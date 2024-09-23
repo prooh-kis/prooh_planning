@@ -1,3 +1,4 @@
+import { EnterCampaignBasicDetails } from "../../components/popup";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,8 +12,8 @@ export const MiddleArea: React.FC = () => {
   const targetDivRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
-      
+    <div className="py-2 w-full h-full pb-5 flex justify-center items-center">
+      <EnterCampaignBasicDetails />
     </div>
   );
 };

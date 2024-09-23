@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { TemplateCard } from "../atoms/TemplateCard";
 import { PrimaryButton } from "../atoms/PrimaryButton";
+import { useNavigate } from "react-router-dom";
 
 export const CampaignTemplates: React.FC = () => {
+  const navigate = useNavigate();
 
   // Track the index of the selected card
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
@@ -55,7 +57,15 @@ export const CampaignTemplates: React.FC = () => {
             />
           </div>
         </div>
-        <PrimaryButton title="Plan Campaign" action={selectedCard} />
+        <PrimaryButton rounded="rounded-[30px]" title="Plan Campaign" action={() => {
+            if (selectedCard === 0) {
+              navigate("/regularplan");
+            } else if (selectedCard === 1) {
+              navigate("/specialdayplan");
+            } else if (selectedCard === 2) {
+              navigate("/triggerbasedplan");
+            }
+        }} />
       </div>
     </div>
   );
