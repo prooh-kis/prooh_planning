@@ -5,10 +5,11 @@ import { HomePageLayout } from "../components";
 import {
   LandingPage,
   PageNotFound,
+  RegularPlanPage,
 } from "../pages";
 
 import { PrivateRoute } from "./PrivateRoute";
-import { HOME } from "./routes";
+import { HOME, REGULARPLAN } from "./routes";
 
 const Routers: React.FC = () => {
   return (
@@ -20,6 +21,15 @@ const Routers: React.FC = () => {
           element={
             <PrivateRoute layout={HomePageLayout}>
               <LandingPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route 
+          path={REGULARPLAN}
+          element={
+            <PrivateRoute layout={HomePageLayout}>
+              <RegularPlanPage />
             </PrivateRoute>
           }
         />

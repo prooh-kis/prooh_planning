@@ -112,7 +112,7 @@ export const Header: React.FC = () => {
               </p>
             </div>
             <div>
-            <i className="fi fi-ss-angle-down"></i>
+              <i className="fi fi-ss-angle-down"></i>
             </div>
           </div>
         </div>

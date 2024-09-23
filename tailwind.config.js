@@ -15,20 +15,13 @@ module.exports = {
       '5xl': '3.052rem',
     },
     extend: {
+      fontFamily: {
+        sans: ['"Open Sans"', 'sans-serif'], // Replace 'Roboto' with your custom font
+      },
       colors: {
-        primary: '#1877f2',
-        greenLight: '#42b72a',
-        transparent: 'transparent',
-        proohYellow: '#FFE55B',
-        proohCyan: '#C9EBFF',
-        proohCyanFooter: '#008080',
-        proohPurple: '#E1CAFF',
-        proohYellowLight: '#FFFBA7',
-        proohBorderGray: '#AEAEAE',
-        proohGreenBgLight: '#00963C20',
-        proohGreenBgLightText: '#00963C',
-        proohCohortBlue: "#EDE9FF",
-        proohCohortGray: "#F4F4F4"
+        primaryText: '#0E212E',
+        secondaryText: '#4A606E90',
+        primaryButton: '#00A0FA'
       },
     },
   },

@@ -1,4 +1,4 @@
-import { CampaignTemplates } from "../../components/index";
+import { StepperSlider } from "../../components/molecules/StepperSlider";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -12,7 +12,7 @@ export const MiddleArea: React.FC = () => {
 
   return (
     <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
-      <CampaignTemplates />
+      
     </div>
   );
 };
