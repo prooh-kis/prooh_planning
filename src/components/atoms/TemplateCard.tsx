@@ -9,9 +9,7 @@ interface TemplateCardProps {
   handleCardClick: () => void;
 }
 
-
 export const TemplateCard = ({text, paratext, icon, color, isSelected, handleCardClick}: TemplateCardProps): JSX.Element => {
-  
   return (
     <div 
       onClick={handleCardClick}
@@ -25,8 +23,14 @@ export const TemplateCard = ({text, paratext, icon, color, isSelected, handleCar
     >
       <div className="py-[48px] ">
         <div className="w-full flex justify-center">
-          <div className={`bg-[${color}10] rounded-[40px] w-[65px] h-[65px] flex justify-center items-center`}>
-            <i className={`fi fi-sr-${icon} flex items-center justify-center h-[30px] h-[30px] text-[${color}]`}></i>
+          <div 
+            className="rounded-[40px] w-[65px] h-[65px] flex justify-center items-center"
+            style={{ backgroundColor: `${color}10` }}  // Use inline styles for dynamic background color
+          >
+            <i 
+              className={`fi fi-sr-${icon} flex items-center justify-center h-[30px] w-[30px]`} 
+              style={{ color }}  // Use inline styles for dynamic text color
+            ></i>
           </div>
         </div>
         <div className="flex justify-center pt-5">

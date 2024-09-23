@@ -28,7 +28,7 @@ export const StepperSlider: React.FC<StepSliderProps> = ({ steps }) => {
   // Example labels for each step
   const stepLabels = [
     "Basic Details", "Audience Selection", "Advanced Filters", "Cohort Selection", "Screens Summary", 
-    "Trigger Selection", "Vendor Approval", "Creative Upload", "Campaign Dashboard"
+    "Trigger Selection", "Vendor Approval", "Creative Upload", "Dashboard"
   ];
 
   return (

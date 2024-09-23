@@ -3,19 +3,21 @@ import { useNavigate } from "react-router-dom";
 interface PrimaryInputProps {
   placeholder: string;
   value: string;
+  inputType: string;  // Updated inputType to be more specific
   action: (value: string) => void;  // Updated action type to be more specific
 }
 
-export const PrimaryInput = ({placeholder, value, action }: PrimaryInputProps) => {
+export const PrimaryInput = ({placeholder, value, action, inputType }: PrimaryInputProps) => {
   const navigate = useNavigate();
 
   return (
     <div className="w-full">
       <input
-        title="campaign_name"
+        title="input_box"
+        type={inputType}
         value={value}
         onChange={(e) => action(e.target.value)}
-        className="h-[48px] w-full border rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-50 active:bg-blue-100 transition-colors"
+        className="h-[48px] w-full border rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 active:bg-blue-100 transition-colors"
       />
     </div>
   );
