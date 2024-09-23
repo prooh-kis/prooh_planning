@@ -21,7 +21,8 @@ module.exports = {
       colors: {
         primaryText: '#0E212E',
         secondaryText: '#4A606E90',
-        primaryButton: '#00A0FA'
+        primaryButton: '#00A0FA',
+        statusBlue: '#4DAAFG'
       },
     },
   },

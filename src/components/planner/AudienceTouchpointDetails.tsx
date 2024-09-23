@@ -6,6 +6,7 @@ import { CalendarInput } from "../atoms/CalendarInput";
 import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
 import { saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import { AudienceCohortTable, CostSummaryTable1, LocationTable, TouchpointTable } from "../../components/tables";
+import { audienceCohortData, touchpointData } from "../../data";
 
 export const AudienceTouchpointDetails = () => {
   const navigate = useNavigate();
@@ -31,19 +32,20 @@ export const AudienceTouchpointDetails = () => {
           <LocationTable />
         </div>
         <div className="col-span-3 flex justify-center">
-          <AudienceCohortTable />
+          <AudienceCohortTable audienceCohortData={audienceCohortData} />
         </div>
         <div className="col-span-3 flex justify-center">
-          <TouchpointTable />
+          <TouchpointTable touchpointData={touchpointData} />
         </div>
       </div>
       <div className="py-2">
         <CostSummaryTable1 />
       </div>
-      <div className="flex py-4">
-        <PrimaryButton rounded="rounded-[6px]" title="Continue" action={() => {
-          
-          }} />
+      <div className="flex justify-start items-center gap-2 py-2">
+        <i className="fi fi-sr-lightbulb-on text-[#FFB904]"></i>
+        <h1 className="text-[14px] text-[#178967]">
+          Prooh Tip:- select target audience and select select target audience and location target audience and location location
+        </h1>
       </div>
     </div>
   )
