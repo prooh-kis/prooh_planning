@@ -1,26 +1,28 @@
-import React from 'react';
-import { LeftSidebar } from './LeftSidebar';
-import { MiddleArea } from './MiddleArea';
-import { RightSidebar } from './RightSidebar';
+import React, { useState } from 'react';
 import { StepperSlider } from '../../components/molecules/StepperSlider';
-import { Footer } from '../../components/footer';
+import { EnterCampaignBasicDetails, AudienceTouchpointDetails } from '../../components/planner';
+
 
 export const RegularPlanPage: React.FC = () => {
+  const [currentStep, setCurrentStep] = useState<any>(1);
   return (
     <div className="w-full h-full">
       <div className="w-full pt-[60px]">
-        <StepperSlider steps={9}/>
+        <StepperSlider step={currentStep} setStep={setCurrentStep} steps={9}/>
       </div>
-      <div className="w-full h-full grid grid-cols-12">
-        {/* <div className="col-span-1 flex justify-start ml-2">
-          <LeftSidebar />
-        </div> */}
-        <div className="col-span-12 h-full">
-          <MiddleArea />
-        </div>
-        {/* <div className="col-span-1 flex justify-end pr-2">
-          <RightSidebar />
-        </div> */}
+      <div className="w-full h-full flex justify-center items-top">
+        {currentStep === 1 ? (
+          <EnterCampaignBasicDetails 
+            setCurrentStep={setCurrentStep} 
+            step={currentStep} 
+          />
+        ) : currentStep === 2 ? (
+          <AudienceTouchpointDetails />
+        ) : (
+          <div className="py-2 w-full h-full pb-5 flex justify-center items-center">
+            {/* <EnterCampaignBasicDetails /> */}
+          </div>
+        )}
       </div>
     </div>
    

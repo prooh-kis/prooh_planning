@@ -6,5 +6,7 @@ export { Header } from "./header";
 export { Footer } from "./footer";
 
 
-export { CampaignTemplates, EnterCampaignBasicDetails } from "./popup";
+export { CampaignTemplates } from "./popup";
+
+export { EnterCampaignBasicDetails, AudienceTouchpointDetails } from "./planner";
 

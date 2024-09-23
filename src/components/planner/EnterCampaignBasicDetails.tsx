@@ -1,12 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
-import { PrimaryButton } from "../../components/atoms/PrimaryButton"
-import { PrimaryInput } from "../../components/atoms/PrimaryInput"
+import { PrimaryButton } from "../atoms/PrimaryButton"
+import { PrimaryInput } from "../atoms/PrimaryInput"
 import { useNavigate } from "react-router-dom";
-import { CalendarInput } from "../../components/atoms/CalendarInput";
+import { CalendarInput } from "../atoms/CalendarInput";
 import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
 import { saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 
-export const EnterCampaignBasicDetails: React.FC  = () => {
+interface EnterCampaignBasicDetailsProps {
+  setCurrentStep: (step: number) => void;
+  step: number;
+}
+
+export const EnterCampaignBasicDetails = ({ setCurrentStep, step }: EnterCampaignBasicDetailsProps) => {
   const navigate = useNavigate();
 
   const [campaignName, setCampaignName] = useState<any>("");
@@ -63,8 +68,8 @@ export const EnterCampaignBasicDetails: React.FC  = () => {
   };
 
   return (
-    <div className="w-full">
-      <div>
+    <div className="w-full py-3">
+      <div className="">
         <h1 className="text-[24px] text-primaryText font-semibold">Add Basic Details</h1>
         <p className="text-[14px] text-secondaryText">Enter your basic details for the campaigns to proceed further</p>
       </div>
@@ -123,7 +128,8 @@ export const EnterCampaignBasicDetails: React.FC  = () => {
           if (validateForm()) {
             saveCampaignDetailsOnLocalStorage();
           }
-          navigate("/audience&touchpoints");
+          // navigate("/audience&touchpoints");
+          setCurrentStep(step + 1);
           }} />
       </div>
     </div>

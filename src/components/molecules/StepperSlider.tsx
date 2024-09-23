@@ -2,14 +2,17 @@ import React, { useState } from "react";
 
 interface StepSliderProps {
   steps: number;
+  step: number;
+  setStep?: any;
 }
 
-export const StepperSlider: React.FC<StepSliderProps> = ({ steps }) => {
-  const [currentStep, setCurrentStep] = useState<number>(1);
+export const StepperSlider: React.FC<StepSliderProps> = ({ setStep, steps, step }) => {
+  const [currentStep, setCurrentStep] = useState<number>(step);
 
   // Function to handle step marker click
   const handleStepClick = (step: number) => {
     setCurrentStep(step);
+    setStep(step);
   };
 
   // Example Flaticon SVG URLs (replace these with actual SVG URLs or import local SVGs)
