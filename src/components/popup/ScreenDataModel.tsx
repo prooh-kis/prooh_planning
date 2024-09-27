@@ -137,18 +137,89 @@ export function ScreenDataModel({ screenName }: Props) {
   return (
     <div>
       <h1 onClick={handleOpen}>{screenName}</h1>
-      <Modal open={open} onCancel={handleCancel} footer={[]} width={1000}>
-        <div className="flex gap-4">
+      <Modal open={open} onCancel={handleCancel} footer={[]} width={1100}>
+        <div className="flex gap-8">
           <div className="w-96">
             <CarouselImageView images={screen.images} />
           </div>
           <div className="w-100%">
-            <h1 className="text-xl ">Screen Detail</h1>
-            <div className="flex flex-col justify-between">
-              <div className="flex flex-col gap-2">
-                <h1></h1>
+            <h1 className="text-xl font-semibold pb-4">Screen Detail</h1>
+            <div className="flex justify-between gap-4">
+              <div className="flex flex-col gap-2 font-semibold">
+                <h1 className="">Placement area</h1>
+                <h1>Integration status</h1>
+                <h1>Hardware pitch</h1>
+                <h1>Gio location</h1>
+                <h1>Pine code</h1>
+                <h1>Operational hours</h1>
+                <h1>Operational time</h1>
+                <h1>Resolution</h1>
+                <h1>Size</h1>
+                <h1>Network type</h1>
+                <h1>Total units available loop length in sec.</h1>
+                <h1>Slot length in sec.</h1>
+                <h1>slots taken</h1>
               </div>
-              <div className="flex flex-col gap-2"></div>
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 font-normal">
+                  <h1>{screen?.location?.address}</h1>
+                  <h1>{screen?.integrationStatus ? "Yes" : "No"}</h1>
+                  <h1>{screen?.hardwarePitch}</h1>
+                  <h1>
+                    {screen?.location?.geographicalLocation?.latitude}x
+                    {screen?.location?.geographicalLocation?.longitude}
+                  </h1>
+                  <h1>{screen?.location?.pincode}</h1>
+                  <h1>{screen?.operationalDuration?.totalDuration}</h1>
+                  <h1>
+                    {screen?.operationalDuration?.onTime}AM -{" "}
+                    {screen?.operationalDuration?.offTime}AM
+                  </h1>
+                  <h1>{screen?.screenResolution}</h1>
+                  <h1>
+                    {screen?.screenLength}'' x {screen?.screenWidth}''
+                  </h1>
+                  <h1>{screen?.networkType || "N/A"}</h1>
+                  <h1>240</h1>
+                  <h1>10</h1>
+                  <h1>2</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="pt-4">
+          <h1 className="py-2 text-xl font-semibold">
+            Your selected cohort time
+          </h1>
+          <div className="flex justify-between items-end">
+            <div className="flex gap-4 text-gray-500">
+              <div className="border border-1 py-2 px-4 flex flex-col items-center">
+                <h1>Morning - Afternoon</h1>
+                <h1>8 am - 11 am</h1>
+              </div>
+              <div className="border border-1 py-2 px-4 flex flex-col items-center">
+                <h1>Afternoon - Evening</h1>
+                <h1>3 pm - 5 pm</h1>
+              </div>
+              <div className="border border-1 py-2 px-4 flex flex-col items-center">
+                <h1>Evening - Night</h1>
+                <h1>8 pm - 11 pm</h1>
+              </div>
+            </div>
+            <div className="flex  items-center gap-4 ">
+              <button
+                className="border border-1 py-2 px-4 rounded-md hover:bg-blue-500 hover:text-white"
+                title="Go back"
+              >
+                Remove screen
+              </button>
+              <button
+                className="border border-1 py-2 px-4 rounded-md bg-blue-500 text-white hover:bg-blue-600"
+                title="Save and go next"
+              >
+                Next screen
+              </button>
             </div>
           </div>
         </div>
