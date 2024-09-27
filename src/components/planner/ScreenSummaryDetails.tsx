@@ -8,6 +8,7 @@ import {
 import { ScreenSummaryTable } from "../ScreenSummaryTable";
 import { ViewPlanPic } from "../ViewPlanPic";
 import { PlainSummary } from "../PlainSummary";
+import { CampaignPlaningFooter } from "../CampaignPlaningFooter";
 
 interface TabInterface {
   icon: any;
@@ -30,11 +31,19 @@ const tabData = [
   },
 ];
 
-export function ScreenSummary() {
+interface EnterCampaignBasicDetailsProps {
+  setCurrentStep: (step: number) => void;
+  step: number;
+}
+
+export const ScreenSummaryDetails = ({
+  setCurrentStep,
+  step,
+}: EnterCampaignBasicDetailsProps) => {
   const [currentTab, setCurrentTab] = useState<string>("1");
 
   return (
-    <div className="">
+    <div className="w-full py-3">
       <h1 className="text-3xl ">
         screens summary as per “cohort plan” selected{" "}
       </h1>
@@ -67,6 +76,14 @@ export function ScreenSummary() {
           <PlainSummary />
         )}
       </div>
+      <CampaignPlaningFooter
+        handleBack={() => {
+          setCurrentStep(step - 1);
+        }}
+        handleSave={() => {
+          setCurrentStep(step + 1);
+        }}
+      />
     </div>
   );
-}
+};

@@ -1,21 +1,31 @@
 import { useCallback, useEffect, useState } from "react";
-import { PrimaryButton } from "../atoms/PrimaryButton"
-import { PrimaryInput } from "../atoms/PrimaryInput"
+import { PrimaryButton } from "../atoms/PrimaryButton";
+import { PrimaryInput } from "../atoms/PrimaryInput";
 import { useNavigate } from "react-router-dom";
 import { CalendarInput } from "../atoms/CalendarInput";
 import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
 import { saveDataOnLocalStorage } from "../../utils/localStorageUtils";
-import { AudienceCohortTable, CostSummaryTable1, LocationTable, TouchpointTable } from "../../components/tables";
+import {
+  AudienceCohortTable,
+  CostSummaryTable1,
+  LocationTable,
+  TouchpointTable,
+} from "../tables";
 import { audienceCohortData, touchpointData } from "../../data";
+import { CampaignPlaningFooter } from "../CampaignPlaningFooter";
 
-export const AudienceTouchpointDetails = () => {
+interface EnterCampaignBasicDetailsProps {
+  setCurrentStep: (step: number) => void;
+  step: number;
+}
+
+export const AudienceTouchPointDetails = ({
+  setCurrentStep,
+  step,
+}: EnterCampaignBasicDetailsProps) => {
   const navigate = useNavigate();
 
-  
-  useEffect(() => {
-  },[]);
-
-
+  useEffect(() => {}, []);
 
   return (
     <div className="w-full py-3">
@@ -44,9 +54,18 @@ export const AudienceTouchpointDetails = () => {
       <div className="flex justify-start items-center gap-2 py-2">
         <i className="fi fi-sr-lightbulb-on text-[#FFB904]"></i>
         <h1 className="text-[14px] text-[#178967]">
-          Prooh Tip:- select target audience and select select target audience and location target audience and location location
+          Prooh Tip:- select target audience and select select target audience
+          and location target audience and location location
         </h1>
       </div>
+      <CampaignPlaningFooter
+        handleBack={() => {
+          setCurrentStep(step - 1);
+        }}
+        handleSave={() => {
+          setCurrentStep(step + 1);
+        }}
+      />
     </div>
-  )
-}
+  );
+};

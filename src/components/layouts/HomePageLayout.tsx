@@ -11,7 +11,7 @@ export const HomePageLayout: React.FC<IProps> = (props) => {
     <div className="w-full h-full flex flex-col">
       <Header />
       <MainContentContainer>{children}</MainContentContainer>
-      <Footer />
+      
     </div>
   );
 };

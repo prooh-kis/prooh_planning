@@ -1,2 +1,2 @@
 export { EnterCampaignBasicDetails } from "./EnterCampaignBasicDetails";
-export { AudienceTouchpointDetails } from "./AudienceTouchpointDetails";
+export { AudienceTouchPointDetails } from "./AudienceTouchPointDetails";

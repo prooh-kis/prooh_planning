@@ -9,12 +9,14 @@ export { CampaignTemplates } from "./popup";
 
 export {
   EnterCampaignBasicDetails,
-  AudienceTouchpointDetails,
+  AudienceTouchPointDetails,
 } from "./planner";
 
-export { ScreenSummary } from "./ScreenSummary";
+export { ScreenSummaryDetails } from "./planner/ScreenSummaryDetails";
 export { TabWithIcon } from "./TabWithIcon";
 export { TabWithoutIcon } from "./TabWithoutIcon";
 export { ScreenDataModel } from "./popup/ScreenDataModel";
 export { CarouselImageView } from "./CarouselImageView";
 export { ViewPlanPic } from "./ViewPlanPic";
+
+export { CampaignPlaningFooter } from "./CampaignPlaningFooter";

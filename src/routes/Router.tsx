@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { HomePageLayout, ScreenSummary } from "../components";
+import { HomePageLayout, ScreenSummaryDetails } from "../components";
 
 import { LandingPage, PageNotFound, RegularPlanPage } from "../pages";
 
@@ -25,15 +25,6 @@ const Routers: React.FC = () => {
           element={
             <PrivateRoute layout={HomePageLayout}>
               <RegularPlanPage />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path={"Screen summary"}
-          element={
-            <PrivateRoute layout={HomePageLayout}>
-              <ScreenSummary />
             </PrivateRoute>
           }
         />
