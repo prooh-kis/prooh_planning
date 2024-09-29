@@ -78,7 +78,7 @@ export const Header: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("useEffect render");
+    // console.log("useEffect render");
     // if (userInfo) dispatch(getCreatives());
   }, [userInfo]);
 

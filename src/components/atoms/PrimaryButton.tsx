@@ -1,15 +1,15 @@
 import { useNavigate } from "react-router-dom";
 
 interface PrimaryButtonProps {
-  title: string;
-  rounded: string;
-  action: any;
+  title?: string;
+  rounded?: string;
+  action?: any;
 }
 
 export const PrimaryButton = ({title, action, rounded}: PrimaryButtonProps) => {
 
   return (
-    <div className="flex justify-center items-center pt-2">
+    <div className="flex justify-center items-center">
       <button
         title="plan_campaign"
         type="submit"

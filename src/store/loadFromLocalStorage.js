@@ -13,6 +13,7 @@ const loadUserFromLocalStorage = () => {
     } else {
       localStorage.removeItem('user');
       localStorage.removeItem('userInfo');
+      localStorage.clear();
       store.dispatch(logout());
     }
   }

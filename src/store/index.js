@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 // import { thunk } from "redux-thunk"
 import authReducer from "./authSlice";
+import { allScreenDataByAudiencesGetReducer } from "../reducers/screenReducers";
 
 const initialState = {
   userSignin: {
@@ -14,7 +15,7 @@ const store = configureStore({
   initialState,
   reducer: {
     //screen
-   
+    allScreenDataByAudiencesGet: allScreenDataByAudiencesGetReducer,
     // auth
     auth: authReducer,
 

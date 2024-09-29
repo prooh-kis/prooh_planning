@@ -1,19 +1,17 @@
-import { IoMdPaper } from "react-icons/io";
-import { IoImageOutline } from "react-icons/io5";
 
 export const screenSummaryTabData = [
   {
-    icon: <IoMdPaper size="20px" />,
+    icon: <i className="fi fi-rr-settings"></i>,
     label: "Screen Summary",
     id: "1",
   },
   {
-    icon: <IoImageOutline size="20px" />,
+    icon: <i className="fi fi-rr-settings"></i>,
     label: "View Plane Pics",
     id: "2",
   },
   {
-    icon: <IoMdPaper size="20px" />,
+    icon: <i className="fi fi-rr-settings"></i>,
     label: "Plane Summary",
     id: "3",
   },

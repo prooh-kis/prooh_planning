@@ -177,7 +177,7 @@ export function ScreenDataModel({ screenName }: Props) {
                   </h1>
                   <h1>{screen?.screenResolution}</h1>
                   <h1>
-                    {screen?.screenLength}'' x {screen?.screenWidth}''
+                    {screen?.screenLength}{''} x {screen?.screenWidth}{''}
                   </h1>
                   <h1>{screen?.networkType || "N/A"}</h1>
                   <h1>240</h1>

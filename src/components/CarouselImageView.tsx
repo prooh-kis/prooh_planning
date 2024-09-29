@@ -12,8 +12,8 @@ const myFunction = ({ images }: Props) => {
   };
   return (
     <Carousel afterChange={onChange}>
-      {images.map((image) => (
-        <img src={image} alt="" className="h-[48vh] w-full rounded-md" />
+      {images.map((image, index) => (
+        <img key={index} src={image} alt="" className="h-[48vh] w-full rounded-md" />
       ))}
     </Carousel>
   );

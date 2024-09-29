@@ -13,8 +13,9 @@ interface Props {
 export function TabWithoutIcon({ tabData, currentTab, onClick }: Props) {
   return (
     <div className="flex gap-4">
-      {tabData.map((tab: TabInterface) => (
+      {tabData.map((tab: TabInterface, index: any) => (
         <div
+          key={index}
           onClick={() => onClick(tab)}
           className={
             currentTab === tab.id

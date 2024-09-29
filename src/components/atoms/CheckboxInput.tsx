@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 
 interface CheckboxProps {
-  label: string;
+  label?: string;
   checked?: boolean;
+  textSize?: string;
+  color?: string;
   onChange?: (checked: boolean) => void;
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({ label, checked = false, onChange }) => {
+export const CheckboxInput: React.FC<CheckboxProps> = ({ color, textSize, label, checked = false, onChange }) => {
   const [isChecked, setIsChecked] = useState(checked);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,11 +23,11 @@ export const Checkbox: React.FC<CheckboxProps> = ({ label, checked = false, onCh
     <label className="flex items-center space-x-2 cursor-pointer">
       <input
         type="checkbox"
-        className="form-checkbox h-4 w-4 text-blue-600"
+        className="form-checkbox h-4 w-4 text-[#52A2FF]"
         checked={isChecked}
         onChange={handleCheckboxChange}
       />
-      <span className="text-[#21394F] text-[14px]">{label}</span>
+      <span className={`text-[${color ? color : "#21394F"}] text-[${textSize ? textSize : "14px"}]`}>{label}</span>
     </label>
   );
 };

@@ -9,7 +9,7 @@ export { CampaignTemplates } from "./popup";
 
 export {
   EnterCampaignBasicDetails,
-  AudienceTouchPointDetails,
+  AudienceTouchPointsDetails,
 } from "./planner";
 
 export { ScreenSummaryDetails } from "./planner/ScreenSummaryDetails";

@@ -1,7 +1,11 @@
-import { LinearBar } from "../../components/molecules/linearbar";
-import { Checkbox } from "../../components/atoms/CheckboxInput"
+import { LinearBar } from "../molecules/linearbar";
+import { CheckboxInput } from "../../components/atoms/CheckboxInput"
 
-export const AudienceCohortTable = ({ audienceCohortData }: any) => {
+interface AudiencesProps {
+  audiences?: any
+  markets?: any
+}
+export const AudienceCohortTable = ({ audiences }: AudiencesProps) => {
 
   return (
     <table className="w-full">
@@ -13,7 +17,7 @@ export const AudienceCohortTable = ({ audienceCohortData }: any) => {
             </h1>
             <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
           </th>
-        </tr>
+        </tr> 
       </thead>
       <tbody className="border overflow-scroll">
         <tr className="grid grid-cols-6 w-full px-2 gap-4">
@@ -33,14 +37,13 @@ export const AudienceCohortTable = ({ audienceCohortData }: any) => {
           </th>
         </tr>
         <div className="w-full h-[40vh] overflow-scroll py-3">
-          {audienceCohortData?.length > 0 && audienceCohortData?.map((a: any, i: any) => {
-            const cohortName = Object.keys(a)[0];
-            const cohortValue = a[cohortName]; // Assuming this is the cohort value (percentage)
-            
+          {Object.keys(audiences)?.map((a: any, i: any) => {
+            const cohortName = a;
+            const cohortValue = audiences[a] * 100; // Assuming this is the cohort value (percentage)
             return (
               <tr key={i} className="grid grid-cols-6 gap-4 flex justify-between items-center w-full p-2">
                 <th className="col-span-4 flex justify-between w-auto truncate text font-normal">
-                  <Checkbox label={cohortName} />
+                  <CheckboxInput label={cohortName} />
                 </th>
                 <th className="col-span-2 pr-2">
                   <LinearBar value={cohortValue} colors={["#F3F3F3", "#7AB3A2"]} />

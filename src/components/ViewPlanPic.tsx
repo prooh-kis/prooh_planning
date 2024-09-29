@@ -17,8 +17,8 @@ function Screen({ screen }: any) {
 export function ViewPlanPic() {
   return (
     <div className="flex flex-wrap gap-4 overflow-scroll h-[70vh]">
-      {screens?.map((screen) => (
-        <Screen screen={screen} />
+      {screens?.map((screen, index) => (
+        <Screen key={index} screen={screen} />
       ))}
     </div>
   );

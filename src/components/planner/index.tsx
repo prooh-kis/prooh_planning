@@ -1,2 +1,5 @@
 export { EnterCampaignBasicDetails } from "./EnterCampaignBasicDetails";
-export { AudienceTouchPointDetails } from "./AudienceTouchPointDetails";
+
+// eslint-disable-next-line import/no-unresolved
+export { AudienceTouchPointsDetails } from "./AudienceTouchPointsDetails";
+export { AdvanceFiltersDetails } from "./AdvancedFiltersDetails";

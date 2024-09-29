@@ -1,7 +1,11 @@
-import { LinearBar } from "../../components/molecules/linearbar";
-import { Checkbox } from "../../components/atoms/CheckboxInput"
+import { LinearBar } from "../molecules/linearbar";
+import { CheckboxInput } from "../../components/atoms/CheckboxInput"
 
-export const TouchpointTable = ({ touchpointData }: any) => {
+interface TouchPointsProps {
+  touchPoints: any;
+  totalScreens?: any;
+}
+export const TouchpointTable = ({ touchPoints, totalScreens }: TouchPointsProps) => {
   return (
     <table className="w-full">
       <thead className="bg-[#F7F7F7] w-full">
@@ -38,18 +42,19 @@ export const TouchpointTable = ({ touchpointData }: any) => {
           </th>
         </tr>
         <div className="w-full h-[40vh] overflow-scroll py-3">
-          {touchpointData?.length > 0 && touchpointData?.map((a: any, i: any) => {
-            const touchpointName = Object.keys(a)[0];
-            const touchpointValue = a[touchpointName]; // Assuming this is the cohort value (percentage)
-            
+          {Object.keys(touchPoints)?.map((a: any, i: any) => {
             return (
               <tr key={i} className="grid grid-cols-6 gap-4 flex justify-between items-center w-full p-2">
                 <th className="col-span-4 flex justify-between w-auto truncate text font-normal">
-                  <Checkbox label={touchpointName} />
+                  <CheckboxInput label={a} />
                 </th>
                 <th className="col-span-2 pr-2">
-                  <LinearBar value={touchpointValue[0]} colors={["#F3F3F3", "#7AB3A2"]}/>
-                  <LinearBar value={touchpointValue[1]} colors={["#F3F3F3", "#00A0FA"]}/>
+                  <LinearBar value={
+                    ((Number(touchPoints[a]["gender"]["Male"]) + Number(touchPoints[a]["gender"]["Female"])) / 2) * 100
+                  } colors={["#F3F3F3", "#7AB3A2"]}/>
+                  <LinearBar value={
+                    ((touchPoints[a]?.screens?.length / totalScreens) * 100).toFixed(2)
+                  } colors={["#F3F3F3", "#00A0FA"]}/>
                 </th>
               </tr>
             );

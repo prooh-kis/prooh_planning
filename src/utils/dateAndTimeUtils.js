@@ -39,7 +39,7 @@ export function getTimeDifferenceInMin(date) {
 export function convertIntoDateAndTime(string) {
   if (string) {
     let date = new Date(string); // Fri Jan 27 2012 02:21:50 GMT+0530 (India Standard Time)
-    if (date != "Invalid Date") {
+    if (date !== "Invalid Date") {
       date = date.toString();
       date = date.split(" ");
       let am_pm = "";

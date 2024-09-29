@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { MdDeselect } from "react-icons/md";
 import { TabWithoutIcon } from "./TabWithoutIcon";
 import { ScreenDataModel } from "./popup/ScreenDataModel";
 

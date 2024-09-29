@@ -22,7 +22,10 @@ module.exports = {
         primaryText: '#0E212E',
         secondaryText: '#4A606E90',
         primaryButton: '#00A0FA',
-        statusBlue: '#4DAAFG'
+        statusBlue: '#4DAAFG',
+        brand: "#52A2FF",
+        competitor: "#20AA70",
+        brand_competitor: "#FF5252"
       },
     },
   },

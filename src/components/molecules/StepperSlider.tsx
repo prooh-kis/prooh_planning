@@ -17,15 +17,15 @@ export const StepperSlider: React.FC<StepSliderProps> = ({ setStep, steps, step 
 
   // Example Flaticon SVG URLs (replace these with actual SVG URLs or import local SVGs)
   const icons = [
-    <i className="fi fi-sr-megaphone text-[14px]"></i>, // Example icon for step 1
-    <i className="fi fi-rr-location-crosshairs text-[14px]"></i>, // Example icon for step 2
-    <i className="fi fi-br-settings-sliders text-[14px]"></i>, // Example icon for step 3
-    <i className="fi fi-sr-users-alt text-[14px]"></i>, // Example icon for step 4
-    <i className="fi fi-sr-document-signed text-[14px]"></i>, // Example icon for step 5
-    <i className="fi fi-sr-tap text-[14px]"></i>, // Example icon for step 6
-    <i className="fi fi-ss-sack text-[14px]"></i>, // Example icon for step 7
-    <i className="fi fi-sr-cloud-upload-alt text-[14px]"></i>, // Example icon for step 8
-    <i className="fi fi-sr-dashboard-monitor text-[14px]"></i>, // Example icon for step 9
+    <i key={1} className="fi fi-sr-megaphone text-[14px]"></i>, // Example icon for step 1
+    <i key={1} className="fi fi-rr-location-crosshairs text-[14px]"></i>, // Example icon for step 2
+    <i key={1} className="fi fi-br-settings-sliders text-[14px]"></i>, // Example icon for step 3
+    <i key={1} className="fi fi-sr-users-alt text-[14px]"></i>, // Example icon for step 4
+    <i key={1} className="fi fi-sr-document-signed text-[14px]"></i>, // Example icon for step 5
+    <i key={1} className="fi fi-sr-tap text-[14px]"></i>, // Example icon for step 6
+    <i key={1} className="fi fi-ss-sack text-[14px]"></i>, // Example icon for step 7
+    <i key={1} className="fi fi-sr-cloud-upload-alt text-[14px]"></i>, // Example icon for step 8
+    <i key={1} className="fi fi-sr-dashboard-monitor text-[14px]"></i>, // Example icon for step 9
   ];
 
   // Example labels for each step

@@ -1,13 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
 import {
-  AudienceTouchPointDetails,
+  AdvanceFiltersDetails,
+  AudienceTouchPointsDetails,
   EnterCampaignBasicDetails,
 } from "../../components/planner";
 import { ScreenSummaryDetails } from "../../components";
+import { useDispatch, useSelector } from 'react-redux';
+import { getScreenDataByAudiences } from '../../actions/screenAction';
+import { getAllLocalStorageData, saveDataOnLocalStorage } from '../../utils/localStorageUtils';
+
 
 export const RegularPlanPage: React.FC = () => {
+  const dispatch = useDispatch<any>();
+
   const [currentStep, setCurrentStep] = useState<any>(1);
+  
+   
+  const allScreenDataByAudiencesGet = useSelector((state: any) => state.allScreenDataByAudiencesGet);
+  const {
+    loading: loadingASDBAG,
+    error: errorASDBAG,
+    data: dataASDBAG,
+  } = allScreenDataByAudiencesGet
+
+  useEffect(() => {
+    dispatch(getScreenDataByAudiences({screenIds: []}))
+  },[dispatch]);
+
+
+
+  useEffect(() => {
+    if (dataASDBAG) {
+      saveDataOnLocalStorage(`screen_audience_data_1`, dataASDBAG);
+    }
+  },[dataASDBAG]);
+
   return (
     <div className="w-full h-full">
       <div className="w-full pt-[60px]">
@@ -20,16 +48,25 @@ export const RegularPlanPage: React.FC = () => {
             step={currentStep}
           />
         ) : currentStep === 2 ? (
-          <AudienceTouchPointDetails
+          <AudienceTouchPointsDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
+            data={dataASDBAG}
+            loading={loadingASDBAG}
+            error={errorASDBAG}
           />
-        ) : currentStep === 3 ? (
+        ) : currentStep === 5 ? (
           <ScreenSummaryDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
           />
-        ) : null}
+        ) : currentStep === 3  ? (
+          <AdvanceFiltersDetails />
+        ) : (
+          <div className="py-2 w-full h-full pb-5 flex justify-center items-center">
+            {/* <EnterCampaignBasicDetails /> */}
+          </div>
+        )}
       </div>
     </div>
   );
