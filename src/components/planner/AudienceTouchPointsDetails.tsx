@@ -26,7 +26,6 @@ export const AudienceTouchPointsDetails = ({ setCurrentStep, step, data, error }
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
 
-  const [audienceScreenData, setAudienceScreenData] = useState<any>({});
   const [markets, setMarkets] = useState<any>({});
   const [audiences, setAudiences] = useState<any>({});
   const [touchPoints, setTouchPoints] = useState<any>({});
@@ -46,6 +45,7 @@ export const AudienceTouchPointsDetails = ({ setCurrentStep, step, data, error }
 
   const getMatchedData = (myData: any) => {
     setMarkets(myData);
+    console.log(myData);
 
     let audiencesData: any = {};
     for (const market in myData) {
@@ -56,34 +56,15 @@ export const AudienceTouchPointsDetails = ({ setCurrentStep, step, data, error }
     setAudiences(audiencesData);
     setSelectedAudiences(Object.keys(audiencesData));
     let touchpointsData: any = {};
-    let totalScreens = 0;
     for (const market in myData) {
-      for (const touchPoint in myData[market]["touchpoint"]) {
+      for (const touchPoint in myData[market]["touchPoint"]) {
         touchpointsData[touchPoint] = {
-          "screens": Object.keys(myData[market]["touchpoint"][touchPoint]),
-          "gender": {},
+          "Screen": myData[market]["touchPoint"][touchPoint].screenPercent,
+          "Female": myData[market]["touchPoint"][touchPoint].femaleAudiencePercent,
+          "Male": myData[market]["touchPoint"][touchPoint].maleAudiencePercent,
+          "Audience": myData[market]["touchPoint"][touchPoint].audiencePercent,
         }
-        for (const screen in myData[market]["touchpoint"][touchPoint]) {
-          let totalMale = 0;
-          let totalFemale = 0;
-          let count = 0;
-          totalScreens++;
-
-          for (const group in myData[market]["touchpoint"][touchPoint][screen]) {
-              totalMale += Number(myData[market]["touchpoint"][touchPoint][screen][group]["Male"]) || 0;
-              totalFemale += Number(myData[market]["touchpoint"][touchPoint][screen][group]["Female"]) || 0;
-              count++;
-          }
-           // Calculate the average for each gender
-           const avgMale = (totalMale / count).toFixed(2);
-           const avgFemale = (totalFemale / count).toFixed(2);
-
-          touchpointsData[touchPoint].gender = {
-            "Male": avgMale,
-            "Female": avgFemale
-          };
-          setTotalScreens(totalScreens);
-        }
+        
       }
     }
     setTouchPoints(touchpointsData);
@@ -119,9 +100,9 @@ export const AudienceTouchPointsDetails = ({ setCurrentStep, step, data, error }
   useEffect(() => {
   
     if (getAllLocalStorageData()) {
-      getScreenCost(JSON.parse(getAllLocalStorageData()["screen_audience_data_1"]).screens)
-      setAudienceScreenData(JSON.parse(getAllLocalStorageData()["screen_audience_data_1"]));
-      getMatchedData(JSON.parse(getAllLocalStorageData()["screen_audience_data_1"]).marketData)
+      console.log("asdasd")
+      // getScreenCost(JSON.parse(getAllLocalStorageData()["screen_audience_data_1"]))
+      getMatchedData(JSON.parse(getAllLocalStorageData()["screen_audience_data_1"]))
     }
 
   }, [])
@@ -159,6 +140,7 @@ export const AudienceTouchPointsDetails = ({ setCurrentStep, step, data, error }
             touchPoints={touchPoints}
             selectedTouchPoints={selectedTouchPoints}
             setSelectedTouchPoints={setSelectedTouchPoints}
+            selectedGender={selectedGender}
           />
         </div>
       </div>

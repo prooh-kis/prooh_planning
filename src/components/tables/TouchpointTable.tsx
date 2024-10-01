@@ -6,12 +6,13 @@ interface TouchPointsProps {
   totalScreens?: any;
   selectedTouchPoints?: any;
   setSelectedTouchPoints?: any;
+  selectedGender?: any;
 }
 export const TouchpointTable = ({
   touchPoints,
-  totalScreens,
   selectedTouchPoints,
-  setSelectedTouchPoints
+  setSelectedTouchPoints,
+  selectedGender,
 }: TouchPointsProps) => {
 
   const handleCheckClick = ({ touchpoint, checked }: any) => {
@@ -22,6 +23,7 @@ export const TouchpointTable = ({
       setSelectedTouchPoints(aud);
     }
   }
+  console.log(touchPoints);
 
   return (
     <table className="w-full">
@@ -71,10 +73,10 @@ export const TouchpointTable = ({
                 </th>
                 <th className="col-span-2 pr-2">
                   <LinearBar value={
-                    ((Number(touchPoints[a]["gender"]["Male"]) + Number(touchPoints[a]["gender"]["Female"])) / 2) * 100
+                    ((touchPoints[a]["Male"] + touchPoints[a]["Female"]) / 2).toFixed(2)
                   } colors={["#F3F3F3", "#7AB3A2"]}/>
                   <LinearBar value={
-                    ((touchPoints[a]?.screens?.length / totalScreens) * 100).toFixed(2)
+                    (touchPoints[a]["Screen"].toFixed(2))
                   } colors={["#F3F3F3", "#00A0FA"]}/>
                 </th>
               </tr>

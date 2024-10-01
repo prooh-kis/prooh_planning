@@ -4,10 +4,12 @@ interface PrimaryButtonProps {
   title?: string;
   rounded?: string;
   action?: any;
+  width?: any;
+  height?: any;
 }
 
-export const PrimaryButton = ({title, action, rounded}: PrimaryButtonProps) => {
-
+export const PrimaryButton = ({width, height, title, action, rounded}: PrimaryButtonProps) => {
+  console.log(width, height)
   return (
     <div className="flex justify-center items-center">
       <button
@@ -15,7 +17,8 @@ export const PrimaryButton = ({title, action, rounded}: PrimaryButtonProps) => {
         type="submit"
         onClick={action}
         className={`
-          p-2 w-[180px] h-[48px] bg-primaryButton
+          ${width ? width : "w-[180px]"} flex items-center justify-center
+          ${height ? height : "h-[48px]"} bg-primaryButton
           ${rounded} text-[16px] text-white font-semibold
           hover:bg-transparent hover:border-primaryButton
           hover:border-2 hover:text-primaryButton 

@@ -2,6 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 // import { thunk } from "redux-thunk"
 import authReducer from "./authSlice";
 import { allScreenDataByAudiencesGetReducer } from "../reducers/screenReducers";
+import {
+  userEmailVerificationReducer,
+  userSendEmailToResetPasswordReducer,
+  userSigninReducer,
+  userSignupReducer,
+  userUpdatePasswordReducer } from "../reducers/userReducers";
 
 const initialState = {
   userSignin: {
@@ -18,6 +24,11 @@ const store = configureStore({
     allScreenDataByAudiencesGet: allScreenDataByAudiencesGetReducer,
     // auth
     auth: authReducer,
+    userSignin: userSigninReducer,
+    userSignup: userSignupReducer,
+    userUpdatePassword: userUpdatePasswordReducer,
+    emailVerify: userEmailVerificationReducer,
+    userSendEmailToResetPassword: userSendEmailToResetPasswordReducer,
 
   },
   // middleware: thunk

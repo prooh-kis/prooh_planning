@@ -37,6 +37,7 @@ export const LocationTable = ({
     return {checked};
    
   }
+  console.log(markets)
 
   return (
 
@@ -71,10 +72,10 @@ export const LocationTable = ({
             </td>
             <td className="col-span-4 flex items-center justify-around gap-2">
               <p className="text-[14px] text-[#21394F]">
-                {markets[market]["gender"]["Male"]}
+                {(markets[market]["gender"]["Male"]["totalWeight"] / markets[market]["gender"]["Male"]["count"]).toFixed(2)}
               </p>
               <p className="text-[14px] text-[#21394F]">
-                {markets[market]["gender"]["Female"]}
+                {(markets[market]["gender"]["Female"]["totalWeight"] / markets[market]["gender"]["Female"]["count"]).toFixed(2)}
               </p>
             </td>
           </tr>

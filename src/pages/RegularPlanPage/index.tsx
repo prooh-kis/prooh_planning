@@ -38,6 +38,7 @@ export const RegularPlanPage: React.FC = () => {
 
   useEffect(() => {
     if (dataASDBAG) {
+      console.log("gdfege")
       saveDataOnLocalStorage(`screen_audience_data_1`, dataASDBAG);
     }
   }, [dataASDBAG]);

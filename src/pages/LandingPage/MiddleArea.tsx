@@ -10,9 +10,24 @@ export const MiddleArea: React.FC = () => {
   const navigate = useNavigate();
   const targetDivRef = useRef<HTMLDivElement>(null);
 
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
+
   return (
     <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
-      <CampaignTemplates />
+      {userInfo && userInfo?.isBrand ? (
+        <CampaignTemplates />
+
+      ) : (
+        <div className="">
+          <h1 className="text-2xl font-bold">
+            Only Campaign managers can access this feature...
+          </h1>
+          <p className="text-md">
+            Please contact support or create a new user with {"Campaign Manager"} role!!!
+          </p>
+        </div>
+      )}
     </div>
   );
 };
