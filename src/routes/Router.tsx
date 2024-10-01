@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { HomePageLayout, ScreenSummaryDetails } from "../components";
+import { HomePageLayout } from "../components";
 
 import { LandingPage, PageNotFound, RegularPlanPage } from "../pages";
 

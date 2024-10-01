@@ -9,11 +9,12 @@ import { saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
+  campaignType?: any;
 }
 
-export const EnterCampaignBasicDetails = ({ setCurrentStep, step }: EnterCampaignBasicDetailsProps) => {
+export const EnterCampaignBasicDetails = ({ setCurrentStep, step, campaignType }: EnterCampaignBasicDetailsProps) => {
   const navigate = useNavigate();
-
+  console.log(campaignType);
   const [campaignName, setCampaignName] = useState<any>("");
   const [brandName, setBrandName] = useState<any>("");
   const [clientName, setClientName] = useState<any>("");
@@ -44,17 +45,18 @@ export const EnterCampaignBasicDetails = ({ setCurrentStep, step }: EnterCampaig
   };
 
   const saveCampaignDetailsOnLocalStorage = useCallback(() => {
-    saveDataOnLocalStorage(`campaign_${brandName}_${campaignName}}`, {
+    saveDataOnLocalStorage(`campaign`, {
       basicDetails: {
-        campaignName: campaignName,
-        brandName: brandName,
-        clientName: clientName,
-        industry: industry,
-        startDate: startDate,
-        endDate: endDate,
+        campaignType: campaignType || "Regular",
+        campaignName: campaignName || "campaign",
+        brandName: brandName || "brand",
+        clientName: clientName || "client",
+        industry: industry || "industry",
+        startDate: startDate || "1 Jan 1970",
+        endDate: endDate || "1 Feb 1970",
       }
     });
-  }, [brandName, campaignName, clientName, endDate, industry, startDate]);
+  }, [brandName, campaignName, clientName, endDate, industry, startDate, campaignType]);
 
 
   useEffect(() => {

@@ -3,19 +3,22 @@ import { StepperSlider } from "../../components/molecules/StepperSlider";
 import {
   AdvanceFiltersDetails,
   AudienceTouchPointsDetails,
+  CohortComparisionDetails,
   EnterCampaignBasicDetails,
+  ScreenSummaryDetails,
+  TriggerDetails,
 } from "../../components/planner";
-import { ScreenSummaryDetails } from "../../components";
 import { useDispatch, useSelector } from 'react-redux';
 import { getScreenDataByAudiences } from '../../actions/screenAction';
 import { getAllLocalStorageData, saveDataOnLocalStorage } from '../../utils/localStorageUtils';
+import { useLocation } from "react-router-dom";
 
 
 export const RegularPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
+  const location = useLocation();
 
   const [currentStep, setCurrentStep] = useState<any>(1);
-  
    
   const allScreenDataByAudiencesGet = useSelector((state: any) => state.allScreenDataByAudiencesGet);
   const {
@@ -35,7 +38,7 @@ export const RegularPlanPage: React.FC = () => {
       saveDataOnLocalStorage(`screen_audience_data_1`, dataASDBAG);
     }
   },[dataASDBAG]);
-
+console.log(location)
   return (
     <div className="w-full h-full">
       <div className="w-full pt-[60px]">
@@ -46,6 +49,7 @@ export const RegularPlanPage: React.FC = () => {
           <EnterCampaignBasicDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
+            campaignType={location?.state?.campaignType}
           />
         ) : currentStep === 2 ? (
           <AudienceTouchPointsDetails
@@ -55,13 +59,17 @@ export const RegularPlanPage: React.FC = () => {
             loading={loadingASDBAG}
             error={errorASDBAG}
           />
+        ) : currentStep === 3  ? (
+          <AdvanceFiltersDetails />
+        ) : currentStep === 4  ? (
+          <CohortComparisionDetails />
         ) : currentStep === 5 ? (
           <ScreenSummaryDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
           />
-        ) : currentStep === 3  ? (
-          <AdvanceFiltersDetails />
+        ) : currentStep === 6  ? (
+          <TriggerDetails />
         ) : (
           <div className="py-2 w-full h-full pb-5 flex justify-center items-center">
             {/* <EnterCampaignBasicDetails /> */}

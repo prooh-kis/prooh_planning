@@ -6,12 +6,30 @@ import { ExcelImport } from "../molecules/ExcelImport"
 
 interface StoreProximityProps {
   selectedStoreOption?: any;
+  setSelectedStoreOption?: any;
   handleStoreSelection?: any;
   handleGetExcelData?: any;
   data?: any;
+  dataBrand?: any;
+  setDataBrand?: any;
+  dataComp?: any;
+  setDataComp?: any;
 }
 
-export const StoreProximity = ({selectedStoreOption, handleStoreSelection, handleGetExcelData, data}: StoreProximityProps) => {
+export const StoreProximity = ({
+  selectedStoreOption,
+  setSelectedStoreOption,
+  dataBrand,
+  setDataBrand,
+  dataComp,
+  setDataComp
+}: StoreProximityProps) => {
+  const handleStoreSelection = (e: any) => {
+    console.log(e.target.value);
+    console.log(selectedStoreOption)
+    setSelectedStoreOption(e.target.value);
+  }
+
   return (
     <div className="">
       <div className="flex justify-between py-1">
@@ -22,11 +40,21 @@ export const StoreProximity = ({selectedStoreOption, handleStoreSelection, handl
         </div>
       </div>
       <div className="flex justify-start gap-4 py-1">
-        <RadioInput title="Brand Store" option={selectedStoreOption} value="brandstore" handleClick={handleStoreSelection} />
-        <RadioInput title="Competitor Store" option={selectedStoreOption} value="competitorstore" handleClick={handleStoreSelection} />
+        <RadioInput
+          title="Brand Store"
+          value={"brandStore"}
+          isChecked={selectedStoreOption === "brandStore" ? true : false}
+          onChange={handleStoreSelection}
+        />
+        <RadioInput
+          title="Competitor Store"
+          value={"compStore"}
+          isChecked={selectedStoreOption === "compStore" ? true : false}
+          onChange={handleStoreSelection}
+        />
       </div>
       <div>
-        <ExcelImport handleGetExcelData={handleGetExcelData}/>
+        <ExcelImport setDataBrand={setDataBrand} dataBrand={dataBrand} />
       </div>
       <div className="border-b py-2">
         <div className="flex justify-between items-center pb-2">
@@ -57,7 +85,7 @@ export const StoreProximity = ({selectedStoreOption, handleStoreSelection, handl
             <CheckboxInput textSize="12px" label={'20 Sites'}/>
           </div>
           <div className="col-span-8">
-            <MultiColorLinearBar colors={[ "#EBEBEB", "#52A2FF", "#20AA70", "#FF5252"]} values={[data.brand, data.competitor, data.both]} totalValue={data.total} />
+            {/* <MultiColorLinearBar colors={[ "#EBEBEB", "#52A2FF", "#20AA70", "#FF5252"]} values={[data.brand, data.competitor, data.both]} totalValue={data.total} /> */}
           </div>
           <div className="col-span-2 flex justify-end">
             <p className="text-[12px]">27 Location</p>

@@ -8,7 +8,6 @@ import {
 import { ScreenSummaryTable } from "../ScreenSummaryTable";
 import { ViewPlanPic } from "../ViewPlanPic";
 import { PlainSummary } from "../PlainSummary";
-import { CampaignPlaningFooter } from "../CampaignPlaningFooter";
 
 interface TabInterface {
   icon: any;
@@ -76,14 +75,6 @@ export const ScreenSummaryDetails = ({
           <PlainSummary />
         )}
       </div>
-      <CampaignPlaningFooter
-        handleBack={() => {
-          setCurrentStep(step - 1);
-        }}
-        handleSave={() => {
-          setCurrentStep(step + 1);
-        }}
-      />
     </div>
   );
 };

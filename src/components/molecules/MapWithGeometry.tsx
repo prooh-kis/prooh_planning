@@ -226,7 +226,7 @@ export function MapWithGeometry(props: any) {
         <ReactMapGL
           ref={mapRef}
           initialViewState={viewState}
-          mapStyle="mapbox://styles/sachinraina/clweyy5y900i601qs9joxdk4e"
+          mapStyle="mapbox://styles/mapbox/streets-v11"
           mapboxAccessToken={
             process.env.REACT_APP_MAPBOX ||
             "pk.eyJ1Ijoic2FjaGlucmFpbmEiLCJhIjoiY2x3N242M2thMDB0MDJsczR2eGF4dXJsZSJ9.ocBaZJ9rPSUhmS4zGRi7vQ"

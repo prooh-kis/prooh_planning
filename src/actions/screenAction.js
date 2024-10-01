@@ -6,7 +6,7 @@ const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/screens`;
 export const getScreenDataByAudiences = ({ screenIds }) => async (dispatch, getState) => {
   dispatch({
     type: GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
-    payload: screenIds
+    payload: {"screenIds": screenIds}
   });
 
   try {

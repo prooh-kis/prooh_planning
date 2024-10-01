@@ -20,7 +20,6 @@ export const readExcelFile = (file: File): Promise<any[]> => {
 
 export const validateGioData = (data: any) => {
   const header = ["Longitude", "Latitude"];
-
   // first check its headers lenght
   if (data[0].length !== header.length) {
     console.log("header leagth not same");
@@ -33,7 +32,6 @@ export const validateGioData = (data: any) => {
       return false;
     }
   });
-
   // now check all its value must be number
   // console.log("validateGioData : ", data);
 

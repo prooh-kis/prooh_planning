@@ -8,10 +8,19 @@ export const CampaignTemplates: React.FC = () => {
 
   // Track the index of the selected card
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
+  const [campaignType, setCampaignType] = useState<string>("Regular");
 
   // Handle card click, setting the clicked card's index
   const handleCardClick = (index: number) => {
     setSelectedCard(index);
+    if (index === 1) {
+      setCampaignType("Special");
+    } else if (index === 2) {
+      setCampaignType("Trigger");
+    } else {
+      setCampaignType("Regular");
+    }
+
   };
 
   return (
@@ -59,7 +68,7 @@ export const CampaignTemplates: React.FC = () => {
         </div>
         <PrimaryButton rounded="rounded-[30px]" title="Plan Campaign" action={() => {
             if (selectedCard === 0) {
-              navigate("/regularplan");
+              navigate("/regularplan", { state: { campaignType: campaignType }});
             } else if (selectedCard === 1) {
               navigate("/specialdayplan");
             } else if (selectedCard === 2) {

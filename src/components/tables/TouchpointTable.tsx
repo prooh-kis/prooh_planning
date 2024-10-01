@@ -4,8 +4,25 @@ import { CheckboxInput } from "../../components/atoms/CheckboxInput"
 interface TouchPointsProps {
   touchPoints: any;
   totalScreens?: any;
+  selectedTouchPoints?: any;
+  setSelectedTouchPoints?: any;
 }
-export const TouchpointTable = ({ touchPoints, totalScreens }: TouchPointsProps) => {
+export const TouchpointTable = ({
+  touchPoints,
+  totalScreens,
+  selectedTouchPoints,
+  setSelectedTouchPoints
+}: TouchPointsProps) => {
+
+  const handleCheckClick = ({ touchpoint, checked }: any) => {
+    if (checked && !selectedTouchPoints.includes(touchpoint)) {
+      setSelectedTouchPoints([...selectedTouchPoints, touchpoint])
+    } else {
+      const aud = selectedTouchPoints?.filter((audience: any) => audience !== touchpoint)
+      setSelectedTouchPoints(aud);
+    }
+  }
+
   return (
     <table className="w-full">
       <thead className="bg-[#F7F7F7] w-full">
@@ -46,7 +63,11 @@ export const TouchpointTable = ({ touchPoints, totalScreens }: TouchPointsProps)
             return (
               <tr key={i} className="grid grid-cols-6 gap-4 flex justify-between items-center w-full p-2">
                 <th className="col-span-4 flex justify-between w-auto truncate text font-normal">
-                  <CheckboxInput label={a} />
+                  <CheckboxInput
+                    label={a}
+                    checked={selectedTouchPoints.includes(a)? true : false}
+                    onChange={(e) => handleCheckClick({ touchPoint: a, checked: e})}
+                  />
                 </th>
                 <th className="col-span-2 pr-2">
                   <LinearBar value={

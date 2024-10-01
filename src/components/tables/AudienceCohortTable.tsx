@@ -4,9 +4,20 @@ import { CheckboxInput } from "../../components/atoms/CheckboxInput"
 interface AudiencesProps {
   audiences?: any
   markets?: any
-}
-export const AudienceCohortTable = ({ audiences }: AudiencesProps) => {
+  selectedAudiences?: any
+  setSelectedAudiences?: any
 
+}
+export const AudienceCohortTable = ({ audiences, selectedAudiences, setSelectedAudiences }: AudiencesProps) => {
+  // console.log(selectedAudiences);
+  const handleCheckClick = ({ cohort, checked }: any) => {
+    if (checked && !selectedAudiences.includes(cohort)) {
+      setSelectedAudiences([...selectedAudiences, cohort])
+    } else {
+      const aud = selectedAudiences?.filter((audience: any) => audience !== cohort)
+      setSelectedAudiences(aud);
+    }
+  }
   return (
     <table className="w-full">
       <thead className="bg-[#F7F7F7] w-full">
@@ -43,7 +54,11 @@ export const AudienceCohortTable = ({ audiences }: AudiencesProps) => {
             return (
               <tr key={i} className="grid grid-cols-6 gap-4 flex justify-between items-center w-full p-2">
                 <th className="col-span-4 flex justify-between w-auto truncate text font-normal">
-                  <CheckboxInput label={cohortName} />
+                  <CheckboxInput
+                    checked={selectedAudiences.includes(cohortName) ? true : false}
+                    label={cohortName}
+                    onChange={(e: any) => handleCheckClick({ cohort: cohortName, checked: e})}
+                  />
                 </th>
                 <th className="col-span-2 pr-2">
                   <LinearBar value={cohortValue} colors={["#F3F3F3", "#7AB3A2"]} />

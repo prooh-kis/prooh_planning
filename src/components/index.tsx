@@ -12,11 +12,9 @@ export {
   AudienceTouchPointsDetails,
 } from "./planner";
 
-export { ScreenSummaryDetails } from "./planner/ScreenSummaryDetails";
 export { TabWithIcon } from "./TabWithIcon";
 export { TabWithoutIcon } from "./TabWithoutIcon";
 export { ScreenDataModel } from "./popup/ScreenDataModel";
 export { CarouselImageView } from "./CarouselImageView";
 export { ViewPlanPic } from "./ViewPlanPic";
 
-export { CampaignPlaningFooter } from "./CampaignPlaningFooter";
