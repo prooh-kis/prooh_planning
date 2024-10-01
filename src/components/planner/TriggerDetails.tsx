@@ -1,6 +1,6 @@
 
 import { WeatherSegment } from "../../components/segments/WeatherSegment";
-import { TabWithIcon } from "../../components/TabWithIcon";
+import { TabWithIcon } from "../molecules/TabWithIcon";
 import { VerticalStepperSlider } from "../../components/molecules/VerticalStepperSlide";
 import { useState } from "react";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";

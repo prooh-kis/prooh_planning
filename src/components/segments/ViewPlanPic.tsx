@@ -1,4 +1,4 @@
-import { screens } from "../utils/hardCoddedData";
+import { screens } from "../../utils/hardCoddedData";
 import React from "react";
 
 function Screen({ screen }: any) {

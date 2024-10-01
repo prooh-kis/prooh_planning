@@ -1,4 +1,4 @@
-import { CarouselImageView } from "../CarouselImageView";
+import { CarouselImageView } from "../molecules/CarouselImageView";
 import { Modal } from "antd";
 import React, { useCallback, useState } from "react";
 

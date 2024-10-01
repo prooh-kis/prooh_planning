@@ -1,13 +1,13 @@
-import { TabWithoutIcon } from "../TabWithoutIcon";
-import { TabWithIcon } from "../TabWithIcon";
+import { TabWithoutIcon } from "../molecules/TabWithoutIcon";
+import { TabWithIcon } from "../molecules/TabWithIcon";
 import React, { useState } from "react";
 import {
   screenSummaryData,
   screenSummaryTabData,
 } from "../../utils/hardCoddedData";
-import { ScreenSummaryTable } from "../ScreenSummaryTable";
-import { ViewPlanPic } from "../ViewPlanPic";
-import { PlainSummary } from "../PlainSummary";
+import { ScreenSummaryTable } from "../tables/ScreenSummaryTable";
+import { ViewPlanPic } from "../segments/ViewPlanPic";
+import { PlainSummary } from "../segments/PlainSummary";
 
 interface TabInterface {
   icon: any;

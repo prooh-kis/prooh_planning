@@ -12,9 +12,9 @@ export {
   AudienceTouchPointsDetails,
 } from "./planner";
 
-export { TabWithIcon } from "./TabWithIcon";
-export { TabWithoutIcon } from "./TabWithoutIcon";
+export { TabWithIcon } from "./molecules/TabWithIcon";
+export { TabWithoutIcon } from "./molecules/TabWithoutIcon";
 export { ScreenDataModel } from "./popup/ScreenDataModel";
-export { CarouselImageView } from "./CarouselImageView";
-export { ViewPlanPic } from "./ViewPlanPic";
+export { CarouselImageView } from "./molecules/CarouselImageView";
+export { ViewPlanPic } from "./segments/ViewPlanPic";
 

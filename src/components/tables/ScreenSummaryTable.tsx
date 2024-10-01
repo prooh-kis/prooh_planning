@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { TabWithoutIcon } from "./TabWithoutIcon";
-import { ScreenDataModel } from "./popup/ScreenDataModel";
+import { TabWithoutIcon } from "../molecules/TabWithoutIcon";
+import { ScreenDataModel } from "../popup/ScreenDataModel";
 
 interface Data {
   [key: string]: {
