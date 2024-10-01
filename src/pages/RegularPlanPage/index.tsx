@@ -4,10 +4,11 @@ import {
   AdvanceFiltersDetails,
   AudienceTouchPointsDetails,
   CohortComparisonDetails,
+  CreativeUploadDetails,
   EnterCampaignBasicDetails,
   ScreenSummaryDetails,
   TriggerDetails,
-  ViewFinalPlanAndShare,
+  ViewFinalPlanPODetails,
 } from "../../components/planner";
 import { useDispatch, useSelector } from "react-redux";
 import { getScreenDataByAudiences } from "../../actions/screenAction";
@@ -74,10 +75,15 @@ export const RegularPlanPage: React.FC = () => {
           />
         ) : currentStep === 6 ? (
           <TriggerDetails />
-        ) : (
-          <ViewFinalPlanAndShare
+        ) : currentStep === 7 ? (
+          <ViewFinalPlanPODetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
+          />
+        ) : (
+          <CreativeUploadDetails
+            step={currentStep}
+            setCurrentStep={setCurrentStep}
           />
         )}
       </div>

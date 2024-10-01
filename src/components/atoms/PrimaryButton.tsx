@@ -9,7 +9,6 @@ interface PrimaryButtonProps {
 }
 
 export const PrimaryButton = ({width, height, title, action, rounded}: PrimaryButtonProps) => {
-  console.log(width, height)
   return (
     <div className="flex justify-center items-center">
       <button

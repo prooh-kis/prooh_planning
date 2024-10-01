@@ -2,12 +2,12 @@ import { useState } from "react";
 import { FileUploadButton } from "../FileUploadButton";
 import { ImageViewCloseButton } from "../molecules/ImageViewCloseButton";
 
-interface ViewFinalPlanAndShareProps {
+interface ViewFinalPlanPODetails {
   setCurrentStep: (step: number) => void;
   step: number;
 }
 
-export const ViewFinalPlanAndShare = ({ setCurrentStep, step }: any) => {
+export const ViewFinalPlanPODetails = ({ setCurrentStep, step }: ViewFinalPlanPODetails) => {
   const [files, setFiles] = useState<any>([]);
 
   const handleAddNewFile = async (file: File) => {
@@ -149,22 +149,22 @@ export const ViewFinalPlanAndShare = ({ setCurrentStep, step }: any) => {
             <div className="flex items-center gap-1">
               <i className="fi fi-br-screen"></i>
               <h1>Approach</h1>
-              <input type="checkbox" />
+              <input title="approach" type="checkbox" />
             </div>
             <div className="flex items-center gap-1">
               <i className="fi fi-br-screen"></i>
               <h1>Plan summary</h1>
-              <input type="checkbox" />
+              <input title="plan-summary" type="checkbox" />
             </div>
             <div className="flex items-center gap-1">
               <i className="fi fi-br-screen"></i>
               <h1>Screen Picture</h1>
-              <input type="checkbox" />
+              <input title="screen-pictures" type="checkbox" />
             </div>
             <div className="flex items-center gap-1">
               <i className="fi fi-br-screen"></i>
               <h1>Creative ratio</h1>
-              <input type="checkbox" />
+              <input title="creative-ratio" type="checkbox" />
             </div>
           </div>
         </div>
