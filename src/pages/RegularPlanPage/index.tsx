@@ -3,42 +3,45 @@ import { StepperSlider } from "../../components/molecules/StepperSlider";
 import {
   AdvanceFiltersDetails,
   AudienceTouchPointsDetails,
-  CohortComparisionDetails,
+  CohortComparisonDetails,
   EnterCampaignBasicDetails,
   ScreenSummaryDetails,
   TriggerDetails,
+  ViewFinalPlanAndShare,
 } from "../../components/planner";
-import { useDispatch, useSelector } from 'react-redux';
-import { getScreenDataByAudiences } from '../../actions/screenAction';
-import { getAllLocalStorageData, saveDataOnLocalStorage } from '../../utils/localStorageUtils';
+import { useDispatch, useSelector } from "react-redux";
+import { getScreenDataByAudiences } from "../../actions/screenAction";
+import {
+  getAllLocalStorageData,
+  saveDataOnLocalStorage,
+} from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
-
 
 export const RegularPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const location = useLocation();
 
   const [currentStep, setCurrentStep] = useState<any>(1);
-   
-  const allScreenDataByAudiencesGet = useSelector((state: any) => state.allScreenDataByAudiencesGet);
+
+  const allScreenDataByAudiencesGet = useSelector(
+    (state: any) => state.allScreenDataByAudiencesGet
+  );
   const {
     loading: loadingASDBAG,
     error: errorASDBAG,
     data: dataASDBAG,
-  } = allScreenDataByAudiencesGet
+  } = allScreenDataByAudiencesGet;
 
   useEffect(() => {
-    dispatch(getScreenDataByAudiences({screenIds: []}))
-  },[dispatch]);
-
-
+    dispatch(getScreenDataByAudiences({ screenIds: [] }));
+  }, [dispatch]);
 
   useEffect(() => {
     if (dataASDBAG) {
       saveDataOnLocalStorage(`screen_audience_data_1`, dataASDBAG);
     }
-  },[dataASDBAG]);
-console.log(location)
+  }, [dataASDBAG]);
+  console.log(location);
   return (
     <div className="w-full h-full">
       <div className="w-full pt-[60px]">
@@ -59,21 +62,22 @@ console.log(location)
             loading={loadingASDBAG}
             error={errorASDBAG}
           />
-        ) : currentStep === 3  ? (
+        ) : currentStep === 3 ? (
           <AdvanceFiltersDetails />
-        ) : currentStep === 4  ? (
-          <CohortComparisionDetails />
+        ) : currentStep === 4 ? (
+          <CohortComparisonDetails />
         ) : currentStep === 5 ? (
           <ScreenSummaryDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
           />
-        ) : currentStep === 6  ? (
+        ) : currentStep === 6 ? (
           <TriggerDetails />
         ) : (
-          <div className="py-2 w-full h-full pb-5 flex justify-center items-center">
-            {/* <EnterCampaignBasicDetails /> */}
-          </div>
+          <ViewFinalPlanAndShare
+            setCurrentStep={setCurrentStep}
+            step={currentStep}
+          />
         )}
       </div>
     </div>

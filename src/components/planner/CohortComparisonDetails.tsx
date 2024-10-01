@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { RadioInput } from "../../components/atoms/RadioInput"
-import { VerticalLine } from "../../components/molecules/VerticalLine"
-import { CohortSlotsCampaignTable, RegularSlotsCampaignTable } from "../../components/tables"
+import { RadioInput } from "../atoms/RadioInput";
+import { VerticalLine } from "../molecules/VerticalLine";
+import {
+  CohortSlotsCampaignTable,
+  RegularSlotsCampaignTable,
+} from "../tables";
 
-export const CohortComparisionDetails = (props: any) => {
-  const [selectedBuyingOption, setSelectedBuyingOption] = useState<any>("Regular");
+export const CohortComparisonDetails = (props: any) => {
+  const [selectedBuyingOption, setSelectedBuyingOption] =
+    useState<any>("Regular");
 
   return (
     <div className="w-full py-3">
@@ -13,7 +17,8 @@ export const CohortComparisionDetails = (props: any) => {
           Compare Plan
         </h1>
         <p className="text-[14px] text-secondaryText">
-          Choose between a Regular Slots Campaign or a customize your slots with cohort data
+          Choose between a Regular Slots Campaign or a customize your slots with
+          cohort data
         </p>
       </div>
       <div className="flex gap-2">
@@ -48,5 +53,5 @@ export const CohortComparisionDetails = (props: any) => {
         />
       </div>
     </div>
-  )
-}
+  );
+};

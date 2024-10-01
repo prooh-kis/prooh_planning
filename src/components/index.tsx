@@ -10,6 +10,7 @@ export { CampaignTemplates } from "./popup";
 export {
   EnterCampaignBasicDetails,
   AudienceTouchPointsDetails,
+  ViewFinalPlanAndShare,
 } from "./planner";
 
 export { TabWithIcon } from "./molecules/TabWithIcon";
@@ -18,3 +19,4 @@ export { ScreenDataModel } from "./popup/ScreenDataModel";
 export { CarouselImageView } from "./molecules/CarouselImageView";
 export { ViewPlanPic } from "./segments/ViewPlanPic";
 
+export { FileUploadButton } from "./FileUploadButton";

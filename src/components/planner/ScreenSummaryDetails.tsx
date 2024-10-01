@@ -9,27 +9,6 @@ import { ScreenSummaryTable } from "../tables/ScreenSummaryTable";
 import { ViewPlanPic } from "../segments/ViewPlanPic";
 import { PlainSummary } from "../segments/PlainSummary";
 
-interface TabInterface {
-  icon: any;
-  label: string;
-  id: string;
-}
-
-const tabData = [
-  {
-    label: "Delhi",
-    id: "1",
-  },
-  {
-    label: "Guru gram",
-    id: "2",
-  },
-  {
-    label: "Noida",
-    id: "3",
-  },
-];
-
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
