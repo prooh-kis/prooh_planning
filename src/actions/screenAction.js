@@ -1,17 +1,24 @@
 import axios from "axios";
-import { GET_SCREEN_DATA_BY_AUDIENCES_ERROR, GET_SCREEN_DATA_BY_AUDIENCES_REQUEST, GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS } from "../constants/screenConstants";
+import {
+  GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
+  GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
+  GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
+  GET_SCREENS_COST_DATA_ERROR,
+  GET_SCREENS_COST_DATA_REQUEST,
+  GET_SCREENS_COST_DATA_SUCCESS
+} from "../constants/screenConstants";
 
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/screens`;
 
-export const getScreenDataByAudiences = ({ screenIds }) => async (dispatch, getState) => {
+export const getScreensAudiencesData = ({ markets }) => async (dispatch, getState) => {
   dispatch({
     type: GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
-    payload: {"screenIds": screenIds}
+    payload: markets
   });
 
   try {
     const { data } = await axios.post(`${url}/audienceData`, {
-      screenIds
+      markets
     });
     dispatch({
       type: GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
@@ -21,6 +28,30 @@ export const getScreenDataByAudiences = ({ screenIds }) => async (dispatch, getS
   } catch (error) {
     dispatch({
       type: GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
+      payload: error,
+    });
+  }
+}
+
+
+export const getScreensCostData = ({ cohorts, gender, touchPoints, duration }) => async (dispatch, getState) => {
+  dispatch({
+    type: GET_SCREENS_COST_DATA_REQUEST,
+    payload: { cohorts, gender, touchPoints, duration }
+  });
+
+  try {
+    const { data } = await axios.post(`${url}/tableAudienceTouchPointPage`, {
+      cohorts, gender, touchPoints
+    });
+    dispatch({
+      type: GET_SCREENS_COST_DATA_SUCCESS,
+      payload: data,
+    });
+
+  } catch (error) {
+    dispatch({
+      type: GET_SCREENS_COST_DATA_ERROR,
       payload: error,
     });
   }

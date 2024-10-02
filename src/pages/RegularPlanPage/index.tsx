@@ -11,7 +11,7 @@ import {
   ViewFinalPlanPODetails,
 } from "../../components/planner";
 import { useDispatch, useSelector } from "react-redux";
-import { getScreenDataByAudiences } from "../../actions/screenAction";
+import { getScreensAudiencesData, getScreensCostData } from "../../actions/screenAction";
 import {
   getAllLocalStorageData,
   saveDataOnLocalStorage,
@@ -24,26 +24,43 @@ export const RegularPlanPage: React.FC = () => {
 
   const [currentStep, setCurrentStep] = useState<any>(1);
 
-  const allScreenDataByAudiencesGet = useSelector(
-    (state: any) => state.allScreenDataByAudiencesGet
+  const screensAudiencesDataGet = useSelector(
+    (state: any) => state.screensAudiencesDataGet
   );
   const {
-    loading: loadingASDBAG,
-    error: errorASDBAG,
-    data: dataASDBAG,
-  } = allScreenDataByAudiencesGet;
+    loading: loading,
+    error: error,
+    data: screensAudiences,
+  } = screensAudiencesDataGet;
+
+  const screensCostDataGet = useSelector(
+    (state: any) => state.screensCostDataGet
+  );
+  const {
+    loading: loadingCost,
+    error: errorCost,
+    data: screensCost,
+  } = screensCostDataGet;
 
   useEffect(() => {
-    dispatch(getScreenDataByAudiences({ screenIds: [] }));
+    dispatch(getScreensAudiencesData({ markets: [] }));
+    dispatch(getScreensCostData({
+      cohorts: [],
+      touchPoints: [],
+      gender: "both",
+      duration: 30,
+    }));
   }, [dispatch]);
 
   useEffect(() => {
-    if (dataASDBAG) {
-      console.log("gdfege")
-      saveDataOnLocalStorage(`screen_audience_data_1`, dataASDBAG);
+    if (screensAudiences) {
+      saveDataOnLocalStorage(`audienceData`, screensAudiences);
     }
-  }, [dataASDBAG]);
-  console.log(location);
+
+    if (screensCost) {
+      saveDataOnLocalStorage(`totalScreenCostData`, screensCost);
+    }
+  }, [screensAudiences, screensCost]);
   return (
     <div className="w-full h-full">
       <div className="w-full pt-[60px]">
@@ -60,21 +77,29 @@ export const RegularPlanPage: React.FC = () => {
           <AudienceTouchPointsDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
-            data={dataASDBAG}
-            loading={loadingASDBAG}
-            error={errorASDBAG}
+            loading={loading}
+            error={error}
           />
         ) : currentStep === 3 ? (
-          <AdvanceFiltersDetails />
+          <AdvanceFiltersDetails
+            setCurrentStep={setCurrentStep}
+            step={currentStep}
+          />
         ) : currentStep === 4 ? (
-          <CohortComparisonDetails />
+          <CohortComparisonDetails
+            setCurrentStep={setCurrentStep}
+            step={currentStep}
+          />
         ) : currentStep === 5 ? (
           <ScreenSummaryDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
           />
         ) : currentStep === 6 ? (
-          <TriggerDetails />
+          <TriggerDetails
+            setCurrentStep={setCurrentStep}
+            step={currentStep}
+          />
         ) : currentStep === 7 ? (
           <ViewFinalPlanPODetails
             setCurrentStep={setCurrentStep}

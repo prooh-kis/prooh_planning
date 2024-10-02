@@ -72,10 +72,10 @@ export const LocationTable = ({
             </td>
             <td className="col-span-4 flex items-center justify-around gap-2">
               <p className="text-[14px] text-[#21394F]">
-                {(markets[market]["gender"]["Male"]["totalWeight"] / markets[market]["gender"]["Male"]["count"]).toFixed(2)}
+                {(markets[market]["gender"]["Male"]).toFixed(1)}
               </p>
               <p className="text-[14px] text-[#21394F]">
-                {(markets[market]["gender"]["Female"]["totalWeight"] / markets[market]["gender"]["Female"]["count"]).toFixed(2)}
+                {(markets[market]["gender"]["Female"]).toFixed(1)}
               </p>
             </td>
           </tr>

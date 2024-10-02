@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 
-interface CreativeUploadDetails {
+interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
 }
 
 
-export const CreativeUploadDetails = ({ setCurrentStep, step }: CreativeUploadDetails) => {
+export const CreativeUploadDetails = ({ setCurrentStep, step }: CreativeUploadDetailsProps) => {
   const [currentTab, setCurrentTab] = useState<any>("1");
   const [citiesCreative, setCitiesCreative] = useState<any>([
     {
@@ -52,7 +52,7 @@ export const CreativeUploadDetails = ({ setCurrentStep, step }: CreativeUploadDe
       <div className="flex gap-4">
         <TabWithoutIcon tabData={citiesCreative} currentTab={currentTab} setCurrentTab={setCurrentTab} />
       </div>
-      <div>
+      <div className="">
         
       </div>
     </div>

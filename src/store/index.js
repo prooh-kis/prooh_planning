@@ -1,7 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 // import { thunk } from "redux-thunk"
 import authReducer from "./authSlice";
-import { allScreenDataByAudiencesGetReducer } from "../reducers/screenReducers";
+import {
+  screensAudiencesDataGetReducer,
+  screensCostDataGetReducer,
+} from "../reducers/screenReducers";
 import {
   userEmailVerificationReducer,
   userSendEmailToResetPasswordReducer,
@@ -21,7 +24,8 @@ const store = configureStore({
   initialState,
   reducer: {
     //screen
-    allScreenDataByAudiencesGet: allScreenDataByAudiencesGetReducer,
+    screensAudiencesDataGet: screensAudiencesDataGetReducer,
+    screensCostDataGet: screensCostDataGetReducer,
     // auth
     auth: authReducer,
     userSignin: userSigninReducer,

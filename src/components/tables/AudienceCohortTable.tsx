@@ -44,13 +44,13 @@ export const AudienceCohortTable = ({ audiences, selectedAudiences, setSelectedA
             <p className="text-[12px] font-normal">0</p>
             <p className="text-[12px] font-normal">25</p>
             <p className="text-[12px] font-normal">50</p>
-            <p className="text-[12px] font-normal">100</p>
           </th>
         </tr>
         <div className="w-full h-[40vh] overflow-scroll py-3">
           {Object.keys(audiences)?.map((a: any, i: any) => {
+            console.log(audiences[a]);
             const cohortName = a;
-            const cohortValue = audiences[a] * 100; // Assuming this is the cohort value (percentage)
+            const cohortValue = audiences[a]; // Assuming this is the cohort value (percentage)
             return (
               <tr key={i} className="grid grid-cols-6 gap-4 flex justify-between items-center w-full p-2">
                 <th className="col-span-4 flex justify-between w-auto truncate text font-normal">

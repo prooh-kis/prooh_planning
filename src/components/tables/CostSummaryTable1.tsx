@@ -1,17 +1,13 @@
+import { formatNumber } from "../../utils/formatValue"
 
 interface CostSummartTabelProps {
-  totalCities?: any,
-  totalTouchPoints?: any,
-  totalScreens?: any,
-  selectedCities?: any,
-  selectedTouchPoints?: any,
-  selectedScreens?: any,
+  totalData?: any,
+  selectedData?: any,
 }
 
 export const CostSummaryTable1 = ({
-  totalCities,
-  totalTouchPoints,
-  totalScreens
+  totalData,
+  selectedData,
 }: CostSummartTabelProps) => {
   return (
 
@@ -50,7 +46,7 @@ export const CostSummaryTable1 = ({
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F]">
-              Budget (INR)
+              Budget
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
@@ -69,17 +65,17 @@ export const CostSummaryTable1 = ({
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              {totalCities.length}
+              {totalData?.citiesTotalCount}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              {totalTouchPoints.length}
+              {totalData?.touchPointsTotalCount}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              {totalScreens}
+              {totalData?.screensTotalCount}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
@@ -89,17 +85,17 @@ export const CostSummaryTable1 = ({
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              100K
+              {formatNumber(totalData?.impressionTotalCount || 0)}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              3Cr
+              &#8377;{formatNumber(totalData?.budgetTotal || 0)}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              0.2
+              &#8377;{totalData?.cpmTotal?.toFixed(2)}
             </h1>
           </th>
         </tr>
@@ -111,17 +107,17 @@ export const CostSummaryTable1 = ({
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              3
+              {totalData?.citiesSelectedCount}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              12
+              {totalData?.touchPointsSelectedCount}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              70
+              {totalData?.screensSelectedCount}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
@@ -138,17 +134,17 @@ export const CostSummaryTable1 = ({
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              100K
+              {formatNumber(totalData?.impressionSelectedCount || 0)}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-red-500">
-              3Cr
+              &#8377;{formatNumber(totalData?.budgetSelected || 0)}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              0.2
+              &#8377;{totalData?.cpmSelected?.toFixed(2)}
             </h1>
           </th>
         </tr>

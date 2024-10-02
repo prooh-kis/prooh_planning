@@ -2,12 +2,12 @@ import { useState } from "react";
 import { FileUploadButton } from "../FileUploadButton";
 import { ImageViewCloseButton } from "../molecules/ImageViewCloseButton";
 
-interface ViewFinalPlanPODetails {
+interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
 }
 
-export const ViewFinalPlanPODetails = ({ setCurrentStep, step }: ViewFinalPlanPODetails) => {
+export const ViewFinalPlanPODetails = ({ setCurrentStep, step }: ViewFinalPlanPODetailsProps) => {
   const [files, setFiles] = useState<any>([]);
 
   const handleAddNewFile = async (file: File) => {

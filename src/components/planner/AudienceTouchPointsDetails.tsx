@@ -13,16 +13,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { Message } from "../Message";
 import { Loading } from "../Loading";
 import { Footer } from "../../components/footer";
+import { getScreensCostData } from "../../actions/screenAction";
 
 interface EnterAudienceTouchpointDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
-  data: any;
+  data?: any;
   loading?: boolean;
   error?: any;
 }
 
-export const AudienceTouchPointsDetails = ({ setCurrentStep, step, data, error }: EnterAudienceTouchpointDetailsProps) => {
+export const AudienceTouchPointsDetails = ({ setCurrentStep, step, error }: EnterAudienceTouchpointDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
 
@@ -30,27 +31,24 @@ export const AudienceTouchPointsDetails = ({ setCurrentStep, step, data, error }
   const [audiences, setAudiences] = useState<any>({});
   const [touchPoints, setTouchPoints] = useState<any>({});
 
-  const [totalScreens, setTotalScreens] = useState<any>(0);
-
-  const [totalCities, setTotalCities] = useState<any>([]);
-  const [totalTouchPoints, setTotalTouchPoints] = useState<any>([]);
+  const [totalScreensData, setTotalScreensData] = useState<any>({});
+  const [selectedScreensData, setSelectedScreensData] = useState<any>({});
 
   const [selectedMarket, setSelectedMarket] = useState<any>([]);
   const [selectedGender, setSelectedGender] = useState<any>(["Male", "Female"]);
   const [selectedAudiences, setSelectedAudiences] = useState<any>([]);
   const [selectedTouchPoints, setSelectedTouchPoints] = useState<any>([]);
-  const [selectedCities, setSelectedCities] = useState<any>([]);
-  const [selectedScreens, setSelectedScreens] = useState<any>([]);
+
   
 
   const getMatchedData = (myData: any) => {
     setMarkets(myData);
-    console.log(myData);
-
     let audiencesData: any = {};
     for (const market in myData) {
       for (const audience in myData[market]["audience"]) {
-        audiencesData[audience] = (Number(myData[market]["audience"][audience]["Male"]) + Number(myData[market]["audience"][audience]["Female"]) / 2).toFixed(2);
+        // console.log(audience);
+        // console.log(myData[market]["audience"][audience]);
+        audiencesData[audience] = myData[market]["audience"][audience]["Total"].toFixed(2)
       }
     }
     setAudiences(audiencesData);
@@ -73,39 +71,27 @@ export const AudienceTouchPointsDetails = ({ setCurrentStep, step, data, error }
     return {audiencesData, touchpointsData};
   }
 
-  const getScreenCost = (myScreens: any) => {
-    let totalCities: any = [];
-    let totalTouchPoints: any = [];
-    let totalCPM: any = {};
-
-    for (const screen of myScreens) {
-      // console.log(screen);
-      if (!totalCities.includes(screen.location.city)) {
-        totalCities.push(screen.location.city);
-      }
-      if (!totalTouchPoints.includes(screen.location.touchPoints[0])) {
-        totalTouchPoints.push(screen.location.touchPoints[0]);
-      }
-      if (!Object.keys(totalCPM).includes(screen._id)) {
-        totalCPM[screen._id] = screen.costPerImpression;
-      }
-
-      setTotalCities(totalCities);
-      setTotalTouchPoints(totalTouchPoints);
-    }
-    // console.log(totalCities, totalTouchPoints)
-    return {totalCities}
+  const getCostData = (myData: any) => {
+    setTotalScreensData(myData);
+    setSelectedScreensData(myData);
   }
+
 
   useEffect(() => {
   
     if (getAllLocalStorageData()) {
-      console.log("asdasd")
-      // getScreenCost(JSON.parse(getAllLocalStorageData()["screen_audience_data_1"]))
-      getMatchedData(JSON.parse(getAllLocalStorageData()["screen_audience_data_1"]))
-    }
+      getMatchedData(JSON.parse(getAllLocalStorageData()["audienceData"]))
+      getCostData(JSON.parse(getAllLocalStorageData()["totalScreenCostData"]))
 
-  }, [])
+    }
+    dispatch(getScreensCostData({
+      cohorts: selectedAudiences,
+      touchPoints: selectedTouchPoints,
+      duration: 30,
+      gender: selectedGender.length === 1 && selectedGender.includes("Male") ? "male" : selectedGender.length === 1 && selectedGender.includes("Female") ? "female" : "both"
+    }));
+
+  }, [dispatch])
 
 
   return (
@@ -136,7 +122,6 @@ export const AudienceTouchPointsDetails = ({ setCurrentStep, step, data, error }
         </div>
         <div className="col-span-3 flex justify-center">
           <TouchpointTable
-            totalScreens={totalScreens}
             touchPoints={touchPoints}
             selectedTouchPoints={selectedTouchPoints}
             setSelectedTouchPoints={setSelectedTouchPoints}
@@ -146,12 +131,8 @@ export const AudienceTouchPointsDetails = ({ setCurrentStep, step, data, error }
       </div>
       <div className="pt-2">
         <CostSummaryTable1
-          totalCities={totalCities}
-          totalTouchPoints={totalTouchPoints}
-          totalScreens={totalScreens}
-          selectedCities={selectedCities}
-          selectedTouchPoints={selectedTouchPoints}
-          selectedScreens={selectedScreens}
+          totalData={totalScreensData}
+          selectedData={selectedScreensData}
         />
       </div>
       <div className="flex justify-start items-center gap-2 pt-2">
