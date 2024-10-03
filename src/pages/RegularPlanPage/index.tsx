@@ -11,7 +11,7 @@ import {
   ViewFinalPlanPODetails,
 } from "../../components/planner";
 import { useDispatch, useSelector } from "react-redux";
-import { getScreensAudiencesData, getScreensCostData } from "../../actions/screenAction";
+import { getScreenDataForAdvanceFilters, getScreensAudiencesData, getScreensCostData } from "../../actions/screenAction";
 import {
   getAllLocalStorageData,
   saveDataOnLocalStorage,
@@ -42,6 +42,13 @@ export const RegularPlanPage: React.FC = () => {
     data: screensCost,
   } = screensCostDataGet;
 
+  const screensDataAdvanceFilterGet = useSelector((state: any) => state.screensDataAdvanceFilterGet);
+  const {
+    loading: loadingAdvanceFilterScreens,
+    error: errorAdvanceFilterScreens,
+    data: advanceFilterScreens,
+  } = screensDataAdvanceFilterGet;
+
   useEffect(() => {
     dispatch(getScreensAudiencesData({ markets: [] }));
     dispatch(getScreensCostData({
@@ -50,6 +57,13 @@ export const RegularPlanPage: React.FC = () => {
       gender: "both",
       duration: 30,
     }));
+    dispatch(getScreenDataForAdvanceFilters({ touchPoints: [
+      "Arterial Route",
+      "CBD- SOHO",
+      "Feeder route",
+      "Golf course",
+      "Premium High Street"
+    ]}))
   }, [dispatch]);
 
   useEffect(() => {
@@ -60,7 +74,11 @@ export const RegularPlanPage: React.FC = () => {
     if (screensCost) {
       saveDataOnLocalStorage(`totalScreenCostData`, screensCost);
     }
-  }, [screensAudiences, screensCost]);
+
+    if (advanceFilterScreens) {
+      saveDataOnLocalStorage(`advanceFilterScreensMapData`, advanceFilterScreens);
+    }
+  }, [screensAudiences, screensCost, advanceFilterScreens]);
   return (
     <div className="w-full h-full">
       <div className="w-full pt-[60px]">
@@ -77,13 +95,15 @@ export const RegularPlanPage: React.FC = () => {
           <AudienceTouchPointsDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
-            loading={loading}
-            error={error}
+            loading={loading || loadingCost}
+            error={error || errorCost}
           />
         ) : currentStep === 3 ? (
           <AdvanceFiltersDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
+            loading={loadingAdvanceFilterScreens}
+            error={errorAdvanceFilterScreens}
           />
         ) : currentStep === 4 ? (
           <CohortComparisonDetails

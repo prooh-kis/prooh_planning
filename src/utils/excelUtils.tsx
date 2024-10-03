@@ -8,9 +8,7 @@ export const readExcelFile = (file: File): Promise<any[]> => {
       const workbook = XLSX.read(data, { type: "array" });
       const firstSheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[firstSheetName];
-      console.log(worksheet)
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-      console.log(jsonData);
       resolve(jsonData);
     };
     reader.onerror = (error) => reject(error);

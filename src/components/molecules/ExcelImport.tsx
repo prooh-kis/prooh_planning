@@ -4,35 +4,82 @@ import { getDistance } from "geolib";
 
 interface ExcelImportProps {
   selectedScreens?: any;
-  handleResetFileUpload?: any;
-  dataBrand?: any;
+  icon?: any;
+  text?: any;
+  type?: any;
   setDataBrand?: any;
-  dataComp?: any;
   setDataComp?: any;
+  allScreens?: any;
+  circleRadius?: any;
+  setFilteredScreens?: any;
+  filteredScreens?: any;
+
+  handleFinalSelectedScreens?: any;
 }
 
 export function ExcelImport({
-  selectedScreens,
-  handleResetFileUpload,
-  dataBrand,
+  icon,
+  text,
+  allScreens,
   setDataBrand,
-  dataComp,
-  setDataComp
+  setDataComp,
+  type,
+  circleRadius,
+  setFilteredScreens,
+  filteredScreens,
+  handleFinalSelectedScreens
 }: ExcelImportProps) {
   const hiddenFileInput = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<any>(null);
+
+  const [brandScreens, setBrandScreens] = useState<any>(null);
+  const [compScreens, setCompScreens] = useState<any>(null);
 
   const handleClick = () => {
     hiddenFileInput.current?.click();
   };
 
+  const getUniqueScreens = (data: any) => {
+    const uniqueScreens = new Set();
+    data.forEach((location: any) => {
+      location.screens.forEach((screen: any) => {
+        uniqueScreens.add(screen);
+      });
+    });
+    let result = Array.from(uniqueScreens);
+   
+    return result;
+  };
+
   const handleResetFile = () => {
     setFile(null);
+    if (type === "brand") {
+      console.log(brandScreens);
+      handleFinalSelectedScreens({
+        type: "remove",
+        screens: brandScreens
+      });
+      console.log(filteredScreens.filter((s: any) => !brandScreens.map((sc: any) => sc._id).includes(s._id)))
+      setFilteredScreens(filteredScreens.filter((s: any) => !brandScreens.map((sc: any) => sc._id).includes(s._id)));
+      setDataBrand([]);
+      setBrandScreens(null);        
+
+    } else if (type === "comp") {
+      console.log(compScreens);
+      handleFinalSelectedScreens({
+        type: "remove",
+        screens: compScreens
+      });
+      console.log(filteredScreens.filter((s: any) => !compScreens.map((sc: any) => sc._id).includes(s._id)))
+      setFilteredScreens(filteredScreens.filter((s: any) => compScreens.map((sc: any) => sc._id).includes(s._id)));
+      setDataComp([]);
+      setCompScreens(null);        
+    }
     if (hiddenFileInput.current) {
       hiddenFileInput.current.value = ""; // Clear the file input value
     }
 
-    handleResetFileUpload();
+
   };
 
   const withinRadius = (center: any, point: any, radius: any) => {
@@ -45,48 +92,56 @@ export function ExcelImport({
         latitude: point[1],
         longitude: point[0],
       }
-    );
-    return distance <= radius;
+    ); // in meters
+    return distance <= radius * 1000;
   };
 
  
   const handleGetExcelData = (data: any) => {
-    const coveredScreens: any = [];
-    console.log(data);
     const coordinates = data
       .map((x: any) => x.filter((y: any) => /^[+-]?\d+(\.\d+)?$/.test(y)))
       .filter((d: any) => d.length === 2);
-    console.log(coordinates);
+
     if (validateGioData(data)) {
-      setDataBrand(coordinates);
-      for (const coordinate of coordinates) {
-        const center = coordinate;
-        // props?.allScreens
-        //   .filter((l: any) =>
-        //     withinRadius(center, [l.latitude, l.longitude], 1000)
-        //   )
-        //   ?.map((s: any) => {
-        //     if (!coveredScreens.includes(s)) {
-        //       coveredScreens.push(s);
-        //     }
-        //   });
+      if (type === "brand") {
+        setDataBrand(coordinates);        
+      } else if (type === "comp") {
+        setDataComp(coordinates);
       }
+
       const coordinatesWithScreensData: any = [];
       for (const coordinate of coordinates) {
         const center = coordinate;
-        // let x = props?.allScreens.filter((l: any) =>
-        //   withinRadius(center, [l.latitude, l.longitude], 1000)
-        // );
-        // coordinatesWithScreensData.push({ screens: x, coordinate: coordinate });
-      }
-      console.log(coordinatesWithScreensData);
-      // setCoordinatesWithScreens(coordinatesWithScreensData);
-      // if (circleData["brand"]?.length > 0) {
-      //   // console.log(circleData["compt"]);
-      // } else {
-      //   setFilter2(getUniqueScreens(coveredScreens));
 
-      // }
+        let x = allScreens.filter((l: any) =>
+          withinRadius(center, [l.location.geographicalLocation.longitude, l.location.geographicalLocation.latitude], circleRadius)
+        );
+        coordinatesWithScreensData.push({ screens: x, coordinate: coordinate });
+      }
+
+      const filtered: any = getUniqueScreens(coordinatesWithScreensData)
+      const newFiltered: any = filteredScreens;
+      console.log(filteredScreens);
+      console.log(filtered);
+      if (type === "brand") {
+        setBrandScreens(filtered);        
+      } else if (type === "comp") {
+        setCompScreens(filtered);
+
+      }
+      filtered?.forEach((f: any) => {
+        if (!newFiltered.map((nf: any) => nf._id).includes(f._id)) {
+          newFiltered.push(f);
+        }
+        return newFiltered
+      })
+
+      setFilteredScreens(newFiltered);
+      handleFinalSelectedScreens({
+        type: "add",
+        screens: newFiltered,
+      });
+
     } else alert("Something went wrong, please send us correct data");
   };
 
@@ -96,7 +151,6 @@ export function ExcelImport({
     if (file) {
       try {
         const data = await readExcelFile(file);
-        console.log(data)
         handleGetExcelData(data);
       } catch (error) {
         console.error("Error reading Excel file:", error);
@@ -104,18 +158,15 @@ export function ExcelImport({
     }
   };
   return (
-    <div className="flex flex-row gap-4 w-full py-2">
+    <div className="w-full py-2">
       <div
-        className="border border-dashed w-full h-[40px] rounded-md flex justify-end items-center p-1"
+        className="border border-dashed w-full h-[40px] rounded-md flex justify-between items-center p-1"
         onClick={handleClick}
       >
-        <div className="w-full flex justify-center items-center">
-          <i className="fi fi-sr-file-excel flex items-center text-green-600"></i>
-        
-          <h1 className="text-sm text-gray-400 px-2">Upload Sheet</h1>
+        <div className="flex justify-start gap-2 items-center">
+          <i className={icon}></i>
+          <p className="text-sm">{text}</p>
         </div>
-        
-
         <input
           title="file"
           type="file"
@@ -125,16 +176,23 @@ export function ExcelImport({
           multiple={false}
           onChange={handleFileUpload}
         />
+        <p className="text-sm text-primaryButton pr-2">Upload</p>
       </div>
-      {/* {file !== null && (
-        <button
-          type="submit"
-          className="my-3 w-48 h-8 rounded-lg bg-red-200 text-sm font-bold test-white px-2"
-          onClick={() => handleResetFileUpload()}
-        >
-          Reset filter
-        </button>
-      )} */}
+        <div className="flex items-center justify-between pt-2">
+            <div>
+              {file !== null && (
+                <div className="flex items-center gap-2 truncate">
+                  <p className="text-sm text-green-700 truncate">{file?.name}</p>
+                  <i className="fi fi-sr-cross-small text-green-700 flex items-center" onClick={() => handleResetFile()}></i>
+                </div>
+              )}
+            </div>
+         
+          <div className="flex items-center gap-2 truncate">
+            <i className="fi fi-sr-file-excel flex items-center text-green-600"></i>
+            <p className="text-sm truncate">Download Sample</p>
+          </div>
+        </div>
     </div>
   );
 }

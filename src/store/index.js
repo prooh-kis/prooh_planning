@@ -4,6 +4,7 @@ import authReducer from "./authSlice";
 import {
   screensAudiencesDataGetReducer,
   screensCostDataGetReducer,
+  screensDataAdvanceFilterGetReducer,
 } from "../reducers/screenReducers";
 import {
   userEmailVerificationReducer,
@@ -26,6 +27,7 @@ const store = configureStore({
     //screen
     screensAudiencesDataGet: screensAudiencesDataGetReducer,
     screensCostDataGet: screensCostDataGetReducer,
+    screensDataAdvanceFilterGet : screensDataAdvanceFilterGetReducer,
     // auth
     auth: authReducer,
     userSignin: userSigninReducer,

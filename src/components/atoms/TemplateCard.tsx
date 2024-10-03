@@ -33,7 +33,7 @@ export const TemplateCard = ({text, paratext, icon, color, isSelected, handleCar
             ></i>
           </div>
         </div>
-        <div className="flex justify-center pt-5">
+        <div className="flex justify-center pt-5 truncate">
           <div className="px-1 truncate">
             <div className="flex justify-center items-center">
               <h1 className="text font-[16px] font-semibold">
@@ -41,7 +41,7 @@ export const TemplateCard = ({text, paratext, icon, color, isSelected, handleCar
               </h1>
             </div>
             <div className="flex justify-center items-center truncate">
-              <p className="text text-[14px] text-secondaryText text-center text-wrap">
+              <p className="text text-[14px] text-secondaryText text-center text-wrap truncate">
                 {paratext}
               </p>
             </div>

@@ -6,9 +6,10 @@ interface PrimaryButtonProps {
   action?: any;
   width?: any;
   height?: any;
+  disabled?: boolean;
 }
 
-export const PrimaryButton = ({width, height, title, action, rounded}: PrimaryButtonProps) => {
+export const PrimaryButton = ({disabled, width, height, title, action, rounded}: PrimaryButtonProps) => {
   return (
     <div className="flex justify-center items-center">
       <button

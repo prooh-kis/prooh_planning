@@ -1,92 +1,109 @@
+import { useState } from "react";
 import { PrimaryInput } from "../atoms/PrimaryInput";
 import { CheckboxInput } from "../atoms/CheckboxInput"
 import { PrimaryButton } from "../atoms/PrimaryButton";
 import { LinearBar } from "../../components/molecules/linearbar";
+import { MapSearchInput } from "../../components/atoms/MapSearchInput";
 
 
 interface RouteProximityProps {
-  selectedStoreOption?: any;
-  handleStoreSelection?: any;
-  handleGetExcelData?: any;
-
+  routes?: any;
+  filteredScreens?: any;
+  setFilteredScreens?: any;
+  setRoutes?: any;
+  routeOrigin?: any;
+  setRouteOrigin?: any;
+  routeDestination?: any;
+  setRouteDestination?: any;
+  handleRouteSetup?: any;
+  handleRemoveRoute?: any;
 }
 
-export const RouteProximity = ({selectedStoreOption, handleStoreSelection, handleGetExcelData}: RouteProximityProps) => {
+export const RouteProximity = ({
+  routes,
+  filteredScreens,
+  setFilteredScreens,
+  setRoutes,
+  routeOrigin,
+  setRouteOrigin,
+  routeDestination,
+  setRouteDestination,
+  handleRouteSetup,
+  handleRemoveRoute,
+}: RouteProximityProps) => {
+
+  const [showDetails, setShowDetails] = useState<any>(null);
+
   return (
     <div className="py-2">
       <div className="flex justify-between py-2">
         <h1 className="text-[20px] text-primaryText">2. Route Proximity</h1>
       </div>
-      <div className="pb-2 flex items-center gap-4">
-        <div className="flex items-center gap-2">
-          <i className="fi fi-br-check text-[14px] text-green-500 flex items-center "></i>
-          <p className="text-[14px] text-green-500">Route 1</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <i className="fi fi-br-check text-[14px] text-green-500 flex items-center "></i>
-          <p className="text-[14px] text-green-500">Route 2</p>
-        </div>
-        <div className="flex items-center gap-2">
-          {/* <i className="fi fi-br-check text-[14px] text-green-500 flex items-center "></i> */}
-          <p className="text-[14px] text-gray-500">Route 3</p>
-        </div>
-      </div>
+      
       <div className="grid grid-cols-5 gap-2 flex items-center py-2">
         <div className="col-span-2 flex items-center">
-          <PrimaryInput 
-            action={() => {}}
+          <MapSearchInput 
+            handleClick={(e: any) => setRouteOrigin(e)}
+            placeholder="Origin"
             prefix={
               <i className="fi fi-sr-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 w-5 h-5"></i>
             }
           />
         </div>
         <div className="col-span-2">
-          <PrimaryInput 
-            action={() => {}}
-            suffix={
+        <MapSearchInput 
+            handleClick={(e: any) => setRouteDestination(e)}
+            placeholder="Destination"
+            prefix={
               <i className="fi fi-sr-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 w-5 h-5"></i>
             }
           />
         </div>
         <div className="col-span-1">
           <PrimaryButton
-            title="Find"
-            action={() => {}}
+            title="Check"
+            action={() => handleRouteSetup(routeOrigin, routeDestination)}
             rounded="rounded-[10px]"
+            disabled={routeOrigin && routeDestination ? false : true}
           />
         </div>
       </div>
       <div className="py-2">
-        <div className="">
-          <CheckboxInput color="#52A2FF" label={'Delhi to Gurgaon'}/>
-          <div className="pb-1 grid grid-cols-12 gap-2 flex items-center">
-            <p className="col-span-1 text-[12px] text-[#52A2FF]">05</p>
-            <div className="col-span-9">
-              <LinearBar value={5} colors={["#F3F3F3", "#7AB3A2"]} />
-            </div>
-            <p className="col-span-2 text-[12px] text-semibold flex justify-end">27 Locations</p>
-          </div>
+        <div className="flex justify-between pr-2" onClick={() => setShowDetails(null)}>
+          <p className="text-sm text-[#9f9f9f]">Added Route</p>
+          <p className="text-sm text-[#9f9f9f]">{routes.length}</p>
         </div>
-        <div className="">
-          <CheckboxInput color="#52A2FF" label={'Delhi to Gurgaon'}/>
-          <div className="pb-1 grid grid-cols-12 gap-2 flex items-center">
-            <p className="col-span-1 text-[12px] text-[#52A2FF]">05</p>
-            <div className="col-span-9">
-              <LinearBar value={5} colors={["#F3F3F3", "#7AB3A2"]} />
+        <div className="overflow-scroll h-20">
+          {routes?.map((route: any, index: any) => (
+            <div key={index} className="bg-[#F6F6F6] p-2 my-1">
+              <div className="flex justify-between items-center" onClick={() => setShowDetails(index)}>
+                <p className="text-sm">
+                  {index + 1}. <span className="font-bold">{route.origin.place_name?.split(",")[0]}</span> to {" "}
+                  <span className="font-bold">{route.destination.place_name?.split(",")[0]}</span>
+                </p>
+                <i className="fi fi-sr-cross-small text-gray-700 flex items-center" onClick={() => handleRemoveRoute(route.id)}></i>
+              </div>
+              {showDetails === index && (
+                <div>
+                  <div className="flex gap-2 items-center">
+                    <i className="fi fi-br-arrow-from-left text-[12px] text-green-600"></i>
+                    <p className="text-[12px]">
+                      {route.origin.place_name}
+                    </p>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <i className="fi fi-br-arrow-alt-to-left text-[12px] text-red-600"></i>
+                    <p className="text-[12px]">
+                      {route.destination.place_name}
+                    </p>
+                  </div>
+                </div>
+              )}
+              
             </div>
-            <p className="col-span-2 text-[12px] text-semibold flex justify-end">27 Locations</p>
-          </div>
+          ))}
         </div>
-        <div className="">
-          <CheckboxInput color="#52A2FF" label={'Delhi to Gurgaon'}/>
-          <div className="pb-1 grid grid-cols-12 gap-2 flex items-center">
-            <p className="col-span-1 text-[12px] text-[#52A2FF]">05</p>
-            <div className="col-span-9">
-              <LinearBar value={5} colors={["#F3F3F3", "#7AB3A2"]} />
-            </div>
-            <p className="col-span-2 text-[12px] text-semibold flex justify-end">27 Locations</p>
-          </div>
-        </div>
+
       </div>
     </div>
   )

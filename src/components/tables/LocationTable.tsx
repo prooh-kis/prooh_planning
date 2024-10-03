@@ -16,7 +16,6 @@ export const LocationTable = ({
 }: LocationTableProps) => {
 
   const handleCheckClick = ({ type, checked }: any) => {
-    console.log(checked);
 
     if (type === "Male") {
       if (checked && !selectedGender.includes("Male")) {
@@ -37,7 +36,6 @@ export const LocationTable = ({
     return {checked};
    
   }
-  console.log(markets)
 
   return (
 

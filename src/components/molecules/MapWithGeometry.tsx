@@ -6,30 +6,30 @@ import mapboxgl from "mapbox-gl";
 // import { FaMapMarkerAlt } from "react-icons/fa";
 
 mapboxgl.accessToken =
-  process.env.REACT_APP_MAPBOX ||
-  "pk.eyJ1Ijoic2FjaGlucmFpbmEiLCJhIjoiY2x3N242M2thMDB0MDJsczR2eGF4dXJsZSJ9.ocBaZJ9rPSUhmS4zGRi7vQ";
-
+  // process.env.REACT_APP_MAPBOX ||
+  "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A"
 export function MapWithGeometry(props: any) {
+  console.log(props)
   const mapRef = useRef<any>(null);
   const [routeData, setRouteData] = useState<any>([]);
-  const [markers, setMarkers] = useState<any>(null);
+  const [selectedMarkers, setSelectedMarkers] = useState<any>(null);
   const [unSelectedMarkers, setUnselectedMarkers] = useState<any>(null);
   const [screenData, setScreenData] = useState<any>(null);
 
-  const [query, SetQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<any[]>([]);
   const [userLocation, setUserLocation] = useState<{
     latitude: number;
     longitude: number;
   } | null>(null);
 
+  // console.log(props?.data["brand"][0]?.concat(props?.data["comp"][0]))
   const coordinates =
     Object.keys(props?.data).length > 0
-      ? props?.data?.["brand"]?.concat(props?.data?.["compt"])
+      ? props?.data["brand"][0].concat(props?.data["comp"][0])
       : [];
+
   const [viewState, setViewState] = useState<any>({
-    longitude: props?.geometry?.coordinates[1] || 84.6702799,
-    latitude: props?.geometry?.coordinates[0] || 25.5540252,
+    longitude: props?.geometry?.coordinates[1] || 77.0891,
+    latitude: props?.geometry?.coordinates[0] || 28.495,
     zoom: props?.zoom || 5,
   });
 
@@ -54,17 +54,33 @@ export function MapWithGeometry(props: any) {
     );
   }, []);
 
+  const findCoordinates = (arrays: any, target: any) => {
+    for (let i = 0; i < arrays.length; i++) {
+        for (let j = 0; j < arrays[i].length; j++) {
+            for (let k = 0; k < arrays[i][j].length; k++) {
+                if (arrays[i][j][k] === target[k] && arrays[i][j][k] === target[k]) {
+                    // console.log(`Coordinates [${target}] belong to array at index [${i}][${j}][${k}]`)
+                    return true;
+                }
+            }
+        }
+    }
+    // console.log(`Coordinates [${target}] not found in any array.`)
+    return false;
+  };
+
   const createGeoJSONCircle = (
     center: [number, number],
     radiusInKm: number,
     points: number = 64
   ): FeatureCollection<Geometry, GeoJsonProperties> => {
     const coords = {
-      latitude: center[0],
-      longitude: center[1],
+      latitude: center[1],
+      longitude: center[0],
     };
 
     const km = radiusInKm;
+    // const km = 10;
 
     const ret: GeoJSON.Position[] = [];
     const distanceX =
@@ -79,7 +95,6 @@ export function MapWithGeometry(props: any) {
       ret.push([coords.longitude + x, coords.latitude + y]);
     }
     ret.push(ret[0]);
-
     return {
       type: "FeatureCollection",
       features: [
@@ -105,16 +120,15 @@ export function MapWithGeometry(props: any) {
     features: coordinates?.map((coord: any) => {
       // Example condition for coloring based on coordinate longitude
       let color = "red";
-      if (props?.data?.["brand"].includes(coord)) {
-        color = "blue";
-      } else if (props?.data?.["compt"].includes(coord)) {
-        color = "red";
+      if (findCoordinates(props?.data["brand"], coord)) {
+        color = "green";
+      } else if (findCoordinates(props?.data["comp"], coord)) {
+        color = "brown";
       }
 
       return {
         type: "Feature",
-        geometry: createGeoJSONCircle(coord, props?.circleRadius).features[0]
-          .geometry,
+        geometry: createGeoJSONCircle(coord, props?.circleRadius).features[0].geometry,
         properties: { color: color },
       };
     }),
@@ -128,19 +142,20 @@ export function MapWithGeometry(props: any) {
       const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${
         start[0]
       },${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${
-        process.env.REACT_APP_MAPBOX ||
-        "pk.eyJ1Ijoic2FjaGlucmFpbmEiLCJhIjoiY2x3N242M2thMDB0MDJsczR2eGF4dXJsZSJ9.ocBaZJ9rPSUhmS4zGRi7vQ"
+        // process.env.REACT_APP_MAPBOX ||
+        "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A"
       }`;
       const response = await fetch(url);
 
       const data = await response.json();
+ 
       setRouteData((pre: any) => [data.routes[0].geometry, ...pre]);
       props?.handleRouteData(data.routes[0].geometry, route?.id);
     } catch (error) {
       console.log("error in  finding routes : ", error);
     }
   };
-  // console.log("props?.screenMarkers : ", props?.screenMarkers);
+  // console.log("props?.filteredScreens : ", props?.filteredScreens);
   // console.log("props.unSelectedScreens : ", props.unSelectedScreens);
 
   const getSingleScreenData = async (
@@ -151,12 +166,12 @@ export function MapWithGeometry(props: any) {
   ) => {
     let data;
     if (isFromSelectedScreens) {
-      data = props?.screenMarkers?.find(
-        (screen: any) => screen.screenId == screenId
+      data = props?.filteredScreens?.find(
+        (screen: any) => screen._id == screenId
       );
     } else {
-      data = props.unSelectedScreens?.find(
-        (screen: any) => screen.screenId == screenId
+      data = props.allScreens?.filter((s:any) => props?.filteredScreens?.map((f: any) => f._id).includes(s._id))?.find(
+        (screen: any) => screen._id == screenId
       );
     }
     setScreenData(data);
@@ -167,7 +182,7 @@ export function MapWithGeometry(props: any) {
     return colors[index % 5];
   }
 
-  const getScreens = useEffect(() => {
+  useEffect(() => {
     setRouteData([]);
     props?.routes?.map((route: any) => {
       getRoute(route);
@@ -175,25 +190,27 @@ export function MapWithGeometry(props: any) {
   }, [props?.routes]);
 
   useEffect(() => {
-    setMarkers(
-      props?.screenMarkers?.map((m: any) => [
-        m.longitude,
-        m.latitude,
-        m.screenId,
+    setSelectedMarkers(
+      props?.filteredScreens?.map((m: any) => [
+        m.location.geographicalLocation.longitude,
+        m.location.geographicalLocation.latitude,
+        m._id,
       ])
     );
+  
     setUnselectedMarkers(
-      props.unSelectedScreens?.map((m: any) => [
-        m.longitude,
-        m.latitude,
-        m.screenId,
+      props.allScreens?.filter((s:any) => !props?.filteredScreens?.map((f: any) => f._id).includes(s._id))?.map((m: any) => [
+        m.location.geographicalLocation.longitude,
+        m.location.geographicalLocation.latitude,
+        m._id,
       ])
     );
-  }, [props?.screenMarkers, props.unSelectedScreens]);
+
+  }, [props?.filteredScreens]);
 
   useEffect(() => {
-    if (markers?.length > 0) {
-      const validMarkers = markers.filter(
+    if (selectedMarkers?.length > 0) {
+      const validMarkers = selectedMarkers.filter(
         (marker: any) =>
           marker[1] !== undefined &&
           marker[0] !== undefined &&
@@ -217,15 +234,16 @@ export function MapWithGeometry(props: any) {
         console.error("No valid markers to display.");
       }
     }
-  }, [markers]);
+  }, [selectedMarkers]);
 
-  // console.log(markers);
+
   return (
     <div className="h-full w-full">
-      <div className="flex w-full h-full border">
+      <div className="flex w-full h-full rounded-[10px]">
         <ReactMapGL
           ref={mapRef}
           initialViewState={viewState}
+          style={{borderRadius: "10px"}}
           mapStyle="mapbox://styles/mapbox/streets-v11"
           mapboxAccessToken={
             process.env.REACT_APP_MAPBOX ||
@@ -265,14 +283,14 @@ export function MapWithGeometry(props: any) {
                   type="line"
                   paint={{
                     "line-color": `${randomColor(index)}`,
-                    "line-width": 12,
+                    "line-width": 4,
                   }}
                 />
               </Source>
             ))}
 
-          {markers &&
-            markers.map((marker: any, i: any) => (
+          {selectedMarkers &&
+            selectedMarkers.map((marker: any, i: any) => (
               <Marker
                 key={i}
                 latitude={marker[1]}
@@ -281,23 +299,27 @@ export function MapWithGeometry(props: any) {
                   getSingleScreenData(e, marker[2], marker, true);
                 }}
               >
-                <div title={`Selected screens ${props?.screenMarkers?.length}`}>
-                  <i className="fi fi-rs-marker text-[#F94623] text-[16px]"></i>
+                <div
+                  title={`Selected screens ${props?.filteredScreens?.length}`}
+                  className="cursor-pointer"
+                >
+                  <i className="fi fi-ss-circle text-primaryButton text-[14px]"></i>
                 </div>
               </Marker>
             ))}
-          {unSelectedMarkers &&
+          {unSelectedMarkers?.length !== selectedMarkers?.length && unSelectedMarkers &&
             unSelectedMarkers.map((marker: any, i: any) => (
               <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
                 <div
-                  title={`UnSeleced screens ${props?.screenMarkers?.length}`}
+                  title={`UnSeletced screens ${props.allScreens?.filter((s:any) => props?.filteredScreens?.map((f: any) => f._id).includes(s._id))?.length}`}
                   className="cursor-pointer"
                   onClick={(e) => {
                     getSingleScreenData(e, marker[2], marker, true);
                   }}
                 >
                   <i 
-                    className="fi fi-rs-marker text-[#1D62F6] text-[12px]"
+                  // [#F94623]
+                    className="fi-ss-circle text-[#F94623] text-[12px]"
                     onClick={(e) => {
                       getSingleScreenData(e, marker.screenId, marker, false);
                     }}
@@ -309,14 +331,12 @@ export function MapWithGeometry(props: any) {
 
           {screenData && (
             <Popup
-              latitude={screenData?.latitude}
-              longitude={screenData?.longitude}
-              // onClose={() => {
-              //   setScreenData(null);
-              // }}
-              // anchor="left"
-              // closeButton={false}
-              // focusAfterOpen={true}
+              latitude={screenData?.location?.geographicalLocation?.latitude}
+              longitude={screenData?.location?.geographicalLocation?.longitude}
+              onClose={() => {
+                setScreenData(null);
+              }}
+              anchor="left"
             >
               <div className="border boder-1 rounded-10 border- #2BB3E0 p-3 ">
                 <div className="flex flex-row gap-2">
