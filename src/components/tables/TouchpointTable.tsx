@@ -15,11 +15,11 @@ export const TouchpointTable = ({
   selectedGender,
 }: TouchPointsProps) => {
 
-  const handleCheckClick = ({ touchpoint, checked }: any) => {
-    if (checked && !selectedTouchPoints.includes(touchpoint)) {
-      setSelectedTouchPoints([...selectedTouchPoints, touchpoint])
+  const handleCheckClick = ({ touchPoint, checked }: any) => {
+    if (checked && !selectedTouchPoints.includes(touchPoint)) {
+      setSelectedTouchPoints([...selectedTouchPoints, touchPoint])
     } else {
-      const aud = selectedTouchPoints?.filter((audience: any) => audience !== touchpoint)
+      const aud = selectedTouchPoints?.filter((audience: any) => audience !== touchPoint)
       setSelectedTouchPoints(aud);
     }
   }
@@ -30,7 +30,7 @@ export const TouchpointTable = ({
         <tr className="flex justify-between w-full h-[40px] px-2">
           <th className="flex items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F]">
-              Touchpoints
+              TouchPoints
             </h1>
             <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
           </th>

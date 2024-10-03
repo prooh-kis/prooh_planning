@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { PrimaryButton } from "../atoms/PrimaryButton"
-import { PrimaryInput } from "../atoms/PrimaryInput"
+import { PrimaryButton } from "../atoms/PrimaryButton";
+import { PrimaryInput } from "../atoms/PrimaryInput";
 import { useNavigate } from "react-router-dom";
 import { CalendarInput } from "../atoms/CalendarInput";
 import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
 import { saveDataOnLocalStorage } from "../../utils/localStorageUtils";
+import { message } from "antd";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -12,9 +13,12 @@ interface EnterCampaignBasicDetailsProps {
   campaignType?: any;
 }
 
-export const EnterCampaignBasicDetails = ({ setCurrentStep, step, campaignType }: EnterCampaignBasicDetailsProps) => {
+export const EnterCampaignBasicDetails = ({
+  setCurrentStep,
+  step,
+  campaignType,
+}: EnterCampaignBasicDetailsProps) => {
   const navigate = useNavigate();
-  console.log(campaignType);
   const [campaignName, setCampaignName] = useState<any>("");
   const [brandName, setBrandName] = useState<any>("");
   const [clientName, setClientName] = useState<any>("");
@@ -22,22 +26,21 @@ export const EnterCampaignBasicDetails = ({ setCurrentStep, step, campaignType }
   const [startDate, setStartDate] = useState<any>("");
   const [endDate, setEndDate] = useState<any>("");
   const [duration, setDuration] = useState<any>("");
-  
 
   const [enterDuration, setEnterDuration] = useState<any>(false);
 
   const validateForm = () => {
     if (campaignName.length === 0) {
-      alert("Please enter campaign name");
+      message.error("Please enter campaign name");
       return false;
     } else if (brandName.length === 0) {
-      alert("Please enter brand name");
+      message.error("Please enter brand name");
       return false;
-    } else if (startDate === undefined || startDate === null) {
-      alert("Please enter start data ");
+    } else if (startDate === "") {
+      message.error("Please enter start data ");
       return false;
-    } else if (endDate === undefined || endDate === null) {
-      alert("Please enter endData ");
+    } else if (endDate === "") {
+      message.error("Please enter endData ");
       return false;
     } else {
       return true;
@@ -54,51 +57,95 @@ export const EnterCampaignBasicDetails = ({ setCurrentStep, step, campaignType }
         industry: industry || "industry",
         startDate: startDate || "1 Jan 1970",
         endDate: endDate || "1 Feb 1970",
-      }
+      },
     });
-  }, [brandName, campaignName, clientName, endDate, industry, startDate, campaignType]);
+    setCurrentStep(step + 1);
+  }, [
+    brandName,
+    campaignName,
+    clientName,
+    endDate,
+    industry,
+    startDate,
+    campaignType,
+  ]);
 
-
-  useEffect(() => {
-  },[]);
-
+  useEffect(() => {}, []);
 
   const handleSetNewDuration = () => {
     if (startDate && endDate)
       setDuration(getNumberOfDaysBetweenTwoDates(startDate, endDate));
-    else alert("Please enter first start , end Date");
+    else message.error("Please enter first start , end Date");
   };
 
   return (
     <div className="w-full py-3">
       <div className="">
-        <h1 className="text-[24px] text-primaryText font-semibold">Add Basic Details</h1>
-        <p className="text-[14px] text-secondaryText">Enter your basic details for the campaigns to proceed further</p>
+        <h1 className="text-[24px] text-primaryText font-semibold">
+          Add Basic Details
+        </h1>
+        <p className="text-[14px] text-secondaryText">
+          Enter your basic details for the campaigns to proceed further
+        </p>
       </div>
       <div className="grid grid-cols-3 gap-8 pt-2">
         <div className="col-span-1 py-1">
-          <label className="block text-secondaryText text-[14px] mb-2">Campaign Name</label>
-          <PrimaryInput inputType="text" placeholder="Campaign Name" value={campaignName} action={setCampaignName}/>
+          <label className="block text-secondaryText text-[14px] mb-2">
+            Campaign Name
+          </label>
+          <PrimaryInput
+            inputType="text"
+            placeholder="Campaign Name"
+            value={campaignName}
+            action={setCampaignName}
+          />
         </div>
         <div className="col-span-1 py-1">
-          <label className="block text-secondaryText text-[14px] mb-2">Brand Name</label>
-          <PrimaryInput inputType="text" placeholder="Brand Name" value={brandName} action={setBrandName}/>
+          <label className="block text-secondaryText text-[14px] mb-2">
+            Brand Name
+          </label>
+          <PrimaryInput
+            inputType="text"
+            placeholder="Brand Name"
+            value={brandName}
+            action={setBrandName}
+          />
         </div>
       </div>
       <div className="grid grid-cols-3 gap-8 pt-2">
         <div className="col-span-1 py-1">
-          <label className="block text-secondaryText text-[14px] mb-2">Client Name</label>
-          <PrimaryInput inputType="text" placeholder="Client Name" value={clientName} action={setClientName}/>
+          <label className="block text-secondaryText text-[14px] mb-2">
+            Client Name
+          </label>
+          <PrimaryInput
+            inputType="text"
+            placeholder="Client Name"
+            value={clientName}
+            action={setClientName}
+          />
         </div>
         <div className="col-span-1 py-1">
-          <label className="block text-secondaryText text-[14px] mb-2">Industry</label>
-          <PrimaryInput inputType="text" placeholder="Industry" value={industry} action={setIndustry}/>
+          <label className="block text-secondaryText text-[14px] mb-2">
+            Industry
+          </label>
+          <PrimaryInput
+            inputType="text"
+            placeholder="Industry"
+            value={industry}
+            action={setIndustry}
+          />
         </div>
       </div>
       <div className="grid grid-cols-3 gap-8 pt-2">
         <div className="col-span-1 py-1">
-          <label className="block text-secondaryText text-[14px] mb-2">Start Date</label>
-          <CalendarInput placeholder="Start Date" value={startDate} action={setStartDate}/>  
+          <label className="block text-secondaryText text-[14px] mb-2">
+            Start Date
+          </label>
+          <CalendarInput
+            placeholder="Start Date"
+            value={startDate}
+            action={setStartDate}
+          />
         </div>
         <div className="col-span-1 py-1">
           <div className="flex justify-between">
@@ -118,22 +165,33 @@ export const EnterCampaignBasicDetails = ({ setCurrentStep, step, campaignType }
             />
           </div>
           {!enterDuration ? (
-            <CalendarInput placeholder={!enterDuration ? "End Date" : "0"} value={!enterDuration ? endDate : duration} action={setEndDate}/>
+            <CalendarInput
+              placeholder={!enterDuration ? "End Date" : "0"}
+              value={!enterDuration ? endDate : duration}
+              action={setEndDate}
+            />
           ) : (
-            <PrimaryInput inputType="number" placeholder="duration" value={duration} action={setDuration}/>
+            <PrimaryInput
+              inputType="number"
+              placeholder="duration"
+              value={duration}
+              action={setDuration}
+            />
           )}
         </div>
       </div>
       <div className="flex py-4">
-        <PrimaryButton rounded="rounded-[6px]" title="Continue" action={() => {
-          
-          if (validateForm()) {
-            saveCampaignDetailsOnLocalStorage();
-          }
-          // navigate("/audience&touchpoints");
-          setCurrentStep(step + 1);
-          }} />
+        <PrimaryButton
+          rounded="rounded-[6px]"
+          title="Continue"
+          action={() => {
+            if (validateForm()) {
+              saveCampaignDetailsOnLocalStorage();
+            }
+            // navigate("/audience&touchpoints");
+          }}
+        />
       </div>
     </div>
-  )
-}
+  );
+};

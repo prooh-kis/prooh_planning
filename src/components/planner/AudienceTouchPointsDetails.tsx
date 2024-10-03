@@ -5,15 +5,23 @@ import { useNavigate } from "react-router-dom";
 import { CalendarInput } from "../atoms/CalendarInput";
 import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
 
-
-import { getAllLocalStorageData, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
-import { AudienceCohortTable, CostSummaryTable1, LocationTable, TouchpointTable } from "../tables";
+import {
+  getAllLocalStorageData,
+  saveDataOnLocalStorage,
+} from "../../utils/localStorageUtils";
+import {
+  AudienceCohortTable,
+  CostSummaryTable1,
+  LocationTable,
+  TouchpointTable,
+} from "../tables";
 import { audienceCohortData, touchpointData } from "../../data";
 import { useDispatch, useSelector } from "react-redux";
 import { Message } from "../Message";
 import { Loading } from "../Loading";
 import { Footer } from "../../components/footer";
 import { getScreensCostData } from "../../actions/screenAction";
+import { TOTAL_SCREEN_COST_DATA } from "../../constants/localStorageConstants";
 
 interface EnterAudienceTouchpointDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -23,7 +31,11 @@ interface EnterAudienceTouchpointDetailsProps {
   error?: any;
 }
 
-export const AudienceTouchPointsDetails = ({ setCurrentStep, step, error }: EnterAudienceTouchpointDetailsProps) => {
+export const AudienceTouchPointsDetails = ({
+  setCurrentStep,
+  step,
+  error,
+}: EnterAudienceTouchpointDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
 
@@ -39,69 +51,100 @@ export const AudienceTouchPointsDetails = ({ setCurrentStep, step, error }: Ente
   const [selectedAudiences, setSelectedAudiences] = useState<any>([]);
   const [selectedTouchPoints, setSelectedTouchPoints] = useState<any>([]);
 
-  
+  const screensCostDataGet = useSelector(
+    (state: any) => state.screensCostDataGet
+  );
+  const {
+    loading: loadingCost,
+    error: errorCost,
+    data: screensCost,
+  } = screensCostDataGet;
 
   const getMatchedData = (myData: any) => {
     setMarkets(myData);
     let audiencesData: any = {};
     for (const market in myData) {
       for (const audience in myData[market]["audience"]) {
-        // console.log(audience);
-        // console.log(myData[market]["audience"][audience]);
-        audiencesData[audience] = myData[market]["audience"][audience]["Total"].toFixed(2)
+        audiencesData[audience] =
+          myData[market]["audience"][audience]["Total"].toFixed(2);
       }
     }
     setAudiences(audiencesData);
     setSelectedAudiences(Object.keys(audiencesData));
-    let touchpointsData: any = {};
+    let touchPointsData: any = {};
     for (const market in myData) {
       for (const touchPoint in myData[market]["touchPoint"]) {
-        touchpointsData[touchPoint] = {
-          "Screen": myData[market]["touchPoint"][touchPoint].screenPercent,
-          "Female": myData[market]["touchPoint"][touchPoint].femaleAudiencePercent,
-          "Male": myData[market]["touchPoint"][touchPoint].maleAudiencePercent,
-          "Audience": myData[market]["touchPoint"][touchPoint].audiencePercent,
-        }
-        
+        touchPointsData[touchPoint] = {
+          Screen: myData[market]["touchPoint"][touchPoint].screenPercent,
+          Female:
+            myData[market]["touchPoint"][touchPoint].femaleAudiencePercent,
+          Male: myData[market]["touchPoint"][touchPoint].maleAudiencePercent,
+          Audience: myData[market]["touchPoint"][touchPoint].audiencePercent,
+        };
       }
     }
-    setTouchPoints(touchpointsData);
-    setSelectedTouchPoints(Object.keys(touchpointsData));
+    setTouchPoints(touchPointsData);
+    setSelectedTouchPoints(Object.keys(touchPointsData));
 
-    return {audiencesData, touchpointsData};
-  }
+    return { audiencesData, touchPointsData };
+  };
 
-  const getCostData = (myData: any) => {
+  const setCostData = (myData: any) => {
     setTotalScreensData(myData);
     setSelectedScreensData(myData);
-  }
-
+  };
 
   useEffect(() => {
-  
-    if (getAllLocalStorageData()) {
-      getMatchedData(JSON.parse(getAllLocalStorageData()["audienceData"]))
-      getCostData(JSON.parse(getAllLocalStorageData()["totalScreenCostData"]))
-
+    if (screensCost) {
+      saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, screensCost);
+      setCostData(screensCost);
     }
-    dispatch(getScreensCostData({
-      cohorts: selectedAudiences,
-      touchPoints: selectedTouchPoints,
-      duration: 30,
-      gender: selectedGender.length === 1 && selectedGender.includes("Male") ? "male" : selectedGender.length === 1 && selectedGender.includes("Female") ? "female" : "both"
-    }));
+  }, [screensCost]);
 
-  }, [dispatch])
+  useEffect(() => {
+    dispatch(
+      getScreensCostData({
+        cohorts: selectedAudiences,
+        touchPoints: selectedTouchPoints,
+        duration: 30,
+        gender:
+          selectedGender.length === 1 && selectedGender.includes("Male")
+            ? "male"
+            : selectedGender.length === 1 && selectedGender.includes("Female")
+            ? "female"
+            : "both",
+      })
+    );
+  }, [selectedAudiences, selectedTouchPoints, selectedGender]);
 
+  useEffect(() => {
+    if (getAllLocalStorageData()) {
+      getMatchedData(JSON.parse(getAllLocalStorageData()["audienceData"]));
+      setCostData(JSON.parse(getAllLocalStorageData()["totalScreenCostData"]));
+    }
+    dispatch(
+      getScreensCostData({
+        cohorts: selectedAudiences,
+        touchPoints: selectedTouchPoints,
+        duration: 30,
+        gender:
+          selectedGender.length === 1 && selectedGender.includes("Male")
+            ? "male"
+            : selectedGender.length === 1 && selectedGender.includes("Female")
+            ? "female"
+            : "both",
+      })
+    );
+  }, [dispatch]);
 
   return (
     <div className="w-full py-3">
       <div>
         <h1 className="text-[24px] text-primaryText font-semibold">
-          Select Target Audiences and Touchpoints
+          Select Target Audiences and TouchPoints
         </h1>
         <p className="text-[14px] text-secondaryText">
-          Choose the audiences you want to target at your desired touchpoints
+          Choose the audiences you want to target at your desired touchPoints
         </p>
       </div>
       <div className="grid grid-cols-8 gap-1 pt-4">

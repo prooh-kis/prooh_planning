@@ -9,7 +9,7 @@ interface AudiencesProps {
 
 }
 export const AudienceCohortTable = ({ audiences, selectedAudiences, setSelectedAudiences }: AudiencesProps) => {
-  // console.log(selectedAudiences);
+  
   const handleCheckClick = ({ cohort, checked }: any) => {
     if (checked && !selectedAudiences.includes(cohort)) {
       setSelectedAudiences([...selectedAudiences, cohort])

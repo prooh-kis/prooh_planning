@@ -11,12 +11,21 @@ import {
   ViewFinalPlanPODetails,
 } from "../../components/planner";
 import { useDispatch, useSelector } from "react-redux";
-import { getScreenDataForAdvanceFilters, getScreensAudiencesData, getScreensCostData } from "../../actions/screenAction";
+import {
+  getScreenDataForAdvanceFilters,
+  getScreensAudiencesData,
+  getScreensCostData,
+} from "../../actions/screenAction";
 import {
   getAllLocalStorageData,
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
+import {
+  ADVANCE_FILTER_SCREENS_MAP_DATA,
+  AUDIENCE_DATA,
+  TOTAL_SCREEN_COST_DATA,
+} from "../../constants/localStorageConstants";
 
 export const RegularPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -42,7 +51,9 @@ export const RegularPlanPage: React.FC = () => {
     data: screensCost,
   } = screensCostDataGet;
 
-  const screensDataAdvanceFilterGet = useSelector((state: any) => state.screensDataAdvanceFilterGet);
+  const screensDataAdvanceFilterGet = useSelector(
+    (state: any) => state.screensDataAdvanceFilterGet
+  );
   const {
     loading: loadingAdvanceFilterScreens,
     error: errorAdvanceFilterScreens,
@@ -51,34 +62,44 @@ export const RegularPlanPage: React.FC = () => {
 
   useEffect(() => {
     dispatch(getScreensAudiencesData({ markets: [] }));
-    dispatch(getScreensCostData({
-      cohorts: [],
-      touchPoints: [],
-      gender: "both",
-      duration: 30,
-    }));
-    dispatch(getScreenDataForAdvanceFilters({ touchPoints: [
-      "Arterial Route",
-      "CBD- SOHO",
-      "Feeder route",
-      "Golf course",
-      "Premium High Street"
-    ]}))
+    dispatch(
+      getScreensCostData({
+        cohorts: [],
+        touchPoints: [],
+        gender: "both",
+        duration: 30,
+      })
+    );
+    dispatch(
+      getScreenDataForAdvanceFilters({
+        touchPoints: [
+          "Arterial Route",
+          "CBD- SOHO",
+          "Feeder route",
+          "Golf course",
+          "Premium High Street",
+        ],
+      })
+    );
   }, [dispatch]);
 
   useEffect(() => {
     if (screensAudiences) {
-      saveDataOnLocalStorage(`audienceData`, screensAudiences);
+      saveDataOnLocalStorage(AUDIENCE_DATA, screensAudiences);
     }
 
     if (screensCost) {
-      saveDataOnLocalStorage(`totalScreenCostData`, screensCost);
+      saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, screensCost);
     }
 
     if (advanceFilterScreens) {
-      saveDataOnLocalStorage(`advanceFilterScreensMapData`, advanceFilterScreens);
+      saveDataOnLocalStorage(
+        ADVANCE_FILTER_SCREENS_MAP_DATA,
+        advanceFilterScreens
+      );
     }
   }, [screensAudiences, screensCost, advanceFilterScreens]);
+
   return (
     <div className="w-full h-full">
       <div className="w-full pt-[60px]">
@@ -116,10 +137,7 @@ export const RegularPlanPage: React.FC = () => {
             step={currentStep}
           />
         ) : currentStep === 6 ? (
-          <TriggerDetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-          />
+          <TriggerDetails setCurrentStep={setCurrentStep} step={currentStep} />
         ) : currentStep === 7 ? (
           <ViewFinalPlanPODetails
             setCurrentStep={setCurrentStep}
