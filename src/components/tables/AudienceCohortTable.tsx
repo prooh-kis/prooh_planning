@@ -44,6 +44,7 @@ export const AudienceCohortTable = ({ audiences, selectedAudiences, setSelectedA
             <p className="text-[12px] font-normal">0</p>
             <p className="text-[12px] font-normal">25</p>
             <p className="text-[12px] font-normal">50</p>
+            <p className="text-[12px] font-normal">100</p>
           </th>
         </tr>
         <div className="w-full h-[40vh] overflow-scroll py-3">

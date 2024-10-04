@@ -3,13 +3,14 @@ import ReactMapGL, { Source, Layer, Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
 import mapboxgl from "mapbox-gl";
+import { MapboxScreen } from "../../components/popup";
 // import { FaMapMarkerAlt } from "react-icons/fa";
 
 mapboxgl.accessToken =
   // process.env.REACT_APP_MAPBOX ||
   "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A"
 export function MapWithGeometry(props: any) {
-  console.log(props)
+  // console.log(props)
   const mapRef = useRef<any>(null);
   const [routeData, setRouteData] = useState<any>([]);
   const [selectedMarkers, setSelectedMarkers] = useState<any>(null);
@@ -159,21 +160,15 @@ export function MapWithGeometry(props: any) {
   // console.log("props.unSelectedScreens : ", props.unSelectedScreens);
 
   const getSingleScreenData = async (
-    e: any,
     screenId: any,
-    pinData: any,
-    isFromSelectedScreens: boolean
   ) => {
     let data;
-    if (isFromSelectedScreens) {
-      data = props?.filteredScreens?.find(
+    console.log(screenId);
+      data = props?.allScreens?.find(
         (screen: any) => screen._id == screenId
       );
-    } else {
-      data = props.allScreens?.filter((s:any) => props?.filteredScreens?.map((f: any) => f._id).includes(s._id))?.find(
-        (screen: any) => screen._id == screenId
-      );
-    }
+  
+      console.log(data);
     setScreenData(data);
   };
 
@@ -238,118 +233,115 @@ export function MapWithGeometry(props: any) {
 
 
   return (
-    <div className="h-full w-full">
-      <div className="flex w-full h-full rounded-[10px]">
-        <ReactMapGL
-          ref={mapRef}
-          initialViewState={viewState}
-          style={{borderRadius: "10px"}}
-          mapStyle="mapbox://styles/mapbox/streets-v11"
-          mapboxAccessToken={
-            process.env.REACT_APP_MAPBOX ||
-            "pk.eyJ1Ijoic2FjaGlucmFpbmEiLCJhIjoiY2x3N242M2thMDB0MDJsczR2eGF4dXJsZSJ9.ocBaZJ9rPSUhmS4zGRi7vQ"
-          }
-          onMove={(e: any) => setViewState(e.viewState)}
-        >
-          <Source id="circle-data" type="geojson" data={circlesData}>
-            <Layer
-              id="circle-layer"
-              type="fill"
-              paint={{
-                // "fill-color": "red",
-                "fill-color": ["get", "color"],
-                "fill-opacity": 0.5,
-              }}
-            />
-          </Source>
+    <div className="h-full w-full flex items-center justify-center">
+      <ReactMapGL
+        ref={mapRef}
+        initialViewState={viewState}
+        style={{borderRadius: "10px"}}
+        mapStyle="mapbox://styles/mapbox/streets-v11"
+        mapboxAccessToken={
+          process.env.REACT_APP_MAPBOX ||
+          "pk.eyJ1Ijoic2FjaGlucmFpbmEiLCJhIjoiY2x3N242M2thMDB0MDJsczR2eGF4dXJsZSJ9.ocBaZJ9rPSUhmS4zGRi7vQ"
+        }
+        onMove={(e: any) => setViewState(e.viewState)}
+      >
+    
 
-          {routeData?.length > 0 &&
-            routeData.map((route: any, index: number) => (
-              <Source
-                key={index}
-                id={`${index}`}
-                type="geojson"
-                data={{
-                  type: "Feature",
-                  properties: {},
-                  geometry: {
-                    type: "LineString",
-                    coordinates: route.coordinates,
-                  },
-                }}
-              >
-                <Layer
-                  id={`layer-${index}`}
-                  type="line"
-                  paint={{
-                    "line-color": `${randomColor(index)}`,
-                    "line-width": 4,
-                  }}
-                />
-              </Source>
-            ))}
-
-          {selectedMarkers &&
-            selectedMarkers.map((marker: any, i: any) => (
-              <Marker
-                key={i}
-                latitude={marker[1]}
-                longitude={marker[0]}
-                onClick={(e: any) => {
-                  getSingleScreenData(e, marker[2], marker, true);
-                }}
-              >
-                <div
-                  title={`Selected screens ${props?.filteredScreens?.length}`}
-                  className="cursor-pointer"
-                >
-                  <i className="fi fi-ss-circle text-primaryButton text-[14px]"></i>
-                </div>
-              </Marker>
-            ))}
-          {unSelectedMarkers?.length !== selectedMarkers?.length && unSelectedMarkers &&
-            unSelectedMarkers.map((marker: any, i: any) => (
-              <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
-                <div
-                  title={`UnSeletced screens ${props.allScreens?.filter((s:any) => props?.filteredScreens?.map((f: any) => f._id).includes(s._id))?.length}`}
-                  className="cursor-pointer"
-                  onClick={(e) => {
-                    getSingleScreenData(e, marker[2], marker, true);
-                  }}
-                >
-                  <i 
-                  // [#F94623]
-                    className="fi-ss-circle text-[#F94623] text-[12px]"
-                    onClick={(e) => {
-                      getSingleScreenData(e, marker.screenId, marker, false);
-                    }}
- 
-                  ></i>
-                </div>
-              </Marker>
-            ))}
-
-          {screenData && (
-            <Popup
-              latitude={screenData?.location?.geographicalLocation?.latitude}
-              longitude={screenData?.location?.geographicalLocation?.longitude}
-              onClose={() => {
-                setScreenData(null);
-              }}
-              anchor="left"
+        {selectedMarkers &&
+          selectedMarkers.map((marker: any, i: any) => (
+            <Marker
+              key={i}
+              latitude={marker[1]}
+              longitude={marker[0]}
             >
-              <div className="border boder-1 rounded-10 border- #2BB3E0 p-3 ">
-                <div className="flex flex-row gap-2">
-                  {/* <img src={screenData?.images[0]} alt="screen Image" /> */}
-                  <div>
-                    <h1 className="text-#000000">{screenData?.screenName}</h1>
-                  </div>
-                </div>
+              <div
+                title={`Selected screens ${props?.filteredScreens?.length}`}
+                className="cursor-pointer"
+              >
+                <i className="fi fi-ss-circle text-primaryButton text-[14px]"
+                  onClick={(e: any) => {
+                    e.stopPropagation();
+                    getSingleScreenData(marker[2]);
+                  }}
+                ></i>
               </div>
-            </Popup>
-          )}
-        </ReactMapGL>
-      </div>
+            </Marker>
+          ))}
+        {unSelectedMarkers?.length !== selectedMarkers?.length && unSelectedMarkers &&
+          unSelectedMarkers.map((marker: any, i: any) => (
+            <Marker
+              key={i} 
+              latitude={marker[1]}
+              longitude={marker[0]}
+            >
+              <div
+                title={`UnSeletced screens ${props.allScreens?.filter((s:any) => props?.filteredScreens?.map((f: any) => f._id).includes(s._id))?.length}`}
+                className="cursor-pointer"
+              >
+                <i 
+                // [#F94623]
+                  className="fi-ss-circle text-[#F94623] text-[12px]"
+                  onClick={(e) => {
+                    console.log(e)
+                    e.stopPropagation();
+                    getSingleScreenData(marker[2]);
+                  }}
+                ></i>
+              </div>
+            </Marker>
+          ))}
+
+        {screenData && (
+          <Popup
+            key={screenData._id}
+            latitude={screenData?.location?.geographicalLocation?.latitude}
+            longitude={screenData?.location?.geographicalLocation?.longitude}
+            onClose={() => {
+              setScreenData(null);
+            }}
+            anchor="left"
+          >
+            <MapboxScreen screenData={screenData} />
+          </Popup>
+        )}
+        <Source id="circle-data" type="geojson" data={circlesData}>
+          <Layer
+            id="circle-layer"
+            type="fill"
+            paint={{
+              // "fill-color": "red",
+              "fill-color": ["get", "color"],
+              "fill-opacity": 0.5,
+            }}
+          />
+        </Source>
+
+        {routeData?.length > 0 &&
+          routeData.map((route: any, index: number) => (
+            <Source
+              key={index}
+              id={`${index}`}
+              type="geojson"
+              data={{
+                type: "Feature",
+                properties: {},
+                geometry: {
+                  type: "LineString",
+                  coordinates: route.coordinates,
+                },
+              }}
+            >
+              <Layer
+                id={`layer-${index}`}
+                type="line"
+                paint={{
+                  "line-color": `${randomColor(index)}`,
+                  "line-width": 4,
+                }}
+              />
+            </Source>
+          ))}
+      </ReactMapGL>
     </div>
   );
 }

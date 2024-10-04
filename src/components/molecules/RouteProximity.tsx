@@ -8,9 +8,6 @@ import { MapSearchInput } from "../../components/atoms/MapSearchInput";
 
 interface RouteProximityProps {
   routes?: any;
-  filteredScreens?: any;
-  setFilteredScreens?: any;
-  setRoutes?: any;
   routeOrigin?: any;
   setRouteOrigin?: any;
   routeDestination?: any;
@@ -21,9 +18,6 @@ interface RouteProximityProps {
 
 export const RouteProximity = ({
   routes,
-  filteredScreens,
-  setFilteredScreens,
-  setRoutes,
   routeOrigin,
   setRouteOrigin,
   routeDestination,
@@ -36,11 +30,11 @@ export const RouteProximity = ({
 
   return (
     <div className="py-2">
-      <div className="flex justify-between py-2">
+      <div className="flex justify-between pt-2">
         <h1 className="text-[20px] text-primaryText">2. Route Proximity</h1>
       </div>
       
-      <div className="grid grid-cols-5 gap-2 flex items-center py-2">
+      <div className="grid grid-cols-5 gap-2 flex items-center pt-2">
         <div className="col-span-2 flex items-center">
           <MapSearchInput 
             handleClick={(e: any) => setRouteOrigin(e)}
@@ -68,12 +62,12 @@ export const RouteProximity = ({
           />
         </div>
       </div>
-      <div className="py-2">
+      <div className="pt-2">
         <div className="flex justify-between pr-2" onClick={() => setShowDetails(null)}>
           <p className="text-sm text-[#9f9f9f]">Added Route</p>
           <p className="text-sm text-[#9f9f9f]">{routes.length}</p>
         </div>
-        <div className="overflow-scroll h-20">
+        <div className="overflow-scroll h-24">
           {routes?.map((route: any, index: any) => (
             <div key={index} className="bg-[#F6F6F6] p-2 my-1">
               <div className="flex justify-between items-center" onClick={() => setShowDetails(index)}>

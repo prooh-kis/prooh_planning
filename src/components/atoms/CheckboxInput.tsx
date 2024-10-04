@@ -14,7 +14,6 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({ disabled, color, textSi
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { checked } = event.target;
-    console.log(event)
     setIsChecked(checked);
     if (onChange) {
       onChange(checked);
@@ -30,7 +29,9 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({ disabled, color, textSi
         disabled={disabled}
         onChange={handleCheckboxChange}
       />
-      <span className={`text-[${color ? color : "#21394F"}] text-[${textSize ? textSize : "14px"}] truncate`}>{label}</span>
+      <span className={`text-[${color ? color : "#21394F"}] text-[${textSize ? textSize : "14px"}] truncate`}>
+        {label}
+        </span>
     </label>
   );
 };

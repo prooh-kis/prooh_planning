@@ -1,17 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
-import { PrimaryButton } from "../atoms/PrimaryButton"
 import { useNavigate } from "react-router-dom";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
-import { RouteProximity } from "../../components/segments/RouteProximity";
 import { MapWithGeometry } from "../../components/molecules/MapWithGeometry";
 import * as turf from "@turf/turf";
-import { ExcelImport } from "../../components/molecules/ExcelImport";
 import { LinearBar } from "../../components/molecules/linearbar";
 import { getAllLocalStorageData } from "../../utils/localStorageUtils";
+import { LocationProximity } from "../../components/segments/LocationProximity";
+import { POIProximity } from "../../components/segments/POIProximity";
 
 type Coordinate = [number, number];
 
-interface AdvanceFiltersDetails {
+interface AdvanceFiltersDetailsProps {
   step?: any;
   setCurrentStep?: any;
   mapData?: any;
@@ -19,7 +18,7 @@ interface AdvanceFiltersDetails {
   error?: any;
 }
 
-export const AdvanceFiltersDetails = ({ mapData, step, setCurrentStep, loading, error }: AdvanceFiltersDetails) => {
+export const AdvanceFiltersDetails = ({ mapData, step, setCurrentStep, loading, error }: AdvanceFiltersDetailsProps) => {
   const navigate = useNavigate();
 
   const [storeFilter, setStoreFilter] = useState<any>(true);
@@ -27,20 +26,21 @@ export const AdvanceFiltersDetails = ({ mapData, step, setCurrentStep, loading, 
   const [circleRadius, setCircleRadius] = useState<any>(1);
   const [routes, setRoutes] = useState<any[]>([]);
 
+  const [dataBrand, setDataBrand] = useState<any[]>([]);
+  const [dataComp, setDataComp] = useState<any[]>([]);
   const [routeOrigin, setRouteOrigin] = useState<any>([]);
   const [routeDestination, setRouteDestination] = useState<any>([]);
+  const [pois, setPOIs] = useState<any[]>([]);
+  const [selectedPOIs, setSelectedPOIs] = useState<any[]>([]);
 
   const [allScreens, setAllScreens] = useState<any>([]);
   const [excelFilteredScreens, setExcelFilteredScreens] = useState<any>([]);
   const [routeFilteredScreens, setRouteFilteredScreens] = useState<any>([]);
-  const [unSelectedScreens, setUnSelectedScreens] = useState<any>([]);
+  const [poiFilteredScreens, setPOIFilteredScreens] = useState<any>([]);
+
   const [circleData, setCircleData] = useState<any>({});
   const [finalSelectedScreens, setFinalSelectedScreens] = useState<any>([]);
 
-  const [dataBrand, setDataBrand] = useState<any[]>([]);
-  const [dataComp, setDataComp] = useState<any[]>([]);
-  
-  const [pois, setPOIs] = useState<any[]>([]);
 
   const getUniqueScreens = (data: any) => {
     const uniqueScreens = new Set();
@@ -54,6 +54,11 @@ export const AdvanceFiltersDetails = ({ mapData, step, setCurrentStep, loading, 
     return result;
   };
 
+  const handlePOIScreens = (myPOIs: any) => {
+    console.log(allScreens.filter((s: any) => s.location.pointOfInterest))
+    console.log(selectedPOIs);
+  }
+
   const getMapData = useCallback((myData: any) => {
     setAllScreens(myData.screens);
     const data: any = {
@@ -66,26 +71,22 @@ export const AdvanceFiltersDetails = ({ mapData, step, setCurrentStep, loading, 
   },[dataBrand, dataComp])
 
   const handleFinalSelectedScreens = ({type, screens}: any) => {
-
-    console.log(screens);
-    const mySelectedScreens = finalSelectedScreens;
-    const uniqueScreens = getUniqueScreens([{screens}]);
-
     if (type === "add") {
-      console.log("adding value", uniqueScreens)
+      screens = [...excelFilteredScreens, ...routeFilteredScreens, ...screens, ...poiFilteredScreens]
+      const uniqueScreens = getUniqueScreens([{screens}]);
       setFinalSelectedScreens(uniqueScreens);
 
     } else if (type === "remove") {
-      console.log("removing value");
+      const uniqueScreens = getUniqueScreens([{screens}]);
       setFinalSelectedScreens(finalSelectedScreens.filter((fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)));
     } 
-    console.log('adasdsadasdasd', finalSelectedScreens)
   }
 
   useEffect(() => {
     if (getAllLocalStorageData()) {
       getMapData(JSON.parse(getAllLocalStorageData()["advanceFilterScreensMapData"]))
       setPOIs(JSON.parse(getAllLocalStorageData()["advanceFilterScreensMapData"]).poiList)
+      setSelectedPOIs(JSON.parse(getAllLocalStorageData()["advanceFilterScreensMapData"]).poiList)
     }
   }, [getMapData]);
 
@@ -164,116 +165,84 @@ export const AdvanceFiltersDetails = ({ mapData, step, setCurrentStep, loading, 
     // handleSetFIlter4(arr);
   };
 
-  
   return (
-    <div className="w-full py-3 grid grid-cols-2 gap-4">
-      {storeFilter ? (
-        <div className="col-span-1 py-2 pr-8">
-          <div className="flex justify-between">
-            <div className="truncate">
-              <h1 className="text-[24px] text-primaryText font-semibold truncate">
-                Store & Route Proximity
-              </h1>
-              <p className="text-[14px] text-secondaryText">
-                Viewing Store & Competitor Matches
-              </p>
-            </div>
-            <div className="flex items-center justify-end" onClick={() => setStoreFilter(!storeFilter)}>
-              <p className="text-[14px] text-[#9f9f9f]">Skip</p>
-            </div>
-          </div>
-          
-          <div className="py-2">
-            <ExcelImport
-              icon="fi fi-rr-shop pl-2 text text-primaryButton flex items-center"
-              text="Brand Store"
-              setDataBrand={setDataBrand}
-              allScreens={allScreens}
-              setFilteredScreens={setExcelFilteredScreens}
-              filteredScreens={excelFilteredScreens}
-              circleRadius={circleRadius}
-              type={"brand"}
-              handleFinalSelectedScreens={handleFinalSelectedScreens}
+    <div className="h-[640px] w-full py-3 grid grid-cols-2 gap-4">
+      <div className="col-span-1 py-2 pr-4">
 
-            />
-            <ExcelImport
-              icon="fi fi-rr-shop pl-2 text text-red-600 flex items-center"
-              text="Competitor Store"
-              setDataComp={setDataComp}
-              allScreens={allScreens}
-              setFilteredScreens={setExcelFilteredScreens}
-              filteredScreens={excelFilteredScreens}
-              circleRadius={circleRadius}
-              type={"comp"}
-              handleFinalSelectedScreens={handleFinalSelectedScreens}
-            />
-            <RouteProximity
+        {storeFilter ? (
+          <div className="">
+            <div className="flex justify-between">
+              <div className="truncate">
+                <h1 className="text-[24px] text-primaryText font-semibold truncate">
+                  Store & Route Proximity
+                </h1>
+                <p className="text-[14px] text-secondaryText">
+                  Viewing Store & Competitor Matches
+                </p>
+              </div>
+              <div className="flex items-center justify-end" onClick={() => setStoreFilter(!storeFilter)}>
+                <p className="text-[14px] text-[#9f9f9f]">Next</p>
+              </div>
+            </div>
+            
+            <LocationProximity
               routes={routes}
-              filteredScreens={routeFilteredScreens}
-              setFilteredScreens={setRouteFilteredScreens}
-              setRoutes={setRoutes}
               routeOrigin={routeOrigin}
               setRouteOrigin={setRouteOrigin}
               routeDestination={routeDestination}
               setRouteDestination={setRouteDestination}
+              setDataBrand={setDataBrand}
+              setDataComp={setDataComp}
+              allScreens={allScreens}
+              finalSelectedScreens={finalSelectedScreens}
+              setExcelFilteredScreens={setExcelFilteredScreens}
+              excelFilteredScreens={excelFilteredScreens}
+              circleRadius={circleRadius}
               handleRouteSetup={handleRouteSetup}
               handleRemoveRoute={handleRemoveRoute}
+              handleFinalSelectedScreens={handleFinalSelectedScreens}
             />
-            <div className="">
-              <p className="text-[14px]">Showing Result</p>
-              <div className="pb-1 grid grid-cols-12 gap-2 flex items-center">
-                <div className="col-span-2">
-                  <CheckboxInput color="#52A2FF" label={finalSelectedScreens.length}/>
-                </div>
-                <div className="col-span-8">
-                  <LinearBar value={5} colors={["#F3F3F3", "#7AB3A2"]} />
-                </div>
-                <p className="col-span-2 text-[12px] text-semibold flex justify-end truncate">{allScreens?.length} Sites</p>
+          </div>
+        ) : (
+          <div>
+            <div className="flex justify-between">
+              <div className="truncate">
+                <h1 className="text-[24px] text-primaryText font-semibold truncate">
+                  POI Proximity
+                </h1>
+                <p className="text-[14px] text-secondaryText">
+                  Select your desired POIs for filtering screens
+                </p>
+              </div>
+              <div className="flex items-center justify-end" onClick={() => setStoreFilter(!storeFilter)}>
+                <p className="text-[14px] text-[#9f9f9f]">Back</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <CheckboxInput />
-              <p className="text-[14px] truncate">
-                Confirm and take {" "}
+            <POIProximity 
+              pois={pois}
+              selectedPOIs={selectedPOIs}
+              setSelectedPOIs={setSelectedPOIs}
+              setPOIFilteredScreens={setPOIFilteredScreens}
+              allScreens={allScreens}
+              finalSelectedScreens={finalSelectedScreens}
+              handlePOIScreens={handlePOIScreens}
+            />
+          </div>
+        )}
+        <div className="flex items-center pt-2">
+          <CheckboxInput label={
+            <>
+              Confirm and take {" "}
                 <span className=" font-bold">
                   {`${finalSelectedScreens.length} Sites Out of ${allScreens.length} Sites `}
                 </span>
                   for my plan
-                </p>
-            </div>
-          </div>
+            </>
+          } />
         </div>
-      ) : (
-        <div className="col-span-1 py-2 pr-8">
-          <div className="flex justify-between">
-            <div className="truncate">
-              <h1 className="text-[24px] text-primaryText font-semibold truncate">
-                POI Proximity
-              </h1>
-              <p className="text-[14px] text-secondaryText">
-                Select your desired POIs for filtering screens
-              </p>
-            </div>
-            <div className="flex items-center justify-end" onClick={() => setStoreFilter(!storeFilter)}>
-              <p className="text-[14px] text-[#9f9f9f]">Skip</p>
-            </div>
-          </div>
-          <div className="py-2">
-            <div className="">
-              <h1 className="">
-                Select sites with most POI exposure
-              </h1>
-              {pois?.map((poi: any, index: any) => (
-                <div key={index} className="">
-                  <h1>{poi}</h1>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      </div>
   
-      <div className="col-span-1 py-5">
+      <div className="col-span-1 w-full flex items-center justify-center">
         <MapWithGeometry
           handleRouteData={handleRouteData}
           circleRadius={circleRadius}

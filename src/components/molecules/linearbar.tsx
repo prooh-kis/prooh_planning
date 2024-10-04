@@ -12,7 +12,7 @@ export const LinearBar = ({ value, colors, }: LinearBarProps) => {
       <div
         className="border border-transparent rounded h-full"
         style={{
-          width: `${value * 2}%`,
+          width: `${value}%`,
           backgroundColor: colors[1] || '#7AB3A2',
         }}
       >
