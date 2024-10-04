@@ -6,14 +6,16 @@ interface Props {
 }
 
 const myFunction = ({ images }: Props) => {
-  console.log("images : ", images);
-  const onChange = (currentSlide: any) => {
-    console.log(currentSlide);
-  };
+  const onChange = (currentSlide: any) => {};
   return (
     <Carousel afterChange={onChange}>
       {images.map((image, index) => (
-        <img key={index} src={image} alt="" className="h-[48vh] w-full rounded-md" />
+        <img
+          key={index}
+          src={image}
+          alt=""
+          className="h-[48vh] w-full rounded-md"
+        />
       ))}
     </Carousel>
   );

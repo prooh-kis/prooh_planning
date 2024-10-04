@@ -235,12 +235,6 @@ export const ScreenSummaryTable: React.FC<any> = ({
                           for (const s of Object.keys(
                             touchPointsCities[tp][screenType]
                           )) {
-                            console.log(
-                              Object.values(
-                                touchPointsCities[tp][screenType][s]
-                              )
-                            );
-
                             handleMultipleFilteredScreen(
                               Object.values(
                                 touchPointsCities[tp][screenType][s]

@@ -12,7 +12,6 @@ interface Props {
 }
 
 export function TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
-  console.log(tabData);
 
 // Define icons for availability
   const CheckIcon = () => <span className="text-green-500 font-bold">✔</span>;

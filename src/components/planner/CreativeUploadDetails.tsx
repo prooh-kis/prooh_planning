@@ -27,7 +27,6 @@ export const CreativeUploadDetails = ({ setCurrentStep, step }: CreativeUploadDe
   ])
 
   const creativeUploadTabs = ({ cities }: any) => {
-    console.log(cities)
     // setCitiesCreative(cities.map((city: any, index: any) => {
     //   return {
     //     params: [],

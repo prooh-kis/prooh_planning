@@ -1,11 +1,31 @@
-import React from "react";
+import { getAllLocalStorageData } from "../../utils/localStorageUtils";
+import { CostSummaryTable1 } from "../../components/tables";
+import Modal from "antd/es/modal/Modal";
+import React, { useEffect, useState } from "react";
 
-export function ScreenSummaryModel() {
+export function ScreenSummaryModel({ totalScreensData }: any) {
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
   return (
     <div>
-      <button className="border border-1 rounded-full py-2 px-8 hover:bg-blue-500 hover:text-white">
+      <button
+        onClick={() => setOpen(true)}
+        className="border border-1 rounded-full py-2 px-8 hover:bg-blue-500 hover:text-white"
+      >
         Screen Summary
       </button>
+      <Modal open={open} onCancel={handleCancel} footer={[]} width={1100}>
+        <div className="p-2">
+          <CostSummaryTable1
+            totalData={totalScreensData}
+            selectedData={totalScreensData}
+          />
+        </div>
+      </Modal>
     </div>
   );
 }

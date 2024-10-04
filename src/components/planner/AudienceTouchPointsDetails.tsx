@@ -119,8 +119,12 @@ export const AudienceTouchPointsDetails = ({
 
   useEffect(() => {
     if (getAllLocalStorageData()) {
-      getMatchedData(JSON.parse(getAllLocalStorageData()["audienceData"]));
-      setCostData(JSON.parse(getAllLocalStorageData()["totalScreenCostData"]));
+      getMatchedData(
+        JSON.parse(getAllLocalStorageData()["audienceData"] || "{}")
+      );
+      setCostData(
+        JSON.parse(getAllLocalStorageData()["totalScreenCostData"] || "{}")
+      );
     }
     dispatch(
       getScreensCostData({
@@ -185,14 +189,16 @@ export const AudienceTouchPointsDetails = ({
           and location target audience and location location
         </h1>
       </div>
-      {/* <Footer
+
+      <Footer
         handleBack={() => {
           setCurrentStep(step - 1);
         }}
         handleSave={() => {
           setCurrentStep(step + 1);
         }}
-      /> */}
+        totalScreensData={totalScreensData}
+      />
     </div>
   );
 };

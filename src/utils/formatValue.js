@@ -1,5 +1,4 @@
 export function formatNumber(num) {
-  console.log(num)
   if (num >= 1000000) {
     return (num / 1000000).toFixed(1) + 'M';
   } else if (num >= 1000) {
