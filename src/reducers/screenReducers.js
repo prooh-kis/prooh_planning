@@ -7,7 +7,10 @@ import {
   GET_SCREENS_COST_DATA_SUCCESS,
   GET_SCREENS_DATA_ADVANCE_FILTER_ERROR,
   GET_SCREENS_DATA_ADVANCE_FILTER_REQUEST,
-  GET_SCREENS_DATA_ADVANCE_FILTER_SUCCESS
+  GET_SCREENS_DATA_ADVANCE_FILTER_SUCCESS,
+  GET_SCREENS_PRICE_FOR_REGULAR_COHORT_ERROR,
+  GET_SCREENS_PRICE_FOR_REGULAR_COHORT_REQUEST,
+  GET_SCREENS_PRICE_FOR_REGULAR_COHORT_SUCCESS
 } from "../constants/screenConstants";
 
 export function screensAudiencesDataGetReducer(state = [], action) {
@@ -59,6 +62,25 @@ export function screensDataAdvanceFilterGetReducer(state = [], action) {
         data: action.payload,
       };
     case GET_SCREENS_DATA_ADVANCE_FILTER_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function regularVsCohortPriceDataGetReducer(state = [], action) {
+  switch (action.type) {
+    case GET_SCREENS_PRICE_FOR_REGULAR_COHORT_REQUEST:
+      return { loading: true };
+    case GET_SCREENS_PRICE_FOR_REGULAR_COHORT_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_SCREENS_PRICE_FOR_REGULAR_COHORT_ERROR:
       return {
         loading: false,
         error: action.payload,

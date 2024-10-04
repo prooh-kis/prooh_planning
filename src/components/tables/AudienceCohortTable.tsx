@@ -47,26 +47,26 @@ export const AudienceCohortTable = ({ audiences, selectedAudiences, setSelectedA
             <p className="text-[12px] font-normal">100</p>
           </th>
         </tr>
-        <div className="w-full h-[40vh] overflow-scroll py-3">
+        <tr className="w-full h-[40vh] overflow-scroll py-3">
           {Object.keys(audiences)?.map((a: any, i: any) => {
             const cohortName = a;
             const cohortValue = audiences[a]; // Assuming this is the cohort value (percentage)
             return (
-              <tr key={i} className="grid grid-cols-6 gap-4 flex justify-between items-center w-full p-2">
-                <th className="col-span-4 flex justify-between w-auto truncate text font-normal">
+              <td key={i} className="grid grid-cols-6 gap-4 flex justify-between items-center w-full p-2">
+                <div className="col-span-4 flex justify-between w-auto truncate text font-normal">
                   <CheckboxInput
                     checked={selectedAudiences.includes(cohortName) ? true : false}
                     label={cohortName}
                     onChange={(e: any) => handleCheckClick({ cohort: cohortName, checked: e})}
                   />
-                </th>
-                <th className="col-span-2 pr-2">
+                </div>
+                <div className="col-span-2 pr-2">
                   <LinearBar value={cohortValue} colors={["#F3F3F3", "#7AB3A2"]} />
-                </th>
-              </tr>
+                </div>
+              </td>
             );
           })}
-        </div>
+        </tr>
       </tbody>
     </table>
   )

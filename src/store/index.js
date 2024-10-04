@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 // import { thunk } from "redux-thunk"
 import authReducer from "./authSlice";
 import {
+  regularVsCohortPriceDataGetReducer,
   screensAudiencesDataGetReducer,
   screensCostDataGetReducer,
   screensDataAdvanceFilterGetReducer,
@@ -28,6 +29,8 @@ const store = configureStore({
     screensAudiencesDataGet: screensAudiencesDataGetReducer,
     screensCostDataGet: screensCostDataGetReducer,
     screensDataAdvanceFilterGet : screensDataAdvanceFilterGetReducer,
+    regularVsCohortPriceDataGet: regularVsCohortPriceDataGetReducer,
+    
     // auth
     auth: authReducer,
     userSignin: userSigninReducer,

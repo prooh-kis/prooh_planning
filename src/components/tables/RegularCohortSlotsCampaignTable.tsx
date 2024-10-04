@@ -1,8 +1,15 @@
+import { formatNumber } from "../../utils/formatValue";
 
-export const CohortSlotsCampaignTable = () => {
+interface RegularCohortSlotsCampaignTableProps {
+  priceData?: any;
+  setShowSummary?: any;
+  type?: any;
+  showSummary?: any;
+}
+export const RegularCohortSlotsCampaignTable = ({ type, setShowSummary, priceData, showSummary }: RegularCohortSlotsCampaignTableProps) => {
   return (
     <table className="w-full">
-      <thead className="bg-[#DFE8FF] flex justify-between items-center w-full">
+      <thead className={`bg-[${type === "regular" ? "#F7F7F7" : "#DFE8FF"}] flex justify-between items-center w-full`}>
         <tr className="flex justify-between w-full h-[40px]">
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F]">
@@ -34,14 +41,19 @@ export const CohortSlotsCampaignTable = () => {
               Total Cost
             </h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2">
+          {/* <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F]">
               SOV
+            </h1>
+          </th> */}
+          <th className="flex w-full items-center justify-center gap-2">
+            <h1 className="text-[14px] text-[#21394F]">
+              Duration
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F]">
-              Duration
+              Details
             </h1>
           </th>
         </tr>
@@ -50,42 +62,60 @@ export const CohortSlotsCampaignTable = () => {
         <tr className=" flex justify-between border-b w-full h-[45px]">
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F]">
-              Total
+              {priceData?.tableData?.totalScreens}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              sfdf
+              &#8377;{
+                priceData?.tableData?.cpm.toFixed(0) > 1 
+                  ? priceData?.tableData?.cpm.toFixed(0)
+                  : 1
+              }
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              dsfsdf
+              {formatNumber(priceData?.tableData?.impressionPerDay.toFixed(0) || 0)}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              dfffa
+              {priceData?.tableData?.totalSlotsPerDay.toFixed(0)}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              30 Days
+              &#8377;{priceData?.tableData?.pricePerSlot.toFixed(0)}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              100K
+              &#8377;{formatNumber(priceData?.tableData?.costOfCampaign.toFixed(0) || 0)}
             </h1>
           </th>
+          {/* <th className="flex w-full items-center justify-center gap-2">
+            <h1 className="text-[14px] text-[#21394F] font-normal">
+              {priceData?.tableData?.sov}
+            </h1>
+          </th> */}
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              3Cr
+              {priceData?.tableData?.duration} Days
             </h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2">
+          <th
+            className="flex w-full items-center justify-center gap-2"
+            onClick={() => {
+              if (showSummary === type) {
+                setShowSummary(null);
+              } else {
+                setShowSummary(type);
+              }
+            }}
+          >
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              0.2
+              <i className="fi fi-sr-eye"></i>
             </h1>
           </th>
         </tr>

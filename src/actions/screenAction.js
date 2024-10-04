@@ -8,7 +8,10 @@ import {
   GET_SCREENS_COST_DATA_SUCCESS,
   GET_SCREENS_DATA_ADVANCE_FILTER_ERROR,
   GET_SCREENS_DATA_ADVANCE_FILTER_REQUEST,
-  GET_SCREENS_DATA_ADVANCE_FILTER_SUCCESS
+  GET_SCREENS_DATA_ADVANCE_FILTER_SUCCESS,
+  GET_SCREENS_PRICE_FOR_REGULAR_COHORT_ERROR,
+  GET_SCREENS_PRICE_FOR_REGULAR_COHORT_REQUEST,
+  GET_SCREENS_PRICE_FOR_REGULAR_COHORT_SUCCESS
 } from "../constants/screenConstants";
 
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/screens`;
@@ -78,6 +81,28 @@ export const getScreenDataForAdvanceFilters = ({ touchPoints }) => async (dispat
   } catch (error) {
     dispatch({
       type: GET_SCREENS_DATA_ADVANCE_FILTER_ERROR,
+      payload: error,
+    });
+  }
+}
+
+export const getRegularVsCohortPriceData = ({ screenIds, cohorts, gender, duration }) => async (dispatch, getState) => {
+  dispatch({
+    type: GET_SCREENS_PRICE_FOR_REGULAR_COHORT_REQUEST,
+    payload: { screenIds, cohorts, gender, duration },
+  });
+
+  try {
+    const { data } = await axios.post(`${url}/tableDataComparePlanPage`, {
+      screenIds, cohorts, gender, duration
+    });
+    dispatch({
+      type: GET_SCREENS_PRICE_FOR_REGULAR_COHORT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_SCREENS_PRICE_FOR_REGULAR_COHORT_ERROR,
       payload: error,
     });
   }
