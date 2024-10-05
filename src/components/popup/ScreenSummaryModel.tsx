@@ -14,7 +14,7 @@ export function ScreenSummaryModel({ totalScreensData }: any) {
     <div>
       <button
         onClick={() => setOpen(true)}
-        className="border border-1 rounded-full py-2 px-8 hover:bg-blue-500 hover:text-white"
+        className="border border-1 rounded-full py-2 px-4 text-[14px] hover:bg-blue-500 hover:text-white"
       >
         Screen Summary
       </button>

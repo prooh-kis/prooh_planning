@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { MapWithGeometry } from "../../components/molecules/MapWithGeometry";
 import * as turf from "@turf/turf";
-import { getAllLocalStorageData } from "../../utils/localStorageUtils";
+import { getAllLocalStorageData, getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import { LocationProximity } from "../../components/segments/LocationProximity";
 import { POIProximity } from "../../components/segments/POIProximity";
 import { Footer } from "../../components/footer";
 import { SelectManuallyScreensCheckBox } from "../../components/segments/SelectManuallyScreensCheckBox";
 import { message } from "antd";
+import { useDispatch } from "react-redux";
+import { getRegularVsCohortPriceData } from "../../actions/screenAction";
 
 type Coordinate = [number, number];
 
@@ -28,7 +30,7 @@ export const AdvanceFiltersDetails = ({
   error,
 }: AdvanceFiltersDetailsProps) => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch<any>();
   const [storeFilter, setStoreFilter] = useState<any>(true);
 
   const [circleRadius, setCircleRadius] = useState<any>(1);
@@ -62,11 +64,6 @@ export const AdvanceFiltersDetails = ({
     let result = Array.from(uniqueScreens);
 
     return result;
-  };
-
-  const handlePOIScreens = (myPOIs: any) => {
-    console.log(allScreens.filter((s: any) => s.location.pointOfInterest));
-    console.log(selectedPOIs);
   };
 
   const getMapData = useCallback(
@@ -234,6 +231,8 @@ export const AdvanceFiltersDetails = ({
 
   const handleConfirmScreensSelections = (checked: boolean) => {
     setIsDisabled(!checked);
+    const selectedScreenIds = finalSelectedScreens.map((s: any) => s._id);
+    saveDataOnLocalStorage("selectedScreensId", selectedScreenIds);
   };
 
   return (
@@ -278,7 +277,7 @@ export const AdvanceFiltersDetails = ({
               />
             </div>
           ) : (
-            <div>
+            <div className="">
               <div className="flex justify-between">
                 <div className="truncate">
                   <h1 className="text-[24px] text-primaryText font-semibold truncate">
@@ -302,7 +301,6 @@ export const AdvanceFiltersDetails = ({
                 setPOIFilteredScreens={setPOIFilteredScreens}
                 allScreens={allScreens}
                 finalSelectedScreens={finalSelectedScreens}
-                handlePOIScreens={handlePOIScreens}
                 manuallySelected={selectedScreensFromMap}
                 handleAddManualSelectedScreenIntoFinalSelectedScreens={
                   handleAddManualSelectedScreenIntoFinalSelectedScreens
@@ -316,7 +314,7 @@ export const AdvanceFiltersDetails = ({
             unselectedScreen={allScreens?.length - finalSelectedScreens?.length}
             handleCheck={handleAddManualSelectedScreenIntoFinalSelectedScreens}
           />
-          <div className="flex items-center pt-2">
+          <div className="flex items-center pt-4 mx-[-1px]">
             <CheckboxInput
               label={
                 <>
@@ -332,7 +330,7 @@ export const AdvanceFiltersDetails = ({
           </div>
         </div>
 
-        <div className="col-span-1 w-full flex items-center justify-center">
+        <div className="col-span-1 w-full">
           <MapWithGeometry
             handleRouteData={handleRouteData}
             circleRadius={circleRadius}
@@ -344,7 +342,7 @@ export const AdvanceFiltersDetails = ({
           />
         </div>
       </div>
-      <div className="pt-4">
+      <div className="px-4 fixed bottom-0 left-0 w-full bg-white z-10">
         <Footer
           handleBack={() => {
             setCurrentStep(step - 1);
@@ -354,7 +352,7 @@ export const AdvanceFiltersDetails = ({
               message.error("Please  confirm screen selection");
             } else setCurrentStep(step + 1);
           }}
-          totalScreensData={{}}
+          totalScreensData={getDataFromLocalStorage("costSummary")["2"]}
         />
       </div>
     </div>

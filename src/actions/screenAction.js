@@ -3,6 +3,9 @@ import {
   GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
   GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
   GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
+  GET_SCREEN_SUMMARY_DATA_ERROR,
+  GET_SCREEN_SUMMARY_DATA_REQUEST,
+  GET_SCREEN_SUMMARY_DATA_SUCCESS,
   GET_SCREENS_COST_DATA_ERROR,
   GET_SCREENS_COST_DATA_REQUEST,
   GET_SCREENS_COST_DATA_SUCCESS,
@@ -105,5 +108,26 @@ export const getRegularVsCohortPriceData = ({ screenIds, cohorts, gender, durati
       type: GET_SCREENS_PRICE_FOR_REGULAR_COHORT_ERROR,
       payload: error,
     });
+  }
+}
+
+export const getScreenSummaryData = ({screenIds, touchPointData, cohorts, gender}) => async (dispatch, getState) => {
+  dispatch({
+    type: GET_SCREEN_SUMMARY_DATA_REQUEST,
+    payload: { screenIds, touchPointData, cohorts, gender },
+  });
+  try {
+    const { data } = await axios.post(`${url}/screenDataScreenSummaryPage`, {
+      screenIds, touchPointData, cohorts, gender
+    });
+    dispatch({
+      type: GET_SCREEN_SUMMARY_DATA_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_SCREEN_SUMMARY_DATA_ERROR,
+      payload: error,
+    })
   }
 }

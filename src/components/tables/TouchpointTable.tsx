@@ -59,7 +59,7 @@ export const TouchpointTable = ({
             <p className="text-[12px] font-normal">100</p>
           </th>
         </tr>
-        <tr className="w-full h-[40vh] overflow-scroll py-3">
+        <tr className="w-full overflow-scroll py-3">
           {Object.keys(touchPoints)?.map((a: any, i: any) => {
             return (
               <td key={i} className="grid grid-cols-6 gap-4 flex justify-between items-center w-full p-2">

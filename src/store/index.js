@@ -6,6 +6,7 @@ import {
   screensAudiencesDataGetReducer,
   screensCostDataGetReducer,
   screensDataAdvanceFilterGetReducer,
+  screenSummaryDataGetReducer,
 } from "../reducers/screenReducers";
 import {
   userEmailVerificationReducer,
@@ -26,18 +27,19 @@ const store = configureStore({
   initialState,
   reducer: {
     //screen
-    screensAudiencesDataGet: screensAudiencesDataGetReducer,
-    screensCostDataGet: screensCostDataGetReducer,
+    screensAudiencesDataGet : screensAudiencesDataGetReducer,
+    screensCostDataGet : screensCostDataGetReducer,
     screensDataAdvanceFilterGet : screensDataAdvanceFilterGetReducer,
-    regularVsCohortPriceDataGet: regularVsCohortPriceDataGetReducer,
+    regularVsCohortPriceDataGet : regularVsCohortPriceDataGetReducer,
+    screenSummaryDataGet : screenSummaryDataGetReducer,
     
     // auth
-    auth: authReducer,
-    userSignin: userSigninReducer,
-    userSignup: userSignupReducer,
-    userUpdatePassword: userUpdatePasswordReducer,
-    emailVerify: userEmailVerificationReducer,
-    userSendEmailToResetPassword: userSendEmailToResetPasswordReducer,
+    auth : authReducer,
+    userSignin : userSigninReducer,
+    userSignup : userSignupReducer,
+    userUpdatePassword : userUpdatePasswordReducer,
+    emailVerify : userEmailVerificationReducer,
+    userSendEmailToResetPassword : userSendEmailToResetPasswordReducer,
 
   },
   // middleware: thunk

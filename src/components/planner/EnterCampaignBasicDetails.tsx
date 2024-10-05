@@ -4,7 +4,7 @@ import { PrimaryInput } from "../atoms/PrimaryInput";
 import { useNavigate } from "react-router-dom";
 import { CalendarInput } from "../atoms/CalendarInput";
 import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
-import { saveDataOnLocalStorage } from "../../utils/localStorageUtils";
+import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import { message } from "antd";
 
 interface EnterCampaignBasicDetailsProps {
@@ -19,13 +19,14 @@ export const EnterCampaignBasicDetails = ({
   campaignType,
 }: EnterCampaignBasicDetailsProps) => {
   const navigate = useNavigate();
-  const [campaignName, setCampaignName] = useState<any>("");
-  const [brandName, setBrandName] = useState<any>("");
-  const [clientName, setClientName] = useState<any>("");
-  const [industry, setIndustry] = useState<any>("");
-  const [startDate, setStartDate] = useState<any>("");
-  const [endDate, setEndDate] = useState<any>("");
-  const [duration, setDuration] = useState<any>("");
+
+  const [campaignName, setCampaignName] = useState<any>(getDataFromLocalStorage("campaign").basicDetails.campaignName || "");
+  const [brandName, setBrandName] = useState<any>(getDataFromLocalStorage("campaign").basicDetails.brandName || "");
+  const [clientName, setClientName] = useState<any>(getDataFromLocalStorage("campaign").basicDetails.clientName || "");
+  const [industry, setIndustry] = useState<any>(getDataFromLocalStorage("campaign").basicDetails.industry || "");
+  const [startDate, setStartDate] = useState<any>(getDataFromLocalStorage("campaign").basicDetails.startDate || "");
+  const [endDate, setEndDate] = useState<any>(getDataFromLocalStorage("campaign").basicDetails.endDate || "");
+  const [duration, setDuration] = useState<any>(getDataFromLocalStorage("campaign").basicDetails.duration || 30);
 
   const [enterDuration, setEnterDuration] = useState<any>(false);
 
@@ -57,20 +58,12 @@ export const EnterCampaignBasicDetails = ({
         industry: industry || "industry",
         startDate: startDate || "1 Jan 1970",
         endDate: endDate || "1 Feb 1970",
+        duration: duration || 30,
       },
     });
     setCurrentStep(step + 1);
-  }, [
-    brandName,
-    campaignName,
-    clientName,
-    endDate,
-    industry,
-    startDate,
-    campaignType,
-  ]);
+  }, [campaignType, campaignName, brandName, clientName, industry, startDate, endDate, duration, setCurrentStep, step]);
 
-  useEffect(() => {}, []);
 
   const handleSetNewDuration = () => {
     if (startDate && endDate)

@@ -68,30 +68,30 @@ export const RegularCohortSlotsCampaignTable = ({ type, setShowSummary, priceDat
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
               &#8377;{
-                priceData?.tableData?.cpm.toFixed(0) > 1 
-                  ? priceData?.tableData?.cpm.toFixed(0)
+                priceData?.tableData?.cpm?.toFixed(0) > 1 
+                  ? priceData?.tableData?.cpm?.toFixed(0)
                   : 1
               }
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              {formatNumber(priceData?.tableData?.impressionPerDay.toFixed(0) || 0)}
+              {formatNumber(priceData?.tableData?.impressionPerDay?.toFixed(0) || 0)}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              {priceData?.tableData?.totalSlotsPerDay.toFixed(0)}
+              {priceData?.tableData?.totalSlotsPerDay?.toFixed(0)}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              &#8377;{priceData?.tableData?.pricePerSlot.toFixed(0)}
+              &#8377;{priceData?.tableData?.pricePerSlot?.toFixed(0)}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              &#8377;{formatNumber(priceData?.tableData?.costOfCampaign.toFixed(0) || 0)}
+              &#8377;{formatNumber(priceData?.tableData?.costOfCampaign?.toFixed(0) || 0)}
             </h1>
           </th>
           {/* <th className="flex w-full items-center justify-center gap-2">

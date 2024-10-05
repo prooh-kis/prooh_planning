@@ -34,22 +34,8 @@ export const ScreenSummaryTable: React.FC<any> = ({
   const [stateCities, setStateCities] = useState<any>({});
   const [cityTouchPoints, setCityTouchPoints] = useState<any>({});
   const [touchPointsCities, setTouchPointsCities] = useState<any>({});
-  const [selectedScreen, setSelectedScreen] = useState<any>(null);
 
   const [isPopupOpen, setIsPopupOpen] = useState<Boolean>(false);
-  const [modalData, setModalData] = useState<any>(null);
-
-  const handleOpenScreenDetailModel = (screenName: string) => {
-    console.log("handleOpenScreenDetailModel : ", screenName);
-    const screenData = allScreen?.find(
-      (screen: any) => screen?.screenName == screenName
-    );
-    console.log("screenData : ", screenData);
-    setSelectedScreen(screenData);
-    setTimeout(() => {
-      setIsPopupOpen(true);
-    }, 0);
-  };
 
   const fillCntData = (myData: any) => {
     const cs: any = {};

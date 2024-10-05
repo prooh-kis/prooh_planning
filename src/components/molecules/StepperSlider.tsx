@@ -7,11 +7,9 @@ interface StepSliderProps {
 }
 
 export const StepperSlider: React.FC<StepSliderProps> = ({ setStep, steps, step }) => {
-  const [currentStep, setCurrentStep] = useState<number>(step);
 
   // Function to handle step marker click
   const handleStepClick = (step: number) => {
-    setCurrentStep(step);
     setStep(step);
   };
 
@@ -42,8 +40,8 @@ export const StepperSlider: React.FC<StepSliderProps> = ({ setStep, steps, step 
         <div
           className="absolute top-1/2 bg-blue-500 h-[2px]"
           style={{
-            left: currentStep === 1 ? `calc(50% / ${steps})` : currentStep === 9 ? `calc(50% / ${steps})` : `calc(40% / ${steps})`, // Starts the line at the center of the first step
-            right: currentStep === 1 ? `calc(50% / ${steps})` : currentStep === 9 ? `calc(50% / ${steps})` : `calc(40% / ${steps})`, // Ends the line at the center of the last step
+            left: step === 1 ? `calc(50% / ${steps})` : step === 9 ? `calc(50% / ${steps})` : `calc(40% / ${steps})`, // Starts the line at the center of the first step
+            right: step === 1 ? `calc(50% / ${steps})` : step === 9 ? `calc(50% / ${steps})` : `calc(40% / ${steps})`, // Ends the line at the center of the last step
             transform: "translateY(-50%)",
           }}
         ></div>
@@ -57,11 +55,11 @@ export const StepperSlider: React.FC<StepSliderProps> = ({ setStep, steps, step 
             >
               {/* Icon or Text for each step */}
               <div className="mb-2">
-                {i + 1 === currentStep ? (
+                {i + 1 === step ? (
                   <span className={
-                    currentStep === 1 ?
+                    step === 1 ?
                       `text-blue-500 text-[14px] pr-0 pl-0 truncate` :
-                    currentStep === 9 ?
+                    step === 9 ?
                       `text-blue-500 text-[14px] text-right pr-0 pl-0 truncate` :
                       `text-blue-500 text-[14px] pr-40 pl-40 truncate`
                   }>
@@ -70,7 +68,7 @@ export const StepperSlider: React.FC<StepSliderProps> = ({ setStep, steps, step 
                 ) : (
                   <i
                     className={`fi ${
-                      i + 1 <= currentStep
+                      i + 1 <= step
                         ? "text-blue-500" // Blue for selected steps
                         : "text-gray-300" // Gray for unselected steps
                     }`}
@@ -83,9 +81,9 @@ export const StepperSlider: React.FC<StepSliderProps> = ({ setStep, steps, step 
               {/* The clickable circle for each step */}
               <div
                 className={`cursor-pointer rounded-full transition-all duration-500 ${
-                  i + 1 === currentStep
+                  i + 1 === step
                     ? "h-4 w-4 bg-white border-2 border-blue-500" // Larger circle with ring for active step
-                    : i + 1 < currentStep
+                    : i + 1 < step
                     ? "h-3 w-3 bg-blue-500 border border-blue-500" // Blue for previous steps, same size as future
                     : "h-3 w-3 bg-white border border-blue-500" // White for future steps
                 }`}

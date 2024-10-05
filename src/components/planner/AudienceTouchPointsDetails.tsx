@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Message } from "../Message";
 import { Loading } from "../Loading";
 import { Footer } from "../../components/footer";
-import { getScreensCostData } from "../../actions/screenAction";
+import { getScreenDataForAdvanceFilters, getScreensCostData } from "../../actions/screenAction";
 import { TOTAL_SCREEN_COST_DATA } from "../../constants/localStorageConstants";
 
 interface EnterAudienceTouchpointDetailsProps {
@@ -92,12 +92,23 @@ export const AudienceTouchPointsDetails = ({
   const setCostData = (myData: any) => {
     setTotalScreensData(myData);
     setSelectedScreensData(myData);
+   
   };
 
   useEffect(() => {
     if (screensCost) {
       saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, screensCost);
       setCostData(screensCost);
+      saveDataOnLocalStorage("selectedAudienceTouchpoints", {
+        cohorts: selectedAudiences,
+        touchPoints: selectedTouchPoints,
+        gender: selectedGender.length === 1 && selectedGender.includes("Male")
+          ? "male"
+          : selectedGender.length === 1 && selectedGender.includes("Female")
+          ? "female"
+          : "both",
+        duration: 30,
+      })
     }
   }, [screensCost]);
 
@@ -113,6 +124,12 @@ export const AudienceTouchPointsDetails = ({
             : selectedGender.length === 1 && selectedGender.includes("Female")
             ? "female"
             : "both",
+      })
+    );
+    
+    dispatch(
+      getScreenDataForAdvanceFilters({
+        touchPoints: selectedTouchPoints,
       })
     );
   }, [selectedAudiences, selectedTouchPoints, selectedGender]);
@@ -189,16 +206,21 @@ export const AudienceTouchPointsDetails = ({
           and location target audience and location location
         </h1>
       </div>
-
-      <Footer
-        handleBack={() => {
-          setCurrentStep(step - 1);
-        }}
-        handleSave={() => {
-          setCurrentStep(step + 1);
-        }}
-        totalScreensData={totalScreensData}
-      />
+      <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
+        <Footer
+          handleBack={() => {
+            setCurrentStep(step - 1);
+          }}
+          handleSave={() => {
+            setCurrentStep(step + 1);
+            saveDataOnLocalStorage("costSummary", {
+              "1": totalScreensData,
+              "2": selectedScreensData,
+            })
+          }}
+          totalScreensData={totalScreensData}
+        />
+      </div>
     </div>
   );
 };

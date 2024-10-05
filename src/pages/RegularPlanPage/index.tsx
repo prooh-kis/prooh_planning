@@ -3,7 +3,7 @@ import { StepperSlider } from "../../components/molecules/StepperSlider";
 import {
   AdvanceFiltersDetails,
   AudienceTouchPointsDetails,
-  CohortComparisonDetails,
+  RegularCohortComparisonDetails,
   CreativeUploadDetails,
   EnterCampaignBasicDetails,
   ScreenSummaryDetails,
@@ -18,6 +18,7 @@ import {
 } from "../../actions/screenAction";
 import {
   getAllLocalStorageData,
+  getDataFromLocalStorage,
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
@@ -31,7 +32,7 @@ export const RegularPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const location = useLocation();
 
-  const [currentStep, setCurrentStep] = useState<any>(1);
+  const [currentStep, setCurrentStep] = useState<any>(getDataFromLocalStorage("currentStep") || 1);
 
   const screensAudiencesDataGet = useSelector(
     (state: any) => state.screensAudiencesDataGet
@@ -60,6 +61,7 @@ export const RegularPlanPage: React.FC = () => {
     data: advanceFilterScreens,
   } = screensDataAdvanceFilterGet;
 
+
   useEffect(() => {
     dispatch(getScreensAudiencesData({ markets: [] }));
     dispatch(
@@ -70,17 +72,17 @@ export const RegularPlanPage: React.FC = () => {
         duration: 30,
       })
     );
-    dispatch(
-      getScreenDataForAdvanceFilters({
-        touchPoints: [
-          "Arterial Route",
-          "CBD- SOHO",
-          "Feeder route",
-          "Golf course",
-          "Premium High Street",
-        ],
-      })
-    );
+    // dispatch(
+    //   getScreenDataForAdvanceFilters({
+    //     touchPoints: [
+    //       "Arterial Route",
+    //       "CBD- SOHO",
+    //       "Feeder route",
+    //       "Golf course",
+    //       "Premium High Street",
+    //     ],
+    //   })
+    // );
   }, [dispatch]);
 
   useEffect(() => {
@@ -98,7 +100,11 @@ export const RegularPlanPage: React.FC = () => {
         advanceFilterScreens
       );
     }
-  }, [screensAudiences, screensCost, advanceFilterScreens]);
+
+ 
+    saveDataOnLocalStorage("currentStep", currentStep);
+
+  }, [screensAudiences, screensCost, advanceFilterScreens, currentStep]);
 
   return (
     <div className="w-full h-full">
@@ -127,7 +133,7 @@ export const RegularPlanPage: React.FC = () => {
             error={errorAdvanceFilterScreens}
           />
         ) : currentStep === 4 ? (
-          <CohortComparisonDetails
+          <RegularCohortComparisonDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
           />
