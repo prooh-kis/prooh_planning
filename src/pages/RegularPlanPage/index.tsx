@@ -21,7 +21,7 @@ import {
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import {
   ADVANCE_FILTER_SCREENS_MAP_DATA,
   AUDIENCE_DATA,

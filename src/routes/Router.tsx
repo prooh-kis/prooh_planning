@@ -53,7 +53,8 @@ const Routers: React.FC = () => {
         />
 
         <Route
-          path={REGULARPLAN}
+          // path={REGULARPLAN}
+          path={"/regularplan/:id?"}
           element={
             <PrivateRoute layout={HomePageLayout}>
               <RegularPlanPage />

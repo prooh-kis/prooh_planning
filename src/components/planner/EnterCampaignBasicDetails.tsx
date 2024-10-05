@@ -6,6 +6,7 @@ import { CalendarInput } from "../atoms/CalendarInput";
 import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
 import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import { message } from "antd";
+import { useDispatch } from "react-redux";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -19,14 +20,15 @@ export const EnterCampaignBasicDetails = ({
   campaignType,
 }: EnterCampaignBasicDetailsProps) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<any>();
 
-  const [campaignName, setCampaignName] = useState<any>(getDataFromLocalStorage("campaign").basicDetails.campaignName || "");
-  const [brandName, setBrandName] = useState<any>(getDataFromLocalStorage("campaign").basicDetails.brandName || "");
-  const [clientName, setClientName] = useState<any>(getDataFromLocalStorage("campaign").basicDetails.clientName || "");
-  const [industry, setIndustry] = useState<any>(getDataFromLocalStorage("campaign").basicDetails.industry || "");
-  const [startDate, setStartDate] = useState<any>(getDataFromLocalStorage("campaign").basicDetails.startDate || "");
-  const [endDate, setEndDate] = useState<any>(getDataFromLocalStorage("campaign").basicDetails.endDate || "");
-  const [duration, setDuration] = useState<any>(getDataFromLocalStorage("campaign").basicDetails.duration || 30);
+  const [campaignName, setCampaignName] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.campaignName || "");
+  const [brandName, setBrandName] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.brandName || "");
+  const [clientName, setClientName] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.clientName || "");
+  const [industry, setIndustry] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.industry || "");
+  const [startDate, setStartDate] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.startDate || "");
+  const [endDate, setEndDate] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.endDate || "");
+  const [duration, setDuration] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.duration || 30);
 
   const [enterDuration, setEnterDuration] = useState<any>(false);
 
@@ -181,7 +183,7 @@ export const EnterCampaignBasicDetails = ({
             if (validateForm()) {
               saveCampaignDetailsOnLocalStorage();
             }
-            // navigate("/audience&touchpoints");
+            // navigate("/regular/campaignId");
           }}
         />
       </div>

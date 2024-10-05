@@ -7,4 +7,4 @@ export const HOME = "/";
 
 export const LOGIN = "/login";
 
-export const REGULARPLAN = "/regularplan"
+export const REGULARPLAN = "/regularplan/:id?";
