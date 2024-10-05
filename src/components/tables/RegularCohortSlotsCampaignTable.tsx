@@ -6,40 +6,37 @@ interface RegularCohortSlotsCampaignTableProps {
   type?: any;
   showSummary?: any;
 }
-export const RegularCohortSlotsCampaignTable = ({ type, setShowSummary, priceData, showSummary }: RegularCohortSlotsCampaignTableProps) => {
+export const RegularCohortSlotsCampaignTable = ({
+  type,
+  setShowSummary,
+  priceData,
+  showSummary,
+}: RegularCohortSlotsCampaignTableProps) => {
   return (
     <table className="w-full">
-      <thead className={`bg-[${type === "regular" ? "#F7F7F7" : "#DFE8FF"}] flex justify-between items-center w-full`}>
+      <thead
+        className={`bg-[${
+          type === "regular" ? "#F7F7F7" : "#DFE8FF"
+        }] flex justify-between items-center w-full`}
+      >
         <tr className="flex justify-between w-full h-[40px]">
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="text-[14px] text-[#21394F]">
-              Total Screens
-            </h1>
+            <h1 className="text-[14px] text-[#21394F]">Total Screens</h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="text-[14px] text-[#21394F]">
-              CPM
-            </h1>
+            <h1 className="text-[14px] text-[#21394F]">CPM</h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="text-[14px] text-[#21394F]">
-              Impressions/Day
-            </h1>
+            <h1 className="text-[14px] text-[#21394F]">Impressions/Day</h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="text-[14px] text-[#21394F]">
-              Total Slots/Day
-            </h1>
+            <h1 className="text-[14px] text-[#21394F]">Total Slots/Day</h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="text-[14px] text-[#21394F]">
-              Price/Slot
-            </h1>
+            <h1 className="text-[14px] text-[#21394F]">Price/Slot</h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="text-[14px] text-[#21394F]">
-              Total Cost
-            </h1>
+            <h1 className="text-[14px] text-[#21394F]">Total Cost</h1>
           </th>
           {/* <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F]">
@@ -47,14 +44,10 @@ export const RegularCohortSlotsCampaignTable = ({ type, setShowSummary, priceDat
             </h1>
           </th> */}
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="text-[14px] text-[#21394F]">
-              Duration
-            </h1>
+            <h1 className="text-[14px] text-[#21394F]">Duration</h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="text-[14px] text-[#21394F]">
-              Details
-            </h1>
+            <h1 className="text-[14px] text-[#21394F]">Details</h1>
           </th>
         </tr>
       </thead>
@@ -67,16 +60,17 @@ export const RegularCohortSlotsCampaignTable = ({ type, setShowSummary, priceDat
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              &#8377;{
-                priceData?.tableData?.cpm?.toFixed(0) > 1 
-                  ? priceData?.tableData?.cpm?.toFixed(0)
-                  : 1
-              }
+              &#8377;
+              {priceData?.tableData?.cpm?.toFixed(0) > 1
+                ? priceData?.tableData?.cpm?.toFixed(0)
+                : 1}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              {formatNumber(priceData?.tableData?.impressionPerDay?.toFixed(0) || 0)}
+              {formatNumber(
+                priceData?.tableData?.impressionPerDay?.toFixed(0) || 0
+              )}
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
@@ -91,7 +85,10 @@ export const RegularCohortSlotsCampaignTable = ({ type, setShowSummary, priceDat
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              &#8377;{formatNumber(priceData?.tableData?.costOfCampaign?.toFixed(0) || 0)}
+              &#8377;
+              {formatNumber(
+                priceData?.tableData?.costOfCampaign?.toFixed(0) || 0
+              )}
             </h1>
           </th>
           {/* <th className="flex w-full items-center justify-center gap-2">
@@ -121,5 +118,5 @@ export const RegularCohortSlotsCampaignTable = ({ type, setShowSummary, priceDat
         </tr>
       </tbody>
     </table>
-  )
-}
+  );
+};
