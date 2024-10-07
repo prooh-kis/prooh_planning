@@ -125,7 +125,7 @@ export const ScreenSummaryTable = ({
                                   `}
                                 >
                                       <ScreenDataModel
-                                        screenName={screen?.screenName || ""}
+                                        screen={screen || ""}
                                       />
                                     <div className="flex gap-4 justify-between items-center">
                                       <div className="flex gap-1 items-center">

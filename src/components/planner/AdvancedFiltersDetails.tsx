@@ -328,8 +328,8 @@ export const AdvanceFiltersDetails = ({
                   for my plan
                 </>
               }
-              onChange={() => {
-                handleConfirmScreensSelections
+              onChange={(e) => {
+                handleConfirmScreensSelections(e)
                 dispatch(getRegularVsCohortPriceData({
                   screenIds: JSON.parse(getAllLocalStorageData()["selectedScreensId"] || "[]"),
                   cohorts: JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}")?.cohorts,
