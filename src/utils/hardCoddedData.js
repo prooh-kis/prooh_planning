@@ -1,19 +1,14 @@
 
 export const screenSummaryTabData = [
   {
-    icon: <i className="fi fi-rr-settings"></i>,
+    icon: <i className="fi fi-rr-screen flex items-center"></i>,
     label: "Screen Summary",
     id: "1",
   },
   {
-    icon: <i className="fi fi-rr-settings"></i>,
-    label: "View Plane Pics",
+    icon: <i className="fi fi-sr-summary-check flex items-center"></i>,
+    label: "Plan Summary",
     id: "2",
-  },
-  {
-    icon: <i className="fi fi-rr-settings"></i>,
-    label: "Plane Summary",
-    id: "3",
   },
 ];
 

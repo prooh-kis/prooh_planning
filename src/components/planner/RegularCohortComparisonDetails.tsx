@@ -6,14 +6,18 @@ import {
   RegularCohortSummaryTable,
 } from "../tables";
 import { useDispatch, useSelector } from "react-redux";
-import { getRegularVsCohortPriceData } from "../../actions/screenAction";
+import { getRegularVsCohortPriceData, getScreenSummaryData } from "../../actions/screenAction";
 import { getAllLocalStorageData, getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import { Footer } from "../../components/footer";
 import { message } from "antd";
+import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { useLocation } from "react-router-dom";
 
 export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
 
   const dispatch = useDispatch<any>();
+  const { pathname } = useLocation();
+
   const [isDisabled, setIsDisabled] = useState<any>(true);
 
   const [showSummary, setShowSummary] = useState<any>(null);
@@ -46,13 +50,16 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
 
   useEffect(() => {
  
-    dispatch(getRegularVsCohortPriceData({
-      screenIds: screenIds,
-      cohorts: cohorts,
-      gender: gender,
-      duration: duration,
-    }))
-  },[cohorts, dispatch, duration, gender, screenIds])
+    if (!priceData) {
+      dispatch(getRegularVsCohortPriceData({
+        screenIds: screenIds,
+        cohorts: cohorts,
+        gender: gender,
+        duration: duration,
+      }));
+    }
+
+  },[priceData, cohorts, dispatch, duration, gender, screenIds])
 
   
   const handleRegularVsCohortSelection = (type: any) => {
@@ -62,7 +69,9 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
 
     const oldData = getDataFromLocalStorage("costSummary");
     oldData["3"] = priceData[type].tableData;
-    console.log(oldData);
+    const campaign = getDataFromLocalStorage("campaign");
+    campaign.basicDetails["regularVsCohort"] = type;
+    saveDataOnLocalStorage("campaign", campaign);
     saveDataOnLocalStorage("costSummary", oldData)
   }
   return (
@@ -129,6 +138,10 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
           isChecked={selectedBuyingOption === "regular" ? true : false}
           onChange={() => {
             handleRegularVsCohortSelection("regular");
+            dispatch(getScreenSummaryData({
+              id: pathname.split("/").splice(-1)[0],
+              type: getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]
+            }))
           }}
         />
         <RadioInput
@@ -137,6 +150,10 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
           isChecked={selectedBuyingOption === "cohort" ? true : false}
           onChange={() => {
             handleRegularVsCohortSelection("cohort");
+            dispatch(getScreenSummaryData({
+              id: pathname.split("/").splice(-1)[0],
+              type: getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]
+            }))
           }}
         />
       </div>
@@ -148,7 +165,16 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
           handleSave={() => {
             if (isDisabled) {
               message.error("Please  confirm screen selection");
-            } else setCurrentStep(step + 1);
+            } else {
+              dispatch(addDetailsToCreateCampaign({
+                pageName: "Compare Plan Page",
+                id: pathname.split("/").splice(-1)[0],
+                regularTouchPointWiseSlotDetails: priceData?.regular?.touchPointData,
+                cohortTouchPointWiseSlotDetails: priceData?.cohort?.touchPointData,
+                selectedType: selectedBuyingOption
+              }));
+              setCurrentStep(step + 1);
+            };
           }}
           totalScreensData={{}}
         />

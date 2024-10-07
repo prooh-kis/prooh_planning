@@ -6,18 +6,21 @@ import { CalendarInput } from "../atoms/CalendarInput";
 import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
 import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import { message } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
   campaignType?: any;
+  userInfo?: any;
 }
 
 export const EnterCampaignBasicDetails = ({
   setCurrentStep,
   step,
   campaignType,
+  userInfo,
 }: EnterCampaignBasicDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -30,7 +33,16 @@ export const EnterCampaignBasicDetails = ({
   const [endDate, setEndDate] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.endDate || "");
   const [duration, setDuration] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.duration || 30);
 
+
   const [enterDuration, setEnterDuration] = useState<any>(false);
+
+  const detailsToCreateCampaignAdd = useSelector((state: any) => state.detailsToCreateCampaignAdd);
+  const {
+    loading: loadingAddDetails,
+    error: errorAddDetails,
+    success: successAddDetails,
+    data: addDetails,
+  } = detailsToCreateCampaignAdd;
 
   const validateForm = () => {
     if (campaignName.length === 0) {
@@ -51,6 +63,22 @@ export const EnterCampaignBasicDetails = ({
   };
 
   const saveCampaignDetailsOnLocalStorage = useCallback(() => {
+    dispatch(addDetailsToCreateCampaign({
+      pageName: "Basic Details Page",
+      name: campaignName,
+      brandName: brandName,
+      campaignType: campaignType,
+      clientName: clientName,
+      industry: industry,
+      startDate: startDate,
+      endDate: endDate,
+      duration: duration,
+      campaignPlannerId: userInfo?._id,
+      campaignPlannerName: userInfo?.name,
+      campaignPlannerEmail: userInfo?.email,
+      campaignManagerId: userInfo?.primaryUserId,
+      campaignManagerEmail: userInfo?.primaryUserEmail
+    }))
     saveDataOnLocalStorage(`campaign`, {
       basicDetails: {
         campaignType: campaignType || "Regular",
@@ -63,8 +91,8 @@ export const EnterCampaignBasicDetails = ({
         duration: duration || 30,
       },
     });
-    setCurrentStep(step + 1);
-  }, [campaignType, campaignName, brandName, clientName, industry, startDate, endDate, duration, setCurrentStep, step]);
+
+  }, [dispatch, campaignName, brandName, clientName, industry, startDate, endDate, duration, userInfo?._id, userInfo?.name, userInfo?.email, userInfo?.primaryUserId, userInfo?.primaryUserEmail, campaignType]);
 
 
   const handleSetNewDuration = () => {
@@ -73,6 +101,17 @@ export const EnterCampaignBasicDetails = ({
     else message.error("Please enter first start , end Date");
   };
 
+  useEffect(() => {
+    if (errorAddDetails) {
+      message.error("Failed to add campaign details");
+    }
+    
+    if (successAddDetails) {
+      setCurrentStep(step + 1);
+      navigate(`/regularplan/${addDetails?._id}`);
+    }
+  },[navigate, successAddDetails]);
+  
   return (
     <div className="w-full py-3">
       <div className="">
@@ -183,7 +222,6 @@ export const EnterCampaignBasicDetails = ({
             if (validateForm()) {
               saveCampaignDetailsOnLocalStorage();
             }
-            // navigate("/regular/campaignId");
           }}
         />
       </div>

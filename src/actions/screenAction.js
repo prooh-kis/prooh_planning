@@ -6,6 +6,9 @@ import {
   GET_SCREEN_SUMMARY_DATA_ERROR,
   GET_SCREEN_SUMMARY_DATA_REQUEST,
   GET_SCREEN_SUMMARY_DATA_SUCCESS,
+  GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_ERROR,
+  GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_REQUEST,
+  GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_SUCCESS,
   GET_SCREENS_COST_DATA_ERROR,
   GET_SCREENS_COST_DATA_REQUEST,
   GET_SCREENS_COST_DATA_SUCCESS,
@@ -111,14 +114,14 @@ export const getRegularVsCohortPriceData = ({ screenIds, cohorts, gender, durati
   }
 }
 
-export const getScreenSummaryData = ({screenIds, touchPointData, cohorts, gender}) => async (dispatch, getState) => {
+export const getScreenSummaryData = ({id, type}) => async (dispatch, getState) => {
   dispatch({
     type: GET_SCREEN_SUMMARY_DATA_REQUEST,
-    payload: { screenIds, touchPointData, cohorts, gender },
+    payload: { id, type },
   });
   try {
     const { data } = await axios.post(`${url}/screenDataScreenSummaryPage`, {
-      screenIds, touchPointData, cohorts, gender
+      id, type
     });
     dispatch({
       type: GET_SCREEN_SUMMARY_DATA_SUCCESS,
@@ -127,6 +130,27 @@ export const getScreenSummaryData = ({screenIds, touchPointData, cohorts, gender
   } catch (error) {
     dispatch({
       type: GET_SCREEN_SUMMARY_DATA_ERROR,
+      payload: error,
+    })
+  }
+}
+
+export const getScreenSummaryPlanTableData = ({id}) => async (dispatch, getState) => {
+  dispatch({
+    type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_REQUEST,
+    payload: { id },
+  });
+  try {
+    const { data } = await axios.post(`${url}/tableDataScreenSummaryPage`, {
+      id
+    });
+    dispatch({
+      type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_ERROR,
       payload: error,
     })
   }

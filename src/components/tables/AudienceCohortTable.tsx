@@ -42,9 +42,7 @@ export const AudienceCohortTable = ({ audiences, selectedAudiences, setSelectedA
           </th>
           <th className="col-span-2 flex justify-between gap-4 pr-2">
             <p className="text-[12px] font-normal">0</p>
-            <p className="text-[12px] font-normal">25</p>
-            <p className="text-[12px] font-normal">50</p>
-            <p className="text-[12px] font-normal">100</p>
+            <p className="text-[12px] font-normal">{Number(Math.max(...Object.keys(audiences)?.map((a: any) => audiences[a])).toFixed(0)) + 1}</p>
           </th>
         </tr>
         <tr className="w-full h-[40vh] overflow-scroll py-3">
@@ -61,7 +59,7 @@ export const AudienceCohortTable = ({ audiences, selectedAudiences, setSelectedA
                   />
                 </div>
                 <div className="col-span-2 pr-2">
-                  <LinearBar value={cohortValue} colors={["#F3F3F3", "#7AB3A2"]} />
+                  <LinearBar highest={Math.max(...Object.keys(audiences)?.map((a: any) => audiences[a]))} value={cohortValue} colors={["#F3F3F3", "#7AB3A2"]} />
                 </div>
               </td>
             );

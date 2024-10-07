@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { PrimaryButton } from "../atoms/PrimaryButton";
 import { PrimaryInput } from "../atoms/PrimaryInput";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CalendarInput } from "../atoms/CalendarInput";
 import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
 
 import {
   getAllLocalStorageData,
+  getDataFromLocalStorage,
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import {
@@ -22,6 +23,7 @@ import { Loading } from "../Loading";
 import { Footer } from "../../components/footer";
 import { getScreenDataForAdvanceFilters, getScreensCostData } from "../../actions/screenAction";
 import { TOTAL_SCREEN_COST_DATA } from "../../constants/localStorageConstants";
+import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
 interface EnterAudienceTouchpointDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -38,6 +40,7 @@ export const AudienceTouchPointsDetails = ({
 }: EnterAudienceTouchpointDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
+  const { pathname } = useLocation();
 
   const [markets, setMarkets] = useState<any>({});
   const [audiences, setAudiences] = useState<any>({});
@@ -208,10 +211,20 @@ export const AudienceTouchPointsDetails = ({
       </div>
       <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
         <Footer
+          loading={loadingCost}
+          error={errorCost}
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
           handleSave={() => {
+            dispatch(addDetailsToCreateCampaign({
+              pageName: "Audience And TouchPoint Page",
+              id: pathname.split("/").splice(-1)[0],
+              markets: Object.keys(getDataFromLocalStorage("audienceData")),
+              cohorts: getDataFromLocalStorage("selectedAudienceTouchpoints").cohorts,
+              touchPoints: getDataFromLocalStorage("selectedAudienceTouchpoints").touchPoints,
+              gender: getDataFromLocalStorage("selectedAudienceTouchpoints").gender,
+            }))
             setCurrentStep(step + 1);
             saveDataOnLocalStorage("costSummary", {
               "1": totalScreensData,

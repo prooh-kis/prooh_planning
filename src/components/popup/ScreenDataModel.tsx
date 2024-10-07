@@ -135,8 +135,10 @@ export function ScreenDataModel({ screenName }: Props) {
   }, [open]);
 
   return (
-    <div>
-      <h1 onClick={handleOpen}>{screenName}</h1>
+    <div className="truncate">
+      <div className="truncate">
+        <h1 className="text-[14px] truncate" onClick={handleOpen}>{screenName}</h1>
+      </div>
       <Modal open={open} onCancel={handleCancel} footer={[]} width={1100}>
         <div className="flex gap-8">
           <div className="w-96">

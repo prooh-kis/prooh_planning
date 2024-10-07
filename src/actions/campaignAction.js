@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   ADD_DETAILS_TO_CREATE_CAMPAIGN_ERROR,
   ADD_DETAILS_TO_CREATE_CAMPAIGN_REQUEST,
@@ -6,13 +7,13 @@ import {
 
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/campaigns`;
 
-export const addDetailsToCreateCampaign = (inputData) => async (dispatch, getState) => {
+export const addDetailsToCreateCampaign = (input) => async (dispatch, getState) => {
   dispatch({
     type: ADD_DETAILS_TO_CREATE_CAMPAIGN_REQUEST,
-    payload: inputData,
+    payload: input,
   });
   try {
-    const { data } = await axios.post(`${url}/addDataForCampaign`, inputData);
+    const { data } = await axios.post(`${url}/addDataForCampaign`, input);
     dispatch({
       type: ADD_DETAILS_TO_CREATE_CAMPAIGN_SUCCESS,
       payload: data,

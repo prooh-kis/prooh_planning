@@ -1,314 +1,155 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { TabWithoutIcon } from "../molecules/TabWithoutIcon";
-import { ScreenDataModel } from "../popup/ScreenDataModel";
+import { ScreenDataModel } from "../../components/popup/ScreenDataModel";
 
-interface Data {
-  [key: string]: {
-    [key: string]: {
-      [key: string]: {
-        [key: string]: {
-          [key: string]: number;
-        };
-      };
-    };
-  };
-}
 
-interface Tab {
-  label: string;
-  id: string;
-}
+export const ScreenSummaryTable = ({
+  data,
+  currentCity,
+  setCurrentCity,
+  currentSummaryTab,
+  setScreensBuyingCount,
+  screensBuyingCount,
+  setCityZones,
+  cityZones,
+  setCityTP,
+  cityTP,
+  setScreenTypes
+}: any) => {
 
-export const ScreenSummaryTable: React.FC<any> = ({
-  data = {},
-  allScreen = [],
-  handleSetFilteredScreens,
-  isScreenSelected,
-  handleMultipleFilteredScreen,
-}) => {
-  const [currentSummaryTab, setCurrentSummaryTab] = useState<string>("1");
-  const [defCnt, setDefCnt] = useState<any>(["India"]);
-  const [defSt, setDefSt] = useState<any>([]);
 
-  const [countryStates, setCountryStates] = useState<any>({});
-  const [stateCities, setStateCities] = useState<any>({});
-  const [cityTouchPoints, setCityTouchPoints] = useState<any>({});
-  const [touchPointsCities, setTouchPointsCities] = useState<any>({});
 
-  const [isPopupOpen, setIsPopupOpen] = useState<Boolean>(false);
+  const handleData = useCallback((myData: any) => {
+    const zones: any = {};
+    const tps: any = {};
+    const screens: any = {}
+    const types: any = {};
 
-  const fillCntData = (myData: any) => {
-    const cs: any = {};
-    // Extracting data for cs
-    for (const country in myData) {
-      cs[country] = cs[country] || {};
-      for (const state in myData[country]) {
-        cs[country][state] = Object.keys(myData[country][state]).length;
-      }
-    }
-    return cs;
-  };
+    for (const city in myData) {
+      zones[city] = {};
+      tps[city] = {};
+      screens[city] = {}
+      types[city] = {};
+      for (const tp in myData[city]) {
+        tps[city][tp] = {};
+        for (const st in myData[city][tp]) {
+          tps[city][tp][st] = [];
+          types[city][st] = []
+          for (const zone in myData[city][tp][st]) {
+            zones[city][zone] = [];
+            for (const screen in myData[city][tp][st][zone]) {
+              zones[city][zone].push(myData[city][tp][st][zone][screen]?.screenName);
+              tps[city][tp][st].push(myData[city][tp][st][zone][screen]?.screenName);
+              types[city][st].push(myData[city][tp][st][zone][screen]?.screenName);
 
-  const fillStateData = (myData: any) => {
-    const sc: any = {};
-    // Extracting data for sc
-    for (const country in myData) {
-      for (const state in myData[country]) {
-        for (const city in myData[country][state]) {
-          sc[state] = sc[state] || {};
-          sc[state][city] = Object.keys(myData[country][state][city]).length;
-        }
-      }
-    }
-    return sc;
-  };
-
-  const fillCityData = (myData: any) => {
-    const ct: any = {};
-    // Extracting data for ct
-    for (const country in myData) {
-      for (const state in myData[country]) {
-        for (const city in myData[country][state]) {
-          ct[city] = ct[city] || {};
-          for (const attribute in myData[country][state][city]) {
-            ct[city][attribute] = myData[country][state][city][attribute];
-          }
-        }
-      }
-    }
-    return ct;
-  };
-
-  const fillTpData = (myData: any) => {
-    const tc: any = {};
-    // Extracting data for tc
-    for (const country in myData) {
-      for (const state in myData[country]) {
-        for (const city in myData[country][state]) {
-          for (const attribute in myData[country][state][city]) {
-            tc[attribute] = tc[attribute] || {};
-            for (const highlight in myData[country][state][city][attribute]) {
-              tc[attribute][highlight] = tc[attribute][highlight] || {};
-
-              tc[attribute][highlight][city] =
-                myData[country][state][city][attribute][highlight];
+              screens[city][myData[city][tp][st][zone][screen]?._id] = {}
+              screens[city][myData[city][tp][st][zone][screen]?._id]["status"] = true
+              screens[city][myData[city][tp][st][zone][screen]?._id]["data"] = myData[city][tp][st][zone][screen]
             }
-            // tc[attribute] = myData[country][state][city][attribute];
           }
         }
       }
     }
-    const sortedArray = Object.entries(tc).sort((a, b) =>
-      a[0].localeCompare(b[0])
-    );
-    const sortedObject = Object.fromEntries(sortedArray);
-    // console.log(sortedObject);
-    return sortedObject;
-  };
 
-  const handleCntClick = (country: any) => {
-    const dfc = Array.from(new Set([...defCnt, country]));
-    const dataToShow: any = {};
-    dfc.map((d: any) => {
-      dataToShow[d] = data[d];
-    });
-    setStateCities(fillStateData(dataToShow));
-    setCityTouchPoints(fillCityData(dataToShow));
-    setTouchPointsCities(fillTpData(dataToShow));
-  };
-
-  const handleStClick = (state: any) => {
-    const dfs = Array.from(new Set([...defSt, state]));
-    const dataToUse: any = {};
-    dfs.map((d: any) => {
-      dataToUse[d] = stateCities[d];
-    });
-    const dataToShow: any = {};
-
-    for (const state in dataToUse) {
-      for (const city in dataToUse[state]) {
-        dataToShow[city] = fillCityData(data)[city];
-      }
-    }
-
-    setCityTouchPoints(dataToShow);
-  };
+    setCurrentCity(Object.keys(data)[Number(currentSummaryTab) - 1]);
+    setCityZones(zones);
+    setCityTP(tps);
+    setScreenTypes(types);
+    setScreensBuyingCount(screens);
+  }, [currentSummaryTab, data, setCityTP, setCityZones, setCurrentCity, setScreenTypes, setScreensBuyingCount]);
 
   useEffect(() => {
     if (data !== undefined) {
-      setCountryStates(fillCntData(data));
-      setStateCities(fillStateData(data));
-      setCityTouchPoints(fillCityData(data));
-      setTouchPointsCities(fillTpData(data));
+      handleData(data);
     }
-  }, [data]);
-  // console.log(cityTouchPoints["Gurgaon"]["Malls"])
-  // console.log(touchPointsCities);
-
-  const closePopup = () => setIsPopupOpen(false);
-
-  // Define icons for availability
-  const CheckIcon = () => <span className="text-green-500 font-bold">✔</span>;
-  const CrossIcon = () => <span className="text-red-500 font-bold">✘</span>;
+  }, [data, handleData, setCityTP, setCityZones, setCurrentCity]);
 
   return (
     <div className="">
-      <div className="py-4">
-        <TabWithoutIcon
-          currentTab={currentSummaryTab}
-          onClick={(tab: Tab) => {
-            setCurrentSummaryTab(tab.id);
-            if (!defCnt.includes(tab.label)) {
-              setDefSt([...defSt, tab.label]);
-            } else {
-              setDefSt(defSt.filter((f: any) => f !== tab.label));
-            }
-            handleStClick(tab.label);
-          }}
-          tabData={Object.keys(stateCities).map((s: any, index: any) => {
-            return {
-              id: `${index + 1}`,
-              label: s,
-            };
-          })}
-        />
-      </div>
-      <div className="grid grid-cols-12 border-y border-proohGray">
-        {/* table header */}
-
-        <div className="col-span-12 grid grid-cols-12">
-          <div className="col-span-2 p-1 border border-1 border-gray-300  bg-gray-200 ">
-            <h1 className="text-base font-bold text-center">Touch Points</h1>
-          </div>
-          <div className="col-span-10">
-            <div className="grid grid-cols-10">
-              <div className="col-span-3 p-1 border border-1 border-gray-300  bg-gray-200">
-                <h1 className="text-base font-semibold text-center truncate">
-                  Screen Type
-                </h1>
-              </div>
-              <div className="col-span-7 flex">
-                {Object.keys(cityTouchPoints).map((ct: any, i: any) => (
-                  <div
-                    className="p-1 w-64 border border-1 border-gray-300  bg-gray-200"
-                    key={i}
-                  >
-                    <h1 className="text-base font-semibold text-center truncate">
-                      {ct}
-                    </h1>
-                  </div>
-                ))}
-              </div>
+      {currentCity&& data && Object.keys(cityZones).length > 0 && (
+        <div className="w-full border-r border-b">
+          <div className="bg-blue-200 grid grid-cols-12 flex items-center">
+            <div className="py-2 col-span-2">
+              <h1 className="text-[16px] font-bold flex justify-center">Touchpoints</h1>
+            </div>
+            <div className="py-2 col-span-3 border-l">
+              <h1 className="text-[16px] font-bold flex justify-center">Screen Type</h1>
+            </div>
+            <div className={`
+              
+              col-span-7 grid grid-cols-8
+              flex items-center
+              `}
+            >
+              {Object.keys(cityZones[currentCity])?.map((d: any, i: any) => (
+                <div className="border-x py-2 px-3 col-span-4 flex justify-center" key={i}>
+                  <h1 className="text-[16px] font-bold flex justify-center">{d}</h1>
+                </div> 
+              ))}
             </div>
           </div>
-        </div>
-        {/* table data */}
-        <div className="col-span-12 grid grid-cols-12 border-r h-[50vh] overflow-scroll no-scrollbar">
-          {Object.keys(touchPointsCities).map((tp: any, j: any) => (
-            <div className="col-span-12 grid grid-cols-12" key={j}>
-              <div className="col-span-2 p-1 border border-proohGray">
-                <h1 className="text-base font-bold text-center truncate">
-                  {tp}
-                </h1>
-              </div>
-              <div className="col-span-10">
-                {Object.keys(touchPointsCities[tp]).map(
-                  (screenType: any, j: any) => (
-                    <div className="grid grid-cols-10" key={j}>
-                      <div
-                        className="col-span-3 p-1  px-4 border border-black-300 flex gap-4 justify-between"
-                        onClick={() => {
-                          for (const s of Object.keys(
-                            touchPointsCities[tp][screenType]
-                          )) {
-                            handleMultipleFilteredScreen(
-                              Object.values(
-                                touchPointsCities[tp][screenType][s]
-                              )
-                            );
-                          }
-                        }}
-                      >
-                        <h1 className="text-base font-semibold text-center truncate">
-                          {screenType}
-                        </h1>
-                        <CheckIcon />
+          <div className="overflow-y-auto h-96">
+            {Object.keys(data[currentCity])?.map((tp: any, i: any) => (
+              <div key={i} className="grid grid-cols-12">
+                <div className="border-b border-l col-span-2 py-2 px-4">
+                  <h1 className="text-[14px]">{tp}</h1>
+                </div>
+                <div className="col-span-10">
+                  {Object.keys(cityTP?.[currentCity]?.[tp])?.map((st: any, j: any) => (
+                    <div key={j} className={`grid grid-cols-10 border-l`}>
+                      <div className={`col-span-3 py-2 px-4 border-b`}>
+                        <div className="flex justify-between items-center">
+                            <h1 className="text-[14px]">{st}</h1>
+                            <i className={`fi fi-br-check flex items-center text-green-500 text-[12px]`}></i>
+                          </div>
                       </div>
-                      <div className="col-span-7">
-                        {Object.keys(touchPointsCities[tp][screenType]).map(
-                          (c: any, k: any) => (
-                            <div
-                              className="flex flex-row w-full h-auto"
-                              key={k}
+                      <div className={`
+                        col-span-7 grid grid-cols-8
+                        ${Object.keys(cityZones[currentCity]).length > 1 
+                          ? "overflow-x-auto" : ""}
+                        `}
+                      >
+                        {Object.keys(cityZones[currentCity])?.map((zone: any, k: any) => (
+                          <div key={k}
+                            className={`
+                              ${Object.keys(cityZones[currentCity]).length > 1 ? "col-span-4" : "col-span-4"}
+                              `}
                             >
-                              {Object.keys(cityTouchPoints).map(
-                                (ct: any, k: any) => (
-                                  <div
-                                    className="cursor-pointer w-full"
-                                    key={k}
-                                  >
-                                    {Object.keys(
-                                      touchPointsCities[tp][screenType][c]
-                                    )?.map((g: any, z: any) => (
-                                      <div
-                                        key={z}
-                                        className={
-                                          isScreenSelected(
-                                            ct === c
-                                              ? touchPointsCities[tp][
-                                                  screenType
-                                                ][c][g]
-                                              : "w-full"
-                                          )
-                                            ? "border w-full h-auto p-1 flex flex-row justify-start items-center pl-4 gap-4 truncate"
-                                            : ct === c
-                                            ? "border w-full h-auto  flex flex-row justify-start items-center pl-4 gap-4 truncate"
-                                            : "bg-red-300 truncate"
-                                        }
-                                      >
-                                        {ct === c ? (
-                                          <div className="flex gap-4 items-center justify-between">
-                                            <ScreenDataModel
-                                              screenName={
-                                                ct === c
-                                                  ? touchPointsCities[tp][
-                                                      screenType
-                                                    ][c][g]
-                                                  : ""
-                                              }
-                                            />
-                                            {isScreenSelected(
-                                              ct === c
-                                                ? touchPointsCities[tp][
-                                                    screenType
-                                                  ][c][g]
-                                                : ""
-                                            ) ? (
-                                              <CrossIcon />
-                                            ) : (
-                                              <CheckIcon />
-                                            )}
-                                          </div>
-                                        ) : (
-                                          <div className="py-3"></div>
-                                        )}
+                            {data[currentCity][tp][st][zone]?.map(
+                              (screen: any, m: any) => (
+                                <div
+                                  key={m}
+                                  className={`flex gap-4 justify-between
+                                    border-x py-2 px-4 border-b
+                                    truncate
+                                  `}
+                                >
+                                      <ScreenDataModel
+                                        screenName={screen?.screenName || ""}
+                                      />
+                                    <div className="flex gap-4 justify-between items-center">
+                                      <div className="flex gap-1 items-center">
+                                        <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+                                        <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
                                       </div>
-                                    ))}
-                                  </div>
-                                )
-                              )}
-                            </div>
-                          )
-                        )}
+                                      <i className={`fi fi-br-check flex items-center text-green-500 text-[12px]`}></i>
+                                    </div>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  )
-                )}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          
         </div>
-      </div>
+      )}
     </div>
   );
 };

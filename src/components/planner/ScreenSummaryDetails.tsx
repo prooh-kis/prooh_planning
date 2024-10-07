@@ -9,7 +9,15 @@ import { ScreenSummaryTable } from "../tables/ScreenSummaryTable";
 import { ViewPlanPic } from "../segments/ViewPlanPic";
 import { PlainSummary } from "../segments/PlainSummary";
 import { useDispatch, useSelector } from "react-redux";
-import { getScreenSummaryData } from "../../actions/screenAction";
+import { getScreenSummaryData, getScreenSummaryPlanTableData } from "../../actions/screenAction";
+import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { useLocation } from "react-router-dom";
+import { Footer } from "../../components/footer";
+
+interface Tab {
+  label: string;
+  id: string;
+}
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -21,7 +29,19 @@ export const ScreenSummaryDetails = ({
   step,
 }: EnterCampaignBasicDetailsProps) => {
   const [currentTab, setCurrentTab] = useState<string>("1");
+  const [currentSummaryTab, setCurrentSummaryTab] = useState<any>("1");
+  const [listView, setListView] = useState<any>(true);
+  const [currentCity, setCurrentCity] = useState<any>(null);
+  const [cityZones, setCityZones] = useState<any>({});
+  const [cityTP, setCityTP] = useState<any>({});
+  const [screenTypes, setScreenTypes] = useState<any>({});
+
+
+  const [screensBuyingCount, setScreensBuyingCount] = useState<any>(null);
+
   const dispatch = useDispatch<any>();
+  const { pathname } = useLocation();
+  // console.log(getDataFromLocalStorage("campaign").basicDetails)
 
   const screenSummaryDataGet = useSelector((state: any) => state.screenSummaryDataGet);
   const {
@@ -30,78 +50,32 @@ export const ScreenSummaryDetails = ({
     data: screenSummaryData,
   } = screenSummaryDataGet;
 
+  const screenSummaryPlanTableDataGet = useSelector((state: any) => state.screenSummaryPlanTableDataGet);
+  const {
+    loading: loadingScreenSummaryPlanTable,
+    error: errorScreenSummaryPlanTable,
+    data: screenSummaryPlanTableData,
+  } = screenSummaryPlanTableDataGet;
+
   useEffect(() => {
-    dispatch(getScreenSummaryData({
-      screenIds: [
-        "66f7bb44d2829e146ff82aeb"
-      ],
-      cohorts: [
-        "Working Professionals-A"
-      ],
-      touchPointData: [
-        {
-          "touchPoint": "Premium High Street",
-          "dayWiseData": {
-              "weekdays": {
-                  "morning": {
-                      "percentage": 40,
-                      "included": true
-                  },
-                  "afternoon": {
-                      "percentage": 15.000000000000002,
-                      "included": false
-                  },
-                  "evening": {
-                      "percentage": 25,
-                      "included": false
-                  },
-                  "night": {
-                      "percentage": 20,
-                      "included": false
-                  }
-              },
-              "saturdays": {
-                  "morning": {
-                      "percentage": 20,
-                      "included": false
-                  },
-                  "afternoon": {
-                      "percentage": 15.000000000000002,
-                      "included": false
-                  },
-                  "evening": {
-                      "percentage": 25,
-                      "included": false
-                  },
-                  "night": {
-                      "percentage": 40,
-                      "included": true
-                  }
-              },
-              "sundays": {
-                  "morning": {
-                      "percentage": 20,
-                      "included": false
-                  },
-                  "afternoon": {
-                      "percentage": 15.000000000000002,
-                      "included": false
-                  },
-                  "evening": {
-                      "percentage": 35,
-                      "included": true
-                  },
-                  "night": {
-                      "percentage": 30,
-                      "included": true
-                  }
-              }
-          }
-      }
-      ],
-      gender: "both"
-    }))
-  },[]);
+    // if (screenSummaryData) {
+    //   setCurrentCity(Object.keys(screenSummaryData)[Number(currentSummaryTab) - 1]);
+    // }
+  },[currentSummaryTab, screenSummaryData]);
+
+  useEffect(() => {
+    if (!screenSummaryData) {
+      dispatch(getScreenSummaryData({
+        id: pathname.split("/").splice(-1)[0],
+        type: getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]
+      }))
+    }
+    dispatch(getScreenSummaryPlanTableData({
+      id: pathname.split("/").splice(-1)[0],
+    }));
+
+  },[screenSummaryData, dispatch, pathname]);
+
   return (
     <div className="w-full py-3">
       <h1 className="text-3xl ">
@@ -111,7 +85,9 @@ export const ScreenSummaryDetails = ({
         you can further optimized your plan by deselecting locations in the
         screen summary
       </h1>
-      <div className="mt-4">
+      <i className="fi fi-rr-screen-play text-black flex items-center"></i>
+
+      <div className="mt-2">
         <TabWithIcon
           currentTab={currentTab}
           setCurrentTab={setCurrentTab}
@@ -119,22 +95,124 @@ export const ScreenSummaryDetails = ({
         />
       </div>
 
-      <div className="mt-4">
-        {currentTab == "1" ? (
-          <ScreenSummaryTable
-            data={screenSummaryData}
-            allScreen={[]}
-            handleSetFilteredScreens={() => {}}
-            handleMultipleFilteredScreen={() => {}}
-            isScreenSelected={() => {
-              return true;
-            }}
-          />
-        ) : currentTab == "2" ? (
-          <ViewPlanPic />
-        ) : (
-          <PlainSummary />
-        )}
+      {loadingScreenSummary ? (
+        <h1>Loading...</h1>
+      ) : errorScreenSummary ? (
+        <p>Error: {JSON.stringify(errorScreenSummary)}</p>
+      ) : (
+        <div className="">
+    
+          {currentTab === "1" ? (
+            <div>
+              <div className="py-2 flex justify-between">
+                <div className="">
+                  {screenSummaryData && screensBuyingCount && (
+                    <TabWithoutIcon
+                      currentTab={currentSummaryTab}
+                      setCurrentTab={(tab: Tab) => {
+                        setCurrentSummaryTab(tab);
+                        setCurrentCity(Object.keys(screenSummaryData)[Number(tab) - 1]);
+                      }}
+                      tabData={Object.keys(screenSummaryData).map((s: any, index: any) => {
+                        return {
+                          id: `${index + 1}`,
+                          label: s,
+                          params: [Object.values(screensBuyingCount[s])?.map((f: any) => f.status)?.filter((s: any) => s === true).length, Object.values(screensBuyingCount[s])?.map((f: any) => f.status)?.filter((s: any) => s === false).length]
+                        };
+                      })}
+                    />
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <div className="px-1 border rounded flex items-center gap-1 ">
+                    <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+                    <p className="text-[12px]">&#8377;200 - &#8377;400</p>
+                  </div>
+                  <div className="px-1 border rounded flex items-center gap-1">
+                    <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+                    <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+                    <p className="text-[12px]">&#8377;400 - &#8377;600</p>
+                  </div>
+                  <div
+                    className={`px-1 border rounded flex items-center gap-1 ${listView && "border-primaryButton"}`}
+                    onClick={() => setListView(true)}
+                  >
+                    <i
+                      className={
+                        `fi fi-rr-table-list flex items-center
+                        text-[12px]
+                        ${listView && "text-primaryButton"}`
+                      }
+                    ></i>
+                    <p className={`${listView && "text-primaryButton"} text-[12px]`}>List View</p>
+                  </div>
+                  <div 
+                    className={`px-1 border rounded flex items-center gap-1 ${!listView && "border-primaryButton"}`}
+                    onClick={() => setListView(false)}
+                  >
+                    <i className={
+                        `fi fi-sr-apps flex items-center
+                        text-[12px]
+                        ${!listView && "text-primaryButton"}`
+                      }></i>
+                    <p className={`${!listView && "text-primaryButton"} text-[12px]`}>Grid View</p>
+                  </div>
+                </div>
+              </div>
+              {listView ? (
+                <ScreenSummaryTable
+                  data={screenSummaryData}
+                  currentCity={currentCity}
+                  currentSummaryTab={currentSummaryTab}
+                  setCurrentCity={setCurrentCity}
+                  setScreensBuyingCount={setScreensBuyingCount}
+                  screensBuyingCount={screensBuyingCount}
+                  setCityZones={setCityZones}
+                  cityZones={cityZones}
+                  setCityTP={setCityTP}
+                  cityTP={cityTP}
+                  setScreenTypes={setScreenTypes}
+            
+                />
+              ) : (
+                <ViewPlanPic
+                  screens={Object.values(screensBuyingCount[currentCity])?.map((f: any) => f.data)}
+                  cityZones={Object.keys(cityZones[currentCity])}
+                  cityTP={Object.keys(cityTP[currentCity])}
+                  screenTypes={Object.keys(screenTypes[currentCity])}
+                />
+              )}
+            </div>
+          ) : currentTab === "2" && (
+            <PlainSummary
+              loading={loadingScreenSummaryPlanTable}
+              error={errorScreenSummaryPlanTable}
+              data={screenSummaryPlanTableData}
+            />
+          )}
+        </div>
+      )}
+      <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
+        <Footer
+          handleBack={() => {
+            setCurrentStep(step - 1);
+          }}
+          handleSave={() => {
+            // if (isDisabled) {
+            //   message.error("Please  confirm screen selection");
+            // } else {
+            //   dispatch(addDetailsToCreateCampaign({
+            //     pageName: "Compare Plan Page",
+            //     id: pathname.split("/").splice(-1)[0],
+            //     regularTouchPointWiseSlotDetails: priceData?.regular?.touchPointData,
+            //     cohortTouchPointWiseSlotDetails: priceData?.cohort?.touchPointData,
+            //     selectedType: selectedBuyingOption
+            //   }));
+            //   setCurrentStep(step + 1);
+            // };
+          }}
+          totalScreensData={{}}
+        />
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { formatNumber } from "../../utils/formatValue";
 
 export const Footer = ({
+  loading, error,
   handleSave,
   handleBack,
   totalScreensData,
@@ -15,7 +16,7 @@ export const Footer = ({
  
       <div className="flex justify-between items-center gap-4">
         <ScreenSummaryModel totalScreensData={totalScreensData} />
-        {Object.keys(totalScreensData).length < 1 ? (
+        {loading || Object.keys(totalScreensData).length < 1 ? (
           <h1>Loading...</h1>
         ) : (
           <div className="flex justify-between items-center gap-4">
@@ -49,24 +50,28 @@ export const Footer = ({
         )}
 
       </div>
+      {!loading && !error && (
+        <div className="flex justify-between items-center gap-4">
+          <button
+            type="submit"
+            className="border border-1 py-2 px-4 text-[14px] rounded-md hover:bg-blue-500 hover:text-white"
+            title="Go back"
+            onClick={handleBack}
+          >
+            Back
+          </button>
+          <button
+            type="submit"
+            className="border border-1 py-2 px-4 text-[14px] rounded-md bg-blue-500 text-white hover:bg-blue-600"
+            title="Save and go next"
+            onClick={handleSave}
+            disabled={isDisabled}
+          >
+            Save and Continue
+          </button>
+        </div>
+      )}
 
-      <div className="flex justify-between items-center gap-4">
-        <button
-          className="border border-1 py-2 px-4 text-[14px] rounded-md hover:bg-blue-500 hover:text-white"
-          title="Go back"
-          onClick={handleBack}
-        >
-          Back
-        </button>
-        <button
-          className="border border-1 py-2 px-4 text-[14px] rounded-md bg-blue-500 text-white hover:bg-blue-600"
-          title="Save and go next"
-          onClick={handleSave}
-          disabled={isDisabled}
-        >
-          Save and Continue
-        </button>
-      </div>
     </div>
   );
 };

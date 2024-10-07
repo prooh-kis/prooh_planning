@@ -8,7 +8,7 @@ const loadUserFromLocalStorage = () => {
     const currentTime = new Date().getTime();
     const timeElapsed = currentTime - parsedUserInfo.loginTime;
 
-    if (timeElapsed < 120 * 60 * 1000) { // 120 minutes in milliseconds
+    if (timeElapsed < 720 * 60 * 1000) { // 720 minutes in milliseconds
       store.dispatch(login(parsedUserInfo));
     } else {
       localStorage.removeItem('user');

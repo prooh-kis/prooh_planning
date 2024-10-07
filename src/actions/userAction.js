@@ -96,7 +96,7 @@ export const signin = (email, password) => async (dispatch) => {
       type: USER_SIGNIN_SUCCESS,
       payload: data,
     });
-    localStorage.setItem("userInfo", JSON.stringify(data));
+    // localStorage.setItem("userInfo", JSON.stringify(data));
 
     const loginTime = new Date().getTime();
     const loginData = {
@@ -143,7 +143,15 @@ export const userEmailVerification = (token) => async (dispatch) => {
       type: USER_SIGNIN_SUCCESS,
       payload: data,
     });
-    localStorage.setItem("userInfo", JSON.stringify(data));
+    // localStorage.setItem("userInfo", JSON.stringify(data));
+
+    const loginTime = new Date().getTime();
+    const loginData = {
+      userInfo: data,
+      loginTime,
+    };
+    localStorage.setItem("user", JSON.stringify(loginData));
+    store.dispatch(login(loginData));
   } catch (error) {
     dispatch({
       type: USER_EMAIL_VERIFICATION_ERROR,
@@ -221,7 +229,7 @@ export const googleSignupSignin =
         type: USER_SIGNIN_SUCCESS,
         payload: data,
       });
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      // localStorage.setItem("userInfo", JSON.stringify(data));
 
       const loginTime = new Date().getTime();
       const loginData = {

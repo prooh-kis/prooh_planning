@@ -34,6 +34,9 @@ export const RegularPlanPage: React.FC = () => {
 
   const [currentStep, setCurrentStep] = useState<any>(getDataFromLocalStorage("currentStep") || 1);
 
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
+
   const screensAudiencesDataGet = useSelector(
     (state: any) => state.screensAudiencesDataGet
   );
@@ -117,6 +120,7 @@ export const RegularPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignType={location?.state?.campaignType}
+            userInfo={userInfo}
           />
         ) : currentStep === 2 ? (
           <AudienceTouchPointsDetails

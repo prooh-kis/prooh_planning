@@ -71,7 +71,8 @@ export const TouchpointTable = ({
                   />
                 </div>
                 <div className="col-span-2 pr-2">
-                  <LinearBar value={
+                  <LinearBar
+                    value={
                     ((touchPoints[a]["Male"] + touchPoints[a]["Female"]) / 2).toFixed(2)
                   } colors={["#F3F3F3", "#7AB3A2"]}/>
                   <LinearBar value={

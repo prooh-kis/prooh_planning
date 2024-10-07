@@ -1,9 +1,10 @@
 interface LinearBarProps {
   value: any;
   colors: any;
+  highest?: any
 }
 
-export const LinearBar = ({ value, colors, }: LinearBarProps) => {
+export const LinearBar = ({ value, colors, highest}: LinearBarProps) => {
   return (
     <div
       className="rounded flex items-center w-full h-1 mt-1 relative group"
@@ -12,7 +13,7 @@ export const LinearBar = ({ value, colors, }: LinearBarProps) => {
       <div
         className="border border-transparent rounded h-full"
         style={{
-          width: `${value}%`,
+          width: `${highest ? value * 100/highest : value}%`,
           backgroundColor: colors[1] || '#7AB3A2',
         }}
       >

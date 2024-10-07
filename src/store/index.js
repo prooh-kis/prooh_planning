@@ -7,6 +7,7 @@ import {
   screensCostDataGetReducer,
   screensDataAdvanceFilterGetReducer,
   screenSummaryDataGetReducer,
+  screenSummaryPlanTableDataGetReducer,
 } from "../reducers/screenReducers";
 import {
   userEmailVerificationReducer,
@@ -14,11 +15,12 @@ import {
   userSigninReducer,
   userSignupReducer,
   userUpdatePasswordReducer } from "../reducers/userReducers";
+import { detailsToCreateCampaignAddReducer } from "../reducers/campaignReducers";
 
 const initialState = {
   userSignin: {
-    userInfo: localStorage.getItem("userInfo")
-      ? JSON.parse(localStorage.getItem("userInfo"))
+    userInfo: localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user"))
       : null,
   },
 };
@@ -32,6 +34,10 @@ const store = configureStore({
     screensDataAdvanceFilterGet : screensDataAdvanceFilterGetReducer,
     regularVsCohortPriceDataGet : regularVsCohortPriceDataGetReducer,
     screenSummaryDataGet : screenSummaryDataGetReducer,
+    screenSummaryPlanTableDataGet: screenSummaryPlanTableDataGetReducer,
+
+    // campaign
+    detailsToCreateCampaignAdd : detailsToCreateCampaignAddReducer,
     
     // auth
     auth : authReducer,
@@ -56,10 +62,10 @@ store.subscribe(() => {
         loginTime: state.auth.loginTime,
       })
     );
-    localStorage.setItem(
-      "userInfo",
-      JSON.stringify({ userInfo: state.auth.userInfo })
-    );
+    // localStorage.setItem(
+    //   "userInfo",
+    //   JSON.stringify({ userInfo: state.auth.userInfo })
+    // );
   } else {
     localStorage.removeItem("user");
     localStorage.removeItem("userInfo");

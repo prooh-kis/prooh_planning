@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { MapWithGeometry } from "../../components/molecules/MapWithGeometry";
 import * as turf from "@turf/turf";
@@ -11,6 +11,7 @@ import { SelectManuallyScreensCheckBox } from "../../components/segments/SelectM
 import { message } from "antd";
 import { useDispatch } from "react-redux";
 import { getRegularVsCohortPriceData } from "../../actions/screenAction";
+import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
 type Coordinate = [number, number];
 
@@ -31,6 +32,8 @@ export const AdvanceFiltersDetails = ({
 }: AdvanceFiltersDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
+  const { pathname } = useLocation();
+
   const [storeFilter, setStoreFilter] = useState<any>(true);
 
   const [circleRadius, setCircleRadius] = useState<any>(1);
@@ -325,7 +328,15 @@ export const AdvanceFiltersDetails = ({
                   for my plan
                 </>
               }
-              onChange={handleConfirmScreensSelections}
+              onChange={() => {
+                handleConfirmScreensSelections
+                dispatch(getRegularVsCohortPriceData({
+                  screenIds: JSON.parse(getAllLocalStorageData()["selectedScreensId"] || "[]"),
+                  cohorts: JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}")?.cohorts,
+                  gender: JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}")?.gender,
+                  duration: JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}")?.duration,
+                }));
+              }}
             />
           </div>
         </div>
@@ -350,7 +361,14 @@ export const AdvanceFiltersDetails = ({
           handleSave={() => {
             if (isDisabled) {
               message.error("Please  confirm screen selection");
-            } else setCurrentStep(step + 1);
+            } else {
+              dispatch(addDetailsToCreateCampaign({
+                pageName: "Advance Filter Page",
+                id: pathname.split("/").splice(-1)[0],
+                screenIds: finalSelectedScreens.map((s: any) => s._id)
+              }));
+              setCurrentStep(step + 1);
+            };
           }}
           totalScreensData={getDataFromLocalStorage("costSummary")["2"]}
         />

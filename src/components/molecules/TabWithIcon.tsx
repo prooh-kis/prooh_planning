@@ -12,15 +12,15 @@ interface Props {
 
 export function TabWithIcon({ tabData, currentTab, setCurrentTab }: Props) {
   return (
-    <div className="flex items-center border-b-2 border-gray-100">
+    <div className="flex gap-2 items-center border-b-2 border-gray-100">
       {tabData?.map((tab: TabInterface, index: any) => (
         <div
           key={index}
           onClick={() => setCurrentTab(tab.id)}
           className={
             currentTab === tab.id
-              ? "w-48 flex gap-4 text-blue-500 items-center text-lg border-b-2 border-blue-500 py-2"
-              : "w-48 flex gap-2 text-gray-500 items-center text-lg py-2"
+              ? "px-1 w-48 flex gap-4 text-primaryButton items-center text-[14px] border-b-2 border-primaryButton py-2"
+              : "px-1 w-48 flex gap-2 text-gray-500 items-center text-[14px] py-2"
           }
         >
           {tab.icon}

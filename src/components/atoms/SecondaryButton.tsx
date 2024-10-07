@@ -10,7 +10,7 @@ interface PrimaryButtonProps {
   textSize?: any;
 }
 
-export const PrimaryButton = ({textSize, disabled, width, height, title, action, rounded}: PrimaryButtonProps) => {
+export const SecondaryButton = ({textSize, disabled, width, height, title, action, rounded}: PrimaryButtonProps) => {
   return (
     <div className="flex justify-center items-center">
       <button
@@ -19,12 +19,11 @@ export const PrimaryButton = ({textSize, disabled, width, height, title, action,
         onClick={action}
         disabled={disabled}
         className={`
-          px-4 py-2
           ${width ? width : "w-[180px]"} flex items-center justify-center
-          ${height ? height : "h-[48px]"} bg-primaryButton
+          ${height ? height : "h-[48px]"} bg-secondaryButton
           ${rounded} ${textSize ? textSize : "text-[16px]"} text-white font-semibold
-          hover:bg-transparent hover:border-primaryButton
-          hover:border-2 hover:text-primaryButton 
+          hover:bg-transparent hover:border-secondaryButton
+          hover:border-2 hover:text-secondaryButton 
           transition-colors duration-300
         `}
       >
