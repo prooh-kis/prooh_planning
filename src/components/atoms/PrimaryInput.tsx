@@ -21,7 +21,7 @@ export const PrimaryInput = ({prefix, suffix, value, action, inputType }: Primar
         type={inputType}
         value={value}
         onChange={(e) => action(e.target.value)}
-        className="h-[48px] w-full border rounded-lg pl-10 py-2 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 active:bg-blue-100 transition-colors"
+        className="h-[48px] w-full border rounded-lg pl-5 py-2 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 active:bg-blue-100 transition-colors"
       />
       {suffix}
     </div>

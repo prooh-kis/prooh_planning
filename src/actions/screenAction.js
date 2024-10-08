@@ -119,6 +119,7 @@ export const getScreenSummaryData = ({id, type}) => async (dispatch, getState) =
     type: GET_SCREEN_SUMMARY_DATA_REQUEST,
     payload: { id, type },
   });
+  console.log(id, type)
   try {
     const { data } = await axios.post(`${url}/screenDataScreenSummaryPage`, {
       id, type

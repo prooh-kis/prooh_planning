@@ -1,4 +1,4 @@
-import { AUDIENCES_FILTER_OPTIONS, CAMPAIGN_DETAILS, CREATIVES_DATA, CRICKET_TRIGGERS, FILTERED_SCREENS, WEATHER_TRIGGERS } from "../constants/localStorageConstants";
+import { ADVANCE_FILTER_SCREENS_MAP_DATA, AUDIENCE_DATA, AUDIENCES_FILTER_OPTIONS, CAMPAIGN, CAMPAIGN_DETAILS, COST_SUMMARY, CREATIVES_DATA, CRICKET_TRIGGERS, CURRENT_STEP, FILTERED_SCREENS, REGULAR_VS_COHORT_PRICE_DATA, SELECTED_AUDIENCE_TOUCHPOINTS, SELECTED_SCREENS_ID, TOTAL_SCREEN_COST_DATA, WEATHER_TRIGGERS } from "../constants/localStorageConstants";
 
 export const saveDataOnLocalStorage = (key: string, value: any) => {
   window.localStorage.setItem(key, JSON.stringify(value));
@@ -29,12 +29,15 @@ export const getDataFromLocalStorage = (key: string) => {
 
 export const removeAllKeyFromLocalStorage = () => {
   const keys: string[] = [
-    WEATHER_TRIGGERS,
-    CRICKET_TRIGGERS,
-    CAMPAIGN_DETAILS,
-    AUDIENCES_FILTER_OPTIONS,
-    FILTERED_SCREENS,
-    CREATIVES_DATA,
+    CURRENT_STEP,
+    CAMPAIGN,
+    AUDIENCE_DATA,
+    TOTAL_SCREEN_COST_DATA,
+    SELECTED_AUDIENCE_TOUCHPOINTS,
+    ADVANCE_FILTER_SCREENS_MAP_DATA,
+    SELECTED_SCREENS_ID,
+    REGULAR_VS_COHORT_PRICE_DATA,
+    COST_SUMMARY,
   ];
   for (let key of keys) {
     window.localStorage.removeItem(key);

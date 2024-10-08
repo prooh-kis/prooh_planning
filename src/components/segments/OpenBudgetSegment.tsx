@@ -1,43 +1,53 @@
-import { PrimaryInput } from "../../components/atoms/PrimaryInput"
 import { RadioInput } from "../../components/atoms/RadioInput"
 
 export const OpenBudgetSegment = () => {
   return (
-    <div className="border rounded-md p-4">
-      <div className="flex justify-between">
-        <div className="">
-          <h1>Allow open budget to occupy</h1>
-          <p>Additional cost of slots will be same as normal slot price</p>
-        </div>
-        <div className="flex justify-start gap-4 py-1">
+    <div className="rounded-md p-2">
+      <div className="pt-4">
+        <h1>Allow open budget to occupy slot space in a loop</h1>
+        <div className="flex justify-start gap-4 py-2">
           <RadioInput
-            title="25%"
-            value={"25"}
+            title="once"
+            value={"Once"}
             // isChecked={selectedBuyingOption === "regular" ? true : false}
             onChange={() => {}}
           />
           <RadioInput
-            title="33%"
-            value={"33"}
+            title="twice"
+            value={"Twice"}
             // isChecked={selectedBuyingOption === "cohort" ? true : false}
             onChange={() => {}}
           />
           <RadioInput
-            title="50%"
-            value={"50"}
+            title="thrice"
+            value={"Thrice"}
             // isChecked={selectedBuyingOption === "cohort" ? true : false}
             onChange={() => {}}
           />
         </div>
       </div>
-      <div className="flex justify-between">
-        <h1>Maximum budget permitted</h1>
-        <PrimaryInput
-          inputType="text"
-          placeholder="Client Name"
-          value={"clientName"}
-          action={() => {}}
-        />
+      <div className="pt-4">
+        <h1>Kindly approve maximum budget for this trigger</h1>
+        <div className="flex justify-start gap-4 py-2">
+          <RadioInput
+            title="1,00,000"
+            value={"100000"}
+            // isChecked={selectedBuyingOption === "regular" ? true : false}
+            onChange={() => {}}
+          />
+          <RadioInput
+            title="1,50,000"
+            value={"150000"}
+            // isChecked={selectedBuyingOption === "cohort" ? true : false}
+            onChange={() => {}}
+          />
+          <RadioInput
+            title="2,00,000"
+            value={"200000"}
+            // isChecked={selectedBuyingOption === "cohort" ? true : false}
+            onChange={() => {}}
+          />
+        </div>
       </div>
     </div>
   )

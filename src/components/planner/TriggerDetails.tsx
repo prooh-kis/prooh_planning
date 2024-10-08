@@ -5,6 +5,9 @@ import { VerticalStepperSlider } from "../../components/molecules/VerticalSteppe
 import { useState } from "react";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { SportsSegment } from "../../components/segments/SportsSegment";
+import { BuyVacantSlots } from "../../components/segments/BuyVacantSlots";
+import { OpenBudgetSegment } from "../../components/segments/OpenBudgetSegment";
+import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 
 export const TriggerDetails = (props: any) => {
   const [currentStep, setCurrentStep] = useState<any>(1);
@@ -18,7 +21,7 @@ export const TriggerDetails = (props: any) => {
     },
     {
       icon: <i className="fi fi-ts-cloud-sun-rain flex items-center"></i>,
-      label: "Rain Forecast",
+      label: "Rain",
       id: 2,
     },
     {
@@ -33,16 +36,16 @@ export const TriggerDetails = (props: any) => {
         <h1 className="text-[24px] text-primaryText font-semibold">
           Add Triggers
         </h1>
-        <p className="text-[14px] text-secondaryText">
+        <p className="text-[14px] text-secondaryText py-2">
           Choose any one of your desired triggers for contextual targeting of you target audiences
         </p>
       </div>
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-4 border rounded py-5 flex flex-col justify-between">
           <div className="h-1/2">
-            <VerticalStepperSlider step={currentStep} setStep={setCurrentStep} steps={4} />
+            <VerticalStepperSlider step={currentStep} setStep={setCurrentStep} steps={3} />
           </div>
-          <p className="p-2">
+          <p className="p-2 text-[14px] text-[#AF0D0D]">
             <strong>Note:- </strong>
             The Creative of such campaigns shall be contextual.
             You will be asked to upload a separate creative for your trigger based campaigns
@@ -51,22 +54,83 @@ export const TriggerDetails = (props: any) => {
         <div className="col-span-8 border rounded p-5">
           {currentStep === 1 ? (
             <div>
-              <h1>Conditional to Weather Situations</h1>
-              <TabWithIcon
-                currentTab={currentTab}
-                setCurrentTab={setCurrentTab}
-                tabData={weatherTabData}
-              />
+              <div className="flex gap-2 justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="rounded-full bg-[#F5F9FF] p-3 w-16 h-16 flex items-center justify-center">
+                    <i className="fi fi-sr-cloud-sun text-[30px] flex items-center text-primaryButton"></i>
+                  </div>
+                  <div>
+                    <h1 className="text-[24px] font-semibold">Weather Situation</h1>
+                    <p className="text-[14px]">Choose your weather condition</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <p className="text-[12px] text-primaryButton underline">View use cases</p>
+                </div>
+              </div>
+              <div className="py-2">
+                <TabWithIcon
+                  trigger={true}
+                  currentTab={currentTab}
+                  setCurrentTab={setCurrentTab}
+                  tabData={weatherTabData}
+                />
+              </div>
+              
               <WeatherSegment currentTab={currentTab}/>
             </div>
           ) : currentStep === 2 ? (
             <div>
-              <h1>Conditional to Sporting Events</h1>
-              <SportsSegment />
+              <div className="flex gap-2 justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="rounded-full bg-[#28A61D12] p-3 w-16 h-16 flex items-center justify-center">
+                    <i className="fi fi-sr-cricket text-[30px] flex items-center text-[#5A9D42]"></i>
+                  </div>
+                  <div>
+                    <h1 className="text-[24px] font-semibold">Sporting Events</h1>
+                    <p className="text-[14px]">Choose your sports event</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <p className="text-[12px] text-primaryButton underline">View use cases</p>
+                </div>
+              </div>
+              <div className="py-2">
+                <SportsSegment />
+              </div>
             </div>
           ) : (
-            <div></div>
+            <div>
+              <div className="flex gap-2 justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="rounded-full bg-[#FF935726] p-3 w-16 h-16 flex items-center justify-center">
+                    <i className="fi fi-sr-sign-posts text-[30px] flex items-center text-[#FF9357]"></i>
+                  </div>
+                  <div>
+                    <h1 className="text-[24px] font-semibold">Buy Vacant Slot</h1>
+                    <p className="text-[14px]">Buy Vacant slots at 50% discount</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <p className="text-[12px] text-primaryButton underline">View use cases</p>
+                </div>
+              </div>
+              <BuyVacantSlots />
+            </div>
           )}
+          <OpenBudgetSegment />
+          <div className="flex justify-between items-center">
+            <div className="flex items-center">
+              <p className="text-[12px] text-[#969696]">A trigger is set for uploading tigger creative towards the end of your planning</p>
+            </div>
+            <PrimaryButton
+              height="h-10"
+              width="w-36"
+              rounded="rounded-full"
+              title="Apply Creative"
+              textSize="text-[14px]"
+            />
+          </div>
         </div>
       </div>
       <div className="flex gap-4 py-5">

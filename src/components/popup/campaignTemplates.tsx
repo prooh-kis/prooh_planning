@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TemplateCard } from "../atoms/TemplateCard";
 import { PrimaryButton } from "../atoms/PrimaryButton";
 import { useNavigate } from "react-router-dom";
+import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 
 export const CampaignTemplates: React.FC = () => {
   const navigate = useNavigate();
@@ -22,7 +23,9 @@ export const CampaignTemplates: React.FC = () => {
     }
 
   };
-
+  useEffect(() => {
+    removeAllKeyFromLocalStorage();
+  },[]);
   return (
     <div className="p-20 flex items-center justify-center w-full h-full">
       <div className="border border-transparent rounded-lg w-full h-full">

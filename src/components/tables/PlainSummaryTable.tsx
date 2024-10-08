@@ -11,12 +11,12 @@ export function PlainSummary({ loading, error, data }: any) {
         <thead>
           <tr className="py-1 border border-1">
             <th className="border border-1">Cities</th>
-            <th className="border border-1">Total screens</th>
-            <th className="border border-1">Total impression</th>
+            <th className="border border-1">Total Screens</th>
+            <th className="border border-1">Total Reach</th>
             <th className="border border-1">
-              Total impression based on time schedule
+              Total Impression
             </th>
-            <th className="border border-1">Total campaign budget</th>
+            <th className="border border-1">Total Budget</th>
             <th className="border border-1">CPM</th>
           </tr>
         </thead>
@@ -25,10 +25,10 @@ export function PlainSummary({ loading, error, data }: any) {
             <tr key={i} className="py-1 border border-1">
               <td className="border border-1 text-center">{d}</td>
               <td className="border border-1 text-center">{data[d]?.totalScreens}</td>
-              <td className="border border-1 text-center">{data[d]?.totalImpression}</td>
-              <td className="border border-1 text-center">{data[d]?.totalImpressionBasedOnSchedule.toFixed(0)}</td>
+              <td className="border border-1 text-center">{formatNumber(data[d]?.totalReach?.toFixed(0))}</td>
+              <td className="border border-1 text-center">{formatNumber(data[d]?.totalImpression?.toFixed(0))}</td>
               <td className="border border-1 text-center">{formatNumber(data[d]?.totalCampaignBudget)}</td>
-              <td className="border border-1 text-center">{data[d]?.totalCpm.toFixed(2)}</td>
+              <td className="border border-1 text-center">{data[d]?.totalCpm?.toFixed(2)}</td>
             </tr>
           ))}
         </tbody>

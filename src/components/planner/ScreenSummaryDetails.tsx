@@ -7,7 +7,7 @@ import {
 } from "../../utils/hardCoddedData";
 import { ScreenSummaryTable } from "../tables/ScreenSummaryTable";
 import { ViewPlanPic } from "../segments/ViewPlanPic";
-import { PlainSummary } from "../segments/PlainSummary";
+import { PlainSummary } from "../tables/PlainSummaryTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getScreenSummaryData, getScreenSummaryPlanTableData } from "../../actions/screenAction";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
@@ -57,11 +57,6 @@ export const ScreenSummaryDetails = ({
     data: screenSummaryPlanTableData,
   } = screenSummaryPlanTableDataGet;
 
-  useEffect(() => {
-    // if (screenSummaryData) {
-    //   setCurrentCity(Object.keys(screenSummaryData)[Number(currentSummaryTab) - 1]);
-    // }
-  },[currentSummaryTab, screenSummaryData]);
 
   useEffect(() => {
     if (!screenSummaryData) {
@@ -202,11 +197,14 @@ export const ScreenSummaryDetails = ({
             //   message.error("Please  confirm screen selection");
             // } else {
             //   dispatch(addDetailsToCreateCampaign({
-            //     pageName: "Compare Plan Page",
+            //     pageName: "Screen Summary Page",
             //     id: pathname.split("/").splice(-1)[0],
-            //     regularTouchPointWiseSlotDetails: priceData?.regular?.touchPointData,
-            //     cohortTouchPointWiseSlotDetails: priceData?.cohort?.touchPointData,
-            //     selectedType: selectedBuyingOption
+            //     screenWiseSlotDetails: priceData?.regular?.touchPointData,
+            //     totalScreens: priceData?.cohort?.touchPointData,
+            //     totalImpression: selectedBuyingOption
+            //     totalUniqueImpression:
+            //     totalCampaignBudget:
+            //     totalCpm:
             //   }));
             //   setCurrentStep(step + 1);
             // };

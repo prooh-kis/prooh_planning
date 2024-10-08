@@ -68,11 +68,15 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
     setIsDisabled(false);
 
     const oldData = getDataFromLocalStorage("costSummary");
-    oldData["3"] = priceData[type].tableData;
+    oldData["3"] = priceData[type]?.tableData;
     const campaign = getDataFromLocalStorage("campaign");
     campaign.basicDetails["regularVsCohort"] = type;
     saveDataOnLocalStorage("campaign", campaign);
-    saveDataOnLocalStorage("costSummary", oldData)
+    saveDataOnLocalStorage("costSummary", oldData);
+    dispatch(getScreenSummaryData({
+      id: pathname.split("/").splice(-1)[0],
+      type: getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]
+    }));
   }
   return (
     <div className="w-full pt-3">
@@ -138,10 +142,6 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
           isChecked={selectedBuyingOption === "regular" ? true : false}
           onChange={() => {
             handleRegularVsCohortSelection("regular");
-            dispatch(getScreenSummaryData({
-              id: pathname.split("/").splice(-1)[0],
-              type: getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]
-            }))
           }}
         />
         <RadioInput
@@ -150,10 +150,6 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
           isChecked={selectedBuyingOption === "cohort" ? true : false}
           onChange={() => {
             handleRegularVsCohortSelection("cohort");
-            dispatch(getScreenSummaryData({
-              id: pathname.split("/").splice(-1)[0],
-              type: getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]
-            }))
           }}
         />
       </div>

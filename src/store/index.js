@@ -16,6 +16,7 @@ import {
   userSignupReducer,
   userUpdatePasswordReducer } from "../reducers/userReducers";
 import { detailsToCreateCampaignAddReducer } from "../reducers/campaignReducers";
+import { cricketMatchesListGetReducer, playersListGetReducer } from "../reducers/externalApiReducers";
 
 const initialState = {
   userSignin: {
@@ -38,6 +39,10 @@ const store = configureStore({
 
     // campaign
     detailsToCreateCampaignAdd : detailsToCreateCampaignAddReducer,
+    
+    // external apis
+    cricketMatchesListGet : cricketMatchesListGetReducer,
+    playersListGet: playersListGetReducer,
     
     // auth
     auth : authReducer,

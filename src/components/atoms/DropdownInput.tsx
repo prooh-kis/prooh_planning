@@ -1,25 +1,41 @@
 import React, { useState } from 'react';
 
-export const DropdownInput = () => {
-  const [selectedOption, setSelectedOption] = useState('');
+export const DropdownInput = ({selectedOption, setSelectedOption, options }: any) => {
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
   };
 
+  console.log(options);
   return (
-    <div className="relative w-64">
+    <div className="relative w-full">
       <select
         title="dropdown"
-        className="h-[40px] w-full border rounded-lg pl-10 py-2 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 active:bg-blue-100 transition-colors"
+        className="h-[40px] w-full border rounded-lg px-4 py-2  focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 active:bg-blue-100 transition-colors appearance-none"
         value={selectedOption}
         onChange={handleSelectChange}
       >
-        <option value="">Select</option>
-        <option value="Option 1">Option 1</option>
-        <option value="Option 2">Option 2</option>
-        <option value="Option 3">Option 3</option>
+        <option value="">Select</option>  {/* Default option */}
+        {options?.map((opt: any, index: any) => (
+          <option key={index} value={opt.value} >{opt.label}</option>
+        ))}
       </select>
+      <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+        <svg
+          className="w-5 h-5 text-gray-500"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </div>
     </div>
   );
 };

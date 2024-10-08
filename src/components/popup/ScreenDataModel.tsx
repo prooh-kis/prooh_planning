@@ -19,8 +19,8 @@ export function ScreenDataModel({ screen }: Props) {
 
   return (
     <div className="truncate">
-      <div className="truncate">
-        <h1 className="text-[14px] truncate" onClick={handleOpen}>{screen?.screenName}</h1>
+      <div className="truncate" onClick={handleOpen}>
+        <h1 className="text-[14px] truncate">{screen?.screenName}</h1>
       </div>
       <Modal open={open} onCancel={handleCancel} footer={[]} width={1100}>
         <div className="flex gap-8">
@@ -93,12 +93,14 @@ export function ScreenDataModel({ screen }: Props) {
             </div>
             <div className="flex  items-center gap-4 ">
               <button
+                type="submit"
                 className="border border-1 py-2 px-4 rounded-md hover:bg-blue-500 hover:text-white"
                 title="Go back"
               >
                 Remove screen
               </button>
               <button
+                type="submit"
                 className="border border-1 py-2 px-4 rounded-md bg-blue-500 text-white hover:bg-blue-600"
                 title="Save and go next"
               >
