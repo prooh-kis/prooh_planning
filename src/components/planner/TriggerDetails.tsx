@@ -50,13 +50,11 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
         </p>
       </div>
       <div className="grid grid-cols-12 gap-4">
-        <div className="z-0 col-span-4 border rounded py-5 flex flex-col justify-between">
+        <div className="col-span-4 border rounded py-5 flex flex-col justify-between">
           <div className="h-1/2">
             <VerticalStepperSlider
               step={currentStep1}
               setStep={setCurrentStep1}
-              setTrigger={setSelectedTrigger}
-              trigger={selectedTrigger}
               steps={3}
             />
           </div>

@@ -1,3 +1,4 @@
+import { ConformationModel } from "../../components/popup/ConformationModel";
 import { FileUploadButton } from "../../components/FileUploadButton";
 import { ImageContainer, VideoContainer } from "./ShowMyFile";
 import { Radio } from "antd";
@@ -43,12 +44,13 @@ export const UploadCreativeForStandardCampaign = ({
           )
         ) : null}
       </div>
-      <button
-        className="border border-1 py-2 w-full rounded-md bg-gray-200 mt-4 hover:bg-gray-500 hover:text-white font-semibold"
-        onClick={handleSaveFile}
-      >
-        Save creative
-      </button>
+      <ConformationModel
+        handleConfirm={(value: boolean) => {
+          if (value) {
+            handleSaveFile();
+          }
+        }}
+      />
     </div>
   );
 };
@@ -94,12 +96,13 @@ export const UploadCreativeForTriggerCampaign = ({
           )
         ) : null}
       </div>
-      <button
-        className="border border-1 py-2 w-full rounded-md bg-gray-200 mt-4 hover:bg-gray-500 hover:text-white font-semibold"
-        onClick={handleSaveFile}
-      >
-        Save creative
-      </button>
+      <ConformationModel
+        handleConfirm={(value: boolean) => {
+          if (value) {
+            handleSaveFile();
+          }
+        }}
+      />
     </div>
   );
 };
