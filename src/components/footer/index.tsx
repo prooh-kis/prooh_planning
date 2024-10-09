@@ -10,7 +10,7 @@ export const Footer = ({
   totalScreensData,
   isDisabled = false,
 }: any) => {
-  console.log(totalScreensData)
+  // console.log(totalScreensData)
   return (
     <div className="py-4 z-10 flex justify-between">
  

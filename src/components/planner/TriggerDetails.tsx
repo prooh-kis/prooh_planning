@@ -14,7 +14,7 @@ interface TriggerProps {
   step: number;
 }
 export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
-  const [currentStep, setCurrentStep1] = useState<any>(1);
+  const [currentStep1, setCurrentStep1] = useState<any>(1);
   const [currentTab, setCurrentTab] = useState<any>(1);
 
   const [selectedTrigger, setSelectedTrigger] = useState<any>({});
@@ -50,11 +50,13 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
         </p>
       </div>
       <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-4 border rounded py-5 flex flex-col justify-between">
+        <div className="z-0 col-span-4 border rounded py-5 flex flex-col justify-between">
           <div className="h-1/2">
             <VerticalStepperSlider
-              step={currentStep}
+              step={currentStep1}
               setStep={setCurrentStep1}
+              setTrigger={setSelectedTrigger}
+              trigger={selectedTrigger}
               steps={3}
             />
           </div>
@@ -65,7 +67,7 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
           </p>
         </div>
         <div className="col-span-8 border rounded p-5">
-          {currentStep === 1 ? (
+          {currentStep1 === 1 ? (
             <div>
               <div className="flex gap-2 justify-between">
                 <div className="flex items-center gap-4">
@@ -96,7 +98,7 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
 
               <WeatherSegment currentTab={currentTab} />
             </div>
-          ) : currentStep === 2 ? (
+          ) : currentStep1 === 2 ? (
             <div>
               <div className="flex gap-2 justify-between">
                 <div className="flex items-center gap-4">
