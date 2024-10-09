@@ -21,7 +21,7 @@ export const FileUploadButton: React.FC<FileUploaderProps> = ({
   };
 
   return (
-    <div className="mt-2">
+    <div className="">
       <button
         onClick={handleClick}
         className={

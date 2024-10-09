@@ -3,6 +3,8 @@ import { FileUploadButton } from "../FileUploadButton";
 import { ImageViewCloseButton } from "../molecules/ImageViewCloseButton";
 import { Divider } from "antd";
 import { Footer } from "../../components/footer";
+import { EmailConfirmationImage } from "../../components/segments/EmailConfirmationImage";
+import { EmailSendBox } from "../../components/segments/EmailSendBox";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -105,35 +107,13 @@ export const ViewFinalPlanPODetails = ({
             Download
           </button>
           <Divider />
-          <h1 className="font-semibold text-lg ">
-            2. Share this plan to client
-          </h1>
-          <div className="flex gap-0 pt-4">
-            <input
-              placeholder="Enter email"
-              type="email"
-              className="px-4 py-2 border border-1 border-#C3C3C3 rounded-md"
-            />
-            <button className="px-4 py-2 border border-1 border-#C3C3C3 rounded-md bg-blue-400 text-white hover:bg-blue-600 text-md">
-              Send
-            </button>
-          </div>
+          <EmailSendBox />
           <Divider />
-          <div className="flex flex-col">
-            <h1 className="font-semibold text-lg">
-              3.upload client approval screenshot
-            </h1>
-            <FileUploadButton handleFile={handleAddNewFile} width="" />
-          </div>
-          <div className="flex gap-4 pt-4">
-            {files?.map((file: any, index: number) => (
-              <ImageViewCloseButton
-                file={file}
-                key={index}
-                removeImage={removeImage}
-              />
-            ))}
-          </div>
+          <EmailConfirmationImage
+            files={files}
+            handleAddNewFile={handleAddNewFile}
+            removeImage={removeImage}
+          />
         </div>
       </div>
       <div className="px-4 fixed bottom-0 left-0 w-full bg-white">

@@ -9,6 +9,8 @@ import {
   ScreenSummaryDetails,
   TriggerDetails,
   ViewFinalPlanPODetails,
+  VendorConfirmationDetails,
+  CampaignDashboardDetails,
 } from "../../components/planner";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -156,8 +158,18 @@ export const RegularPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
           />
-        ) : (
+        ) : currentStep === 8 ? (
           <CreativeUploadDetails
+            step={currentStep}
+            setCurrentStep={setCurrentStep}
+          />
+        ) : currentStep === 9 ? (
+          <VendorConfirmationDetails
+            step={currentStep}
+            setCurrentStep={setCurrentStep}
+          />
+        ) : (
+          <CampaignDashboardDetails
             step={currentStep}
             setCurrentStep={setCurrentStep}
           />

@@ -44,11 +44,23 @@ export const CreativeUploadDetails = ({
   const [selectFileType, setSelectFileType] = useState("video");
   const [creativeType, setCreativeType] = useState("Standard"); // Standard/ Trigger
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
-  const [data, setData] = useState<any>(null);
+  const [creativeUploadData, setCreativeUploadData] = useState<any>(null);
   const [citiesCreative, setCitiesCreative] = useState<any>([]);
 
-  console.log("data : ", data);
+  console.log("data : ", creativeUploadData);
 
+
+  const screenDataUploadCreative = useSelector(
+    (state: any) => state.screenDataUploadCreative
+  );
+  const {
+    loading: loadingCost,
+    error: errorScreeData,
+    data: screenData,
+  } = screenDataUploadCreative;
+
+
+  console.log(screenData);
   const handleSetCreativeType = (e: RadioChangeEvent) => {
     setCreativeType(e.target.value);
   };
@@ -72,18 +84,9 @@ export const CreativeUploadDetails = ({
     }
   };
 
-  const screenDataUploadCreative = useSelector(
-    (state: any) => state.screenDataUploadCreative
-  );
-  const {
-    loading: loadingCost,
-    error: errorScreeData,
-    data: screenData,
-  } = screenDataUploadCreative;
-
   const handleSaveFile = () => {
     if (file) {
-      const myData = data;
+      const myData = creativeUploadData;
       if (creativeType === "Standard") {
         if (currentPlayTimeCreative === "1")
           myData[currentCity][currentScreen].standardDayTimeCreatives.push(
@@ -98,14 +101,14 @@ export const CreativeUploadDetails = ({
         myData[currentCity][currentScreen].triggerCreatives.push(file);
       }
       setFIle(null);
-      setData(myData);
+      setCreativeUploadData(myData);
     } else {
       message.error("Please select file to save!");
     }
   };
 
   const removeFile = (url: string) => {
-    const myData = data;
+    const myData = creativeUploadData;
     if (creativeType === "Standard") {
       if (currentPlayTimeCreative === "1")
         myData[currentCity][currentScreen].standardDayTimeCreatives = myData[
@@ -126,7 +129,7 @@ export const CreativeUploadDetails = ({
       ].triggerCreatives.filter((file: any) => file.url !== url);
     }
     setFIle(null);
-    setData(myData);
+    setCreativeUploadData(myData);
     setIsDeleted((pre: boolean) => !pre);
   };
 
@@ -150,41 +153,6 @@ export const CreativeUploadDetails = ({
     setCurrentCity(city);
   };
 
-  // const creativeSchema = new mongoose.Schema({
-  //   screenResolution: { type: String, default: "" },
-  //   screenCount: { type: Number, default: 0 },
-  //   creativeDuration: { type: Number, default: 0 },
-  //   standardDayTimeCreatives: { type: [creativeInfoSchema], default: [] },
-  //   standardNightTimeCreatives: { type: [creativeInfoSchema], default: [] },
-  //   triggerDayTimeCreatives: { type: [creativeInfoSchema], default: [] },
-  //   triggerNightTimeCreatives: { type: [creativeInfoSchema], default: [] },
-  // });
-
-  useEffect(() => {
-    if (screenData) {
-      handleSetInitialData(screenData);
-      const result: any = {};
-      for (let city in screenData) {
-        if (result[city] === undefined) {
-          result[city] = [];
-        }
-        for (let data of screenData[city]) {
-          result[city].push({
-            screenResolution: data.resolution,
-            screenCount: data.count,
-            creativeDuration: data.duration,
-            standardDayTimeCreatives: [],
-            standardNightTimeCreatives: [],
-            triggerCreatives: [],
-          });
-        }
-      }
-      setData(result);
-    }
-    if (errorScreeData) {
-      message.error(errorScreeData);
-    }
-  }, [screenData]);
 
   useEffect(() => {
     dispatch(
@@ -192,10 +160,39 @@ export const CreativeUploadDetails = ({
         id: pathname?.split("/").splice(-1)[0],
       })
     );
-  }, [pathname?.split("/").splice(-1)[0]]);
+  }, [dispatch, pathname]);
+
+  useEffect(() => {
+    if (screenData) {
+      handleSetInitialData(screenData);
+      const result: any = {};
+      for (let city in screenData) {
+        console.log(city);
+        if (result[city] === undefined) {
+          result[city] = [];
+        }
+        console.log(screenData[city]);
+        for (let data in screenData[city]) {
+          result[city].push({
+            screenResolution: screenData[city][data].resolution,
+            screenCount: screenData[city][data].count,
+            creativeDuration: screenData[city][data].duration,
+            standardDayTimeCreatives: [],
+            standardNightTimeCreatives: [],
+            triggerCreatives: [],
+          });
+        }
+      }
+      setCreativeUploadData(result);
+    }
+    if (errorScreeData) {
+      message.error(errorScreeData);
+    }
+  }, [errorScreeData, screenData]);
+
 
   return (
-    <>
+    <div>
       {currentCity === "" ? null : (
         <div className="w-full py-3">
           <div>
@@ -230,7 +227,7 @@ export const CreativeUploadDetails = ({
             </div>
             <div className="flex">
               <div className="border border-1 h-100%">
-                {data[currentCity]?.map((singleData: any, index: number) => {
+                {creativeUploadData[currentCity]?.map((singleData: any, index: number) => {
                   return (
                     <div
                       title="click to select row"
@@ -318,7 +315,7 @@ export const CreativeUploadDetails = ({
                     currentPlayTimeCreative === "1" ? (
                       <ViewMediaForUploadCreatives
                         files={
-                          data[currentCity][currentScreen]
+                          creativeUploadData[currentCity][currentScreen]
                             ?.standardDayTimeCreatives
                         }
                         removeFile={removeFile}
@@ -326,7 +323,7 @@ export const CreativeUploadDetails = ({
                     ) : (
                       <ViewMediaForUploadCreatives
                         files={
-                          data[currentCity][currentScreen]
+                          creativeUploadData[currentCity][currentScreen]
                             ?.standardNightTimeCreatives
                         }
                         removeFile={removeFile}
@@ -334,7 +331,7 @@ export const CreativeUploadDetails = ({
                     )
                   ) : (
                     <ViewMediaForUploadCreatives
-                      files={data[currentCity][currentScreen]?.triggerCreatives}
+                      files={creativeUploadData[currentCity][currentScreen]?.triggerCreatives}
                       removeFile={removeFile}
                     />
                   )}
@@ -355,6 +352,6 @@ export const CreativeUploadDetails = ({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };

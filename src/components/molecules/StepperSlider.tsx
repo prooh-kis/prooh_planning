@@ -29,7 +29,7 @@ export const StepperSlider = ({ setStep, steps, step }: StepSliderProps) => {
   // Example labels for each step
   const stepLabels = [
     "Basic Details", "Audience Selection", "Advanced Filters", "Cohort Selection", "Screens Summary", 
-    "Trigger Selection", "Vendor Approval", "Creative Upload", "Dashboard"
+    "Trigger Selection", "Vendor Approval", "Creative Upload", "Vendor Confirmation"
   ];
 
   return (
