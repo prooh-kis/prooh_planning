@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FileUploadButton } from "../FileUploadButton";
 import { ImageViewCloseButton } from "../molecules/ImageViewCloseButton";
 import { Divider } from "antd";
+import { Footer } from "../../components/footer";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -122,7 +123,7 @@ export const ViewFinalPlanPODetails = ({
             <h1 className="font-semibold text-lg">
               3.upload client approval screenshot
             </h1>
-            <FileUploadButton handleFile={handleAddNewFile} />
+            <FileUploadButton handleFile={handleAddNewFile} width="" />
           </div>
           <div className="flex gap-4 pt-4">
             {files?.map((file: any, index: number) => (
@@ -134,6 +135,17 @@ export const ViewFinalPlanPODetails = ({
             ))}
           </div>
         </div>
+      </div>
+      <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
+        <Footer
+          handleBack={() => {
+            setCurrentStep(step - 1);
+          }}
+          handleSave={() => {
+            setCurrentStep(step + 1);
+          }}
+          totalScreensData={{}}
+        />
       </div>
     </div>
   );

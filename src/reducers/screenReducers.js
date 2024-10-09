@@ -2,6 +2,10 @@ import {
   GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
   GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
   GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
+  GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_ERROR,
+  GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_REQUEST,
+  GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_RESET,
+  GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_SUCCESS,
   GET_SCREEN_SUMMARY_DATA_ERROR,
   GET_SCREEN_SUMMARY_DATA_REQUEST,
   GET_SCREEN_SUMMARY_DATA_SUCCESS,
@@ -16,7 +20,7 @@ import {
   GET_SCREENS_DATA_ADVANCE_FILTER_SUCCESS,
   GET_SCREENS_PRICE_FOR_REGULAR_COHORT_ERROR,
   GET_SCREENS_PRICE_FOR_REGULAR_COHORT_REQUEST,
-  GET_SCREENS_PRICE_FOR_REGULAR_COHORT_SUCCESS
+  GET_SCREENS_PRICE_FOR_REGULAR_COHORT_SUCCESS,
 } from "../constants/screenConstants";
 
 export function screensAudiencesDataGetReducer(state = [], action) {
@@ -56,7 +60,6 @@ export function screensCostDataGetReducer(state = [], action) {
       return state;
   }
 }
-
 
 export function screensDataAdvanceFilterGetReducer(state = [], action) {
   switch (action.type) {
@@ -116,7 +119,6 @@ export function screenSummaryDataGetReducer(state = [], action) {
   }
 }
 
-
 export function screenSummaryPlanTableDataGetReducer(state = [], action) {
   switch (action.type) {
     case GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_REQUEST:
@@ -135,3 +137,26 @@ export function screenSummaryPlanTableDataGetReducer(state = [], action) {
       return state;
   }
 }
+
+export function screenDataUploadCreativeReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_REQUEST:
+      return { loading: true };
+    case GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+// screenDataUploadCreativePage

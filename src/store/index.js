@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
 import {
   regularVsCohortPriceDataGetReducer,
+  screenDataUploadCreativeReducer,
   screensAudiencesDataGetReducer,
   screensCostDataGetReducer,
   screensDataAdvanceFilterGetReducer,
@@ -14,9 +15,13 @@ import {
   userSendEmailToResetPasswordReducer,
   userSigninReducer,
   userSignupReducer,
-  userUpdatePasswordReducer } from "../reducers/userReducers";
+  userUpdatePasswordReducer,
+} from "../reducers/userReducers";
 import { detailsToCreateCampaignAddReducer } from "../reducers/campaignReducers";
-import { cricketMatchesListGetReducer, playersListGetReducer } from "../reducers/externalApiReducers";
+import {
+  cricketMatchesListGetReducer,
+  playersListGetReducer,
+} from "../reducers/externalApiReducers";
 
 const initialState = {
   userSignin: {
@@ -30,28 +35,28 @@ const store = configureStore({
   initialState,
   reducer: {
     //screen
-    screensAudiencesDataGet : screensAudiencesDataGetReducer,
-    screensCostDataGet : screensCostDataGetReducer,
-    screensDataAdvanceFilterGet : screensDataAdvanceFilterGetReducer,
-    regularVsCohortPriceDataGet : regularVsCohortPriceDataGetReducer,
-    screenSummaryDataGet : screenSummaryDataGetReducer,
+    screensAudiencesDataGet: screensAudiencesDataGetReducer,
+    screensCostDataGet: screensCostDataGetReducer,
+    screensDataAdvanceFilterGet: screensDataAdvanceFilterGetReducer,
+    regularVsCohortPriceDataGet: regularVsCohortPriceDataGetReducer,
+    screenSummaryDataGet: screenSummaryDataGetReducer,
     screenSummaryPlanTableDataGet: screenSummaryPlanTableDataGetReducer,
+    screenDataUploadCreative: screenDataUploadCreativeReducer,
 
     // campaign
-    detailsToCreateCampaignAdd : detailsToCreateCampaignAddReducer,
-    
-    // external apis
-    cricketMatchesListGet : cricketMatchesListGetReducer,
-    playersListGet: playersListGetReducer,
-    
-    // auth
-    auth : authReducer,
-    userSignin : userSigninReducer,
-    userSignup : userSignupReducer,
-    userUpdatePassword : userUpdatePasswordReducer,
-    emailVerify : userEmailVerificationReducer,
-    userSendEmailToResetPassword : userSendEmailToResetPasswordReducer,
+    detailsToCreateCampaignAdd: detailsToCreateCampaignAddReducer,
 
+    // external apis
+    cricketMatchesListGet: cricketMatchesListGetReducer,
+    playersListGet: playersListGetReducer,
+
+    // auth
+    auth: authReducer,
+    userSignin: userSigninReducer,
+    userSignup: userSignupReducer,
+    userUpdatePassword: userUpdatePasswordReducer,
+    emailVerify: userEmailVerificationReducer,
+    userSendEmailToResetPassword: userSendEmailToResetPasswordReducer,
   },
   // middleware: thunk
   // devTools: process.env.NODE_ENV !== 'production'

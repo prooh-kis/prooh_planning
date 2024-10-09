@@ -2,10 +2,12 @@ import React, { useRef, ChangeEvent } from "react";
 
 interface FileUploaderProps {
   handleFile: (file: File) => void;
+  width: string;
 }
 
 export const FileUploadButton: React.FC<FileUploaderProps> = ({
   handleFile,
+  width,
 }) => {
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
@@ -22,7 +24,11 @@ export const FileUploadButton: React.FC<FileUploaderProps> = ({
     <div className="mt-2">
       <button
         onClick={handleClick}
-        className="border border-dashed border-2 border-blue-400 text-blue-400 rounded-2xl  bg-blue-100 py-1 w-32"
+        className={
+          width
+            ? "border border-dashed border-2 border-blue-400 text-blue-400 rounded-2xl  bg-blue-100 py-1 w-full"
+            : "border border-dashed border-2 border-blue-400 text-blue-400 rounded-2xl  bg-blue-100 py-1 w-32"
+        }
       >
         + Upload
       </button>

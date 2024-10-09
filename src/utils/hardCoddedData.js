@@ -1,4 +1,3 @@
-
 export const screenSummaryTabData = [
   {
     icon: <i className="fi fi-rr-screen flex items-center"></i>,
@@ -8,6 +7,19 @@ export const screenSummaryTabData = [
   {
     icon: <i className="fi fi-sr-summary-check flex items-center"></i>,
     label: "Plan Summary",
+    id: "2",
+  },
+];
+
+export const playCreativeTime = [
+  {
+    icon: <i className="fi fi-rr-settings"></i>,
+    label: "Day Time Creative",
+    id: "1",
+  },
+  {
+    icon: <i className="fi fi-rr-settings"></i>,
+    label: "Night Time Creative",
     id: "2",
   },
 ];
