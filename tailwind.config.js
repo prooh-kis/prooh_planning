@@ -26,7 +26,7 @@ module.exports = {
         statusBlue: '#4DAAFG',
         brand: "#52A2FF",
         competitor: "#20AA70",
-        brand_competitor: "#FF5252"
+        brand_competitor: "#FF5252",
       },
     },
   },

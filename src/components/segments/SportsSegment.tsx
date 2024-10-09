@@ -88,6 +88,7 @@ export const SportsSegment = ({}: SportsSegmentProps) => {
           options={sportOptions}
           setSelectedOption={setSport}
           selectedOption={sport}
+          placeHolder="Select Sport"
         />
         {loadingPlayers ? (
           <h1>Loading...</h1>
@@ -96,6 +97,7 @@ export const SportsSegment = ({}: SportsSegmentProps) => {
           options={players}
           setSelectedOption={setPlayer}
           selectedOption={player}
+          placeHolder="Select Player"
         />
       )}
 
@@ -113,6 +115,7 @@ export const SportsSegment = ({}: SportsSegmentProps) => {
                 }
               })
             }
+            placeHolder="Select Match"
           />
         )}
       </div>
@@ -124,11 +127,12 @@ export const SportsSegment = ({}: SportsSegmentProps) => {
       )}
 
       <div className="">
-        <h1 className="px-1 py-2 text-[14px]">Choose a condition</h1>
+        {/* <h1 className="px-1 py-2 text-[14px]">Choose a condition</h1> */}
         <DropdownInput
           setSelectedOption={setCriteria}
           selectedOption={criteria}
           options={options}
+          placeHolder="Choose a condition"
         />
       </div>
     </div>

@@ -8,10 +8,15 @@ import { SportsSegment } from "../../components/segments/SportsSegment";
 import { BuyVacantSlots } from "../../components/segments/BuyVacantSlots";
 import { OpenBudgetSegment } from "../../components/segments/OpenBudgetSegment";
 import { PrimaryButton } from "../../components/atoms/PrimaryButton";
+import { formatNumber } from "../../utils/formatValue";
 
 export const TriggerDetails = (props: any) => {
   const [currentStep, setCurrentStep] = useState<any>(1);
   const [currentTab, setCurrentTab] = useState<any>(1)
+
+  const [selectedTrigger, setSelectedTrigger] = useState<any>({});
+  const [selectedBudget, setSelectedBudget] = useState<any>(null);
+  const [selectedSOV, setSelectedSOV] = useState<any>(null);
 
   const weatherTabData = [
     {
@@ -118,7 +123,12 @@ export const TriggerDetails = (props: any) => {
               <BuyVacantSlots />
             </div>
           )}
-          <OpenBudgetSegment />
+          <OpenBudgetSegment
+            selectedSOV={selectedSOV}
+            selectedBudget={selectedBudget}
+            setSelectedBudget={setSelectedBudget}
+            setSelectedSOV={setSelectedSOV}
+          />
           <div className="flex justify-between items-center">
             <div className="flex items-center">
               <p className="text-[12px] text-[#969696]">A trigger is set for uploading tigger creative towards the end of your planning</p>
@@ -138,7 +148,7 @@ export const TriggerDetails = (props: any) => {
           label={
             <>
               Kindly re-confirm the additional budget of 
-              <span className="font-bold"> INR 6000 </span> 
+              <span className="font-bold"> &#8377;{formatNumber(Number(selectedBudget))} </span> 
               for trigger based ads
             </>
           }

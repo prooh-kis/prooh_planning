@@ -7,7 +7,7 @@ export const MatchDetails = ({ details }: MatchDetailsProps) => {
   return (
     <div className="overflow-y-auto h-28 no-scrollbar">
       {details.length < 1 && (
-        <p>Please select a match first</p>
+        <p className="px-1 text-[12px] text-red-500">Please select a match first</p>
       )}
       {details?.map((m: any, i: any) => (
         <div key={i} className="border rounded-[10px] py-2 my-2 px-4">

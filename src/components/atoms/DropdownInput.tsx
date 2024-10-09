@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export const DropdownInput = ({selectedOption, setSelectedOption, options }: any) => {
+export const DropdownInput = ({placeHolder, selectedOption, setSelectedOption, options }: any) => {
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
@@ -15,7 +15,7 @@ export const DropdownInput = ({selectedOption, setSelectedOption, options }: any
         value={selectedOption}
         onChange={handleSelectChange}
       >
-        <option value="">Select</option>  {/* Default option */}
+        <option value="">{placeHolder}</option>  {/* Default option */}
         {options?.map((opt: any, index: any) => (
           <option key={index} value={opt.value} >{opt.label}</option>
         ))}

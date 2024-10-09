@@ -73,10 +73,10 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
     campaign.basicDetails["regularVsCohort"] = type;
     saveDataOnLocalStorage("campaign", campaign);
     saveDataOnLocalStorage("costSummary", oldData);
-    dispatch(getScreenSummaryData({
-      id: pathname.split("/").splice(-1)[0],
-      type: getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]
-    }));
+    // dispatch(getScreenSummaryData({
+    //   id: pathname.split("/").splice(-1)[0],
+    //   type: type
+    // }));
   }
   return (
     <div className="w-full pt-3">
@@ -95,14 +95,14 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
         <p>Error: {errorPriceData}</p>
       ) : (
         <div className="flex gap-2">
-          <div className="ml-[-25px] pt-2">
-            <VerticalLine height="100px" color="#B5B5B5" thickness="1px" />
-            <h1>vs</h1>
+          <div className="ml-[-25px] pt-6">
+            <VerticalLine height="120px" color="#B5B5B5" thickness="1px" />
+            <h1 className="py-4">vs</h1>
             <VerticalLine height="100px" color="#B5B5B5" thickness="1px" />
           </div>
           <div className="w-full">
-            <div>
-              <h1>Regular slots per day buying</h1>
+            <div className="py-2">
+              <h1 className="py-2">Regular slots per day buying</h1>
               <RegularCohortSlotsCampaignTable
                 priceData={priceData?.regular}
                 setShowSummary={setShowSummary}
@@ -112,13 +112,14 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
               {showSummary === "regular" && (
                 
                 <RegularCohortSummaryTable 
+                  type="regular"
                   touchPointData={priceData?.regular?.touchPointData}
                 />
               )}
               
             </div>
-            <div>
-              <h1>Cohort slots per day buying</h1>
+            <div className="py-2">
+              <h1 className="py-2">Cohort slots per day buying</h1>
               <RegularCohortSlotsCampaignTable
                 type="cohort"
                 priceData={priceData?.cohort}
@@ -126,9 +127,10 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
                 showSummary={showSummary}
               />
               {showSummary === "cohort" && (
-                <RegularCohortSummaryTable 
-                touchPointData={priceData?.cohort?.touchPointData}
-              />
+                <RegularCohortSummaryTable
+                  type="cohort" 
+                  touchPointData={priceData?.cohort?.touchPointData}
+                />
               )}
             </div>
           </div>

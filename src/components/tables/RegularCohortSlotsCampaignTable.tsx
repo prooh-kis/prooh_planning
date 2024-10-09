@@ -12,12 +12,13 @@ export const RegularCohortSlotsCampaignTable = ({
   priceData,
   showSummary,
 }: RegularCohortSlotsCampaignTableProps) => {
+  console.log(type);
   return (
     <table className="w-full">
       <thead
-        className={`bg-[${
-          type === "regular" ? "#F7F7F7" : "#DFE8FF"
-        }] flex justify-between items-center w-full`}
+        className={`border
+          bg-${type === "regular" ? "[#F7F7F7]" : "[#DFE8FF]" }
+        flex justify-between items-center w-full`}
       >
         <tr className="flex justify-between w-full h-[40px]">
           <th className="flex w-full items-center justify-center gap-2">

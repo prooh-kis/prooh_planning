@@ -7,7 +7,7 @@ import {
 } from "../../utils/hardCoddedData";
 import { ScreenSummaryTable } from "../tables/ScreenSummaryTable";
 import { ViewPlanPic } from "../segments/ViewPlanPic";
-import { PlainSummary } from "../tables/PlainSummaryTable";
+import { PlanSummaryTable } from "../tables/PlanSummaryTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getScreenSummaryData, getScreenSummaryPlanTableData } from "../../actions/screenAction";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
@@ -30,6 +30,10 @@ export const ScreenSummaryDetails = ({
 }: EnterCampaignBasicDetailsProps) => {
   const [currentTab, setCurrentTab] = useState<string>("1");
   const [currentSummaryTab, setCurrentSummaryTab] = useState<any>("1");
+
+  const [regularVsCohort, setRegularVsCohort] = useState<any>(getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]);
+  const [showSummary, setShowSummary] = useState<any>(null);
+
   const [listView, setListView] = useState<any>(true);
   const [currentCity, setCurrentCity] = useState<any>(null);
   const [cityZones, setCityZones] = useState<any>({});
@@ -59,25 +63,31 @@ export const ScreenSummaryDetails = ({
 
 
   useEffect(() => {
+    setRegularVsCohort(getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]);
+
     if (!screenSummaryData) {
       dispatch(getScreenSummaryData({
         id: pathname.split("/").splice(-1)[0],
         type: getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]
       }))
     }
-    dispatch(getScreenSummaryPlanTableData({
-      id: pathname.split("/").splice(-1)[0],
-    }));
+
+    if (pathname) {
+      dispatch(getScreenSummaryPlanTableData({
+        id: pathname.split("/").splice(-1)[0],
+      }));
+    }
+ 
 
   },[screenSummaryData, dispatch, pathname]);
 
   return (
     <div className="w-full py-3">
       <h1 className="text-3xl ">
-        screens summary as per “cohort plan” selected{" "}
+        Screens summary as per “{regularVsCohort === "cohort" ? "COHORT" : "REGULAR"}” selection{" "}
       </h1>
       <h1 className="text-sm text-gray-500 ">
-        you can further optimized your plan by deselecting locations in the
+        You can further optimized your plan by deselecting locations in the
         screen summary
       </h1>
       <i className="fi fi-rr-screen-play text-black flex items-center"></i>
@@ -179,7 +189,10 @@ export const ScreenSummaryDetails = ({
               )}
             </div>
           ) : currentTab === "2" && (
-            <PlainSummary
+            <PlanSummaryTable
+              showSummary={showSummary}
+              setShowSummary={setShowSummary}
+              regularVsCohort={regularVsCohort}
               loading={loadingScreenSummaryPlanTable}
               error={errorScreenSummaryPlanTable}
               data={screenSummaryPlanTableData}

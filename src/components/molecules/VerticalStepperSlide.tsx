@@ -4,21 +4,38 @@ interface StepSliderProps {
   steps: number;
   step: number;
   setStep?: any;
+  setTrigger?: any;
+  trigger?: any;
 }
 
-export const VerticalStepperSlider: React.FC<StepSliderProps> = ({ setStep, steps, step }) => {
+export const VerticalStepperSlider: React.FC<StepSliderProps> = ({ setStep, steps, step, setTrigger, trigger }) => {
+  // Example labels for each step
+  const stepLabels = [
+    {
+      label: "Conditional To Weather Situations",
+      value: "weather",
+    },
+    {
+      label: "Conditional To Sporting Events",
+      value: "sport",
+    },
+    {
+      label: "Empty Slots",
+      value: "empty",
+    }
+  ];
 
   // Function to handle step marker click
   const handleStepClick = (step: number) => {
     setStep(step);
+    const triggerType: any = {};
+    triggerType["triggerType"] = stepLabels[step].value
+    setTrigger(triggerType);
+    console.log(triggerType);
+
   };
 
-  // Example labels for each step
-  const stepLabels = [
-    "Conditional To Weather Situations",
-    "Conditional To Sporting Events",
-    "Empty Slots"
-  ];
+
 
   return (
     <div className="h-full py-0 px-5 flex flex-col w-full">
@@ -46,7 +63,7 @@ export const VerticalStepperSlider: React.FC<StepSliderProps> = ({ setStep, step
                   i + 1 === step ? "text-[#166235]" : "text-gray-400"
                 } text-[14px] truncate`}
               >
-                {stepLabels[i]}
+                {stepLabels[i]?.label}
               </span>
             </div>
           ))}

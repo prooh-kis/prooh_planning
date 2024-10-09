@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { RadioInput } from "../../components/atoms/RadioInput";
 
 interface BuyVacantSlotsProps {
@@ -5,6 +6,7 @@ interface BuyVacantSlotsProps {
 }
 export const BuyVacantSlots = ({}: BuyVacantSlotsProps) => {
 
+  const [slotTime, setSlotTime] = useState<any>(null);
   const times = [
     {
       label: "Morning",
@@ -29,7 +31,8 @@ export const BuyVacantSlots = ({}: BuyVacantSlotsProps) => {
           <RadioInput 
             title={t.label}
             value={t.value}
-            onChange={() => {}}
+            isChecked={slotTime === t.value}
+            onChange={() => setSlotTime(t.value)}
           />
         </div>
 
