@@ -6,7 +6,7 @@ interface VerticalLineProps {
   thickness?: string; // thickness of the line
 }
 
-export const VerticalLine: React.FC<VerticalLineProps> = ({ height, color, thickness }) => {
+export const VerticalLine = ({ height, color, thickness }: VerticalLineProps) => {
   return (
     <div
       style={{

@@ -6,7 +6,7 @@ interface StepSliderProps {
   setStep?: any;
 }
 
-export const StepperSlider: React.FC<StepSliderProps> = ({ setStep, steps, step }) => {
+export const StepperSlider = ({ setStep, steps, step }: StepSliderProps) => {
 
   // Function to handle step marker click
   const handleStepClick = (step: number) => {

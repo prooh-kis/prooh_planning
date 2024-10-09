@@ -15,13 +15,6 @@ export function PlanSummaryTable({
   data
 }: any) {
 
-  const regularVsCohortPriceDataGet = useSelector((state: any) => state.regularVsCohortPriceDataGet);
-  const {
-    loading: loadingPriceData,
-    error: errorPriceData,
-    data: priceData,
-  } = regularVsCohortPriceDataGet;
-
   return (
     <div>
       <div className="py-4">

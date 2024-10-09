@@ -10,9 +10,12 @@ import { ViewPlanPic } from "../segments/ViewPlanPic";
 import { PlanSummaryTable } from "../tables/PlanSummaryTable";
 import { useDispatch, useSelector } from "react-redux";
 import { getScreenSummaryData, getScreenSummaryPlanTableData } from "../../actions/screenAction";
-import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
 import { Footer } from "../../components/footer";
+import { REGULAR_VS_COHORT_PRICE_DATA, SCREEN_SUMMARY_DATA, SCREEN_SUMMARY_SELECTION, SCREEN_SUMMARY_TABLE_DATA } from "../../constants/localStorageConstants";
+import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { message } from "antd";
 
 interface Tab {
   label: string;
@@ -30,6 +33,7 @@ export const ScreenSummaryDetails = ({
 }: EnterCampaignBasicDetailsProps) => {
   const [currentTab, setCurrentTab] = useState<string>("1");
   const [currentSummaryTab, setCurrentSummaryTab] = useState<any>("1");
+  const [isDisabled, setIsDisabled] = useState<any>(true);
 
   const [regularVsCohort, setRegularVsCohort] = useState<any>(getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]);
   const [showSummary, setShowSummary] = useState<any>(null);
@@ -41,7 +45,7 @@ export const ScreenSummaryDetails = ({
   const [screenTypes, setScreenTypes] = useState<any>({});
 
 
-  const [screensBuyingCount, setScreensBuyingCount] = useState<any>(null);
+  const [screensBuyingCount, setScreensBuyingCount] = useState<any>(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION));
 
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -64,6 +68,11 @@ export const ScreenSummaryDetails = ({
 
   useEffect(() => {
     setRegularVsCohort(getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]);
+
+    if (screenSummaryPlanTableData) {
+      saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, screenSummaryData);
+      saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, screenSummaryPlanTableData);
+    }
 
     if (!screenSummaryData) {
       dispatch(getScreenSummaryData({
@@ -122,7 +131,7 @@ export const ScreenSummaryDetails = ({
                         return {
                           id: `${index + 1}`,
                           label: s,
-                          params: [Object.values(screensBuyingCount[s])?.map((f: any) => f.status)?.filter((s: any) => s === true).length, Object.values(screensBuyingCount[s])?.map((f: any) => f.status)?.filter((s: any) => s === false).length]
+                          params: [Object.values(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)[s])?.map((f: any) => f.status)?.filter((s: any) => s === true).length, Object.values(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)[s])?.map((f: any) => f.status)?.filter((s: any) => s === false).length]
                         };
                       })}
                     />
@@ -209,17 +218,17 @@ export const ScreenSummaryDetails = ({
             // if (isDisabled) {
             //   message.error("Please  confirm screen selection");
             // } else {
-            //   dispatch(addDetailsToCreateCampaign({
-            //     pageName: "Screen Summary Page",
-            //     id: pathname.split("/").splice(-1)[0],
-            //     screenWiseSlotDetails: priceData?.regular?.touchPointData,
-            //     totalScreens: priceData?.cohort?.touchPointData,
-            //     totalImpression: selectedBuyingOption
-            //     totalUniqueImpression:
-            //     totalCampaignBudget:
-            //     totalCpm:
-            //   }));
-            //   setCurrentStep(step + 1);
+              dispatch(addDetailsToCreateCampaign({
+                pageName: "Screen Summary Page",
+                id: pathname.split("/").splice(-1)[0],
+                screenWiseSlotDetails: getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[`${regularVsCohort}`].touchPointData,
+                totalScreens: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalScreens,
+                totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalImpression,
+                totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalReach,
+                totalCampaignBudget:getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCampaignBudget,
+                totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCpm,
+              }));
+              setCurrentStep(step + 1);
             // };
           }}
           totalScreensData={{}}

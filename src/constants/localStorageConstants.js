@@ -22,3 +22,7 @@ export const SELECTED_SCREENS_ID = "selectedScreensId";
 // 4
 export const REGULAR_VS_COHORT_PRICE_DATA = "regularVsCohortPriceData";
 export const COST_SUMMARY = "costSummary";
+// 5
+export const SCREEN_SUMMARY_DATA = "screenSummaryData";
+export const SCREEN_SUMMARY_TABLE_DATA = "screenSummaryTableData";
+export const SCREEN_SUMMARY_SELECTION = "screenSummarySelection";
