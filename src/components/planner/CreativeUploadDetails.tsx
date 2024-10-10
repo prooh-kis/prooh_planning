@@ -14,12 +14,13 @@ import { getScreenDataUploadCreativeData } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Footer } from "../../components/footer";
+import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
+import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
 }
-
 interface SingleFile {
   file: File;
   url: string;
@@ -28,11 +29,24 @@ interface SingleFile {
   duration: number;
   awsURl: string;
 }
+interface Data1 {
+  screenResolution: string;
+  screenCount: number;
+  creativeDuration: number;
+  standardDayTimeCreatives: SingleFile[];
+  standardNightTimeCreatives: SingleFile[];
+  triggerCreatives: SingleFile[];
+}
+
+interface Data {
+  [key: string]: Data1[];
+}
 
 export const CreativeUploadDetails = ({
   setCurrentStep,
   step,
 }: CreativeUploadDetailsProps) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { pathname } = useLocation();
   const dispatch = useDispatch<any>();
   const [currentTab, setCurrentTab] = useState<any>("1");
@@ -44,11 +58,10 @@ export const CreativeUploadDetails = ({
   const [selectFileType, setSelectFileType] = useState("video");
   const [creativeType, setCreativeType] = useState("Standard"); // Standard/ Trigger
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
-  const [creativeUploadData, setCreativeUploadData] = useState<any>(null);
+  const [creativeUploadData, setCreativeUploadData] = useState<Data>({});
   const [citiesCreative, setCitiesCreative] = useState<any>([]);
 
   console.log("data : ", creativeUploadData);
-
 
   const screenDataUploadCreative = useSelector(
     (state: any) => state.screenDataUploadCreative
@@ -58,7 +71,6 @@ export const CreativeUploadDetails = ({
     error: errorScreeData,
     data: screenData,
   } = screenDataUploadCreative;
-
 
   console.log(screenData);
   const handleSetCreativeType = (e: RadioChangeEvent) => {
@@ -102,6 +114,13 @@ export const CreativeUploadDetails = ({
       }
       setFIle(null);
       setCreativeUploadData(myData);
+      let citiesCreativeData = citiesCreative.map((data: any) => {
+        if (data.label === currentCity) {
+          data.params[0] += myData[currentCity][currentScreen]?.screenCount;
+        }
+        return data;
+      });
+      setCitiesCreative(citiesCreativeData);
     } else {
       message.error("Please select file to save!");
     }
@@ -133,10 +152,35 @@ export const CreativeUploadDetails = ({
     setIsDeleted((pre: boolean) => !pre);
   };
 
+  const isCreativeUploaded = (index: number) => {
+    let res1 =
+      creativeUploadData[currentCity][index]?.standardDayTimeCreatives?.length >
+      0;
+    let res2 =
+      creativeUploadData[currentCity][index]?.standardNightTimeCreatives
+        ?.length > 0;
+    let res3 =
+      creativeUploadData[currentCity][index]?.triggerCreatives?.length > 0;
+
+    let res = true;
+    if (res1 || res2 || res3) {
+      res = true;
+    } else {
+      res = false;
+    }
+    return res;
+  };
+
   const handleSelectCurrentTab = (id: string) => {
     setCurrentTab(id);
     let city = citiesCreative?.find((data: any) => data.id == id)?.label || "";
     setCurrentCity(city);
+  };
+
+  const getScreenCountCityWise = (data: any, city: string) => {
+    return data[city]?.reduce((accum: number, current: any) => {
+      return accum + current.count;
+    }, 0);
   };
 
   const handleSetInitialData = (data: any) => {
@@ -145,7 +189,7 @@ export const CreativeUploadDetails = ({
       return {
         id: `${index + 1}`,
         label: value,
-        params: [20, 10],
+        params: [0, getScreenCountCityWise(data, value)],
       };
     });
     setCitiesCreative(result);
@@ -153,6 +197,83 @@ export const CreativeUploadDetails = ({
     setCurrentCity(city);
   };
 
+  const getAWSUrl = async (data: any) => {
+    try {
+      const aws = await getAWSUrlToUploadFile(data.fileType);
+      const successAWSUploadFile = await saveFileOnAWS(aws?.url, data.file);
+      data.awsURL = aws?.awsURL;
+      return aws?.awsURL;
+    } catch (error: any) {
+      message.error(error);
+    }
+  };
+
+  const returnRequiredValue = async (file: any) => {
+    // let url = "";
+    // if (file) url = await getAWSUrl(file);
+    return {
+      url: file.url,
+      size: file.fileSize,
+      type: file.fileType,
+    };
+  };
+
+  const validate = () => {
+    for (let city in creativeUploadData) {
+      for (let data of creativeUploadData[city]) {
+        if (
+          data?.standardDayTimeCreatives?.length === 0 &&
+          data?.standardNightTimeCreatives?.length === 0
+        ) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+  const handleSaveAndNext = async () => {
+    if (validate()) {
+      setIsLoading(true);
+      let requestBody: any = [];
+      for (let city in creativeUploadData) {
+        for (let data of creativeUploadData[city]) {
+          let standardDayTimeCreatives: any = [];
+          let standardNightTimeCreatives: any = [];
+          let triggerCreatives: any = [];
+
+          for (let file of data?.standardDayTimeCreatives) {
+            standardDayTimeCreatives.push(await returnRequiredValue(file));
+          }
+          for (let file of data?.standardNightTimeCreatives) {
+            standardNightTimeCreatives.push(await returnRequiredValue(file));
+          }
+          for (let file of data?.triggerCreatives) {
+            triggerCreatives.push(await returnRequiredValue(file));
+          }
+          requestBody.push({
+            screenResolution: data?.screenResolution,
+            screenCount: data?.screenCount,
+            creativeDuration: data?.creativeDuration,
+            standardDayTimeCreatives: standardDayTimeCreatives,
+            standardNightTimeCreatives: standardNightTimeCreatives,
+            triggerCreatives: triggerCreatives,
+          });
+        }
+      }
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Upload Creative Page",
+          id: pathname.split("/").splice(-1)[0],
+          creatives: requestBody,
+        })
+      );
+
+      console.log("requestBody : ", requestBody);
+    } else {
+      message.error("Please upload creatives for each row and foreach city");
+    }
+  };
 
   useEffect(() => {
     dispatch(
@@ -190,17 +311,16 @@ export const CreativeUploadDetails = ({
     }
   }, [errorScreeData, screenData]);
 
-
   return (
-    <div>
+    <div className="w-full py-3">
+      <div>
+        <h1 className="text-2xl font-semibold">Upload Creative</h1>
+        <h1 className="text-sm text-gray-500 ">
+          Upload your creatives for the campaigns for your selected screens
+        </h1>
+      </div>
       {currentCity === "" ? null : (
-        <div className="w-full py-3">
-          <div>
-            <h1 className="text-2xl font-semibold">Upload Creative</h1>
-            <h1 className="text-sm text-gray-500 ">
-              Upload your creatives for the campaigns for your selected screens
-            </h1>
-          </div>
+        <div>
           <div className="flex gap-4">
             <TabWithoutIcon
               tabData={citiesCreative}
@@ -227,28 +347,45 @@ export const CreativeUploadDetails = ({
             </div>
             <div className="flex">
               <div className="border border-1 h-100%">
-                {creativeUploadData[currentCity]?.map((singleData: any, index: number) => {
-                  return (
-                    <div
-                      title="click to select row"
-                      className={index === currentScreen ? "bg-blue-100" : ""}
-                      key={index}
-                      onClick={() => setCurrentScreen(index)}
-                    >
-                      <div className="flex">
-                        <h1 className="border border-1 p-2 w-24 text-center ">
-                          {singleData?.screenCount}
-                        </h1>
-                        <h1 className="border border-1 p-2 w-24 text-center ">
-                          {singleData?.creativeDuration}
-                        </h1>
-                        <h1 className="border border-1 p-2 w-48 text-center ">
-                          {singleData?.screenResolution}
-                        </h1>
+                {creativeUploadData[currentCity]?.map(
+                  (singleData: any, index: number) => {
+                    return (
+                      <div
+                        title={
+                          isCreativeUploaded(index)
+                            ? "click to select row"
+                            : "this row has no creative"
+                        }
+                        className={
+                          index === currentScreen && isCreativeUploaded(index)
+                            ? "bg-green-200"
+                            : !(
+                                index === currentScreen ||
+                                isCreativeUploaded(index)
+                              )
+                            ? "bg-red-100"
+                            : isCreativeUploaded(index)
+                            ? "bg-green-100"
+                            : "bg-red-200"
+                        }
+                        key={index}
+                        onClick={() => setCurrentScreen(index)}
+                      >
+                        <div className="flex">
+                          <h1 className="border border-1 p-2 w-24 text-center ">
+                            {singleData?.screenCount}
+                          </h1>
+                          <h1 className="border border-1 p-2 w-24 text-center ">
+                            {singleData?.creativeDuration}
+                          </h1>
+                          <h1 className="border border-1 p-2 w-48 text-center ">
+                            {singleData?.screenResolution}
+                          </h1>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  }
+                )}
               </div>
               <div className="border border-1 h-100% px-2 py-1 w-72">
                 <Radio.Group
@@ -272,25 +409,14 @@ export const CreativeUploadDetails = ({
                         setCurrentTab={setCurrentPlayTimeCreative}
                       />
                       <div className="">
-                        {currentPlayTimeCreative === "1" ? (
-                          <UploadCreativeForStandardCampaign
-                            handleSelectFileType={handleSelectFileType}
-                            selectFileType={selectFileType}
-                            handleAddNewFile={handleAddNewFile}
-                            file={file}
-                            handleSaveFile={handleSaveFile}
-                            removeFile={() => setFIle(null)}
-                          />
-                        ) : (
-                          <UploadCreativeForStandardCampaign
-                            handleSelectFileType={handleSelectFileType}
-                            selectFileType={selectFileType}
-                            handleAddNewFile={handleAddNewFile}
-                            file={file}
-                            handleSaveFile={handleSaveFile}
-                            removeFile={() => setFIle(null)}
-                          />
-                        )}
+                        <UploadCreativeForStandardCampaign
+                          handleSelectFileType={handleSelectFileType}
+                          selectFileType={selectFileType}
+                          handleAddNewFile={handleAddNewFile}
+                          file={file}
+                          handleSaveFile={handleSaveFile}
+                          removeFile={() => setFIle(null)}
+                        />
                       </div>
                     </div>
                   ) : (
@@ -331,7 +457,10 @@ export const CreativeUploadDetails = ({
                     )
                   ) : (
                     <ViewMediaForUploadCreatives
-                      files={creativeUploadData[currentCity][currentScreen]?.triggerCreatives}
+                      files={
+                        creativeUploadData[currentCity][currentScreen]
+                          ?.triggerCreatives
+                      }
                       removeFile={removeFile}
                     />
                   )}
@@ -345,8 +474,10 @@ export const CreativeUploadDetails = ({
                 setCurrentStep(step - 1);
               }}
               handleSave={() => {
-                setCurrentStep(step + 1);
+                handleSaveAndNext();
+                // setCurrentStep(step + 1);
               }}
+              loading={isLoading}
               totalScreensData={{}}
             />
           </div>
