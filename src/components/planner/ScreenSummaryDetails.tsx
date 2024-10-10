@@ -31,6 +31,9 @@ export const ScreenSummaryDetails = ({
   setCurrentStep,
   step,
 }: EnterCampaignBasicDetailsProps) => {
+  const dispatch = useDispatch<any>();
+  const { pathname } = useLocation();
+  
   const [currentTab, setCurrentTab] = useState<string>("1");
   const [currentSummaryTab, setCurrentSummaryTab] = useState<any>("1");
   const [isDisabled, setIsDisabled] = useState<any>(true);
@@ -47,8 +50,6 @@ export const ScreenSummaryDetails = ({
 
   const [screensBuyingCount, setScreensBuyingCount] = useState<any>(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION));
 
-  const dispatch = useDispatch<any>();
-  const { pathname } = useLocation();
   // console.log(getDataFromLocalStorage("campaign").basicDetails)
 
   const screenSummaryDataGet = useSelector((state: any) => state.screenSummaryDataGet);
@@ -65,15 +66,28 @@ export const ScreenSummaryDetails = ({
     data: screenSummaryPlanTableData,
   } = screenSummaryPlanTableDataGet;
 
+  const getSelectedScreenIdsFromAllCities = (citiesData: any) => {
+    let activeScreenIds: any = [];
+    
+    for (const city in citiesData) {
+      const screens = citiesData[city];
+      const activeScreens = Object.keys(screens).filter(screenId => screens[screenId].status === true);
+      activeScreenIds = activeScreenIds.concat(activeScreens);
+    }
+    
+    return activeScreenIds;
+  };
   
   const refreshScreenSummary = () => {
-    dispatch(getScreenSummaryData({
-      id: pathname.split("/").splice(-1)[0],
-      type: getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]
-    }));
+    // dispatch(getScreenSummaryData({
+    //   id: pathname.split("/").splice(-1)[0],
+    //   type: getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]
+    // }));
 
     dispatch(getScreenSummaryPlanTableData({
       id: pathname.split("/").splice(-1)[0],
+      screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+
     }));
   };
 
@@ -85,20 +99,19 @@ export const ScreenSummaryDetails = ({
       }))
     }
 
-    if (pathname) {
+    if (!screenSummaryPlanTableData) {
       dispatch(getScreenSummaryPlanTableData({
         id: pathname.split("/").splice(-1)[0],
+        screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
       }));
     }
 
-  },[screenSummaryData, dispatch, pathname]);
+  },[screenSummaryData, dispatch, pathname, screensBuyingCount, screenSummaryPlanTableData]);
   
   useEffect(() => {
     setRegularVsCohort(getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]);
 
-    if (screenSummaryPlanTableData) {
-      saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, screenSummaryPlanTableData);
-    }
+    saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, screenSummaryPlanTableData);
     saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, screenSummaryData);
 
   },[screenSummaryData, screenSummaryPlanTableData]);
@@ -238,7 +251,7 @@ export const ScreenSummaryDetails = ({
                 pageName: "Screen Summary Page",
                 id: pathname.split("/").splice(-1)[0],
                 screenWiseSlotDetails: getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[`${regularVsCohort}`].touchPointData,
-                totalScreens: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalScreens,
+                totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
                 totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalImpression,
                 totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalReach,
                 totalCampaignBudget:getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCampaignBudget,

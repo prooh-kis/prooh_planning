@@ -9,20 +9,20 @@ export const OpenBudgetSegment = ({ selectedBudget, selectedSOV, setSelectedBudg
           <RadioInput
             title="Once"
             value={"once"}
-            isChecked={selectedSOV === "once" ? true : false}
-            onChange={() => setSelectedSOV("once")}
+            isChecked={selectedSOV === 1 ? true : false}
+            onChange={() => setSelectedSOV(1)}
           />
           <RadioInput
             title="Twice"
             value={"twice"}
-            isChecked={selectedSOV === "twice" ? true : false}
-            onChange={() => setSelectedSOV("twice")}
+            isChecked={selectedSOV === 2 ? true : false}
+            onChange={() => setSelectedSOV(2)}
           />
           <RadioInput
             title="Thrice"
             value={"thrice"}
-            isChecked={selectedSOV === "thrice" ? true : false}
-            onChange={() => setSelectedSOV("thrice")}
+            isChecked={selectedSOV === 3 ? true : false}
+            onChange={() => setSelectedSOV(3)}
           />
         </div>
       </div>

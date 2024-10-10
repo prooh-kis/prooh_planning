@@ -94,6 +94,8 @@ export const ScreenSummaryTable = ({
     Object.keys(cityTP?.[currentCity] || {}).forEach(screenType => {
       updateScreenTypeStatus(screenType);
     });
+
+    refreshScreenSummary();
   };
 
   const handleScreenTypeClick = (screenType: any, myData: any) => {
@@ -195,7 +197,7 @@ export const ScreenSummaryTable = ({
                                   <div onClick={() => {screenTypeToggle[st] &&
                                     handleScreenClick(screen)
                                     }}>
-                                    {getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) !== null && getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)[currentCity][screen._id].status === false ? (
+                                    {getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) !== null && getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)[currentCity][screen._id]?.status === false ? (
                                       <i className={`fi fi-br-cross flex items-center text-red-500 text-[12px]`}></i>
                                     ) : (
                                       <i className={`fi fi-br-check flex items-center text-green-500 text-[12px]`}></i>

@@ -371,7 +371,7 @@ export const AdvanceFiltersDetails = ({
               setCurrentStep(step + 1);
             };
           }}
-          totalScreensData={getDataFromLocalStorage("costSummary")["2"]}
+          totalScreensData={getDataFromLocalStorage("costSummary")?.["2"]}
         />
       </div>
     </div>

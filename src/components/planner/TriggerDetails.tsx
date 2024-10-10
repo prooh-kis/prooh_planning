@@ -10,17 +10,32 @@ import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import { formatNumber } from "../../utils/formatValue";
 import { Footer } from "../../components/footer";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
-import { saveDataOnLocalStorage } from "../../utils/localStorageUtils";
+import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import { SELECTED_TRIGGER } from "../../constants/localStorageConstants";
+import { message } from "antd";
+import { useDispatch } from "react-redux";
+import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { useLocation } from "react-router-dom";
 interface TriggerProps {
   setCurrentStep: (step: number) => void;
   step: number;
 }
 export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
+
+  const dispatch = useDispatch<any>();
+  const { pathname } = useLocation();
+
   const [currentStep1, setCurrentStep1] = useState<any>(1);
   const [currentTab, setCurrentTab] = useState<any>(1);
 
-  const [selectedTrigger, setSelectedTrigger] = useState<any>({});
+  const [isDisabled, setIsDisabled] = useState<any>(true);
+
+  const [selectedTrigger, setSelectedTrigger] = useState<any>({ triggerType: "weather"});
+  const [minVal, setMinVal] = useState<any>(0);
+  const [maxVal, setMaxVal] = useState<any>(0);
+  const [rainType, setRainType] = useState<any>("0");
+  const [aqi, setAqi] = useState<any>("");
+
   const [condition, setCondition] = useState<any>("");
 
   const [selectedMatchId, setSelectedMatchId] = useState<any>("");
@@ -76,29 +91,33 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
   console.log(weatherTabData());
 
   const handleSelectTrigger = useCallback(() => {
+    console.log(selectedTrigger)
     saveDataOnLocalStorage(SELECTED_TRIGGER, {
-      weatherTrigger: selectedTrigger?.triggerType === "weather" ? {
+      weatherTriggers: selectedTrigger?.triggerType === "weather" ? {
         type: weatherTabData()?.filter((w: any) => w.id === currentTab)[0]?.value,
-        condition: condition,
-        sov: selectedSOV,
-        budget: selectedBudget,
+        minVal: minVal,
+        maxVal: maxVal,
+        rainType: rainType,
+        aqi: aqi,
+        openBudgetSovPercent: selectedSOV,
+        budget: Number(selectedBudget),
         period: Number(selectedTimeOptions),
       } : {},
-      sportsTrigger: selectedTrigger?.triggerType === "sport" ? {
-        type: sport,
+      sportsTriggers: selectedTrigger?.triggerType === "sport" ? {
+        sport: sport,
         player: player,
-        match: selectedMatchId,
+        matchId: selectedMatchId,
         condition: condition,
-        sov: selectedSOV,
-        budget: selectedBudget,
+        openBudgetSovPercent: selectedSOV,
+        budget: Number(selectedBudget),
         period: Number(selectedTimeOptions),
 
       } : {},
-      emptySlots: selectedTrigger?.triggerType === "empty" ? {
-        type: "buy_empty",
-        condition: condition,
-        sov: selectedSOV,
-        budget: selectedBudget,
+      vacantSlots: selectedTrigger?.triggerType === "empty" ? {
+        type: "vacantSlots",
+        slotType: condition,
+        openBudgetSovPercent: selectedSOV,
+        budget: Number(selectedBudget),
         period: Number(selectedTimeOptions),
 
       } : {},
@@ -113,6 +132,10 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
     player,
     selectedMatchId,
     selectedTimeOptions,
+    minVal,
+    maxVal,
+    rainType,
+    aqi,
   ]);
 
   console.log(selectedTrigger);
@@ -180,7 +203,17 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
                 />
               </div>
 
-              <WeatherSegment condition={condition} setCondition={setCondition} currentTab={currentTab} />
+              <WeatherSegment
+                minVal={minVal}
+                setMinVal={setMinVal}
+                maxVal={maxVal}
+                setMaxVal={setMaxVal}
+                rainType={rainType}
+                setRainType={setRainType}
+                currentTab={currentTab}
+                aqi={aqi}
+                setAqi={setAqi}
+              />
             </div>
           ) : currentStep1 === 2 ? (
             <div>
@@ -270,13 +303,14 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
                 } 
               />
             </div>
-            <PrimaryButton
+            {/* <PrimaryButton
               height="h-10"
               width="w-36"
               rounded="rounded-full"
               title="Apply Creative"
               textSize="text-[14px]"
-            />
+              action={handleSelectTrigger}
+            /> */}
           </div>
         </div>
       </div>
@@ -289,11 +323,10 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
                 {" "}
                 &#8377;{formatNumber(Number(selectedBudget))}{" "}
               </span>
-              Kindly re-confirm the additional budget of
-              <span className="font-bold"> INR 6000 </span>
-              for trigger based ads
+              for your campaign triggers
             </>
           }
+          onChange={() => {setIsDisabled(!isDisabled)}}
         />
       </div>
       <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
@@ -302,7 +335,16 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
             setCurrentStep(step - 1);
           }}
           handleSave={() => {
-            setCurrentStep(step + 1);
+            if (isDisabled) {
+              message.error("Please confirm budget for your selected trigger");
+            } else {
+              dispatch(addDetailsToCreateCampaign({
+                pageName: "Add Triggers Page",
+                id: pathname.split("/").splice(-1)[0],
+                triggers: getDataFromLocalStorage(SELECTED_TRIGGER)
+              }));
+              setCurrentStep(step + 1);
+            };
           }}
           totalScreensData={{}}
         />

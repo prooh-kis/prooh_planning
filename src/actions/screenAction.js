@@ -172,15 +172,15 @@ export const getScreenSummaryData =
   };
 
 export const getScreenSummaryPlanTableData =
-  ({ id }) =>
+  ({ id, screenIds }) =>
   async (dispatch, getState) => {
     dispatch({
       type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_REQUEST,
-      payload: { id },
+      payload: { id, screenIds },
     });
     try {
       const { data } = await axios.post(`${url}/tableDataScreenSummaryPage`, {
-        id,
+        id, screenIds
       });
       dispatch({
         type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_SUCCESS,
