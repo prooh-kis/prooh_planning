@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import { signout } from "../../actions/userAction";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 interface StepSliderProps {
   steps: number;
@@ -7,6 +10,10 @@ interface StepSliderProps {
 }
 
 export const StepperSlider = ({ setStep, steps, step }: StepSliderProps) => {
+
+  const dispatch = useDispatch<any>();
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
 
   // Function to handle step marker click
   const handleStepClick = (step: number) => {
@@ -31,6 +38,12 @@ export const StepperSlider = ({ setStep, steps, step }: StepSliderProps) => {
     "Basic Details", "Audience Selection", "Advanced Filters", "Cohort Selection", "Screens Summary", 
     "Trigger Selection", "Vendor Approval", "Creative Upload", "Vendor Confirmation"
   ];
+
+  useEffect(() => {
+    if (!userInfo) {
+      dispatch(signout())
+    }
+  },[dispatch, userInfo])
 
   return (
     <div className="w-[100vw] py-0 mx-[-40px]">

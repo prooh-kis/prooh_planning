@@ -6,10 +6,35 @@ import { useDispatch, useSelector } from "react-redux";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 
 interface SportsSegmentProps {
-  currentTab?: any;
+  sportOption?: any;
+  setSportOption?: any;
+  selectedMatchId?: any;
+  setSelectedMatchId?: any;
+  sport?: any;
+  setSport?: any;
+  player?: any;
+  setPlayer?: any;
+  condition?: any;
+  setCondition?: any
 }
-export const SportsSegment = ({}: SportsSegmentProps) => {
+export const SportsSegment = ({
+
+  selectedMatchId,
+  setSelectedMatchId,
+  sport,
+  setSport,
+  player,
+  setPlayer,
+  condition,
+  setCondition
+}: SportsSegmentProps) => {
   const dispatch = useDispatch<any>();
+
+  const [sportOptions, setSportOptions] = useState<any>([{
+    label: "Cricket",
+    value: "cricket"
+  }]);
+
   const options = [{
     label: "Hits 6",
     value: "six",
@@ -36,18 +61,9 @@ export const SportsSegment = ({}: SportsSegmentProps) => {
     value: "bowling"
   }];
 
-  const [sportOptions, setSportOptions] = useState<any>([{
-    label: "Cricket",
-    value: "cricket"
-  }]);
+
 
   const [myMatches, setMyMatches] = useState<any>(null);
-  const [selectedMatchId, setSelectedMatchId] = useState<any>(null);
-  const [sport, setSport] = useState<any>(null);
-  const [player, setPlayer] = useState<any>(null);
-  const [criteria, setCriteria] = useState<any>(null);
-
-
 
   const cricketMatchesListGet = useSelector((state: any) => state.cricketMatchesListGet);
   const {
@@ -129,8 +145,8 @@ export const SportsSegment = ({}: SportsSegmentProps) => {
       <div className="">
         {/* <h1 className="px-1 py-2 text-[14px]">Choose a condition</h1> */}
         <DropdownInput
-          setSelectedOption={setCriteria}
-          selectedOption={criteria}
+          setSelectedOption={setCondition}
+          selectedOption={condition}
           options={options}
           placeHolder="Choose a condition"
         />

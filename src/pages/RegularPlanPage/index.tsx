@@ -27,6 +27,7 @@ import { useLocation, useParams } from "react-router-dom";
 import {
   ADVANCE_FILTER_SCREENS_MAP_DATA,
   AUDIENCE_DATA,
+  CURRENT_STEP,
   TOTAL_SCREEN_COST_DATA,
 } from "../../constants/localStorageConstants";
 
@@ -107,7 +108,7 @@ export const RegularPlanPage: React.FC = () => {
     }
 
  
-    saveDataOnLocalStorage("currentStep", currentStep);
+    saveDataOnLocalStorage(CURRENT_STEP, currentStep);
 
   }, [screensAudiences, screensCost, advanceFilterScreens, currentStep]);
 

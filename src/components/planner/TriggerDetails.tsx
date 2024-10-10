@@ -1,7 +1,7 @@
 import { WeatherSegment } from "../../components/segments/WeatherSegment";
 import { TabWithIcon } from "../molecules/TabWithIcon";
 import { VerticalStepperSlider } from "../../components/molecules/VerticalStepperSlide";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { SportsSegment } from "../../components/segments/SportsSegment";
 import { BuyVacantSlots } from "../../components/segments/BuyVacantSlots";
@@ -9,6 +9,9 @@ import { OpenBudgetSegment } from "../../components/segments/OpenBudgetSegment";
 import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import { formatNumber } from "../../utils/formatValue";
 import { Footer } from "../../components/footer";
+import { DropdownInput } from "../../components/atoms/DropdownInput";
+import { saveDataOnLocalStorage } from "../../utils/localStorageUtils";
+import { SELECTED_TRIGGER } from "../../constants/localStorageConstants";
 interface TriggerProps {
   setCurrentStep: (step: number) => void;
   step: number;
@@ -18,26 +21,107 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
   const [currentTab, setCurrentTab] = useState<any>(1);
 
   const [selectedTrigger, setSelectedTrigger] = useState<any>({});
+  const [condition, setCondition] = useState<any>("");
+
+  const [selectedMatchId, setSelectedMatchId] = useState<any>("");
+  const [sport, setSport] = useState<any>("");
+  const [player, setPlayer] = useState<any>("");
+
   const [selectedBudget, setSelectedBudget] = useState<any>(null);
   const [selectedSOV, setSelectedSOV] = useState<any>(null);
+  const [selectedTimeOptions, setSelectedTimeOptions] = useState<any>(300)
 
-  const weatherTabData = [
-    {
-      icon: <i className="fi fi-tr-summer flex items-center"></i>,
-      label: "Temperature",
-      id: 1,
-    },
-    {
-      icon: <i className="fi fi-ts-cloud-sun-rain flex items-center"></i>,
-      label: "Rain",
-      id: 2,
-    },
-    {
-      icon: <i className="fi fi-ts-pollution flex items-center"></i>,
-      label: "AQI",
-      id: 3,
-    },
-  ];
+  const timeOptions = [{
+    label: "5 Min",
+    value: "300"
+  },{
+    label: "10 Min",
+    value: "600"
+  },{
+    label: "15 Min",
+    value: "900"
+  },{
+    label: "30 Min",
+    value: "1800"
+  },{
+    label: "1 Hrs",
+    value: "3600"
+  },{
+    label: "2 Hrs",
+    value: "7200"
+  }];
+
+  const weatherTabData = () => {
+    return [
+        {
+          icon: <i className="fi fi-tr-summer flex items-center"></i>,
+          label: "Temperature",
+          value: "temperature",
+          id: 1,
+        },
+        {
+          icon: <i className="fi fi-ts-cloud-sun-rain flex items-center"></i>,
+          label: "Rain",
+          value: "rain",
+          id: 2,
+        },
+        {
+          icon: <i className="fi fi-ts-pollution flex items-center"></i>,
+          label: "AQI",
+          value: "aqi",
+          id: 3,
+        },
+  ]};
+
+  console.log(weatherTabData());
+
+  const handleSelectTrigger = useCallback(() => {
+    saveDataOnLocalStorage(SELECTED_TRIGGER, {
+      weatherTrigger: selectedTrigger?.triggerType === "weather" ? {
+        type: weatherTabData()?.filter((w: any) => w.id === currentTab)[0]?.value,
+        condition: condition,
+        sov: selectedSOV,
+        budget: selectedBudget,
+        period: Number(selectedTimeOptions),
+      } : {},
+      sportsTrigger: selectedTrigger?.triggerType === "sport" ? {
+        type: sport,
+        player: player,
+        match: selectedMatchId,
+        condition: condition,
+        sov: selectedSOV,
+        budget: selectedBudget,
+        period: Number(selectedTimeOptions),
+
+      } : {},
+      emptySlots: selectedTrigger?.triggerType === "empty" ? {
+        type: "buy_empty",
+        condition: condition,
+        sov: selectedSOV,
+        budget: selectedBudget,
+        period: Number(selectedTimeOptions),
+
+      } : {},
+    })
+  },[
+    currentTab,
+    selectedTrigger,
+    selectedSOV,
+    selectedBudget,
+    condition,
+    sport,
+    player,
+    selectedMatchId,
+    selectedTimeOptions,
+  ]);
+
+  console.log(selectedTrigger);
+
+  useEffect(() => {
+    if (selectedTrigger) {
+      handleSelectTrigger();      
+    }
+  },[handleSelectTrigger, selectedTrigger])
   return (
     <div className="w-full py-3">
       <div>
@@ -56,6 +140,8 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
               step={currentStep1}
               setStep={setCurrentStep1}
               steps={3}
+              setTrigger={setSelectedTrigger}
+              trigger={selectedTrigger}
             />
           </div>
           <p className="p-2 text-[14px] text-[#AF0D0D]">
@@ -90,11 +176,11 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
                   trigger={true}
                   currentTab={currentTab}
                   setCurrentTab={setCurrentTab}
-                  tabData={weatherTabData}
+                  tabData={weatherTabData()}
                 />
               </div>
 
-              <WeatherSegment currentTab={currentTab} />
+              <WeatherSegment condition={condition} setCondition={setCondition} currentTab={currentTab} />
             </div>
           ) : currentStep1 === 2 ? (
             <div>
@@ -117,7 +203,16 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
                 </div>
               </div>
               <div className="py-2">
-                <SportsSegment />
+                <SportsSegment
+                  selectedMatchId={selectedMatchId}
+                  setSelectedMatchId={setSelectedMatchId}
+                  sport={sport}
+                  setSport={setSport}
+                  player={player}
+                  setPlayer={setPlayer}
+                  condition={condition}
+                  setCondition={setCondition}
+                />
               </div>
             </div>
           ) : (
@@ -142,7 +237,10 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
                   </p>
                 </div>
               </div>
-              <BuyVacantSlots />
+              <BuyVacantSlots
+                condition={condition}
+                setCondition={setCondition}
+              />
             </div>
           )}
           <OpenBudgetSegment
@@ -152,11 +250,25 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
             setSelectedSOV={setSelectedSOV}
           />
           <div className="flex justify-between items-center">
-            <div className="flex items-center">
+            <div className="flex items-center gap-4">
               <p className="text-[12px] text-[#969696]">
-                A trigger is set for uploading tigger creative towards the end
-                of your planning
+                Click here to change the time period for the trigger
               </p>
+              <DropdownInput
+                height={"8"}
+                width={"20"}
+                placeHolder={"Set Time"}
+                selectedOption={selectedTimeOptions}
+                setSelectedOption={setSelectedTimeOptions}
+                options={
+                  timeOptions?.map((m: any) => {
+                    return {
+                      label: m.label,
+                      value: m.value
+                    }
+                  })
+                } 
+              />
             </div>
             <PrimaryButton
               height="h-10"

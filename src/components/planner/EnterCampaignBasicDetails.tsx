@@ -8,6 +8,7 @@ import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/loc
 import { message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { CAMPAIGN } from "../../constants/localStorageConstants";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -79,7 +80,7 @@ export const EnterCampaignBasicDetails = ({
       campaignManagerId: userInfo?.primaryUserId,
       campaignManagerEmail: userInfo?.primaryUserEmail
     }))
-    saveDataOnLocalStorage(`campaign`, {
+    saveDataOnLocalStorage(CAMPAIGN, {
       basicDetails: {
         campaignType: campaignType || "Regular",
         campaignName: campaignName || "campaign",

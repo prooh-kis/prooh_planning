@@ -12,6 +12,7 @@ import { Footer } from "../../components/footer";
 import { message } from "antd";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { useLocation } from "react-router-dom";
+import { CAMPAIGN, COST_SUMMARY, REGULAR_VS_COHORT_PRICE_DATA } from "../../constants/localStorageConstants";
 
 export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
 
@@ -40,7 +41,7 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
   useEffect(() => {
     if (priceData) {
       saveDataOnLocalStorage(
-        "regularVsCohortPriceData",
+        REGULAR_VS_COHORT_PRICE_DATA,
         priceData
       );
     }
@@ -71,8 +72,8 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
     oldData["3"] = priceData[type]?.tableData;
     const campaign = getDataFromLocalStorage("campaign");
     campaign.basicDetails["regularVsCohort"] = type;
-    saveDataOnLocalStorage("campaign", campaign);
-    saveDataOnLocalStorage("costSummary", oldData);
+    saveDataOnLocalStorage(CAMPAIGN, campaign);
+    saveDataOnLocalStorage(COST_SUMMARY, oldData);
     // dispatch(getScreenSummaryData({
     //   id: pathname.split("/").splice(-1)[0],
     //   type: type

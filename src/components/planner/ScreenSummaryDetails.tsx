@@ -78,13 +78,6 @@ export const ScreenSummaryDetails = ({
   };
 
   useEffect(() => {
-    setRegularVsCohort(getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]);
-
-    if (screenSummaryPlanTableData) {
-      saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, screenSummaryPlanTableData);
-    }
-    saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, screenSummaryData);
-
     if (!screenSummaryData) {
       dispatch(getScreenSummaryData({
         id: pathname.split("/").splice(-1)[0],
@@ -99,6 +92,16 @@ export const ScreenSummaryDetails = ({
     }
 
   },[screenSummaryData, dispatch, pathname]);
+  
+  useEffect(() => {
+    setRegularVsCohort(getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]);
+
+    if (screenSummaryPlanTableData) {
+      saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, screenSummaryPlanTableData);
+    }
+    saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, screenSummaryData);
+
+  },[screenSummaryData, screenSummaryPlanTableData]);
 
   return (
     <div className="w-full py-3">

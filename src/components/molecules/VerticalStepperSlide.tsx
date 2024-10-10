@@ -6,6 +6,7 @@ interface StepSliderProps {
   setStep?: any;
   setTrigger?: any;
   trigger?: any;
+  stepLabels?: any;
 }
 
 export const VerticalStepperSlider: React.FC<StepSliderProps> = ({ setStep, steps, step, setTrigger, trigger }) => {

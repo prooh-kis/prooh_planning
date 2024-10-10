@@ -22,7 +22,7 @@ import { Message } from "../Message";
 import { Loading } from "../Loading";
 import { Footer } from "../../components/footer";
 import { getScreenDataForAdvanceFilters, getScreensCostData } from "../../actions/screenAction";
-import { TOTAL_SCREEN_COST_DATA } from "../../constants/localStorageConstants";
+import { COST_SUMMARY, SELECTED_AUDIENCE_TOUCHPOINTS, TOTAL_SCREEN_COST_DATA } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
 interface EnterAudienceTouchpointDetailsProps {
@@ -102,7 +102,7 @@ export const AudienceTouchPointsDetails = ({
     if (screensCost) {
       saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, screensCost);
       setCostData(screensCost);
-      saveDataOnLocalStorage("selectedAudienceTouchpoints", {
+      saveDataOnLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS, {
         cohorts: selectedAudiences,
         touchPoints: selectedTouchPoints,
         gender: selectedGender.length === 1 && selectedGender.includes("Male")
@@ -226,7 +226,7 @@ export const AudienceTouchPointsDetails = ({
               gender: getDataFromLocalStorage("selectedAudienceTouchpoints").gender,
             }))
             setCurrentStep(step + 1);
-            saveDataOnLocalStorage("costSummary", {
+            saveDataOnLocalStorage(COST_SUMMARY, {
               "1": totalScreensData,
               "2": selectedScreensData,
             })

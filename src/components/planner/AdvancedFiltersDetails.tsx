@@ -12,6 +12,7 @@ import { message } from "antd";
 import { useDispatch } from "react-redux";
 import { getRegularVsCohortPriceData } from "../../actions/screenAction";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { SELECTED_SCREENS_ID } from "../../constants/localStorageConstants";
 
 type Coordinate = [number, number];
 
@@ -235,7 +236,7 @@ export const AdvanceFiltersDetails = ({
   const handleConfirmScreensSelections = (checked: boolean) => {
     setIsDisabled(!checked);
     const selectedScreenIds = finalSelectedScreens.map((s: any) => s._id);
-    saveDataOnLocalStorage("selectedScreensId", selectedScreenIds);
+    saveDataOnLocalStorage(SELECTED_SCREENS_ID, selectedScreenIds);
   };
 
   return (

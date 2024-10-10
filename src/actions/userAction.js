@@ -19,6 +19,7 @@ import {
 import store from "../store";
 import { login, logout } from "../store/authSlice";
 import { removeDispatchData } from "../utils/dispatchUtils";
+import { removeAllKeyFromLocalStorage } from "../utils/localStorageUtils";
 
 const USER_URL = `${process.env.REACT_APP_PROOH_SERVER}/api/v1/users`;
 
@@ -122,7 +123,7 @@ export const signout = () => (dispatch) => {
   removeDispatchData(dispatch);
   localStorage.removeItem("user");
   store.dispatch(logout());
-
+  removeAllKeyFromLocalStorage();
   dispatch({
     type: USER_SIGNOUT,
   });
