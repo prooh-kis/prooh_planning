@@ -25,7 +25,7 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({ disabled, color, textSi
       <input
         type="checkbox"
         className="form-checkbox h-4 w-4 text-[#52A2FF]"
-        checked={isChecked}
+        checked={isChecked !== undefined ? isChecked : false}
         disabled={disabled}
         onChange={handleCheckboxChange}
       />

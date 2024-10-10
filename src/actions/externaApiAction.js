@@ -23,7 +23,11 @@ export const getCricketMatchesList = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: GET_CRICKET_MATCHES_LIST_ERROR,
-      payload: error,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
     })
   }
 }

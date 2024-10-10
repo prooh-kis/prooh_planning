@@ -21,7 +21,11 @@ export const addDetailsToCreateCampaign = (input) => async (dispatch, getState) 
   } catch (error) {
     dispatch({
       type: ADD_DETAILS_TO_CREATE_CAMPAIGN_ERROR,
-      payload: error,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
     })
   }
 }

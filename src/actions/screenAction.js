@@ -44,7 +44,11 @@ export const getScreensAudiencesData =
     } catch (error) {
       dispatch({
         type: GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
-        payload: error,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
       });
     }
   };
@@ -71,7 +75,11 @@ export const getScreensCostData =
     } catch (error) {
       dispatch({
         type: GET_SCREENS_COST_DATA_ERROR,
-        payload: error,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
       });
     }
   };
@@ -95,7 +103,11 @@ export const getScreenDataForAdvanceFilters =
     } catch (error) {
       dispatch({
         type: GET_SCREENS_DATA_ADVANCE_FILTER_ERROR,
-        payload: error,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
       });
     }
   };
@@ -122,7 +134,11 @@ export const getRegularVsCohortPriceData =
     } catch (error) {
       dispatch({
         type: GET_SCREENS_PRICE_FOR_REGULAR_COHORT_ERROR,
-        payload: error,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
       });
     }
   };
@@ -146,7 +162,11 @@ export const getScreenSummaryData =
     } catch (error) {
       dispatch({
         type: GET_SCREEN_SUMMARY_DATA_ERROR,
-        payload: error,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
       });
     }
   };
@@ -169,7 +189,11 @@ export const getScreenSummaryPlanTableData =
     } catch (error) {
       dispatch({
         type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_ERROR,
-        payload: error,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
       });
     }
   };
@@ -192,7 +216,11 @@ export const getScreenDataUploadCreativeData =
     } catch (error) {
       dispatch({
         type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_ERROR,
-        payload: error,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
       });
     }
   };

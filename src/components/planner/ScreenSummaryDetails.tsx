@@ -65,14 +65,25 @@ export const ScreenSummaryDetails = ({
     data: screenSummaryPlanTableData,
   } = screenSummaryPlanTableDataGet;
 
+  
+  const refreshScreenSummary = () => {
+    dispatch(getScreenSummaryData({
+      id: pathname.split("/").splice(-1)[0],
+      type: getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]
+    }));
+
+    dispatch(getScreenSummaryPlanTableData({
+      id: pathname.split("/").splice(-1)[0],
+    }));
+  };
 
   useEffect(() => {
     setRegularVsCohort(getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]);
 
     if (screenSummaryPlanTableData) {
-      saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, screenSummaryData);
       saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, screenSummaryPlanTableData);
     }
+    saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, screenSummaryData);
 
     if (!screenSummaryData) {
       dispatch(getScreenSummaryData({
@@ -86,7 +97,6 @@ export const ScreenSummaryDetails = ({
         id: pathname.split("/").splice(-1)[0],
       }));
     }
- 
 
   },[screenSummaryData, dispatch, pathname]);
 
@@ -131,7 +141,10 @@ export const ScreenSummaryDetails = ({
                         return {
                           id: `${index + 1}`,
                           label: s,
-                          params: [Object.values(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)[s])?.map((f: any) => f.status)?.filter((s: any) => s === true).length, Object.values(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)[s])?.map((f: any) => f.status)?.filter((s: any) => s === false).length]
+                          params: getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) !== null ? [
+                            Object.values(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)[s])?.map((f: any) => f.status)?.filter((s: any) => s === true).length,
+                            Object.values(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)[s])?.map((f: any) => f.status)?.filter((s: any) => s === false).length
+                          ] : [0,0]
                         };
                       })}
                     />
@@ -186,7 +199,7 @@ export const ScreenSummaryDetails = ({
                   setCityTP={setCityTP}
                   cityTP={cityTP}
                   setScreenTypes={setScreenTypes}
-            
+                  refreshScreenSummary={refreshScreenSummary}
                 />
               ) : (
                 <ViewPlanPic
