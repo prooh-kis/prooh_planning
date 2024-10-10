@@ -13,14 +13,14 @@ export const EmailConfirmationImage = ({files, handleAddNewFile, removeImage}: E
       <div className="flex flex-col">
         <div className="flex justify-between items-center">
           <h1 className="font-semibold text-lg">
-            3.upload client approval screenshot
+            3.Upload email approval screenshot
           </h1>
           <div className="flex items-center">
             <FileUploadButton handleFile={handleAddNewFile} width="" />
           </div>
         </div>
         
-        <div className="flex gap-4 pt-4">
+        <div className="flex gap-4 pt-2">
           {files?.map((file: any, index: number) => (
             <ImageViewCloseButton
               file={file}

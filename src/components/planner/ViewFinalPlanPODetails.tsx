@@ -14,8 +14,8 @@ interface ViewFinalPlanPODetailsProps {
 function MyDiv({ left, right }: any) {
   return (
     <div className="flex font-normal text-[#2B2B2B]">
-      <h1 className="text-left basis-1/2">{left}</h1>
-      <h1 className="text-left basis-1/2">{right}</h1>
+      <h1 className="text-left text-[14px] basis-1/2">{left}</h1>
+      <h1 className="text-left text-[14px] basis-1/2">{right}</h1>
     </div>
   );
 }
@@ -55,8 +55,8 @@ export const ViewFinalPlanPODetails = ({
           Any specific route you want to cover in this campaign
         </h1>
       </div>
-      <div className="flex gap-4">
-        <div className="mt-4 p-8 border border-1 border-#C3C3C3 rounded-2xl w-full">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="col-span-1 mt-4 px-8 py-4 border border-1 border-#C3C3C3 rounded-2xl w-full">
           <h1 className="font-semibold py-2	">Client Information</h1>
           <MyDiv left={"Client Name"} right={"Surf excel"} />
           <MyDiv left={"Brand Name"} right={"Surf excel"} />
@@ -81,29 +81,29 @@ export const ViewFinalPlanPODetails = ({
             <h1 className="text-left basis-1/2">INR 3 cr</h1>
           </div>
         </div>
-        <div className="mt-4 p-8 border border-1 border-#C3C3C3 rounded-2xl w-full">
+        <div className="col-span-1 mt-4 p-8 border border-1 border-#C3C3C3 rounded-2xl w-full">
           <h1 className="font-semibold text-lg">
             1.Download or share your campaign plan{" "}
           </h1>
           <div className="flex gap-4 py-4">
             <div className="flex items-center gap-1">
-              <h1>Approach</h1>
+              <h1 className="text-[14px] truncate">Approach</h1>
               <input title="approach" type="checkbox" />
             </div>
             <div className="flex items-center gap-1">
-              <h1>Plan summary</h1>
+              <h1 className="text-[14px] truncate">Plan summary</h1>
               <input title="plan-summary" type="checkbox" />
             </div>
             <div className="flex items-center gap-1">
-              <h1>Screen Picture</h1>
+              <h1 className="text-[14px] truncate">Screen Picture</h1>
               <input title="screen-pictures" type="checkbox" />
             </div>
             <div className="flex items-center gap-1">
-              <h1>Creative ratio</h1>
+              <h1 className="text-[14px] truncate">Creative ratio</h1>
               <input title="creative-ratio" type="checkbox" />
             </div>
           </div>
-          <button className="px-8 py-2 border border-1 border-[#52ACFF] text-[#0094FF] rounded-full text-gray-500 text-sm">
+          <button type="submit" className="px-8 py-2 border border-1 border-[#52ACFF] text-[#0094FF] rounded-full text-gray-500 text-sm">
             Download
           </button>
           <Divider />
