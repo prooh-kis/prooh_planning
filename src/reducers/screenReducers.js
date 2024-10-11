@@ -24,6 +24,9 @@ import {
   GET_SCREENS_PRICE_FOR_REGULAR_COHORT_ERROR,
   GET_SCREENS_PRICE_FOR_REGULAR_COHORT_REQUEST,
   GET_SCREENS_PRICE_FOR_REGULAR_COHORT_SUCCESS,
+  GET_VENDOR_CONFIRMATION_DETAILS_ERROR,
+  GET_VENDOR_CONFIRMATION_DETAILS_REQUEST,
+  GET_VENDOR_CONFIRMATION_DETAILS_SUCCESS,
 } from "../constants/screenConstants";
 
 export function screensAudiencesDataGetReducer(state = [], action) {
@@ -182,4 +185,24 @@ export function screenDataUploadCreativeReducer(state = {}, action) {
   }
 }
 
-// screenDataUploadCreativePage
+// getVendorConfirmationDetailsData
+
+
+export function vendorConfirmationDetailsGetReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_VENDOR_CONFIRMATION_DETAILS_REQUEST:
+      return { loading: true };
+    case GET_VENDOR_CONFIRMATION_DETAILS_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_VENDOR_CONFIRMATION_DETAILS_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}

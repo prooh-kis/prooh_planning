@@ -24,6 +24,9 @@ import {
   GET_SCREENS_PRICE_FOR_REGULAR_COHORT_ERROR,
   GET_SCREENS_PRICE_FOR_REGULAR_COHORT_REQUEST,
   GET_SCREENS_PRICE_FOR_REGULAR_COHORT_SUCCESS,
+  GET_VENDOR_CONFIRMATION_DETAILS_ERROR,
+  GET_VENDOR_CONFIRMATION_DETAILS_REQUEST,
+  GET_VENDOR_CONFIRMATION_DETAILS_SUCCESS,
 } from "../constants/screenConstants";
 
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/screens`;
@@ -245,6 +248,33 @@ export const getScreenDataUploadCreativeData =
     } catch (error) {
       dispatch({
         type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
+
+
+
+export const getVendorConfirmationDetails =
+  (vendorInput) =>
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_VENDOR_CONFIRMATION_DETAILS_REQUEST,
+      payload: vendorInput,
+    });
+    try {
+      const { data } = await axios.post(`${url}/tableDataVendorCnfPage`, vendorInput);
+      dispatch({
+        type: GET_VENDOR_CONFIRMATION_DETAILS_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_VENDOR_CONFIRMATION_DETAILS_ERROR,
         payload: {
           message: error.message,
           status: error.response?.status,

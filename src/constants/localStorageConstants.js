@@ -28,3 +28,6 @@ export const SCREEN_SUMMARY_TABLE_DATA = "screenSummaryTableData";
 export const SCREEN_SUMMARY_SELECTION = "screenSummarySelection";
 // 6
 export const SELECTED_TRIGGER = "selectedTrigger";
+
+// 7
+export const CAMPAIGN_CREATIVES = "campaignCreatives"

@@ -54,7 +54,10 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
     value: "7200"
   },{
     label: "3 Hrs",
-    value: "7200"
+    value: "10800"
+  },{
+    label: "4 Hrs",
+    value: "14400"
   }];
 
   const weatherTabData = () => {

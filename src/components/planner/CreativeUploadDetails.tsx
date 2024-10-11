@@ -9,13 +9,14 @@ import {
   UploadCreativeForStandardCampaign,
   UploadCreativeForTriggerCampaign,
 } from "../../components/molecules/UploadCreativeForCreateCampaign";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { getScreenDataUploadCreativeData } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { Footer } from "../../components/footer";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
+import { CAMPAIGN_CREATIVES, SELECTED_TRIGGER } from "../../constants/localStorageConstants";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -31,7 +32,7 @@ interface SingleFile {
 }
 interface Data1 {
   screenResolution: string;
-  screenCount: number;
+  count: number;
   creativeDuration: number;
   standardDayTimeCreatives: SingleFile[];
   standardNightTimeCreatives: SingleFile[];
@@ -61,8 +62,6 @@ export const CreativeUploadDetails = ({
   const [creativeUploadData, setCreativeUploadData] = useState<Data>({});
   const [citiesCreative, setCitiesCreative] = useState<any>([]);
 
-  console.log("data : ", creativeUploadData);
-
   const screenDataUploadCreative = useSelector(
     (state: any) => state.screenDataUploadCreative
   );
@@ -72,7 +71,6 @@ export const CreativeUploadDetails = ({
     data: screenData,
   } = screenDataUploadCreative;
 
-  console.log(screenData);
   const handleSetCreativeType = (e: RadioChangeEvent) => {
     setCreativeType(e.target.value);
   };
@@ -115,12 +113,17 @@ export const CreativeUploadDetails = ({
       setFIle(null);
       setCreativeUploadData(myData);
       let citiesCreativeData = citiesCreative.map((data: any) => {
-        if (data.label === currentCity) {
-          data.params[0] += myData[currentCity][currentScreen]?.screenCount;
+        console.log(myData[currentCity][currentScreen].standardDayTimeCreatives.length);
+        if (data.label === currentCity && (myData[currentCity][currentScreen].standardDayTimeCreatives.length === 0 || myData[currentCity][currentScreen].triggerCreatives.length === 0)) {
+          data.params[0] += myData[currentCity][currentScreen]?.count;
+          data.params[1] = data.params[1] - myData[currentCity][currentScreen]?.count;
+
         }
         return data;
       });
       setCitiesCreative(citiesCreativeData);
+      saveDataOnLocalStorage(CAMPAIGN_CREATIVES, myData)
+
     } else {
       message.error("Please select file to save!");
     }
@@ -178,6 +181,9 @@ export const CreativeUploadDetails = ({
   };
 
   const getScreenCountCityWise = (data: any, city: string) => {
+    console.log(data[city])
+    const param1 = data[city]?.filter((d: any) => d?.standardDayTimeCreatives?.length > 0 || d?.triggerCreatives?.length > 0)
+    console.log(param1)
     return data[city]?.reduce((accum: number, current: any) => {
       return accum + current.count;
     }, 0);
@@ -185,7 +191,10 @@ export const CreativeUploadDetails = ({
 
   const handleSetInitialData = (data: any) => {
     let arr = Object.keys(data);
+    console.log(data)
+
     let result = arr?.map((value: string, index: number) => {
+      console.log(getScreenCountCityWise(data, value))
       return {
         id: `${index + 1}`,
         label: value,
@@ -238,6 +247,7 @@ export const CreativeUploadDetails = ({
       let requestBody: any = [];
       for (let city in creativeUploadData) {
         for (let data of creativeUploadData[city]) {
+          console.log(data);
           let standardDayTimeCreatives: any = [];
           let standardNightTimeCreatives: any = [];
           let triggerCreatives: any = [];
@@ -253,7 +263,7 @@ export const CreativeUploadDetails = ({
           }
           requestBody.push({
             screenResolution: data?.screenResolution,
-            screenCount: data?.screenCount,
+            count: data?.count,
             creativeDuration: data?.creativeDuration,
             standardDayTimeCreatives: standardDayTimeCreatives,
             standardNightTimeCreatives: standardNightTimeCreatives,
@@ -285,20 +295,28 @@ export const CreativeUploadDetails = ({
 
   useEffect(() => {
     if (screenData) {
-      handleSetInitialData(screenData);
-      const result: any = {};
+      console.log("screenData : ", screenData);
+      console.log(getDataFromLocalStorage(CAMPAIGN_CREATIVES))
+      if (getDataFromLocalStorage(CAMPAIGN_CREATIVES)) {
+        handleSetInitialData(getDataFromLocalStorage(CAMPAIGN_CREATIVES));
+      } else {
+        handleSetInitialData(screenData);
+
+      }
+      const result: any = getDataFromLocalStorage(CAMPAIGN_CREATIVES) || {};
+      console.log(result);
       for (let city in screenData) {
         if (result[city] === undefined) {
           result[city] = [];
         }
         for (let data in screenData[city]) {
           result[city].push({
-            screenResolution: screenData[city][data].resolution,
-            screenCount: screenData[city][data].count,
+            screenResolution: screenData[city][data].screenResolution,
+            count: screenData[city][data].count,
             creativeDuration: screenData[city][data].duration,
-            standardDayTimeCreatives: [],
-            standardNightTimeCreatives: [],
-            triggerCreatives: [],
+            standardDayTimeCreatives: screenData[city][data].standardDayTimeCreatives || [],
+            standardNightTimeCreatives: screenData[city][data].standardDayTimeCreatives || [],
+            triggerCreatives: screenData[city][data].triggerCreatives || [],
           });
         }
       }
@@ -308,6 +326,7 @@ export const CreativeUploadDetails = ({
       message.error(errorScreeData);
     }
   }, [errorScreeData, screenData]);
+
 
   return (
     <div className="w-full py-3">
@@ -356,27 +375,27 @@ export const CreativeUploadDetails = ({
                         }
                         className={
                           index === currentScreen && isCreativeUploaded(index)
-                            ? "bg-green-50"
+                            ? "bg-blue-50"
                             : !(
                                 index === currentScreen ||
                                 isCreativeUploaded(index)
                               )
-                            ? "bg-red-50"
+                            ? ""
                             : isCreativeUploaded(index)
-                            ? "bg-green-50"
-                            : "bg-red-100"
+                            ? "bg-blue-50"
+                            : "bg-blue-50"
                         }
                         key={index}
                         onClick={() => setCurrentScreen(index)}
                       >
                         <div className="flex">
-                          <h1 className="border border-1 p-2 w-24 text-center ">
-                            {singleData?.screenCount}
+                          <h1 className="border-b border-1 p-2 w-24 text-center ">
+                            {singleData?.count}
                           </h1>
-                          <h1 className="border border-1 p-2 w-24 text-center ">
+                          <h1 className="border-b border-x border-1 p-2 w-24 text-center ">
                             {singleData?.creativeDuration}
                           </h1>
-                          <h1 className="border border-1 p-2 w-48 text-center ">
+                          <h1 className="border-b border-1 p-2 w-48 text-center ">
                             {singleData?.screenResolution}
                           </h1>
                         </div>
@@ -385,7 +404,7 @@ export const CreativeUploadDetails = ({
                   }
                 )}
               </div>
-              <div className="border border-1 h-100% px-2 py-1 w-72">
+              <div className="border-b border-1 h-100% px-2 py-1 w-72">
                 <Radio.Group
                   onChange={handleSetCreativeType}
                   value={creativeType}
@@ -397,7 +416,7 @@ export const CreativeUploadDetails = ({
                   </Space>
                 </Radio.Group>
               </div>
-              <div className="flex border border-1 h-100% w-full">
+              <div className="flex border-1 h-100% w-full">
                 <div className="border border-1 h-100% p-2  w-1/2">
                   {creativeType === "Standard" ? (
                     <div>
@@ -424,10 +443,26 @@ export const CreativeUploadDetails = ({
                       handleAddNewFile={handleAddNewFile}
                       file={file}
                       handleSaveFile={handleSaveFile}
+                      triggerData={
+                        Object.keys(getDataFromLocalStorage(SELECTED_TRIGGER)?.weatherTriggers).length > 0 ?
+                          getDataFromLocalStorage(SELECTED_TRIGGER)?.weatherTriggers :
+                        Object.keys(getDataFromLocalStorage(SELECTED_TRIGGER)?.sportsTriggers).length > 0 ?
+                          getDataFromLocalStorage(SELECTED_TRIGGER)?.sportsTriggers :
+                        Object.keys(getDataFromLocalStorage(SELECTED_TRIGGER)?.vacantSlots).length > 0 ?
+                        getDataFromLocalStorage(SELECTED_TRIGGER)?.vacantSlots : {}
+                      }
+                      triggerType={
+                        Object.keys(getDataFromLocalStorage(SELECTED_TRIGGER)?.weatherTriggers).length > 0 ?
+                          "Weather Trigger" :
+                        Object.keys(getDataFromLocalStorage(SELECTED_TRIGGER)?.sportsTriggers).length > 0 ?
+                          "Sports Trigger" :
+                        Object.keys(getDataFromLocalStorage(SELECTED_TRIGGER)?.vacantSlots).length > 0 ?
+                          "Fill Vacancy Trigger" : "No Trigger"
+                      }
                     />
                   )}
                 </div>
-                <div className="border border-1 h-100% px-4 py-2 w-1/2">
+                <div className="border-b border-r border-1 h-100% px-4 py-2 w-1/2">
                   <h1 className="font-semibold">
                     {creativeType === "Standard"
                       ? currentPlayTimeCreative === "1"

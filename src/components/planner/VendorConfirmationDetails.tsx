@@ -1,9 +1,15 @@
 import { VendorConfirmationAdvancedTable } from "../../components/tables/VendorConfirmationAdvancedTable";
 import { MultiColorLinearBar } from "../../components/molecules/MultiColorLinearBar";
 import { VendorConfirmationBasicTable } from "../../components/tables/VendorConfirmationBasicTable";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EmailSendBox } from "../../components/segments/EmailSendBox";
 import { EmailConfirmationImage } from "../../components/segments/EmailConfirmationImage";
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { getVendorConfirmationDetails } from "../../actions/screenAction";
+import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { CAMPAIGN, SCREEN_SUMMARY_TABLE_DATA, SELECTED_AUDIENCE_TOUCHPOINTS, SELECTED_SCREENS_ID, SELECTED_TRIGGER } from "../../constants/localStorageConstants";
+import { useSelector } from "react-redux";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -15,7 +21,32 @@ export const VendorConfirmationDetails = ({
   step,
 }: VendorConfirmationDetailsProps) => {
 
+  const dispatch = useDispatch<any>();
+  const { pathname } = useLocation();
+
   const [files, setFiles] = useState<any>([]);
+  const [vendorInput, setVendorInput] = useState<any>({
+    pageName: "View Final Plan Page",
+    id: pathname.split("/").splice(-1)[0],
+    name: getDataFromLocalStorage(CAMPAIGN).basicDetails.campaignName,
+    brandName: getDataFromLocalStorage(CAMPAIGN).basicDetails.brandName,
+    clientName: getDataFromLocalStorage(CAMPAIGN).basicDetails.clientName,
+    campaignType: getDataFromLocalStorage(CAMPAIGN).basicDetails.campaignType,
+    startDate: getDataFromLocalStorage(CAMPAIGN).basicDetails.startData,
+    endDate: getDataFromLocalStorage(CAMPAIGN).basicDetails.endDate,
+    duration: getDataFromLocalStorage(CAMPAIGN).basicDetails.duration,
+    selectedType: getDataFromLocalStorage(CAMPAIGN).basicDetails.regularVsCohort,
+    screenIds: getDataFromLocalStorage(SELECTED_SCREENS_ID),
+    triggers: getDataFromLocalStorage(SELECTED_TRIGGER),
+    totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCampaignBudget,
+  });
+
+  const vendorConfirmationDetailsGet = useSelector((state: any) => state.vendorConfirmationDetailsGet);
+  const {
+    loading: loadingVendorConfirmationData,
+    error: errorVendorConfirmationData,
+    data: vendorConfirmationData,
+  } = vendorConfirmationDetailsGet;
 
   const handleAddNewFile = async (file: File) => {
     if (file) {
@@ -38,6 +69,10 @@ export const VendorConfirmationDetails = ({
     setFiles(files.filter((singleFile: any) => singleFile.url !== file.url));
   };
 
+  useEffect(() => {
+    dispatch(getVendorConfirmationDetails(vendorInput));
+  },[dispatch, vendorInput]);
+
   return (
     <div className="w-full pt-3">
       <div className="flex items-center justify-between">
@@ -59,7 +94,9 @@ export const VendorConfirmationDetails = ({
         </div>
       </div>
       
-      <VendorConfirmationBasicTable />
+      <VendorConfirmationBasicTable 
+        vendorConfirmationData={vendorConfirmationData}
+      />
 
       <div className="py-4 w-full">
         <div className="flex gap-4">

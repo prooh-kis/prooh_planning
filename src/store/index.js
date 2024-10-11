@@ -10,6 +10,7 @@ import {
   screensDataAdvanceFilterGetReducer,
   screenSummaryDataGetReducer,
   screenSummaryPlanTableDataGetReducer,
+  vendorConfirmationDetailsGetReducer,
 } from "../reducers/screenReducers";
 import {
   userEmailVerificationReducer,
@@ -42,8 +43,9 @@ const store = configureStore({
     regularVsCohortPriceDataGet: regularVsCohortPriceDataGetReducer,
     screenSummaryDataGet: screenSummaryDataGetReducer,
     screenSummaryPlanTableDataGet: screenSummaryPlanTableDataGetReducer,
-    screenDataUploadCreative: screenDataUploadCreativeReducer,
     finalPlanPOTableDataGet: finalPlanPOTableDataGetReducer,
+    screenDataUploadCreative: screenDataUploadCreativeReducer,
+    vendorConfirmationDetailsGet: vendorConfirmationDetailsGetReducer,
     // campaign
     detailsToCreateCampaignAdd: detailsToCreateCampaignAddReducer,
 
