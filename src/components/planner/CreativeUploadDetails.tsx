@@ -269,7 +269,7 @@ export const CreativeUploadDetails = ({
         })
       );
 
-      console.log("requestBody : ", requestBody);
+      // console.log("requestBody : ", requestBody);
     } else {
       message.error("Please upload creatives for each row and foreach city");
     }
@@ -288,11 +288,9 @@ export const CreativeUploadDetails = ({
       handleSetInitialData(screenData);
       const result: any = {};
       for (let city in screenData) {
-        console.log(city);
         if (result[city] === undefined) {
           result[city] = [];
         }
-        console.log(screenData[city]);
         for (let data in screenData[city]) {
           result[city].push({
             screenResolution: screenData[city][data].resolution,
@@ -358,15 +356,15 @@ export const CreativeUploadDetails = ({
                         }
                         className={
                           index === currentScreen && isCreativeUploaded(index)
-                            ? "bg-green-200"
+                            ? "bg-green-50"
                             : !(
                                 index === currentScreen ||
                                 isCreativeUploaded(index)
                               )
-                            ? "bg-red-100"
+                            ? "bg-red-50"
                             : isCreativeUploaded(index)
-                            ? "bg-green-100"
-                            : "bg-red-200"
+                            ? "bg-green-50"
+                            : "bg-red-100"
                         }
                         key={index}
                         onClick={() => setCurrentScreen(index)}
@@ -475,7 +473,7 @@ export const CreativeUploadDetails = ({
               }}
               handleSave={() => {
                 handleSaveAndNext();
-                // setCurrentStep(step + 1);
+                setCurrentStep(step + 1);
               }}
               loading={isLoading}
               totalScreensData={{}}

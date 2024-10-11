@@ -1,4 +1,7 @@
 import {
+  GET_FINAL_PLAN_PO_DATA_ERROR,
+  GET_FINAL_PLAN_PO_DATA_REQUEST,
+  GET_FINAL_PLAN_PO_DATA_SUCCESS,
   GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
   GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
   GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
@@ -137,6 +140,26 @@ export function screenSummaryPlanTableDataGetReducer(state = [], action) {
       return state;
   }
 }
+
+export function finalPlanPOTableDataGetReducer(state = [], action) {
+  switch (action.type) {
+    case GET_FINAL_PLAN_PO_DATA_REQUEST:
+      return { loading: true };
+    case GET_FINAL_PLAN_PO_DATA_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_FINAL_PLAN_PO_DATA_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
 
 export function screenDataUploadCreativeReducer(state = {}, action) {
   switch (action.type) {

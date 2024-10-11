@@ -47,22 +47,13 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
   const [selectedTimeOptions, setSelectedTimeOptions] = useState<any>(300)
 
   const timeOptions = [{
-    label: "5 Min",
-    value: "300"
-  },{
-    label: "10 Min",
-    value: "600"
-  },{
-    label: "15 Min",
-    value: "900"
-  },{
-    label: "30 Min",
-    value: "1800"
-  },{
     label: "1 Hrs",
     value: "3600"
   },{
     label: "2 Hrs",
+    value: "7200"
+  },{
+    label: "3 Hrs",
     value: "7200"
   }];
 
@@ -88,10 +79,8 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
         },
   ]};
 
-  console.log(weatherTabData());
 
   const handleSelectTrigger = useCallback(() => {
-    console.log(selectedTrigger)
     saveDataOnLocalStorage(SELECTED_TRIGGER, {
       weatherTriggers: selectedTrigger?.triggerType === "weather" ? {
         type: weatherTabData()?.filter((w: any) => w.id === currentTab)[0]?.value,
@@ -137,8 +126,6 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
     rainType,
     aqi,
   ]);
-
-  console.log(selectedTrigger);
 
   useEffect(() => {
     if (selectedTrigger) {

@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FileUploadButton } from "../FileUploadButton";
 import { ImageViewCloseButton } from "../molecules/ImageViewCloseButton";
 import { Divider } from "antd";
 import { Footer } from "../../components/footer";
 import { EmailConfirmationImage } from "../../components/segments/EmailConfirmationImage";
 import { EmailSendBox } from "../../components/segments/EmailSendBox";
+import { useDispatch, useSelector } from "react-redux";
+import { getFinalPlanPOTableData } from "../../actions/screenAction";
+import { useLocation } from "react-router-dom";
+import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { CAMPAIGN, SCREEN_SUMMARY_TABLE_DATA, SELECTED_AUDIENCE_TOUCHPOINTS, SELECTED_SCREENS_ID, SELECTED_TRIGGER } from "../../constants/localStorageConstants";
+import { formatNumber } from "../../utils/formatValue";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -24,7 +30,38 @@ export const ViewFinalPlanPODetails = ({
   setCurrentStep,
   step,
 }: ViewFinalPlanPODetailsProps) => {
+
+  const dispatch = useDispatch<any>();
+  const { pathname } = useLocation();
+
   const [files, setFiles] = useState<any>([]);
+  const [poInput, setPoInput] = useState<any>({
+    pageName: "View Final Plan Page",
+    id: pathname.split("/").splice(-1)[0],
+    name: getDataFromLocalStorage(CAMPAIGN).basicDetails.campaignName,
+    brandName: getDataFromLocalStorage(CAMPAIGN).basicDetails.brandName,
+    clientName: getDataFromLocalStorage(CAMPAIGN).basicDetails.clientName,
+    campaignType: getDataFromLocalStorage(CAMPAIGN).basicDetails.campaignType,
+    startDate: getDataFromLocalStorage(CAMPAIGN).basicDetails.startData,
+    endDate: getDataFromLocalStorage(CAMPAIGN).basicDetails.endDate,
+    duration: getDataFromLocalStorage(CAMPAIGN).basicDetails.duration,
+    selectedType: getDataFromLocalStorage(CAMPAIGN).basicDetails.regularVsCohort,
+    gender: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).gender,
+    totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalImpression,
+    totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalReach,
+    screenIds: getDataFromLocalStorage(SELECTED_SCREENS_ID),
+    totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCpm,
+    triggers: getDataFromLocalStorage(SELECTED_TRIGGER),
+    totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCampaignBudget,
+    cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).cohorts,
+  });
+
+  const finalPlanPOTableDataGet = useSelector((state: any) => state.finalPlanPOTableDataGet);
+  const {
+    loading: loadingPOData,
+    error: errorPOData,
+    data: poTableData
+  } = finalPlanPOTableDataGet;
 
   const handleAddNewFile = async (file: File) => {
     if (file) {
@@ -47,6 +84,10 @@ export const ViewFinalPlanPODetails = ({
     setFiles(files.filter((singleFile: any) => singleFile.url !== file.url));
   };
 
+  useEffect(() => {
+    dispatch(getFinalPlanPOTableData(poInput));
+  },[dispatch, poInput]);
+
   return (
     <div className="w-full py-3">
       <div>
@@ -58,27 +99,31 @@ export const ViewFinalPlanPODetails = ({
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-1 mt-4 px-8 py-4 border border-1 border-#C3C3C3 rounded-2xl w-full">
           <h1 className="font-semibold py-2	">Client Information</h1>
-          <MyDiv left={"Client Name"} right={"Surf excel"} />
-          <MyDiv left={"Brand Name"} right={"Surf excel"} />
+          <MyDiv left={"Client Name"} right={poTableData?.clientName} />
+          <MyDiv left={"Brand Name"} right={poTableData?.brandName} />
           <Divider />
-          <h1 className="font-semibold py-2	">Client Details</h1>
-          <MyDiv left={"Campaign Name"} right={"Surf excel"} />
-          <MyDiv left={"Campaign Type"} right={"Surf excel"} />
-          <MyDiv left={"Start Date"} right={"27 Aug, 2024, 08:00:00 AM"} />
-          <MyDiv left={"End Date"} right={"31 Aug, 2024, 08:00:00 AM"} />
-          <MyDiv left={"Duration"} right={"6 days"} />
+          <h1 className="font-semibold py-2	">Campaign Details</h1>
+          <MyDiv left={"Campaign Name"} right={poTableData?.name} />
+          <MyDiv left={"Campaign Type"} right={`${poTableData?.campaignType} Campaign`} />
+          <MyDiv left={"Start Date"} right={new Date(poTableData?.startDate).toUTCString()} />
+          <MyDiv left={"End Date"} right={new Date(poTableData?.endDate).toUTCString()} />
+          <MyDiv left={"Duration"} right={`${poTableData?.duration} Days`}/>
           <Divider />
           <h1 className="font-semibold py-2	">Performance Metrics</h1>
-          <MyDiv left={"audience impression"} right={"Surf excel"} />
-          <MyDiv left={"Total screens"} right={"Surf excel"} />
-          <MyDiv left={"Reach"} right={"27 Aug, 2024, 08:00:00 AM"} />
-          <MyDiv left={"TG%"} right={"31 Aug, 2024, 08:00:00 AM"} />
-          <MyDiv left={"CPM"} right={"6 days"} />
-          <MyDiv left={"Selected Triggers"} right={"None"} />
+          <MyDiv left={"audience impression"} right={Number(poTableData?.totalImpression).toFixed(0)} />
+          <MyDiv left={"Total screens"} right={poTableData?.screens} />
+          <MyDiv left={"Reach"} right={Number(poTableData?.totalReach).toFixed(0)} />
+          <MyDiv left={"TG%"} right={`${Number(poTableData?.tgPercent).toFixed(1)} %`} />
+          <MyDiv left={"CPM"} right={`${String.fromCharCode(8377)} ${Number(poTableData?.totalCpm).toFixed(2)}`} />
+          <MyDiv left={"Selected Triggers"} right={
+            poTableData?.trigger === "weatherTriggers" ? "Weather Trigger" : 
+            poTableData?.trigger === "sportsTriggers" ? "Sports Trigger" :
+            poTableData?.trigger === "vacantSlots" ? "Fill Vacancy" : "None"
+            } />
           <Divider />
           <div className="flex font-semibold ">
             <h1 className="text-left basis-1/2">Total Cost</h1>
-            <h1 className="text-left basis-1/2">INR 3 cr</h1>
+            <h1 className="text-left basis-1/2">&#8377; {formatNumber(Number(poTableData?.totalCampaignBudget))}</h1>
           </div>
         </div>
         <div className="col-span-1 mt-4 p-8 border border-1 border-#C3C3C3 rounded-2xl w-full">

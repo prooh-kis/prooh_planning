@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 // import { thunk } from "redux-thunk"
 import authReducer from "./authSlice";
 import {
+  finalPlanPOTableDataGetReducer,
   regularVsCohortPriceDataGetReducer,
   screenDataUploadCreativeReducer,
   screensAudiencesDataGetReducer,
@@ -42,7 +43,7 @@ const store = configureStore({
     screenSummaryDataGet: screenSummaryDataGetReducer,
     screenSummaryPlanTableDataGet: screenSummaryPlanTableDataGetReducer,
     screenDataUploadCreative: screenDataUploadCreativeReducer,
-
+    finalPlanPOTableDataGet: finalPlanPOTableDataGetReducer,
     // campaign
     detailsToCreateCampaignAdd: detailsToCreateCampaignAddReducer,
 

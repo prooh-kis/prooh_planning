@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+  GET_FINAL_PLAN_PO_DATA_ERROR,
+  GET_FINAL_PLAN_PO_DATA_REQUEST,
+  GET_FINAL_PLAN_PO_DATA_SUCCESS,
   GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
   GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
   GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
@@ -197,6 +200,32 @@ export const getScreenSummaryPlanTableData =
       });
     }
   };
+
+  export const getFinalPlanPOTableData =
+  (poInput) =>
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_FINAL_PLAN_PO_DATA_REQUEST,
+      payload: poInput,
+    });
+    try {
+      const { data } = await axios.post(`${url}/tableDataViewFinalPlanPage`, poInput);
+      dispatch({
+        type: GET_FINAL_PLAN_PO_DATA_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_FINAL_PLAN_PO_DATA_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
+
 
 export const getScreenDataUploadCreativeData =
   ({ id }) =>
