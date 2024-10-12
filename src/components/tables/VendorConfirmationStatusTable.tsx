@@ -49,7 +49,39 @@ export const VendorConfirmationStatusTable = ({statusTableData}: any) => {
       </thead>
       <tbody>
         {statusTableData?.map((status: any, i: any) => (
-          <tr key={i}>
+          <tr key={i}  className={`border 
+            ${status.status === "PleaRequestBudgetSent" && "bg-purple-50"}
+            ${
+              status.status === "PleaRequestBudgetAccepted" && "bg-purple-50"
+            }
+            ${
+              status.status === "PleaRequestBudgetRejected" && "bg-purple-50"
+            }
+            ${
+              status.status === "PleaRequestScreenApprovalSent" &&
+              "bg-blue-50"
+            }
+            ${
+              status.status === "PleaRequestScreenApprovalAccepted" &&
+              "bg-blue-50"
+            }
+            ${
+              status.status === "PleaRequestScreenApprovalRejected" &&
+              "bg-blue-50"
+            }
+            ${
+              status.status === "PleaRequestFinalApprovalSent" &&
+              "bg-violet-100"
+            }
+            ${
+              status.status === "PleaRequestFinalApprovalAccepted" &&
+              "bg-violet-100"
+            }
+            ${
+              status.status === "PleaRequestFinalApprovalRejected" &&
+              "bg-violet-100"
+            }
+          `}>
             <td className="p-2"><CheckboxInput /></td>
             <td className="py-2">
               <h1 className="text-[14px]">
@@ -72,8 +104,48 @@ export const VendorConfirmationStatusTable = ({statusTableData}: any) => {
               </h1>
             </td>
             <td className="py-2">
-              <h1 className="text-[14px]">
-                {status.status || "Pending"}
+              <h1 className={`text-[14px] ${
+                  status.status === "PleaRequestBudgetSent"
+                  ? "text-purple-400"
+                  : status.status === "PleaRequestBudgetAccepted"
+                  ? "text-blue-400"
+                  : status.status === "PleaRequestBudgetRejected"
+                  ? "text-red-400"
+                  : status.status === "PleaRequestScreenApprovalSent"
+                  ? "text-purple-800"
+                  : status.status === "PleaRequestScreenApprovalAccepted"
+                  ? "text-blue-800"
+                  : status.status === "PleaRequestScreenApprovalRejected"
+                  ? "text-red-800"
+                  : status.status === "PleaRequestFinalApprovalSent"
+                  ? "text-purple-800"
+                  : status.status === "PleaRequestFinalApprovalAccepted"
+                  ? "text-blue-800"
+                  : status.status === "PleaRequestFinalApprovalRejected"
+                  ? "text-red-800"
+                  : ""
+                }`}
+              >
+                {
+                  status.status === "PleaRequestBudgetSent"
+                  ? "Budget Approval Pending"
+                  : status.status === "PleaRequestBudgetAccepted"
+                  ? "Budget Approved"
+                  : status.status === "PleaRequestBudgetRejected"
+                  ? "Budget Rejected"
+                  : status.status === "PleaRequestScreenApprovalSent"
+                  ? "Screen Approval Pending"
+                  : status.status === "PleaRequestScreenApprovalAccepted"
+                  ? "Screen Approved"
+                  : status.status === "PleaRequestScreenApprovalRejected"
+                  ? "Screen Rejected"
+                  : status.status === "PleaRequestFinalApprovalSent"
+                  ? "Final Aprroval Pending"
+                  : status.status === "PleaRequestFinalApprovalAccepted"
+                  ? "Final Approved"
+                  : status.status === "PleaRequestFinalApprovalRejected"
+                  ? "Final Rejected" : "Pending"
+                }
               </h1>
             </td>
             <td className="p-2">

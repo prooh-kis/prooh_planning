@@ -20,7 +20,7 @@ import {
   userSignupReducer,
   userUpdatePasswordReducer,
 } from "../reducers/userReducers";
-import { detailsToCreateCampaignAddReducer } from "../reducers/campaignReducers";
+import { detailsToCreateCampaignAddReducer, myCreateCampaignsManagerRequestsListGetReducer, myCreateCampaignsListGetReducer } from "../reducers/campaignReducers";
 import {
   cricketMatchesListGetReducer,
   playersListGetReducer,
@@ -51,6 +51,9 @@ const store = configureStore({
 
     // campaign
     detailsToCreateCampaignAdd: detailsToCreateCampaignAddReducer,
+    myCreateCampaignsListGet: myCreateCampaignsListGetReducer,
+    myCreateCampaignsManagerRequestsListGet: myCreateCampaignsManagerRequestsListGetReducer,
+
 
     // external apis
     cricketMatchesListGet: cricketMatchesListGetReducer,

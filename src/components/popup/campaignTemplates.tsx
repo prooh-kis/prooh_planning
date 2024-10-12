@@ -37,7 +37,7 @@ export const CampaignTemplates: React.FC = () => {
             Choose any one of the following and start planning your campaign instantly
           </p>
         </div>
-        <div className="py-[21px] grid grid-cols-3 gap-[24px]">
+        <div className="py-[21px] grid grid-cols-4 gap-[24px]">
           <div className="col-span-1 flex justify-center items-center">
             <TemplateCard
               text="Regular Campaign"
@@ -64,6 +64,16 @@ export const CampaignTemplates: React.FC = () => {
               paratext="Create campaigns based on specific events trigger and engage with your target audiences"
               icon="condition-alt"
               color="#3523D1"
+              isSelected={selectedCard === 3} // Check if the card is selected
+              handleCardClick={() => handleCardClick(3)} // Pass the card index
+            />
+          </div>
+          <div className="col-span-1 flex justify-center items-center">
+            <TemplateCard
+              text="I Know It All"
+              paratext="Create campaigns by selecting your desired location without any hassle and plan in express mode"
+              icon="shop"
+              color="#FF5252"
               isSelected={selectedCard === 2} // Check if the card is selected
               handleCardClick={() => handleCardClick(2)} // Pass the card index
             />
@@ -76,6 +86,8 @@ export const CampaignTemplates: React.FC = () => {
               navigate("/specialdayplan");
             } else if (selectedCard === 2) {
               navigate("/triggerbasedplan");
+            } else if (selectedCard === 3) {
+              navigate("iknowitall");
             }
         }} />
       </div>

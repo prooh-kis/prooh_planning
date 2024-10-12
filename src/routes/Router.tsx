@@ -2,10 +2,20 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { HomePageLayout } from "../components";
 
-import { AuthPage, ForgetPassword, LandingPage, PageNotFound, RegularPlanPage, UpdatePassword, VerifyEmail } from "../pages";
+import {
+  AuthPage,
+  ForgetPassword,
+  LandingPage,
+  PageNotFound,
+  RegularPlanPage,
+  UpdatePassword,
+  VerifyEmail,
+  MyCampaignsListPage,
+  MyRequestsListPage,
+} from "../pages";
 
 import { PrivateRoute } from "./PrivateRoute";
-import { AUTH, FORGET_PASSWORD, HOME, REGULARPLAN, UPDATE_PASSWORD, VERIFY_EMAIL } from "./routes";
+import { AUTH, FORGET_PASSWORD, HOME, MY_CAMPAIGNS_LIST, MY_REQUESTS_LIST, REGULARPLAN, UPDATE_PASSWORD, VERIFY_EMAIL } from "./routes";
 
 const Routers: React.FC = () => {
   return (
@@ -51,7 +61,22 @@ const Routers: React.FC = () => {
             </PrivateRoute>
           }
         />
-
+        <Route
+          path={MY_CAMPAIGNS_LIST}
+          element={
+            <PrivateRoute layout={HomePageLayout}>
+              <MyCampaignsListPage />
+            </PrivateRoute>
+          }
+        />
+     <Route
+          path={MY_REQUESTS_LIST}
+          element={
+            <PrivateRoute layout={HomePageLayout}>
+              <MyRequestsListPage />
+            </PrivateRoute>
+          }
+        />
         <Route
           // path={REGULARPLAN}
           path={"/regularplan/:id?"}

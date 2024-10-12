@@ -3,7 +3,7 @@ import "./index.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signout } from "../../actions/userAction";
-import { AUTH } from "../../routes/routes";
+import { AUTH, MY_CAMPAIGNS_LIST, MY_REQUESTS_LIST } from "../../routes/routes";
 
 export const Menu = (props: any) => {
   const { userInfo } = props;
@@ -49,13 +49,22 @@ export const Menu = (props: any) => {
         </div> */}
      
         <div
-          // onClick={() => navigate(CAMPAIGNS)}
+          onClick={() => navigate(MY_CAMPAIGNS_LIST)}
           className="flex flex-row gap-4 items-center py-2 px-2 hover:bg-sky-600 hover:text-white"
         >
           <div>
             {/* <MdCampaign className="w-6 h-6" /> */}
           </div>
           <h1 className="text-black-1000">My Campaigns</h1>
+        </div>
+        <div
+          onClick={() => navigate(MY_REQUESTS_LIST)}
+          className="flex flex-row gap-4 items-center py-2 px-2 hover:bg-sky-600 hover:text-white"
+        >
+          <div>
+            {/* <MdOutlinePermMedia className="w-6 h-6" /> */}
+          </div>
+          <h1 className="text-black-1000">My Requests</h1>
         </div>
         <div
           // onClick={() => navigate(MY_CREATIVES)}

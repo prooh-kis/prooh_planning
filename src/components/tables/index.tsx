@@ -8,3 +8,6 @@ export { ScreenSummaryTable } from "./ScreenSummaryTable";
 export { PlanSummaryTable } from "./PlanSummaryTable";
 export { VendorConfirmationBasicTable } from "./VendorConfirmationBasicTable";
 export { VendorConfirmationStatusTable } from "./VendorConfirmationStatusTable";
+
+export { MyCampaignsListTable } from "./MyCampaignsListTable";
+export { MyRequestsListTable } from "./MyRequestsListTable";
