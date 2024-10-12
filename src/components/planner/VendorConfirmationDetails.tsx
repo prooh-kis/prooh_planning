@@ -1,15 +1,16 @@
-import { VendorConfirmationAdvancedTable } from "../../components/tables/VendorConfirmationAdvancedTable";
 import { MultiColorLinearBar } from "../../components/molecules/MultiColorLinearBar";
-import { VendorConfirmationBasicTable } from "../../components/tables/VendorConfirmationBasicTable";
 import { useEffect, useState } from "react";
 import { EmailSendBox } from "../../components/segments/EmailSendBox";
 import { EmailConfirmationImage } from "../../components/segments/EmailConfirmationImage";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { getVendorConfirmationDetails } from "../../actions/screenAction";
+import { getVendorConfirmationDetails, getVendorConfirmationStatusTableDetails } from "../../actions/screenAction";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
-import { CAMPAIGN, SCREEN_SUMMARY_TABLE_DATA, SELECTED_AUDIENCE_TOUCHPOINTS, SELECTED_SCREENS_ID, SELECTED_TRIGGER } from "../../constants/localStorageConstants";
-import { useSelector } from "react-redux";
+import { CAMPAIGN, SCREEN_SUMMARY_TABLE_DATA, SELECTED_SCREENS_ID, SELECTED_TRIGGER } from "../../constants/localStorageConstants";
+import { VendorConfirmationBasicTable, VendorConfirmationStatusTable } from "../../components/tables";
+import { Footer } from "../../components/footer";
+import { message } from "antd";
+import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -25,6 +26,8 @@ export const VendorConfirmationDetails = ({
   const { pathname } = useLocation();
 
   const [files, setFiles] = useState<any>([]);
+  const [isDisabled, setIsDisabled] = useState<any>(true);
+
   const [vendorInput, setVendorInput] = useState<any>({
     pageName: "View Final Plan Page",
     id: pathname.split("/").splice(-1)[0],
@@ -47,6 +50,13 @@ export const VendorConfirmationDetails = ({
     error: errorVendorConfirmationData,
     data: vendorConfirmationData,
   } = vendorConfirmationDetailsGet;
+
+  const vendorConfirmationStatusTableDetailsGet = useSelector((state: any) => state.vendorConfirmationStatusTableDetailsGet);
+  const {
+    loading: loadingStatusTableData,
+    error: errorStatusTableData,
+    data: statusTableData,
+  } = vendorConfirmationStatusTableDetailsGet;
 
   const handleAddNewFile = async (file: File) => {
     if (file) {
@@ -71,7 +81,8 @@ export const VendorConfirmationDetails = ({
 
   useEffect(() => {
     dispatch(getVendorConfirmationDetails(vendorInput));
-  },[dispatch, vendorInput]);
+    dispatch(getVendorConfirmationStatusTableDetails({ id: pathname.split("/").splice(-1)[0] }));
+  },[dispatch, vendorInput, pathname]);
 
   return (
     <div className="w-full pt-3">
@@ -93,7 +104,6 @@ export const VendorConfirmationDetails = ({
 
         </div>
       </div>
-      
       <VendorConfirmationBasicTable 
         vendorConfirmationData={vendorConfirmationData}
       />
@@ -117,7 +127,7 @@ export const VendorConfirmationDetails = ({
             totalValue={9}
           />
         </div>
-        <VendorConfirmationAdvancedTable />
+        <VendorConfirmationStatusTable statusTableData={statusTableData} />
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-1 border rounded-[12px] p-2">
@@ -131,7 +141,26 @@ export const VendorConfirmationDetails = ({
           />
         </div>
       </div>
-      
+      <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
+        <Footer
+          handleBack={() => {
+            setCurrentStep(step - 1);
+          }}
+          handleSave={() => {
+            if (isDisabled) {
+              message.error("Please confirm budget for your selected trigger");
+            } else {
+              dispatch(addDetailsToCreateCampaign({
+                pageName: "View Final Plan Page",
+                id: pathname.split("/").splice(-1)[0],
+                clientApprovalImgs: [],
+              }));
+              setCurrentStep(step + 1);
+            };
+          }}
+          totalScreensData={{}}
+        />
+      </div>
     </div>
   )
 }

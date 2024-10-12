@@ -160,7 +160,11 @@ export const WeatherSegment = ({
                 title="Good"
                 value="good"
                 isChecked={aqi === "good" ? true : false}
-                onChange={() => setAqi("good")}
+                onChange={() => {
+                  setMaxVal(0);
+                  setMaxVal(50);
+                  setAqi("good");
+                }}
               />
               <p className="text-[14px] text-[#348655]">0-50</p>  
             </div>
@@ -169,7 +173,11 @@ export const WeatherSegment = ({
                 title="Moderate"
                 value="moderate"
                 isChecked={aqi === "moderate" ? true : false}
-                onChange={() => setAqi("moderate")}
+                onChange={() => {
+                  setMaxVal(51);
+                  setMaxVal(100);
+                  setAqi("moderate");
+                }}
               />
               <p className="text-[14px] text-[#1D9EF7]">51-100</p>
             </div>
@@ -178,7 +186,11 @@ export const WeatherSegment = ({
                 title="Poor"
                 value="poor"
                 isChecked={aqi === "poor" ? true : false}
-                onChange={() => setAqi("poor")}
+                onChange={() => {
+                  setMaxVal(101);
+                  setMaxVal(200);
+                  setAqi("poor");
+                }}
               />
               <p className="text-[14px] text-[#5BB8F7]">101-200</p>
             </div>
@@ -187,7 +199,11 @@ export const WeatherSegment = ({
                 title="Unhealthy"
                 value="unhealthy"
                 isChecked={aqi === "unhealthy" ? true : false}
-                onChange={() => setAqi("unhealthy")}
+                onChange={() => {
+                  setMaxVal(201);
+                  setMaxVal(350);
+                  setAqi("unhealthy");
+                }}
               />
               <p className="text-[14px] text-[#F79D5B]">201-350</p>
             </div>
@@ -196,7 +212,11 @@ export const WeatherSegment = ({
                 title="Hazardous"
                 value="hazardous"
                 isChecked={aqi === "hazardous" ? true : false}
-                onChange={() => setAqi("hazardous")}
+                onChange={() => {
+                  setMaxVal(351);
+                  setMaxVal(500);
+                  setAqi("hazardous");
+                }}
               />
               <p className="text-[14px] text-[#C63A3A]">351-500</p>
             </div>

@@ -6,3 +6,5 @@ export { RegularCohortSlotsCampaignTable } from "./RegularCohortSlotsCampaignTab
 export { RegularCohortSummaryTable } from "./RegularCohortSummaryTable";
 export { ScreenSummaryTable } from "./ScreenSummaryTable";
 export { PlanSummaryTable } from "./PlanSummaryTable";
+export { VendorConfirmationBasicTable } from "./VendorConfirmationBasicTable";
+export { VendorConfirmationStatusTable } from "./VendorConfirmationStatusTable";

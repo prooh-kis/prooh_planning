@@ -11,6 +11,7 @@ import {
   screenSummaryDataGetReducer,
   screenSummaryPlanTableDataGetReducer,
   vendorConfirmationDetailsGetReducer,
+  vendorConfirmationStatusTableDetailsGetReducer,
 } from "../reducers/screenReducers";
 import {
   userEmailVerificationReducer,
@@ -46,6 +47,8 @@ const store = configureStore({
     finalPlanPOTableDataGet: finalPlanPOTableDataGetReducer,
     screenDataUploadCreative: screenDataUploadCreativeReducer,
     vendorConfirmationDetailsGet: vendorConfirmationDetailsGetReducer,
+    vendorConfirmationStatusTableDetailsGet: vendorConfirmationStatusTableDetailsGetReducer,
+
     // campaign
     detailsToCreateCampaignAdd: detailsToCreateCampaignAddReducer,
 

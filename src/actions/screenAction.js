@@ -27,6 +27,9 @@ import {
   GET_VENDOR_CONFIRMATION_DETAILS_ERROR,
   GET_VENDOR_CONFIRMATION_DETAILS_REQUEST,
   GET_VENDOR_CONFIRMATION_DETAILS_SUCCESS,
+  GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_ERROR,
+  GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_REQUEST,
+  GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_SUCCESS,
 } from "../constants/screenConstants";
 
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/screens`;
@@ -283,3 +286,30 @@ export const getVendorConfirmationDetails =
       });
     }
   };
+
+
+
+export const getVendorConfirmationStatusTableDetails =
+({id}) =>
+async (dispatch, getState) => {
+  dispatch({
+    type: GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_REQUEST,
+    payload: {id},
+  });
+  try {
+    const { data } = await axios.post(`${url}/statusTableVendorCnfPage`, {id});
+    dispatch({
+      type: GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_ERROR,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    });
+  }
+};

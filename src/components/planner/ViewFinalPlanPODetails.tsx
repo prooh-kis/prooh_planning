@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { CAMPAIGN, SCREEN_SUMMARY_TABLE_DATA, SELECTED_AUDIENCE_TOUCHPOINTS, SELECTED_SCREENS_ID, SELECTED_TRIGGER } from "../../constants/localStorageConstants";
 import { formatNumber } from "../../utils/formatValue";
+import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -167,6 +168,11 @@ export const ViewFinalPlanPODetails = ({
             setCurrentStep(step - 1);
           }}
           handleSave={() => {
+            dispatch(addDetailsToCreateCampaign({
+              pageName: "Vendor Confirmation Page",
+              id: pathname.split("/").splice(-1)[0],
+              vendorApprovalImgs: [],
+            }));
             setCurrentStep(step + 1);
           }}
           totalScreensData={{}}
