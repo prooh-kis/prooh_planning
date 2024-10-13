@@ -12,7 +12,7 @@ import { message } from "antd";
 import { useDispatch } from "react-redux";
 import { getRegularVsCohortPriceData } from "../../actions/screenAction";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { SELECTED_SCREENS_ID } from "../../constants/localStorageConstants";
+import { COST_SUMMARY, SELECTED_SCREENS_ID } from "../../constants/localStorageConstants";
 
 type Coordinate = [number, number];
 
@@ -22,6 +22,7 @@ interface AdvanceFiltersDetailsProps {
   mapData?: any;
   loading?: boolean;
   error?: any;
+
 }
 
 export const AdvanceFiltersDetails = ({
@@ -30,6 +31,7 @@ export const AdvanceFiltersDetails = ({
   setCurrentStep,
   loading,
   error,
+
 }: AdvanceFiltersDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -371,7 +373,7 @@ export const AdvanceFiltersDetails = ({
               setCurrentStep(step + 1);
             };
           }}
-          totalScreensData={getDataFromLocalStorage("costSummary")?.["2"]}
+          totalScreensData={getDataFromLocalStorage(COST_SUMMARY)?.[-1] || []}
         />
       </div>
     </div>

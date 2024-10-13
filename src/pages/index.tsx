@@ -4,6 +4,8 @@ export { AuthPage, VerifyEmail, UpdatePassword, ForgetPassword } from "./AuthPag
 export { LandingPage } from "./LandingPage";
 export { MyCampaignsListPage } from "./MyCampaignsListPage";
 export { MyRequestsListPage } from "./MyRequestsListPage";
+export { CampaignDetailsPage } from "./CampaignDetailsPage";
+
 
 export { RegularPlanPage } from "./RegularPlanPage";
 

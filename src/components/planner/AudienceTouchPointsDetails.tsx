@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PrimaryButton } from "../atoms/PrimaryButton";
 import { PrimaryInput } from "../atoms/PrimaryInput";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -22,7 +22,7 @@ import { Message } from "../Message";
 import { Loading } from "../Loading";
 import { Footer } from "../../components/footer";
 import { getScreenDataForAdvanceFilters, getScreensCostData } from "../../actions/screenAction";
-import { COST_SUMMARY, SELECTED_AUDIENCE_TOUCHPOINTS, TOTAL_SCREEN_COST_DATA } from "../../constants/localStorageConstants";
+import { CAMPAIGN, COST_SUMMARY, SELECTED_AUDIENCE_TOUCHPOINTS, TOTAL_SCREEN_COST_DATA } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
 interface EnterAudienceTouchpointDetailsProps {
@@ -31,12 +31,18 @@ interface EnterAudienceTouchpointDetailsProps {
   data?: any;
   loading?: boolean;
   error?: any;
+  marketRef?: any;
+  audienceRef?: any;
+  touchpointRef?: any;
 }
 
 export const AudienceTouchPointsDetails = ({
   setCurrentStep,
   step,
   error,
+  marketRef,
+  audienceRef,
+  touchpointRef,
 }: EnterAudienceTouchpointDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -110,7 +116,7 @@ export const AudienceTouchPointsDetails = ({
           : selectedGender.length === 1 && selectedGender.includes("Female")
           ? "female"
           : "both",
-        duration: 30,
+        duration: getDataFromLocalStorage(CAMPAIGN).basicDetails.duration || 30,
       })
     }
   }, [screensCost]);
@@ -120,7 +126,7 @@ export const AudienceTouchPointsDetails = ({
       getScreensCostData({
         cohorts: selectedAudiences,
         touchPoints: selectedTouchPoints,
-        duration: 30,
+        duration: getDataFromLocalStorage(CAMPAIGN).basicDetails.duration || 30,
         gender:
           selectedGender.length === 1 && selectedGender.includes("Male")
             ? "male"
@@ -172,7 +178,7 @@ export const AudienceTouchPointsDetails = ({
         </p>
       </div>
       <div className="grid grid-cols-8 gap-1 pt-4">
-        <div className="col-span-2 flex justify-center">
+        <div ref={marketRef} className="col-span-2 flex justify-center">
           <LocationTable
             markets={markets}
             selectedMarkets={selectedMarket}
@@ -180,14 +186,14 @@ export const AudienceTouchPointsDetails = ({
             setSelectedGender={setSelectedGender}
           />
         </div>
-        <div className="col-span-3 flex justify-center">
+        <div ref={audienceRef} className="col-span-3 flex justify-center">
           <AudienceCohortTable
             audiences={audiences}
             selectedAudiences={selectedAudiences}
             setSelectedAudiences={setSelectedAudiences}
           />
         </div>
-        <div className="col-span-3 flex justify-center">
+        <div ref={touchpointRef} className="col-span-3 flex justify-center">
           <TouchpointTable
             touchPoints={touchPoints}
             selectedTouchPoints={selectedTouchPoints}
@@ -226,10 +232,13 @@ export const AudienceTouchPointsDetails = ({
               gender: getDataFromLocalStorage("selectedAudienceTouchpoints").gender,
             }))
             setCurrentStep(step + 1);
-            saveDataOnLocalStorage(COST_SUMMARY, {
-              "1": totalScreensData,
-              "2": selectedScreensData,
-            })
+            saveDataOnLocalStorage(COST_SUMMARY, [
+              {
+                totalScreensData: totalScreensData,
+              },{
+                selectedScreensData: selectedScreensData,
+              }
+            ])
           }}
           totalScreensData={totalScreensData}
         />

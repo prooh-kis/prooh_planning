@@ -14,14 +14,14 @@ export const DropdownInput = ({
   };
 
   // Create dynamic classes for height and width
-  const dropdownHeight = height ? `h-${height}` : 'h-[40px]';
-  const dropdownWidth = width ? `w-${width}` : 'w-full';
+  const dropdownHeight = height ? height : 'h-[40px]';
+  const dropdownWidth = width ? width : 'w-full';
 
   return (
     <div className={height ? "relative" : "relative w-full"}>
       <select
         title="dropdown"
-        className={`truncate ${dropdownHeight} ${dropdownWidth} text-[14px] border rounded-lg ${height ? "px-1" : "px-3"} py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 active:bg-blue-100 transition-colors appearance-none`}
+        className={`truncate ${dropdownHeight} ${dropdownWidth} text-[14px] border rounded-lg ${height ? "px-1" : "px-3"} py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 active:bg-blue-100 transition-colors appearance-none`}
         value={selectedOption}
         onChange={handleSelectChange}
       >

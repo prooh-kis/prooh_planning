@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import { formatNumber } from "../../utils/formatValue"
 
 interface MyCampaignsListTableProps {
@@ -7,6 +8,8 @@ interface MyCampaignsListTableProps {
 export const MyCampaignsListTable = ({
   campaignsList
 }: MyCampaignsListTableProps) => {
+  const navigate = useNavigate();
+  console.log(campaignsList)
   return (
     <table className="w-full">
       <thead>
@@ -26,7 +29,11 @@ export const MyCampaignsListTable = ({
               Brand Name
             </h1>
           </th>
-
+          <th className="py-2 font-semibold">
+            <h1 className="text-[14px] flex justify-start">
+              Campaign Type
+            </h1>
+          </th>
           <th className="py-2 font-semibold">
             <h1 className="text-[14px] flex justify-start">
               Performance
@@ -74,6 +81,11 @@ export const MyCampaignsListTable = ({
             </td>
             <td className="p-2">
               <h1 className="text-[14px]">
+                {campaign.campaignType}
+              </h1>
+            </td>
+            <td className="p-2">
+              <h1 className="text-[14px]">
                 0 %
               </h1>
             </td>
@@ -92,7 +104,13 @@ export const MyCampaignsListTable = ({
                 {new Date(campaign.endDate).toDateString()}
               </h1>
             </td>
-            <td className="p-2">
+            <td className="p-2"
+              onClick={() => navigate(`/regularplan/${campaign._id}`,
+                {
+                  state: { campaign }
+                }
+              )}
+            >
               <i className="fi fi-bs-menu-dots text-[20px] flex justify-center"></i>
             </td>
           </tr>

@@ -8,7 +8,10 @@ export const PRICING_DATA = "pricingData";
 export const FILTERED_SCREENS_IN_FILTER_FIVE = "filteredFive";
 
 
+
 // used for planning page
+
+export const FULL_CAMPAIGN_PLAN = "fullCampaignPlan";
 // 1
 export const CURRENT_STEP = "currentStep";
 export const CAMPAIGN = "campaign";

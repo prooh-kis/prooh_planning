@@ -12,7 +12,7 @@ export function PlanSummaryTable({
   setShowSummary,
   loading,
   error,
-  data
+  data,
 }: any) {
 
   return (

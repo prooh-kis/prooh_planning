@@ -12,10 +12,11 @@ import {
   VerifyEmail,
   MyCampaignsListPage,
   MyRequestsListPage,
+  CampaignDetailsPage,
 } from "../pages";
 
 import { PrivateRoute } from "./PrivateRoute";
-import { AUTH, FORGET_PASSWORD, HOME, MY_CAMPAIGNS_LIST, MY_REQUESTS_LIST, REGULARPLAN, UPDATE_PASSWORD, VERIFY_EMAIL } from "./routes";
+import { AUTH, CAMPAIGN_DETAILS_PAGE, FORGET_PASSWORD, HOME, MY_CAMPAIGNS_LIST, MY_REQUESTS_LIST, REGULARPLAN, UPDATE_PASSWORD, VERIFY_EMAIL } from "./routes";
 
 const Routers: React.FC = () => {
   return (
@@ -69,11 +70,19 @@ const Routers: React.FC = () => {
             </PrivateRoute>
           }
         />
-     <Route
+        <Route
           path={MY_REQUESTS_LIST}
           element={
             <PrivateRoute layout={HomePageLayout}>
               <MyRequestsListPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path={CAMPAIGN_DETAILS_PAGE}
+          element={
+            <PrivateRoute layout={HomePageLayout}>
+              <CampaignDetailsPage />
             </PrivateRoute>
           }
         />

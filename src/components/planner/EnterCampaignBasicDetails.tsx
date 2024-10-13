@@ -111,6 +111,7 @@ export const EnterCampaignBasicDetails = ({
       setCurrentStep(step + 1);
       navigate(`/regularplan/${addDetails?._id}`);
     }
+    
   },[navigate, successAddDetails]);
   
   return (

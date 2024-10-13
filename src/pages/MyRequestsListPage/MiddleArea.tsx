@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
 import { MyRequestsList } from "./MyRequestsList";
-import { getMyCreateCampaignsManagerRequestsList } from "../../actions/campaignAction";
+import { getMyCreateCampaignsManagerRequestsList, getMyCreateCampaignsVendorRequestsList } from "../../actions/campaignAction";
 
 
 export const MiddleArea: React.FC = () => {
@@ -16,22 +16,44 @@ export const MiddleArea: React.FC = () => {
 
   const myCreateCampaignsManagerRequestsListGet = useSelector((state: any) => state.myCreateCampaignsManagerRequestsListGet);
   const {
-    loading: loadingRequestsList,
-    error: errorRequestsList,
-    data: requestsList
+    loading: loadingManagerRequestsList,
+    error: errorManagerRequestsList,
+    data: managerRequestsList
   } = myCreateCampaignsManagerRequestsListGet;
+
+  const myCreateCampaignsVendorRequestsListGet = useSelector((state: any) => state.myCreateCampaignsVendorRequestsListGet);
+  const {
+    loading: loadingVendorRequestsList,
+    error: errorVendorRequestsList,
+    data: vendorRequestsList
+  } = myCreateCampaignsVendorRequestsListGet;
 
   useEffect(() => {
     if (!userInfo) {
       navigate("/login");
     }
-    dispatch(getMyCreateCampaignsManagerRequestsList({id: userInfo?._id}))
+    if (userInfo?.isMaster) {
+      dispatch(getMyCreateCampaignsVendorRequestsList({id: userInfo?._id}))
+
+    }
+
+    if (userInfo?.isBrand) {
+      dispatch(getMyCreateCampaignsManagerRequestsList({id: userInfo?._id}))
+    }
   },[dispatch, navigate, userInfo]);
+  console.log(vendorRequestsList?.campaigns?.filter((campaign: any) => vendorRequestsList?.screenIds?.includes(campaign?.screenId)));
   return (
     <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
       {userInfo && userInfo?.isBrand ? (
-        <MyRequestsList requestsList={requestsList} />
-
+        <MyRequestsList requestsList={
+          managerRequestsList?.filter((campaign: any) => campaign.currentPage === "Add Triggers Page" && campaign.campaignManagerEmail === userInfo?.email)
+          } 
+        />
+      ) : userInfo && userInfo?.isMaster ? (
+        <MyRequestsList requestsList={
+          vendorRequestsList?.campaigns?.filter((campaign: any) => vendorRequestsList?.screenIds?.includes(campaign?.screenId) && campaign?.status === "PleaRequestScreenApprovalSent")
+          } 
+        />
       ) : (
         <div className="">
           <h1 className="text-2xl font-bold">

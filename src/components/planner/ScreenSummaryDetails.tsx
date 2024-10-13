@@ -227,14 +227,16 @@ export const ScreenSummaryDetails = ({
               )}
             </div>
           ) : currentTab === "2" && (
-            <PlanSummaryTable
-              showSummary={showSummary}
-              setShowSummary={setShowSummary}
-              regularVsCohort={regularVsCohort}
-              loading={loadingScreenSummaryPlanTable}
-              error={errorScreenSummaryPlanTable}
-              data={screenSummaryPlanTableData}
-            />
+            <div>
+              <PlanSummaryTable
+                showSummary={showSummary}
+                setShowSummary={setShowSummary}
+                regularVsCohort={regularVsCohort}
+                loading={loadingScreenSummaryPlanTable}
+                error={errorScreenSummaryPlanTable}
+                data={screenSummaryPlanTableData}
+              />
+            </div>
           )}
         </div>
       )}

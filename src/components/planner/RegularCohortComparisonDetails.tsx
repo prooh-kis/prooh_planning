@@ -68,9 +68,9 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
     setShowSummary(null);
     setIsDisabled(false);
 
-    const oldData = getDataFromLocalStorage("costSummary");
-    oldData["3"] = priceData[type]?.tableData;
-    const campaign = getDataFromLocalStorage("campaign");
+    const oldData = getDataFromLocalStorage(COST_SUMMARY);
+    oldData.push(priceData[type]?.tableData);
+    const campaign = getDataFromLocalStorage(CAMPAIGN);
     campaign.basicDetails["regularVsCohort"] = type;
     saveDataOnLocalStorage(CAMPAIGN, campaign);
     saveDataOnLocalStorage(COST_SUMMARY, oldData);

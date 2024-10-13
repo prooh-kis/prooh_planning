@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
 import {
   AdvanceFiltersDetails,
@@ -27,9 +27,45 @@ import { useLocation, useParams } from "react-router-dom";
 import {
   ADVANCE_FILTER_SCREENS_MAP_DATA,
   AUDIENCE_DATA,
+  CAMPAIGN,
   CURRENT_STEP,
+  FULL_CAMPAIGN_PLAN,
+  SELECTED_AUDIENCE_TOUCHPOINTS,
   TOTAL_SCREEN_COST_DATA,
 } from "../../constants/localStorageConstants";
+
+const pages = [{
+  id: 1,
+  value: "Basic Details Page"
+},{
+  id: 2,
+  value: "Audience And TouchPoint Page"
+},{
+  id: 3,
+  value: "Advance Filter Page"
+},{
+  id: 4,
+  value: "Compare Plan Page"
+},{
+  id: 5,
+  value: "Screen Summary Page"
+},{
+  id: 6,
+  value: "Add Triggers Page"
+},{
+  id: 7,
+  value: "View Final Plan Page"
+},{
+  id: 8,
+  value: "Upload Creative Page"
+},{
+  id: 9,
+  value: "Vendor Confirmation Page"
+},{
+  id: 10,
+  value: "Campaign Dashboard Page"
+},{
+}];
 
 export const RegularPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -69,27 +105,53 @@ export const RegularPlanPage: React.FC = () => {
 
 
   useEffect(() => {
-    dispatch(getScreensAudiencesData({ markets: [] }));
-    dispatch(
-      getScreensCostData({
-        cohorts: [],
-        touchPoints: [],
-        gender: "both",
-        duration: 30,
-      })
-    );
-    // dispatch(
-    //   getScreenDataForAdvanceFilters({
-    //     touchPoints: [
-    //       "Arterial Route",
-    //       "CBD- SOHO",
-    //       "Feeder route",
-    //       "Golf course",
-    //       "Premium High Street",
-    //     ],
-    //   })
-    // );
-  }, [dispatch]);
+   
+    if (location.state.campaign) {
+      const campDetails = location.state .campaign
+      saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, campDetails);
+      saveDataOnLocalStorage(CAMPAIGN, {
+        basicDetails: {
+          campaignType: campDetails.campaignType || "Regular",
+          campaignName: campDetails.name || "campaign",
+          brandName: campDetails.brandName || "brand",
+          clientName: campDetails.clientName || "client",
+          industry: campDetails.industry || "industry",
+          startDate: campDetails.startDate || "1 Jan 1970",
+          endDate: campDetails.endDate || "1 Feb 1970",
+          duration: campDetails.duration || 30,
+        },
+      });
+
+      saveDataOnLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS, {
+        cohorts: campDetails.cohorts,
+        touchPoints: campDetails.touchPoints,
+        gender: campDetails.gender,
+        duration: getDataFromLocalStorage(CAMPAIGN).basicDetails.duration || 30,
+      });
+
+      setCurrentStep(Number(pages.filter((page: any) => page.value === campDetails.currentPage)[0].id) + 1);
+      dispatch(getScreensAudiencesData({ markets: campDetails.markets }));
+      dispatch(
+        getScreensCostData({
+          cohorts: campDetails.cohorts,
+          touchPoints: campDetails.touchPoints,
+          gender: campDetails.gender,
+          duration: campDetails.duration,
+        })
+      );
+    } else {
+      dispatch(getScreensAudiencesData({ markets: [] }));
+      dispatch(
+        getScreensCostData({
+          cohorts: [],
+          touchPoints: [],
+          gender: "both",
+          duration: 30,
+        })
+      );
+    }
+    
+  }, [dispatch, location]);
 
   useEffect(() => {
     if (screensAudiences) {
@@ -131,7 +193,7 @@ export const RegularPlanPage: React.FC = () => {
             step={currentStep}
             loading={loading || loadingCost}
             error={error || errorCost}
-          />
+            />
         ) : currentStep === 3 ? (
           <AdvanceFiltersDetails
             setCurrentStep={setCurrentStep}

@@ -8,7 +8,10 @@ import {
   GET_MY_CREATE_CAMPAIGNS_MANAGER_REQUESTS_LIST_SUCCESS,
   GET_MY_CREATE_CAMPAIGNS_LIST_ERROR,
   GET_MY_CREATE_CAMPAIGNS_LIST_REQUEST,
-  GET_MY_CREATE_CAMPAIGNS_LIST_SUCCESS
+  GET_MY_CREATE_CAMPAIGNS_LIST_SUCCESS,
+  GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_REQUEST,
+  GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_SUCCESS,
+  GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_ERROR
 } from "../constants/campaignConstants";
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/campaigns`;
 
@@ -74,6 +77,29 @@ export const getMyCreateCampaignsManagerRequestsList = ({id}) => async (dispatch
   } catch (error) {
     dispatch({
       type: GET_MY_CREATE_CAMPAIGNS_MANAGER_REQUESTS_LIST_ERROR,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    })
+  }
+}
+
+export const getMyCreateCampaignsVendorRequestsList = ({id}) => async (dispatch, getState) => {
+  dispatch({
+    type: GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_REQUEST,
+    payload: {id},
+  });
+  try {
+    const { data } = await axios.post(`${url}/campaignCreationsScreenVendor`, {id});
+    dispatch({
+      type: GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_ERROR,
       payload: {
         message: error.message,
         status: error.response?.status,

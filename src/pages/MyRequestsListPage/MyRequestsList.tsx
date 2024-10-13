@@ -9,13 +9,13 @@ const allTabs = [{
   label: "All"
 },{
   id: "2",
-  label: "Active"
+  label: "Approved"
 },{
   id: "3",
   label: "Pending"
 },{
   id: "4",
-  label: "Archived"
+  label: "Rejected"
 }];
 
 
