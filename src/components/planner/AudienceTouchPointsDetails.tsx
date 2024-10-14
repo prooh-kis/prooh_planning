@@ -1,10 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { PrimaryButton } from "../atoms/PrimaryButton";
-import { PrimaryInput } from "../atoms/PrimaryInput";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CalendarInput } from "../atoms/CalendarInput";
-import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
-
 import {
   getAllLocalStorageData,
   getDataFromLocalStorage,
@@ -16,13 +11,19 @@ import {
   LocationTable,
   TouchpointTable,
 } from "../tables";
-import { audienceCohortData, touchpointData } from "../../data";
 import { useDispatch, useSelector } from "react-redux";
-import { Message } from "../Message";
-import { Loading } from "../Loading";
 import { Footer } from "../../components/footer";
-import { getScreenDataForAdvanceFilters, getScreensCostData } from "../../actions/screenAction";
-import { CAMPAIGN, COST_SUMMARY, SELECTED_AUDIENCE_TOUCHPOINTS, TOTAL_SCREEN_COST_DATA } from "../../constants/localStorageConstants";
+import {
+  getScreenDataForAdvanceFilters,
+  getScreensCostData,
+} from "../../actions/screenAction";
+import {
+  AUDIENCE_DATA,
+  CAMPAIGN,
+  COST_SUMMARY,
+  SELECTED_AUDIENCE_TOUCHPOINTS,
+  TOTAL_SCREEN_COST_DATA,
+} from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
 interface EnterAudienceTouchpointDetailsProps {
@@ -101,7 +102,29 @@ export const AudienceTouchPointsDetails = ({
   const setCostData = (myData: any) => {
     setTotalScreensData(myData);
     setSelectedScreensData(myData);
-   
+  };
+
+  const handleSaveAndContinue = () => {
+    dispatch(
+      addDetailsToCreateCampaign({
+        pageName: "Audience And TouchPoint Page",
+        id: pathname.split("/").splice(-1)[0],
+        markets: Object.keys(getDataFromLocalStorage(AUDIENCE_DATA)),
+        cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).cohorts,
+        touchPoints: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)
+          .touchPoints,
+        gender: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).gender,
+      })
+    );
+    saveDataOnLocalStorage(COST_SUMMARY, [
+      {
+        totalScreensData: totalScreensData,
+      },
+      {
+        selectedScreensData: selectedScreensData,
+      },
+    ]);
+    setCurrentStep(step + 1);
   };
 
   useEffect(() => {
@@ -111,13 +134,14 @@ export const AudienceTouchPointsDetails = ({
       saveDataOnLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS, {
         cohorts: selectedAudiences,
         touchPoints: selectedTouchPoints,
-        gender: selectedGender.length === 1 && selectedGender.includes("Male")
-          ? "male"
-          : selectedGender.length === 1 && selectedGender.includes("Female")
-          ? "female"
-          : "both",
+        gender:
+          selectedGender.length === 1 && selectedGender.includes("Male")
+            ? "male"
+            : selectedGender.length === 1 && selectedGender.includes("Female")
+            ? "female"
+            : "both",
         duration: getDataFromLocalStorage(CAMPAIGN).basicDetails.duration || 30,
-      })
+      });
     }
   }, [screensCost]);
 
@@ -135,7 +159,7 @@ export const AudienceTouchPointsDetails = ({
             : "both",
       })
     );
-    
+
     dispatch(
       getScreenDataForAdvanceFilters({
         touchPoints: selectedTouchPoints,
@@ -222,24 +246,7 @@ export const AudienceTouchPointsDetails = ({
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={() => {
-            dispatch(addDetailsToCreateCampaign({
-              pageName: "Audience And TouchPoint Page",
-              id: pathname.split("/").splice(-1)[0],
-              markets: Object.keys(getDataFromLocalStorage("audienceData")),
-              cohorts: getDataFromLocalStorage("selectedAudienceTouchpoints").cohorts,
-              touchPoints: getDataFromLocalStorage("selectedAudienceTouchpoints").touchPoints,
-              gender: getDataFromLocalStorage("selectedAudienceTouchpoints").gender,
-            }))
-            setCurrentStep(step + 1);
-            saveDataOnLocalStorage(COST_SUMMARY, [
-              {
-                totalScreensData: totalScreensData,
-              },{
-                selectedScreensData: selectedScreensData,
-              }
-            ])
-          }}
+          handleSave={handleSaveAndContinue}
           totalScreensData={totalScreensData}
         />
       </div>

@@ -4,10 +4,21 @@ import { EmailSendBox } from "../../components/segments/EmailSendBox";
 import { EmailConfirmationImage } from "../../components/segments/EmailConfirmationImage";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { getVendorConfirmationDetails, getVendorConfirmationStatusTableDetails } from "../../actions/screenAction";
+import {
+  getVendorConfirmationDetails,
+  getVendorConfirmationStatusTableDetails,
+} from "../../actions/screenAction";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
-import { CAMPAIGN, SCREEN_SUMMARY_TABLE_DATA, SELECTED_SCREENS_ID, SELECTED_TRIGGER } from "../../constants/localStorageConstants";
-import { VendorConfirmationBasicTable, VendorConfirmationStatusTable } from "../../components/tables";
+import {
+  CAMPAIGN,
+  SCREEN_SUMMARY_TABLE_DATA,
+  SELECTED_SCREENS_ID,
+  SELECTED_TRIGGER,
+} from "../../constants/localStorageConstants";
+import {
+  VendorConfirmationBasicTable,
+  VendorConfirmationStatusTable,
+} from "../../components/tables";
 import { Footer } from "../../components/footer";
 import { message } from "antd";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
@@ -21,7 +32,6 @@ export const VendorConfirmationDetails = ({
   setCurrentStep,
   step,
 }: VendorConfirmationDetailsProps) => {
-
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
 
@@ -38,20 +48,27 @@ export const VendorConfirmationDetails = ({
     startDate: getDataFromLocalStorage(CAMPAIGN).basicDetails.startData,
     endDate: getDataFromLocalStorage(CAMPAIGN).basicDetails.endDate,
     duration: getDataFromLocalStorage(CAMPAIGN).basicDetails.duration,
-    selectedType: getDataFromLocalStorage(CAMPAIGN).basicDetails.regularVsCohort,
+    selectedType:
+      getDataFromLocalStorage(CAMPAIGN).basicDetails.regularVsCohort,
     screenIds: getDataFromLocalStorage(SELECTED_SCREENS_ID),
     triggers: getDataFromLocalStorage(SELECTED_TRIGGER),
-    totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCampaignBudget,
+    totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
+      "total"
+    ].totalCampaignBudget,
   });
 
-  const vendorConfirmationDetailsGet = useSelector((state: any) => state.vendorConfirmationDetailsGet);
+  const vendorConfirmationDetailsGet = useSelector(
+    (state: any) => state.vendorConfirmationDetailsGet
+  );
   const {
     loading: loadingVendorConfirmationData,
     error: errorVendorConfirmationData,
     data: vendorConfirmationData,
   } = vendorConfirmationDetailsGet;
 
-  const vendorConfirmationStatusTableDetailsGet = useSelector((state: any) => state.vendorConfirmationStatusTableDetailsGet);
+  const vendorConfirmationStatusTableDetailsGet = useSelector(
+    (state: any) => state.vendorConfirmationStatusTableDetailsGet
+  );
   const {
     loading: loadingStatusTableData,
     error: errorStatusTableData,
@@ -81,8 +98,25 @@ export const VendorConfirmationDetails = ({
 
   useEffect(() => {
     dispatch(getVendorConfirmationDetails(vendorInput));
-    dispatch(getVendorConfirmationStatusTableDetails({ id: pathname.split("/").splice(-1)[0] }));
-  },[dispatch, vendorInput, pathname]);
+    dispatch(
+      getVendorConfirmationStatusTableDetails({
+        id: pathname.split("/").splice(-1)[0],
+      })
+    );
+  }, [dispatch, vendorInput, pathname]);
+
+  const handleSaveAndContinue = () => {
+    if (isDisabled) {
+      message.error("Please confirm budget for your selected trigger");
+    } else {
+      addDetailsToCreateCampaign({
+        pageName: "Vendor Confirmation Page",
+        id: pathname.split("/").splice(-1)[0],
+        vendorApprovalImgs: [], // return url array
+      });
+      setCurrentStep(step + 1);
+    }
+  };
 
   return (
     <div className="w-full pt-3">
@@ -101,10 +135,9 @@ export const VendorConfirmationDetails = ({
             <h1 className="text-[14px] font-semibold">00.30</h1>
           </div>
           <p className="text-[12px] text-gray-400">Time Remaining</p>
-
         </div>
       </div>
-      <VendorConfirmationBasicTable 
+      <VendorConfirmationBasicTable
         vendorConfirmationData={vendorConfirmationData}
       />
 
@@ -121,11 +154,7 @@ export const VendorConfirmationDetails = ({
           </div>
         </div>
         <div className="pb-4">
-          <MultiColorLinearBar
-            values={[2, 3, 4]}
-            colors={[]}
-            totalValue={9}
-          />
+          <MultiColorLinearBar values={[2, 3, 4]} colors={[]} totalValue={9} />
         </div>
         <VendorConfirmationStatusTable statusTableData={statusTableData} />
       </div>
@@ -146,21 +175,10 @@ export const VendorConfirmationDetails = ({
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={() => {
-            if (isDisabled) {
-              message.error("Please confirm budget for your selected trigger");
-            } else {
-              dispatch(addDetailsToCreateCampaign({
-                pageName: "View Final Plan Page",
-                id: pathname.split("/").splice(-1)[0],
-                clientApprovalImgs: [],
-              }));
-              setCurrentStep(step + 1);
-            };
-          }}
+          handleSave={handleSaveAndContinue}
           totalScreensData={{}}
         />
       </div>
     </div>
-  )
-}
+  );
+};

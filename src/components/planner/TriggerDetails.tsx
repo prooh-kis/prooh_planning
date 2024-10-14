@@ -10,7 +10,10 @@ import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import { formatNumber } from "../../utils/formatValue";
 import { Footer } from "../../components/footer";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
-import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
+import {
+  getDataFromLocalStorage,
+  saveDataOnLocalStorage,
+} from "../../utils/localStorageUtils";
 import { SELECTED_TRIGGER } from "../../constants/localStorageConstants";
 import { message } from "antd";
 import { useDispatch } from "react-redux";
@@ -21,7 +24,6 @@ interface TriggerProps {
   step: number;
 }
 export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
-
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
 
@@ -30,7 +32,9 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
 
   const [isDisabled, setIsDisabled] = useState<any>(true);
 
-  const [selectedTrigger, setSelectedTrigger] = useState<any>({ triggerType: "weather"});
+  const [selectedTrigger, setSelectedTrigger] = useState<any>({
+    triggerType: "weather",
+  });
   const [minVal, setMinVal] = useState<any>(0);
   const [maxVal, setMaxVal] = useState<any>(0);
   const [rainType, setRainType] = useState<any>("0");
@@ -44,77 +48,90 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
 
   const [selectedBudget, setSelectedBudget] = useState<any>(null);
   const [selectedSOV, setSelectedSOV] = useState<any>(null);
-  const [selectedTimeOptions, setSelectedTimeOptions] = useState<any>(300)
+  const [selectedTimeOptions, setSelectedTimeOptions] = useState<any>(300);
 
-  const timeOptions = [{
-    label: "1 Hrs",
-    value: "3600"
-  },{
-    label: "2 Hrs",
-    value: "7200"
-  },{
-    label: "3 Hrs",
-    value: "10800"
-  },{
-    label: "4 Hrs",
-    value: "14400"
-  }];
+  const timeOptions = [
+    {
+      label: "1 Hrs",
+      value: "3600",
+    },
+    {
+      label: "2 Hrs",
+      value: "7200",
+    },
+    {
+      label: "3 Hrs",
+      value: "10800",
+    },
+    {
+      label: "4 Hrs",
+      value: "14400",
+    },
+  ];
 
   const weatherTabData = () => {
     return [
-        {
-          icon: <i className="fi fi-tr-summer flex items-center"></i>,
-          label: "Temperature",
-          value: "temperature",
-          id: 1,
-        },
-        {
-          icon: <i className="fi fi-ts-cloud-sun-rain flex items-center"></i>,
-          label: "Rain",
-          value: "rain",
-          id: 2,
-        },
-        {
-          icon: <i className="fi fi-ts-pollution flex items-center"></i>,
-          label: "AQI",
-          value: "aqi",
-          id: 3,
-        },
-  ]};
-
+      {
+        icon: <i className="fi fi-tr-summer flex items-center"></i>,
+        label: "Temperature",
+        value: "temperature",
+        id: 1,
+      },
+      {
+        icon: <i className="fi fi-ts-cloud-sun-rain flex items-center"></i>,
+        label: "Rain",
+        value: "rain",
+        id: 2,
+      },
+      {
+        icon: <i className="fi fi-ts-pollution flex items-center"></i>,
+        label: "AQI",
+        value: "aqi",
+        id: 3,
+      },
+    ];
+  };
 
   const handleSelectTrigger = useCallback(() => {
     saveDataOnLocalStorage(SELECTED_TRIGGER, {
-      weatherTriggers: selectedTrigger?.triggerType === "weather" ? {
-        type: weatherTabData()?.filter((w: any) => w.id === currentTab)[0]?.value,
-        minVal: minVal,
-        maxVal: maxVal,
-        rainType: rainType,
-        aqi: aqi,
-        openBudgetSovPercent: selectedSOV,
-        budget: Number(selectedBudget),
-        period: Number(selectedTimeOptions),
-      } : {},
-      sportsTriggers: selectedTrigger?.triggerType === "sport" ? {
-        sport: sport,
-        player: player,
-        matchId: selectedMatchId,
-        condition: condition,
-        openBudgetSovPercent: selectedSOV,
-        budget: Number(selectedBudget),
-        period: Number(selectedTimeOptions),
-
-      } : {},
-      vacantSlots: selectedTrigger?.triggerType === "empty" ? {
-        type: "vacantSlots",
-        slotType: condition,
-        openBudgetSovPercent: selectedSOV,
-        budget: Number(selectedBudget),
-        period: Number(selectedTimeOptions),
-
-      } : {},
-    })
-  },[
+      weatherTriggers:
+        selectedTrigger?.triggerType === "weather"
+          ? {
+              type: weatherTabData()?.filter((w: any) => w.id === currentTab)[0]
+                ?.value,
+              minVal: minVal,
+              maxVal: maxVal,
+              rainType: rainType,
+              aqi: aqi,
+              openBudgetSovPercent: selectedSOV,
+              budget: Number(selectedBudget),
+              period: Number(selectedTimeOptions),
+            }
+          : {},
+      sportsTriggers:
+        selectedTrigger?.triggerType === "sport"
+          ? {
+              sport: sport,
+              player: player,
+              matchId: selectedMatchId,
+              condition: condition,
+              openBudgetSovPercent: selectedSOV,
+              budget: Number(selectedBudget),
+              period: Number(selectedTimeOptions),
+            }
+          : {},
+      vacantSlots:
+        selectedTrigger?.triggerType === "empty"
+          ? {
+              type: "vacantSlots",
+              slotType: condition,
+              openBudgetSovPercent: selectedSOV,
+              budget: Number(selectedBudget),
+              period: Number(selectedTimeOptions),
+            }
+          : {},
+    });
+  }, [
     currentTab,
     selectedTrigger,
     selectedSOV,
@@ -130,11 +147,26 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
     aqi,
   ]);
 
+  const handleSaveAndContinue = () => {
+    if (isDisabled) {
+      message.error("Please confirm budget for your selected trigger");
+    } else {
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Add Triggers Page",
+          id: pathname.split("/").splice(-1)[0],
+          triggers: getDataFromLocalStorage(SELECTED_TRIGGER),
+        })
+      );
+      setCurrentStep(step + 1);
+    }
+  };
+
   useEffect(() => {
     if (selectedTrigger) {
-      handleSelectTrigger();      
+      handleSelectTrigger();
     }
-  },[handleSelectTrigger, selectedTrigger])
+  }, [handleSelectTrigger, selectedTrigger]);
   return (
     <div className="w-full py-3">
       <div>
@@ -283,14 +315,12 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
                 placeHolder={"Set Time"}
                 selectedOption={selectedTimeOptions}
                 setSelectedOption={setSelectedTimeOptions}
-                options={
-                  timeOptions?.map((m: any) => {
-                    return {
-                      label: m.label,
-                      value: m.value
-                    }
-                  })
-                } 
+                options={timeOptions?.map((m: any) => {
+                  return {
+                    label: m.label,
+                    value: m.value,
+                  };
+                })}
               />
             </div>
             {/* <PrimaryButton
@@ -316,7 +346,9 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
               for your campaign triggers
             </>
           }
-          onChange={() => {setIsDisabled(!isDisabled)}}
+          onChange={() => {
+            setIsDisabled(!isDisabled);
+          }}
         />
       </div>
       <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
@@ -324,18 +356,7 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={() => {
-            if (isDisabled) {
-              message.error("Please confirm budget for your selected trigger");
-            } else {
-              dispatch(addDetailsToCreateCampaign({
-                pageName: "Add Triggers Page",
-                id: pathname.split("/").splice(-1)[0],
-                triggers: getDataFromLocalStorage(SELECTED_TRIGGER)
-              }));
-              setCurrentStep(step + 1);
-            };
-          }}
+          handleSave={handleSaveAndContinue}
           totalScreensData={{}}
         />
       </div>

@@ -14,16 +14,14 @@ import {
 } from "../../components/planner";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getScreenDataForAdvanceFilters,
   getScreensAudiencesData,
   getScreensCostData,
 } from "../../actions/screenAction";
 import {
-  getAllLocalStorageData,
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   ADVANCE_FILTER_SCREENS_MAP_DATA,
   AUDIENCE_DATA,
@@ -34,44 +32,57 @@ import {
   TOTAL_SCREEN_COST_DATA,
 } from "../../constants/localStorageConstants";
 
-const pages = [{
-  id: 1,
-  value: "Basic Details Page"
-},{
-  id: 2,
-  value: "Audience And TouchPoint Page"
-},{
-  id: 3,
-  value: "Advance Filter Page"
-},{
-  id: 4,
-  value: "Compare Plan Page"
-},{
-  id: 5,
-  value: "Screen Summary Page"
-},{
-  id: 6,
-  value: "Add Triggers Page"
-},{
-  id: 7,
-  value: "View Final Plan Page"
-},{
-  id: 8,
-  value: "Upload Creative Page"
-},{
-  id: 9,
-  value: "Vendor Confirmation Page"
-},{
-  id: 10,
-  value: "Campaign Dashboard Page"
-},{
-}];
+const pages = [
+  {
+    id: 1,
+    value: "Basic Details Page",
+  },
+  {
+    id: 2,
+    value: "Audience And TouchPoint Page",
+  },
+  {
+    id: 3,
+    value: "Advance Filter Page",
+  },
+  {
+    id: 4,
+    value: "Compare Plan Page",
+  },
+  {
+    id: 5,
+    value: "Screen Summary Page",
+  },
+  {
+    id: 6,
+    value: "Add Triggers Page",
+  },
+  {
+    id: 7,
+    value: "View Final Plan Page",
+  },
+  {
+    id: 8,
+    value: "Upload Creative Page",
+  },
+  {
+    id: 9,
+    value: "Vendor Confirmation Page",
+  },
+  {
+    id: 10,
+    value: "Campaign Dashboard Page",
+  },
+  {},
+];
 
 export const RegularPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const location = useLocation();
 
-  const [currentStep, setCurrentStep] = useState<any>(getDataFromLocalStorage("currentStep") || 1);
+  const [currentStep, setCurrentStep] = useState<any>(
+    getDataFromLocalStorage("currentStep") || 1
+  );
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
@@ -103,11 +114,9 @@ export const RegularPlanPage: React.FC = () => {
     data: advanceFilterScreens,
   } = screensDataAdvanceFilterGet;
 
-
   useEffect(() => {
-   
     if (location.state.campaign) {
-      const campDetails = location.state .campaign
+      const campDetails = location.state.campaign;
       saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, campDetails);
       saveDataOnLocalStorage(CAMPAIGN, {
         basicDetails: {
@@ -129,7 +138,12 @@ export const RegularPlanPage: React.FC = () => {
         duration: getDataFromLocalStorage(CAMPAIGN).basicDetails.duration || 30,
       });
 
-      setCurrentStep(Number(pages.filter((page: any) => page.value === campDetails.currentPage)[0].id) + 1);
+      setCurrentStep(
+        Number(
+          pages.filter((page: any) => page.value === campDetails.currentPage)[0]
+            .id
+        ) + 1
+      );
       dispatch(getScreensAudiencesData({ markets: campDetails.markets }));
       dispatch(
         getScreensCostData({
@@ -150,7 +164,6 @@ export const RegularPlanPage: React.FC = () => {
         })
       );
     }
-    
   }, [dispatch, location]);
 
   useEffect(() => {
@@ -169,9 +182,7 @@ export const RegularPlanPage: React.FC = () => {
       );
     }
 
- 
     saveDataOnLocalStorage(CURRENT_STEP, currentStep);
-
   }, [screensAudiences, screensCost, advanceFilterScreens, currentStep]);
 
   return (
@@ -193,7 +204,7 @@ export const RegularPlanPage: React.FC = () => {
             step={currentStep}
             loading={loading || loadingCost}
             error={error || errorCost}
-            />
+          />
         ) : currentStep === 3 ? (
           <AdvanceFiltersDetails
             setCurrentStep={setCurrentStep}
@@ -212,10 +223,7 @@ export const RegularPlanPage: React.FC = () => {
             step={currentStep}
           />
         ) : currentStep === 6 ? (
-          <TriggerDetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-          />
+          <TriggerDetails setCurrentStep={setCurrentStep} step={currentStep} />
         ) : currentStep === 7 ? (
           <ViewFinalPlanPODetails
             setCurrentStep={setCurrentStep}

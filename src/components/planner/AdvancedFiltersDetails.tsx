@@ -241,6 +241,21 @@ export const AdvanceFiltersDetails = ({
     saveDataOnLocalStorage(SELECTED_SCREENS_ID, selectedScreenIds);
   };
 
+  const handleSaveAndContinue = () => {
+    if (isDisabled) {
+      message.error("Please confirm screen selection");
+    } else {
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Advance Filter Page",
+          id: pathname.split("/").splice(-1)[0],
+          screenIds: finalSelectedScreens.map((s: any) => s._id),
+        })
+      );
+      setCurrentStep(step + 1);
+    }
+  }
+
   return (
     <div>
       <div className="h-[640px] w-full py-3 grid grid-cols-2 gap-4">
@@ -332,13 +347,26 @@ export const AdvanceFiltersDetails = ({
                 </>
               }
               onChange={(e) => {
-                handleConfirmScreensSelections(e)
-                dispatch(getRegularVsCohortPriceData({
-                  screenIds: JSON.parse(getAllLocalStorageData()["selectedScreensId"] || "[]"),
-                  cohorts: JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}")?.cohorts,
-                  gender: JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}")?.gender,
-                  duration: JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}")?.duration,
-                }));
+                handleConfirmScreensSelections(e);
+                dispatch(
+                  getRegularVsCohortPriceData({
+                    screenIds: JSON.parse(
+                      getAllLocalStorageData()["selectedScreensId"] || "[]"
+                    ),
+                    cohorts: JSON.parse(
+                      getAllLocalStorageData()["selectedAudienceTouchpoints"] ||
+                        "{}"
+                    )?.cohorts,
+                    gender: JSON.parse(
+                      getAllLocalStorageData()["selectedAudienceTouchpoints"] ||
+                        "{}"
+                    )?.gender,
+                    duration: JSON.parse(
+                      getAllLocalStorageData()["selectedAudienceTouchpoints"] ||
+                        "{}"
+                    )?.duration,
+                  })
+                );
               }}
             />
           </div>
@@ -361,18 +389,7 @@ export const AdvanceFiltersDetails = ({
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={() => {
-            if (isDisabled) {
-              message.error("Please  confirm screen selection");
-            } else {
-              dispatch(addDetailsToCreateCampaign({
-                pageName: "Advance Filter Page",
-                id: pathname.split("/").splice(-1)[0],
-                screenIds: finalSelectedScreens.map((s: any) => s._id)
-              }));
-              setCurrentStep(step + 1);
-            };
-          }}
+          handleSave={handleSaveAndContinue}
           totalScreensData={getDataFromLocalStorage(COST_SUMMARY)?.[-1] || []}
         />
       </div>

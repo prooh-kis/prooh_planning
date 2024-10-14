@@ -6,63 +6,82 @@ import {
   RegularCohortSummaryTable,
 } from "../tables";
 import { useDispatch, useSelector } from "react-redux";
-import { getRegularVsCohortPriceData, getScreenSummaryData } from "../../actions/screenAction";
-import { getAllLocalStorageData, getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
+import {
+  getRegularVsCohortPriceData,
+  getScreenSummaryData,
+} from "../../actions/screenAction";
+import {
+  getAllLocalStorageData,
+  getDataFromLocalStorage,
+  saveDataOnLocalStorage,
+} from "../../utils/localStorageUtils";
 import { Footer } from "../../components/footer";
 import { message } from "antd";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { useLocation } from "react-router-dom";
-import { CAMPAIGN, COST_SUMMARY, REGULAR_VS_COHORT_PRICE_DATA } from "../../constants/localStorageConstants";
+import {
+  CAMPAIGN,
+  COST_SUMMARY,
+  REGULAR_VS_COHORT_PRICE_DATA,
+} from "../../constants/localStorageConstants";
 
-export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
-
+export const RegularCohortComparisonDetails = ({
+  setCurrentStep,
+  step,
+}: any) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
 
   const [isDisabled, setIsDisabled] = useState<any>(true);
 
   const [showSummary, setShowSummary] = useState<any>(null);
-  const [screenIds, setScreenIds] = useState<any>(JSON.parse(getAllLocalStorageData()["selectedScreensId"] || "[]") || []);
-  const [cohorts, setCohorts] = useState<any>(JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}").cohorts || []);
-  const [gender, setGender] = useState<any>(JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}").gender || "both");
-  const [duration, setDuration] = useState<any>(JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}").duration || 30);
+  const [screenIds, setScreenIds] = useState<any>(
+    JSON.parse(getAllLocalStorageData()["selectedScreensId"] || "[]") || []
+  );
+  const [cohorts, setCohorts] = useState<any>(
+    JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}")
+      .cohorts || []
+  );
+  const [gender, setGender] = useState<any>(
+    JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}")
+      .gender || "both"
+  );
+  const [duration, setDuration] = useState<any>(
+    JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}")
+      .duration || 30
+  );
 
   const [selectedBuyingOption, setSelectedBuyingOption] =
     useState<any>("Regular");
 
-
-  const regularVsCohortPriceDataGet = useSelector((state: any) => state.regularVsCohortPriceDataGet);
+  const regularVsCohortPriceDataGet = useSelector(
+    (state: any) => state.regularVsCohortPriceDataGet
+  );
   const {
     loading: loadingPriceData,
     error: errorPriceData,
     data: priceData,
   } = regularVsCohortPriceDataGet;
-  
+
   useEffect(() => {
     if (priceData) {
-      saveDataOnLocalStorage(
-        REGULAR_VS_COHORT_PRICE_DATA,
-        priceData
-      );
+      saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, priceData);
     }
-
-
-  },[priceData])
+  }, [priceData]);
 
   useEffect(() => {
- 
     if (!priceData) {
-      dispatch(getRegularVsCohortPriceData({
-        screenIds: screenIds,
-        cohorts: cohorts,
-        gender: gender,
-        duration: duration,
-      }));
+      dispatch(
+        getRegularVsCohortPriceData({
+          screenIds: screenIds,
+          cohorts: cohorts,
+          gender: gender,
+          duration: duration,
+        })
+      );
     }
+  }, [priceData, cohorts, dispatch, duration, gender, screenIds]);
 
-  },[priceData, cohorts, dispatch, duration, gender, screenIds])
-
-  
   const handleRegularVsCohortSelection = (type: any) => {
     setSelectedBuyingOption(type);
     setShowSummary(null);
@@ -78,7 +97,25 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
     //   id: pathname.split("/").splice(-1)[0],
     //   type: type
     // }));
-  }
+  };
+
+  const handleSaveAndContinue = () => {
+    if (isDisabled) {
+      message.error("Please  confirm screen selection");
+    } else {
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Compare Plan Page",
+          id: pathname.split("/").splice(-1)[0],
+          regularTouchPointWiseSlotDetails: priceData?.regular?.touchPointData,
+          cohortTouchPointWiseSlotDetails: priceData?.cohort?.touchPointData,
+          selectedType: selectedBuyingOption,
+        })
+      );
+      setCurrentStep(step + 1);
+    }
+  };
+  
   return (
     <div className="w-full pt-3">
       <div>
@@ -111,13 +148,11 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
                 showSummary={showSummary}
               />
               {showSummary === "regular" && (
-                
-                <RegularCohortSummaryTable 
+                <RegularCohortSummaryTable
                   type="regular"
                   touchPointData={priceData?.regular?.touchPointData}
                 />
               )}
-              
             </div>
             <div className="py-2">
               <h1 className="py-2">Cohort slots per day buying</h1>
@@ -129,7 +164,7 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
               />
               {showSummary === "cohort" && (
                 <RegularCohortSummaryTable
-                  type="cohort" 
+                  type="cohort"
                   touchPointData={priceData?.cohort?.touchPointData}
                 />
               )}
@@ -161,20 +196,7 @@ export const RegularCohortComparisonDetails = ({setCurrentStep, step}: any) => {
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={() => {
-            if (isDisabled) {
-              message.error("Please  confirm screen selection");
-            } else {
-              dispatch(addDetailsToCreateCampaign({
-                pageName: "Compare Plan Page",
-                id: pathname.split("/").splice(-1)[0],
-                regularTouchPointWiseSlotDetails: priceData?.regular?.touchPointData,
-                cohortTouchPointWiseSlotDetails: priceData?.cohort?.touchPointData,
-                selectedType: selectedBuyingOption
-              }));
-              setCurrentStep(step + 1);
-            };
-          }}
+          handleSave={handleSaveAndContinue}
           totalScreensData={{}}
         />
       </div>
