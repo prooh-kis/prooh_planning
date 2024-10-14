@@ -2,6 +2,7 @@ import { getAllLocalStorageData } from "../../utils/localStorageUtils";
 import { ScreenSummaryModel } from "../../components/popup/ScreenSummaryModel";
 import React, { useEffect, useState } from "react";
 import { formatNumber } from "../../utils/formatValue";
+import { Loading } from "../../components/Loading";
 
 export const Footer = ({
   loading, error,
@@ -10,14 +11,23 @@ export const Footer = ({
   totalScreensData,
   isDisabled = false,
 }: any) => {
-  // console.log(totalScreensData)
+  console.log(totalScreensData)
   return (
     <div className="py-4 z-10 flex justify-between">
  
-      <div className="flex justify-between items-center gap-4">
-        <ScreenSummaryModel totalScreensData={totalScreensData} />
+      <div className="flex w-full justify-start items-center gap-4">
+        <div className="flex">
+          <ScreenSummaryModel totalScreensData={totalScreensData} />
+        </div>
         {loading || Object.keys(totalScreensData).length < 1 ? (
-          <h1>Loading...</h1>
+          <div className="flex w-full justify-start">
+            <div className="w-full">
+              <p className="text-[14px] font-semibold">Experience a new way of media planning</p>
+            </div>
+            <div className="">
+              <Loading height={20} width={100} />
+            </div>
+          </div>
         ) : (
           <div className="flex justify-between items-center gap-4">
             <div className="flex gap-2 truncate">
@@ -51,7 +61,7 @@ export const Footer = ({
 
       </div>
       {!loading && !error && (
-        <div className="flex justify-between items-center gap-4">
+        <div className="flex w-full justify-end items-center gap-4">
           <button
             type="submit"
             className="border border-1 py-2 px-4 text-[14px] rounded-md hover:bg-blue-500 hover:text-white"

@@ -6,33 +6,19 @@ import { Footer } from "../../components/footer";
 import { EmailConfirmationImage } from "../../components/segments/EmailConfirmationImage";
 import { EmailSendBox } from "../../components/segments/EmailSendBox";
 import { useDispatch, useSelector } from "react-redux";
-import { getFinalPlanPOTableData } from "../../actions/screenAction";
+import { getFinalPlanPOTableData, getScreenSummaryPlanTableData } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
-import {
-  CAMPAIGN,
-  FULL_CAMPAIGN_PLAN,
-  SCREEN_SUMMARY_TABLE_DATA,
-  SELECTED_AUDIENCE_TOUCHPOINTS,
-  SELECTED_SCREENS_ID,
-  SELECTED_TRIGGER,
-} from "../../constants/localStorageConstants";
+import { CAMPAIGN, COST_SUMMARY, FULL_CAMPAIGN_PLAN, SCREEN_SUMMARY_TABLE_DATA, SELECTED_AUDIENCE_TOUCHPOINTS, SELECTED_SCREENS_ID, SELECTED_TRIGGER } from "../../constants/localStorageConstants";
 import { formatNumber } from "../../utils/formatValue";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import {
-  generatePdfFromJSON,
-  generatePdfFromWebPage,
-} from "../../utils/generatePdf";
+import { generateCreativeRatioPdfFromJSON, generatePlanApproachPdfFromJSON, generatePlanSummaryPdfFromJSON, generateScreenPicturesPptFromJSON } from "../../utils/generatePdf";
+import { sendEmailForConfirmation } from "../../actions/userAction";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
-  marketRef?: any;
-  audienceRef?: any;
-  touchpointRef?: any;
-  locationProximityRef?: any;
-  poiProximityRef?: any;
-  mapViewRef?: any;
+  campaignId?: any;
 }
 
 function MyDiv({ left, right }: any) {
@@ -47,12 +33,7 @@ function MyDiv({ left, right }: any) {
 export const ViewFinalPlanPODetails = ({
   setCurrentStep,
   step,
-  marketRef,
-  audienceRef,
-  touchpointRef,
-  locationProximityRef,
-  poiProximityRef,
-  mapViewRef,
+  campaignId,
 }: ViewFinalPlanPODetailsProps) => {
   const pageRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<any>();
@@ -64,6 +45,7 @@ export const ViewFinalPlanPODetails = ({
   const [files, setFiles] = useState<any>([]);
   const [toEmail, setToEmail] = useState<any>("");
   const [cc, setCC] = useState<any>(userInfo?.email);
+  const [blobData, setBlobData] = useState<any>([]);
 
   const [pageRefs, setPageRefs] = useState<any>([]);
 
@@ -72,39 +54,23 @@ export const ViewFinalPlanPODetails = ({
   const [poInput, setPoInput] = useState<any>({
     pageName: "View Final Plan Page",
     id: pathname.split("/").splice(-1)[0],
-    name: getDataFromLocalStorage(CAMPAIGN).basicDetails.campaignName,
-    brandName: getDataFromLocalStorage(CAMPAIGN).basicDetails.brandName,
-    clientName: getDataFromLocalStorage(CAMPAIGN).basicDetails.clientName,
-    campaignType: getDataFromLocalStorage(CAMPAIGN).basicDetails.campaignType,
-    startDate: getDataFromLocalStorage(CAMPAIGN).basicDetails.startData,
-    endDate: getDataFromLocalStorage(CAMPAIGN).basicDetails.endDate,
-    duration: getDataFromLocalStorage(CAMPAIGN).basicDetails.duration,
-    selectedType:
-      getDataFromLocalStorage(CAMPAIGN).basicDetails.regularVsCohort,
-    gender: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).gender,
-    totalImpression:
-      getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.["total"]
-        ?.totalImpression ||
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN).totalImpression,
-    totalReach:
-      getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.["total"]
-        ?.totalReach || getDataFromLocalStorage(FULL_CAMPAIGN_PLAN).totalReach,
-    screenIds:
-      getDataFromLocalStorage(SELECTED_SCREENS_ID) ||
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN).screenIds,
-    totalCpm:
-      getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.["total"]?.totalCpm ||
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN).totalCpm,
-    triggers:
-      getDataFromLocalStorage(SELECTED_TRIGGER) ||
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN).selectedTriggers,
-    totalCampaignBudget:
-      getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.["total"]
-        ?.totalCampaignBudget ||
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN).totalCampaignBudget,
-    cohorts:
-      getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.cohorts ||
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN).cohorts,
+    name: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name,
+    brandName: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName,
+    clientName: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.clientName,
+    campaignType: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.campaignType,
+    startDate: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startData,
+    endDate: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate,
+    duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
+    selectedType: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType,
+    gender: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender,
+    screenIds: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
+
+    totalImpression: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.totalImpression,
+    totalReach: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.totalReach,
+    totalCpm: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.totalCpm,
+    triggers: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedTriggers,
+    totalCampaignBudget: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.totalCampaignBudget,
+    cohorts: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts,
   });
 
   const finalPlanPOTableDataGet = useSelector(
@@ -116,7 +82,78 @@ export const ViewFinalPlanPODetails = ({
     data: poTableData,
   } = finalPlanPOTableDataGet;
 
-  const sendEmail = () => {};
+  const emailSendForConfirmation = useSelector((state: any) => state.emailSendForConfirmation);
+  const {
+    loading: loadingSendEmail,
+    error: errorSendEmail,
+    data: sendEmailData,
+  } = emailSendForConfirmation;
+
+  const sendEmail = () => {
+    const formData = new FormData();
+    blobData.forEach(({ newBlob, fileName }: any) => {
+      if (newBlob instanceof Blob) { // Ensure blob is a valid Blob
+        formData.append('files', newBlob, fileName); // Append each blob with its name
+      } else {
+        console.error("Invalid blob for file:", fileName);
+      }
+    });
+    formData.append("toEmail", toEmail);
+    formData.append("cc", cc);
+
+    dispatch(sendEmailForConfirmation(formData));
+  };
+
+  const handleBlob = (pdf: any) => {
+    let newBlob: any = null;
+    // Generate the blob based on the pdf type
+    if (pdf === "approach") {
+      newBlob = generatePlanApproachPdfFromJSON({
+        download: false,
+        jsonData: pdfDownload[pdf].pdfData,
+        fileName: pdfDownload[pdf].fileName,
+        heading: pdfDownload[pdf].heading,
+      });
+    }
+    if (pdf === "plan-summary") {
+      newBlob = generatePlanSummaryPdfFromJSON({
+        download: false,
+        jsonData: pdfDownload[pdf].pdfData,
+        fileName: pdfDownload[pdf].fileName,
+        heading: pdfDownload[pdf].heading,
+      });
+    }
+    if (pdf === "screen-pictures") {
+      newBlob = generateScreenPicturesPptFromJSON({
+        download: false,
+        jsonData: pdfDownload[pdf].pdfData,
+        fileName: pdfDownload[pdf].fileName,
+        heading: pdfDownload[pdf].heading,
+      });
+    }
+    if (pdf === "creative-ratio") {
+      newBlob = generateCreativeRatioPdfFromJSON({
+        download: false,
+        jsonData: pdfDownload[pdf].pdfData,
+        fileName: pdfDownload[pdf].fileName,
+        heading: pdfDownload[pdf].heading,
+      });
+    }
+    // uniqueFileName = pdfDownload[pdf].fileName + ".pdf";
+
+    if (newBlob instanceof Blob) {
+      const uniqueFileName = pdfDownload[pdf].fileName + ".pdf";;
+      setBlobData((prev: any) => {
+        const existingFileNames = new Set(prev.map((blob: any) => blob.fileName));
+        if (!existingFileNames.has(uniqueFileName)) {
+          return [...prev, { fileName: uniqueFileName, newBlob }];
+        }
+        return prev; // Return previous state if the blob is not unique
+      });
+    } else {
+      console.error("Generated value is not a Blob:", newBlob);
+    }
+  };
 
   const handleAddNewFile = async (file: File) => {
     if (file) {
@@ -139,23 +176,39 @@ export const ViewFinalPlanPODetails = ({
     setFiles(files.filter((singleFile: any) => singleFile.url !== file.url));
   };
 
-  const handleSaveAndContinue = () => {
-    dispatch(
-      dispatch(
-        addDetailsToCreateCampaign({
-          pageName: "View Final Plan Page",
-          id: pathname.split("/").splice(-1)[0],
-          clientApprovalImgs: [],
-        })
-      )
-    );
-
-    setCurrentStep(step + 1);
+  const countScreensByResolutionAndCity = (data: any) => {
+    const result: any = {};
+  
+    data.forEach((screen: any) => {
+      const { city } = screen.location;
+      const { screenResolution } = screen;
+  
+      // Initialize city and resolution group if not already present
+      if (!result[city]) {
+        result[city] = {};
+      }
+      if (!result[city][screenResolution]) {
+        result[city][screenResolution] = 0;
+      }
+  
+      // Increment the count for the screen resolution in that city
+      result[city][screenResolution]++;
+    });
+  
+    return result;
   };
 
   useEffect(() => {
     dispatch(getFinalPlanPOTableData(poInput));
-  }, [dispatch, poInput]);
+    dispatch(getScreenSummaryPlanTableData({
+      id: campaignId,
+      screenIds: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
+    }));
+
+    if (userInfo) {
+      setCC(userInfo?.email)
+    }
+  },[dispatch, poInput, campaignId]);
 
   return (
     <div className="w-full py-3">
@@ -247,14 +300,7 @@ export const ViewFinalPlanPODetails = ({
                   const pdfToDownload = pdfDownload;
                   pdfToDownload["approach"] = {
                     heading: "PLAN APPROACH",
-                    pageRefs: [
-                      marketRef,
-                      audienceRef,
-                      touchpointRef,
-                      locationProximityRef,
-                      poiProximityRef,
-                      mapViewRef,
-                    ],
+                    pdfData: [getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]],
                     fileName: `${poInput?.name}_Approach`,
                   };
                   setPdfDownload(pdfToDownload);
@@ -270,7 +316,7 @@ export const ViewFinalPlanPODetails = ({
                   const pdfToDownload = pdfDownload;
                   pdfToDownload["plan-summary"] = {
                     heading: "PLAN SUMMARY",
-                    pageRefs: [],
+                    pdfData: [getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)],
                     fileName: `${poInput?.name}_Plan_Summary`,
                   };
                   setPdfDownload(pdfToDownload);
@@ -279,14 +325,19 @@ export const ViewFinalPlanPODetails = ({
             </div>
             <div className="flex items-center gap-2">
               <h1 className="text-[14px] truncate">Screen Picture</h1>
-              <input
-                title="screen-pictures"
-                type="checkbox"
+              <input title="screen-pictures" type="checkbox" disabled
                 onChange={() => {
                   const pdfToDownload = pdfDownload;
                   pdfToDownload["screen-pictures"] = {
                     heading: "SCREEN PICTURES",
-                    pageRefs: [],
+                    pdfData: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenWiseSlotDetails?.map((screen: any) => {
+                      return {
+                        screenId: screen._id,
+                        name: screen.screenName,
+                        images: screen.images,
+                        location: screen.location,
+                      }
+                    }),
                     fileName: `${poInput?.name}_Screen_Pictures`,
                   };
                   setPdfDownload(pdfToDownload);
@@ -302,7 +353,7 @@ export const ViewFinalPlanPODetails = ({
                   const pdfToDownload = pdfDownload;
                   pdfToDownload["creative-ratio"] = {
                     heading: "CREATIVE RATIO",
-                    pageRefs: [],
+                    pdfData: countScreensByResolutionAndCity(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenWiseSlotDetails),
                     fileName: `${poInput?.name}_Creative_Ratio`,
                   };
                   setPdfDownload(pdfToDownload);
@@ -314,27 +365,41 @@ export const ViewFinalPlanPODetails = ({
             type="submit"
             className="px-8 py-2 border border-1 border-[#52ACFF] text-[#0094FF] rounded-full text-gray-500 text-sm"
             onClick={() => {
-              Object.keys(pdfDownload)?.map(async (pdf: any) => {
-                console.log(pdf);
-                console.log(pdfDownload);
-                console.log(pdfDownload[pdf]);
-                //   generatePdfFromJSON({ jsonData: pdfDownload[pdf].jsonData , fileName: pdfDownload[pdf].fileName });
-                await generatePdfFromWebPage({
-                  pageRefs: pdfDownload[pdf]?.pageRefs,
-                  fileName: pdfDownload[pdf].fileName,
-                  heading: pdfDownload[pdf].heading,
-                });
+              Object.keys(pdfDownload)?.map(async(pdf: any) => {
+                if (pdf === "approach") {
+                  generatePlanApproachPdfFromJSON({ download: true, jsonData: pdfDownload[pdf].pdfData , fileName: pdfDownload[pdf].fileName, heading: pdfDownload[pdf].heading});
+                }
+                if (pdf === "plan-summary") {
+                  generatePlanSummaryPdfFromJSON({ download: true, jsonData: pdfDownload[pdf].pdfData , fileName: pdfDownload[pdf].fileName, heading: pdfDownload[pdf].heading });
+                }
+
+                if (pdf === "screen-pictures") {
+                  generateScreenPicturesPptFromJSON({ download: true, jsonData: pdfDownload[ pdf].pdfData , fileName: pdfDownload[ pdf].fileName, heading: pdfDownload[ pdf].heading});
+                }
+
+                if (pdf === "creative-ratio") {
+                  generateCreativeRatioPdfFromJSON({ download: true, jsonData: pdfDownload[ pdf].pdfData , fileName: pdfDownload[ pdf].fileName, heading: pdfDownload[ pdf].heading});
+                }
               });
+              
             }}
           >
             Download
           </button>
           <Divider />
-          <EmailSendBox
-            toEmail={toEmail}
-            setToEmail={setToEmail}
-            sendEmail={sendEmail}
-          />
+          <div onClick={() => {
+            Object.keys(pdfDownload).map((pdf: any) => {
+              handleBlob(pdf);
+            })
+          }}>
+            <EmailSendBox
+              toEmail={toEmail}
+              setToEmail={setToEmail}
+              cc={cc}
+              sendEmail={sendEmail}
+            />
+          </div>
+          
           <Divider />
           <EmailConfirmationImage
             files={files}
@@ -348,8 +413,15 @@ export const ViewFinalPlanPODetails = ({
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={handleSaveAndContinue}
-          totalScreensData={{}}
+          handleSave={() => {
+            dispatch(addDetailsToCreateCampaign({
+              pageName: "Vendor Confirmation Page",
+              id: pathname.split("/").splice(-1)[0],
+              vendorApprovalImgs: [],
+            }));
+            setCurrentStep(step + 1);
+          }}
+          totalScreensData={getDataFromLocalStorage(COST_SUMMARY)[0] || []}
         />
       </div>
     </div>

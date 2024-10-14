@@ -10,11 +10,8 @@ import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import { formatNumber } from "../../utils/formatValue";
 import { Footer } from "../../components/footer";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
-import {
-  getDataFromLocalStorage,
-  saveDataOnLocalStorage,
-} from "../../utils/localStorageUtils";
-import { SELECTED_TRIGGER } from "../../constants/localStorageConstants";
+import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
+import { COST_SUMMARY, SELECTED_TRIGGER } from "../../constants/localStorageConstants";
 import { message } from "antd";
 import { useDispatch } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
@@ -356,8 +353,19 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={handleSaveAndContinue}
-          totalScreensData={{}}
+          handleSave={() => {
+            if (isDisabled) {
+              message.error("Please confirm budget for your selected trigger");
+            } else {
+              dispatch(addDetailsToCreateCampaign({
+                pageName: "Add Triggers Page",
+                id: pathname.split("/").splice(-1)[0],
+                triggers: getDataFromLocalStorage(SELECTED_TRIGGER)
+              }));
+              setCurrentStep(step + 1);
+            };
+          }}
+          totalScreensData={getDataFromLocalStorage(COST_SUMMARY)[0] || []}
         />
       </div>
     </div>

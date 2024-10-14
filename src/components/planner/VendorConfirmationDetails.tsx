@@ -52,9 +52,7 @@ export const VendorConfirmationDetails = ({
       getDataFromLocalStorage(CAMPAIGN).basicDetails.regularVsCohort,
     screenIds: getDataFromLocalStorage(SELECTED_SCREENS_ID),
     triggers: getDataFromLocalStorage(SELECTED_TRIGGER),
-    totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
-      "total"
-    ].totalCampaignBudget,
+    // totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCampaignBudget,
   });
 
   const vendorConfirmationDetailsGet = useSelector(
@@ -98,25 +96,8 @@ export const VendorConfirmationDetails = ({
 
   useEffect(() => {
     dispatch(getVendorConfirmationDetails(vendorInput));
-    dispatch(
-      getVendorConfirmationStatusTableDetails({
-        id: pathname.split("/").splice(-1)[0],
-      })
-    );
-  }, [dispatch, vendorInput, pathname]);
-
-  const handleSaveAndContinue = () => {
-    if (isDisabled) {
-      message.error("Please confirm budget for your selected trigger");
-    } else {
-      addDetailsToCreateCampaign({
-        pageName: "Vendor Confirmation Page",
-        id: pathname.split("/").splice(-1)[0],
-        vendorApprovalImgs: [], // return url array
-      });
-      setCurrentStep(step + 1);
-    }
-  };
+    dispatch(getVendorConfirmationStatusTableDetails({ id: pathname.split("/").splice(-1)[0] }));
+  },[dispatch, vendorInput]);
 
   return (
     <div className="w-full pt-3">
@@ -175,7 +156,7 @@ export const VendorConfirmationDetails = ({
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={handleSaveAndContinue}
+          handleSave={() => {}}
           totalScreensData={{}}
         />
       </div>

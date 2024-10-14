@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getScreensAudiencesData,
   getScreensCostData,
+  getScreenSummaryPlanTableData,
 } from "../../actions/screenAction";
 import {
   getDataFromLocalStorage,
@@ -28,7 +29,10 @@ import {
   CAMPAIGN,
   CURRENT_STEP,
   FULL_CAMPAIGN_PLAN,
+  SCREEN_SUMMARY_TABLE_DATA,
   SELECTED_AUDIENCE_TOUCHPOINTS,
+  SELECTED_SCREENS_ID,
+  SELECTED_TRIGGER,
   TOTAL_SCREEN_COST_DATA,
 } from "../../constants/localStorageConstants";
 
@@ -79,10 +83,10 @@ const pages = [
 export const RegularPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const location = useLocation();
+  const { pathname } = location;
+  const campaignId = pathname?.split("/")?.splice(-1)[0];
 
-  const [currentStep, setCurrentStep] = useState<any>(
-    getDataFromLocalStorage("currentStep") || 1
-  );
+  const [currentStep, setCurrentStep] = useState<any>(getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] : 1);
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
@@ -91,8 +95,8 @@ export const RegularPlanPage: React.FC = () => {
     (state: any) => state.screensAudiencesDataGet
   );
   const {
-    loading: loading,
-    error: error,
+    loading: loadingAudiences,
+    error: errorAudiences,
     data: screensAudiences,
   } = screensAudiencesDataGet;
 
@@ -114,45 +118,39 @@ export const RegularPlanPage: React.FC = () => {
     data: advanceFilterScreens,
   } = screensDataAdvanceFilterGet;
 
+  const screenSummaryPlanTableDataGet = useSelector((state: any) => state.screenSummaryPlanTableDataGet);
+  const {
+    loading: loadingScreenSummaryPlanTable,
+    error: errorScreenSummaryPlanTable,
+    data: screenSummaryPlanTableData,
+  } = screenSummaryPlanTableDataGet;
+
+  const detailsToCreateCampaignAdd = useSelector((state: any) => state.detailsToCreateCampaignAdd);
+  const {
+    loading, error, success, data: campaignDetails
+  } = detailsToCreateCampaignAdd;
+
   useEffect(() => {
-    if (location.state.campaign) {
-      const campDetails = location.state.campaign;
-      saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, campDetails);
-      saveDataOnLocalStorage(CAMPAIGN, {
-        basicDetails: {
-          campaignType: campDetails.campaignType || "Regular",
-          campaignName: campDetails.name || "campaign",
-          brandName: campDetails.brandName || "brand",
-          clientName: campDetails.clientName || "client",
-          industry: campDetails.industry || "industry",
-          startDate: campDetails.startDate || "1 Jan 1970",
-          endDate: campDetails.endDate || "1 Feb 1970",
-          duration: campDetails.duration || 30,
-        },
-      });
-
-      saveDataOnLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS, {
-        cohorts: campDetails.cohorts,
-        touchPoints: campDetails.touchPoints,
-        gender: campDetails.gender,
-        duration: getDataFromLocalStorage(CAMPAIGN).basicDetails.duration || 30,
-      });
-
-      setCurrentStep(
-        Number(
-          pages.filter((page: any) => page.value === campDetails.currentPage)[0]
-            .id
-        ) + 1
-      );
-      dispatch(getScreensAudiencesData({ markets: campDetails.markets }));
+   
+    if (campaignDetails) {
+      // const campDetails = location.state.campaign
+      const campDetails = campaignDetails?.campaign
+      console.log(campaignDetails);
+    
+      setCurrentStep(Number(pages.filter((page: any) => page.value === campDetails?.currentPage)[0].id) + 1);
+      dispatch(getScreensAudiencesData({ markets: campDetails?.markets }));
       dispatch(
         getScreensCostData({
-          cohorts: campDetails.cohorts,
-          touchPoints: campDetails.touchPoints,
-          gender: campDetails.gender,
-          duration: campDetails.duration,
+          cohorts: campDetails?.cohorts,
+          touchPoints: campDetails?.touchPoints,
+          gender: campDetails?.gender,
+          duration: campDetails?.duration,
         })
       );
+      dispatch(getScreenSummaryPlanTableData({
+        id: campaignId,
+        screenIds: campDetails?.screenIds,
+      }));
     } else {
       dispatch(getScreensAudiencesData({ markets: [] }));
       dispatch(
@@ -164,26 +162,20 @@ export const RegularPlanPage: React.FC = () => {
         })
       );
     }
-  }, [dispatch, location]);
+
+    
+  }, [dispatch]);
 
   useEffect(() => {
-    if (screensAudiences) {
-      saveDataOnLocalStorage(AUDIENCE_DATA, screensAudiences);
+    if (campaignId) {
+      const campDetails = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+      const curr = Number(pages.filter((page: any) => page.value === campDetails?.currentPage)[0].id) + 1;
+      const currStep = {
+        [campaignId]: curr
+      };
+      saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
-
-    if (screensCost) {
-      saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, screensCost);
-    }
-
-    if (advanceFilterScreens) {
-      saveDataOnLocalStorage(
-        ADVANCE_FILTER_SCREENS_MAP_DATA,
-        advanceFilterScreens
-      );
-    }
-
-    saveDataOnLocalStorage(CURRENT_STEP, currentStep);
-  }, [screensAudiences, screensCost, advanceFilterScreens, currentStep]);
+  }, [campaignId, currentStep]);
 
   return (
     <div className="w-full h-full">
@@ -195,15 +187,17 @@ export const RegularPlanPage: React.FC = () => {
           <EnterCampaignBasicDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
-            campaignType={location?.state?.campaignType}
             userInfo={userInfo}
+            pathname={pathname}
+            campaignId={campaignId}
           />
         ) : currentStep === 2 ? (
           <AudienceTouchPointsDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
-            loading={loading || loadingCost}
-            error={error || errorCost}
+            loading={loadingAudiences || loadingCost}
+            error={errorAudiences || errorCost}
+            campaignId={campaignId}
           />
         ) : currentStep === 3 ? (
           <AdvanceFiltersDetails
@@ -216,11 +210,13 @@ export const RegularPlanPage: React.FC = () => {
           <RegularCohortComparisonDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
+            campaignId={campaignId}
           />
         ) : currentStep === 5 ? (
           <ScreenSummaryDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
+            campaignId={campaignId}
           />
         ) : currentStep === 6 ? (
           <TriggerDetails setCurrentStep={setCurrentStep} step={currentStep} />
@@ -228,6 +224,7 @@ export const RegularPlanPage: React.FC = () => {
           <ViewFinalPlanPODetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
+            campaignId={campaignId}
           />
         ) : currentStep === 8 ? (
           <CreativeUploadDetails

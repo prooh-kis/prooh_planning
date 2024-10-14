@@ -1,3 +1,4 @@
+import { saveDataOnLocalStorage } from "../utils/localStorageUtils";
 import {
   ADD_DETAILS_TO_CREATE_CAMPAIGN_ERROR,
   ADD_DETAILS_TO_CREATE_CAMPAIGN_REQUEST,
@@ -12,12 +13,17 @@ import {
   GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_SUCCESS,
   GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_ERROR
 } from "../constants/campaignConstants";
+import { FULL_CAMPAIGN_PLAN } from "../constants/localStorageConstants";
 
 export function detailsToCreateCampaignAddReducer(state = [], action) {
   switch (action.type) {
     case ADD_DETAILS_TO_CREATE_CAMPAIGN_REQUEST:
       return { loading: true };
     case ADD_DETAILS_TO_CREATE_CAMPAIGN_SUCCESS:
+      const campaign = action.payload;
+      const saveData = {};
+      saveData[campaign._id] = campaign
+      saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, saveData);
       return {
         loading: false,
         success: true,

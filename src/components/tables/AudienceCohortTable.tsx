@@ -22,11 +22,15 @@ export const AudienceCohortTable = ({ audiences, selectedAudiences, setSelectedA
     <table className="w-full">
       <thead className="bg-[#F7F7F7] w-full">
         <tr className="flex justify-between w-full h-[40px] px-2">
-          <th className="flex items-center justify-center gap-2">
-            <h1 className="text-[14px] text-[#21394F]">
-              Cohorts
-            </h1>
-            <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
+          <th className="flex items-center justify-between w-full gap-2">
+            <div className="flex gap-2 items-center">
+              <h1 className="text-[14px] text-[#21394F]">
+                Cohorts
+              </h1>
+              <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
+            </div>
+            <i className="fi fi-sr-lock-open-alt flex items-center text-[#9A9A9A] text-[12px]"></i>
+            
           </th>
         </tr> 
       </thead>

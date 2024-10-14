@@ -15,6 +15,9 @@ import {
   SEND_EMAIL_TO_RESET_PASSWORD_REQUEST,
   SEND_EMAIL_TO_RESET_PASSWORD_SUCCESS,
   SEND_EMAIL_TO_RESET_PASSWORD_ERROR,
+  SEND_EMAIL_FOR_CONFIRMATION_REQUEST,
+  SEND_EMAIL_FOR_CONFIRMATION_SUCCESS,
+  SEND_EMAIL_FOR_CONFIRMATION_ERROR,
 } from "../constants/userConstants";
 import store from "../store";
 import { login, logout } from "../store/authSlice";
@@ -249,3 +252,30 @@ export const googleSignupSignin =
       });
     }
   };
+
+export const sendEmailForConfirmation = (formData) => async (dispatch, getState) => {
+  dispatch({
+    type: SEND_EMAIL_FOR_CONFIRMATION_REQUEST,
+    // payload: ,
+  });
+  try {
+
+    const { data } = await Axios.post(`${USER_URL}/sendEmailForConfirmation`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      }
+    });
+    dispatch({
+      type: SEND_EMAIL_FOR_CONFIRMATION_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: SEND_EMAIL_FOR_CONFIRMATION_ERROR,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+}

@@ -8,31 +8,34 @@ import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/loc
 import { message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { CAMPAIGN } from "../../constants/localStorageConstants";
+import { CAMPAIGN, FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
-  campaignType?: any;
   userInfo?: any;
+  pathname?: string;
+  campaignId?: any;
 }
 
 export const EnterCampaignBasicDetails = ({
   setCurrentStep,
   step,
-  campaignType,
   userInfo,
+  pathname,
+  campaignId,
 }: EnterCampaignBasicDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
 
-  const [campaignName, setCampaignName] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.campaignName || "");
-  const [brandName, setBrandName] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.brandName || "");
-  const [clientName, setClientName] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.clientName || "");
-  const [industry, setIndustry] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.industry || "");
-  const [startDate, setStartDate] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.startDate || "");
-  const [endDate, setEndDate] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.endDate || "");
-  const [duration, setDuration] = useState<any>(getDataFromLocalStorage("campaign")?.basicDetails?.duration || 30);
+  const [campaignName, setCampaignName] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || "");
+  const [brandName, setBrandName] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName || "");
+  const [clientName, setClientName] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.clientName || "");
+  const [industry, setIndustry] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.industry || "");
+  const [startDate, setStartDate] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] ? new Date(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startDate)?.toISOString()?.slice(0, 16) : "");
+  const [endDate, setEndDate] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] ? new Date(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate)?.toISOString()?.slice(0, 16) : "");
+ 
+  const [duration, setDuration] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30);
 
 
   const [enterDuration, setEnterDuration] = useState<any>(false);
@@ -68,7 +71,7 @@ export const EnterCampaignBasicDetails = ({
       pageName: "Basic Details Page",
       name: campaignName,
       brandName: brandName,
-      campaignType: campaignType,
+      campaignType: pathname?.split("/").splice(1)[0] === "regularplan" ? "Regular" : "",
       clientName: clientName,
       industry: industry,
       startDate: startDate,
@@ -80,20 +83,8 @@ export const EnterCampaignBasicDetails = ({
       campaignManagerId: userInfo?.primaryUserId,
       campaignManagerEmail: userInfo?.primaryUserEmail
     }))
-    saveDataOnLocalStorage(CAMPAIGN, {
-      basicDetails: {
-        campaignType: campaignType || "Regular",
-        campaignName: campaignName || "campaign",
-        brandName: brandName || "brand",
-        clientName: clientName || "client",
-        industry: industry || "industry",
-        startDate: startDate || "1 Jan 1970",
-        endDate: endDate || "1 Feb 1970",
-        duration: duration || 30,
-      },
-    });
 
-  }, [dispatch, campaignName, brandName, clientName, industry, startDate, endDate, duration, userInfo?._id, userInfo?.name, userInfo?.email, userInfo?.primaryUserId, userInfo?.primaryUserEmail, campaignType]);
+  }, [dispatch, campaignName, brandName, clientName, industry, startDate, endDate, duration, userInfo?._id, userInfo?.name, userInfo?.email, userInfo?.primaryUserId, userInfo?.primaryUserEmail]);
 
 
   const handleSetNewDuration = () => {
@@ -203,7 +194,7 @@ export const EnterCampaignBasicDetails = ({
           {!enterDuration ? (
             <CalendarInput
               placeholder={!enterDuration ? "End Date" : "0"}
-              value={!enterDuration ? endDate : duration}
+              value={endDate}
               action={setEndDate}
             />
           ) : (

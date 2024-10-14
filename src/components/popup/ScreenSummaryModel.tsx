@@ -11,10 +11,11 @@ export function ScreenSummaryModel({ totalScreensData }: any) {
   };
 
   return (
-    <div>
+    <div className="w-full">
       <button
+        type="submit"
         onClick={() => setOpen(true)}
-        className="border border-1 rounded-full py-2 px-4 text-[14px] hover:bg-blue-500 hover:text-white"
+        className="w-[160px] border border-1 rounded-full py-2 px-4 text-[14px] hover:bg-blue-500 hover:text-white"
       >
         Screen Summary
       </button>

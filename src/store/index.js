@@ -14,6 +14,7 @@ import {
   vendorConfirmationStatusTableDetailsGetReducer,
 } from "../reducers/screenReducers";
 import {
+  emailSendForConfirmationReducer,
   userEmailVerificationReducer,
   userSendEmailToResetPasswordReducer,
   userSigninReducer,
@@ -67,6 +68,7 @@ const store = configureStore({
     userUpdatePassword: userUpdatePasswordReducer,
     emailVerify: userEmailVerificationReducer,
     userSendEmailToResetPassword: userSendEmailToResetPasswordReducer,
+    emailSendForConfirmation: emailSendForConfirmationReducer,
   },
   // middleware: thunk
   // devTools: process.env.NODE_ENV !== 'production'

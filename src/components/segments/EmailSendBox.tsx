@@ -6,9 +6,10 @@ interface EmailSendBoxProps {
   toEmail?: any;
   setToEmail?: any;
   sendEmail?: any;
+  cc?: any;
 }
 
-export const EmailSendBox = ({toEmail, setToEmail, sendEmail}: EmailSendBoxProps) => {
+export const EmailSendBox = ({cc, toEmail, setToEmail, sendEmail}: EmailSendBoxProps) => {
   return (
     <div className="p-2">
       <div className="flex flex-col">

@@ -29,7 +29,7 @@ export const POIProximity = ({
   handleConfirmScreensSelections,
 }: POIProximityProps) => {
   return (
-    <div className="pt-2">
+    <div className="pt-2 w-full">
       <h1 className="text-[20px] truncate pb-2">
         Select sites with most POI exposure
       </h1>

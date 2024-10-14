@@ -19,16 +19,10 @@ import { Footer } from "../../components/footer";
 import { message } from "antd";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { useLocation } from "react-router-dom";
-import {
-  CAMPAIGN,
-  COST_SUMMARY,
-  REGULAR_VS_COHORT_PRICE_DATA,
-} from "../../constants/localStorageConstants";
+import { CAMPAIGN, COST_SUMMARY, FULL_CAMPAIGN_PLAN, REGULAR_VS_COHORT_PRICE_DATA } from "../../constants/localStorageConstants";
 
-export const RegularCohortComparisonDetails = ({
-  setCurrentStep,
-  step,
-}: any) => {
+export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step}: any) => {
+
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
 
@@ -64,20 +58,17 @@ export const RegularCohortComparisonDetails = ({
   } = regularVsCohortPriceDataGet;
 
   useEffect(() => {
-    if (priceData) {
-      saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, priceData);
-    }
-  }, [priceData]);
-
-  useEffect(() => {
     if (!priceData) {
-      dispatch(
-        getRegularVsCohortPriceData({
-          screenIds: screenIds,
-          cohorts: cohorts,
-          gender: gender,
-          duration: duration,
-        })
+      dispatch(getRegularVsCohortPriceData({
+        screenIds: screenIds,
+        cohorts: cohorts,
+        gender: gender,
+        duration: duration,
+      }));
+    } else {
+      saveDataOnLocalStorage(
+        REGULAR_VS_COHORT_PRICE_DATA,
+        priceData
       );
     }
   }, [priceData, cohorts, dispatch, duration, gender, screenIds]);
@@ -87,35 +78,19 @@ export const RegularCohortComparisonDetails = ({
     setShowSummary(null);
     setIsDisabled(false);
 
-    const oldData = getDataFromLocalStorage(COST_SUMMARY);
-    oldData.push(priceData[type]?.tableData);
-    const campaign = getDataFromLocalStorage(CAMPAIGN);
-    campaign.basicDetails["regularVsCohort"] = type;
-    saveDataOnLocalStorage(CAMPAIGN, campaign);
-    saveDataOnLocalStorage(COST_SUMMARY, oldData);
+    const campaign = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId];
+    console.log(campaign);
+    campaign["selectedType"] = type;
+    const tcamp = {
+      [campaign._id] : campaign
+    }
+    saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, tcamp);
     // dispatch(getScreenSummaryData({
     //   id: pathname.split("/").splice(-1)[0],
     //   type: type
     // }));
-  };
-
-  const handleSaveAndContinue = () => {
-    if (isDisabled) {
-      message.error("Please  confirm screen selection");
-    } else {
-      dispatch(
-        addDetailsToCreateCampaign({
-          pageName: "Compare Plan Page",
-          id: pathname.split("/").splice(-1)[0],
-          regularTouchPointWiseSlotDetails: priceData?.regular?.touchPointData,
-          cohortTouchPointWiseSlotDetails: priceData?.cohort?.touchPointData,
-          selectedType: selectedBuyingOption,
-        })
-      );
-      setCurrentStep(step + 1);
-    }
-  };
-  
+  }
+  console.log(priceData);
   return (
     <div className="w-full pt-3">
       <div>
@@ -193,11 +168,26 @@ export const RegularCohortComparisonDetails = ({
       </div>
       <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
         <Footer
+          loading={loadingPriceData}
+          error={errorPriceData}
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={handleSaveAndContinue}
-          totalScreensData={{}}
+          handleSave={() => {
+            if (isDisabled) {
+              message.error("Please  confirm screen selection");
+            } else {
+              dispatch(addDetailsToCreateCampaign({
+                pageName: "Compare Plan Page",
+                id: pathname.split("/").splice(-1)[0],
+                regularTouchPointWiseSlotDetails: priceData?.regular?.touchPointData,
+                cohortTouchPointWiseSlotDetails: priceData?.cohort?.touchPointData,
+                selectedType: selectedBuyingOption
+              }));
+              setCurrentStep(step + 1);
+            };
+          }}
+          totalScreensData={getDataFromLocalStorage(COST_SUMMARY)[0] || []}
         />
       </div>
     </div>

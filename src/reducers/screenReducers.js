@@ -1,3 +1,4 @@
+import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../utils/localStorageUtils";
 import {
   GET_FINAL_PLAN_PO_DATA_ERROR,
   GET_FINAL_PLAN_PO_DATA_REQUEST,
@@ -31,12 +32,14 @@ import {
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_REQUEST,
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_SUCCESS,
 } from "../constants/screenConstants";
+import { ADVANCE_FILTER_SCREENS_MAP_DATA, AUDIENCE_DATA, COST_SUMMARY, REGULAR_VS_COHORT_PRICE_DATA, SCREEN_SUMMARY_DATA, SCREEN_SUMMARY_TABLE_DATA, TOTAL_SCREEN_COST_DATA } from "../constants/localStorageConstants";
 
 export function screensAudiencesDataGetReducer(state = [], action) {
   switch (action.type) {
     case GET_SCREEN_DATA_BY_AUDIENCES_REQUEST:
       return { loading: true };
     case GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS:
+      saveDataOnLocalStorage(AUDIENCE_DATA, action.payload);
       return {
         loading: false,
         data: action.payload,
@@ -56,6 +59,11 @@ export function screensCostDataGetReducer(state = [], action) {
     case GET_SCREENS_COST_DATA_REQUEST:
       return { loading: true };
     case GET_SCREENS_COST_DATA_SUCCESS:
+      saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, action.payload);
+      const old = getDataFromLocalStorage(COST_SUMMARY) || [];
+      const cost = action.payload;
+      const newCost = [cost, ...old];
+      saveDataOnLocalStorage(COST_SUMMARY, newCost);
       return {
         loading: false,
         data: action.payload,
@@ -75,6 +83,7 @@ export function screensDataAdvanceFilterGetReducer(state = [], action) {
     case GET_SCREENS_DATA_ADVANCE_FILTER_REQUEST:
       return { loading: true };
     case GET_SCREENS_DATA_ADVANCE_FILTER_SUCCESS:
+      saveDataOnLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA, action.payload);
       return {
         loading: false,
         data: action.payload,
@@ -94,6 +103,7 @@ export function regularVsCohortPriceDataGetReducer(state = [], action) {
     case GET_SCREENS_PRICE_FOR_REGULAR_COHORT_REQUEST:
       return { loading: true };
     case GET_SCREENS_PRICE_FOR_REGULAR_COHORT_SUCCESS:
+      saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, action.payload);
       return {
         loading: false,
         data: action.payload,
@@ -114,6 +124,8 @@ export function screenSummaryDataGetReducer(state = [], action) {
     case GET_SCREEN_SUMMARY_DATA_REQUEST:
       return { loading: true };
     case GET_SCREEN_SUMMARY_DATA_SUCCESS:
+      saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, action.payload);
+
       return {
         loading: false,
         data: action.payload,
@@ -133,6 +145,8 @@ export function screenSummaryPlanTableDataGetReducer(state = [], action) {
     case GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_REQUEST:
       return { loading: true };
     case GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_SUCCESS:
+      saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, action.payload);
+
       return {
         loading: false,
         data: action.payload,
@@ -152,6 +166,8 @@ export function finalPlanPOTableDataGetReducer(state = [], action) {
     case GET_FINAL_PLAN_PO_DATA_REQUEST:
       return { loading: true };
     case GET_FINAL_PLAN_PO_DATA_SUCCESS:
+      // saveDataOnLocalStorage(AUDIENCE_DATA, action.payload);
+
       return {
         loading: false,
         data: action.payload,

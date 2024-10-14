@@ -19,6 +19,10 @@ import {
   SEND_EMAIL_TO_RESET_PASSWORD_SUCCESS,
   SEND_EMAIL_TO_RESET_PASSWORD_RESET,
   SEND_EMAIL_TO_RESET_PASSWORD_ERROR,
+  SEND_EMAIL_FOR_CONFIRMATION_REQUEST,
+  SEND_EMAIL_FOR_CONFIRMATION_SUCCESS,
+  SEND_EMAIL_FOR_CONFIRMATION_RESET,
+  SEND_EMAIL_FOR_CONFIRMATION_ERROR,
 
 } from "../constants/userConstants";
 
@@ -94,6 +98,21 @@ export function userSendEmailToResetPasswordReducer(state = {}, action) {
     case SEND_EMAIL_TO_RESET_PASSWORD_ERROR:
       return { loading: false, error: action.payload };
     case SEND_EMAIL_TO_RESET_PASSWORD_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function emailSendForConfirmationReducer(state = {}, action) {
+  switch (action.type) {
+    case SEND_EMAIL_FOR_CONFIRMATION_REQUEST:
+      return { loading: true };
+    case SEND_EMAIL_FOR_CONFIRMATION_SUCCESS:
+      return { loading: false, success: true, data: action.payload };
+    case SEND_EMAIL_FOR_CONFIRMATION_ERROR:
+      return { loading: false, error: action.payload };
+    case SEND_EMAIL_FOR_CONFIRMATION_RESET:
       return {};
     default:
       return state;

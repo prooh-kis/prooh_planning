@@ -146,7 +146,6 @@ export const ScreenSummaryTable = ({
     }
   }, [data, handleData]);
 
-  console.log(screenTypeToggle)
   return (
     <div className="">
       {currentCity && data && Object.keys(cityZones).length > 0 && (

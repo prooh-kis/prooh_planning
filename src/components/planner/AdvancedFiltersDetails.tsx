@@ -240,22 +240,7 @@ export const AdvanceFiltersDetails = ({
     const selectedScreenIds = finalSelectedScreens.map((s: any) => s._id);
     saveDataOnLocalStorage(SELECTED_SCREENS_ID, selectedScreenIds);
   };
-
-  const handleSaveAndContinue = () => {
-    if (isDisabled) {
-      message.error("Please confirm screen selection");
-    } else {
-      dispatch(
-        addDetailsToCreateCampaign({
-          pageName: "Advance Filter Page",
-          id: pathname.split("/").splice(-1)[0],
-          screenIds: finalSelectedScreens.map((s: any) => s._id),
-        })
-      );
-      setCurrentStep(step + 1);
-    }
-  }
-
+  console.log(getDataFromLocalStorage(COST_SUMMARY));
   return (
     <div>
       <div className="h-[640px] w-full py-3 grid grid-cols-2 gap-4">
@@ -298,9 +283,9 @@ export const AdvanceFiltersDetails = ({
               />
             </div>
           ) : (
-            <div className="">
-              <div className="flex justify-between">
-                <div className="truncate">
+            <div className="w-full">
+              <div className="flex w-full justify-between">
+                <div className="truncate w-full ">
                   <h1 className="text-[24px] text-primaryText font-semibold truncate">
                     POI Proximity
                   </h1>
@@ -389,8 +374,19 @@ export const AdvanceFiltersDetails = ({
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={handleSaveAndContinue}
-          totalScreensData={getDataFromLocalStorage(COST_SUMMARY)?.[-1] || []}
+          handleSave={() => {
+            if (isDisabled) {
+              message.error("Please  confirm screen selection");
+            } else {
+              dispatch(addDetailsToCreateCampaign({
+                pageName: "Advance Filter Page",
+                id: pathname.split("/").splice(-1)[0],
+                screenIds: finalSelectedScreens.map((s: any) => s._id)
+              }));
+              setCurrentStep(step + 1);
+            };
+          }}
+          totalScreensData={getDataFromLocalStorage(COST_SUMMARY)[0] || []}
         />
       </div>
     </div>

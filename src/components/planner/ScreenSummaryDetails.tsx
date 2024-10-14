@@ -19,12 +19,7 @@ import {
 } from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
 import { Footer } from "../../components/footer";
-import {
-  REGULAR_VS_COHORT_PRICE_DATA,
-  SCREEN_SUMMARY_DATA,
-  SCREEN_SUMMARY_SELECTION,
-  SCREEN_SUMMARY_TABLE_DATA,
-} from "../../constants/localStorageConstants";
+import { COST_SUMMARY, FULL_CAMPAIGN_PLAN, REGULAR_VS_COHORT_PRICE_DATA, SCREEN_SUMMARY_DATA, SCREEN_SUMMARY_SELECTION, SCREEN_SUMMARY_TABLE_DATA } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { message } from "antd";
 
@@ -36,11 +31,13 @@ interface Tab {
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
+  campaignId?: any;
 }
 
 export const ScreenSummaryDetails = ({
   setCurrentStep,
   step,
+  campaignId,
 }: EnterCampaignBasicDetailsProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -49,9 +46,7 @@ export const ScreenSummaryDetails = ({
   const [currentSummaryTab, setCurrentSummaryTab] = useState<any>("1");
   const [isDisabled, setIsDisabled] = useState<any>(true);
 
-  const [regularVsCohort, setRegularVsCohort] = useState<any>(
-    getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]
-  );
+  const [regularVsCohort, setRegularVsCohort] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].selectedType);
   const [showSummary, setShowSummary] = useState<any>(null);
 
   const [listView, setListView] = useState<any>(true);
@@ -60,11 +55,8 @@ export const ScreenSummaryDetails = ({
   const [cityTP, setCityTP] = useState<any>({});
   const [screenTypes, setScreenTypes] = useState<any>({});
 
-  const [screensBuyingCount, setScreensBuyingCount] = useState<any>(
-    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)
-  );
 
-  // console.log(getDataFromLocalStorage("campaign").basicDetails)
+  const [screensBuyingCount, setScreensBuyingCount] = useState<any>(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION));
 
   const screenSummaryDataGet = useSelector(
     (state: any) => state.screenSummaryDataGet
@@ -104,70 +96,28 @@ export const ScreenSummaryDetails = ({
     //   type: getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]
     // }));
 
-    dispatch(
-      getScreenSummaryPlanTableData({
-        id: pathname.split("/").splice(-1)[0],
-        screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-      })
-    );
-  };
+    dispatch(getScreenSummaryPlanTableData({
+      id: campaignId,
+      screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
 
-  const handleSaveAndContinue = () => {
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "Screen Summary Page",
-        id: pathname.split("/").splice(-1)[0],
-        screenWiseSlotDetails: getDataFromLocalStorage(
-          REGULAR_VS_COHORT_PRICE_DATA
-        )?.[`${regularVsCohort}`].touchPointData,
-        totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-        totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
-          "total"
-        ].totalImpression,
-        totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"]
-          .totalReach,
-        totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
-          "total"
-        ].totalCampaignBudget,
-        totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"]
-          .totalCpm,
-      })
-    );
-    setCurrentStep(step + 1);
+    }));
   };
 
   useEffect(() => {
-    if (!screenSummaryData) {
-      dispatch(
-        getScreenSummaryData({
-          id: pathname.split("/").splice(-1)[0],
-          type: getDataFromLocalStorage("campaign").basicDetails[
-            "regularVsCohort"
-          ],
-        })
-      );
-    }
+    dispatch(getScreenSummaryData({
+      id: campaignId,
+      type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType
+    }))
 
-    if (!screenSummaryPlanTableData) {
-      dispatch(
-        getScreenSummaryPlanTableData({
-          id: pathname.split("/").splice(-1)[0],
-          screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-        })
-      );
-    }
-  }, [
-    screenSummaryData,
-    dispatch,
-    pathname,
-    screensBuyingCount,
-    screenSummaryPlanTableData,
-  ]);
+    dispatch(getScreenSummaryPlanTableData({
+      id: campaignId,
+      screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+    }));
 
+  },[dispatch]);
+  
   useEffect(() => {
-    setRegularVsCohort(
-      getDataFromLocalStorage("campaign").basicDetails["regularVsCohort"]
-    );
+    setRegularVsCohort(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].selectedType);
 
     saveDataOnLocalStorage(
       SCREEN_SUMMARY_TABLE_DATA,
@@ -344,8 +294,23 @@ export const ScreenSummaryDetails = ({
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={handleSaveAndContinue}
-          totalScreensData={{}}
+          handleSave={() => {
+            // if (isDisabled) {
+            //   message.error("Please  confirm screen selection");
+            // } else {
+              dispatch(addDetailsToCreateCampaign({
+                pageName: "Screen Summary Page",
+                id: pathname.split("/").splice(-1)[0],
+                totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+                totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalImpression,
+                totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalReach,
+                totalCampaignBudget:getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCampaignBudget,
+                totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCpm,
+              }));
+              setCurrentStep(step + 1);
+            // };
+          }}
+          totalScreensData={getDataFromLocalStorage(COST_SUMMARY)[0] || []}
         />
       </div>
     </div>
