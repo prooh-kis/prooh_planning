@@ -219,7 +219,10 @@ export const RegularPlanPage: React.FC = () => {
             campaignId={campaignId}
           />
         ) : currentStep === 6 ? (
-          <TriggerDetails setCurrentStep={setCurrentStep} step={currentStep} />
+          <TriggerDetails
+            setCurrentStep={setCurrentStep}
+            step={currentStep}
+          />
         ) : currentStep === 7 ? (
           <ViewFinalPlanPODetails
             setCurrentStep={setCurrentStep}
@@ -230,16 +233,19 @@ export const RegularPlanPage: React.FC = () => {
           <CreativeUploadDetails
             step={currentStep}
             setCurrentStep={setCurrentStep}
+            campaignId={campaignId}
           />
         ) : currentStep === 9 ? (
           <VendorConfirmationDetails
             step={currentStep}
             setCurrentStep={setCurrentStep}
+            campaignId={campaignId}
           />
         ) : (
           <CampaignDashboardDetails
             step={currentStep}
             setCurrentStep={setCurrentStep}
+            campaignId={campaignId}
           />
         )}
       </div>

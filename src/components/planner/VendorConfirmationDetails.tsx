@@ -11,6 +11,7 @@ import {
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import {
   CAMPAIGN,
+  FULL_CAMPAIGN_PLAN,
   SCREEN_SUMMARY_TABLE_DATA,
   SELECTED_SCREENS_ID,
   SELECTED_TRIGGER,
@@ -26,11 +27,13 @@ import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
   step: any;
+  campaignId?: any;
 }
 
 export const VendorConfirmationDetails = ({
   setCurrentStep,
   step,
+  campaignId,
 }: VendorConfirmationDetailsProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -41,17 +44,17 @@ export const VendorConfirmationDetails = ({
   const [vendorInput, setVendorInput] = useState<any>({
     pageName: "View Final Plan Page",
     id: pathname.split("/").splice(-1)[0],
-    name: getDataFromLocalStorage(CAMPAIGN).basicDetails.campaignName,
-    brandName: getDataFromLocalStorage(CAMPAIGN).basicDetails.brandName,
-    clientName: getDataFromLocalStorage(CAMPAIGN).basicDetails.clientName,
-    campaignType: getDataFromLocalStorage(CAMPAIGN).basicDetails.campaignType,
-    startDate: getDataFromLocalStorage(CAMPAIGN).basicDetails.startData,
-    endDate: getDataFromLocalStorage(CAMPAIGN).basicDetails.endDate,
-    duration: getDataFromLocalStorage(CAMPAIGN).basicDetails.duration,
+    name: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].name,
+    brandName: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].brandName,
+    clientName: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].clientName,
+    campaignType: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].campaignType,
+    startDate: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].startData,
+    endDate: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].endDate,
+    duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].duration,
     selectedType:
-      getDataFromLocalStorage(CAMPAIGN).basicDetails.regularVsCohort,
-    screenIds: getDataFromLocalStorage(SELECTED_SCREENS_ID),
-    triggers: getDataFromLocalStorage(SELECTED_TRIGGER),
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].selectedType,
+    screenIds: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].screenIds,
+    triggers: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].triggers,
     // totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCampaignBudget,
   });
 

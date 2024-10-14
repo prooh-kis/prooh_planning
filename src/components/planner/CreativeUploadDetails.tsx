@@ -21,12 +21,14 @@ import {
 } from "../../utils/localStorageUtils";
 import {
   CAMPAIGN_CREATIVES,
+  FULL_CAMPAIGN_PLAN,
   SELECTED_TRIGGER,
 } from "../../constants/localStorageConstants";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
+  campaignId?: any;
 }
 interface SingleFile {
   file: File;
@@ -52,6 +54,7 @@ interface Data {
 export const CreativeUploadDetails = ({
   setCurrentStep,
   step,
+  campaignId,
 }: CreativeUploadDetailsProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { pathname } = useLocation();
@@ -76,6 +79,28 @@ export const CreativeUploadDetails = ({
     error: errorScreeData,
     data: screenData,
   } = screenDataUploadCreative;
+
+  const filterUniqueResolutions = (data: any) => {
+    const filteredData: any = {};
+  
+    Object.keys(data).forEach((city) => {
+      // Use a Set to track unique screen resolutions
+      const uniqueResolutions = new Set();
+      const uniqueCreatives: any = [];
+  
+      data[city].forEach((creative: any) => {
+        const resolution = creative.screenResolution.trim(); // Remove any extra spaces
+        if (!uniqueResolutions.has(resolution)) {
+          uniqueResolutions.add(resolution); // Add the resolution to the Set
+          uniqueCreatives.push(creative); // Add the creative to the unique list
+        }
+      });
+  
+      filteredData[city] = uniqueCreatives; // Assign unique creatives back to the city
+    });
+  
+    return filteredData;
+  };
 
   const handleSetCreativeType = (e: RadioChangeEvent) => {
     setCreativeType(e.target.value);
@@ -117,7 +142,7 @@ export const CreativeUploadDetails = ({
         myData[currentCity][currentScreen].triggerCreatives.push(file);
       }
       setFIle(null);
-      setCreativeUploadData(myData);
+      setCreativeUploadData(filterUniqueResolutions(myData));
       let citiesCreativeData = citiesCreative.map((data: any) => {
         console.log(
           myData[currentCity][currentScreen].standardDayTimeCreatives.length
@@ -163,7 +188,7 @@ export const CreativeUploadDetails = ({
       ].triggerCreatives.filter((file: any) => file.url !== url);
     }
     setFIle(null);
-    setCreativeUploadData(myData);
+    setCreativeUploadData(filterUniqueResolutions(myData));
     setIsDeleted((pre: boolean) => !pre);
   };
 
@@ -193,13 +218,11 @@ export const CreativeUploadDetails = ({
   };
 
   const getScreenCountCityWise = (data: any, city: string) => {
-    console.log(data[city]);
-    const param1 = data[city]?.filter(
-      (d: any) =>
-        d?.standardDayTimeCreatives?.length > 0 ||
-        d?.triggerCreatives?.length > 0
-    );
-    console.log(param1);
+    // const param1 = data[city]?.filter(
+    //   (d: any) =>
+    //     d?.standardDayTimeCreatives?.length > 0 ||
+    //     d?.triggerCreatives?.length > 0
+    // );
     return data[city]?.reduce((accum: number, current: any) => {
       return accum + current.count;
     }, 0);
@@ -207,10 +230,8 @@ export const CreativeUploadDetails = ({
 
   const handleSetInitialData = (data: any) => {
     let arr = Object.keys(data);
-    console.log(data);
 
     let result = arr?.map((value: string, index: number) => {
-      console.log(getScreenCountCityWise(data, value));
       return {
         id: `${index + 1}`,
         label: value,
@@ -310,8 +331,7 @@ export const CreativeUploadDetails = ({
 
   useEffect(() => {
     if (screenData) {
-      console.log("screenData : ", screenData);
-      console.log(getDataFromLocalStorage(CAMPAIGN_CREATIVES));
+ 
       if (getDataFromLocalStorage(CAMPAIGN_CREATIVES)) {
         handleSetInitialData(getDataFromLocalStorage(CAMPAIGN_CREATIVES));
       } else {
@@ -336,13 +356,20 @@ export const CreativeUploadDetails = ({
           });
         }
       }
-      setCreativeUploadData(result);
+      setCreativeUploadData(filterUniqueResolutions(result));
     }
     if (errorScreeData) {
       message.error(errorScreeData);
     }
+
+    console.log(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.triggers)
+    console.log("error");
+    const result = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.triggers;
+    console.log(result);
+    saveDataOnLocalStorage(SELECTED_TRIGGER, result);
   }, [errorScreeData, screenData]);
 
+  console.log(creativeUploadData);
   return (
     <div className="w-full py-3">
       <div>
@@ -459,41 +486,34 @@ export const CreativeUploadDetails = ({
                       file={file}
                       handleSaveFile={handleSaveFile}
                       triggerData={
-                        Object.keys(
                           getDataFromLocalStorage(SELECTED_TRIGGER)
-                            ?.weatherTriggers
-                        ).length > 0
+                            ?.weatherTriggers[0]?.type !== ""
+                        
                           ? getDataFromLocalStorage(SELECTED_TRIGGER)
                               ?.weatherTriggers
-                          : Object.keys(
+                          : 
                               getDataFromLocalStorage(SELECTED_TRIGGER)
-                                ?.sportsTriggers
-                            ).length > 0
+                                ?.sportsTriggers[0]?.sport !== ""
                           ? getDataFromLocalStorage(SELECTED_TRIGGER)
                               ?.sportsTriggers
-                          : Object.keys(
+                          : 
                               getDataFromLocalStorage(SELECTED_TRIGGER)
-                                ?.vacantSlots
-                            ).length > 0
+                                ?.vacantSlots[0]?.slotType !== ""
                           ? getDataFromLocalStorage(SELECTED_TRIGGER)
                               ?.vacantSlots
                           : {}
                       }
                       triggerType={
-                        Object.keys(
                           getDataFromLocalStorage(SELECTED_TRIGGER)
-                            ?.weatherTriggers
-                        ).length > 0
+                            ?.weatherTriggers[0]?.type !== ""
                           ? "Weather Trigger"
-                          : Object.keys(
+                          :
                               getDataFromLocalStorage(SELECTED_TRIGGER)
-                                ?.sportsTriggers
-                            ).length > 0
+                                ?.sportsTriggers[0]?.sport !== ""
                           ? "Sports Trigger"
-                          : Object.keys(
+                          :
                               getDataFromLocalStorage(SELECTED_TRIGGER)
-                                ?.vacantSlots
-                            ).length > 0
+                                ?.vacantSlots[0]?.slotType !== ""
                           ? "Fill Vacancy Trigger"
                           : "No Trigger"
                       }
