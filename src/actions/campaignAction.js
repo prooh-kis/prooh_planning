@@ -11,7 +11,13 @@ import {
   GET_MY_CREATE_CAMPAIGNS_LIST_SUCCESS,
   GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_REQUEST,
   GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_SUCCESS,
-  GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_ERROR
+  GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_ERROR,
+  CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_REQUEST,
+  CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_SUCCESS,
+  CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_ERROR,
+  CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_REQUEST,
+  CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_SUCCESS,
+  CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_ERROR
 } from "../constants/campaignConstants";
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/campaigns`;
 
@@ -37,7 +43,6 @@ export const addDetailsToCreateCampaign = (input) => async (dispatch, getState) 
     })
   }
 }
-
 
 export const getMyCreateCampaignsList = ({id}) => async (dispatch, getState) => {
   dispatch({
@@ -108,3 +113,50 @@ export const getMyCreateCampaignsVendorRequestsList = ({id}) => async (dispatch,
     })
   }
 }
+
+export const changeCampaignStatusAfterCreativeUpload = ({ id, status }) => async (dispatch, getState) => {
+  dispatch({
+    type: CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_REQUEST,
+    payload: { id, status },
+  });
+  try {
+    const { data } = await axios.post(`${url}/createCampaigns`, { id, status });
+    dispatch({
+      type: CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_ERROR,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    })
+  }
+}
+
+export const changeCampaignStatusAfterVendorApproval = ({ids}) => async (dispatch, getState) => {
+  dispatch({
+    type: CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_REQUEST,
+    payload: { ids },
+  });
+  try {
+    const { data } = await axios.post(`${url}/approveCampaignScreenVendor`, { ids });
+    dispatch({
+      type: CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_ERROR,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    })
+  }
+}
+

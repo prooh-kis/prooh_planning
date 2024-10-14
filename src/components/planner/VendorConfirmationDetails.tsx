@@ -28,18 +28,22 @@ interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
   step: any;
   campaignId?: any;
+  userInfo?: any;
 }
 
 export const VendorConfirmationDetails = ({
   setCurrentStep,
   step,
   campaignId,
+  userInfo,
 }: VendorConfirmationDetailsProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
 
   const [files, setFiles] = useState<any>([]);
   const [isDisabled, setIsDisabled] = useState<any>(true);
+
+  const [selectedCampaignIds, setSelectedCampaignIds] = useState<any>([]);
 
   const [vendorInput, setVendorInput] = useState<any>({
     pageName: "View Final Plan Page",
@@ -76,6 +80,13 @@ export const VendorConfirmationDetails = ({
     data: statusTableData,
   } = vendorConfirmationStatusTableDetailsGet;
 
+  const campaignStatusChangeAfterVendorApproval = useSelector((state: any) => state.campaignStatusChangeAfterVendorApproval);
+  const {
+    loading: loadingVendorApproval,
+    error: errorVendorApproval,
+    data: vendorApprovalStatus
+  } = campaignStatusChangeAfterVendorApproval;
+
   const handleAddNewFile = async (file: File) => {
     if (file) {
       const fileURL = URL.createObjectURL(file);
@@ -99,7 +110,7 @@ export const VendorConfirmationDetails = ({
 
   useEffect(() => {
     dispatch(getVendorConfirmationDetails(vendorInput));
-    dispatch(getVendorConfirmationStatusTableDetails({ id: pathname.split("/").splice(-1)[0] }));
+    dispatch(getVendorConfirmationStatusTableDetails({ id: campaignId }));
   },[dispatch, vendorInput]);
 
   return (
@@ -140,7 +151,13 @@ export const VendorConfirmationDetails = ({
         <div className="pb-4">
           <MultiColorLinearBar values={[2, 3, 4]} colors={[]} totalValue={9} />
         </div>
-        <VendorConfirmationStatusTable statusTableData={statusTableData} />
+        <VendorConfirmationStatusTable
+          selectedCampaignIds={selectedCampaignIds}
+          setSelectedCampaignIds={setSelectedCampaignIds}
+          campaignId={campaignId}
+          userInfo={userInfo}
+          statusTableData={statusTableData}
+        />
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-1 border rounded-[12px] p-2">

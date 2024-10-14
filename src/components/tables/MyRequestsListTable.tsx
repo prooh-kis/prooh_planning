@@ -105,11 +105,7 @@ export const MyRequestsListTable = ({
               </h1>
             </td>
             <td className="p-2"
-              onClick={() => navigate(`/regularplan/${campaign._id}`,
-                {
-                  state: { campaign }
-                }
-              )}
+              onClick={() => navigate(`/regularplan/${campaign.campaignCreationId}`)}
             >
               <i className="fi fi-bs-menu-dots text-[20px] flex justify-center"></i>
             </td>

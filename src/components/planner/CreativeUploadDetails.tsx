@@ -14,7 +14,7 @@ import { getScreenDataUploadCreativeData } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
 import { Footer } from "../../components/footer";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
-import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { addDetailsToCreateCampaign, changeCampaignStatusAfterCreativeUpload } from "../../actions/campaignAction";
 import {
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
@@ -24,6 +24,7 @@ import {
   FULL_CAMPAIGN_PLAN,
   SELECTED_TRIGGER,
 } from "../../constants/localStorageConstants";
+import { CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT } from "../../constants/campaignConstants";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -284,7 +285,6 @@ export const CreativeUploadDetails = ({
       let requestBody: any = [];
       for (let city in creativeUploadData) {
         for (let data of creativeUploadData[city]) {
-          console.log(data);
           let standardDayTimeCreatives: any = [];
           let standardNightTimeCreatives: any = [];
           let triggerCreatives: any = [];
@@ -315,6 +315,7 @@ export const CreativeUploadDetails = ({
           creatives: requestBody,
         })
       );
+      dispatch(changeCampaignStatusAfterCreativeUpload({id: campaignId, status: CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT }))
       setCurrentStep(step + 1);
     } else {
       message.error("Please upload creatives for each row and foreach city");

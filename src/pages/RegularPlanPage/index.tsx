@@ -24,17 +24,10 @@ import {
 } from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
 import {
-  ADVANCE_FILTER_SCREENS_MAP_DATA,
-  AUDIENCE_DATA,
-  CAMPAIGN,
   CURRENT_STEP,
   FULL_CAMPAIGN_PLAN,
-  SCREEN_SUMMARY_TABLE_DATA,
-  SELECTED_AUDIENCE_TOUCHPOINTS,
-  SELECTED_SCREENS_ID,
-  SELECTED_TRIGGER,
-  TOTAL_SCREEN_COST_DATA,
 } from "../../constants/localStorageConstants";
+import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
 const pages = [
   {
@@ -168,7 +161,14 @@ export const RegularPlanPage: React.FC = () => {
 
   useEffect(() => {
     if (campaignId) {
-      const campDetails = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+      let campDetails: any = {};
+      if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]) {
+        campDetails = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId];
+      } else {
+        dispatch(addDetailsToCreateCampaign({ id: campaignId}));
+        campDetails = campaignDetails
+      }
+      // const campDetails = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
       const curr = Number(pages.filter((page: any) => page.value === campDetails?.currentPage)[0].id) + 1;
       const currStep = {
         [campaignId]: curr
@@ -240,6 +240,7 @@ export const RegularPlanPage: React.FC = () => {
             step={currentStep}
             setCurrentStep={setCurrentStep}
             campaignId={campaignId}
+            userInfo={userInfo}
           />
         ) : (
           <CampaignDashboardDetails

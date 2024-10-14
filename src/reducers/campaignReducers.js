@@ -11,7 +11,15 @@ import {
   GET_MY_CREATE_CAMPAIGNS_LIST_SUCCESS,
   GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_REQUEST,
   GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_SUCCESS,
-  GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_ERROR
+  GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_ERROR,
+  CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_REQUEST,
+  CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_SUCCESS,
+  CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_ERROR,
+  CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_RESET,
+  CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_REQUEST,
+  CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_SUCCESS,
+  CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_ERROR,
+  CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_RESET
 } from "../constants/campaignConstants";
 import { FULL_CAMPAIGN_PLAN } from "../constants/localStorageConstants";
 
@@ -101,3 +109,45 @@ export function myCreateCampaignsVendorRequestsListGetReducer(state = [], action
 }
 
 
+export function campaignStatusChangeAfterCreativeUploadReducer(state=[], action) {
+  switch (action.type) {
+    case CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_REQUEST:
+      return { loading: true };
+    case CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+
+export function campaignStatusChangeAfterVendorApprovalReducer(state=[], action) {
+  switch (action.type) {
+    case CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_REQUEST:
+      return { loading: true };
+    case CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_RESET:
+      return {};
+    default:
+      return state;
+  }
+}

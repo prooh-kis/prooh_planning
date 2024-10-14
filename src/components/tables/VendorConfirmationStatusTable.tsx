@@ -1,12 +1,40 @@
+import { ActionMenu } from "../../components/molecules/ActionMenu"
 import { CheckboxInput } from "../atoms/CheckboxInput"
 
-export const VendorConfirmationStatusTable = ({statusTableData}: any) => {
+export const VendorConfirmationStatusTable = ({
+  campaignId,
+  userInfo,
+  statusTableData,
+  selectedCampaignIds,
+  setSelectedCampaignIds
+}: any) => {
+
+  const handleRowCheckboxChange = (e: boolean, campaignId: string) => {
+    let updatedIds = [...selectedCampaignIds];
+    if (e) {
+      // Add campaignId if row checkbox is checked
+      updatedIds = [...selectedCampaignIds, campaignId];
+    } else {
+      // Remove campaignId if row checkbox is unchecked
+      updatedIds = updatedIds.filter((id) => id !== campaignId);
+    }
+    setSelectedCampaignIds(updatedIds); // Update the state with the new selection
+  };
+
   return (
     <table className="w-full">
       <thead>
         <tr className="bg-[#D6EEFF]">
           <th className="p-2">
-            <CheckboxInput />
+            <CheckboxInput
+              checked={statusTableData?.length > 0 && statusTableData?.length === selectedCampaignIds?.length}
+              onChange={(e) => {
+                statusTableData?.map((status: any) => {
+                  handleRowCheckboxChange(e, status.campaignId)
+                })
+              }}
+              disabled
+            />
           </th>
           <th className="py-2">
             <h1 className="text-[14px] flex justify-start">
@@ -82,7 +110,12 @@ export const VendorConfirmationStatusTable = ({statusTableData}: any) => {
               "bg-violet-100"
             }
           `}>
-            <td className="p-2"><CheckboxInput /></td>
+            <td className="p-2">
+              <CheckboxInput
+                checked={selectedCampaignIds?.includes(status.campaignId)}
+                onChange={(e) => handleRowCheckboxChange(e, status.campaignId)}
+              />
+            </td>
             <td className="py-2">
               <h1 className="text-[14px]">
                 {status.screenName}
@@ -153,7 +186,14 @@ export const VendorConfirmationStatusTable = ({statusTableData}: any) => {
               <i className="fi fi-sr-photo-video text-[20px] text-violet-500 flex justify-center"></i>
             </td>
             <td className="p-2">
-              <i className="fi fi-bs-menu-dots text-[20px] flex justify-center"></i>
+                {userInfo?.isMaster ? (
+                  <div className="flex justify-center">
+                    <ActionMenu ids={selectedCampaignIds}/>
+                  </div>
+                ) : (
+                  <i className="fi fi-bs-menu-dots text-[20px] flex justify-center"></i>
+                )}
+
             </td>
           </tr>
         ))}
