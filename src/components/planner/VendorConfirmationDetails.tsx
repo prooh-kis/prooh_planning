@@ -9,13 +9,7 @@ import {
   getVendorConfirmationStatusTableDetails,
 } from "../../actions/screenAction";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
-import {
-  CAMPAIGN,
-  FULL_CAMPAIGN_PLAN,
-  SCREEN_SUMMARY_TABLE_DATA,
-  SELECTED_SCREENS_ID,
-  SELECTED_TRIGGER,
-} from "../../constants/localStorageConstants";
+import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import {
   VendorConfirmationBasicTable,
   VendorConfirmationStatusTable,
@@ -23,6 +17,7 @@ import {
 import { Footer } from "../../components/footer";
 import { message } from "antd";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -49,16 +44,23 @@ export const VendorConfirmationDetails = ({
     pageName: "View Final Plan Page",
     id: pathname.split("/").splice(-1)[0],
     name: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].name,
-    brandName: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].brandName,
-    clientName: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].clientName,
-    campaignType: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].campaignType,
-    startDate: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].startData,
+    brandName:
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].brandName,
+    clientName:
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].clientName,
+    campaignType:
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].campaignType,
+    startDate:
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].startData,
     endDate: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].endDate,
-    duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].duration,
+    duration:
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].duration,
     selectedType:
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].selectedType,
-    screenIds: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].screenIds,
-    triggers: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].triggers,
+    screenIds:
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].screenIds,
+    triggers:
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].triggers,
     // totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCampaignBudget,
   });
 
@@ -80,11 +82,13 @@ export const VendorConfirmationDetails = ({
     data: statusTableData,
   } = vendorConfirmationStatusTableDetailsGet;
 
-  const campaignStatusChangeAfterVendorApproval = useSelector((state: any) => state.campaignStatusChangeAfterVendorApproval);
+  const campaignStatusChangeAfterVendorApproval = useSelector(
+    (state: any) => state.campaignStatusChangeAfterVendorApproval
+  );
   const {
     loading: loadingVendorApproval,
     error: errorVendorApproval,
-    data: vendorApprovalStatus
+    data: vendorApprovalStatus,
   } = campaignStatusChangeAfterVendorApproval;
 
   const handleAddNewFile = async (file: File) => {
@@ -110,8 +114,43 @@ export const VendorConfirmationDetails = ({
 
   useEffect(() => {
     dispatch(getVendorConfirmationDetails(vendorInput));
-    dispatch(getVendorConfirmationStatusTableDetails({ id: campaignId }));
-  },[dispatch, vendorInput]);
+    dispatch(
+      getVendorConfirmationStatusTableDetails({
+        id: pathname.split("/").splice(-1)[0],
+      })
+    );
+  }, [dispatch, vendorInput, pathname]);
+
+  const getAWSUrl = async (data: any) => {
+    try {
+      const aws = await getAWSUrlToUploadFile(data.fileType);
+      const successAWSUploadFile = await saveFileOnAWS(aws?.url, data.file);
+      data.awsURL = aws?.awsURL;
+      return aws?.awsURL;
+    } catch (error: any) {
+      message.error(error);
+    }
+  };
+
+  const handleSaveAndContinue = async () => {
+    if (isDisabled) {
+      message.error("Please confirm budget for your selected trigger");
+    } else {
+      let imageArr: string[] = [];
+      for (let data of files) {
+        let url = await getAWSUrl(data);
+        imageArr.push(url);
+      }
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Vendor Confirmation Page",
+          id: pathname.split("/").splice(-1)[0],
+          vendorApprovalImgs: imageArr, // return url array
+        })
+      );
+      setCurrentStep(step + 1);
+    }
+  };
 
   return (
     <div className="w-full pt-3">
@@ -176,7 +215,7 @@ export const VendorConfirmationDetails = ({
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={() => {}}
+          handleSave={handleSaveAndContinue}
           totalScreensData={{}}
         />
       </div>

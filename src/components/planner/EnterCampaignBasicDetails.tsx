@@ -95,15 +95,14 @@ export const EnterCampaignBasicDetails = ({
 
   useEffect(() => {
     if (errorAddDetails) {
-      message.error("Failed to add campaign details");
+      message.error(errorAddDetails);
     }
-    
+
     if (successAddDetails) {
       setCurrentStep(step + 1);
       navigate(`/regularplan/${addDetails?._id}`);
     }
-    
-  },[navigate, successAddDetails]);
+  }, [navigate, successAddDetails, errorAddDetails]);
   
   return (
     <div className="w-full py-3">

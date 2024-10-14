@@ -46,7 +46,7 @@ export const ScreenSummaryDetails = ({
   const [currentSummaryTab, setCurrentSummaryTab] = useState<any>("1");
   const [isDisabled, setIsDisabled] = useState<any>(true);
 
-  const [regularVsCohort, setRegularVsCohort] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].selectedType);
+  const [regularVsCohort, setRegularVsCohort] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType);
   const [showSummary, setShowSummary] = useState<any>(null);
 
   const [listView, setListView] = useState<any>(true);

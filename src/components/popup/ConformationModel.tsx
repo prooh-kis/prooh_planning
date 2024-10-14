@@ -38,23 +38,25 @@ export function ConformationModel({ handleConfirm }: Props) {
         width={300}
         maskClosable={false}
       >
-        <div className="flex flex-col justify-center items-center  p-2">
-          <i className="fi fi-sr-disk text-green-500 text-[24px]"></i>
-          <h1 className="text-center font-semibold text-lg">
-            Do you want save this
-          </h1>
-          <h1 className="text-center font-semibold text-lg">
-            creative for same resolution?
-          </h1>
-          <h1 className="text-sm text-[#717171] text-center pt-2">
-            you can also upload multiple creatives for
-          </h1>
-          <h1 className="text-sm text-[#717171] text-center">
-            this campaign. you can also upload
-          </h1>
-          <h1 className="text-sm text-[#717171] text-center">
-            different creative for day
-          </h1>
+        <div>
+          <div className="flex flex-col justify-center items-center  p-2">
+            <i className="fi fi-sr-disk text-green-500 text-[24px]"></i>
+            <h1 className="text-center font-semibold text-lg">
+              Do you want save this
+            </h1>
+            <h1 className="text-center font-semibold text-lg">
+              creative for same resolution?
+            </h1>
+            <h1 className="text-sm text-[#717171] text-center pt-2">
+              you can also upload multiple creatives for
+            </h1>
+            <h1 className="text-sm text-[#717171] text-center">
+              this campaign. you can also upload
+            </h1>
+            <h1 className="text-sm text-[#717171] text-center">
+              different creative for day
+            </h1>
+          </div>
           <div className="flex justify-between pt-4">
             <button
               className="border border-1 py-1 px-8 rounded-md"
