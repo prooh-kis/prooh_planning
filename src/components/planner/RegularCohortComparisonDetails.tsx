@@ -78,12 +78,13 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
     setShowSummary(null);
     setIsDisabled(false);
 
-    const campaign = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId];
-    console.log(campaign);
+    const campaign = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] || {};
+    console.log("82" ,campaign);
     campaign["selectedType"] = type;
     const tcamp = {
-      [campaign._id] : campaign
-    }
+      [campaign?._id || campaignId]: campaign,
+    };
+    console.log("87 : ", campaign, tcamp);
     saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, tcamp);
     // dispatch(getScreenSummaryData({
     //   id: pathname.split("/").splice(-1)[0],
