@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { CampaignDetails } from './CampaignDashboard';
+import { CampaignDashboard } from './CampaignDashboard';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCampaignDashboardData } from '../../actions/screenAction';
 import { useLocation } from 'react-router-dom';
@@ -16,6 +16,12 @@ export const CampaignDashboardPage: React.FC = () => {
     loading, error, success, data: campaignDetails
   } = detailsToCreateCampaignAdd;
 
+  const campaignDashboardDataGet = useSelector((state: any) => state.campaignDashboardDataGet);
+  const {
+    loading: loadingDashboard,
+    error: errorDashboard,
+    data: dashboardData,
+  } = campaignDashboardDataGet;
 
   useEffect(() => {
     dispatch(addDetailsToCreateCampaign({ id: campaignId }));
@@ -23,7 +29,13 @@ export const CampaignDashboardPage: React.FC = () => {
   },[dispatch]);
   return (
     <div className="w-full h-full">
-        <CampaignDetails />
+      {loading || loadingDashboard ? (
+        <h1>Loading...</h1>
+      ) : error || errorDashboard ? (
+        <p>{error}</p>
+      ) : (
+        <CampaignDashboard campaignDetails={campaignDetails} screenLevelData={dashboardData}/>
+      )}
     </div>
   );
 };

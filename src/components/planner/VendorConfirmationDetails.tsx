@@ -188,7 +188,7 @@ export const VendorConfirmationDetails = ({
           </div>
         </div>
         <div className="pb-4">
-          <MultiColorLinearBar values={[2, 3, 4]} colors={[]} totalValue={9} />
+          <MultiColorLinearBar showPercentage={false} values={[2, 3, 4]} colors={[]} totalValue={9} />
         </div>
         <VendorConfirmationStatusTable
           selectedCampaignIds={selectedCampaignIds}
