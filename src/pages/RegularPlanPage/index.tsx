@@ -10,7 +10,6 @@ import {
   TriggerDetails,
   ViewFinalPlanPODetails,
   VendorConfirmationDetails,
-  CampaignDashboardDetails,
 } from "../../components/planner";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -242,13 +241,7 @@ export const RegularPlanPage: React.FC = () => {
             campaignId={campaignId}
             userInfo={userInfo}
           />
-        ) : (
-          <CampaignDashboardDetails
-            step={currentStep}
-            setCurrentStep={setCurrentStep}
-            campaignId={campaignId}
-          />
-        )}
+        ) : null}
       </div>
     </div>
   );

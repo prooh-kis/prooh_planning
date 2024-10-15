@@ -6,19 +6,11 @@ import React from 'react';
 export const CampaignDetails = ({campaignsList}: any) => {
   return (
     <div className="w-full h-full pt-10 flex flex-col gap-2">
-      <div className="bg-white p-2 rounded-[12px] flex justify-between">
-        <div className="flex gap-2">
-          <div className="h-12 w-20">
-            <img 
-              alt=""
-              src=""
-            />
-          </div>
-          <div className="flex items-center">
-            <div>
-              <h1 className="text-[14px] font-semibold">Campaign India</h1>
-              <p className="text-[12px]">Brand Name</p>
-            </div>
+      <div className="bg-white p-2 border rounded-[12px] flex justify-between">
+        <div className="flex gap-2 border">
+          <div>
+            <h1 className="text-[14px] font-semibold">Campaign India</h1>
+            <p className="text-[12px]">Brand Name</p>
           </div>
         </div>
         <div className="flex gap-2 py-2">

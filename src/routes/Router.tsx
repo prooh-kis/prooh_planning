@@ -79,7 +79,7 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          path={CAMPAIGN_DETAILS_PAGE}
+          path={"/campaignDetails/:id?"}
           element={
             <PrivateRoute layout={HomePageLayout}>
               <CampaignDetailsPage />

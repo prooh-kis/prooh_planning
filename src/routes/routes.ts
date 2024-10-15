@@ -7,7 +7,7 @@ export const HOME = "/";
 export const MY_CAMPAIGNS_LIST = "/myCampaignsList"
 export const MY_REQUESTS_LIST = "/myRequestsList"
 
-export const CAMPAIGN_DETAILS_PAGE = "/campaignDetailsPage/:id?"
+export const CAMPAIGN_DETAILS_PAGE = "/campaignDetails/:id?"
 
 export const LOGIN = "/login";
 

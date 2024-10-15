@@ -112,11 +112,7 @@ export const MyCampaignsListTable = ({
                 dispatch(addDetailsToCreateCampaign({
                   id: campaign._id,
                 }));
-                navigate(`/regularplan/${campaign._id}`,
-                  {
-                    state: { campaign }
-                  }
-                );
+                navigate(`/campaignDetails/${campaign._id}`);
             }}
             >
               <i className="fi fi-bs-menu-dots text-[20px] flex justify-center"></i>
