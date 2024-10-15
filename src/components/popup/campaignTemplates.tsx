@@ -81,7 +81,7 @@ export const CampaignTemplates: React.FC = () => {
         </div>
         <PrimaryButton rounded="rounded-[30px]" title="Plan Campaign" action={() => {
             if (selectedCard === 0) {
-              navigate("/regularplan", { state: { campaignType: campaignType }});
+              navigate("/regularplan");
             } else if (selectedCard === 1) {
               navigate("/specialdayplan");
             } else if (selectedCard === 2) {

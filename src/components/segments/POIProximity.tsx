@@ -43,7 +43,7 @@ export const POIProximity = ({
                 } else {
                   setSelectedPOIs([...selectedPOIs, poi]);
                 }
-                handlePOIScreens();
+                // handlePOIScreens();
               }}
               checked={selectedPOIs.includes(poi) ? true : false}
               label={poi}

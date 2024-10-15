@@ -76,9 +76,10 @@ export const RegularPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const location = useLocation();
   const { pathname } = location;
-  const campaignId = pathname?.split("/")?.splice(-1)[0];
+  const campaignId: any = pathname?.split("/")?.length > 2 ? pathname?.split("/")?.splice(2)[0] : null;
+  console.log(campaignId);
 
-  const [currentStep, setCurrentStep] = useState<any>(getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] : 1);
+  const [currentStep, setCurrentStep] = useState<any>(campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] : 1);
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
@@ -159,7 +160,7 @@ export const RegularPlanPage: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (campaignId) {
+    if (campaignId !== null || undefined) {
       let campDetails: any = {};
       if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]) {
         campDetails = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId];

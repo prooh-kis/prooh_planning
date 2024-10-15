@@ -12,7 +12,7 @@ import {
   VerifyEmail,
   MyCampaignsListPage,
   MyRequestsListPage,
-  CampaignDetailsPage,
+  CampaignDashboardPage,
 } from "../pages";
 
 import { PrivateRoute } from "./PrivateRoute";
@@ -82,7 +82,7 @@ const Routers: React.FC = () => {
           path={"/campaignDetails/:id?"}
           element={
             <PrivateRoute layout={HomePageLayout}>
-              <CampaignDetailsPage />
+              <CampaignDashboardPage />
             </PrivateRoute>
           }
         />

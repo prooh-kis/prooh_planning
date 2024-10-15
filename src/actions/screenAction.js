@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+  GET_CAMPAIGN_DASHBOARD_DATA_ERROR,
+  GET_CAMPAIGN_DASHBOARD_DATA_REQUEST,
+  GET_CAMPAIGN_DASHBOARD_DATA_SUCCESS,
   GET_FINAL_PLAN_PO_DATA_ERROR,
   GET_FINAL_PLAN_PO_DATA_REQUEST,
   GET_FINAL_PLAN_PO_DATA_SUCCESS,
@@ -313,3 +316,31 @@ async (dispatch, getState) => {
     });
   }
 };
+
+
+
+export const getCampaignDashboardData = 
+({id}) =>
+async (dispatch, getState) => {
+  dispatch({
+    type: GET_CAMPAIGN_DASHBOARD_DATA_REQUEST,
+    payload: {id},
+  });
+  try {
+    const { data } = await axios.post(`${url}/campaignDashboard`, { id });
+    dispatch({
+      type: GET_CAMPAIGN_DASHBOARD_DATA_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_CAMPAIGN_DASHBOARD_DATA_ERROR,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    });
+  }
+};
+

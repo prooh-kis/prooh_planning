@@ -1,5 +1,8 @@
 import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../utils/localStorageUtils";
 import {
+  GET_CAMPAIGN_DASHBOARD_DATA_ERROR,
+  GET_CAMPAIGN_DASHBOARD_DATA_REQUEST,
+  GET_CAMPAIGN_DASHBOARD_DATA_SUCCESS,
   GET_FINAL_PLAN_PO_DATA_ERROR,
   GET_FINAL_PLAN_PO_DATA_REQUEST,
   GET_FINAL_PLAN_PO_DATA_SUCCESS,
@@ -234,6 +237,26 @@ export function vendorConfirmationStatusTableDetailsGetReducer(state = {}, actio
         data: action.payload,
       };
     case GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+
+export function campaignDashboardDataGetReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_CAMPAIGN_DASHBOARD_DATA_REQUEST:
+      return { loading: true };
+    case GET_CAMPAIGN_DASHBOARD_DATA_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_CAMPAIGN_DASHBOARD_DATA_ERROR:
       return {
         loading: false,
         error: action.payload,
