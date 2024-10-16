@@ -510,7 +510,7 @@ export const ViewFinalPlanPODetails = ({
             setCurrentStep(step - 1);
           }}
           handleSave={handleSaveAndContinue}
-          totalScreensData={getDataFromLocalStorage(COST_SUMMARY)[0] || []}
+          totalScreensData={getDataFromLocalStorage(COST_SUMMARY)?.[0] || []}
         />
       </div>
     </div>

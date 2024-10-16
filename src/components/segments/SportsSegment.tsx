@@ -87,10 +87,10 @@ export const SportsSegment = ({
 
   useEffect(() => {
     if (matches && !myMatches) {
-      const campaign = getDataFromLocalStorage("campaign").basicDetails;
+      const campaign = getDataFromLocalStorage("campaign")?.basicDetails;
       const filteredMatches = matches.filter((match: any) => {
-        const currentDate = new Date(match.startDate);
-        return currentDate >= new Date(campaign.startDate) && currentDate <= new Date(campaign.endDate);
+        const currentDate = new Date(match?.startDate);
+        return currentDate >= new Date(campaign?.startDate) && currentDate <= new Date(campaign?.endDate);
       });
       setMyMatches(filteredMatches);
     }

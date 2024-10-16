@@ -14,7 +14,10 @@ import { getScreenDataUploadCreativeData } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
 import { Footer } from "../../components/footer";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
-import { addDetailsToCreateCampaign, changeCampaignStatusAfterCreativeUpload } from "../../actions/campaignAction";
+import {
+  addDetailsToCreateCampaign,
+  changeCampaignStatusAfterCreativeUpload,
+} from "../../actions/campaignAction";
 import {
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
@@ -25,6 +28,7 @@ import {
   SELECTED_TRIGGER,
 } from "../../constants/localStorageConstants";
 import { CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT } from "../../constants/campaignConstants";
+import { getVideoDurationFromVideoURL } from "../../utils/fileUtils";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -42,6 +46,7 @@ interface SingleFile {
 interface Data1 {
   screenResolution: string;
   count: number;
+  screenIds: string[];
   creativeDuration: number;
   standardDayTimeCreatives: SingleFile[];
   standardNightTimeCreatives: SingleFile[];
@@ -114,12 +119,17 @@ export const CreativeUploadDetails = ({
   const handleAddNewFile = async (file: File) => {
     if (file) {
       const fileURL = URL.createObjectURL(file);
+      let duration: any = 15;
+      if (file.type?.split("/")[0] === "video") {
+        duration = await getVideoDurationFromVideoURL(fileURL);
+      }
+
       const ff = {
         file: file,
         url: fileURL,
         fileType: file.type,
         fileSize: file.size,
-        duration: "10",
+        duration: Number(duration),
         awsURL: "",
       };
       setFIle(ff);
@@ -256,7 +266,7 @@ export const CreativeUploadDetails = ({
     let url = "";
     if (file) url = await getAWSUrl(file);
     return {
-      url: file.url,
+      url: url,
       size: file.fileSize,
       type: file.fileType,
     };
@@ -298,28 +308,49 @@ export const CreativeUploadDetails = ({
     saveDataOnLocalStorage(CAMPAIGN_CREATIVES, result);
   };
 
+  const isTriggerAvailable = () => {
+    const result =
+      getDataFromLocalStorage(SELECTED_TRIGGER)?.weatherTriggers?.length > 0
+        ? true
+        : getDataFromLocalStorage(SELECTED_TRIGGER)?.sportsTriggers?.length > 0
+        ? true
+        : getDataFromLocalStorage(SELECTED_TRIGGER)?.vacantSlots?.length > 0
+        ? true
+        : false;
+
+    return result;
+  };
+
   const handleSaveAndContinue = async () => {
     if (validate()) {
       setIsLoading(true);
       let requestBody: any = [];
-      for (let city in creativeUploadData) {
+      let sss = creativeUploadData;
+      for (let city in sss) {
         for (let data of creativeUploadData[city]) {
           let standardDayTimeCreatives: any = [];
           let standardNightTimeCreatives: any = [];
           let triggerCreatives: any = [];
 
           for (let file of data?.standardDayTimeCreatives) {
-            standardDayTimeCreatives.push(await returnRequiredValue(file));
+            let myData = await returnRequiredValue(file);
+            file.awsURl = myData?.url;
+            standardDayTimeCreatives.push(myData);
           }
           for (let file of data?.standardNightTimeCreatives) {
-            standardNightTimeCreatives.push(await returnRequiredValue(file));
+            let myData = await returnRequiredValue(file);
+            file.awsURl = myData?.url;
+            standardNightTimeCreatives.push(myData);
           }
           for (let file of data?.triggerCreatives) {
-            triggerCreatives.push(await returnRequiredValue(file));
+            let myData = await returnRequiredValue(file);
+            file.awsURl = myData?.url;
+            triggerCreatives.push(myData);
           }
           requestBody.push({
             screenResolution: data?.screenResolution,
             count: data?.count,
+            screenIds: data?.screenIds,
             creativeDuration: data?.creativeDuration,
             standardDayTimeCreatives: standardDayTimeCreatives,
             standardNightTimeCreatives: standardNightTimeCreatives,
@@ -327,6 +358,8 @@ export const CreativeUploadDetails = ({
           });
         }
       }
+      console.log("ssss : ", sss);
+      saveDataOnLocalStorage(CAMPAIGN_CREATIVES, sss);
       dispatch(
         addDetailsToCreateCampaign({
           pageName: "Upload Creative Page",
@@ -334,7 +367,12 @@ export const CreativeUploadDetails = ({
           creatives: requestBody,
         })
       );
-      dispatch(changeCampaignStatusAfterCreativeUpload({id: campaignId, status: CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT }))
+      dispatch(
+        changeCampaignStatusAfterCreativeUpload({
+          id: campaignId,
+          status: CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT,
+        })
+      );
       setCurrentStep(step + 1);
     } else {
       message.error("Please upload creatives for each row and foreach city");
@@ -351,6 +389,7 @@ export const CreativeUploadDetails = ({
 
   useEffect(() => {
     if (screenData) {
+      // console.log("screenData : ", screenData);
       if (getDataFromLocalStorage(CAMPAIGN_CREATIVES)) {
         handleSetInitialData(getDataFromLocalStorage(CAMPAIGN_CREATIVES));
       } else {
@@ -365,6 +404,7 @@ export const CreativeUploadDetails = ({
           result[city].push({
             screenResolution: screenData[city][data].screenResolution,
             count: screenData[city][data].count,
+            screenIds: screenData[city][data].screenIds,
             creativeDuration: screenData[city][data].duration,
             standardDayTimeCreatives:
               screenData[city][data].standardDayTimeCreatives || [],
@@ -469,7 +509,9 @@ export const CreativeUploadDetails = ({
                 >
                   <Space direction="vertical">
                     <Radio value={"Standard"}>Standard</Radio>
-                    <Radio value={"Trigger"}>Trigger</Radio>
+                    {isTriggerAvailable() && (
+                      <Radio value={"Trigger"}>Trigger</Radio>
+                    )}
                   </Space>
                 </Radio.Group>
               </div>

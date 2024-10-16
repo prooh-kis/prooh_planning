@@ -1,5 +1,5 @@
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import React from "react";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,7 +11,7 @@ import {
   BarController,
   Filler,
   ArcElement,
-} from 'chart.js';
+} from "chart.js";
 
 // Register the required chart components
 ChartJS.register(
@@ -35,17 +35,22 @@ interface BarChartProps {
   label?: string;
 }
 
-export const DashboardBarChart: React.FC<BarChartProps> = ({ data, labels, label }) => {
+export const DashboardBarChart: React.FC<BarChartProps> = ({
+  data,
+  labels,
+  label,
+}) => {
   const chartData = {
     labels,
     datasets: [
       {
         label: label,
         data,
+        borderColor: "#129BFF",
         // borderColor: '#129BFF',
         borderWidth: 1,
         borderRadius: 5,
-        barThickness: 'flex' as const, // Cast "flex" as a valid type
+        barThickness: "flex" as const, // Cast "flex" as a valid type
         barPercentage: 0.9,
         categoryPercentage: 0.8,
         backgroundColor: function (context: any) {
@@ -70,7 +75,7 @@ export const DashboardBarChart: React.FC<BarChartProps> = ({ data, labels, label
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top' as const, // Explicitly cast "top" as a valid value
+        position: "top" as const, // Explicitly cast "top" as a valid value
         display: false,
       },
       title: {

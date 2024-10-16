@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { EmailSendBox } from "../../components/segments/EmailSendBox";
 import { EmailConfirmationImage } from "../../components/segments/EmailConfirmationImage";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   getVendorConfirmationDetails,
   getVendorConfirmationStatusTableDetails,
@@ -18,6 +18,7 @@ import { Footer } from "../../components/footer";
 import { message } from "antd";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
+import { CAMPAIGN_DETAILS_PAGE } from "../../routes/routes";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -33,6 +34,7 @@ export const VendorConfirmationDetails = ({
   userInfo,
 }: VendorConfirmationDetailsProps) => {
   const dispatch = useDispatch<any>();
+  const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const [files, setFiles] = useState<any>([]);
@@ -148,7 +150,10 @@ export const VendorConfirmationDetails = ({
           vendorApprovalImgs: imageArr, // return url array
         })
       );
-      setCurrentStep(step + 1);
+      // setCurrentStep(step + 1);
+      navigate(
+        `${CAMPAIGN_DETAILS_PAGE}/${pathname?.split("/").splice(-1)[0]}`
+      );
     }
   };
 
@@ -188,7 +193,12 @@ export const VendorConfirmationDetails = ({
           </div>
         </div>
         <div className="pb-4">
-          <MultiColorLinearBar showPercentage={false} values={[2, 3, 4]} colors={[]} totalValue={9} />
+          <MultiColorLinearBar
+            showPercentage={false}
+            values={[2, 3, 4]}
+            colors={[]}
+            totalValue={9}
+          />
         </div>
         <VendorConfirmationStatusTable
           selectedCampaignIds={selectedCampaignIds}

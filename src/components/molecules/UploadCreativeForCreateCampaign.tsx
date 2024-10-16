@@ -53,11 +53,9 @@ export const UploadCreativeForStandardCampaign = ({
           }}
         />
       )}
-
     </div>
   );
 };
-
 
 const triggerText = [
   "When it's freezing outside",
@@ -75,7 +73,7 @@ const triggerText = [
   "When AQI is Poor",
   "When AQI is Unhealthy",
   "When AQI is Hazardous",
-]
+];
 
 export const UploadCreativeForTriggerCampaign = ({
   handleSelectFileType,
@@ -84,7 +82,7 @@ export const UploadCreativeForTriggerCampaign = ({
   file,
   handleSaveFile,
   triggerData,
-  triggerType
+  triggerType,
 }: any) => {
   console.log(triggerData);
   return (
@@ -93,31 +91,55 @@ export const UploadCreativeForTriggerCampaign = ({
       {triggerType === "Weather Trigger" && (
         <div>
           <h1 className="pt-4 font-semibold">
-            {
-              triggerData?.type === "rain" ? "Rain" : 
-              triggerData?.type === "temperature" ? "Temperature" :
-              triggerData?.type === "aqi" ? "AQI" : "None"
-            } Based Trigger
+            {triggerData?.type === "rain"
+              ? "Rain Based Trigger"
+              : triggerData?.type === "temperature"
+              ? "Temperature Based Trigger"
+              : triggerData?.type === "aqi"
+              ? "AQI Based Trigger"
+              : "None"}{" "}
           </h1>
           <h1>
-            {
-              triggerData.type === "temperature" && triggerData.maxVal === 10 ? triggerText[0] :
-              triggerData.type === "temperature" && triggerData.maxVal === 20 ? triggerText[1] :
-              triggerData.type === "temperature" && triggerData.maxVal === 30 ? triggerText[2] :
-              triggerData.type === "temperature" && triggerData.maxVal === 42 ? triggerText[3] :
-              triggerData.type === "temperature" && triggerData.minVal === 42 ? triggerText[4] :
-              triggerData.type === "rain" && triggerData.rainType === "cloudy" ? triggerText[5] :
-              triggerData.type === "rain" && triggerData.rainType === "drizzel" ? triggerText[6] :
-              triggerData.type === "rain" && triggerData.rainType === "heavy" ? triggerText[7] :
-              triggerData.type === "rain" && triggerData.rainType === "storm" ? triggerText[8] :
-              triggerData.type === "rain" && triggerData.rainType === "stopped" ? triggerText[9] :
-              triggerData.type === "aqi" && triggerData.aqi === "good" ? triggerText[10] :
-              triggerData.type === "aqi" && triggerData.aqi === "bad" ? triggerText[11] :
-              triggerData.type === "aqi" && triggerData.aqi === "poor" ? triggerText[12] :
-              triggerData.type === "aqi" && triggerData.aqi === "unhealthy" ? triggerText[13] :
-              triggerData.type === "aqi" && triggerData.aqi === "hazardous" ? triggerText[14] :
-              ""
-            }
+            {triggerData?.type === "temperature" && triggerData?.maxVal === 10
+              ? triggerText[0]
+              : triggerData?.type === "temperature" &&
+                triggerData?.maxVal === 20
+              ? triggerText[1]
+              : triggerData?.type === "temperature" &&
+                triggerData?.maxVal === 30
+              ? triggerText[2]
+              : triggerData?.type === "temperature" &&
+                triggerData?.maxVal === 42
+              ? triggerText[3]
+              : triggerData?.type === "temperature" &&
+                triggerData?.minVal === 42
+              ? triggerText[4]
+              : triggerData?.type === "rain" &&
+                triggerData?.rainType === "cloudy"
+              ? triggerText[5]
+              : triggerData?.type === "rain" &&
+                triggerData?.rainType === "drizzel"
+              ? triggerText[6]
+              : triggerData?.type === "rain" &&
+                triggerData?.rainType === "heavy"
+              ? triggerText[7]
+              : triggerData?.type === "rain" &&
+                triggerData?.rainType === "storm"
+              ? triggerText[8]
+              : triggerData?.type === "rain" &&
+                triggerData?.rainType === "stopped"
+              ? triggerText[9]
+              : triggerData?.type === "aqi" && triggerData?.aqi === "good"
+              ? triggerText[10]
+              : triggerData?.type === "aqi" && triggerData?.aqi === "bad"
+              ? triggerText[11]
+              : triggerData?.type === "aqi" && triggerData?.aqi === "poor"
+              ? triggerText[12]
+              : triggerData?.type === "aqi" && triggerData?.aqi === "unhealthy"
+              ? triggerText[13]
+              : triggerData?.type === "aqi" && triggerData?.aqi === "hazardous"
+              ? triggerText[14]
+              : ""}
           </h1>
         </div>
       )}

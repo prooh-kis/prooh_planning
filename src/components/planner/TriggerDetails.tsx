@@ -10,8 +10,14 @@ import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import { formatNumber } from "../../utils/formatValue";
 import { Footer } from "../../components/footer";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
-import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
-import { COST_SUMMARY, SELECTED_TRIGGER } from "../../constants/localStorageConstants";
+import {
+  getDataFromLocalStorage,
+  saveDataOnLocalStorage,
+} from "../../utils/localStorageUtils";
+import {
+  COST_SUMMARY,
+  SELECTED_TRIGGER,
+} from "../../constants/localStorageConstants";
 import { message } from "antd";
 import { useDispatch } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
@@ -90,44 +96,54 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
   };
 
   const handleSelectTrigger = useCallback(() => {
+    setIsDisabled(true);
     saveDataOnLocalStorage(SELECTED_TRIGGER, {
       weatherTriggers:
         selectedTrigger?.triggerType === "weather"
-          ? {
-              type: weatherTabData()?.filter((w: any) => w.id === currentTab)[0]
-                ?.value,
-              minVal: minVal,
-              maxVal: maxVal,
-              rainType: rainType,
-              aqi: aqi,
-              openBudgetSovPercent: selectedSOV,
-              budget: Number(selectedBudget),
-              period: Number(selectedTimeOptions),
-            }
-          : {},
+          ? [
+              {
+                type: weatherTabData()?.filter(
+                  (w: any) => w.id === currentTab
+                )[0]?.value,
+                minVal: minVal,
+                maxVal: maxVal,
+                rainType: rainType,
+                aqi: aqi,
+                openBudgetSovPercent: selectedSOV,
+                budget: Number(selectedBudget),
+                period: Number(selectedTimeOptions),
+              },
+            ]
+          : [],
       sportsTriggers:
         selectedTrigger?.triggerType === "sport"
-          ? {
-              sport: sport,
-              player: player,
-              matchId: selectedMatchId,
-              condition: condition,
-              openBudgetSovPercent: selectedSOV,
-              budget: Number(selectedBudget),
-              period: Number(selectedTimeOptions),
-            }
-          : {},
+          ? [
+              {
+                sport: sport,
+                player: player,
+                matchId: selectedMatchId,
+                condition: condition,
+                openBudgetSovPercent: selectedSOV,
+                budget: Number(selectedBudget),
+                period: Number(selectedTimeOptions),
+              },
+            ]
+          : [],
+
       vacantSlots:
         selectedTrigger?.triggerType === "empty"
-          ? {
-              type: "vacantSlots",
-              slotType: condition,
-              openBudgetSovPercent: selectedSOV,
-              budget: Number(selectedBudget),
-              period: Number(selectedTimeOptions),
-            }
-          : {},
+          ? [
+              {
+                type: "vacantSlots",
+                slotType: condition,
+                openBudgetSovPercent: selectedSOV,
+                budget: Number(selectedBudget),
+                period: Number(selectedTimeOptions),
+              },
+            ]
+          : [],
     });
+    console.log("fffffff : ", getDataFromLocalStorage(SELECTED_TRIGGER));
   }, [
     currentTab,
     selectedTrigger,
@@ -145,8 +161,11 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
   ]);
 
   const handleSaveAndContinue = () => {
+    console.log("handle save : ", getDataFromLocalStorage(SELECTED_TRIGGER));
     if (isDisabled) {
-      message.error("Please confirm budget for your selected trigger");
+      message.error(
+        "Please confirm budget for your selected trigger or skip this step"
+      );
     } else {
       dispatch(
         addDetailsToCreateCampaign({
@@ -159,6 +178,55 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
     }
   };
 
+  const handleSkipTriggerSelection = () => {
+    if (confirm("Do you really want to skip this steps?")) {
+      saveDataOnLocalStorage(SELECTED_TRIGGER, {
+        weatherTriggers: [],
+        sportsTriggers: [],
+        vacantSlots: [],
+      });
+      setIsDisabled(false);
+      console.log("ggggg : ", getDataFromLocalStorage(SELECTED_TRIGGER));
+    }
+  };
+
+  // setting initial value  when page reload or came from future
+  useEffect(() => {
+    const trigger = getDataFromLocalStorage(SELECTED_TRIGGER);
+    if (trigger?.weatherTriggers?.length > 0) {
+      setSelectedTrigger({
+        triggerType: "weather",
+      });
+      setMinVal(trigger?.weatherTriggers[0]?.minVal || 0);
+      setMaxVal(trigger?.weatherTriggers[0]?.maxVal || 0);
+      setRainType(trigger?.weatherTriggers[0]?.rainType || "0");
+      setAqi(trigger?.weatherTriggers[0]?.aqi || "");
+      setSelectedSOV(trigger?.weatherTriggers[0]?.openBudgetSovPercent || null);
+      setSelectedBudget(trigger?.weatherTriggers[0]?.budget || null);
+      setMaxVal(trigger?.weatherTriggers[0]?.maxVal || 0);
+      setSelectedTimeOptions(trigger?.weatherTriggers[0]?.period || 300);
+    } else if (trigger?.sportsTriggers?.length > 0) {
+      setSelectedTrigger({
+        triggerType: "sport",
+      });
+      setSport(trigger?.sportsTriggers[0]?.sport || "");
+      setPlayer(trigger?.sportsTriggers[0]?.player || "");
+      setSelectedMatchId(trigger?.sportsTriggers[0]?.matchId || "");
+      setCondition(trigger?.sportsTriggers[0]?.condition || "");
+      setSelectedSOV(trigger?.sportsTriggers[0]?.openBudgetSovPercent || null);
+      setSelectedBudget(trigger?.sportsTriggers[0]?.budget || null);
+      setSelectedTimeOptions(trigger?.sportsTriggers[0]?.period || 300);
+    } else if (trigger?.vacantSlots?.length > 0) {
+      setSelectedTrigger({
+        triggerType: "empty",
+      });
+      setCondition(trigger?.sportsTriggers[0]?.condition || "");
+      setSelectedSOV(trigger?.sportsTriggers[0]?.openBudgetSovPercent || null);
+      setSelectedBudget(trigger?.sportsTriggers[0]?.budget || null);
+      setSelectedTimeOptions(trigger?.sportsTriggers[0]?.period || 300);
+    }
+  }, []);
+
   useEffect(() => {
     if (selectedTrigger) {
       handleSelectTrigger();
@@ -170,10 +238,18 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
         <h1 className="text-[24px] text-primaryText font-semibold">
           Add Triggers
         </h1>
-        <p className="text-[14px] text-secondaryText py-2">
-          Choose any one of your desired triggers for contextual targeting of
-          you target audiences
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-[14px] text-secondaryText py-2">
+            Choose any one of your desired triggers for contextual targeting of
+            you target audiences
+          </p>
+          <p
+            className="text-[14px] text-primaryButton underline"
+            onClick={handleSkipTriggerSelection}
+          >
+            Skip trigger selection
+          </p>
+        </div>
       </div>
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-4 border rounded py-5 flex flex-col justify-between">
@@ -343,6 +419,7 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
               for your campaign triggers
             </>
           }
+          disabled={!isDisabled}
           onChange={() => {
             setIsDisabled(!isDisabled);
           }}
@@ -353,19 +430,8 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={() => {
-            if (isDisabled) {
-              message.error("Please confirm budget for your selected trigger");
-            } else {
-              dispatch(addDetailsToCreateCampaign({
-                pageName: "Add Triggers Page",
-                id: pathname.split("/").splice(-1)[0],
-                triggers: getDataFromLocalStorage(SELECTED_TRIGGER)
-              }));
-              setCurrentStep(step + 1);
-            };
-          }}
-          totalScreensData={getDataFromLocalStorage(COST_SUMMARY)[0] || []}
+          handleSave={handleSaveAndContinue}
+          totalScreensData={getDataFromLocalStorage(COST_SUMMARY)?.[0] || []}
         />
       </div>
     </div>
