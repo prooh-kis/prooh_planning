@@ -1,18 +1,14 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import { formatNumber } from "../../utils/formatValue"
-import { useDispatch } from "react-redux";
-import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
-interface MyCampaignsListTableProps {
-  campaignsList?: any,
+interface MyRequestsListTableProps {
+  plansList?: any,
 }
 
-export const MyCampaignsListTable = ({
-  campaignsList
-}: MyCampaignsListTableProps) => {
+export const MyPlansListTable = ({
+  plansList
+}: MyRequestsListTableProps) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch<any>();
-  console.log(campaignsList)
   return (
     <table className="w-full">
       <thead>
@@ -23,38 +19,38 @@ export const MyCampaignsListTable = ({
             </h1>
           </th>
           <th className="py-2 font-semibold">
-            <h1 className="text-[14px] flex justify-start">
+            <h1 className="flex justify-start">
               Campaign Name
             </h1>
           </th>
           <th className="py-2 font-semibold">
-            <h1 className="text-[14px] flex justify-start">
+            <h1 className="flex justify-start">
               Brand Name
             </h1>
           </th>
           <th className="py-2 font-semibold">
-            <h1 className="text-[14px] flex justify-start">
-              Campaign Type
+            <h1 className="flex justify-start">
+              Client Name
             </h1>
           </th>
           <th className="py-2 font-semibold">
-            <h1 className="text-[14px] flex justify-start">
-              Performance
-            </h1>
-          </th>
-          <th className="py-2 font-semibold">
-            <h1 className="text-[14px] flex justify-start">
+            <h1 className="flex justify-start">
               Status
             </h1>
           </th>
           <th className="py-2 font-semibold">
-            <h1 className="text-[14px] flex justify-start">
+            <h1 className="flex justify-start">
               Start Date
             </h1>
           </th>
           <th className="py-2 font-semibold">
-            <h1 className="text-[14px] flex justify-start">
+            <h1 className="flex justify-start">
               End Date
+            </h1>
+          </th>
+          <th className="py-2 font-semibold">
+            <h1 className="flex justify-start">
+              Campaign Type
             </h1>
           </th>
           <th className="py-2 font-semibold">
@@ -65,7 +61,7 @@ export const MyCampaignsListTable = ({
         </tr>
       </thead>
       <tbody>
-        {campaignsList?.map((campaign: any, i: any) => (
+        {plansList?.map((campaign: any, i: any) => (
           <tr key={i}>
             <td className="p-2">
               <h1 className="text-[14px] flex justify-center">
@@ -73,23 +69,18 @@ export const MyCampaignsListTable = ({
               </h1>
             </td>
             <td className="p-2">
-              <h1 className="text-[14px]">
+              <h1 className="text-[14px] flex justify-start">
                 {campaign.name}
               </h1>
             </td>
             <td className="p-2">
-              <h1 className="text-[14px]">
+              <h1 className="text-[14px] flex justify-start">
                 {campaign.brandName}
               </h1>
             </td>
             <td className="p-2">
-              <h1 className="text-[14px]">
-                {campaign.campaignType}
-              </h1>
-            </td>
-            <td className="p-2">
-              <h1 className="text-[14px]">
-                0 %
+              <h1 className="text-[14px] flex justify-start">
+                {campaign.clientName}
               </h1>
             </td>
             <td className="p-2">
@@ -107,14 +98,13 @@ export const MyCampaignsListTable = ({
                 {new Date(campaign.endDate).toDateString()}
               </h1>
             </td>
+            <td className="p-2 truncate">
+              <h1 className="text-[14px] truncate">
+                {campaign?.campaignType}
+              </h1>
+            </td>
             <td className="p-2"
-              onClick={() => {
-                dispatch(addDetailsToCreateCampaign({
-                  id: campaign._id,
-                }));
-                if (campaign.currentPage !== "")
-                navigate(`/campaignDetails/${campaign._id}`);
-            }}
+              onClick={() => navigate(`/regularplan/${campaign.campaignCreationId}`)}
             >
               <i className="fi fi-bs-menu-dots text-[20px] flex justify-center"></i>
             </td>

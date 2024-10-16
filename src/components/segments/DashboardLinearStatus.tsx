@@ -17,7 +17,6 @@ interface DashboardLinearStatusProps {
  spotDelivery?: any;
 }
 export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleShow, show, campaignDetails, screenLevelData}: DashboardLinearStatusProps) => {
-  console.log(screenPerformance())
   return (
     <div className="">
        <div className="grid grid-cols-12 gap-4 py-2">

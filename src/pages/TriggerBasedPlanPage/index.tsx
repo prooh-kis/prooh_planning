@@ -27,11 +27,12 @@ import {
   FULL_CAMPAIGN_PLAN,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { SpecialDay } from "../../components/planner/SpecialDay";
 
 const pages = [
   {
     id: 1,
-    value: "Basic Details Page",
+    value: "Topical Day Page",
   },
   {
     id: 2,
@@ -72,7 +73,7 @@ const pages = [
   {},
 ];
 
-export const RegularPlanPage: React.FC = () => {
+export const TriggerBasedPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const location = useLocation();
   const { pathname } = location;
@@ -148,7 +149,6 @@ export const RegularPlanPage: React.FC = () => {
         [campaignId]: curr
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
-      console.log(currStep);
     } else {
       dispatch(getScreensAudiencesData({ markets: [] }));
       dispatch(
@@ -165,11 +165,8 @@ export const RegularPlanPage: React.FC = () => {
   }, [dispatch, campaignDetails]);
 
   useEffect(() => {
-    console.log(campaignId)
     if (campaignId !== null || undefined) {
-      console.log(campaignId)
       dispatch(addDetailsToCreateCampaign({ id: campaignId}));
-      // const campDetails = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
     }
   }, [dispatch, campaignId]);
 
@@ -180,64 +177,14 @@ export const RegularPlanPage: React.FC = () => {
       </div>
       <div className="w-full h-full flex justify-center items-top">
         {currentStep === 1 ? (
-          <EnterCampaignBasicDetails
+          <SpecialDay
             setCurrentStep={setCurrentStep}
             step={currentStep}
             userInfo={userInfo}
             pathname={pathname}
             campaignId={campaignId}
           />
-        ) : currentStep === 2 ? (
-          <AudienceTouchPointsDetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-            loading={loadingAudiences || loadingCost}
-            error={errorAudiences || errorCost}
-            campaignId={campaignId}
-          />
-        ) : currentStep === 3 ? (
-          <AdvanceFiltersDetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-            loading={loadingAdvanceFilterScreens}
-            error={errorAdvanceFilterScreens}
-          />
-        ) : currentStep === 4 ? (
-          <RegularCohortComparisonDetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-            campaignId={campaignId}
-          />
-        ) : currentStep === 5 ? (
-          <ScreenSummaryDetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-            campaignId={campaignId}
-          />
-        ) : currentStep === 6 ? (
-          <TriggerDetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-          />
-        ) : currentStep === 7 ? (
-          <ViewFinalPlanPODetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-            campaignId={campaignId}
-          />
-        ) : currentStep === 8 ? (
-          <CreativeUploadDetails
-            step={currentStep}
-            setCurrentStep={setCurrentStep}
-            campaignId={campaignId}
-          />
-        ) : currentStep === 9 ? (
-          <VendorConfirmationDetails
-            step={currentStep}
-            setCurrentStep={setCurrentStep}
-            campaignId={campaignId}
-            userInfo={userInfo}
-          />
+   
         ) : null}
       </div>
     </div>

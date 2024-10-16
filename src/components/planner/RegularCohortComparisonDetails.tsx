@@ -188,7 +188,7 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
               setCurrentStep(step + 1);
             };
           }}
-          totalScreensData={getDataFromLocalStorage(COST_SUMMARY)[0] || []}
+          totalScreensData={getDataFromLocalStorage(COST_SUMMARY)?.[0] || []}
         />
       </div>
     </div>

@@ -9,19 +9,10 @@ export const CampaignTemplates: React.FC = () => {
 
   // Track the index of the selected card
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
-  const [campaignType, setCampaignType] = useState<string>("Regular");
 
   // Handle card click, setting the clicked card's index
   const handleCardClick = (index: number) => {
     setSelectedCard(index);
-    if (index === 1) {
-      setCampaignType("Special");
-    } else if (index === 2) {
-      setCampaignType("Trigger");
-    } else {
-      setCampaignType("Regular");
-    }
-
   };
   useEffect(() => {
     removeAllKeyFromLocalStorage();
@@ -64,8 +55,8 @@ export const CampaignTemplates: React.FC = () => {
               paratext="Create campaigns based on specific events trigger and engage with your target audiences"
               icon="condition-alt"
               color="#3523D1"
-              isSelected={selectedCard === 3} // Check if the card is selected
-              handleCardClick={() => handleCardClick(3)} // Pass the card index
+              isSelected={selectedCard === 2} // Check if the card is selected
+              handleCardClick={() => handleCardClick(2)} // Pass the card index
             />
           </div>
           <div className="col-span-1 flex justify-center items-center">
@@ -74,8 +65,8 @@ export const CampaignTemplates: React.FC = () => {
               paratext="Create campaigns by selecting your desired location without any hassle and plan in express mode"
               icon="shop"
               color="#FF5252"
-              isSelected={selectedCard === 2} // Check if the card is selected
-              handleCardClick={() => handleCardClick(2)} // Pass the card index
+              isSelected={selectedCard === 3} // Check if the card is selected
+              handleCardClick={() => handleCardClick(3)} // Pass the card index
             />
           </div>
         </div>
@@ -87,7 +78,7 @@ export const CampaignTemplates: React.FC = () => {
             } else if (selectedCard === 2) {
               navigate("/triggerbasedplan");
             } else if (selectedCard === 3) {
-              navigate("iknowitall");
+              navigate("iknowitallplan");
             }
         }} />
       </div>

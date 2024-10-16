@@ -13,10 +13,14 @@ import {
   MyCampaignsListPage,
   MyRequestsListPage,
   CampaignDashboardPage,
+  MyPlansListPage,
+  SpecialDayPlanPage,
+  TriggerBasedPlanPage,
+  IKnowItAllPlanPage,
 } from "../pages";
 
 import { PrivateRoute } from "./PrivateRoute";
-import { AUTH, CAMPAIGN_DETAILS_PAGE, FORGET_PASSWORD, HOME, MY_CAMPAIGNS_LIST, MY_REQUESTS_LIST, REGULARPLAN, UPDATE_PASSWORD, VERIFY_EMAIL } from "./routes";
+import { AUTH, CAMPAIGN_DETAILS_PAGE, FORGET_PASSWORD, HOME, MY_CAMPAIGNS_LIST, MY_PLANS_LIST, MY_REQUESTS_LIST, REGULARPLAN, UPDATE_PASSWORD, VERIFY_EMAIL } from "./routes";
 
 const Routers: React.FC = () => {
   return (
@@ -78,6 +82,14 @@ const Routers: React.FC = () => {
             </PrivateRoute>
           }
         />
+         <Route
+          path={MY_PLANS_LIST}
+          element={
+            <PrivateRoute layout={HomePageLayout}>
+              <MyPlansListPage />
+            </PrivateRoute>
+          }
+        />
         <Route
           path={"/campaignDetails/:id?"}
           element={
@@ -95,7 +107,33 @@ const Routers: React.FC = () => {
             </PrivateRoute>
           }
         />
-
+        <Route
+          // path={REGULARPLAN}
+          path={"/specialdayplan/:id?"}
+          element={
+            <PrivateRoute layout={HomePageLayout}>
+              <SpecialDayPlanPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          // path={REGULARPLAN}
+          path={"/triggerbasedplan/:id?"}
+          element={
+            <PrivateRoute layout={HomePageLayout}>
+              <TriggerBasedPlanPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          // path={REGULARPLAN}
+          path={"/iknowitallplan/:id?"}
+          element={
+            <PrivateRoute layout={HomePageLayout}>
+              <IKnowItAllPlanPage />
+            </PrivateRoute>
+          }
+        />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

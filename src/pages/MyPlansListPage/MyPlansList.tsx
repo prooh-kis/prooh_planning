@@ -2,7 +2,7 @@ import { TabWithoutIcon } from '../../components/index';
 import { PrimaryButton } from '../../components/atoms/PrimaryButton';
 import { PrimaryInput } from '../../components/atoms/PrimaryInput';
 import React, { useState } from 'react';
-import { MyRequestsListTable } from '../../components/tables';
+import { MyPlansListTable } from '../../components/tables';
 
 const allTabs = [{
   id: "1",
@@ -19,7 +19,7 @@ const allTabs = [{
 }];
 
 
-export const MyRequestsList = ({requestsList}: any) => {
+export const MyPlansList = ({plansList}: any) => {
   const [currentTab, setCurrentTab] = useState<any>("1");
   return (
     <div className="w-full">
@@ -27,7 +27,7 @@ export const MyRequestsList = ({requestsList}: any) => {
         <div className="flex gap-2 items-center">
           <i className="fi fi-sr-megaphone flex items-center text-[#129BFF]"></i>
           <h1 className="text-[18px] text-primaryText font-semibold">
-            My Requests List
+            My Plans List
           </h1>
         </div>
         <div className="flex gap-2 items-center">
@@ -57,7 +57,7 @@ export const MyRequestsList = ({requestsList}: any) => {
         />
       </div>
       <div className="w-full bg-gray-50">
-        <MyRequestsListTable requestsList={requestsList} />
+        <MyPlansListTable plansList={plansList} />
       </div>
     </div>
   );

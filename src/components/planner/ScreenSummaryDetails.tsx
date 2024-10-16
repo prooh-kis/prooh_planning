@@ -178,16 +178,18 @@ export const ScreenSummaryDetails = ({
           ?.selectedType,
       })
     );
-
-    dispatch(
-      getScreenSummaryPlanTableData({
-        id: campaignId,
-        screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-      })
-    );
+    if (screenSummaryData) {
+      dispatch(
+        getScreenSummaryPlanTableData({
+          id: campaignId,
+          screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+        })
+      );
+    }
   }, [dispatch]);
 
   useEffect(() => {
+    
     setRegularVsCohort(
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType
     );

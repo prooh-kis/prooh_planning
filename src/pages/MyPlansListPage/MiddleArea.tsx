@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
-import { MyCampaignsList } from "./MyCampaignsList";
-import { getMyCreateCampaignsList, getMyCreateCampaignsVendorRequestsList } from "../../actions/campaignAction";
+import { MyPlansList } from "./MyPlansList";
+import { getMyCreateCampaignsList } from "../../actions/campaignAction";
 
 
 export const MiddleArea: React.FC = () => {
@@ -21,24 +21,21 @@ export const MiddleArea: React.FC = () => {
     data: campaignsList
   } = myCreateCampaignsListGet;
 
-  const myCreateCampaignsVendorRequestsListGet = useSelector((state: any) => state.myCreateCampaignsVendorRequestsListGet);
-  const {
-    loading: loadingVendorList,
-    error: errorVendorList,
-    data: vendorCampaignsList
-  } = myCreateCampaignsVendorRequestsListGet;
   useEffect(() => {
     if (!userInfo) {
       navigate("/login");
     }
+
     if (userInfo?.isBrand) {
-      dispatch(getMyCreateCampaignsList({id: userInfo?._id}));
+      dispatch(getMyCreateCampaignsList({id: userInfo?._id}))
     }
   },[dispatch, navigate, userInfo]);
+  console.log(campaignsList);
   return (
     <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
-      {userInfo && userInfo?.isBrand ? (
-        <MyCampaignsList campaignsList={campaignsList} />
+      {!loadingCampaignsList && !errorCampaignsList && userInfo && userInfo?.isBrand ? (
+        <MyPlansList plansList={campaignsList} 
+        />
       ) : (
         <div className="">
           <h1 className="text-2xl font-bold">

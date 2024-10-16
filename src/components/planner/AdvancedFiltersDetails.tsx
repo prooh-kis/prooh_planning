@@ -107,16 +107,20 @@ export const AdvanceFiltersDetails = ({
   };
 
   useEffect(() => {
-    if (getAllLocalStorageData()) {
+    if (getDataFromLocalStorage("advanceFilterScreensMapData")) {
       getMapData(
-        JSON.parse(getAllLocalStorageData()["advanceFilterScreensMapData"])
+        getDataFromLocalStorage("advanceFilterScreensMapData")
       );
+    }
+    if (getDataFromLocalStorage("advanceFilterScreensMapData")) {
       setPOIs(
-        JSON.parse(getAllLocalStorageData()["advanceFilterScreensMapData"])
+        getDataFromLocalStorage("advanceFilterScreensMapData")
           .poiList
       );
+    }
+    if (getDataFromLocalStorage("advanceFilterScreensMapData")) {
       setSelectedPOIs(
-        JSON.parse(getAllLocalStorageData()["advanceFilterScreensMapData"])
+        getDataFromLocalStorage("advanceFilterScreensMapData")
           .poiList
       );
     }

@@ -18,75 +18,12 @@ export const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch<any>();
-  const [isPopupOpen1, setIsPopupOpen1] = useState<boolean>(false);
-  const [isPopupOpenScreenCode, setIsPopupOpenScreenCode] =
-    useState<boolean>(false);
-
-  const [isOpenSaveCreatives, setIsOpenSaveCreatives] =
-    useState<boolean>(false);
-  const [screenOptions, setScreenOptions] = useState<any>([]);
-
-  const handleCloseModel = () => {
-    setIsOpenSaveCreatives(false);
-  };
-
-  const handleCloseModelScreenCode = () => {
-    setIsPopupOpenScreenCode(false);
-  };
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-  const openErrorToast = (message: string) => {
-    toast.error(message, {
-      style: {
-        marginTop: "50px",
-      },
-    });
-  };
-
-  const openSuccessToast = (message: string) => {
-    toast.success(message, {
-      style: {
-        marginTop: "50px",
-      },
-    });
-  };
-
-  const closePopup1 = () => {
-    setIsPopupOpen1(false);
-  };
-  const handleGoToPlanCampaign = () => {
-    removeAllKeyFromLocalStorage();
-    navigate("/create-campaign");
-  };
-
-  const handleSetOpenModel = () => {
-    // if (userInfo?.userRole == USER_ROLE_PRIMARY) {
-    //   setIsPopupOpen1(true);
-    // } else {
-    //   openErrorToast("You have no access");
-    // }
-  };
-
-  const handleSetOpenScreenCodeModel = () => {
-    // if (userInfo?.userRole == USER_ROLE_PRIMARY) {
-    //   setIsPopupOpenScreenCode(true);
-    // } else {
-    //   openErrorToast("You have no access");
-    // }
-  };
-
   useEffect(() => {
-    // console.log("useEffect render");
-    // if (userInfo) dispatch(getCreatives());
-  }, [userInfo]);
-
-  useEffect(() => {
-    if (userInfo && userInfo.isMaster) {
-      // dispatch(getAllScreensByUserId());
-    }
-  }, [dispatch, userInfo]);
+  }, []);
 
   return (
     <div className="w-full h-16 bg-white border border-b flex items-center justify-between fixed z-50">
