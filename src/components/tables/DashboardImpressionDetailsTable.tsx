@@ -62,32 +62,41 @@ export const DashboardImpressionDetailsTable = ({
           </td>
           <td className="text-[12px]">
             <div className="flex flex-col gap-1 pl-4">
-              <p>
+              <p className="pt-1">
                 Male
               </p>
-              <p>
+              <p className="pb-1">
                 Female
               </p>
             </div>
-
           </td>
           <td className="">
-            <div className="flex flex-col gap-2 px-2 border-x">
-              <LinearBar value={40} colors={["","#84CBFF"]} highest={100} />
-              <LinearBar value={60} colors={["","#D0B3FF"]} highest={100} />
+            <div className="flex flex-col gap-1 px-2 border-x">
+              <div className="flex gap-4 items-center">
+                <LinearBar value={formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredMale.toFixed(0))} colors={["","#84CBFF"]} highest={formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredTotal.toFixed(0))} />
+                <p className="text-[10px]">
+                  {formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredMale.toFixed(0))}
+                </p>
+              </div>
+              <div className="flex gap-4 items-center">
+                <LinearBar value={formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredFemale.toFixed(0))} colors={["","#D0B3FF"]} highest={formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredTotal.toFixed(0))} />
+                <p className="text-[10px]">
+                  {formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredFemale.toFixed(0))}
+                </p>
+              </div>
             </div>
           </td>
           <td className="text-[12px]">
             <div className="flex items-center justify-center">
               <p>
-                {formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp].impressionDelivered.toFixed(0))}
+                {formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredTotal.toFixed(0))}
               </p>
             </div>
           </td>
           <td className="text-[12px]">
             <div className="flex items-center justify-center border-x">
               <p>
-                {formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp].impressionPromised.toFixed(0))}
+                {formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionPromisedTotal.toFixed(0))}
               </p>
             </div>
           </td>

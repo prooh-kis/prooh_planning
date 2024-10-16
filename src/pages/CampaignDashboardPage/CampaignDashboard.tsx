@@ -6,6 +6,18 @@ import { DashboardFilters } from '../../components/segments/DashboardFilters';
 
 export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
 
+  const getScreenPerformanceData = () => {
+    const datesArray = screenLevelData["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.date);
+    const countsArray = screenLevelData["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.count);
+    return { datesArray, countsArray };
+  }
+
+  const getSpotDeliveryData = () => {
+    const datesArray = screenLevelData["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.date);
+    const countsArray = screenLevelData["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.count);
+    return { datesArray, countsArray };
+  }
+
   const [show, setShow] = useState<any>({
     "audience": false,
     "screen": false,
@@ -38,6 +50,8 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
         handleShow={handleShow}
         campaignDetails={campaignDetails}
         screenLevelData={screenLevelData}
+        screenPerformance={getScreenPerformanceData}
+        spotDelivery={getSpotDeliveryData}
       />
       </div>
       <div className="bg-white px-0 w-full border rounded-[12px] flex justify-between">

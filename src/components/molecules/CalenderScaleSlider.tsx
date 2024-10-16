@@ -34,8 +34,8 @@ export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({ days, 
           ${lineColor}`}
           
         style={{
-          marginLeft: isFirstWeek ? '10px' : '25px', // Change margin if daysPlayed is in the first week
-          marginRight: isLastWeek ? '10px' : '25px', // Change margin if daysPlayed is in the last week
+          marginLeft: isFirstWeek ? '20px' : '25px', // Change margin if daysPlayed is in the first week
+          marginRight: isLastWeek ? '20px' : '25px', // Change margin if daysPlayed is in the last week
         }}
       ></div>
 

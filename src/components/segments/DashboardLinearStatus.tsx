@@ -13,10 +13,10 @@ interface DashboardLinearStatusProps {
  screenLevelData?: any;
  show?: any;
  handleShow?: any;
+ screenPerformance?: any;
+ spotDelivery?: any;
 }
-export const DashboardLinearStatus = ({handleShow, show, campaignDetails, screenLevelData}: DashboardLinearStatusProps) => {
-  const labels = ['January', 'February', 'March', 'April', 'May', 'June'];
-  const data = [12, 19, 3, 5, 2, 3];
+export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleShow, show, campaignDetails, screenLevelData}: DashboardLinearStatusProps) => {
   return (
     <div className="">
        <div className="grid grid-cols-12 gap-4 py-2">
@@ -26,7 +26,10 @@ export const DashboardLinearStatus = ({handleShow, show, campaignDetails, screen
             <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
           </div>
           <div className="col-span-8 pt-2">
-            <CalendarScaleSlider days={30} daysPlayed={23}/>
+            <CalendarScaleSlider
+              days={screenLevelData?.["totalData"]?.durationPromised || 30}
+              daysPlayed={screenLevelData?.["totalData"]?.durationDelivered || 10}
+            />
           </div>
           <div className="col-span-1 pt-1">
             <p className="text-[12px] text-gray-400">
@@ -41,7 +44,15 @@ export const DashboardLinearStatus = ({handleShow, show, campaignDetails, screen
             <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
           </div>
           <div className="col-span-8 pt-2 px-4">
-            <MultiColorLinearBar showPercentage={false} values={[20000, 30000]} colors={["","#129BFF","#E46452"]} totalValue={screenLevelData?.["totalData"]?.impressionsPromised?.toFixed(0)} />
+            <MultiColorLinearBar
+              showPercentage={false}
+              values={[
+                formatNumber(screenLevelData?.["totalData"]?.impressionsDelivered.toFixed(0) || 0),
+                0
+              ]}
+              colors={["","#129BFF"]}
+              totalValue={screenLevelData?.["totalData"]?.impressionsPromised?.toFixed(0)}
+            />
           </div>
           <div
             className="col-span-1 pt-1" 
@@ -75,7 +86,13 @@ export const DashboardLinearStatus = ({handleShow, show, campaignDetails, screen
             <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
           </div>
           <div className="col-span-8 pt-2 px-4">
-            <MultiColorLinearBar showPercentage={true} values={[28, 10]} colors={["","#129BFF","#E46452"]}
+            <MultiColorLinearBar
+              showPercentage={true}
+              values={[
+                screenLevelData?.["totalData"]?.impressionsDelivered.toFixed(0) * 100 / screenLevelData?.["totalData"]?.impressionsPromised.toFixed(0),
+                0
+              ]}
+              colors={["","#129BFF"]}
               totalValue={
                 screenLevelData?.["totalData"]?.impressionsPromised.toFixed(0) * 100 / screenLevelData?.["totalData"]?.impressionsPromised.toFixed(0)
               }
@@ -102,7 +119,7 @@ export const DashboardLinearStatus = ({handleShow, show, campaignDetails, screen
                 <h1 className="text-[14px] font-semibold">Screen Performance Detailed View - </h1>
                 <p className="text-[14px] text-[#129BFF]">{screenLevelData?.["totalData"]?.durationDelivered.toFixed(0) || 1}</p>
               </div>
-              <DashboardBarChart data={data} labels={labels}/>
+              <DashboardBarChart label={"Screen Performance"}data={screenPerformance().countsArray} labels={screenPerformance().datesArray}/>
             </div>
             <Divider />
           </div>
@@ -114,7 +131,15 @@ export const DashboardLinearStatus = ({handleShow, show, campaignDetails, screen
             <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
           </div>
           <div className="col-span-8 pt-2 px-4">
-            <MultiColorLinearBar showPercentage={false} values={[2098, 3786]} colors={["","#129BFF","#E46452"]} totalValue={screenLevelData?.["totalData"]?.slotsPromised.toFixed(0)} />
+            <MultiColorLinearBar
+              showPercentage={false}
+              values={[
+                screenLevelData?.["totalData"]?.slotsDelivered.toFixed(0),
+                0
+              ]}
+              colors={["","#129BFF"]}
+              totalValue={screenLevelData?.["totalData"]?.slotsPromised.toFixed(0)}
+            />
           </div>
           <div
             className="col-span-1 pt-1"
@@ -136,7 +161,7 @@ export const DashboardLinearStatus = ({handleShow, show, campaignDetails, screen
                 <h1 className="text-[14px] font-semibold">Spot Delivery Detailed View - </h1>
                 <p className="text-[14px] text-[#129BFF]">{screenLevelData?.["totalData"]?.durationDelivered.toFixed(0) || 1}</p>
               </div>
-              <DashboardBarChart data={data} labels={labels}/>
+              <DashboardBarChart label={"Spot Delivery"} data={spotDelivery().countsArray} labels={spotDelivery().datesArray}/>
             </div>
             <Divider />
           </div>
@@ -146,10 +171,16 @@ export const DashboardLinearStatus = ({handleShow, show, campaignDetails, screen
             <i className="fi fi-sr-sack flex items-center text-[14px] text-[#129BFF]"></i>
             <h1 className="text-[14px]">Cost Consumed</h1>
             <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
-
           </div>
           <div className="col-span-8 pt-2 px-4">
-            <MultiColorLinearBar showPercentage={false} values={[2908]} colors={["","#129BFF"]} totalValue={screenLevelData?.["totalData"]?.costTaken.toFixed(0)} />
+            <MultiColorLinearBar
+              showPercentage={false}
+              values={[
+                screenLevelData?.["totalData"]?.costConsumed.toFixed(0)
+              ]}
+              colors={["","#129BFF"]}
+              totalValue={screenLevelData?.["totalData"]?.costTaken.toFixed(0)}
+            />
           </div>
           <div className="col-span-1 pt-1">
             <p className="text-[12px] text-gray-400">
