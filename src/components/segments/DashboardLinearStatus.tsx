@@ -17,6 +17,7 @@ interface DashboardLinearStatusProps {
  spotDelivery?: any;
 }
 export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleShow, show, campaignDetails, screenLevelData}: DashboardLinearStatusProps) => {
+  console.log(screenPerformance())
   return (
     <div className="">
        <div className="grid grid-cols-12 gap-4 py-2">
@@ -89,12 +90,12 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
             <MultiColorLinearBar
               showPercentage={true}
               values={[
-                screenLevelData?.["totalData"]?.impressionsDelivered.toFixed(0) * 100 / screenLevelData?.["totalData"]?.impressionsPromised.toFixed(0),
+                screenLevelData?.["totalData"]?.screenPerformance.toFixed(0),
                 0
               ]}
               colors={["","#129BFF"]}
               totalValue={
-                screenLevelData?.["totalData"]?.impressionsPromised.toFixed(0) * 100 / screenLevelData?.["totalData"]?.impressionsPromised.toFixed(0)
+                100
               }
             />
           </div>

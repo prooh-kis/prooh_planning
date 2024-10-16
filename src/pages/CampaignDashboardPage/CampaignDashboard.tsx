@@ -7,9 +7,10 @@ import { DashboardFilters } from '../../components/segments/DashboardFilters';
 export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
 
   const getScreenPerformanceData = () => {
-    const datesArray = screenLevelData["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.date);
-    const countsArray = screenLevelData["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.count);
+    const datesArray = screenLevelData["totalData"]?.screenPerformanceDateWise?.map((slot: any) => slot.date);
+    const countsArray = screenLevelData["totalData"]?.screenPerformanceDateWise?.map((slot: any) => slot.screenPerformance * 100);
     return { datesArray, countsArray };
+
   }
 
   const getSpotDeliveryData = () => {

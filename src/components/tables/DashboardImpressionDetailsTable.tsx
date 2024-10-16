@@ -41,7 +41,7 @@ export const DashboardImpressionDetailsTable = ({
           </div>
         </th>
         <th className="">
-          <div className="border-x">
+          <div className="border-l">
             <h1 className="font-semibold">
               Promised
             </h1>
