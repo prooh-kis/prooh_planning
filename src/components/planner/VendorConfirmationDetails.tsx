@@ -19,6 +19,7 @@ import { message } from "antd";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { CAMPAIGN_DETAILS_PAGE } from "../../routes/routes";
+import { CountdownTimer } from "../../components/molecules/CountdownTimer";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -121,14 +122,12 @@ export const VendorConfirmationDetails = ({
   };
 
   useEffect(() => {
-    if (campaignDetails) {
-      dispatch(getVendorConfirmationDetails(vendorInput));
-      dispatch(
-        getVendorConfirmationStatusTableDetails({
-          id: campaignId,
-        })
-      );
-    }
+    dispatch(getVendorConfirmationDetails(vendorInput));
+    dispatch(
+      getVendorConfirmationStatusTableDetails({
+        id: campaignId,
+      })
+    );
 
   }, [dispatch, vendorInput]);
 
@@ -177,13 +176,8 @@ export const VendorConfirmationDetails = ({
             Check and confirm media availability for your campaign plan
           </p>
         </div>
-        <div>
-          <div className="flex gap-2 items-center justify-end text-red-500">
-            <i className="fi fi-br-clock-three flex items-center"></i>
-            <h1 className="text-[14px] font-semibold">00.30</h1>
-          </div>
-          <p className="text-[12px] text-gray-400">Time Remaining</p>
-        </div>
+        <CountdownTimer createdAt={vendorConfirmationData?.createdAt} />
+     
       </div>
       <VendorConfirmationBasicTable
         vendorConfirmationData={vendorConfirmationData}
