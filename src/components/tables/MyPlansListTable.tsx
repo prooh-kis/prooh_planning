@@ -104,7 +104,7 @@ export const MyPlansListTable = ({
               </h1>
             </td>
             <td className="p-2"
-              onClick={() => navigate(`/regularplan/${campaign.campaignCreationId}`)}
+              onClick={() => navigate(`/regularplan/${campaign._id}`)}
             >
               <i className="fi fi-bs-menu-dots text-[20px] flex justify-center"></i>
             </td>

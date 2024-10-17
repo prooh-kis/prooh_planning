@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { TabWithoutIcon } from "../molecules/TabWithoutIcon";
 import { ScreenDataModel } from "../../components/popup/ScreenDataModel";
 import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
-import { SCREEN_SUMMARY_SELECTION } from "../../constants/localStorageConstants";
+import { SCREEN_SUMMARY_SELECTION, SCREEN_TYPE_TOGGLE_SELECTION } from "../../constants/localStorageConstants";
 
 export const ScreenSummaryTable = ({
   data,
@@ -20,24 +20,32 @@ export const ScreenSummaryTable = ({
 }: any) => {
   const [screenTypeToggle, setScreenTypeToggle] = useState<any>({});
 
+  const setScreenTypeToggleAndSave = (newToggleState: any) => {
+    setScreenTypeToggle(newToggleState);
+    saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, newToggleState);
+  }
+
   const handleData = useCallback((myData: any) => {
     const zones: any = {};
     const tps: any = {};
-    const screens: any = {};
+    const screens: any = getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) || {};
     const types: any = {};
-    const stToggle: any = {};
+    const stToggle: any = getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION) || {};
 
     for (const city in myData) {
       zones[city] = {};
       tps[city] = {};
       screens[city] = {};
       types[city] = {};
+      stToggle[city] = {};
       for (const tp in myData[city]) {
         tps[city][tp] = {};
+        stToggle[city][tp] = {};
         for (const st in myData[city][tp]) {
           tps[city][tp][st] = [];
           types[city][st] = [];
-          stToggle[st] = true;
+          console.log(getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)[city][tp][st])
+          stToggle[city][tp][st] = getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)[city][tp][st] || true;
           for (const zone in myData[city][tp][st]) {
             zones[city][zone] = [];
             for (const screen in myData[city][tp][st][zone]) {
@@ -59,11 +67,11 @@ export const ScreenSummaryTable = ({
     setCityTP(tps);
     setScreenTypes(types);
     setScreensBuyingCount(screens);
-    setScreenTypeToggle(stToggle);
+    setScreenTypeToggleAndSave(stToggle);
 
   }, [currentSummaryTab, data, setCityTP, setCityZones, setCurrentCity, setScreenTypes, setScreensBuyingCount]);
 
-  const updateScreenTypeStatus = (screenType: any) => {
+  const updateScreenTypeStatus = ({screenType, city, touchpoint}: any) => {
     const currentScreens = Object.keys(screensBuyingCount[currentCity] || {});
     const allScreensStatuses = currentScreens.map(screenId => screensBuyingCount[currentCity][screenId]?.status);
 
@@ -73,11 +81,18 @@ export const ScreenSummaryTable = ({
     // Update screen type toggle based on individual screens' statuses
     setScreenTypeToggle((prevState: any) => ({
       ...prevState,
-      [screenType]: anyScreenTrue // Set to true if any are true, false otherwise
+      [city]: {
+        ...prevState[city],
+        [touchpoint] : {
+          ...prevState[city][touchpoint],
+          [screenType]: anyScreenTrue // Set to true if any are true, false otherwise
+        }
+      }
     }));
   };
 
-  const handleScreenClick = (screen: any) => {
+  const handleScreenClick = ({screen, city, touchpoint}: any) => {
+    console.log(screen, city, touchpoint);
     const screenId = screen._id;
     const updatedScreens = { ...screensBuyingCount[currentCity] };
 
@@ -92,14 +107,15 @@ export const ScreenSummaryTable = ({
 
     // Update the screen type status based on the updated screen status
     Object.keys(cityTP?.[currentCity] || {}).forEach(screenType => {
-      updateScreenTypeStatus(screenType);
+      updateScreenTypeStatus({screenType, city, touchpoint});
     });
 
     refreshScreenSummary();
   };
 
-  const handleScreenTypeClick = (screenType: any, myData: any) => {
-    console.log(screenTypeToggle[screenType]);
+  const handleScreenTypeClick = ({screenType, myData, city, touchpoint}: any) => {
+    console.log(screenTypeToggle);
+    console.log(myData)
     const updatedScreens = { ...screensBuyingCount[currentCity] };
     const screens: any = [];
 
@@ -109,7 +125,7 @@ export const ScreenSummaryTable = ({
     for (const zone in myData) {
       myData[zone]?.map((s: any) => {
         console.log(updatedScreens[s._id])
-        if (!stToggle[screenType] && updatedScreens[s._id].status) {
+        if (!stToggle[city][touchpoint][screenType] && updatedScreens[s._id].status) {
           updatedScreens[s._id].status = true
         }
 
@@ -122,10 +138,13 @@ export const ScreenSummaryTable = ({
 
     console.log(allSelected)
     screens.forEach((s: any) => {
-      handleScreenClick(s); // Update individual screen status
+      console.log(s);
+      handleScreenClick({screen: s, city, touchpoint}); // Update individual screen status
     });
 
-    stToggle[screenType] = !allSelected;
+    console.log(city);
+    console.log(stToggle);
+    stToggle[city][touchpoint][screenType] = !allSelected;
 
     // Toggle screen type status based on current status
     setScreenTypeToggle(stToggle);
@@ -177,8 +196,8 @@ export const ScreenSummaryTable = ({
                       <div className={`col-span-3 py-2 px-4 border-b`}>
                         <div className="flex justify-between items-center">
                           <h1 className="text-[14px]">{st}</h1>
-                          <div onClick={() => handleScreenTypeClick(st, data[currentCity][tp][st])}>
-                            <i className={`fi ${screenTypeToggle[st] ? 'fi-br-check text-green-500' : 'fi-br-cross text-red-500'} flex items-center text-[12px]`}></i>
+                          <div onClick={() => handleScreenTypeClick({screenType: st, myData: data[currentCity][tp][st], city: currentCity, touchpoint: tp})}>
+                            <i className={`fi ${screenTypeToggle?.[currentCity]?.[tp]?.[st] ? 'fi-br-check text-green-500' : 'fi-br-cross text-red-500'} flex items-center text-[12px]`}></i>
                           </div>
                         </div>
                       </div>
@@ -194,7 +213,7 @@ export const ScreenSummaryTable = ({
                                     <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
                                   </div>
                                   <div onClick={() => {screenTypeToggle[st] &&
-                                    handleScreenClick(screen)
+                                    handleScreenClick({screen, currentCity, tp, st})
                                     }}>
                                     {getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) !== null && getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)[currentCity][screen._id]?.status === false ? (
                                       <i className={`fi fi-br-cross flex items-center text-red-500 text-[12px]`}></i>

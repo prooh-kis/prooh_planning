@@ -29,6 +29,7 @@ export const COST_SUMMARY = "costSummary";
 export const SCREEN_SUMMARY_DATA = "screenSummaryData";
 export const SCREEN_SUMMARY_TABLE_DATA = "screenSummaryTableData";
 export const SCREEN_SUMMARY_SELECTION = "screenSummarySelection";
+export const SCREEN_TYPE_TOGGLE_SELECTION = "screenTypeToggleSelection"
 // 6
 export const SELECTED_TRIGGER = "selectedTrigger";
 

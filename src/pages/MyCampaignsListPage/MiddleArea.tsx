@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
 import { MyCampaignsList } from "./MyCampaignsList";
-import { getMyCreateCampaignsList, getMyCreateCampaignsVendorRequestsList } from "../../actions/campaignAction";
+import { getMyCreateCampaignsList, getMyCreateCampaignsManagerRequestsList, getMyCreateCampaignsVendorRequestsList } from "../../actions/campaignAction";
 
 
 export const MiddleArea: React.FC = () => {
@@ -27,25 +27,45 @@ export const MiddleArea: React.FC = () => {
     error: errorVendorList,
     data: vendorCampaignsList
   } = myCreateCampaignsVendorRequestsListGet;
+
+  const myCreateCampaignsManagerRequestsListGet = useSelector((state: any) => state.myCreateCampaignsManagerRequestsListGet);
+  const {
+    loading: loadingManagerRequestsList,
+    error: errorManagerRequestsList,
+    data: clientRequestsList
+  } = myCreateCampaignsManagerRequestsListGet;
+
   useEffect(() => {
     if (!userInfo) {
       navigate("/login");
     }
-    if (userInfo?.isBrand) {
-      dispatch(getMyCreateCampaignsList({id: userInfo?._id}));
+    if (userInfo?.isBrand && userInfo?.userRole === "secondary") {
+      dispatch(getMyCreateCampaignsList({id: userInfo?._id, type: "complete"}));
+    }
+    if (userInfo?.isMaster) {
+      dispatch(getMyCreateCampaignsVendorRequestsList({id: userInfo?._id, type: "complete"}))
+    }
+    if (userInfo?.isBrand && userInfo?.userRole === "primary") {
+      dispatch(getMyCreateCampaignsManagerRequestsList({id: userInfo?._id, type: "complete"}))
     }
   },[dispatch, navigate, userInfo]);
   return (
     <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
-      {userInfo && userInfo?.isBrand ? (
-        <MyCampaignsList campaignsList={campaignsList} />
+      {userInfo ? (
+        <MyCampaignsList
+          campaignsList={
+            userInfo?.isBrand && userInfo?.userRole === "secondary" ? campaignsList :
+            userInfo?.isBrand && userInfo?.userRole === "primary" ? clientRequestsList :
+            userInfo?.isMaster ? vendorCampaignsList?.campaigns : []
+          }
+        />
       ) : (
         <div className="">
           <h1 className="text-2xl font-bold">
             No Campaigns Found
           </h1>
           <p className="text-md">
-            Please contact support or create a new user with {"Campaign Manager"} role!!!
+            Please contact support !!!
           </p>
         </div>
       )}

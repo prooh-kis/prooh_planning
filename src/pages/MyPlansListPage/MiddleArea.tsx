@@ -27,7 +27,7 @@ export const MiddleArea: React.FC = () => {
     }
 
     if (userInfo?.isBrand) {
-      dispatch(getMyCreateCampaignsList({id: userInfo?._id}))
+      dispatch(getMyCreateCampaignsList({id: userInfo?._id, type: "incomplete"}))
     }
   },[dispatch, navigate, userInfo]);
   console.log(campaignsList);
@@ -42,7 +42,7 @@ export const MiddleArea: React.FC = () => {
             No Campaigns Found
           </h1>
           <p className="text-md">
-            Please contact support or create a new user with {"Campaign Manager"} role!!!
+            Please contact support !!!
           </p>
         </div>
       )}

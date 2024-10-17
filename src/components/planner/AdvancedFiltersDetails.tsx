@@ -12,7 +12,7 @@ import { message } from "antd";
 import { useDispatch } from "react-redux";
 import { getRegularVsCohortPriceData } from "../../actions/screenAction";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { COST_SUMMARY, SELECTED_SCREENS_ID } from "../../constants/localStorageConstants";
+import { ADVANCE_FILTER_SCREENS_MAP_DATA, COST_SUMMARY, FULL_CAMPAIGN_PLAN, SELECTED_SCREENS_ID } from "../../constants/localStorageConstants";
 
 type Coordinate = [number, number];
 
@@ -22,7 +22,7 @@ interface AdvanceFiltersDetailsProps {
   mapData?: any;
   loading?: boolean;
   error?: any;
-
+  campaignId?: string
 }
 
 export const AdvanceFiltersDetails = ({
@@ -31,11 +31,12 @@ export const AdvanceFiltersDetails = ({
   setCurrentStep,
   loading,
   error,
-
+  campaignId
 }: AdvanceFiltersDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
+  const campId = campaignId ? campaignId : pathname.split("/").splice(-1)[0]
 
   const [storeFilter, setStoreFilter] = useState<any>(true);
 
@@ -96,6 +97,8 @@ export const AdvanceFiltersDetails = ({
       ];
       const uniqueScreens = getUniqueScreens([{ screens }]);
       setFinalSelectedScreens(uniqueScreens);
+      saveDataOnLocalStorage(SELECTED_SCREENS_ID, uniqueScreens);
+
     } else if (type === "remove") {
       const uniqueScreens = getUniqueScreens([{ screens }]);
       setFinalSelectedScreens(
@@ -103,24 +106,28 @@ export const AdvanceFiltersDetails = ({
           (fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)
         )
       );
+      saveDataOnLocalStorage(SELECTED_SCREENS_ID, finalSelectedScreens.filter(
+          (fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)
+        ));
+
     }
   };
 
   useEffect(() => {
-    if (getDataFromLocalStorage("advanceFilterScreensMapData")) {
+    if (getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)) {
       getMapData(
-        getDataFromLocalStorage("advanceFilterScreensMapData")
+        getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)
       );
     }
-    if (getDataFromLocalStorage("advanceFilterScreensMapData")) {
+    if (getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)) {
       setPOIs(
-        getDataFromLocalStorage("advanceFilterScreensMapData")
+        getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)
           .poiList
       );
     }
-    if (getDataFromLocalStorage("advanceFilterScreensMapData")) {
+    if (getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)) {
       setSelectedPOIs(
-        getDataFromLocalStorage("advanceFilterScreensMapData")
+        getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)
           .poiList
       );
     }
@@ -133,16 +140,13 @@ export const AdvanceFiltersDetails = ({
     ) {
       handleFinalSelectedScreens({
         type: "add",
-        screens: JSON.parse(
-          getAllLocalStorageData()["advanceFilterScreensMapData"]
-        ).screens,
+        screens: getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)?.screens,
       });
     }
   }, []);
 
   const handleRemoveRoute = (id: any) => {
     let arr = routes;
-    console.log(arr);
     for (let data of arr) {
       if (data?.id === id) {
         setRouteFilteredScreens(
@@ -239,12 +243,21 @@ export const AdvanceFiltersDetails = ({
     });
   };
 
-  const handleConfirmScreensSelections = (checked: boolean) => {
+  const handleConfirmScreensSelections = ({checked, screens}: any) => {
     setIsDisabled(!checked);
-    const selectedScreenIds = finalSelectedScreens.map((s: any) => s._id);
-    saveDataOnLocalStorage(SELECTED_SCREENS_ID, selectedScreenIds);
+    if (checked) {
+      handleFinalSelectedScreens({
+        type: "add",
+        screens: screens,
+      });
+    } else {
+      handleFinalSelectedScreens({
+        type: "remove",
+        screens: screens,
+      });
+    }
+    // saveDataOnLocalStorage(SELECTED_SCREENS_ID, getUniqueScreens([{screens: selectedScreenIds}]));
   };
-  console.log(getDataFromLocalStorage(COST_SUMMARY));
   return (
     <div>
       <div className="h-[640px] w-full py-3 grid grid-cols-2 gap-4">
@@ -319,11 +332,6 @@ export const AdvanceFiltersDetails = ({
               />
             </div>
           )}
-          <SelectManuallyScreensCheckBox
-            manuallySelected={selectedScreensFromMap?.length}
-            unselectedScreen={allScreens?.length - finalSelectedScreens?.length}
-            handleCheck={handleAddManualSelectedScreenIntoFinalSelectedScreens}
-          />
           <div className="flex items-center pt-4 mx-[-1px]">
             <CheckboxInput
               label={
@@ -336,26 +344,17 @@ export const AdvanceFiltersDetails = ({
                 </>
               }
               onChange={(e) => {
-                handleConfirmScreensSelections(e);
-                dispatch(
-                  getRegularVsCohortPriceData({
-                    screenIds: JSON.parse(
-                      getAllLocalStorageData()["selectedScreensId"] || "[]"
-                    ),
-                    cohorts: JSON.parse(
-                      getAllLocalStorageData()["selectedAudienceTouchpoints"] ||
-                        "{}"
-                    )?.cohorts,
-                    gender: JSON.parse(
-                      getAllLocalStorageData()["selectedAudienceTouchpoints"] ||
-                        "{}"
-                    )?.gender,
-                    duration: JSON.parse(
-                      getAllLocalStorageData()["selectedAudienceTouchpoints"] ||
-                        "{}"
-                    )?.duration,
-                  })
-                );
+                handleConfirmScreensSelections({checked: e, screens: finalSelectedScreens});
+                if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)) {
+                  dispatch(
+                    getRegularVsCohortPriceData({
+                      screenIds: getDataFromLocalStorage(SELECTED_SCREENS_ID) || [],
+                      cohorts: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].cohorts || {},
+                      gender: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].gender || "",
+                      duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].duration || 30,
+                    })
+                  );
+                }
               }}
             />
           </div>

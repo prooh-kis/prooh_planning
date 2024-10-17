@@ -21,7 +21,9 @@ function Screen({ screen }: any) {
             <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
           </div>
           <div className="flex items-center">
-            <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+            {/* <i className="fi fi-sr-add flex items-center text-[12px] text-green-500"></i> */}
+            <i className="fi-ss-minus-circle flex items-center text-[12px] text-red-500"></i>
+
           </div>
         </div>
       </div>

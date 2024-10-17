@@ -44,13 +44,13 @@ export const addDetailsToCreateCampaign = (input) => async (dispatch, getState) 
   }
 }
 
-export const getMyCreateCampaignsList = ({id}) => async (dispatch, getState) => {
+export const getMyCreateCampaignsList = ({id, type}) => async (dispatch, getState) => {
   dispatch({
     type: GET_MY_CREATE_CAMPAIGNS_LIST_REQUEST,
-    payload: {id},
+    payload: {id, type},
   });
   try {
-    const { data } = await axios.post(`${url}/campaignCreationsCampaignPlanner`, {id});
+    const { data } = await axios.post(`${url}/campaignCreationsCampaignPlanner`, {id, type});
     dispatch({
       type: GET_MY_CREATE_CAMPAIGNS_LIST_SUCCESS,
       payload: data,
@@ -68,13 +68,13 @@ export const getMyCreateCampaignsList = ({id}) => async (dispatch, getState) => 
 }
 
 
-export const getMyCreateCampaignsManagerRequestsList = ({id}) => async (dispatch, getState) => {
+export const getMyCreateCampaignsManagerRequestsList = ({id, type}) => async (dispatch, getState) => {
   dispatch({
     type: GET_MY_CREATE_CAMPAIGNS_MANAGER_REQUESTS_LIST_REQUEST,
-    payload: {id},
+    payload: {id, type},
   });
   try {
-    const { data } = await axios.post(`${url}/campaignCreationsCampaignManager`, {id});
+    const { data } = await axios.post(`${url}/campaignCreationsCampaignManager`, {id, type});
     dispatch({
       type: GET_MY_CREATE_CAMPAIGNS_MANAGER_REQUESTS_LIST_SUCCESS,
       payload: data,
@@ -91,13 +91,13 @@ export const getMyCreateCampaignsManagerRequestsList = ({id}) => async (dispatch
   }
 }
 
-export const getMyCreateCampaignsVendorRequestsList = ({id}) => async (dispatch, getState) => {
+export const getMyCreateCampaignsVendorRequestsList = ({id, type}) => async (dispatch, getState) => {
   dispatch({
     type: GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_REQUEST,
-    payload: {id},
+    payload: {id, type},
   });
   try {
-    const { data } = await axios.post(`${url}/campaignCreationsScreenVendor`, {id});
+    const { data } = await axios.post(`${url}/campaignCreationsScreenVendor`, {id, type});
     dispatch({
       type: GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_SUCCESS,
       payload: data,

@@ -178,6 +178,7 @@ export const ScreenSummaryDetails = ({
           ?.selectedType,
       })
     );
+
     if (screenSummaryData) {
       dispatch(
         getScreenSummaryPlanTableData({
@@ -186,10 +187,10 @@ export const ScreenSummaryDetails = ({
         })
       );
     }
+ 
   }, [dispatch]);
 
   useEffect(() => {
-    
     setRegularVsCohort(
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType
     );

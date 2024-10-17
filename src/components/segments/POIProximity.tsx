@@ -40,10 +40,13 @@ export const POIProximity = ({
               onChange={() => {
                 if (selectedPOIs.includes(poi)) {
                   setSelectedPOIs(selectedPOIs.filter((p: any) => p !== poi));
+                  console.log(selectedPOIs?.filter((p: any) => p !== poi));
                 } else {
                   setSelectedPOIs([...selectedPOIs, poi]);
+                  console.log([...selectedPOIs, poi]);
                 }
                 // handlePOIScreens();
+                console.log(selectedPOIs)
               }}
               checked={selectedPOIs.includes(poi) ? true : false}
               label={poi}
@@ -57,14 +60,14 @@ export const POIProximity = ({
           <div className="pt-2">
             <h2 className="text-[12px] font-semibold">Atleast One</h2>
             <p className="text-[12px] text-[#9f9f9f]">
-              These 20 locations have been shortlisted even if anyone of the
+              These {filterScreensByInterests(finalSelectedScreens, selectedPOIs).screensWithAnyInterest.length} locations have been shortlisted even if anyone of the
               filters above are matched
             </p>
             <div className="pt-1 grid grid-cols-12 gap-2 flex items-center">
               <div className="col-span-2">
                 <CheckboxInput
                   color="#52A2FF"
-                  checked={true}
+                  // checked={true}
                   label={
                     filterScreensByInterests(finalSelectedScreens, selectedPOIs)
                       .screensWithAnyInterest.length
@@ -78,7 +81,15 @@ export const POIProximity = ({
                         ).screensWithAnyInterest
                       );
                     }
-                    handleConfirmScreensSelections(checked);
+                    console.log(filterScreensByInterests(
+                      finalSelectedScreens,
+                      selectedPOIs
+                    ).screensWithAnyInterest)
+                    handleConfirmScreensSelections({
+                      checked, screens: filterScreensByInterests(
+                      finalSelectedScreens,
+                      selectedPOIs
+                    ).screensWithAnyInterest});
                   }}
                 />
               </div>

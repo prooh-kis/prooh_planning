@@ -201,6 +201,7 @@ export const RegularPlanPage: React.FC = () => {
             step={currentStep}
             loading={loadingAdvanceFilterScreens}
             error={errorAdvanceFilterScreens}
+            campaignId={campaignId}
           />
         ) : currentStep === 4 ? (
           <RegularCohortComparisonDetails

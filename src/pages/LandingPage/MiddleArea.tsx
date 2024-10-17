@@ -15,9 +15,8 @@ export const MiddleArea: React.FC = () => {
 
   return (
     <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
-      {userInfo && userInfo?.isBrand ? (
+      {userInfo && userInfo?.isBrand && userInfo?.userRole === "secondary" ? (
         <CampaignTemplates />
-
       ) : (
         <div className="">
           <h1 className="text-2xl font-bold">

@@ -21,7 +21,7 @@ export const MiddleArea: React.FC = () => {
   const {
     loading: loadingManagerRequestsList,
     error: errorManagerRequestsList,
-    data: managerRequestsList
+    data: clientRequestsList
   } = myCreateCampaignsManagerRequestsListGet;
 
   const myCreateCampaignsVendorRequestsListGet = useSelector((state: any) => state.myCreateCampaignsVendorRequestsListGet);
@@ -36,17 +36,16 @@ export const MiddleArea: React.FC = () => {
       navigate("/login");
     }
     if (userInfo?.isMaster) {
-      dispatch(getMyCreateCampaignsVendorRequestsList({id: userInfo?._id}))
-
+      dispatch(getMyCreateCampaignsVendorRequestsList({id: userInfo?._id, type: "incomplete"}))
     }
 
     if (userInfo?.isBrand) {
-      dispatch(getMyCreateCampaignsManagerRequestsList({id: userInfo?._id}))
+      dispatch(getMyCreateCampaignsManagerRequestsList({id: userInfo?._id, type: "incomplete"}))
     }
   },[dispatch, navigate, userInfo]);
-  console.log(managerRequestsList);
+  console.log(clientRequestsList);
   return (
-    <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
+    <div className="mt-6 w-full h-full pb-5">
       <div className="flex justify-between border-b py-2">
         <div className="flex gap-2 items-center">
           <i className="fi fi-sr-megaphone flex items-center text-[#129BFF]"></i>
@@ -75,12 +74,12 @@ export const MiddleArea: React.FC = () => {
       </div>
       {userInfo && userInfo?.isBrand ? (
         <ClientsRequestsList requestsList={
-          managerRequestsList?.filter((campaign: any) => campaign.campaignManagerEmail === userInfo?.email)
+          clientRequestsList?.filter((campaign: any) => campaign.campaignManagerEmail === userInfo?.email)
           } 
         />
       ) : userInfo && userInfo?.isMaster ? (
         <VendorsRequestsList requestsList={
-          vendorRequestsList?.campaigns?.filter((campaign: any) => vendorRequestsList?.screenIds?.includes(campaign?.screenId) && campaign?.status === "PleaRequestScreenApprovalSent")
+          vendorRequestsList?.campaigns?.filter((campaign: any) => vendorRequestsList?.screenIds?.includes(campaign?.screenId))
           } 
         />
       ) : (
@@ -89,7 +88,7 @@ export const MiddleArea: React.FC = () => {
             No Campaigns Found
           </h1>
           <p className="text-md">
-            Please contact support or create a new user with {"Campaign Manager"} role!!!
+            Please contact support !!!
           </p>
         </div>
       )}

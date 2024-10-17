@@ -40,7 +40,7 @@ export const Menu = (props: any) => {
           </div>
         )}
         
-        {userInfo && userInfo?.isBrand && (
+        {userInfo && userInfo?.isBrand && userInfo?.userRole === "secondary" && (
           <div
             onClick={() => navigate(MY_PLANS_LIST)}
             className="flex flex-row gap-4 items-center py-2 px-2 hover:bg-sky-600 hover:text-white"
