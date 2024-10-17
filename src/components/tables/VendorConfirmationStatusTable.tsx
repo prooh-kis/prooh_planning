@@ -188,7 +188,9 @@ export const VendorConfirmationStatusTable = ({
             <td className="p-2">
                 {userInfo?.isMaster ? (
                   <div className="flex justify-center">
-                    <ActionMenu ids={selectedCampaignIds}/>
+                    {selectedCampaignIds?.length > 0 && (
+                      <ActionMenu ids={selectedCampaignIds}/>
+                    )}
                   </div>
                 ) : (
                   <i className="fi fi-bs-menu-dots text-[20px] flex justify-center"></i>

@@ -109,11 +109,11 @@ export const MyCampaignsListTable = ({
             </td>
             <td className="p-2"
               onClick={() => {
-                dispatch(addDetailsToCreateCampaign({
-                  id: campaign._id,
-                }));
-                if (campaign.currentPage !== "")
-                navigate(`/campaignDetails/${campaign._id}`);
+                // dispatch(addDetailsToCreateCampaign({
+                //   id: campaign._id,
+                // }));
+                // if (campaign.currentPage !== "")
+                // navigate(`/campaignDetails/${campaign._id}`);
             }}
             >
               <i className="fi fi-bs-menu-dots text-[20px] flex justify-center"></i>

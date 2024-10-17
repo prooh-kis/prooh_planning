@@ -91,13 +91,13 @@ export const getMyCreateCampaignsManagerRequestsList = ({id, type}) => async (di
   }
 }
 
-export const getMyCreateCampaignsVendorRequestsList = ({id, type}) => async (dispatch, getState) => {
+export const getMyCreateCampaignsVendorRequestsList = ({id, status}) => async (dispatch, getState) => {
   dispatch({
     type: GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_REQUEST,
-    payload: {id, type},
+    payload: {id, status},
   });
   try {
-    const { data } = await axios.post(`${url}/campaignCreationsScreenVendor`, {id, type});
+    const { data } = await axios.post(`${url}/campaignCreationsScreenVendor`, {id, status});
     dispatch({
       type: GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_SUCCESS,
       payload: data,

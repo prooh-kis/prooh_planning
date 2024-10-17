@@ -43,7 +43,7 @@ export const MiddleArea: React.FC = () => {
       dispatch(getMyCreateCampaignsList({id: userInfo?._id, type: "complete"}));
     }
     if (userInfo?.isMaster) {
-      dispatch(getMyCreateCampaignsVendorRequestsList({id: userInfo?._id, type: "complete"}))
+      dispatch(getMyCreateCampaignsVendorRequestsList({id: userInfo?._id, status: "Active"}))
     }
     if (userInfo?.isBrand && userInfo?.userRole === "primary") {
       dispatch(getMyCreateCampaignsManagerRequestsList({id: userInfo?._id, type: "complete"}))

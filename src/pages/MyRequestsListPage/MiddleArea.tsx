@@ -7,6 +7,7 @@ import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import { PrimaryInput } from "../../components/atoms/PrimaryInput";
 import { ClientsRequestsList } from "./ClientRequestsList";
 import { VendorsRequestsList } from "./VendorRequestsList";
+import { CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT } from "../../constants/campaignConstants";
 
 
 export const MiddleArea: React.FC = () => {
@@ -36,7 +37,7 @@ export const MiddleArea: React.FC = () => {
       navigate("/login");
     }
     if (userInfo?.isMaster) {
-      dispatch(getMyCreateCampaignsVendorRequestsList({id: userInfo?._id, type: "incomplete"}))
+      dispatch(getMyCreateCampaignsVendorRequestsList({id: userInfo?._id, status: CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT}))
     }
 
     if (userInfo?.isBrand) {

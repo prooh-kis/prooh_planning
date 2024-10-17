@@ -47,24 +47,24 @@ export const VendorConfirmationDetails = ({
   const [vendorInput, setVendorInput] = useState<any>({
     pageName: "View Final Plan Page",
     id: pathname.split("/").splice(-1)[0],
-    name: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].name || "",
+    name: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || "",
     brandName:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].brandName || "",
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName || "",
     clientName:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].clientName || "",
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.clientName || "",
     campaignType:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].campaignType || "",
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.campaignType || "",
     startDate:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].startData || "",
-    endDate: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].endDate || "",
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startData || "",
+    endDate: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate || "",
     duration:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].duration || 30,
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30,
     selectedType:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].selectedType || "",
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType || "",
     screenIds:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].screenIds || [],
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds || [],
     triggers:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId].triggers || [],
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.triggers || [],
     // totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCampaignBudget,
   });
 
@@ -190,7 +190,7 @@ export const VendorConfirmationDetails = ({
             <h1 className="text-[14px]">
               Approved
               (
-                {statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED).length}
+                {statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED || c.status ===  "Pending").length}
               )
             </h1>
           </div>
@@ -215,7 +215,7 @@ export const VendorConfirmationDetails = ({
           <MultiColorLinearBar
             showPercentage={false}
             values={[
-              statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED).length,
+              statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED || c.status === "Pending").length,
               statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT).length,
               statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED).length
             ]}
