@@ -3,6 +3,7 @@ import { TemplateCard } from "../atoms/TemplateCard";
 import { PrimaryButton } from "../atoms/PrimaryButton";
 import { useNavigate } from "react-router-dom";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
+import { message } from "antd";
 
 export const CampaignTemplates: React.FC = () => {
   const navigate = useNavigate();
@@ -14,9 +15,25 @@ export const CampaignTemplates: React.FC = () => {
   const handleCardClick = (index: number) => {
     setSelectedCard(index);
   };
+
+  const handleNext = () => {
+    if (selectedCard === null) {
+      message.error("Please select campaign type");
+    } else {
+      if (selectedCard === 0) {
+        navigate("/regularplan");
+      } else if (selectedCard === 1) {
+        navigate("/specialdayplan");
+      } else if (selectedCard === 2) {
+        navigate("/triggerbasedplan");
+      } else if (selectedCard === 3) {
+        navigate("iknowitallplan");
+      }
+    }
+  };
   useEffect(() => {
     removeAllKeyFromLocalStorage();
-  },[]);
+  }, []);
   return (
     <div className="p-20 flex items-center justify-center w-full h-full">
       <div className="border border-transparent rounded-lg w-full h-full">
@@ -25,7 +42,8 @@ export const CampaignTemplates: React.FC = () => {
             Create A Campaign
           </h1>
           <p className="text-[14px] font-sans text-secondaryText">
-            Choose any one of the following and start planning your campaign instantly
+            Choose any one of the following and start planning your campaign
+            instantly
           </p>
         </div>
         <div className="py-[21px] grid grid-cols-4 gap-[24px]">
@@ -70,17 +88,11 @@ export const CampaignTemplates: React.FC = () => {
             />
           </div>
         </div>
-        <PrimaryButton rounded="rounded-[30px]" title="Plan Campaign" action={() => {
-            if (selectedCard === 0) {
-              navigate("/regularplan");
-            } else if (selectedCard === 1) {
-              navigate("/specialdayplan");
-            } else if (selectedCard === 2) {
-              navigate("/triggerbasedplan");
-            } else if (selectedCard === 3) {
-              navigate("iknowitallplan");
-            }
-        }} />
+        <PrimaryButton
+          rounded="rounded-[30px]"
+          title="Plan Campaign"
+          action={handleNext}
+        />
       </div>
     </div>
   );

@@ -20,7 +20,11 @@ import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { CAMPAIGN_DETAILS_PAGE } from "../../routes/routes";
 import { CountdownTimer } from "../../components/molecules/CountdownTimer";
-import { CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED, CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED, CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT } from "../../constants/campaignConstants";
+import {
+  CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED,
+  CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED,
+  CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT,
+} from "../../constants/campaignConstants";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -49,20 +53,27 @@ export const VendorConfirmationDetails = ({
     id: pathname.split("/").splice(-1)[0],
     name: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || "",
     brandName:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName || "",
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName ||
+      "",
     clientName:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.clientName || "",
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.clientName ||
+      "",
     campaignType:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.campaignType || "",
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.campaignType ||
+      "",
     startDate:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startData || "",
-    endDate: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate || "",
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startData ||
+      "",
+    endDate:
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate || "",
     duration:
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30,
     selectedType:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType || "",
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType ||
+      "",
     screenIds:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds || [],
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds ||
+      [],
     triggers:
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.triggers || [],
     // totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCampaignBudget,
@@ -95,11 +106,15 @@ export const VendorConfirmationDetails = ({
     data: vendorApprovalStatus,
   } = campaignStatusChangeAfterVendorApproval;
 
-  const detailsToCreateCampaignAdd = useSelector((state: any) => state.detailsToCreateCampaignAdd);
+  const detailsToCreateCampaignAdd = useSelector(
+    (state: any) => state.detailsToCreateCampaignAdd
+  );
   const {
-    loading, error, success, data: campaignDetails
+    loading,
+    error,
+    success,
+    data: campaignDetails,
   } = detailsToCreateCampaignAdd;
-
 
   const handleAddNewFile = async (file: File) => {
     if (file) {
@@ -121,16 +136,6 @@ export const VendorConfirmationDetails = ({
   const removeImage = (file: any) => {
     setFiles(files.filter((singleFile: any) => singleFile.url !== file.url));
   };
-
-  useEffect(() => {
-    dispatch(getVendorConfirmationDetails(vendorInput));
-    dispatch(
-      getVendorConfirmationStatusTableDetails({
-        id: campaignId,
-      })
-    );
-
-  }, [dispatch, vendorInput]);
 
   const getAWSUrl = async (data: any) => {
     try {
@@ -166,6 +171,17 @@ export const VendorConfirmationDetails = ({
     }
   };
 
+  useEffect(() => {
+    if (campaignDetails) {
+      dispatch(getVendorConfirmationDetails(vendorInput));
+      dispatch(
+        getVendorConfirmationStatusTableDetails({
+          id: campaignId,
+        })
+      );
+    }
+  }, [dispatch, vendorInput, campaignDetails]);
+
   return (
     <div className="w-full pt-3">
       <div className="flex items-center justify-between">
@@ -178,7 +194,6 @@ export const VendorConfirmationDetails = ({
           </p>
         </div>
         <CountdownTimer createdAt={vendorConfirmationData?.createdAt} />
-     
       </div>
       <VendorConfirmationBasicTable
         vendorConfirmationData={vendorConfirmationData}
@@ -188,25 +203,41 @@ export const VendorConfirmationDetails = ({
         <div className="flex gap-4">
           <div className="flex">
             <h1 className="text-[14px]">
-              Approved
-              (
-                {statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED || c.status ===  "Pending").length}
+              Approved (
+              {
+                statusTableData?.filter(
+                  (c: any) =>
+                    c.status ===
+                      CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED ||
+                    c.status === "Pending"
+                ).length
+              }
               )
             </h1>
           </div>
           <div className="flex">
             <h1 className="text-[14px]">
-              Pending 
-              (
-                {statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT).length}
+              Pending (
+              {
+                statusTableData?.filter(
+                  (c: any) =>
+                    c.status ===
+                    CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT
+                ).length
+              }
               )
             </h1>
           </div>
           <div className="flex">
             <h1 className="text-[14px]">
-              Rejected 
-              (
-                {statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED).length}
+              Rejected (
+              {
+                statusTableData?.filter(
+                  (c: any) =>
+                    c.status ===
+                    CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
+                ).length
+              }
               )
             </h1>
           </div>
@@ -215,9 +246,21 @@ export const VendorConfirmationDetails = ({
           <MultiColorLinearBar
             showPercentage={false}
             values={[
-              statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED || c.status === "Pending").length,
-              statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT).length,
-              statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED).length
+              statusTableData?.filter(
+                (c: any) =>
+                  c.status ===
+                    CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED ||
+                  c.status === "Pending"
+              ).length,
+              statusTableData?.filter(
+                (c: any) =>
+                  c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT
+              ).length,
+              statusTableData?.filter(
+                (c: any) =>
+                  c.status ===
+                  CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
+              ).length,
             ]}
             colors={["#FF0808", "#5FAC90", "#F9B34B"]}
             totalValue={statusTableData?.length}

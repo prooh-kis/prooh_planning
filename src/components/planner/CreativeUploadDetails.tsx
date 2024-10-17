@@ -41,7 +41,7 @@ interface SingleFile {
   fileType: string;
   fileSize: number;
   duration: number;
-  awsURl: string;
+  awsURL: string;
 }
 interface Data1 {
   screenResolution: string;
@@ -264,7 +264,14 @@ export const CreativeUploadDetails = ({
 
   const returnRequiredValue = async (file: any) => {
     let url = "";
-    if (file) url = await getAWSUrl(file);
+    // stop again saving same creatives again and again when we came from future.
+    if (file?.awsURL === "") {
+      console.log("awsURL not preset!");
+      url = await getAWSUrl(file);
+    } else {
+      console.log("no need to save again and again");
+      url = file.awsURL;
+    }
     return {
       url: url,
       size: file.fileSize,
@@ -334,17 +341,20 @@ export const CreativeUploadDetails = ({
 
           for (let file of data?.standardDayTimeCreatives) {
             let myData = await returnRequiredValue(file);
-            file.awsURl = myData?.url;
+            file.awsURL = myData?.url;
+            file.url = myData?.url;
             standardDayTimeCreatives.push(myData);
           }
           for (let file of data?.standardNightTimeCreatives) {
             let myData = await returnRequiredValue(file);
-            file.awsURl = myData?.url;
+            file.awsURL = myData?.url;
+            file.url = myData?.url;
             standardNightTimeCreatives.push(myData);
           }
           for (let file of data?.triggerCreatives) {
             let myData = await returnRequiredValue(file);
-            file.awsURl = myData?.url;
+            file.awsURL = myData?.url;
+            file.url = myData?.url;
             triggerCreatives.push(myData);
           }
           requestBody.push({
@@ -373,6 +383,7 @@ export const CreativeUploadDetails = ({
           status: CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT,
         })
       );
+      setIsLoading(false);
       setCurrentStep(step + 1);
     } else {
       message.error("Please upload creatives for each row and foreach city");
@@ -618,6 +629,7 @@ export const CreativeUploadDetails = ({
               }}
               handleSave={handleSaveAndContinue}
               loading={isLoading}
+              isDisabled={isLoading}
               totalScreensData={{}}
             />
           </div>
