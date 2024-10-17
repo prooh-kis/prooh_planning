@@ -20,6 +20,7 @@ import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { CAMPAIGN_DETAILS_PAGE } from "../../routes/routes";
 import { CountdownTimer } from "../../components/molecules/CountdownTimer";
+import { CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED, CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED, CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT } from "../../constants/campaignConstants";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -186,21 +187,40 @@ export const VendorConfirmationDetails = ({
       <div className="py-4 w-full">
         <div className="flex gap-4">
           <div className="flex">
-            <h1 className="text-[14px]">Approved (08)</h1>
+            <h1 className="text-[14px]">
+              Approved
+              (
+                {statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED).length}
+              )
+            </h1>
           </div>
           <div className="flex">
-            <h1 className="text-[14px]">Pending (08)</h1>
+            <h1 className="text-[14px]">
+              Pending 
+              (
+                {statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT).length}
+              )
+            </h1>
           </div>
           <div className="flex">
-            <h1 className="text-[14px]">Rejected (08)</h1>
+            <h1 className="text-[14px]">
+              Rejected 
+              (
+                {statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED).length}
+              )
+            </h1>
           </div>
         </div>
         <div className="pb-4">
           <MultiColorLinearBar
             showPercentage={false}
-            values={[2, 3, 4]}
-            colors={[]}
-            totalValue={9}
+            values={[
+              statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED).length,
+              statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT).length,
+              statusTableData?.filter((c: any) => c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED).length
+            ]}
+            colors={["#FF0808", "#5FAC90", "#F9B34B"]}
+            totalValue={statusTableData?.length}
           />
         </div>
         <VendorConfirmationStatusTable
