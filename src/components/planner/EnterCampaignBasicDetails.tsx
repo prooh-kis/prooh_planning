@@ -4,11 +4,17 @@ import { PrimaryInput } from "../atoms/PrimaryInput";
 import { useNavigate } from "react-router-dom";
 import { CalendarInput } from "../atoms/CalendarInput";
 import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
-import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
+import {
+  getDataFromLocalStorage,
+  saveDataOnLocalStorage,
+} from "../../utils/localStorageUtils";
 import { message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { CAMPAIGN, FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
+import {
+  CAMPAIGN,
+  FULL_CAMPAIGN_PLAN,
+} from "../../constants/localStorageConstants";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -28,19 +34,46 @@ export const EnterCampaignBasicDetails = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
 
-  const [campaignName, setCampaignName] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || "");
-  const [brandName, setBrandName] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName || "");
-  const [clientName, setClientName] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.clientName || "");
-  const [industry, setIndustry] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.industry || "");
-  const [startDate, setStartDate] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] ? new Date(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startDate)?.toISOString()?.slice(0, 16) : "");
-  const [endDate, setEndDate] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] ? new Date(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate)?.toISOString()?.slice(0, 16) : "");
- 
-  const [duration, setDuration] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30);
+  const [campaignName, setCampaignName] = useState<any>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || ""
+  );
+  const [brandName, setBrandName] = useState<any>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName || ""
+  );
+  const [clientName, setClientName] = useState<any>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.clientName || ""
+  );
+  const [industry, setIndustry] = useState<any>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.industry || ""
+  );
+  const [startDate, setStartDate] = useState<any>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+      ? new Date(
+          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startDate
+        )
+          ?.toISOString()
+          ?.slice(0, 16)
+      : ""
+  );
+  const [endDate, setEndDate] = useState<any>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+      ? new Date(
+          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate
+        )
+          ?.toISOString()
+          ?.slice(0, 16)
+      : ""
+  );
 
+  const [duration, setDuration] = useState<any>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30
+  );
 
   const [enterDuration, setEnterDuration] = useState<any>(false);
 
-  const detailsToCreateCampaignAdd = useSelector((state: any) => state.detailsToCreateCampaignAdd);
+  const detailsToCreateCampaignAdd = useSelector(
+    (state: any) => state.detailsToCreateCampaignAdd
+  );
   const {
     loading: loadingAddDetails,
     error: errorAddDetails,
@@ -67,25 +100,40 @@ export const EnterCampaignBasicDetails = ({
   };
 
   const saveCampaignDetailsOnLocalStorage = useCallback(() => {
-    dispatch(addDetailsToCreateCampaign({
-      pageName: "Basic Details Page",
-      name: campaignName,
-      brandName: brandName,
-      campaignType: pathname?.split("/").splice(1)[0] === "regularplan" ? "Regular" : "",
-      clientName: clientName,
-      industry: industry,
-      startDate: startDate,
-      endDate: endDate,
-      duration: duration,
-      campaignPlannerId: userInfo?._id,
-      campaignPlannerName: userInfo?.name,
-      campaignPlannerEmail: userInfo?.email,
-      campaignManagerId: userInfo?.primaryUserId,
-      campaignManagerEmail: userInfo?.primaryUserEmail
-    }))
-
-  }, [dispatch, campaignName, brandName, clientName, industry, startDate, endDate, duration, userInfo?._id, userInfo?.name, userInfo?.email, userInfo?.primaryUserId, userInfo?.primaryUserEmail]);
-
+    dispatch(
+      addDetailsToCreateCampaign({
+        pageName: "Basic Details Page",
+        name: campaignName,
+        brandName: brandName,
+        campaignType:
+          pathname?.split("/").splice(1)[0] === "regularplan" ? "Regular" : "",
+        clientName: clientName,
+        industry: industry,
+        startDate: startDate,
+        endDate: endDate,
+        duration: duration,
+        campaignPlannerId: userInfo?._id,
+        campaignPlannerName: userInfo?.name,
+        campaignPlannerEmail: userInfo?.email,
+        campaignManagerId: userInfo?.primaryUserId,
+        campaignManagerEmail: userInfo?.primaryUserEmail,
+      })
+    );
+  }, [
+    dispatch,
+    campaignName,
+    brandName,
+    clientName,
+    industry,
+    startDate,
+    endDate,
+    duration,
+    userInfo?._id,
+    userInfo?.name,
+    userInfo?.email,
+    userInfo?.primaryUserId,
+    userInfo?.primaryUserEmail,
+  ]);
 
   const handleSetNewDuration = () => {
     if (startDate && endDate)
@@ -103,7 +151,7 @@ export const EnterCampaignBasicDetails = ({
       navigate(`/regularplan/${addDetails?._id}`);
     }
   }, [navigate, successAddDetails, errorAddDetails]);
-  
+
   return (
     <div className="w-full py-3">
       <div className="">
@@ -171,6 +219,7 @@ export const EnterCampaignBasicDetails = ({
             placeholder="Start Date"
             value={startDate}
             action={setStartDate}
+            disabled={false}
           />
         </div>
         <div className="col-span-1 py-1">
@@ -195,6 +244,7 @@ export const EnterCampaignBasicDetails = ({
               placeholder={!enterDuration ? "End Date" : "0"}
               value={endDate}
               action={setEndDate}
+              disabled={false}
             />
           ) : (
             <PrimaryInput
