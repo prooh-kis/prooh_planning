@@ -79,8 +79,10 @@ export const MiddleArea: React.FC = () => {
           } 
         />
       ) : userInfo && userInfo?.isMaster ? (
-        <VendorsRequestsList requestsList={
-          vendorRequestsList?.campaigns?.filter((campaign: any) => vendorRequestsList?.screenIds?.includes(campaign?.screenId))
+        <VendorsRequestsList
+          userInfo={userInfo}
+          requestsList={
+            vendorRequestsList?.campaigns?.filter((campaign: any) => vendorRequestsList?.screenIds?.includes(campaign?.screenId))
           } 
         />
       ) : (

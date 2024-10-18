@@ -6,10 +6,13 @@ interface EmailSendBoxProps {
   toEmail?: any;
   setToEmail?: any;
   sendEmail?: any;
+  sendEmailToAll?: any;
   cc?: any;
+  data?: any
+  type?: any;
 }
 
-export const EmailSendBox = ({cc, toEmail, setToEmail, sendEmail}: EmailSendBoxProps) => {
+export const EmailSendBox = ({cc, data, type, toEmail, setToEmail, sendEmail, sendEmailToAll}: EmailSendBoxProps) => {
   return (
     <div className="p-2">
       <div className="flex flex-col">
@@ -36,6 +39,19 @@ export const EmailSendBox = ({cc, toEmail, setToEmail, sendEmail}: EmailSendBoxP
               textSize="14px"
             />
           </div>
+          {type === "vendor" && (
+            <div className="col-span-1">
+              <PrimaryButton
+                title={"Send To All"}
+                rounded="rounded-[8px]"
+                action={sendEmailToAll}
+                width="w-full"
+                height=""
+                textSize="14px"
+              />
+            </div>
+          )}
+          
         </div>
         <p className="p-1 pb-6 text-gray-500 text-[12px]">Send plan summary as pdf attachement in email</p>
       </div>

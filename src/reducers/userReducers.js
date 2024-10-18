@@ -23,6 +23,10 @@ import {
   SEND_EMAIL_FOR_CONFIRMATION_SUCCESS,
   SEND_EMAIL_FOR_CONFIRMATION_RESET,
   SEND_EMAIL_FOR_CONFIRMATION_ERROR,
+  SEND_EMAIL_FOR_VENDOR_CONFIRMATION_REQUEST,
+  SEND_EMAIL_FOR_VENDOR_CONFIRMATION_SUCCESS,
+  SEND_EMAIL_FOR_VENDOR_CONFIRMATION_ERROR,
+  SEND_EMAIL_FOR_VENDOR_CONFIRMATION_RESET,
 
 } from "../constants/userConstants";
 
@@ -113,6 +117,21 @@ export function emailSendForConfirmationReducer(state = {}, action) {
     case SEND_EMAIL_FOR_CONFIRMATION_ERROR:
       return { loading: false, error: action.payload };
     case SEND_EMAIL_FOR_CONFIRMATION_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function emailSendForVendorConfirmationReducer(state = {}, action) {
+  switch (action.type) {
+    case SEND_EMAIL_FOR_VENDOR_CONFIRMATION_REQUEST:
+      return { loading: true };
+    case SEND_EMAIL_FOR_VENDOR_CONFIRMATION_SUCCESS:
+      return { loading: false, success: true, data: action.payload };
+    case SEND_EMAIL_FOR_VENDOR_CONFIRMATION_ERROR:
+      return { loading: false, error: action.payload };
+    case SEND_EMAIL_FOR_VENDOR_CONFIRMATION_RESET:
       return {};
     default:
       return state;

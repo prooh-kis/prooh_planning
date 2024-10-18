@@ -18,6 +18,9 @@ import {
   SEND_EMAIL_FOR_CONFIRMATION_REQUEST,
   SEND_EMAIL_FOR_CONFIRMATION_SUCCESS,
   SEND_EMAIL_FOR_CONFIRMATION_ERROR,
+  SEND_EMAIL_FOR_VENDOR_CONFIRMATION_REQUEST,
+  SEND_EMAIL_FOR_VENDOR_CONFIRMATION_SUCCESS,
+  SEND_EMAIL_FOR_VENDOR_CONFIRMATION_ERROR,
 } from "../constants/userConstants";
 import store from "../store";
 import { login, logout } from "../store/authSlice";
@@ -272,6 +275,33 @@ export const sendEmailForConfirmation = (formData) => async (dispatch, getState)
   } catch (error) {
     dispatch({
       type: SEND_EMAIL_FOR_CONFIRMATION_ERROR,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+}
+
+export const sendEmailForVendorConfirmation = (emailData) => async (dispatch, getState) => {
+  dispatch({
+    type: SEND_EMAIL_FOR_VENDOR_CONFIRMATION_REQUEST,
+    // payload: ,
+  });
+  try {
+
+    const { data } = await Axios.post(`${USER_URL}/sendEmailForVendorConfirmation`, emailData, {
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    dispatch({
+      type: SEND_EMAIL_FOR_VENDOR_CONFIRMATION_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: SEND_EMAIL_FOR_VENDOR_CONFIRMATION_ERROR,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

@@ -16,10 +16,13 @@ import {
 } from "../../components/tables";
 import { Footer } from "../../components/footer";
 import { message } from "antd";
-import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { addDetailsToCreateCampaign, changeCampaignStatusAfterVendorApproval } from "../../actions/campaignAction";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { CAMPAIGN_DETAILS_PAGE } from "../../routes/routes";
 import { CountdownTimer } from "../../components/molecules/CountdownTimer";
+import { sendEmailForConfirmation, sendEmailForVendorConfirmation } from "../../actions/userAction";
+import { VendorMailTemplate } from "../../components/segments/VendorMailTemplate";
+import ReactDOMServer from "react-dom/server";
 import {
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED,
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED,
@@ -42,6 +45,9 @@ export const VendorConfirmationDetails = ({
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+
+  const [toEmail, setToEmail] = useState<any>("");
+  const [cc, setCC] = useState<any>(userInfo?.email);
 
   const [files, setFiles] = useState<any>([]);
   const [isDisabled, setIsDisabled] = useState<any>(true);
@@ -115,6 +121,57 @@ export const VendorConfirmationDetails = ({
     success,
     data: campaignDetails,
   } = detailsToCreateCampaignAdd;
+
+
+  const sendEmail = () => {
+    // const emailContent = ReactDOMServer.renderToString(
+    //   <VendorMailTemplate
+    //     tableData={[]}
+    //     buttonText="Approve"
+    //     onButtonClick={() => {}}
+    //   />
+    // );
+    // dispatch(sendEmailForConfirmation(emailContent));
+  };
+
+  const sendEmailToAll = () => {
+    const screenOwnerEmails = Array.from(
+      new Set(statusTableData?.map((s: any) => s.screenVendorEmail))
+    );
+    
+    const plannerEmail = userInfo?.email;
+    const managerEmail = userInfo?.primaryUserEmail;
+    screenOwnerEmails?.forEach((email: any) => {
+      const emailContent = ReactDOMServer.renderToString(
+        <VendorMailTemplate
+          tableData={
+            statusTableData?.filter((s: any) => s.screenVendorEmail === email)?.map((d: any) => {
+              return {
+                screenName: d.screenName,
+                touchPoint: d.touchPoint,
+                startDate: new Date(d.startDate).toLocaleDateString(),
+                endDate: new Date(d.endDate).toLocaleDateString(),
+                cost: `${'\u20B9'}${d.cost.toFixed(0)}`
+              }
+            })
+          }
+          buttonText="See Details"
+          onButtonClick={() => {
+            dispatch(changeCampaignStatusAfterVendorApproval({
+              ids: statusTableData?.filter((s: any) => s.screenVendorEmail === email) 
+            }));
+          }}
+        />
+      );
+      dispatch(sendEmailForVendorConfirmation({
+        toEmail: email,
+        cc: [plannerEmail, managerEmail],
+        emailContent: JSON.stringify(emailContent),
+      }))
+
+    })
+    
+  }
 
   const handleAddNewFile = async (file: File) => {
     if (file) {
@@ -274,18 +331,28 @@ export const VendorConfirmationDetails = ({
           statusTableData={statusTableData}
         />
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="col-span-1 border rounded-[12px] p-2">
-          <EmailSendBox />
+      {!loadingStatusTableData && !errorStatusTableData && (
+        <div className="grid grid-cols-2 gap-4">
+          <div className="col-span-1 border rounded-[12px] p-2">
+            <EmailSendBox
+              type="vendor"
+              toEmail={toEmail}
+              setToEmail={setToEmail}
+              cc={cc}
+              sendEmail={sendEmail}
+              sendEmailToAll={sendEmailToAll}
+            />
+          </div>
+          <div className="col-span-1 border rounded-[12px] p-2">
+            <EmailConfirmationImage
+              files={files}
+              handleAddNewFile={handleAddNewFile}
+              removeImage={removeImage}
+            />
+          </div>
         </div>
-        <div className="col-span-1 border rounded-[12px] p-2">
-          <EmailConfirmationImage
-            files={files}
-            handleAddNewFile={handleAddNewFile}
-            removeImage={removeImage}
-          />
-        </div>
-      </div>
+      )}
+
       <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
         <Footer
           handleBack={() => {

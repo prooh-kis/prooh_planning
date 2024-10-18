@@ -16,6 +16,7 @@ import {
 } from "../reducers/screenReducers";
 import {
   emailSendForConfirmationReducer,
+  emailSendForVendorConfirmationReducer,
   userEmailVerificationReducer,
   userSendEmailToResetPasswordReducer,
   userSigninReducer,
@@ -80,6 +81,8 @@ const store = configureStore({
     emailVerify: userEmailVerificationReducer,
     userSendEmailToResetPassword: userSendEmailToResetPasswordReducer,
     emailSendForConfirmation: emailSendForConfirmationReducer,
+    emailSendForVendorConfirmation: emailSendForVendorConfirmationReducer,
+
   },
   // middleware: thunk
   // devTools: process.env.NODE_ENV !== 'production'

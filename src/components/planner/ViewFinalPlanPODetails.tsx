@@ -493,6 +493,7 @@ export const ViewFinalPlanPODetails = ({
               setToEmail={setToEmail}
               cc={cc}
               sendEmail={sendEmail}
+              type="po"
             />
           </div>
 
