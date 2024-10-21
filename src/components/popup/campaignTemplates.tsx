@@ -27,17 +27,21 @@ export const CampaignTemplates: React.FC = () => {
       } else if (selectedCard === 2) {
         navigate("/triggerbasedplan");
       } else if (selectedCard === 3) {
-        navigate("iknowitallplan");
+        navigate("/storebasedplan");
+      } else if (selectedCard === 4) {
+        navigate("/iknowitallplan");
       }
     }
   };
+
   useEffect(() => {
     removeAllKeyFromLocalStorage();
   }, []);
+
   return (
-    <div className="p-20 flex items-center justify-center w-full h-full">
+    <div className="p-10 flex items-center justify-center w-full h-full">
       <div className="border border-transparent rounded-lg w-full h-full">
-        <div className="grid justify-center p-2">
+        <div className="flex flex-col items-center justify-center p-2">
           <h1 className="text-[24px] font-sans font-bold text-center text-primaryText">
             Create A Campaign
           </h1>
@@ -46,53 +50,72 @@ export const CampaignTemplates: React.FC = () => {
             instantly
           </p>
         </div>
-        <div className="py-[21px] grid grid-cols-4 gap-[24px]">
-          <div className="col-span-1 flex justify-center items-center">
+
+        {/* First row with 3 cards */}
+        <div className="py-[20px] w-full flex flex-wrap justify-center gap-[20px]">
+          <div className="flex w-1/4 justify-center items-center">
             <TemplateCard
               text="Regular Campaign"
               paratext="Create campaigns based on specific events trigger and engage with your target audiences"
-              icon="megaphone"
+              icon="fi fi-sr-megaphone"
               color="#0091E3"
-              isSelected={selectedCard === 0} // Check if the card is selected
-              handleCardClick={() => handleCardClick(0)} // Pass the card index
+              isSelected={selectedCard === 0}
+              handleCardClick={() => handleCardClick(0)}
             />
           </div>
-          <div className="col-span-1 flex justify-center items-center">
+          <div className="flex w-1/4 justify-center items-center">
             <TemplateCard
               text="Special Day"
               paratext="Create campaigns based on specific events trigger and engage with your target audiences"
-              icon="calendar-star"
+              icon="fi fi-sr-calendar-star"
               color="#28A61D"
-              isSelected={selectedCard === 1} // Check if the card is selected
-              handleCardClick={() => handleCardClick(1)} // Pass the card index
+              isSelected={selectedCard === 1}
+              handleCardClick={() => handleCardClick(1)}
             />
           </div>
-          <div className="col-span-1 flex justify-center items-center">
+          <div className="flex w-1/4 justify-center items-center">
             <TemplateCard
               text="Trigger Based"
               paratext="Create campaigns based on specific events trigger and engage with your target audiences"
-              icon="condition-alt"
+              icon="fi fi-sr-condition-alt"
               color="#3523D1"
-              isSelected={selectedCard === 2} // Check if the card is selected
-              handleCardClick={() => handleCardClick(2)} // Pass the card index
-            />
-          </div>
-          <div className="col-span-1 flex justify-center items-center">
-            <TemplateCard
-              text="I Know It All"
-              paratext="Create campaigns by selecting your desired location without any hassle and plan in express mode"
-              icon="shop"
-              color="#FF5252"
-              isSelected={selectedCard === 3} // Check if the card is selected
-              handleCardClick={() => handleCardClick(3)} // Pass the card index
+              isSelected={selectedCard === 2}
+              handleCardClick={() => handleCardClick(2)}
             />
           </div>
         </div>
-        <PrimaryButton
-          rounded="rounded-[30px]"
-          title="Plan Campaign"
-          action={handleNext}
-        />
+
+        {/* Second row with 2 centered cards */}
+        <div className="w-full flex justify-center gap-[24px]">
+          <div className="flex w-1/4 justify-center items-center">
+            <TemplateCard
+              text="Store Based"
+              paratext="Create campaigns by selecting your desired location without any hassle and plan in express mode"
+              icon="fi fi-sr-shop"
+              color="#FF5252"
+              isSelected={selectedCard === 3}
+              handleCardClick={() => handleCardClick(3)}
+            />
+          </div>
+          <div className="flex w-1/4 justify-center items-center">
+            <TemplateCard
+              text="I Know It All"
+              paratext="Create campaigns by using your experience and some little help from the prooh planner"
+              icon="fi fi-sr-head-side-brain"
+              color="#FF5E00"
+              isSelected={selectedCard === 4}
+              handleCardClick={() => handleCardClick(4)}
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-center mt-6">
+          <PrimaryButton
+            rounded="rounded-[30px]"
+            title="Plan Campaign"
+            action={handleNext}
+          />
+        </div>
       </div>
     </div>
   );

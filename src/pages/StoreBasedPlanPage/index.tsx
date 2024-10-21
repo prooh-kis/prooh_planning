@@ -27,7 +27,7 @@ import {
   FULL_CAMPAIGN_PLAN,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { IKnowItAll } from "../../components/planner/IKnowItAll";
+import { SpecialDay } from "../../components/planner/SpecialDay";
 
 const pages = [
   {
@@ -73,7 +73,7 @@ const pages = [
   {},
 ];
 
-export const IKnowItAllPlanPage: React.FC = () => {
+export const StoreBasedPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const location = useLocation();
   const { pathname } = location;
@@ -130,7 +130,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
       // const campDetails = location.state.campaign
       const campDetails = campaignDetails
     
-      setCurrentStep(Number(pages.filter((page: any) => page.value === campDetails?.currentPage)[0]?.id || 0) + 1);
+      setCurrentStep(Number(pages.filter((page: any) => page.value === campDetails?.currentPage)[0].id) + 1);
       dispatch(getScreensAudiencesData({ markets: campDetails?.markets }));
       dispatch(
         getScreensCostData({
@@ -144,7 +144,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
         id: campaignId,
         screenIds: campDetails?.screenIds,
       }));
-      const curr = Number(pages.filter((page: any) => page.value === campDetails?.currentPage)[0]?.id || 0) + 1;
+      const curr = Number(pages.filter((page: any) => page.value === campDetails?.currentPage)[0].id) + 1;
       const currStep = {
         [campaignId]: curr
       };
@@ -177,13 +177,14 @@ export const IKnowItAllPlanPage: React.FC = () => {
       </div>
       <div className="w-full h-full flex justify-center items-top">
         {currentStep === 1 ? (
-          <IKnowItAll
+          <SpecialDay
             setCurrentStep={setCurrentStep}
             step={currentStep}
             userInfo={userInfo}
             pathname={pathname}
             campaignId={campaignId}
           />
+   
         ) : null}
       </div>
     </div>

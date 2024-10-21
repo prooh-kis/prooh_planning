@@ -1,16 +1,15 @@
-import { PrimaryInput } from "../../components/atoms/PrimaryInput";
+import { PrimaryInput } from "../atoms/PrimaryInput";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { message, Modal } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
-import { useSelector } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
-import { CalendarInput } from "../../components/atoms/CalendarInput";
+import { CalendarInput } from "../atoms/CalendarInput";
 
-export const AddCampaignDetailForSpacialDay = ({
+export const AddCampaignDetails = ({
   handleCancel,
   open,
   setCurrentStep,
@@ -18,6 +17,8 @@ export const AddCampaignDetailForSpacialDay = ({
   userInfo,
   pathname,
   campaignId,
+  setCampaignId,
+  router,
 }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -90,7 +91,7 @@ export const AddCampaignDetailForSpacialDay = ({
         pageName: "Basic Details Page",
         name: campaignName,
         brandName: brandName,
-        campaignType: "Specialdayplan",
+        campaignType: router,
         clientName: clientName,
         industry: industry,
         startDate: startDate,
@@ -117,6 +118,7 @@ export const AddCampaignDetailForSpacialDay = ({
     userInfo?.email,
     userInfo?.primaryUserId,
     userInfo?.primaryUserEmail,
+    router
   ]);
 
   const handleSetNewDuration = () => {
@@ -131,8 +133,9 @@ export const AddCampaignDetailForSpacialDay = ({
     }
 
     if (successAddDetails) {
-      setCurrentStep(step + 1);
-      navigate(`/specialdayplan/${addDetails?._id}`);
+      setCampaignId(addDetails._id);
+      // setCurrentStep(step + 1);
+      navigate(`/${router}/${addDetails?._id}`);
     }
   }, [navigate, successAddDetails, errorAddDetails]);
 
@@ -211,15 +214,37 @@ export const AddCampaignDetailForSpacialDay = ({
             />
           </div>
           <div className="col-span-1 py-1">
-            <label className="block text-secondaryText text-[14px] mb-2">
-              Duration
-            </label>
-            <PrimaryInput
-              inputType="text"
-              placeholder="Industry"
-              value={duration}
-              action={() => {}}
-            />
+            <div className="flex justify-between">
+              <label className="block text-secondaryText text-[14px] mb-2">
+                {!enterDuration ? "End Date" : "Duration"}
+              </label>
+              <input
+                className="mr-2 h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                type="checkbox"
+                role="switch"
+                title="toggle"
+                id="flexSwitchCheckDefault"
+                onChange={() => {
+                  handleSetNewDuration();
+                  setEnterDuration(!enterDuration);
+                }}
+              />
+            </div>
+            {!enterDuration ? (
+              <CalendarInput
+                placeholder={!enterDuration ? "End Date" : "0"}
+                value={endDate}
+                action={setEndDate}
+                disabled={false}
+              />
+            ) : (
+              <PrimaryInput
+                inputType="number"
+                placeholder="duration"
+                value={duration}
+                action={setDuration}
+              />
+            )}
           </div>
         </div>
         <button

@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Select } from "antd";
-import { AddCampaignDetailForSpacialDay } from "../../components/popup/AddCampaignDetailForSpacialDay";
+import { AddCampaignDetails } from "../popup/AddCampaignDetails";
 import { EventCalender } from "../../components/popup/EventCalender";
 
 function SingleCalenderData() {
@@ -24,7 +24,7 @@ function SingleCalenderData() {
           <h1 className="text-[24px]">02</h1>
           <h1 className="text-[#737373] text-[13px] ">Feb</h1>
         </div>
-        <input type="checkbox" className="text-[24px]" />
+        <input title="month" type="checkbox" className="text-[24px]" />
       </div>
     </div>
   );
@@ -73,12 +73,13 @@ export const SpecialDay = ({
 
   return (
     <div className="w-full py-3">
-      <AddCampaignDetailForSpacialDay
+      <AddCampaignDetails
         handleCancel={handleCancel}
         open={isOpen}
         userInfo={userInfo}
         setCurrentStep={setCurrentStep}
         step={step}
+        router="specialdayplan"
       />
       <h1 className="text-[24px] text-primaryText font-semibold">
         Select Topical Day

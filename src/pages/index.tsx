@@ -12,4 +12,5 @@ export { CampaignDashboardPage } from "./CampaignDashboardPage";
 export { RegularPlanPage } from "./RegularPlanPage";
 export { SpecialDayPlanPage } from "./SpecialDayPlanPage";
 export { TriggerBasedPlanPage } from "./TriggerBasedPlanPage";
+export { StoreBasedPlanPage } from "./StoreBasedPlanPage";
 export { IKnowItAllPlanPage } from "./IKnowItAllPlanPage";

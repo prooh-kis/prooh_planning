@@ -17,6 +17,7 @@ import {
   SpecialDayPlanPage,
   TriggerBasedPlanPage,
   IKnowItAllPlanPage,
+  StoreBasedPlanPage,
 } from "../pages";
 
 import { PrivateRoute } from "./PrivateRoute";
@@ -122,6 +123,15 @@ const Routers: React.FC = () => {
           element={
             <PrivateRoute layout={HomePageLayout}>
               <TriggerBasedPlanPage />
+            </PrivateRoute>
+          }
+        />
+           <Route
+          // path={REGULARPLAN}
+          path={"/storebasedplan/:id?"}
+          element={
+            <PrivateRoute layout={HomePageLayout}>
+              <StoreBasedPlanPage />
             </PrivateRoute>
           }
         />

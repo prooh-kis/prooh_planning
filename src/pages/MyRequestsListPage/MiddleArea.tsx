@@ -44,7 +44,7 @@ export const MiddleArea: React.FC = () => {
       dispatch(getMyCreateCampaignsManagerRequestsList({id: userInfo?._id, type: "incomplete"}))
     }
   },[dispatch, navigate, userInfo]);
-  console.log(clientRequestsList);
+
   return (
     <div className="mt-6 w-full h-full pb-5">
       <div className="flex justify-between border-b py-2">

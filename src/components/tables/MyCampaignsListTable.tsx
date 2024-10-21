@@ -12,7 +12,6 @@ export const MyCampaignsListTable = ({
 }: MyCampaignsListTableProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-  console.log(campaignsList)
   return (
     <table className="w-full">
       <thead>

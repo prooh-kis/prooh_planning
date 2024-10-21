@@ -31,12 +31,11 @@ export const TouchpointTable = ({
           <th className="flex items-center justify-between w-full gap-2">
             <div className="flex gap-2 items-center">
               <h1 className="text-[14px] text-[#21394F]">
-                Cohorts
+                Touchpoints
               </h1>
               <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
             </div>
             <i className="fi fi-sr-lock-open-alt flex items-center text-[#9A9A9A] text-[12px]"></i>
-            
           </th>
         </tr>
       </thead>

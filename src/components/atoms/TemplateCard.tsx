@@ -28,7 +28,7 @@ export const TemplateCard = ({text, paratext, icon, color, isSelected, handleCar
             style={{ backgroundColor: `${color}10` }}  // Use inline styles for dynamic background color
           >
             <i 
-              className={`fi fi-sr-${icon} flex items-center justify-center h-[30px] w-[30px]`} 
+              className={`${icon} flex items-center justify-center h-[30px] w-[30px]`} 
               style={{ color }}  // Use inline styles for dynamic text color
             ></i>
           </div>
@@ -40,7 +40,7 @@ export const TemplateCard = ({text, paratext, icon, color, isSelected, handleCar
                 {text}
               </h1>
             </div>
-            <div className="flex justify-center items-center truncate">
+            <div className="px-4 flex justify-center items-center truncate">
               <p className="text text-[14px] text-secondaryText text-center text-wrap truncate">
                 {paratext}
               </p>
