@@ -4,6 +4,7 @@ import authReducer from "./authSlice";
 import {
   campaignDashboardDataGetReducer,
   finalPlanPOTableDataGetReducer,
+  getTableDataForSelectTopicalDayPageReducer,
   regularVsCohortPriceDataGetReducer,
   screenDataUploadCreativeReducer,
   screensAudiencesDataGetReducer,
@@ -30,12 +31,15 @@ import {
   myCreateCampaignsVendorRequestsListGetReducer,
   campaignStatusChangeAfterCreativeUploadReducer,
   campaignStatusChangeAfterVendorApprovalReducer,
-  
 } from "../reducers/campaignReducers";
 import {
   cricketMatchesListGetReducer,
   playersListGetReducer,
 } from "../reducers/externalApiReducers";
+import {
+  getCalendarListDataReducer,
+  getIndustryCategoryReducer,
+} from "../reducers/calenderReducers";
 
 const initialState = {
   userSignin: {
@@ -58,16 +62,21 @@ const store = configureStore({
     finalPlanPOTableDataGet: finalPlanPOTableDataGetReducer,
     screenDataUploadCreative: screenDataUploadCreativeReducer,
     vendorConfirmationDetailsGet: vendorConfirmationDetailsGetReducer,
-    vendorConfirmationStatusTableDetailsGet: vendorConfirmationStatusTableDetailsGetReducer,
+    vendorConfirmationStatusTableDetailsGet:
+      vendorConfirmationStatusTableDetailsGetReducer,
     campaignDashboardDataGet: campaignDashboardDataGetReducer,
 
     // campaign
     detailsToCreateCampaignAdd: detailsToCreateCampaignAddReducer,
     myCreateCampaignsListGet: myCreateCampaignsListGetReducer,
-    myCreateCampaignsManagerRequestsListGet: myCreateCampaignsManagerRequestsListGetReducer,
-    myCreateCampaignsVendorRequestsListGet: myCreateCampaignsVendorRequestsListGetReducer,
-    campaignStatusChangeAfterCreativeUpload: campaignStatusChangeAfterCreativeUploadReducer,
-    campaignStatusChangeAfterVendorApproval: campaignStatusChangeAfterVendorApprovalReducer,
+    myCreateCampaignsManagerRequestsListGet:
+      myCreateCampaignsManagerRequestsListGetReducer,
+    myCreateCampaignsVendorRequestsListGet:
+      myCreateCampaignsVendorRequestsListGetReducer,
+    campaignStatusChangeAfterCreativeUpload:
+      campaignStatusChangeAfterCreativeUploadReducer,
+    campaignStatusChangeAfterVendorApproval:
+      campaignStatusChangeAfterVendorApprovalReducer,
 
     // external apis
     cricketMatchesListGet: cricketMatchesListGetReducer,
@@ -83,6 +92,10 @@ const store = configureStore({
     emailSendForConfirmation: emailSendForConfirmationReducer,
     emailSendForVendorConfirmation: emailSendForVendorConfirmationReducer,
 
+    //
+    industryCategory: getIndustryCategoryReducer,
+    calendarListData: getCalendarListDataReducer,
+    tableDataForSelectTopicalDay: getTableDataForSelectTopicalDayPageReducer,
   },
   // middleware: thunk
   // devTools: process.env.NODE_ENV !== 'production'

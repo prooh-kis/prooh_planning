@@ -1,4 +1,7 @@
-import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../utils/localStorageUtils";
+import {
+  getDataFromLocalStorage,
+  saveDataOnLocalStorage,
+} from "../utils/localStorageUtils";
 import {
   GET_CAMPAIGN_DASHBOARD_DATA_ERROR,
   GET_CAMPAIGN_DASHBOARD_DATA_REQUEST,
@@ -28,6 +31,9 @@ import {
   GET_SCREENS_PRICE_FOR_REGULAR_COHORT_ERROR,
   GET_SCREENS_PRICE_FOR_REGULAR_COHORT_REQUEST,
   GET_SCREENS_PRICE_FOR_REGULAR_COHORT_SUCCESS,
+  GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_ERROR,
+  GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_REQUEST,
+  GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_SUCCESS,
   GET_VENDOR_CONFIRMATION_DETAILS_ERROR,
   GET_VENDOR_CONFIRMATION_DETAILS_REQUEST,
   GET_VENDOR_CONFIRMATION_DETAILS_SUCCESS,
@@ -35,7 +41,15 @@ import {
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_REQUEST,
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_SUCCESS,
 } from "../constants/screenConstants";
-import { ADVANCE_FILTER_SCREENS_MAP_DATA, AUDIENCE_DATA, COST_SUMMARY, REGULAR_VS_COHORT_PRICE_DATA, SCREEN_SUMMARY_DATA, SCREEN_SUMMARY_TABLE_DATA, TOTAL_SCREEN_COST_DATA } from "../constants/localStorageConstants";
+import {
+  ADVANCE_FILTER_SCREENS_MAP_DATA,
+  AUDIENCE_DATA,
+  COST_SUMMARY,
+  REGULAR_VS_COHORT_PRICE_DATA,
+  SCREEN_SUMMARY_DATA,
+  SCREEN_SUMMARY_TABLE_DATA,
+  TOTAL_SCREEN_COST_DATA,
+} from "../constants/localStorageConstants";
 
 export function screensAudiencesDataGetReducer(state = [], action) {
   switch (action.type) {
@@ -122,7 +136,6 @@ export function regularVsCohortPriceDataGetReducer(state = [], action) {
 }
 
 export function screenSummaryDataGetReducer(state = [], action) {
-
   switch (action.type) {
     case GET_SCREEN_SUMMARY_DATA_REQUEST:
       return { loading: true };
@@ -185,7 +198,6 @@ export function finalPlanPOTableDataGetReducer(state = [], action) {
   }
 }
 
-
 export function screenDataUploadCreativeReducer(state = {}, action) {
   switch (action.type) {
     case GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_REQUEST:
@@ -226,8 +238,10 @@ export function vendorConfirmationDetailsGetReducer(state = {}, action) {
   }
 }
 
-
-export function vendorConfirmationStatusTableDetailsGetReducer(state = {}, action) {
+export function vendorConfirmationStatusTableDetailsGetReducer(
+  state = {},
+  action
+) {
   switch (action.type) {
     case GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_REQUEST:
       return { loading: true };
@@ -245,7 +259,6 @@ export function vendorConfirmationStatusTableDetailsGetReducer(state = {}, actio
       return state;
   }
 }
-
 
 export function campaignDashboardDataGetReducer(state = {}, action) {
   switch (action.type) {
@@ -266,3 +279,21 @@ export function campaignDashboardDataGetReducer(state = {}, action) {
   }
 }
 
+export function getTableDataForSelectTopicalDayPageReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_REQUEST:
+      return { loading: true };
+    case GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}

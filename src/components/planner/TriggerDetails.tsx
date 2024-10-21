@@ -143,7 +143,6 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
             ]
           : [],
     });
-    console.log("fffffff : ", getDataFromLocalStorage(SELECTED_TRIGGER));
   }, [
     currentTab,
     selectedTrigger,

@@ -3,12 +3,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import axios from "axios";
+
 const localizer = momentLocalizer(moment);
 
-export const EventCalender = () => {
+export const EventCalender = ({ events }: any) => {
   const [open, setOpen] = useState<boolean>(false);
-
   const state = {
     events: [
       {
@@ -26,19 +25,6 @@ export const EventCalender = () => {
   const handleOpen = useCallback(() => {
     setOpen(true);
   }, [open]);
-
-  //   useEffect(() => {
-  //     axios
-  //       .get(
-  //         "https://api.api-ninjas.com/v1/holidays?country=india&year=2025&type=public_holiday",
-  //         {
-  //           headers: {
-  //             "X-Api-Key": "YOUR_API_KEY",
-  //           },
-  //         }
-  //       )
-  //       .then((data) => console.log("data", data));
-  //   }, []);
 
   return (
     <div>
@@ -64,7 +50,13 @@ export const EventCalender = () => {
             localizer={localizer}
             defaultDate={new Date()}
             defaultView="month"
-            events={state.events}
+            events={events?.map((data: any) => {
+              return {
+                start: moment(data?.date).toDate(),
+                end: moment(data?.date).add(1, "days").toDate(),
+                title: data.specialDay,
+              };
+            })}
             style={{ height: "100vh" }}
           />
         </div>
