@@ -40,7 +40,6 @@ export const AudienceTouchPointsDetails = ({
 }: EnterAudienceTouchpointDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-  const { pathname } = useLocation();
 
   const [markets, setMarkets] = useState<any>({});
   const [audiences, setAudiences] = useState<any>({});
@@ -236,7 +235,7 @@ export const AudienceTouchPointsDetails = ({
               totalScreensData,
             ])
           }}
-          totalScreensData={totalScreensData}
+          totalScreensData={getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]}
         />
       </div>
     </div>

@@ -12,6 +12,21 @@ export const Footer = ({
   isDisabled = false,
 }: any) => {
   console.log(totalScreensData)
+  const avgPricePerSlot = (data: any) => {
+    const screenWiseSlotDetails = data.screenWiseSlotDetails;
+
+    // Calculate total price per slot and count of screens
+    let totalPricePerSlot = 0;
+    let totalScreens = screenWiseSlotDetails.length;
+
+    screenWiseSlotDetails.forEach((screen: any) => {
+        totalPricePerSlot += screen.pricePerSlot;
+    });
+
+    // Calculate average price per slot
+    const averagePricePerSlot = totalPricePerSlot / totalScreens;
+    return averagePricePerSlot;
+  }
   return (
     <div className="py-4 z-10 flex justify-between">
  
@@ -33,27 +48,34 @@ export const Footer = ({
             <div className="flex gap-2 truncate">
               <h1 className="text-[14px] truncate">Total screens</h1>
               <h1 className="text-[14px] font-semibold">
-                {totalScreensData?.screensSelectedCount}/
-                {totalScreensData?.screensTotalCount}
+                {totalScreensData?.totalScreens}
+                
               </h1>
             </div>
             <div className="flex gap-2 truncate">
               <h1 className="text-[14px] truncate">Total impression</h1>
               <h1 className="text-[14px] font-semibold">
-                {formatNumber(totalScreensData?.impressionSelectedCount || 0)}
+                {formatNumber(totalScreensData?.totalImpression || 0)}
               </h1>
             </div>
             <div className="flex gap-2 truncate">
               <h1 className="text-[14px] truncate">Total Budget</h1>
               <h1 className="text-[14px] font-semibold">
                 {" "}
-                &#8377;{formatNumber(totalScreensData?.budgetSelected || 0)}
+                &#8377;{formatNumber(totalScreensData?.totalCampaignBudget || 0)}
               </h1>
             </div>
             <div className="flex gap-2 truncate">
               <h1 className="text-[14px] truncate">CPM</h1>
               <h1 className="text-[14px] font-semibold">
-                &#8377;{totalScreensData?.cpmSelected?.toFixed(2) || 0}
+                &#8377;{totalScreensData?.totalCpm?.toFixed(2) || 0}
+              </h1>
+            </div>
+            <div className="flex gap-2 truncate">
+              <h1 className="text-[14px] truncate">Price Per Slot</h1>
+              <h1 className="text-[14px] font-semibold">
+                &#8377;{avgPricePerSlot(totalScreensData)?.toFixed(2) || 0
+                  }
               </h1>
             </div>
           </div>

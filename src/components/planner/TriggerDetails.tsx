@@ -16,6 +16,7 @@ import {
 } from "../../utils/localStorageUtils";
 import {
   COST_SUMMARY,
+  FULL_CAMPAIGN_PLAN,
   SELECTED_TRIGGER,
 } from "../../constants/localStorageConstants";
 import { message } from "antd";
@@ -25,8 +26,9 @@ import { useLocation } from "react-router-dom";
 interface TriggerProps {
   setCurrentStep: (step: number) => void;
   step: number;
+  campaignId?: any;
 }
-export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
+export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
 
@@ -34,6 +36,7 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
   const [currentTab, setCurrentTab] = useState<any>(1);
 
   const [isDisabled, setIsDisabled] = useState<any>(true);
+  const [disableApply, setDisableApply] = useState<any>(true);
 
   const [selectedTrigger, setSelectedTrigger] = useState<any>({
     triggerType: "weather",
@@ -50,7 +53,7 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
   const [player, setPlayer] = useState<any>("");
 
   const [selectedBudget, setSelectedBudget] = useState<any>(null);
-  const [selectedSOV, setSelectedSOV] = useState<any>(null);
+  const [selectedSOV, setSelectedSOV] = useState<any>(1);
   const [selectedTimeOptions, setSelectedTimeOptions] = useState<any>(300);
 
   const timeOptions = [
@@ -98,6 +101,12 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
   const handleSelectTrigger = useCallback(() => {
     setIsDisabled(true);
     saveDataOnLocalStorage(SELECTED_TRIGGER, {
+      weatherTriggers: {},
+      sportsTriggers: {},
+      vacantSlots: {},
+    });
+
+    saveDataOnLocalStorage(SELECTED_TRIGGER, {
       weatherTriggers:
         selectedTrigger?.triggerType === "weather"
           ? [
@@ -129,7 +138,6 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
               },
             ]
           : [],
-
       vacantSlots:
         selectedTrigger?.triggerType === "empty"
           ? [
@@ -185,7 +193,14 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
         vacantSlots: [],
       });
       setIsDisabled(false);
-      console.log("ggggg : ", getDataFromLocalStorage(SELECTED_TRIGGER));
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Add Triggers Page",
+          id: pathname.split("/").splice(-1)[0],
+          triggers: getDataFromLocalStorage(SELECTED_TRIGGER),
+        })
+      );
+      setCurrentStep(step + 1);
     }
   };
 
@@ -370,12 +385,16 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
               />
             </div>
           )}
-          <OpenBudgetSegment
-            selectedSOV={selectedSOV}
-            selectedBudget={selectedBudget}
-            setSelectedBudget={setSelectedBudget}
-            setSelectedSOV={setSelectedSOV}
-          />
+          <div className="" onClick={() => setDisableApply(false)}>
+            <OpenBudgetSegment
+              totalCost={getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.totalCampaignBudget}
+              selectedSOV={selectedSOV}
+              selectedBudget={selectedBudget}
+              setSelectedBudget={setSelectedBudget}
+              setSelectedSOV={setSelectedSOV}
+            />
+          </div>
+
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
               <p className="text-[12px] text-[#969696]">
@@ -395,14 +414,18 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
                 })}
               />
             </div>
-            {/* <PrimaryButton
-              height="h-10"
-              width="w-36"
-              rounded="rounded-full"
-              title="Apply Creative"
-              textSize="text-[14px]"
-              action={handleSelectTrigger}
-            /> */}
+            {!disableApply && (
+              <PrimaryButton
+                height="h-10"
+                width="w-36"
+                disabled={disableApply}
+                rounded="rounded-full"
+                title="Apply Trigger"
+                textSize="text-[14px]"
+                action={handleSelectTrigger}
+              />
+            )}
+
           </div>
         </div>
       </div>
@@ -418,7 +441,7 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
               for your campaign triggers
             </>
           }
-          disabled={!isDisabled}
+          disabled={disableApply}
           onChange={() => {
             setIsDisabled(!isDisabled);
           }}
@@ -430,7 +453,7 @@ export const TriggerDetails = ({ setCurrentStep, step }: TriggerProps) => {
             setCurrentStep(step - 1);
           }}
           handleSave={handleSaveAndContinue}
-          totalScreensData={getDataFromLocalStorage(COST_SUMMARY)?.[0] || []}
+          totalScreensData={getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] || []}
         />
       </div>
     </div>

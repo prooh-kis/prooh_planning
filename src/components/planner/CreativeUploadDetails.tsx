@@ -630,7 +630,7 @@ export const CreativeUploadDetails = ({
               handleSave={handleSaveAndContinue}
               loading={isLoading}
               isDisabled={isLoading}
-              totalScreensData={{}}
+              totalScreensData={getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]}
             />
           </div>
         </div>
