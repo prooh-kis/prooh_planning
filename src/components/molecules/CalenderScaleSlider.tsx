@@ -24,7 +24,7 @@ export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({ days, 
   const isLastWeek = playedWeekIndex === Math.ceil(days / 7) - 1;
 
   // Determine line color based on played days
-  const lineColor = Number(playedDays) > 0 ? 'border-[#129BFF]' : 'border-[#129BFF30]'; // Change color if days are played
+  const lineColor = Number(playedDays) > 0 ? 'border-[#129BFF20]' : 'border-[#129BFF30]'; // Change color if days are played
 
   return (
     <div className="calendar-scale relative flex flex-col items-start w-full">
@@ -35,7 +35,7 @@ export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({ days, 
           
         style={{
           marginLeft: isFirstWeek ? '20px' : '25px', // Change margin if daysPlayed is in the first week
-          marginRight: isLastWeek ? '20px' : '25px', // Change margin if daysPlayed is in the last week
+          marginRight: isLastWeek ? '20px' : '35px', // Change margin if daysPlayed is in the last week
         }}
       ></div>
 

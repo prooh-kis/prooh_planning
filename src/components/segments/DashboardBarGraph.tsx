@@ -46,7 +46,7 @@ export const DashboardBarChart: React.FC<BarChartProps> = ({
       {
         label: label,
         data,
-        borderColor: "#129BFF",
+        borderColor: "#129BFF10",
         // borderColor: '#129BFF',
         borderWidth: 1,
         borderRadius: 5,
