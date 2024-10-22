@@ -112,7 +112,7 @@ export const MyCampaignsListTable = ({
                 //   id: campaign._id,
                 // }));
                 // if (campaign.currentPage !== "")
-                // navigate(`/campaignDetails/${campaign._id}`);
+                navigate(`/campaignDetails/${campaign._id}`);
             }}
             >
               <i className="fi fi-bs-menu-dots text-[20px] flex justify-center"></i>

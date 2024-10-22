@@ -219,6 +219,7 @@ export const RegularPlanPage: React.FC = () => {
           <TriggerDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
+            campaignId={campaignId}
           />
         ) : currentStep === 7 ? (
           <ViewFinalPlanPODetails

@@ -47,7 +47,7 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
             <MultiColorLinearBar
               showPercentage={false}
               values={[
-                formatNumber(screenLevelData?.["totalData"]?.impressionsDelivered.toFixed(0) || 0),
+                formatNumber(screenLevelData?.["totalData"]?.impressionsDelivered?.toFixed(0) || 0),
                 0
               ]}
               colors={["","#129BFF"]}
@@ -60,7 +60,7 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
           >
             <div className="flex gap-4 justify-between items-center pr-2">
               <p className="text-[12px] text-gray-400">
-                {formatNumber(screenLevelData?.["totalData"]?.impressionsPromised.toFixed(0) || 0)}
+                {formatNumber(screenLevelData?.["totalData"]?.impressionsPromised?.toFixed(0) || 0)}
               </p>
               <i className="fi fi-ss-angle-down flex items-center text-gray-400 text-[12px]"></i>
             </div>
@@ -72,7 +72,7 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
             <div className="w-full">
               <div className="py-1 flex gap-2">
                 <h1 className="text-[14px] font-semibold">Audience Impression Detailed View - </h1>
-                <p className="text-[14px] text-[#129BFF]">{screenLevelData?.["totalData"]?.durationDelivered.toFixed(0) || 1}</p>
+                <p className="text-[14px] text-[#129BFF]">{screenLevelData?.["totalData"]?.durationDelivered?.toFixed(0) || 1}</p>
               </div>
               <DashboardImpressionDetailsTable screenLevelData={screenLevelData} />
             </div>
@@ -117,7 +117,7 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
             <div className="w-full">
               <div className="py-1 flex gap-2">
                 <h1 className="text-[14px] font-semibold">Screen Performance Detailed View - </h1>
-                <p className="text-[14px] text-[#129BFF]">{screenLevelData?.["totalData"]?.durationDelivered.toFixed(0) || 1}</p>
+                <p className="text-[14px] text-[#129BFF]">{screenLevelData?.["totalData"]?.durationDelivered?.toFixed(0) || 1}</p>
               </div>
               <DashboardBarChart label={"Screen Performance"}data={screenPerformance().countsArray} labels={screenPerformance().datesArray}/>
             </div>
@@ -134,11 +134,11 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
             <MultiColorLinearBar
               showPercentage={false}
               values={[
-                screenLevelData?.["totalData"]?.slotsDelivered.toFixed(0),
+                screenLevelData?.["totalData"]?.slotsDelivered?.toFixed(0),
                 0
               ]}
               colors={["","#129BFF"]}
-              totalValue={screenLevelData?.["totalData"]?.slotsPromised.toFixed(0)}
+              totalValue={screenLevelData?.["totalData"]?.slotsPromised?.toFixed(0)}
             />
           </div>
           <div
@@ -147,7 +147,7 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
           >
             <div className="flex gap-4 justify-between items-center pr-2">
               <p className="text-[12px] text-gray-400">
-                {formatNumber(screenLevelData?.["totalData"]?.slotsPromised.toFixed(0) || 0)}
+                {formatNumber(screenLevelData?.["totalData"]?.slotsPromised?.toFixed(0) || 0)}
               </p>
               <i className="fi fi-ss-angle-down flex items-center text-gray-400 text-[12px]"></i>
             </div>
@@ -159,7 +159,7 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
             <div className="w-full">
               <div className="py-1 flex gap-2 ">
                 <h1 className="text-[14px] font-semibold">Spot Delivery Detailed View - </h1>
-                <p className="text-[14px] text-[#129BFF]">{screenLevelData?.["totalData"]?.durationDelivered.toFixed(0) || 1}</p>
+                <p className="text-[14px] text-[#129BFF]">{screenLevelData?.["totalData"]?.durationDelivered?.toFixed(0) || 1}</p>
               </div>
               <DashboardBarChart label={"Spot Delivery"} data={spotDelivery().countsArray} labels={spotDelivery().datesArray}/>
             </div>
@@ -176,15 +176,15 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
             <MultiColorLinearBar
               showPercentage={false}
               values={[
-                screenLevelData?.["totalData"]?.costConsumed.toFixed(0)
+                screenLevelData?.["totalData"]?.costConsumed?.toFixed(0)
               ]}
               colors={["","#129BFF"]}
-              totalValue={screenLevelData?.["totalData"]?.costTaken.toFixed(0)}
+              totalValue={screenLevelData?.["totalData"]?.costTaken?.toFixed(0)}
             />
           </div>
           <div className="col-span-1 pt-1">
             <p className="text-[12px] text-gray-400">
-              &#8377;{formatNumber(screenLevelData?.["totalData"]?.costTaken.toFixed(0) || 0)}
+              &#8377;{formatNumber(screenLevelData?.["totalData"]?.costTaken?.toFixed(0) || 0)}
             </p>
           </div>
         </div>
