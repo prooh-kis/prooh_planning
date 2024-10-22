@@ -402,7 +402,7 @@ export const CreativeUploadDetails = ({
     if (screenData) {
       // console.log("screenData : ", screenData);
       if (getDataFromLocalStorage(CAMPAIGN_CREATIVES)) {
-        handleSetInitialData(getDataFromLocalStorage(CAMPAIGN_CREATIVES));
+        handleSetInitialData(getDataFromLocalStorage(CAMPAIGN_CREATIVES) || {});
       } else {
         handleSetInitialData(screenData);
       }

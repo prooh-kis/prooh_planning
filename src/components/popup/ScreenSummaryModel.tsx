@@ -21,10 +21,10 @@ export function ScreenSummaryModel({ totalScreensData }: any) {
       </button>
       <Modal open={open} onCancel={handleCancel} footer={[]} width={1100}>
         <div className="p-2">
-          <CostSummaryTable1
+          {/* <CostSummaryTable1
             totalData={totalScreensData}
             selectedData={totalScreensData}
-          />
+          /> */}
         </div>
       </Modal>
     </div>

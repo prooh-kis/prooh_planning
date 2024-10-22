@@ -63,11 +63,14 @@ export const AdvanceFiltersDetails = ({
 
   const getUniqueScreens = (data: any) => {
     const uniqueScreens = new Set();
-    data.forEach((location: any) => {
-      location.screens.forEach((screen: any) => {
-        uniqueScreens.add(screen);
+    if (data) {
+      data?.forEach((location: any) => {
+        location?.screens?.forEach((screen: any) => {
+          uniqueScreens.add(screen);
+        });
       });
-    });
+    }
+
     let result = Array.from(uniqueScreens);
 
     return result;
@@ -75,7 +78,7 @@ export const AdvanceFiltersDetails = ({
 
   const getMapData = useCallback(
     (myData: any) => {
-      setAllScreens(myData.screens);
+      setAllScreens(myData?.screens);
       const data: any = {
         brand: [],
         comp: [],
@@ -88,6 +91,7 @@ export const AdvanceFiltersDetails = ({
   );
 
   const handleFinalSelectedScreens = ({ type, screens }: any) => {
+    console.log(type, screens);
     if (type === "add") {
       screens = [
         ...excelFilteredScreens,
@@ -140,7 +144,9 @@ export const AdvanceFiltersDetails = ({
     ) {
       handleFinalSelectedScreens({
         type: "add",
-        screens: getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)?.screens,
+        screens: getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)?.screens || [],
+        // screens: [],
+
       });
     }
   }, []);
@@ -157,7 +163,7 @@ export const AdvanceFiltersDetails = ({
         );
         handleFinalSelectedScreens({
           type: "remove",
-          screens: data.selectedScreens,
+          screens: data?.selectedScreens || [],
         });
       }
     }
@@ -196,22 +202,24 @@ export const AdvanceFiltersDetails = ({
       });
     });
     let arr = routes;
-    const screens: any = routeFilteredScreens;
+    const _screens: any = routeFilteredScreens;
     for (let data of arr) {
       if (data?.id === id) {
         data.selectedScreens = filteredRecords;
         filteredRecords.map((f: any) => {
-          if (!screens.map((s: any) => s._id).includes(f._id)) {
-            screens.push(f);
+          if (!_screens.map((s: any) => s._id).includes(f._id)) {
+            _screens.push(f);
           }
         });
       }
     }
-    setRouteFilteredScreens(screens);
+    setRouteFilteredScreens(_screens);
     setRoutes(arr);
     handleFinalSelectedScreens({
       type: "add",
-      screens: filteredRecords,
+      screens: filteredRecords || [],
+      // screens: [],
+
     });
 
     // handleSetFIlter4(arr);
@@ -223,12 +231,14 @@ export const AdvanceFiltersDetails = ({
     if (checked) {
       handleFinalSelectedScreens({
         type: "add",
-        screens: selectedScreensFromMap,
+        screens: selectedScreensFromMap || [],
+        // screens: [],
+
       });
     } else {
       handleFinalSelectedScreens({
         type: "remove",
-        screens: selectedScreensFromMap,
+        screens: selectedScreensFromMap || [],
       });
     }
   };
@@ -243,17 +253,19 @@ export const AdvanceFiltersDetails = ({
     });
   };
 
-  const handleConfirmScreensSelections = ({checked, screens}: any) => {
+  const handleConfirmScreensSelections = ({checked, cscreens}: any) => {
     setIsDisabled(!checked);
     if (checked) {
       handleFinalSelectedScreens({
         type: "add",
-        screens: screens,
+        screens: cscreens || [],
+        // screens: [],
+
       });
     } else {
       handleFinalSelectedScreens({
         type: "remove",
-        screens: screens,
+        screens: cscreens || [],
       });
     }
     // saveDataOnLocalStorage(SELECTED_SCREENS_ID, getUniqueScreens([{screens: selectedScreenIds}]));

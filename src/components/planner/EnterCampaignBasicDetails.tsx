@@ -149,12 +149,11 @@ export const EnterCampaignBasicDetails = ({
   
   const handleSetNewDuration = () => {
 
-    if (!enterDuration)
+    if (!enterDuration){
       setDuration(getNumberOfDaysBetweenTwoDates(startDate, endDate));
-    else {
+    } else {
       updateEndDateBasedOnDuration(duration);
     } 
-    setDuration(duration);
     // else message.error("Please enter first start , end Date");
   };
 
@@ -260,7 +259,10 @@ export const EnterCampaignBasicDetails = ({
             <CalendarInput
               placeholder={!enterDuration ? "End Date" : "0"}
               value={endDate}
-              action={setEndDate}
+              action={(e: any) => {
+                setEndDate(e);
+                handleSetNewDuration();
+              }}
               disabled={false}
             />
           ) : (
@@ -268,7 +270,10 @@ export const EnterCampaignBasicDetails = ({
               inputType="number"
               placeholder="duration"
               value={duration}
-              action={setDuration}
+              action={(e: any) => {
+                setDuration(e);
+                handleSetNewDuration();
+              }}
             />
           )}
         </div>

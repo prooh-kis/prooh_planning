@@ -78,16 +78,19 @@ export const ScreenSummaryTable = ({
     const anyScreenTrue = allScreensStatuses.some(status => status === true);
 
     // Update screen type toggle based on individual screens' statuses
-    setScreenTypeToggle((prevState: any) => ({
-      ...prevState,
-      [city]: {
-        ...prevState[city],
-        [touchpoint] : {
-          ...prevState[city][touchpoint],
-          [screenType]: anyScreenTrue // Set to true if any are true, false otherwise
+    if (screenTypeToggle[screenType]) {
+      setScreenTypeToggle((prevState: any) => ({
+        ...prevState,
+        [city]: {
+          ...prevState[city],
+          [touchpoint] : {
+            ...prevState[city][touchpoint],
+            [screenType]: anyScreenTrue // Set to true if any are true, false otherwise
+          }
         }
-      }
-    }));
+      }));
+    }
+
   };
 
   const handleScreenClick = ({screen, city, touchpoint}: any) => {
@@ -211,10 +214,16 @@ export const ScreenSummaryTable = ({
                                     <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
                                     <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
                                   </div>
-                                  <div onClick={() => {screenTypeToggle[st] &&
-                                    handleScreenClick({screen, currentCity, tp, st})
-                                    }}>
-                                    {getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) !== null && getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[currentCity]?.[screen._id]?.status === false ? (
+                                  <div
+                                    onClick={() => {
+                                      // screenTypeToggle[st] &&
+                                      handleScreenClick({screen, currentCity, tp, st})
+                                    }}
+                                  >
+                                    {
+                                      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) !== null &&
+                                      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[currentCity]?.[screen._id]?.status === false ? 
+                                    (
                                       <i className={`fi fi-br-cross flex items-center text-red-500 text-[12px]`}></i>
                                     ) : (
                                       <i className={`fi fi-br-check flex items-center text-green-500 text-[12px]`}></i>

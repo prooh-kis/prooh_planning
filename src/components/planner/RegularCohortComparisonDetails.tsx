@@ -30,19 +30,16 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
 
   const [showSummary, setShowSummary] = useState<any>(null);
   const [screenIds, setScreenIds] = useState<any>(
-    JSON.parse(getAllLocalStorageData()["selectedScreensId"] || "[]") || []
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds || []
   );
   const [cohorts, setCohorts] = useState<any>(
-    JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}")
-      .cohorts || []
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts || []
   );
   const [gender, setGender] = useState<any>(
-    JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}")
-      .gender || "both"
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender || "both"
   );
   const [duration, setDuration] = useState<any>(
-    JSON.parse(getAllLocalStorageData()["selectedAudienceTouchpoints"] || "{}")
-      .duration || 30
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30
   );
 
   const [selectedBuyingOption, setSelectedBuyingOption] =
@@ -66,6 +63,10 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
         duration: duration,
       }));
     } else {
+      console.log(screenIds);
+      console.log(cohorts);
+      console.log(gender);
+      console.log(duration);
       saveDataOnLocalStorage(
         REGULAR_VS_COHORT_PRICE_DATA,
         priceData

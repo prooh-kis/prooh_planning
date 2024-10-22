@@ -22,8 +22,8 @@ export const CampaignTemplates: React.FC = () => {
     } else {
       if (selectedCard === 0) {
         navigate("/regularplan");
-      // } else if (selectedCard === 1) {
-      //   navigate("/specialdayplan");
+      } else if (selectedCard === 1) {
+        navigate("/specialdayplan");
       } else if (selectedCard === 2) {
         navigate("/triggerbasedplan");
       } else if (selectedCard === 3) {
@@ -61,6 +61,7 @@ export const CampaignTemplates: React.FC = () => {
               color="#0091E3"
               isSelected={selectedCard === 0}
               handleCardClick={() => handleCardClick(0)}
+              navigate={() => navigate("/regularplan")}
             />
           </div>
           <div className="flex w-1/4 justify-center items-center">
@@ -71,6 +72,7 @@ export const CampaignTemplates: React.FC = () => {
               color="#28A61D"
               isSelected={selectedCard === 1}
               handleCardClick={() => handleCardClick(1)}
+              navigate={() => navigate("/specialdayplan")}
             />
           </div>
           <div className="flex w-1/4 justify-center items-center">
@@ -81,6 +83,7 @@ export const CampaignTemplates: React.FC = () => {
               color="#3523D1"
               isSelected={selectedCard === 2}
               handleCardClick={() => handleCardClick(2)}
+              navigate={() => navigate("/triggerbasedplan")}
             />
           </div>
         </div>
@@ -95,6 +98,7 @@ export const CampaignTemplates: React.FC = () => {
               color="#FF5252"
               isSelected={selectedCard === 3}
               handleCardClick={() => handleCardClick(3)}
+              navigate={() => navigate("/storebasedplan")}
             />
           </div>
           <div className="flex w-1/4 justify-center items-center">
@@ -105,6 +109,7 @@ export const CampaignTemplates: React.FC = () => {
               color="#FF5E00"
               isSelected={selectedCard === 4}
               handleCardClick={() => handleCardClick(4)}
+              navigate={() => navigate("/iknowitallplan")}
             />
           </div>
         </div>
