@@ -129,7 +129,7 @@ export const RegularPlanPage: React.FC = () => {
       // const campDetails = location.state.campaign
       const campDetails = campaignDetails
     
-      setCurrentStep(Number(pages.filter((page: any) => page.value === campDetails?.currentPage)[0].id) + 1);
+      setCurrentStep(Number(pages.filter((page: any) => page.value === campDetails?.currentPage)[0]?.id) + 1);
       dispatch(getScreensAudiencesData({ markets: campDetails?.markets }));
       dispatch(
         getScreensCostData({

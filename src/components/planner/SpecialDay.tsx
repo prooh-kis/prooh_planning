@@ -115,8 +115,8 @@ export const SpecialDay = ({
   }, [isOpen]);
 
   useEffect(() => {
-    dispatch(getTableDataForSelectTopicalDayPage({ impactFactor: 0.2 }));
-  }, []);
+    // dispatch(getTableDataForSelectTopicalDayPage({ impactFactor: 0.2 }));
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(

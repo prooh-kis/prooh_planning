@@ -3,7 +3,7 @@ import { PrimaryButton } from "../atoms/PrimaryButton";
 import { PrimaryInput } from "../atoms/PrimaryInput";
 import { useNavigate } from "react-router-dom";
 import { CalendarInput } from "../atoms/CalendarInput";
-import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
+import { getEndDateFromStartDateANdDuration, getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
 import {
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
@@ -15,6 +15,7 @@ import {
   CAMPAIGN,
   FULL_CAMPAIGN_PLAN,
 } from "../../constants/localStorageConstants";
+import { format } from "date-fns";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -133,12 +134,28 @@ export const EnterCampaignBasicDetails = ({
     userInfo?.email,
     userInfo?.primaryUserId,
     userInfo?.primaryUserEmail,
+    pathname
   ]);
 
+    // Function to handle duration change and update the end date
+    const updateEndDateBasedOnDuration = (newDuration: number) => {
+      if (startDate) {
+        const endDate1 = getEndDateFromStartDateANdDuration(startDate, newDuration);
+        setEndDate(new Date(endDate1).toISOString().slice(0, 16));
+      } else {
+        message.error("Please enter a start date first");
+      }
+    };
+  
   const handleSetNewDuration = () => {
-    if (startDate && endDate)
+
+    if (!enterDuration)
       setDuration(getNumberOfDaysBetweenTwoDates(startDate, endDate));
-    else message.error("Please enter first start , end Date");
+    else {
+      updateEndDateBasedOnDuration(duration);
+    } 
+    setDuration(duration);
+    // else message.error("Please enter first start , end Date");
   };
 
   useEffect(() => {

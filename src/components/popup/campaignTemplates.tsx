@@ -22,8 +22,8 @@ export const CampaignTemplates: React.FC = () => {
     } else {
       if (selectedCard === 0) {
         navigate("/regularplan");
-      } else if (selectedCard === 1) {
-        navigate("/specialdayplan");
+      // } else if (selectedCard === 1) {
+      //   navigate("/specialdayplan");
       } else if (selectedCard === 2) {
         navigate("/triggerbasedplan");
       } else if (selectedCard === 3) {

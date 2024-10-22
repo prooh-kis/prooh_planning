@@ -78,7 +78,7 @@ export const getScreensCostData =
 
     try {
       const { data } = await axios.post(
-        `${url}/tableDataForSelectTopicalDayPage`,
+        `${url}/tableAudienceTouchPointPage`,
         {
           cohorts,
           gender,

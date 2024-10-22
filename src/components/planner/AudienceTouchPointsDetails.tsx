@@ -97,29 +97,6 @@ export const AudienceTouchPointsDetails = ({
     setSelectedScreensData(myData);
   };
 
-  const handleSaveAndContinue = () => {
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "Audience And TouchPoint Page",
-        id: pathname.split("/").splice(-1)[0],
-        markets: Object.keys(getDataFromLocalStorage(AUDIENCE_DATA)),
-        cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).cohorts,
-        touchPoints: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)
-          .touchPoints,
-        gender: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).gender,
-      })
-    );
-    saveDataOnLocalStorage(COST_SUMMARY, [
-      {
-        totalScreensData: totalScreensData,
-      },
-      {
-        selectedScreensData: selectedScreensData,
-      },
-    ]);
-    setCurrentStep(step + 1);
-  };
-
   useEffect(() => {
     if (screensCost) {
       saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, screensCost);
