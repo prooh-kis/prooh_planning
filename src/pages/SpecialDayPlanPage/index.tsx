@@ -145,8 +145,8 @@ export const SpecialDayPlanPage: React.FC = () => {
         Number(
           pages.filter(
             (page: any) => page.value === campDetails?.currentPage
-          )[0].id
-        ) + 1
+          )[0]?.id
+        || 0) + 1
       );
       dispatch(getScreensAudiencesData({ markets: campDetails?.markets }));
       dispatch(
@@ -167,8 +167,8 @@ export const SpecialDayPlanPage: React.FC = () => {
         Number(
           pages.filter(
             (page: any) => page.value === campDetails?.currentPage
-          )[0].id
-        ) + 1;
+          )[0]?.id
+        || 0) + 1;
       const currStep = {
         [campaignId]: curr,
       };

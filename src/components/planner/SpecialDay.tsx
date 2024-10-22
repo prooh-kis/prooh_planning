@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { Select } from "antd";
 import { AddCampaignDetails } from "../popup/AddCampaignDetails";
 import { EventCalender } from "../../components/popup/EventCalender";
+import { MonthRangeSlider } from "../../components/molecules/MonthRangeSlider";
 import moment from "moment";
 import {
   getCalendarListData,
@@ -63,6 +64,23 @@ export const SpecialDay = ({
   const dispatch = useDispatch<any>();
   const [dummay, setDummat] = useState<any>([1, 2, 3, 4, 5, 6]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const [month, setMonth] = useState<any>(new Date().getMonth());
+
+  const [idCampaign, setCampaignId] = useState<any>(campaignId || "");
+
+  const [data, setData] = useState<any>({
+    "Campaign Duration": "1 Day",
+    "Total Cities": "03",
+    "Total Touchpoints": "40",
+    "Total Sites": "70",
+    "Avg Impression Per Day": "100k",
+    "Total Slots": "2000",
+    "Slot Duration": "10 sec in 3 mins",
+    "per slot price": "₹200",
+    CPM: "₹0.2",
+    "Total Budget": "₹2,80,000",
+  });
   const [category, setCategory] = useState<string>("");
 
   const industryCategory = useSelector((state: any) => state.industryCategory);
@@ -114,6 +132,11 @@ export const SpecialDay = ({
     dispatch(getIndustryCategory({ category: [], industry: [] }));
   }, []);
 
+
+  const handleRangeChange = (startMonth: string, endMonth: string) => {
+    console.log(`Selected range: ${startMonth} to ${endMonth}`);
+  };
+
   return (
     <div className="w-full py-3">
       <AddCampaignDetails
@@ -123,6 +146,8 @@ export const SpecialDay = ({
         setCurrentStep={setCurrentStep}
         step={step}
         router="specialdayplan"
+        setCampaignId={setCampaignId}
+        campaignId={idCampaign}
       />
       <h1 className="text-[24px] text-primaryText font-semibold">
         Select Topical Day
@@ -151,7 +176,18 @@ export const SpecialDay = ({
         </div>
         <EventCalender events={calendarListData1?.filteredCalendar || []} />
       </div>
-      <h1 className="py-2">Months</h1>
+      <div className="">
+        <h1 className="py-2">Months</h1>
+        <div className="pt-5">
+          <MonthRangeSlider
+            // min={1} max={12} onChange={() => {}}
+            setMonth={setMonth}
+            months={12}
+            month={month}
+          />
+        </div>
+
+      </div>
       <div className="flex gap-8">
         <div className="w-full border border-1 rounded-xl p-8">
           <h1>Topical days in feb </h1>
