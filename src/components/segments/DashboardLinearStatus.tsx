@@ -89,7 +89,7 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
             <MultiColorLinearBar
               showPercentage={true}
               values={[
-                screenLevelData?.["totalData"]?.screenPerformance.toFixed(0),
+                screenLevelData?.["totalData"]?.screenPerformance?.toFixed(0),
                 0
               ]}
               colors={["","#129BFF"]}
