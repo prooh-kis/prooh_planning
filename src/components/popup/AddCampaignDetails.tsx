@@ -1,28 +1,22 @@
 import { PrimaryInput } from "../atoms/PrimaryInput";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { message, Modal } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
-import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
 import { CalendarInput } from "../atoms/CalendarInput";
 
 export const AddCampaignDetails = ({
   handleCancel,
   open,
-  setCurrentStep,
-  step,
   userInfo,
-  pathname,
   campaignId,
-  setCampaignId,
   router,
+  startDate1,
+  campaignDuration = 1,
+  handleSaveData,
+  selectedSpacialDay,
 }: any) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch<any>();
-
   const [campaignName, setCampaignName] = useState<any>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || ""
   );
@@ -42,6 +36,8 @@ export const AddCampaignDetails = ({
         )
           ?.toISOString()
           ?.slice(0, 16)
+      : startDate1
+      ? new Date(startDate1)?.toISOString()?.slice(0, 16)
       : new Date()?.toISOString()?.slice(0, 16)
   );
   const [endDate, setEndDate] = useState<any>(
@@ -55,20 +51,11 @@ export const AddCampaignDetails = ({
   );
 
   const [duration, setDuration] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 2
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration ||
+      campaignDuration
   );
 
   const [enterDuration, setEnterDuration] = useState<any>(false);
-
-  const detailsToCreateCampaignAdd = useSelector(
-    (state: any) => state.detailsToCreateCampaignAdd
-  );
-  const {
-    loading: loadingAddDetails,
-    error: errorAddDetails,
-    success: successAddDetails,
-    data: addDetails,
-  } = detailsToCreateCampaignAdd;
 
   const validateForm = () => {
     if (campaignName.length === 0) {
@@ -77,17 +64,17 @@ export const AddCampaignDetails = ({
     } else if (brandName.length === 0) {
       message.error("Please enter brand name");
       return false;
-    } else if (startDate === "") {
-      message.error("Please enter start data ");
+    } else if (industry.length === 0) {
+      message.error("Please enter brand name");
       return false;
     } else {
       return true;
     }
   };
 
-  const saveCampaignDetailsOnLocalStorage = useCallback(() => {
-    dispatch(
-      addDetailsToCreateCampaign({
+  const saveCampaignDetailsOnLocalStorage = () => {
+    if (validateForm()) {
+      handleSaveData({
         pageName: "Basic Details Page",
         name: campaignName,
         brandName: brandName,
@@ -102,42 +89,16 @@ export const AddCampaignDetails = ({
         campaignPlannerEmail: userInfo?.email,
         campaignManagerId: userInfo?.primaryUserId,
         campaignManagerEmail: userInfo?.primaryUserEmail,
-      })
-    );
-  }, [
-    dispatch,
-    campaignName,
-    brandName,
-    clientName,
-    industry,
-    startDate,
-    endDate,
-    duration,
-    userInfo?._id,
-    userInfo?.name,
-    userInfo?.email,
-    userInfo?.primaryUserId,
-    userInfo?.primaryUserEmail,
-    router
-  ]);
+      });
+      handleCancel();
+    }
+  };
 
   const handleSetNewDuration = () => {
     if (startDate && endDate)
       setDuration(getNumberOfDaysBetweenTwoDates(startDate, endDate));
     else message.error("Please enter first start , end Date");
   };
-
-  useEffect(() => {
-    if (errorAddDetails) {
-      message.error(errorAddDetails);
-    }
-
-    if (successAddDetails) {
-      setCampaignId(addDetails._id);
-      // setCurrentStep(step + 1);
-      navigate(`/${router}/${addDetails?._id}`);
-    }
-  }, [navigate, successAddDetails, errorAddDetails]);
 
   return (
     <Modal
@@ -151,7 +112,7 @@ export const AddCampaignDetails = ({
       <div className="">
         <h1 className="text-[24px] font-semibold">Add Basic Details</h1>
         <h1 className="text-[14px] text-[#8D8D8D]">
-          Topical Day Selected -Vivekananda Jayanti
+          Topical Day Selected - {selectedSpacialDay}
         </h1>
         <div className="grid grid-cols-2 gap-8 pt-4">
           <div className="col-span-1 py-1">

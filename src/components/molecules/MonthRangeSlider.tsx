@@ -7,17 +7,23 @@ interface StepSliderProps {
   months: number;
   month: number;
   setMonth?: any;
+  setMonthName: any;
 }
 
-export const MonthRangeSlider = ({ setMonth, months, month }: StepSliderProps) => {
-
+export const MonthRangeSlider = ({
+  setMonth,
+  months,
+  month,
+  setMonthName,
+}: StepSliderProps) => {
   const dispatch = useDispatch<any>();
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
   // Function to handle step marker click
-  const handleStepClick = (step: number) => {
+  const handleStepClick = (step: number, month: string) => {
     setMonth(step);
+    setMonthName(month);
   };
 
   // Example Flaticon SVG URLs (replace these with actual SVG URLs or import local SVGs)
@@ -35,15 +41,25 @@ export const MonthRangeSlider = ({ setMonth, months, month }: StepSliderProps) =
 
   // Example labels for each step
   const stepLabels = [
-    "Januray", "February", "March", "April", "May", 
-    "June", "July", "August", "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   useEffect(() => {
     if (!userInfo) {
-      dispatch(signout())
+      dispatch(signout());
     }
-  },[dispatch, userInfo])
+  }, [dispatch, userInfo]);
 
   return (
     <div className="w-[100vw] py-0 mx-[-40px] px-20">
@@ -62,30 +78,31 @@ export const MonthRangeSlider = ({ setMonth, months, month }: StepSliderProps) =
         ></div>
 
         <div className="flex justify-between items-center mt-[-33px] relative z-10 w-full">
-          {Array.from({ length: months }, (_, i) => (
+          {stepLabels?.map((value, i) => (
             <div
               key={i}
               className="relative flex flex-col items-center w-full"
-              onClick={() => handleStepClick(i + 1)}
+              onClick={() => handleStepClick(i, value)}
             >
               {/* Icon or Text for each step */}
               <div className="mb-2">
-                  <span className={
+                <span
+                  className={
                     // month === 1 ?
                     //   `text-blue-500 text-[14px] pr-0 pl-0 truncate` :
                     // month === 9 ?
                     //   `text-blue-500 text-[14px] text-right pr-0 pl-0 truncate` :
-                      `text-blue-500 text-[14px] pr-0 pl-0 truncate`
-                  }>
-                    {stepLabels[i]} {/* Show the label text for the current step */}
-                  </span>
-           
+                    `text-blue-500 text-[14px] pr-0 pl-0 truncate`
+                  }
+                >
+                  {value}
+                </span>
               </div>
 
               {/* The clickable circle for each step */}
               <div
                 className={`cursor-pointer transition-all duration-500 ${
-                  i + 1 === month
+                  i === month
                     ? "h-2 w-full rounded-full border-1 border-y bg-blue-500" // Larger circle with steps, same size as future
                     : "h-1 border border-white w-full bg-blue-500" // White for future steps
                 }`}
