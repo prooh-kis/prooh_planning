@@ -359,7 +359,7 @@ export const VendorConfirmationDetails = ({
             setCurrentStep(step - 1);
           }}
           handleSave={handleSaveAndContinue}
-          totalScreensData={getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]}
+          totalScreensData={getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] || []}
         />
       </div>
     </div>

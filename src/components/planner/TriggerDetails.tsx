@@ -58,6 +58,18 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
 
   const timeOptions = [
     {
+      label: "5 Mins",
+      value: "300",
+    },
+    {
+      label: "15 Mins",
+      value: "900",
+    },
+    {
+      label: "30 Mins",
+      value: "1800",
+    },
+    {
       label: "1 Hrs",
       value: "3600",
     },

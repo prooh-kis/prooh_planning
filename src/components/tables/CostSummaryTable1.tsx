@@ -124,7 +124,7 @@ export const CostSummaryTable1 = ({
             <div className="grid grid-cols-4 w-full items-center">
               <p className="col-span-1"></p>
               <h1 className="col-span-2 text-[14px] text-[#21394F] truncate font-normal">
-                30 Days
+                {totalData?.durationSelected}
               </h1>
               <p className="col-span-1 text-[12px] text-right text-red-500 font-normal">
                 Edit
