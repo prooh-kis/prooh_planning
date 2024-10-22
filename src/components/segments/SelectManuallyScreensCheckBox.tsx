@@ -19,6 +19,7 @@ export const SelectManuallyScreensCheckBox = ({
           <CheckboxInput
             color="#52A2FF"
             label={manuallySelected}
+            // checked={manuallySelected > 0 ? true : false}
             onChange={handleCheck}
           />
         </div>

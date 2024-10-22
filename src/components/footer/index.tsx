@@ -11,7 +11,6 @@ export const Footer = ({
   totalScreensData,
   isDisabled = false,
 }: any) => {
-  console.log(totalScreensData)
   const avgPricePerSlot = (data: any) => {
     const screenWiseSlotDetails = data.screenWiseSlotDetails;
 
@@ -25,7 +24,7 @@ export const Footer = ({
 
     // Calculate average price per slot
     const averagePricePerSlot = totalPricePerSlot / totalScreens;
-    return averagePricePerSlot;
+    return averagePricePerSlot || 0;
   }
   return (
     <div className="py-4 z-10 flex justify-between">
@@ -74,8 +73,7 @@ export const Footer = ({
             <div className="flex gap-2 truncate">
               <h1 className="text-[14px] truncate">Price Per Slot</h1>
               <h1 className="text-[14px] font-semibold">
-                &#8377;{avgPricePerSlot(totalScreensData)?.toFixed(2) || 0
-                  }
+                &#8377;{avgPricePerSlot(totalScreensData)?.toFixed(2) || 0}
               </h1>
             </div>
           </div>

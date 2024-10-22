@@ -161,9 +161,6 @@ export const AudienceTouchPointsDetails = ({
     }
 
   }, []);
-  console.log(selectedScreensData);
-  console.log(totalScreensData);
-
 
   return (
     <div className="w-full py-3">

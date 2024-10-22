@@ -163,7 +163,7 @@ export const AdvanceFiltersDetails = ({
         );
         handleFinalSelectedScreens({
           type: "remove",
-          screens: data?.selectedScreens || [],
+          screens: data?.selectedScreens,
         });
       }
     }
@@ -202,18 +202,18 @@ export const AdvanceFiltersDetails = ({
       });
     });
     let arr = routes;
-    const _screens: any = routeFilteredScreens;
+    const screens: any = routeFilteredScreens;
     for (let data of arr) {
       if (data?.id === id) {
         data.selectedScreens = filteredRecords;
         filteredRecords.map((f: any) => {
-          if (!_screens.map((s: any) => s._id).includes(f._id)) {
-            _screens.push(f);
+          if (!screens.map((s: any) => s._id).includes(f._id)) {
+            screens.push(f);
           }
         });
       }
     }
-    setRouteFilteredScreens(_screens);
+    setRouteFilteredScreens(screens);
     setRoutes(arr);
     handleFinalSelectedScreens({
       type: "add",
@@ -238,7 +238,7 @@ export const AdvanceFiltersDetails = ({
     } else {
       handleFinalSelectedScreens({
         type: "remove",
-        screens: selectedScreensFromMap || [],
+        screens: selectedScreensFromMap,
       });
     }
   };
@@ -253,19 +253,20 @@ export const AdvanceFiltersDetails = ({
     });
   };
 
-  const handleConfirmScreensSelections = ({checked, cscreens}: any) => {
+  const handleConfirmScreensSelections = ({checked, screens}: any) => {
     setIsDisabled(!checked);
+    console.log(screens);
     if (checked) {
       handleFinalSelectedScreens({
         type: "add",
-        screens: cscreens || [],
+        screens: screens || [],
         // screens: [],
 
       });
     } else {
       handleFinalSelectedScreens({
         type: "remove",
-        screens: cscreens || [],
+        screens: screens,
       });
     }
     // saveDataOnLocalStorage(SELECTED_SCREENS_ID, getUniqueScreens([{screens: selectedScreenIds}]));
@@ -356,7 +357,7 @@ export const AdvanceFiltersDetails = ({
                 </>
               }
               onChange={(e) => {
-                handleConfirmScreensSelections({checked: e, screens: finalSelectedScreens});
+                handleConfirmScreensSelections({checked: e, screens: e ? finalSelectedScreens : []});
                 if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)) {
                   dispatch(
                     getRegularVsCohortPriceData({
@@ -381,6 +382,7 @@ export const AdvanceFiltersDetails = ({
             routes={routes}
             data={circleData}
             setSelectedScreensFromMap={handleSelectFromMap}
+            handleAddManualSelection={handleAddManualSelectedScreenIntoFinalSelectedScreens}
           />
         </div>
       </div>

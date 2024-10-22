@@ -300,6 +300,7 @@ export function MapWithGeometry(props: any) {
             anchor="left"
           >
             <MapboxScreen
+              handleAddManualSelection={props?.handleAddManualSelection}
               screenData={screenData}
               setSelectedScreensFromMap={props.setSelectedScreensFromMap}
               isSelectedData = {isSelectedData}
