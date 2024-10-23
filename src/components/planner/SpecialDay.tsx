@@ -101,7 +101,7 @@ export const SpecialDay = ({
     console.log("selectedDate : ", selectedDate);
     if (selectedDate) setIsOpen(true);
     else message.error("Please select Date first");
-  }, [isOpen]);
+  }, [isOpen, selectedDate]);
 
   useEffect(() => {
     dispatch(getTableDataForSelectTopicalDayPage({ impactFactor: 0.2 }));
@@ -241,7 +241,7 @@ export const SpecialDay = ({
           <div className="flex flex-col gap-4 mt-4 overflow-y-auto h-96">
             {Object.keys(tableDataForSelectTopicalDay1 || {})?.map(
               (key: string, index: any) => (
-                <div key={index}>
+                <div key={index} className="pr-4">
                   <div className="flex justify-between">
                     <h1 className="py-2">{key}</h1>
                     <h1
