@@ -35,3 +35,9 @@ export const CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED = "PleaReques
 // export const CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_ACCEPTED = "PleaRequestFinalApprovalAccepted"
 // export const CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_REJECTED = "PleaRequestFinalApprovalRejected"
 
+
+export const CAMPAIGN_TYPE_REGULAR = "Regular";
+export const CAMPAIGN_TYPE_TOPICAL = "Topical";
+export const CAMPAIGN_TYPE_TRIGGER = "Trigger";
+export const CAMPAIGN_TYPE_STORE = "Store";
+export const CAMPAIGN_TYPE_KNOW = "IKnowItAll";
