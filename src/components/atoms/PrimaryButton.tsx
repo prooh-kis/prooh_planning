@@ -9,9 +9,10 @@ interface PrimaryButtonProps {
   disabled?: boolean;
   textSize?: any;
   reverse?: any;
+  icon?: any;
 }
 
-export const PrimaryButton = ({reverse, textSize, disabled, width, height, title, action, rounded}: PrimaryButtonProps) => {
+export const PrimaryButton = ({icon, reverse, textSize, disabled, width, height, title, action, rounded}: PrimaryButtonProps) => {
   return (
     <div className="flex justify-center items-center">
       <button
@@ -25,12 +26,12 @@ export const PrimaryButton = ({reverse, textSize, disabled, width, height, title
           ${height ? height : "h-[48px]"}
           ${rounded} ${textSize ? textSize : "text-[16px]"}
           ${reverse ? 
-              "bg-white border hover:bg-transparent hover:border-primaryButton hover:border-2 hover:text-primaryButton" :
+              "bg-white border border-primaryButton text-primaryButton hover:bg-transparent hover:border-primaryButton hover:border-2 hover:text-primaryButton" :
               "bg-primaryButton font-semibold text-white hover:bg-transparent hover:border-primaryButton hover:border-2 hover:text-primaryButton"}
           transition-colors duration-300
         `}
       >
-        {title}
+        {icon} {title}
       </button>
     </div>
   )

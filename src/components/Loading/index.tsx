@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './index.css'; // Import CSS for styling
-import Lottie from 'react-lottie';
 import animationData from '../../assets/lottie/loading.json';
+import { Player } from "@lordicon/react";
 
 export const Loading = (props: any) => {
+  const playerRef = useRef<Player>(null);
   const [progress, setProgress] = useState(0);
   const [loadingComplete, setLoadingComplete] = useState(false);
 
@@ -18,6 +19,8 @@ export const Loading = (props: any) => {
   };
 
   useEffect(() => {
+    playerRef.current?.playFromBeginning();
+
     // Simulate loading progress
     const interval = setInterval(() => {
       setProgress((prev) => {
@@ -36,12 +39,13 @@ export const Loading = (props: any) => {
 
   return (
     <div className={`loading-container ${loadingComplete ? 'collapse' : ''}`}>
-      <Lottie
+      {/* <Lottie
         options={defaultOptions}
         height={props.height || 300}
         width={props.width || 300}
         isStopped={loadingComplete} // Stop animation when loading completes
-      />
+      /> */}
+      <Player ref={playerRef} icon={animationData}/>
       {props?.slider && (
         <div className="loading-slider">
           <div

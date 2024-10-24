@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
+import { Landing } from "./Landing";
 
 
 export const MiddleArea: React.FC = () => {
@@ -18,13 +19,14 @@ export const MiddleArea: React.FC = () => {
       {userInfo && userInfo?.isBrand && userInfo?.userRole === "secondary" ? (
         <CampaignTemplates />
       ) : (
-        <div className="">
-          <h1 className="text-2xl font-bold">
+        <div className="pt-8 px-8">
+          {/* <h1 className="text-2xl font-bold">
             Only Campaign managers can access this feature...
           </h1>
           <p className="text-md">
             Please contact support or create a new user with {"Campaign Manager"} role!!!
-          </p>
+          </p> */}
+          <Landing />
         </div>
       )}
     </div>
