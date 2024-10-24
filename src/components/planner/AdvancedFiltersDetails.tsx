@@ -150,7 +150,7 @@ export const AdvanceFiltersDetails = ({
       });
     }
     console.log(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.touchPoints)
-     dispatch(
+    dispatch(
       getScreenDataForAdvanceFilters({
         id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?._id,
         touchPoints: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.touchPoints,

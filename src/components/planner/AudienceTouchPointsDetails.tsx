@@ -13,7 +13,7 @@ import {
 } from "../tables";
 import { useDispatch, useSelector } from "react-redux";
 import { Footer } from "../../components/footer";
-import { getScreensCostData } from "../../actions/screenAction";
+import { getScreenDataForAdvanceFilters, getScreensCostData } from "../../actions/screenAction";
 import { AUDIENCE_DATA, CAMPAIGN, COST_SUMMARY, FULL_CAMPAIGN_PLAN, SELECTED_AUDIENCE_TOUCHPOINTS, TOTAL_SCREEN_COST_DATA } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { ALL_COHORTS, ALL_MARKETS, ALL_TOUCHPOINTS } from "../../constants/helperConstants";
@@ -50,7 +50,10 @@ export const AudienceTouchPointsDetails = ({
   const [selectedScreensData, setSelectedScreensData] = useState<any>({});
 
   const [selectedMarket, setSelectedMarket] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.markets || []);
-  const [selectedGender, setSelectedGender] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender || ["Male", "Female"]);
+  const [selectedGender, setSelectedGender] = useState<any>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender === "male" ? ["Male"] :
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender === "female" ? ["Female"] : ["Male", "Female"]
+  );
   const [selectedAudiences, setSelectedAudiences] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts || []);
   const [selectedTouchPoints, setSelectedTouchPoints] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints || []);
 
@@ -74,6 +77,7 @@ export const AudienceTouchPointsDetails = ({
 
   const getMatchedData = (myData: any) => {
     setMarkets(myData);
+    
     let audiencesData: any = {};
     for (const market in myData) {
       for (const audience in myData[market]["audience"]) {
@@ -103,6 +107,14 @@ export const AudienceTouchPointsDetails = ({
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints.length !== 0 ?
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints : Object.keys(touchPointsData)
     );
+
+    if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender === "male") {
+      setSelectedGender(["Male"]);
+    } else if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender === "female") {
+      setSelectedGender(["Female"]);
+    } else if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender === "both") {
+      setSelectedGender(["Male", "Female"]);
+    }
 
     return { audiencesData, touchPointsData };
   };
@@ -142,12 +154,12 @@ export const AudienceTouchPointsDetails = ({
       })
     );
 
-    // dispatch(
-    //   getScreenDataForAdvanceFilters({
-    //     id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
-    //     touchPoints: selectedTouchPoints,
-    //   })
-    // );
+    dispatch(
+      getScreenDataForAdvanceFilters({
+        id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
+        touchPoints: selectedTouchPoints,
+      })
+    );
   }, [dispatch]);
 
   useEffect(() => {
