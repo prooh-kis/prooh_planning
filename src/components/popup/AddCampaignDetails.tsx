@@ -16,6 +16,9 @@ export const AddCampaignDetails = ({
   campaignDuration = 1,
   handleSaveData,
   selectedSpacialDay,
+  startDate,
+  endDate,
+  duration,
 }: any) => {
   const [campaignName, setCampaignName] = useState<any>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || ""
@@ -29,31 +32,31 @@ export const AddCampaignDetails = ({
   const [industry, setIndustry] = useState<any>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.industry || ""
   );
-  const [startDate, setStartDate] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-      ? new Date(
-          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startDate
-        )
-          ?.toISOString()
-          ?.slice(0, 16)
-      : startDate1
-      ? new Date(startDate1)?.toISOString()?.slice(0, 16)
-      : new Date()?.toISOString()?.slice(0, 16)
-  );
-  const [endDate, setEndDate] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-      ? new Date(
-          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate
-        )
-          ?.toISOString()
-          ?.slice(0, 16)
-      : new Date()?.toISOString()?.slice(0, 16)
-  );
+  // const [startDate, setStartDate] = useState<any>(
+  //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+  //     ? new Date(
+  //         getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startDate
+  //       )
+  //         ?.toISOString()
+  //         ?.slice(0, 16)
+  //     : startDate1
+  //     ? new Date(startDate1)?.toISOString()?.slice(0, 16)
+  //     : new Date()?.toISOString()?.slice(0, 16)
+  // );
+  // const [endDate, setEndDate] = useState<any>(
+  //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+  //     ? new Date(
+  //         getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate
+  //       )
+  //         ?.toISOString()
+  //         ?.slice(0, 16)
+  //     : new Date()?.toISOString()?.slice(0, 16)
+  // );
 
-  const [duration, setDuration] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration ||
-      campaignDuration
-  );
+  // const [duration, setDuration] = useState<any>(
+  //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration ||
+  //     campaignDuration
+  // );
 
   const [enterDuration, setEnterDuration] = useState<any>(false);
 
@@ -94,11 +97,11 @@ export const AddCampaignDetails = ({
     }
   };
 
-  const handleSetNewDuration = () => {
-    if (startDate && endDate)
-      setDuration(getNumberOfDaysBetweenTwoDates(startDate, endDate));
-    else message.error("Please enter first start , end Date");
-  };
+  // const handleSetNewDuration = () => {
+  //   if (startDate && endDate)
+  //     setDuration(getNumberOfDaysBetweenTwoDates(startDate, endDate));
+  //   else message.error("Please enter first start , end Date");
+  // };
 
   return (
     <Modal
@@ -167,11 +170,11 @@ export const AddCampaignDetails = ({
             <label className="block text-secondaryText text-[14px] mb-2">
               Start Date
             </label>
-            <CalendarInput
-              placeholder="Start Date"
+            <PrimaryInput
+              inputType="text"
+              placeholder="Industry"
               value={startDate}
-              action={setStartDate}
-              disabled={true}
+              action={() => {}}
             />
           </div>
           <div className="col-span-1 py-1">
@@ -186,24 +189,23 @@ export const AddCampaignDetails = ({
                 title="toggle"
                 id="flexSwitchCheckDefault"
                 onChange={() => {
-                  handleSetNewDuration();
                   setEnterDuration(!enterDuration);
                 }}
               />
             </div>
             {!enterDuration ? (
-              <CalendarInput
-                placeholder={!enterDuration ? "End Date" : "0"}
+              <PrimaryInput
+                inputType="text"
+                placeholder="Industry"
                 value={endDate}
-                action={setEndDate}
-                disabled={false}
+                action={() => {}}
               />
             ) : (
               <PrimaryInput
                 inputType="number"
                 placeholder="duration"
                 value={duration}
-                action={setDuration}
+                action={() => {}}
               />
             )}
           </div>

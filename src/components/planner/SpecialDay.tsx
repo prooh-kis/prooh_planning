@@ -161,6 +161,9 @@ export const SpecialDay = ({
         setCampaignId={setCampaignId}
         campaignId={idCampaign}
         date={selectedDate}
+        startDate={selectedDate}
+        endDate={moment(selectedDate).add(1, "days").format("YYYY-MM-DD")}
+        duration={1}
         handleSaveData={handleSaveData}
         selectedSpacialDay={selectedSpacialDay}
       />

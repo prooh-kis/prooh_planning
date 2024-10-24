@@ -118,7 +118,7 @@ export const EnterCampaignBasicDetails = ({
         industry: industry,
         startDate: startDate,
         endDate: endDate,
-        duration: duration,
+        duration: getNumberOfDaysBetweenTwoDates(startDate, endDate),
         campaignPlannerId: userInfo?._id,
         campaignPlannerName: userInfo?.name,
         campaignPlannerEmail: userInfo?.email,
