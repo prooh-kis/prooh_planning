@@ -179,14 +179,7 @@ export const ScreenSummaryDetails = ({
       })
     );
 
-    if (screenSummaryData && Object.keys(screenSummaryData)?.length) {
-      dispatch(
-        getScreenSummaryPlanTableData({
-          id: campaignId,
-          screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-        })
-      );
-    }
+
  
   }, [campaignId, dispatch]);
 
@@ -327,6 +320,9 @@ export const ScreenSummaryDetails = ({
                   loading={loadingScreenSummaryPlanTable}
                   error={errorScreenSummaryPlanTable}
                   data={screenSummaryPlanTableData}
+                  getSelectedScreenIdsFromAllCities={getSelectedScreenIdsFromAllCities}
+                  campaignId={campaignId}
+                  screensBuyingCount={screensBuyingCount}
                 />
               </div>
             )

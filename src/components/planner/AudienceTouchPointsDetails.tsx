@@ -73,7 +73,6 @@ export const AudienceTouchPointsDetails = ({
   } = screensCostDataGet;
 
   const getMatchedData = (myData: any) => {
-    console.log("nejsjhoajsd")
     setMarkets(myData);
     let audiencesData: any = {};
     for (const market in myData) {
@@ -133,12 +132,6 @@ export const AudienceTouchPointsDetails = ({
 
   useEffect(() => {
 
-    if (
-      screensAudiences 
-    ) {
-      getMatchedData(screensAudiences);
-    }
-    console.log(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN));
     dispatch(
       getScreensCostData({
         id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
@@ -158,16 +151,22 @@ export const AudienceTouchPointsDetails = ({
   }, [dispatch]);
 
   useEffect(() => {
-    getMatchedData(
-      getDataFromLocalStorage(AUDIENCE_DATA) || {}
-    );
+    if (
+      screensAudiences 
+    ) {
+      getMatchedData(screensAudiences);
+    } else {
+      getMatchedData(
+        getDataFromLocalStorage(AUDIENCE_DATA) || {}
+      );
+    }
+
     setCostData(
       getDataFromLocalStorage(TOTAL_SCREEN_COST_DATA) || {}
     );
-  }, []);
+  }, [screensAudiences]);
 
   const handleSelection = useCallback((input: any) => {
-    console.log(input);
     dispatch(
       getScreensCostData({
         id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
@@ -197,7 +196,6 @@ export const AudienceTouchPointsDetails = ({
       <div className="grid grid-cols-8 gap-1 pt-4">
         <div ref={marketRef} className="col-span-2 flex justify-center">
           <LocationTable
-            loading={loadingAudiences}
             markets={markets}
             handleSelection={handleSelection}
             selectedMarkets={selectedMarket}
@@ -208,7 +206,6 @@ export const AudienceTouchPointsDetails = ({
         </div>
         <div ref={audienceRef} className="col-span-3 flex justify-center">
           <AudienceCohortTable
-            loading={loadingAudiences}
             handleSelection={handleSelection}
             audiences={audiences}
             selectedAudiences={selectedAudiences}
@@ -218,7 +215,6 @@ export const AudienceTouchPointsDetails = ({
         </div>
         <div ref={touchpointRef} className="col-span-3 flex justify-center">
           <TouchpointTable
-            loading={loadingAudiences}
             handleSelection={handleSelection}
             touchPoints={touchPoints}
             selectedTouchPoints={selectedTouchPoints}

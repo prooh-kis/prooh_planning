@@ -1,20 +1,33 @@
 import { formatNumber } from "../../utils/formatValue";
-import React from "react";
+import React, { useEffect } from "react";
 import { RegularCohortSummaryTable } from "./RegularCohortSummaryTable";
 import { RegularCohortSlotsCampaignTable } from "./RegularCohortSlotsCampaignTable";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { REGULAR_VS_COHORT_PRICE_DATA } from "../../constants/localStorageConstants";
-import { useSelector } from "react-redux";
+import { getScreenSummaryPlanTableData } from "../../actions/screenAction";
+import { useDispatch } from "react-redux";
 
 export function PlanSummaryTable({
   regularVsCohort,
   showSummary,
   setShowSummary,
-  loading,
-  error,
+  campaignId,
+  getSelectedScreenIdsFromAllCities,
   data,
+  loading,error,
+  screensBuyingCount,
 }: any) {
 
+  const dispatch = useDispatch<any>();
+
+  useEffect(() => {
+    dispatch(
+      getScreenSummaryPlanTableData({
+        id: campaignId,
+        screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+      })
+    );
+  },[dispatch]);
   return (
     <div>
       <div className="py-4">

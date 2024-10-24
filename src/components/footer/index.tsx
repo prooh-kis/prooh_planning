@@ -11,7 +11,7 @@ export const Footer = ({
   totalScreensData,
   isDisabled = false,
 }: any) => {
-  console.log(totalScreensData);
+  // console.log(totalScreensData);
   const avgPricePerSlot = (data: any) => {
     const screenWiseSlotDetails = data.screenWiseSlotDetails;
 
