@@ -151,7 +151,6 @@ export const RegularPlanPage: React.FC = () => {
         [campaignId]: curr,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
-      console.log(currStep);
     }
 
   }, [success, campaignDetails, campaignId]);
