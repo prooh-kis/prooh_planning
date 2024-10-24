@@ -60,7 +60,7 @@ export const AudienceCohortTable = ({ handleSelection, loading, audiences, selec
           </th>
         </tr>
         <tr className="w-full h-[40vh] overflow-scroll py-3">
-          {!loading && Object.keys(audiences)?.map((a: any, i: any) => {
+          {Object.keys(audiences)?.map((a: any, i: any) => {
             const cohortName = a;
             const cohortValue = audiences[a]; // Assuming this is the cohort value (percentage)
             return (

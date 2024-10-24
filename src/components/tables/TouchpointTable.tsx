@@ -73,7 +73,7 @@ export const TouchpointTable = ({
           </th>
         </tr>
         <tr className="w-full overflow-scroll py-3">
-          {!loading && Object.keys(touchPoints)?.map((a: any, i: any) => {
+          {Object.keys(touchPoints)?.map((a: any, i: any) => {
             return (
               <td key={i} className="grid grid-cols-6 gap-4 flex justify-between items-center w-full p-2">
                 <div className="col-span-4 flex justify-between w-auto truncate text font-normal">

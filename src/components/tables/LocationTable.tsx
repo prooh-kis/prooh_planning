@@ -81,7 +81,7 @@ export const LocationTable = ({
         </tr>
       </thead>
       <tbody className="border overflow-scroll">
-        {!loading && Object.keys(markets)?.map((market: any, index: any) => (
+        {Object.keys(markets)?.map((market: any, index: any) => (
           <tr key={index} className="grid grid-cols-8 w-full h-[40px] border-b border-gray-100">
             <td className="col-span-4 flex items-center px-2">
               <CheckboxInput label={`${market}`} disabled={true} checked={true} onChange={() => {}}/>
