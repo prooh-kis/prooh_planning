@@ -13,7 +13,7 @@ import {
 } from "../tables";
 import { useDispatch, useSelector } from "react-redux";
 import { Footer } from "../../components/footer";
-import { getScreenDataForAdvanceFilters, getScreensAudiencesData, getScreensCostData } from "../../actions/screenAction";
+import { getScreensCostData } from "../../actions/screenAction";
 import { AUDIENCE_DATA, CAMPAIGN, COST_SUMMARY, FULL_CAMPAIGN_PLAN, SELECTED_AUDIENCE_TOUCHPOINTS, TOTAL_SCREEN_COST_DATA } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { ALL_COHORTS, ALL_MARKETS, ALL_TOUCHPOINTS } from "../../constants/helperConstants";
@@ -49,10 +49,10 @@ export const AudienceTouchPointsDetails = ({
   const [totalScreensData, setTotalScreensData] = useState<any>({});
   const [selectedScreensData, setSelectedScreensData] = useState<any>({});
 
-  const [selectedMarket, setSelectedMarket] = useState<any>([]);
-  const [selectedGender, setSelectedGender] = useState<any>(["Male", "Female"]);
-  const [selectedAudiences, setSelectedAudiences] = useState<any>([]);
-  const [selectedTouchPoints, setSelectedTouchPoints] = useState<any>([]);
+  const [selectedMarket, setSelectedMarket] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.markets || []);
+  const [selectedGender, setSelectedGender] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender || "both");
+  const [selectedAudiences, setSelectedAudiences] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts || []);
+  const [selectedTouchPoints, setSelectedTouchPoints] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints || []);
 
   const screensAudiencesDataGet = useSelector(
     (state: any) => state.screensAudiencesDataGet
@@ -73,6 +73,7 @@ export const AudienceTouchPointsDetails = ({
   } = screensCostDataGet;
 
   const getMatchedData = (myData: any) => {
+    console.log("nejsjhoajsd")
     setMarkets(myData);
     let audiencesData: any = {};
     for (const market in myData) {
@@ -82,7 +83,10 @@ export const AudienceTouchPointsDetails = ({
       }
     }
     setAudiences(audiencesData);
-    setSelectedAudiences(Object.keys(audiencesData));
+    setSelectedAudiences(
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts.length !== 0 ?
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts : Object.keys(audiencesData)
+    );
     let touchPointsData: any = {};
     for (const market in myData) {
       for (const touchPoint in myData[market]["touchPoint"]) {
@@ -96,7 +100,10 @@ export const AudienceTouchPointsDetails = ({
       }
     }
     setTouchPoints(touchPointsData);
-    setSelectedTouchPoints(Object.keys(touchPointsData));
+    setSelectedTouchPoints(
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints.length !== 0 ?
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints : Object.keys(touchPointsData)
+    );
 
     return { audiencesData, touchPointsData };
   };
@@ -126,10 +133,18 @@ export const AudienceTouchPointsDetails = ({
 
   useEffect(() => {
 
-    if (screensAudiences) {
+    if (
+      screensAudiences && 
+      (
+        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts?.length === 0 ||
+        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts?.length === 0 ||
+        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender === ""
+      )
+    ) {
+      console.log("asdadasdasd")
       getMatchedData(screensAudiences);
     }
-    console.log(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN))
+    console.log(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN));
     dispatch(
       getScreensCostData({
         id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,

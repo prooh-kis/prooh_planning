@@ -86,7 +86,9 @@ export const CostSummaryTable1 = ({
         </tr>
         {loading ? (
           <tr className="bg-[#F0F9FF] flex justify-between border-b w-full h-[45px]">
-            <SkeletonLoader />
+            <th className="w-full">
+              <SkeletonLoader />
+            </th>
           </tr>
         ) : (
           <tr className="bg-[#F0F9FF] flex justify-between border-b w-full h-[45px]">
