@@ -193,7 +193,7 @@ export const SpecialDay = ({
       </div>
       <div className="">
         <h1 className="py-2">Months</h1>
-        <div className="pt-5">
+        <div className="py-4 w-full">
           <MonthRangeSlider
             // min={1} max={12} onChange={() => {}}
             setMonth={setMonth}
@@ -210,7 +210,7 @@ export const SpecialDay = ({
             You have found {calendarListData1?.filteredCalendar?.length} events
             according to your category{" "}
           </h1>
-          <div className="flex flex-col gap-4 mt-4 overflow-y-auto h-96">
+          <div className="flex flex-col gap-4 mt-4 overflow-y-auto pr-4 h-96">
             {calendarListData1?.filteredCalendar?.map(
               (value: any, index: any) => (
                 <div key={index}>

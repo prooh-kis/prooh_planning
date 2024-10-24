@@ -3,7 +3,10 @@ import { PrimaryButton } from "../atoms/PrimaryButton";
 import { PrimaryInput } from "../atoms/PrimaryInput";
 import { useNavigate } from "react-router-dom";
 import { CalendarInput } from "../atoms/CalendarInput";
-import { getEndDateFromStartDateANdDuration, getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
+import {
+  getEndDateFromStartDateANdDuration,
+  getNumberOfDaysBetweenTwoDates,
+} from "../../utils/dateAndTimeUtils";
 import {
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
@@ -23,6 +26,8 @@ interface EnterCampaignBasicDetailsProps {
   userInfo?: any;
   pathname?: string;
   campaignId?: any;
+  campaignType: string;
+  path: string;
 }
 
 export const EnterCampaignBasicDetails = ({
@@ -31,6 +36,8 @@ export const EnterCampaignBasicDetails = ({
   userInfo,
   pathname,
   campaignId,
+  campaignType,
+  path,
 }: EnterCampaignBasicDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -106,8 +113,7 @@ export const EnterCampaignBasicDetails = ({
         pageName: "Basic Details Page",
         name: campaignName,
         brandName: brandName,
-        campaignType:
-          pathname?.split("/").splice(1)[0] === "regularplan" ? "Regular" : "",
+        campaignType: campaignType,
         clientName: clientName,
         industry: industry,
         startDate: startDate,
@@ -134,26 +140,28 @@ export const EnterCampaignBasicDetails = ({
     userInfo?.email,
     userInfo?.primaryUserId,
     userInfo?.primaryUserEmail,
-    pathname
+    pathname,
   ]);
 
-    // Function to handle duration change and update the end date
-    const updateEndDateBasedOnDuration = (newDuration: number) => {
-      if (startDate) {
-        const endDate1 = getEndDateFromStartDateANdDuration(startDate, newDuration);
-        setEndDate(new Date(endDate1).toISOString().slice(0, 16));
-      } else {
-        message.error("Please enter a start date first");
-      }
-    };
-  
-  const handleSetNewDuration = () => {
+  // Function to handle duration change and update the end date
+  const updateEndDateBasedOnDuration = (newDuration: number) => {
+    if (startDate) {
+      const endDate1 = getEndDateFromStartDateANdDuration(
+        startDate,
+        newDuration
+      );
+      setEndDate(new Date(endDate1).toISOString().slice(0, 16));
+    } else {
+      message.error("Please enter a start date first");
+    }
+  };
 
-    if (!enterDuration){
+  const handleSetNewDuration = () => {
+    if (!enterDuration) {
       setDuration(getNumberOfDaysBetweenTwoDates(startDate, endDate));
     } else {
       updateEndDateBasedOnDuration(duration);
-    } 
+    }
     // else message.error("Please enter first start , end Date");
   };
 
@@ -164,7 +172,7 @@ export const EnterCampaignBasicDetails = ({
 
     if (successAddDetails) {
       setCurrentStep(step + 1);
-      navigate(`/regularplan/${addDetails?._id}`);
+      navigate(`/${path}/${addDetails?._id}`);
     }
   }, [navigate, successAddDetails, errorAddDetails]);
 

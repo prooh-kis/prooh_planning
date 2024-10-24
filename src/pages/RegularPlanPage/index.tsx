@@ -27,6 +27,7 @@ import {
   FULL_CAMPAIGN_PLAN,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { CAMPAIGN_PLAN_TYPE_REGULAR } from "../../constants/campaignConstants";
 
 const pages = [
   {
@@ -76,10 +77,15 @@ export const RegularPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const location = useLocation();
   const { pathname } = location;
-  const campaignId: any = pathname?.split("/")?.length > 2 ? pathname?.split("/")?.splice(2)[0] : null;
+  const campaignId: any =
+    pathname?.split("/")?.length > 2
+      ? pathname?.split("/")?.splice(2)[0]
+      : null;
   // console.log(campaignId);
 
-  const [currentStep, setCurrentStep] = useState<any>(campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] : 1);
+  const [currentStep, setCurrentStep] = useState<any>(
+    campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] : 1
+  );
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
@@ -111,25 +117,37 @@ export const RegularPlanPage: React.FC = () => {
     data: advanceFilterScreens,
   } = screensDataAdvanceFilterGet;
 
-  const screenSummaryPlanTableDataGet = useSelector((state: any) => state.screenSummaryPlanTableDataGet);
+  const screenSummaryPlanTableDataGet = useSelector(
+    (state: any) => state.screenSummaryPlanTableDataGet
+  );
   const {
     loading: loadingScreenSummaryPlanTable,
     error: errorScreenSummaryPlanTable,
     data: screenSummaryPlanTableData,
   } = screenSummaryPlanTableDataGet;
 
-  const detailsToCreateCampaignAdd = useSelector((state: any) => state.detailsToCreateCampaignAdd);
+  const detailsToCreateCampaignAdd = useSelector(
+    (state: any) => state.detailsToCreateCampaignAdd
+  );
   const {
-    loading, error, success, data: campaignDetails
+    loading,
+    error,
+    success,
+    data: campaignDetails,
   } = detailsToCreateCampaignAdd;
 
   useEffect(() => {
-   
     if (campaignDetails) {
       // const campDetails = location.state.campaign
-      const campDetails = campaignDetails
-    
-      setCurrentStep(Number(pages.filter((page: any) => page.value === campDetails?.currentPage)[0]?.id) + 1);
+      const campDetails = campaignDetails;
+
+      setCurrentStep(
+        Number(
+          pages.filter(
+            (page: any) => page.value === campDetails?.currentPage
+          )[0]?.id
+        ) + 1
+      );
       dispatch(getScreensAudiencesData({ markets: campDetails?.markets }));
       dispatch(
         getScreensCostData({
@@ -139,13 +157,20 @@ export const RegularPlanPage: React.FC = () => {
           duration: campDetails?.duration,
         })
       );
-      dispatch(getScreenSummaryPlanTableData({
-        id: campaignId,
-        screenIds: campDetails?.screenIds,
-      }));
-      const curr = Number(pages.filter((page: any) => page.value === campDetails?.currentPage)[0].id) + 1;
+      dispatch(
+        getScreenSummaryPlanTableData({
+          id: campaignId,
+          screenIds: campDetails?.screenIds,
+        })
+      );
+      const curr =
+        Number(
+          pages.filter(
+            (page: any) => page.value === campDetails?.currentPage
+          )[0].id
+        ) + 1;
       const currStep = {
-        [campaignId]: curr
+        [campaignId]: curr,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
       console.log(currStep);
@@ -160,15 +185,13 @@ export const RegularPlanPage: React.FC = () => {
         })
       );
     }
-
-    
   }, [dispatch, campaignDetails]);
 
   useEffect(() => {
-    console.log(campaignId)
+    console.log(campaignId);
     if (campaignId !== null || undefined) {
-      console.log(campaignId)
-      dispatch(addDetailsToCreateCampaign({ id: campaignId}));
+      console.log(campaignId);
+      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
       // const campDetails = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
     }
   }, [dispatch, campaignId]);
@@ -186,6 +209,8 @@ export const RegularPlanPage: React.FC = () => {
             userInfo={userInfo}
             pathname={pathname}
             campaignId={campaignId}
+            campaignType={CAMPAIGN_PLAN_TYPE_REGULAR}
+            path={"regularplan"}
           />
         ) : currentStep === 2 ? (
           <AudienceTouchPointsDetails

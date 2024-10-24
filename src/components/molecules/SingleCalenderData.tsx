@@ -39,7 +39,6 @@ export function SingleCalenderData({
         <input
           title="month"
           type="radio"
-          value={data?.date}
           checked={data?.date === selectedDate}
           className="text-[24px]"
           onChange={handleCheck}
