@@ -31,6 +31,7 @@ import {
   myCreateCampaignsVendorRequestsListGetReducer,
   campaignStatusChangeAfterCreativeUploadReducer,
   campaignStatusChangeAfterVendorApprovalReducer,
+  campaignDurationChangeReducer,
 } from "../reducers/campaignReducers";
 import {
   cricketMatchesListGetReducer,
@@ -77,6 +78,7 @@ const store = configureStore({
       campaignStatusChangeAfterCreativeUploadReducer,
     campaignStatusChangeAfterVendorApproval:
       campaignStatusChangeAfterVendorApprovalReducer,
+    updateCampaignDuration: campaignDurationChangeReducer,
 
     // external apis
     cricketMatchesListGet: cricketMatchesListGetReducer,

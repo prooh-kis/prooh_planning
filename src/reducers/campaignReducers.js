@@ -20,7 +20,11 @@ import {
   CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_SUCCESS,
   CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_ERROR,
   CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_RESET,
-  ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET
+  ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+  CHANGE_CAMPAIGN_DURATION_REQUEST,
+  CHANGE_CAMPAIGN_DURATION_SUCCESS,
+  CHANGE_CAMPAIGN_DURATION_ERROR,
+  CHANGE_CAMPAIGN_DURATION_RESET,
 } from "../constants/campaignConstants";
 import { FULL_CAMPAIGN_PLAN } from "../constants/localStorageConstants";
 
@@ -31,7 +35,7 @@ export function detailsToCreateCampaignAddReducer(state = [], action) {
     case ADD_DETAILS_TO_CREATE_CAMPAIGN_SUCCESS:
       const campaign = action.payload;
       const saveData = {};
-      saveData[campaign._id] = campaign
+      saveData[campaign._id] = campaign;
       saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, saveData);
       return {
         loading: false,
@@ -55,7 +59,6 @@ export function detailsToCreateCampaignAddReducer(state = [], action) {
   }
 }
 
-
 export function myCreateCampaignsListGetReducer(state = [], action) {
   switch (action.type) {
     case GET_MY_CREATE_CAMPAIGNS_LIST_REQUEST:
@@ -76,7 +79,10 @@ export function myCreateCampaignsListGetReducer(state = [], action) {
   }
 }
 
-export function myCreateCampaignsManagerRequestsListGetReducer(state = [], action) {
+export function myCreateCampaignsManagerRequestsListGetReducer(
+  state = [],
+  action
+) {
   switch (action.type) {
     case GET_MY_CREATE_CAMPAIGNS_MANAGER_REQUESTS_LIST_REQUEST:
       return { loading: true };
@@ -96,7 +102,10 @@ export function myCreateCampaignsManagerRequestsListGetReducer(state = [], actio
   }
 }
 
-export function myCreateCampaignsVendorRequestsListGetReducer(state = [], action) {
+export function myCreateCampaignsVendorRequestsListGetReducer(
+  state = [],
+  action
+) {
   switch (action.type) {
     case GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_REQUEST:
       return { loading: true };
@@ -116,8 +125,10 @@ export function myCreateCampaignsVendorRequestsListGetReducer(state = [], action
   }
 }
 
-
-export function campaignStatusChangeAfterCreativeUploadReducer(state=[], action) {
+export function campaignStatusChangeAfterCreativeUploadReducer(
+  state = [],
+  action
+) {
   switch (action.type) {
     case CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_REQUEST:
       return { loading: true };
@@ -138,8 +149,10 @@ export function campaignStatusChangeAfterCreativeUploadReducer(state=[], action)
   }
 }
 
-
-export function campaignStatusChangeAfterVendorApprovalReducer(state=[], action) {
+export function campaignStatusChangeAfterVendorApprovalReducer(
+  state = [],
+  action
+) {
   switch (action.type) {
     case CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_REQUEST:
       return { loading: true };
@@ -154,6 +167,33 @@ export function campaignStatusChangeAfterVendorApprovalReducer(state=[], action)
         error: action.payload,
       };
     case CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function campaignDurationChangeReducer(state = [], action) {
+  switch (action.type) {
+    case CHANGE_CAMPAIGN_DURATION_REQUEST:
+      return { loading: true };
+    case CHANGE_CAMPAIGN_DURATION_SUCCESS:
+      const campaign = action.payload;
+      const saveData = {};
+      saveData[campaign._id] = campaign;
+      saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, saveData);
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case CHANGE_CAMPAIGN_DURATION_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+        success: false,
+      };
+    case CHANGE_CAMPAIGN_DURATION_RESET:
       return {};
     default:
       return state;
