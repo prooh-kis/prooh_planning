@@ -272,7 +272,7 @@ export const AdvanceFiltersDetails = ({
     // saveDataOnLocalStorage(SELECTED_SCREENS_ID, getUniqueScreens([{screens: selectedScreenIds}]));
   };
   return (
-    <div>
+    <div className="w-full">
       <div className="h-[640px] w-full py-3 grid grid-cols-2 gap-4">
         <div className="col-span-1 py-2 pr-4">
           {storeFilter ? (
@@ -313,7 +313,7 @@ export const AdvanceFiltersDetails = ({
               />
             </div>
           ) : (
-            <div className="w-full">
+            <div className="">
               <div className="flex w-full justify-between">
                 <div className="truncate w-full ">
                   <h1 className="text-[24px] text-primaryText font-semibold truncate">
@@ -361,6 +361,7 @@ export const AdvanceFiltersDetails = ({
                 if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)) {
                   dispatch(
                     getRegularVsCohortPriceData({
+                      id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?._id,
                       screenIds: getDataFromLocalStorage(SELECTED_SCREENS_ID) || [],
                       cohorts: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].cohorts || {},
                       gender: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].gender || "",

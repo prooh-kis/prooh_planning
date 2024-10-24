@@ -130,9 +130,10 @@ export const IKnowItAllPlanPage: React.FC = () => {
           )[0]?.id || 0
         ) + 1
       );
-      dispatch(getScreensAudiencesData({ markets: campDetails?.markets }));
+      dispatch(getScreensAudiencesData({ id: campDetails?._id, markets: campDetails?.markets }));
       dispatch(
         getScreensCostData({
+          id: campDetails?._id,
           cohorts: campDetails?.cohorts,
           touchPoints: campDetails?.touchPoints,
           gender: campDetails?.gender,
@@ -156,9 +157,10 @@ export const IKnowItAllPlanPage: React.FC = () => {
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     } else {
-      dispatch(getScreensAudiencesData({ markets: [] }));
+      dispatch(getScreensAudiencesData({ id: "", markets: [] }));
       dispatch(
         getScreensCostData({
+          id: "",
           cohorts: [],
           touchPoints: [],
           gender: "both",

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
 import { Landing } from "./Landing";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 
 
 export const MiddleArea: React.FC = () => {
@@ -14,6 +15,10 @@ export const MiddleArea: React.FC = () => {
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
+  useEffect(() => {
+    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+
+  },[dispatch]);
   return (
     <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
       {userInfo && userInfo?.isBrand && userInfo?.userRole === "secondary" ? (

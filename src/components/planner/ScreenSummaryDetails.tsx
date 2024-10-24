@@ -179,7 +179,7 @@ export const ScreenSummaryDetails = ({
       })
     );
 
-    if (screenSummaryData) {
+    if (screenSummaryData && Object.keys(screenSummaryData)?.length) {
       dispatch(
         getScreenSummaryPlanTableData({
           id: campaignId,
@@ -188,7 +188,7 @@ export const ScreenSummaryDetails = ({
       );
     }
  
-  }, [dispatch]);
+  }, [campaignId, dispatch]);
 
   useEffect(() => {
     setRegularVsCohort(

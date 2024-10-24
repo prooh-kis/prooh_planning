@@ -8,7 +8,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   getRegularVsCohortPriceData,
-  getScreenSummaryData,
 } from "../../actions/screenAction";
 import {
   getAllLocalStorageData,
@@ -57,6 +56,7 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
   useEffect(() => {
     if (!priceData) {
       dispatch(getRegularVsCohortPriceData({
+        id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
         screenIds: screenIds,
         cohorts: cohorts,
         gender: gender,

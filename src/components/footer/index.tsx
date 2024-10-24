@@ -36,7 +36,7 @@ export const Footer = ({
         {loading || Object.keys(totalScreensData).length < 1 ? (
           <div className="flex w-full justify-start">
             <div className="w-full">
-              <p className="text-[14px] font-semibold">Experience a new way of media planning</p>
+              <p className="text-[14px] font-semibold">Please wait while we calculate the cost of your desired plan...</p>
             </div>
             <div className="">
               <Loading height={20} width={100} />

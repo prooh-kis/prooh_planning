@@ -232,7 +232,7 @@ export function MapWithGeometry(props: any) {
   }, [selectedMarkers]);
 
   return (
-    <div className="h-full w-full flex items-center justify-center">
+    <div className="h-full w-full flex flex-col items-center justify-center">
       <ReactMapGL
         ref={mapRef}
         initialViewState={viewState}

@@ -41,7 +41,7 @@ import {
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/screens`;
 
 export const getScreensAudiencesData =
-  ({ markets }) =>
+  ({ id, markets }) =>
   async (dispatch, getState) => {
     dispatch({
       type: GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
@@ -50,6 +50,7 @@ export const getScreensAudiencesData =
 
     try {
       const { data } = await axios.post(`${url}/audienceData`, {
+        id,
         markets,
       });
       dispatch({
@@ -69,7 +70,7 @@ export const getScreensAudiencesData =
   };
 
 export const getScreensCostData =
-  ({ cohorts, gender, touchPoints, duration }) =>
+  ({ id, cohorts, gender, touchPoints, duration }) =>
   async (dispatch, getState) => {
     dispatch({
       type: GET_SCREENS_COST_DATA_REQUEST,
@@ -80,6 +81,7 @@ export const getScreensCostData =
       const { data } = await axios.post(
         `${url}/tableAudienceTouchPointPage`,
         {
+          id,
           cohorts,
           gender,
           touchPoints,
@@ -103,7 +105,7 @@ export const getScreensCostData =
   };
 
 export const getScreenDataForAdvanceFilters =
-  ({ touchPoints }) =>
+  ({ id, touchPoints }) =>
   async (dispatch, getState) => {
     dispatch({
       type: GET_SCREENS_DATA_ADVANCE_FILTER_REQUEST,
@@ -112,6 +114,7 @@ export const getScreenDataForAdvanceFilters =
 
     try {
       const { data } = await axios.post(`${url}/screenDataFilterPage`, {
+        id,
         touchPoints,
       });
       dispatch({
@@ -131,7 +134,7 @@ export const getScreenDataForAdvanceFilters =
   };
 
 export const getRegularVsCohortPriceData =
-  ({ screenIds, cohorts, gender, duration }) =>
+  ({ id, screenIds, cohorts, gender, duration }) =>
   async (dispatch, getState) => {
     dispatch({
       type: GET_SCREENS_PRICE_FOR_REGULAR_COHORT_REQUEST,
@@ -140,6 +143,7 @@ export const getRegularVsCohortPriceData =
 
     try {
       const { data } = await axios.post(`${url}/tableDataComparePlanPage`, {
+        id,
         screenIds,
         cohorts,
         gender,

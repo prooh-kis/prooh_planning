@@ -135,7 +135,7 @@ export function regularVsCohortPriceDataGetReducer(state = [], action) {
   }
 }
 
-export function screenSummaryDataGetReducer(state = [], action) {
+export function screenSummaryDataGetReducer(state = {}, action) {
   switch (action.type) {
     case GET_SCREEN_SUMMARY_DATA_REQUEST:
       return { loading: true };

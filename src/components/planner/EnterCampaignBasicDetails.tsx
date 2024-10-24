@@ -107,7 +107,33 @@ export const EnterCampaignBasicDetails = ({
     }
   };
 
+    // Function to handle duration change and update the end date
+    const updateEndDateBasedOnDuration = useCallback((newDuration: number) => {
+      if (startDate) {
+        const endDate1 = getEndDateFromStartDateANdDuration(
+          startDate,
+          newDuration
+        );
+        setEndDate(new Date(endDate1).toISOString().slice(0, 16));
+      } else {
+        message.error("Please enter a start date first");
+      }
+    },[startDate]);
+  
+    const handleSetNewDuration = useCallback(() => {
+      if (!enterDuration) {
+  
+        setDuration(getNumberOfDaysBetweenTwoDates(startDate, endDate));
+      } else {
+        updateEndDateBasedOnDuration(duration);
+      }
+      // else message.error("Please enter first start , end Date");
+    },[duration, endDate, enterDuration, startDate, updateEndDateBasedOnDuration]);
+  
+
   const saveCampaignDetailsOnLocalStorage = useCallback(() => {
+    handleSetNewDuration();
+
     dispatch(
       addDetailsToCreateCampaign({
         pageName: "Basic Details Page",
@@ -126,44 +152,8 @@ export const EnterCampaignBasicDetails = ({
         campaignManagerEmail: userInfo?.primaryUserEmail,
       })
     );
-  }, [
-    dispatch,
-    campaignName,
-    brandName,
-    clientName,
-    industry,
-    startDate,
-    endDate,
-    duration,
-    userInfo?._id,
-    userInfo?.name,
-    userInfo?.email,
-    userInfo?.primaryUserId,
-    userInfo?.primaryUserEmail,
-    pathname,
-  ]);
-
-  // Function to handle duration change and update the end date
-  const updateEndDateBasedOnDuration = (newDuration: number) => {
-    if (startDate) {
-      const endDate1 = getEndDateFromStartDateANdDuration(
-        startDate,
-        newDuration
-      );
-      setEndDate(new Date(endDate1).toISOString().slice(0, 16));
-    } else {
-      message.error("Please enter a start date first");
-    }
-  };
-
-  const handleSetNewDuration = () => {
-    if (!enterDuration) {
-      setDuration(getNumberOfDaysBetweenTwoDates(startDate, endDate));
-    } else {
-      updateEndDateBasedOnDuration(duration);
-    }
-    // else message.error("Please enter first start , end Date");
-  };
+  }, [handleSetNewDuration, dispatch, campaignName, brandName, campaignType, clientName, industry, startDate, endDate, duration, userInfo?._id, userInfo?.name, userInfo?.email, userInfo?.primaryUserId, userInfo?.primaryUserEmail]);
+  console.log(duration);
 
   useEffect(() => {
     if (errorAddDetails) {
@@ -269,7 +259,6 @@ export const EnterCampaignBasicDetails = ({
               value={endDate}
               action={(e: any) => {
                 setEndDate(e);
-                handleSetNewDuration();
               }}
               disabled={false}
             />

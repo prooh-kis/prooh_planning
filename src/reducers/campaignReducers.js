@@ -19,7 +19,8 @@ import {
   CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_REQUEST,
   CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_SUCCESS,
   CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_ERROR,
-  CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_RESET
+  CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_RESET,
+  ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET
 } from "../constants/campaignConstants";
 import { FULL_CAMPAIGN_PLAN } from "../constants/localStorageConstants";
 
@@ -40,7 +41,14 @@ export function detailsToCreateCampaignAddReducer(state = [], action) {
     case ADD_DETAILS_TO_CREATE_CAMPAIGN_ERROR:
       return {
         loading: false,
+        success: false,
         error: action.payload,
+      };
+    case ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET:
+      return {
+        loading: false,
+        success: false,
+        data: state,
       };
     default:
       return state;

@@ -117,6 +117,7 @@ export const AudienceTouchPointsDetails = ({
   useEffect(() => {
     dispatch(
       getScreensCostData({
+        id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
         cohorts: selectedAudiences,
         touchPoints: selectedTouchPoints,
         duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30,
@@ -131,21 +132,8 @@ export const AudienceTouchPointsDetails = ({
 
     dispatch(
       getScreenDataForAdvanceFilters({
+        id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
         touchPoints: selectedTouchPoints,
-      })
-    );
-
-    dispatch(
-      getScreensCostData({
-        cohorts: selectedAudiences,
-        touchPoints: selectedTouchPoints,
-        duration: 30,
-        gender:
-          selectedGender.length === 1 && selectedGender.includes("Male")
-            ? "male"
-            : selectedGender.length === 1 && selectedGender.includes("Female")
-            ? "female"
-            : "both",
       })
     );
   }, [dispatch, selectedAudiences, selectedTouchPoints, selectedGender]);
