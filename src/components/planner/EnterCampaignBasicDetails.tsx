@@ -15,10 +15,11 @@ import { message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
-  CAMPAIGN,
   FULL_CAMPAIGN_PLAN,
 } from "../../constants/localStorageConstants";
 import { format } from "date-fns";
+import { getScreensAudiencesData } from "../../actions/screenAction";
+import { ALL_MARKETS } from "../../constants/helperConstants";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -152,7 +153,7 @@ export const EnterCampaignBasicDetails = ({
         campaignManagerEmail: userInfo?.primaryUserEmail,
       })
     );
-  }, [handleSetNewDuration, dispatch, campaignName, brandName, campaignType, clientName, industry, startDate, endDate, duration, userInfo?._id, userInfo?.name, userInfo?.email, userInfo?.primaryUserId, userInfo?.primaryUserEmail]);
+  }, [handleSetNewDuration, dispatch, campaignName, brandName, campaignType, clientName, industry, startDate, endDate, userInfo?._id, userInfo?.name, userInfo?.email, userInfo?.primaryUserId, userInfo?.primaryUserEmail]);
 
   useEffect(() => {
     if (errorAddDetails) {
@@ -160,10 +161,15 @@ export const EnterCampaignBasicDetails = ({
     }
 
     if (successAddDetails) {
-      setCurrentStep(step + 1);
+  
       navigate(`/${path}/${addDetails?._id}`);
+      setCurrentStep(step + 1);
     }
-  }, [navigate, successAddDetails, errorAddDetails]);
+    // dispatch(getScreensAudiencesData({
+    //   id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
+    //   markets: ALL_MARKETS
+    // }));
+  }, [navigate, step, setCurrentStep, successAddDetails, errorAddDetails, addDetails, path, dispatch, campaignId]);
 
   return (
     <div className="w-full py-3">

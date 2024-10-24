@@ -130,16 +130,16 @@ export const RegularPlanPage: React.FC = () => {
           )[0]?.id
         ) + 1
       );
-      dispatch(getScreensAudiencesData({ id: campDetails?._id, markets: campDetails?.markets }));
-      dispatch(
-        getScreensCostData({
-          id: campDetails?._id,
-          cohorts: campDetails?.cohorts,
-          touchPoints: campDetails?.touchPoints,
-          gender: campDetails?.gender,
-          duration: campDetails?.duration,
-        })
-      );
+      // dispatch(getScreensAudiencesData({ id: campDetails?._id, markets: campDetails?.markets }));
+      // dispatch(
+      //   getScreensCostData({
+      //     id: campDetails?._id,
+      //     cohorts: campDetails?.cohorts,
+      //     touchPoints: campDetails?.touchPoints,
+      //     gender: campDetails?.gender,
+      //     duration: campDetails?.duration,
+      //   })
+      // );
 
       const curr =
         Number(
@@ -152,24 +152,16 @@ export const RegularPlanPage: React.FC = () => {
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
       console.log(currStep);
-    } else {
-      dispatch(getScreensAudiencesData({ id: "", markets: ALL_MARKETS }));
-      dispatch(
-        getScreensCostData({
-          id: "",
-          cohorts: ALL_COHORTS,
-          touchPoints: ALL_TOUCHPOINTS,
-          gender: "both",
-          duration: 30,
-        })
-      );
     }
-  }, [dispatch, campaignDetails]);
+
+  }, [success, campaignDetails, campaignId]);
 
   useEffect(() => {
     if (campaignId !== null || undefined) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
+    dispatch(getScreensAudiencesData({ id: "", markets: ALL_MARKETS }));
+
   }, [dispatch, campaignId]);
 
   return (

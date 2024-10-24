@@ -5,8 +5,8 @@ export const ALL_MARKETS = [
 export const ALL_TOUCHPOINTS = [
   "Premium High Street",
   "Golf course",
-  "Neighbourhood premium Mall",
-  "Neighbourhood hi-street",
+  "Neighborhood premium Mall",
+  "Neighborhood hi-street",
   "Feeder route",
   "Arterial Route",
   "CBD- SOHO",

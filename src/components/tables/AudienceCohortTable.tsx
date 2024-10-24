@@ -6,16 +6,26 @@ interface AudiencesProps {
   markets?: any
   selectedAudiences?: any
   setSelectedAudiences?: any
-
+  loading?: any
+  handleSelection?: any;
 }
-export const AudienceCohortTable = ({ audiences, selectedAudiences, setSelectedAudiences }: AudiencesProps) => {
+export const AudienceCohortTable = ({ handleSelection, loading, audiences, selectedAudiences, setSelectedAudiences }: AudiencesProps) => {
   
   const handleCheckClick = ({ cohort, checked }: any) => {
     if (checked && !selectedAudiences.includes(cohort)) {
       setSelectedAudiences([...selectedAudiences, cohort])
+      handleSelection({
+        type: "cohorts",
+        data: [cohort, selectedAudiences],
+      });
+
     } else {
       const aud = selectedAudiences?.filter((audience: any) => audience !== cohort)
       setSelectedAudiences(aud);
+      handleSelection({
+        type: "cohorts",
+        data: aud,
+      });
     }
   }
   return (
@@ -50,7 +60,7 @@ export const AudienceCohortTable = ({ audiences, selectedAudiences, setSelectedA
           </th>
         </tr>
         <tr className="w-full h-[40vh] overflow-scroll py-3">
-          {Object.keys(audiences)?.map((a: any, i: any) => {
+          {!loading && Object.keys(audiences)?.map((a: any, i: any) => {
             const cohortName = a;
             const cohortValue = audiences[a]; // Assuming this is the cohort value (percentage)
             return (

@@ -6,33 +6,51 @@ interface LocationTableProps {
   setSelectedMarkets?: any;
   selectedGender?: any;
   setSelectedGender?: any;
+  loading?: any;
+  handleSelection?: any;
 }
 export const LocationTable = ({
   markets,
+  loading,
   selectedMarkets,
   setSelectedMarkets,
+  handleSelection,
   selectedGender,
   setSelectedGender,
 }: LocationTableProps) => {
 
   const handleCheckClick = ({ type, checked }: any) => {
-
     if (type === "Male") {
       if (checked && !selectedGender.includes("Male")) {
         setSelectedGender([...selectedGender, "Male"]);
+        handleSelection({
+          type: "gender",
+          data: [...selectedGender, "Male"],
+        });
       } else {
         const gender = selectedGender?.filter((gender: any) => gender !== "Male")
         setSelectedGender(gender);
+        handleSelection({
+          type: "gender",
+          data: gender,
+        });
       }
     } else if (type === "Female") {
       if (checked && !selectedGender.includes("Female")) {
         setSelectedGender([...selectedGender, "Female"]);
+        handleSelection({
+          type: "gender",
+          data: [...selectedGender, "Female"],
+        });
       } else {
         const gender = selectedGender?.filter((gender: any) => gender !== "Female")
         setSelectedGender(gender);
+        handleSelection({
+          type: "gender",
+          data: gender,
+        });
       }
     }
-
     return {checked};
    
   }
@@ -63,7 +81,7 @@ export const LocationTable = ({
         </tr>
       </thead>
       <tbody className="border overflow-scroll">
-        {Object.keys(markets)?.map((market: any, index: any) => (
+        {!loading && Object.keys(markets)?.map((market: any, index: any) => (
           <tr key={index} className="grid grid-cols-8 w-full h-[40px] border-b border-gray-100">
             <td className="col-span-4 flex items-center px-2">
               <CheckboxInput label={`${market}`} disabled={true} checked={true} onChange={() => {}}/>

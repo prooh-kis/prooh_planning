@@ -10,7 +10,7 @@ import { Footer } from "../../components/footer";
 import { SelectManuallyScreensCheckBox } from "../../components/segments/SelectManuallyScreensCheckBox";
 import { message } from "antd";
 import { useDispatch } from "react-redux";
-import { getRegularVsCohortPriceData } from "../../actions/screenAction";
+import { getRegularVsCohortPriceData, getScreenDataForAdvanceFilters } from "../../actions/screenAction";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { ADVANCE_FILTER_SCREENS_MAP_DATA, COST_SUMMARY, FULL_CAMPAIGN_PLAN, SELECTED_SCREENS_ID } from "../../constants/localStorageConstants";
 
@@ -149,7 +149,13 @@ export const AdvanceFiltersDetails = ({
 
       });
     }
-  }, []);
+     dispatch(
+      getScreenDataForAdvanceFilters({
+        id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?._id,
+        touchPoints: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.touchPoints,
+      })
+    );
+  }, [dispatch]);
 
   const handleRemoveRoute = (id: any) => {
     let arr = routes;

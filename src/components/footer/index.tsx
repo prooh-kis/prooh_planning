@@ -11,6 +11,7 @@ export const Footer = ({
   totalScreensData,
   isDisabled = false,
 }: any) => {
+  console.log(totalScreensData);
   const avgPricePerSlot = (data: any) => {
     const screenWiseSlotDetails = data.screenWiseSlotDetails;
 
@@ -31,10 +32,10 @@ export const Footer = ({
  
       <div className="flex w-full justify-start items-center gap-4">
         <div className="flex">
-          <ScreenSummaryModel totalScreensData={totalScreensData} />
+          <ScreenSummaryModel totalScreensData={totalScreensData || []} />
         </div>
         {loading || Object.keys(totalScreensData).length < 1 ? (
-          <div className="flex w-full justify-start">
+          <div className="animate-pulse flex w-full justify-start">
             <div className="w-full">
               <p className="text-[14px] font-semibold">Please wait while we calculate the cost of your desired plan...</p>
             </div>

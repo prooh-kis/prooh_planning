@@ -6,21 +6,31 @@ interface TouchPointsProps {
   totalScreens?: any;
   selectedTouchPoints?: any;
   setSelectedTouchPoints?: any;
-  selectedGender?: any;
+  loading?: any;
+  handleSelection?: any;
 }
 export const TouchpointTable = ({
   touchPoints,
   selectedTouchPoints,
   setSelectedTouchPoints,
-  selectedGender,
+  handleSelection,
+  loading,
 }: TouchPointsProps) => {
 
   const handleCheckClick = ({ touchPoint, checked }: any) => {
     if (checked && !selectedTouchPoints.includes(touchPoint)) {
-      setSelectedTouchPoints([...selectedTouchPoints, touchPoint])
+      setSelectedTouchPoints([...selectedTouchPoints, touchPoint]);
+      handleSelection({
+        type: "touchPoints",
+        data: [...selectedTouchPoints, touchPoint],
+      });
     } else {
       const aud = selectedTouchPoints?.filter((audience: any) => audience !== touchPoint)
       setSelectedTouchPoints(aud);
+      handleSelection({
+        type: "touchPoints",
+        data: aud,
+      });
     }
   }
 
@@ -63,7 +73,7 @@ export const TouchpointTable = ({
           </th>
         </tr>
         <tr className="w-full overflow-scroll py-3">
-          {Object.keys(touchPoints)?.map((a: any, i: any) => {
+          {!loading && Object.keys(touchPoints)?.map((a: any, i: any) => {
             return (
               <td key={i} className="grid grid-cols-6 gap-4 flex justify-between items-center w-full p-2">
                 <div className="col-span-4 flex justify-between w-auto truncate text font-normal">
