@@ -1,15 +1,17 @@
+import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { signout } from "../../actions/userAction";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { CURRENT_STEP } from "../../constants/localStorageConstants";
 
 interface StepSliderProps {
   steps: number;
   step: number;
   setStep?: any;
+  campaignId?: any;
 }
 
-export const StepperSlider = ({ setStep, steps, step }: StepSliderProps) => {
+export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderProps) => {
 
   const dispatch = useDispatch<any>();
   const auth = useSelector((state: any) => state.auth);
@@ -17,7 +19,10 @@ export const StepperSlider = ({ setStep, steps, step }: StepSliderProps) => {
 
   // Function to handle step marker click
   const handleStepClick = (step: number) => {
-    setStep(step);
+    console.log(getDataFromLocalStorage(CURRENT_STEP)?.[campaignId])
+    if (campaignId && getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] >= step) {
+      setStep(step);
+    }
   };
 
   // Example Flaticon SVG URLs (replace these with actual SVG URLs or import local SVGs)

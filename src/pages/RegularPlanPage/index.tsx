@@ -166,7 +166,7 @@ export const RegularPlanPage: React.FC = () => {
   return (
     <div className="w-full h-full">
       <div className="w-full pt-[60px]">
-        <StepperSlider step={currentStep} setStep={setCurrentStep} steps={9} />
+        <StepperSlider campaignId={campaignId} step={currentStep} setStep={setCurrentStep} steps={9} />
       </div>
       <div className="w-full h-full flex justify-center items-top">
         {currentStep === 1 ? (
