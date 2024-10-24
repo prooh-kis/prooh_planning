@@ -153,7 +153,6 @@ export const EnterCampaignBasicDetails = ({
       })
     );
   }, [handleSetNewDuration, dispatch, campaignName, brandName, campaignType, clientName, industry, startDate, endDate, duration, userInfo?._id, userInfo?.name, userInfo?.email, userInfo?.primaryUserId, userInfo?.primaryUserEmail]);
-  console.log(duration);
 
   useEffect(() => {
     if (errorAddDetails) {

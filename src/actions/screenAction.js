@@ -70,7 +70,13 @@ export const getScreensAudiencesData =
   };
 
 export const getScreensCostData =
-  ({ id, cohorts, gender, touchPoints, duration }) =>
+  ({
+    id,
+    cohorts,
+    gender,
+    touchPoints,
+    duration
+  }) =>
   async (dispatch, getState) => {
     dispatch({
       type: GET_SCREENS_COST_DATA_REQUEST,

@@ -213,6 +213,10 @@ export const AudienceTouchPointsDetails = ({
               cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).cohorts,
               touchPoints: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).touchPoints,
               gender: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).gender,
+              screensSelectedCount: screensCost?.screensSelectedCount, 
+              impressionSelectedCount: screensCost?.impressionSelectedCount,
+              budgetSelected: screensCost.budgetSelected,
+              cpmSelected: screensCost.cpmSelected, 
             }))
             setCurrentStep(step + 1);
             saveDataOnLocalStorage(COST_SUMMARY, [

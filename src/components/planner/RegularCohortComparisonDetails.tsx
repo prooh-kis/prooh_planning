@@ -78,14 +78,12 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
     setSelectedBuyingOption(type);
     setShowSummary(null);
     setIsDisabled(false);
-
+    console.log(type);
     const campaign = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] || {};
-    console.log("82" ,campaign);
     campaign["selectedType"] = type;
     const tcamp = {
       [campaign?._id || campaignId]: campaign,
     };
-    console.log("87 : ", campaign, tcamp);
     saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, tcamp);
     // dispatch(getScreenSummaryData({
     //   id: pathname.split("/").splice(-1)[0],
@@ -93,6 +91,7 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
     // }));
   }
   console.log(priceData);
+  console.log(selectedBuyingOption);
   return (
     <div className="w-full pt-3">
       <div>
@@ -184,7 +183,8 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
                 id: pathname.split("/").splice(-1)[0],
                 regularTouchPointWiseSlotDetails: priceData?.regular?.touchPointData,
                 cohortTouchPointWiseSlotDetails: priceData?.cohort?.touchPointData,
-                selectedType: selectedBuyingOption
+                selectedType: selectedBuyingOption,
+                tableData: priceData?.[selectedBuyingOption]?.tableData,
               }));
               setCurrentStep(step + 1);
             };
