@@ -413,7 +413,7 @@ export const AdvanceFiltersDetails = ({
               setCurrentStep(step + 1);
             };
           }}
-          totalScreensData={getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]}
+          campaignId={campaignId}
         />
       </div>
     </div>

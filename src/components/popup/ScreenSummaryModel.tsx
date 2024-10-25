@@ -3,7 +3,7 @@ import { CostSummaryTable1 } from "../../components/tables";
 import Modal from "antd/es/modal/Modal";
 import React, { useEffect, useState } from "react";
 
-export function ScreenSummaryModel({ totalScreensData }: any) {
+export function ScreenSummaryModel({ }: any) {
   const [open, setOpen] = useState<boolean>(false);
 
   const handleCancel = () => {

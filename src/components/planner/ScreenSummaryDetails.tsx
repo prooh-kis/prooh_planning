@@ -338,7 +338,7 @@ export const ScreenSummaryDetails = ({
             setCurrentStep(step - 1);
           }}
           handleSave={handleSaveAndContinue}
-          totalScreensData={getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] || []}
+          campaignId={campaignId}
         />
       </div>
     </div>

@@ -3,38 +3,37 @@ import { ScreenSummaryModel } from "../../components/popup/ScreenSummaryModel";
 import React, { useEffect, useState } from "react";
 import { formatNumber } from "../../utils/formatValue";
 import { Loading } from "../../components/Loading";
+import { useDispatch, useSelector } from "react-redux";
+import { getPlanningPageFooterData } from "../../actions/screenAction";
 
 export const Footer = ({
-  loading, error,
   handleSave,
   handleBack,
-  totalScreensData,
   isDisabled = false,
+  campaignId,
 }: any) => {
-  // console.log(totalScreensData);
-  const avgPricePerSlot = (data: any) => {
-    const screenWiseSlotDetails = data.screenWiseSlotDetails;
+  const dispatch = useDispatch<any>();
+  
+  const planningPageFooterDataGet = useSelector((state: any) => state.planningPageFooterDataGet);
+  const {
+    loading, error, data: totalScreensData
+  } = planningPageFooterDataGet;
 
-    // Calculate total price per slot and count of screens
-    let totalPricePerSlot = 0;
-    let totalScreens = screenWiseSlotDetails.length;
-
-    screenWiseSlotDetails.forEach((screen: any) => {
-        totalPricePerSlot += screen.pricePerSlot;
-    });
-
-    // Calculate average price per slot
-    const averagePricePerSlot = totalPricePerSlot / totalScreens;
-    return averagePricePerSlot || 0;
-  }
+  useEffect(() => {
+    dispatch(getPlanningPageFooterData({id: campaignId }));
+  },[dispatch]);
+  console.log(totalScreensData)
   return (
     <div className="py-4 z-10 flex justify-between">
- 
+      
       <div className="flex w-full justify-start items-center gap-4">
-        <div className="flex">
-          <ScreenSummaryModel totalScreensData={totalScreensData || []} />
-        </div>
-        {loading || Object.keys(totalScreensData).length < 1 ? (
+        {totalScreensData && (
+          <div className="flex">
+            <ScreenSummaryModel />
+          </div>
+        )}
+
+        {loading ? (
           <div className="animate-pulse flex w-full justify-start">
             <div className="w-full">
               <p className="text-[14px] font-semibold">Please wait while we calculate the cost of your desired plan...</p>
@@ -74,7 +73,7 @@ export const Footer = ({
             <div className="flex gap-2 truncate">
               <h1 className="text-[14px] truncate">Price Per Slot</h1>
               <h1 className="text-[14px] font-semibold">
-                &#8377;{avgPricePerSlot(totalScreensData)?.toFixed(2) || 0}
+                &#8377;{totalScreensData?.pricePerSlot?.toFixed(0) || 0}
               </h1>
             </div>
           </div>

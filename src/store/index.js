@@ -5,6 +5,7 @@ import {
   campaignDashboardDataGetReducer,
   finalPlanPOTableDataGetReducer,
   getTableDataForSelectTopicalDayPageReducer,
+  planningPageFooterDataGetReducer,
   regularVsCohortPriceDataGetReducer,
   screenDataUploadCreativeReducer,
   screensAudiencesDataGetReducer,
@@ -66,6 +67,8 @@ const store = configureStore({
     vendorConfirmationStatusTableDetailsGet:
       vendorConfirmationStatusTableDetailsGetReducer,
     campaignDashboardDataGet: campaignDashboardDataGetReducer,
+
+    planningPageFooterDataGet: planningPageFooterDataGetReducer,
 
     // campaign
     detailsToCreateCampaignAdd: detailsToCreateCampaignAddReducer,

@@ -36,6 +36,9 @@ import {
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_ERROR,
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_REQUEST,
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_SUCCESS,
+  PLANNING_PAGE_FOOTER_DATA_ERROR,
+  PLANNING_PAGE_FOOTER_DATA_REQUEST,
+  PLANNING_PAGE_FOOTER_DATA_SUCCESS,
 } from "../constants/screenConstants";
 
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/screens`;
@@ -386,3 +389,29 @@ export const getTableDataForSelectTopicalDayPage =
       });
     }
   };
+
+export const getPlanningPageFooterData = ({id}) => async (dispatch, getState)=> {
+  dispatch({
+    type: PLANNING_PAGE_FOOTER_DATA_REQUEST,
+    payload: {id},
+  });
+  try {
+    const { data } = await axios.post(
+      `${url}/planningPageFooter`,
+      {id}
+    );
+    dispatch({
+      type: PLANNING_PAGE_FOOTER_DATA_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: PLANNING_PAGE_FOOTER_DATA_ERROR,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    });
+  }
+};

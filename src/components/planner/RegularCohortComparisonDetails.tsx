@@ -163,8 +163,6 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
       </div>
       <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
         <Footer
-          loading={loadingPriceData}
-          error={errorPriceData}
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
@@ -183,7 +181,7 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
               setCurrentStep(step + 1);
             };
           }}
-          totalScreensData={getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] || []}
+          campaignId={campaignId}
         />
       </div>
     </div>

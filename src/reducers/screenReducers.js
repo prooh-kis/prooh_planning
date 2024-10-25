@@ -40,6 +40,9 @@ import {
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_ERROR,
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_REQUEST,
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_SUCCESS,
+  PLANNING_PAGE_FOOTER_DATA_ERROR,
+  PLANNING_PAGE_FOOTER_DATA_REQUEST,
+  PLANNING_PAGE_FOOTER_DATA_SUCCESS,
 } from "../constants/screenConstants";
 import {
   ADVANCE_FILTER_SCREENS_MAP_DATA,
@@ -289,6 +292,26 @@ export function getTableDataForSelectTopicalDayPageReducer(state = {}, action) {
         data: action.payload,
       };
     case GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+
+export function planningPageFooterDataGetReducer(state = {}, action) {
+  switch (action.type) {
+    case PLANNING_PAGE_FOOTER_DATA_REQUEST:
+      return { loading: true };
+    case PLANNING_PAGE_FOOTER_DATA_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case PLANNING_PAGE_FOOTER_DATA_ERROR:
       return {
         loading: false,
         error: action.payload,
