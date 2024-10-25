@@ -268,6 +268,7 @@ export const AudienceTouchPointsDetails = ({
               budgetSelected: screensCost.budgetSelected,
               cpmSelected: screensCost.cpmSelected, 
             }))
+            
             setCurrentStep(step + 1);
             saveDataOnLocalStorage(COST_SUMMARY, [
               selectedScreensData,

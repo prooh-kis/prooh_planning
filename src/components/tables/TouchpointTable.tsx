@@ -79,7 +79,7 @@ export const TouchpointTable = ({
                 <div className="col-span-4 flex justify-between w-auto truncate text font-normal">
                   <CheckboxInput
                     label={a}
-                    checked={selectedTouchPoints.includes(a)? true : false}
+                    checked={selectedTouchPoints?.includes(a)? true : false}
                     onChange={(e) => handleCheckClick({ touchPoint: a, checked: e})}
                   />
                 </div>

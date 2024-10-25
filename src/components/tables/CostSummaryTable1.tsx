@@ -118,9 +118,9 @@ export const CostSummaryTable1 = ({
                 <h1 className="col-span-2 text-[14px] text-[#21394F] truncate font-normal">
                   {totalData?.durationSelected} Days
                 </h1>
-                <p className="col-span-1 text-[12px] text-right text-red-500 font-normal">
-                  Edit
-                </p>
+                <ChangeCampaignDuration
+                  campaignId={Object.keys(getCurrentStep || {})?.[0]}
+                />
               </div>
             </th>
             <th className="flex w-full items-center justify-center gap-2">

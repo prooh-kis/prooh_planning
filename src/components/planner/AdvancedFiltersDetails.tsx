@@ -12,7 +12,8 @@ import { message } from "antd";
 import { useDispatch } from "react-redux";
 import { getRegularVsCohortPriceData, getScreenDataForAdvanceFilters } from "../../actions/screenAction";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { ADVANCE_FILTER_SCREENS_MAP_DATA, COST_SUMMARY, FULL_CAMPAIGN_PLAN, SELECTED_SCREENS_ID } from "../../constants/localStorageConstants";
+import { ADVANCE_FILTER_SCREENS_MAP_DATA, COST_SUMMARY, FULL_CAMPAIGN_PLAN, SELECTED_AUDIENCE_TOUCHPOINTS, SELECTED_SCREENS_ID } from "../../constants/localStorageConstants";
+import { useSelector } from "react-redux";
 
 type Coordinate = [number, number];
 
@@ -60,6 +61,13 @@ export const AdvanceFiltersDetails = ({
 
   const [circleData, setCircleData] = useState<any>({});
   const [finalSelectedScreens, setFinalSelectedScreens] = useState<any>([]);
+
+  const screensDataAdvanceFilterGet = useSelector((state: any) => state.screensDataAdvanceFilterGet);
+  const {
+    loading: loadingAdvanceFilterData,
+    error: errorAdvanceFilterData,
+    data: advanceFilterData
+  } = screensDataAdvanceFilterGet;
 
   const getUniqueScreens = (data: any) => {
     const uniqueScreens = new Set();
@@ -116,47 +124,6 @@ export const AdvanceFiltersDetails = ({
 
     }
   };
-
-  useEffect(() => {
-    if (getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)) {
-      getMapData(
-        getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)
-      );
-    }
-    if (getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)) {
-      setPOIs(
-        getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)
-          .poiList
-      );
-    }
-    if (getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)) {
-      setSelectedPOIs(
-        getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)
-          .poiList
-      );
-    }
-  }, [getMapData]);
-
-  useEffect(() => {
-    if (
-      excelFilteredScreens.length === 0 &&
-      routeFilteredScreens.length === 0
-    ) {
-      handleFinalSelectedScreens({
-        type: "add",
-        screens: getDataFromLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA)?.screens || [],
-        // screens: [],
-
-      });
-    }
-    console.log(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.touchPoints)
-    dispatch(
-      getScreenDataForAdvanceFilters({
-        id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?._id,
-        touchPoints: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.touchPoints,
-      })
-    );
-  }, [dispatch]);
 
   const handleRemoveRoute = (id: any) => {
     let arr = routes;
@@ -262,7 +229,6 @@ export const AdvanceFiltersDetails = ({
 
   const handleConfirmScreensSelections = ({checked, screens}: any) => {
     setIsDisabled(!checked);
-    console.log(screens);
     if (checked) {
       handleFinalSelectedScreens({
         type: "add",
@@ -278,6 +244,41 @@ export const AdvanceFiltersDetails = ({
     }
     // saveDataOnLocalStorage(SELECTED_SCREENS_ID, getUniqueScreens([{screens: selectedScreenIds}]));
   };
+
+
+  useEffect(() => {
+    if (advanceFilterData) {
+      
+      getMapData(advanceFilterData || {});
+      setPOIs(advanceFilterData.poiList || []);
+      setSelectedPOIs(advanceFilterData.poiList || []);
+
+      if (
+        excelFilteredScreens.length === 0 &&
+        routeFilteredScreens.length === 0
+      ) {
+        handleFinalSelectedScreens({
+          type: "add",
+          screens: advanceFilterData?.screens || [],
+          // screens: [],
+  
+        });
+      }
+    }
+    
+  }, [advanceFilterData, getMapData, excelFilteredScreens, routeFilteredScreens]);
+
+  useEffect(() => {
+    
+    dispatch(
+      getScreenDataForAdvanceFilters({
+        id: campId,
+        touchPoints: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).touchPoints,
+      })
+    );
+    
+  }, [dispatch, campId]);
+
   return (
     <div className="w-full">
       <div className="h-[640px] w-full py-3 grid grid-cols-2 gap-4">
@@ -294,10 +295,11 @@ export const AdvanceFiltersDetails = ({
                   </p>
                 </div>
                 <div
-                  className="flex items-center justify-end"
-                  onClick={() => setStoreFilter(!storeFilter)}
+                  className="flex items-center justify-end gap-2"
+                  
                 >
-                  <p className="text-[14px] text-[#9f9f9f]">Next</p>
+                  <i className="fi fi-br-rotate-right text-[12px] flex items-center" onClick={() => window.location.reload()}></i>
+                  <p className="text-[14px] text-[#9f9f9f]" onClick={() => setStoreFilter(!storeFilter)}>Next</p>
                 </div>
               </div>
 
@@ -369,10 +371,10 @@ export const AdvanceFiltersDetails = ({
                   dispatch(
                     getRegularVsCohortPriceData({
                       id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?._id,
-                      screenIds: getDataFromLocalStorage(SELECTED_SCREENS_ID) || [],
-                      cohorts: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].cohorts || {},
-                      gender: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].gender || "",
-                      duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].duration || 30,
+                      screenIds: getDataFromLocalStorage(SELECTED_SCREENS_ID),
+                      cohorts: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].cohorts,
+                      gender: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].gender,
+                      duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].duration,
                     })
                   );
                 }

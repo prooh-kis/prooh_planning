@@ -130,17 +130,6 @@ export const RegularPlanPage: React.FC = () => {
           )[0]?.id
         ) + 1
       );
-      // dispatch(getScreensAudiencesData({ id: campDetails?._id, markets: campDetails?.markets }));
-      // dispatch(
-      //   getScreensCostData({
-      //     id: campDetails?._id,
-      //     cohorts: campDetails?.cohorts,
-      //     touchPoints: campDetails?.touchPoints,
-      //     gender: campDetails?.gender,
-      //     duration: campDetails?.duration,
-      //   })
-      // );
-
       const curr =
         Number(
           pages.filter(

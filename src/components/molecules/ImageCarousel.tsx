@@ -33,8 +33,8 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
   return (
     <div
       className="relative w-full overflow-hidden py-2"
-      onMouseEnter={() => setIsHovered(true)} // Stop on hover
-      onMouseLeave={() => setIsHovered(false)} // Resume sliding when not hovered
+      // onMouseEnter={() => setIsHovered(true)} // Stop on hover
+      // onMouseLeave={() => setIsHovered(false)} // Resume sliding when not hovered
       onMouseMove={handleMouseMove} // Update index on mouse move
     >
       <div

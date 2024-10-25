@@ -67,7 +67,7 @@ export const AudienceCohortTable = ({ handleSelection, loading, audiences, selec
               <td key={i} className="grid grid-cols-6 gap-4 flex justify-between items-center w-full p-2">
                 <div className="col-span-4 flex justify-between w-auto truncate text font-normal">
                   <CheckboxInput
-                    checked={selectedAudiences.includes(cohortName) ? true : false}
+                    checked={selectedAudiences?.includes(cohortName) ? true : false}
                     label={cohortName}
                     onChange={(e: any) => handleCheckClick({ cohort: cohortName, checked: e})}
                   />

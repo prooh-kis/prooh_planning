@@ -10,7 +10,6 @@ mapboxgl.accessToken =
   // process.env.REACT_APP_MAPBOX ||
   "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A";
 export function MapWithGeometry(props: any) {
-  console.log(props)
   const mapRef = useRef<any>(null);
   const [routeData, setRouteData] = useState<any>([]);
   const [selectedMarkers, setSelectedMarkers] = useState<any>(null);

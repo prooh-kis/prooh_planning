@@ -219,7 +219,8 @@ export const ScreenSummaryDetails = ({
       {loadingScreenSummary ? (
         <h1>Loading...</h1>
       ) : errorScreenSummary ? (
-        <p>Error: {JSON.stringify(errorScreenSummary)}</p>
+        // <p>Error: {JSON.stringify(errorScreenSummary)}</p>
+        <p></p>
       ) : (
         <div className="">
           {currentTab === "1" ? (

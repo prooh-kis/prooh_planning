@@ -38,11 +38,11 @@ export const RegularCohortSlotsCampaignTable = ({
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F]">Total Cost</h1>
           </th>
-          {/* <th className="flex w-full items-center justify-center gap-2">
+          <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F]">
               SOV
             </h1>
-          </th> */}
+          </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F]">Duration</h1>
           </th>
@@ -91,11 +91,11 @@ export const RegularCohortSlotsCampaignTable = ({
               )}
             </h1>
           </th>
-          {/* <th className="flex w-full items-center justify-center gap-2">
+          <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
               {priceData?.tableData?.sov}
             </h1>
-          </th> */}
+          </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
               {priceData?.tableData?.duration} Days
