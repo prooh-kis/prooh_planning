@@ -12,6 +12,7 @@ interface Props {
 }
 
 export function TabWithIcon({ trigger, tabData, currentTab, setCurrentTab }: Props) {
+  console.log(tabData);
   return (
     <div className={`flex ${trigger ? "justify-between" : "gap-2"} items-center border-b-2 border-gray-100`}>
       {tabData?.map((tab: TabInterface, index: any) => (

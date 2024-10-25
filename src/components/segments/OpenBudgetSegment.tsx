@@ -38,7 +38,7 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
                 onChange={() => setSelectedBudget(`${0.01 * totalCost}`)}
               />
               <p className="text-[12px] text-gray-500">
-                (&#8377;{0.01 * totalCost})
+                (&#8377;{(0.01 * totalCost).toFixed(0)})
               </p>
             </div>
             <div className="flex gap-1 items-center">
@@ -49,18 +49,18 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
                 onChange={() => setSelectedBudget(`${0.02 * totalCost}`)}
               />
               <p className="text-[12px] text-gray-500">
-                (&#8377;{0.02 * totalCost})
+                (&#8377;{(0.02 * totalCost).toFixed(0)})
               </p>
             </div>
             <div className="flex gap-1 items-center">
               <RadioInput
-                title="1%"
+                title="3%"
                 value={"3"}
                 isChecked={selectedBudget === `${0.03 * totalCost}` ? true : false}
                 onChange={() => setSelectedBudget(`${0.03 * totalCost}`)}
               />
               <p className="text-[12px] text-gray-500">
-                (&#8377;{0.03 * totalCost})
+                (&#8377;{(0.03 * totalCost).toFixed(0)})
               </p>
             </div>
           </div>

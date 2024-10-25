@@ -115,8 +115,9 @@ export const ScreenSummaryDetails = ({
   };
 
   const getTabValue = (screenSummaryData: any) => {
-    if (screenSummaryData)
+    if (screenSummaryData) {
       return Object.keys(screenSummaryData).map((s: any, index: any) => {
+        console.log(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION));
         return {
           id: `${index + 1}`,
           label: s,
@@ -137,7 +138,7 @@ export const ScreenSummaryDetails = ({
               : [0, 0],
         };
       });
-    else return [];
+    } else return [];
   };
 
   const refreshScreenSummary = () => {
@@ -193,6 +194,7 @@ export const ScreenSummaryDetails = ({
       screenSummaryPlanTableData
     );
     saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, screenSummaryData);
+    getTabValue(screenSummaryData);
     // if (screenSummaryData) handleSetInitialData(screenSummaryData);
   }, [screenSummaryData, screenSummaryPlanTableData]);
 

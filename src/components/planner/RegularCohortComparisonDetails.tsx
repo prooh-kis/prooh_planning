@@ -63,10 +63,6 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
         duration: duration,
       }));
     } else {
-      console.log(screenIds);
-      console.log(cohorts);
-      console.log(gender);
-      console.log(duration);
       saveDataOnLocalStorage(
         REGULAR_VS_COHORT_PRICE_DATA,
         priceData
@@ -78,7 +74,6 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
     setSelectedBuyingOption(type);
     setShowSummary(null);
     setIsDisabled(false);
-    console.log(type);
     const campaign = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] || {};
     campaign["selectedType"] = type;
     const tcamp = {
@@ -90,8 +85,7 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
     //   type: type
     // }));
   }
-  console.log(priceData);
-  console.log(selectedBuyingOption);
+
   return (
     <div className="w-full pt-3">
       <div>

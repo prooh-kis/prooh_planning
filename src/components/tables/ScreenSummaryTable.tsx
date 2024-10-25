@@ -25,7 +25,7 @@ export const ScreenSummaryTable = ({
     saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, newToggleState);
   }
 
-  const handleData = useCallback((myData: any) => {
+  const handleData = (myData: any) => {
     const zones: any = {};
     const tps: any = {};
     const screens: any = getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) || {};
@@ -52,9 +52,10 @@ export const ScreenSummaryTable = ({
               tps[city][tp][st].push(myData[city][tp][st][zone][screen]?.screenName);
               types[city][st].push(myData[city][tp][st][zone][screen]?.screenName);
 
-              screens[city][myData[city][tp][st][zone][screen]?._id] = {};
-              screens[city][myData[city][tp][st][zone][screen]?._id]["status"] = true;
-              screens[city][myData[city][tp][st][zone][screen]?._id]["data"] = myData[city][tp][st][zone][screen];
+              screens[city][myData[city][tp][st][zone][screen]?._id] = {
+                status: true,  // Set all screens as selected by default
+                data: myData[city][tp][st][zone][screen]
+              };
             }
           }
         }
@@ -68,7 +69,7 @@ export const ScreenSummaryTable = ({
     setScreensBuyingCount(screens);
     setScreenTypeToggleAndSave(stToggle);
 
-  }, [currentSummaryTab, data, setCityTP, setCityZones, setCurrentCity, setScreenTypes, setScreensBuyingCount]);
+  };
 
   const updateScreenTypeStatus = ({screenType, city, touchpoint}: any) => {
     const currentScreens = Object.keys(screensBuyingCount[currentCity] || {});
@@ -94,7 +95,6 @@ export const ScreenSummaryTable = ({
   };
 
   const handleScreenClick = ({screen, city, touchpoint}: any) => {
-    console.log(screen, city, touchpoint);
     const screenId = screen._id;
     const updatedScreens = { ...screensBuyingCount[currentCity] };
 
@@ -116,17 +116,13 @@ export const ScreenSummaryTable = ({
   };
 
   const handleScreenTypeClick = ({screenType, myData, city, touchpoint}: any) => {
-    console.log(screenTypeToggle);
-    console.log(myData)
     const updatedScreens = { ...screensBuyingCount[currentCity] };
     const screens: any = [];
 
     const stToggle = screenTypeToggle;
 
-    console.log(stToggle);
     for (const zone in myData) {
       myData[zone]?.map((s: any) => {
-        console.log(updatedScreens[s._id])
         if (!stToggle[city][touchpoint][screenType] && updatedScreens[s._id].status) {
           updatedScreens[s._id].status = true
         }
@@ -138,25 +134,19 @@ export const ScreenSummaryTable = ({
     // Get current status for all screens in the type
     const allSelected = screens.every((s: any) => screensBuyingCount[currentCity]?.[s._id]?.status);
 
-    console.log(allSelected)
     screens.forEach((s: any) => {
-      console.log(s);
       handleScreenClick({screen: s, city, touchpoint}); // Update individual screen status
     });
 
-    console.log(city);
-    console.log(stToggle);
     stToggle[city][touchpoint][screenType] = !allSelected;
 
     // Toggle screen type status based on current status
     setScreenTypeToggle(stToggle);
-    console.log(stToggle)
 
     // Update the screens buying count and save
     setScreensBuyingCount({ ...screensBuyingCount });
     saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, screensBuyingCount);
 
-    console.log('asdadsa')
     // Call to refresh can be added if necessary
     // refreshScreenSummary();
   };
@@ -165,7 +155,9 @@ export const ScreenSummaryTable = ({
     if (data !== undefined) {
       handleData(data);
     }
-  }, [data, handleData]);
+    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, screensBuyingCount);
+
+  }, [data]);
 
   return (
     <div className="">
@@ -204,9 +196,9 @@ export const ScreenSummaryTable = ({
                         </div>
                       </div>
                       <div className={`col-span-7 grid grid-cols-8`}>
-                        {Object.keys(cityZones[currentCity])?.map((zone: any, k: any) => (
+                        {Object.keys(cityZones?.[currentCity])?.map((zone: any, k: any) => (
                           <div key={k} className={`col-span-4`}>
-                            {data[currentCity][tp][st][zone]?.map((screen: any, m: any) => (
+                            {data?.[currentCity]?.[tp]?.[st]?.[zone]?.map((screen: any, m: any) => (
                               <div key={m} className={`flex gap-4 justify-between border-x py-2 px-4 border-b truncate`}>
                                 <ScreenDataModel screen={screen || ""} />
                                 <div className="flex gap-4 justify-between items-center">

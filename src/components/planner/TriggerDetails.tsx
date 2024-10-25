@@ -270,7 +270,7 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
             you target audiences
           </p>
           <p
-            className="text-[14px] text-primaryButton underline"
+            className="text-[14px] text-primaryButton underline cursor-pointer"
             onClick={handleSkipTriggerSelection}
           >
             Skip trigger selection

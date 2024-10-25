@@ -12,7 +12,7 @@ interface Props {
 }
 
 export function TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
-
+  console.log(tabData);
   return (
     <div className="flex items-center gap-2">
       {tabData?.map((tab: TabInterface, index: any) => (
