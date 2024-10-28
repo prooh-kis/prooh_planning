@@ -281,15 +281,18 @@ export const EnterCampaignBasicDetails = ({
         </div>
       </div>
       <div className="flex py-4">
-        <PrimaryButton
-          rounded="rounded-[6px]"
-          title="Continue"
-          action={() => {
-            if (validateForm()) {
-              saveCampaignDetailsOnLocalStorage();
-            }
-          }}
-        />
+        {!loadingAddDetails && (
+          <PrimaryButton
+            rounded="rounded-[6px]"
+            title="Continue"
+            action={() => {
+              if (validateForm()) {
+                saveCampaignDetailsOnLocalStorage();
+              }
+            }}
+          />
+        )}
+      
       </div>
     </div>
   );

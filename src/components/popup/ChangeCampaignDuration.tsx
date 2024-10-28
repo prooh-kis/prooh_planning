@@ -107,6 +107,7 @@ export const ChangeCampaignDuration = ({ campaignId }: any) => {
       message.success("Campaign duration updated!");
       dispatch({ type: CHANGE_CAMPAIGN_DURATION_RESET });
       handleClose();
+      window.location.reload();
     }
   }, [successChangeDuration, errorChangeDuration]);
 

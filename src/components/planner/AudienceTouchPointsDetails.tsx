@@ -178,7 +178,7 @@ export const AudienceTouchPointsDetails = ({
     );
   }, [screensAudiences]);
 
-  const handleSelection = useCallback((input: any) => {
+  const handleSelection = (input: any) => {
     dispatch(
       getScreensCostData({
         id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
@@ -193,7 +193,7 @@ export const AudienceTouchPointsDetails = ({
             : "both",
       })
     );
-  },[campaignId, dispatch, selectedAudiences, selectedGender, selectedTouchPoints])
+  }
 
   return (
     <div className="w-full py-3">

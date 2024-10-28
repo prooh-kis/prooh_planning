@@ -24,6 +24,7 @@ import {
   SCREEN_SUMMARY_TABLE_DATA,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { Loading } from "../../components/Loading";
 
 interface Tab {
   label: string;
@@ -46,7 +47,6 @@ export const ScreenSummaryDetails = ({
 
   const [currentTab, setCurrentTab] = useState<string>("1");
   const [currentSummaryTab, setCurrentSummaryTab] = useState<any>("1");
-  const [isDisabled, setIsDisabled] = useState<any>(true);
   const [currentCity, setCurrentCity] = useState<string>("");
   const [citiesCreative, setCitiesCreative] = useState<any>([]);
 
@@ -60,9 +60,13 @@ export const ScreenSummaryDetails = ({
   const [cityTP, setCityTP] = useState<any>({});
   const [screenTypes, setScreenTypes] = useState<any>({});
 
-  const [screensBuyingCount, setScreensBuyingCount] = useState<any>(
-    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)
-  );
+  const [screensBuyingCount, setScreensBuyingCount] = useState(() => {
+    // Check localStorage on the first load
+    return getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) || {};
+  });
+  
+  // console.log(screensBuyingCount)
+
 
   const screenSummaryDataGet = useSelector(
     (state: any) => state.screenSummaryDataGet
@@ -95,29 +99,22 @@ export const ScreenSummaryDetails = ({
 
     return activeScreenIds;
   };
-  // impotent function
-  // const getScreenCountCityWise = (data: any, city: string) => {
-  //   let count: number = 0;
-  //   for (let touchPoint in data[city]) {
-  //     for (let screenType in data[city][touchPoint]) {
-  //       for (let zoon in data[city][touchPoint][screenType]) {
-  //         count += data[city][touchPoint][screenType][zoon]?.length;
-  //       }
-  //     }
-  //   }
-  //   return count;
-  // };
 
   const handleSelectCurrentTab = (id: string) => {
+    console.log(screensBuyingCount["Gurgaon"]);
     setCurrentSummaryTab(id);
-    let city = citiesCreative?.find((data: any) => data.id == id)?.label || "";
+  
+    const city = citiesCreative?.find((data: any) => data.id === id)?.label || "";
     setCurrentCity(city);
   };
 
-  const getTabValue = (screenSummaryData: any) => {
-    if (screenSummaryData) {
-      return Object.keys(screenSummaryData).map((s: any, index: any) => {
-        console.log(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION));
+  const getTabValue = (dataScreenSummary: any) => {
+    if (
+      dataScreenSummary &&
+      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) &&
+      Object.keys(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION))?.length !== 0
+    ) {
+        return Object.keys(dataScreenSummary).map((s: any, index: any) => {
         return {
           id: `${index + 1}`,
           label: s,
@@ -172,17 +169,28 @@ export const ScreenSummaryDetails = ({
   };
 
   useEffect(() => {
-    dispatch(
-      getScreenSummaryData({
-        id: campaignId,
-        type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-          ?.selectedType,
-      })
-    );
-
-
+    // if (!getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)) {
+      dispatch(
+        getScreenSummaryData({
+          id: campaignId,
+          type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+            ?.selectedType,
+        })
+      );
+    // }
  
   }, [campaignId, dispatch]);
+
+
+  // Update localStorage whenever screensBuyingCount changes
+  useEffect(() => {
+    // console.log("called first", screensBuyingCount["Gurgaon"]);
+    // console.log("called now first", getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)["Gurgaon"]);
+
+    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, screensBuyingCount);
+    // console.log("called now", getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)["Gurgaon"]);
+    // console.log("called", screensBuyingCount["Gurgaon"]);
+  }, [screensBuyingCount]);
 
   useEffect(() => {
     setRegularVsCohort(
@@ -195,7 +203,6 @@ export const ScreenSummaryDetails = ({
     );
     saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, screenSummaryData);
     getTabValue(screenSummaryData);
-    // if (screenSummaryData) handleSetInitialData(screenSummaryData);
   }, [screenSummaryData, screenSummaryPlanTableData]);
 
   return (
@@ -208,18 +215,21 @@ export const ScreenSummaryDetails = ({
         You can further optimized your plan by deselecting locations in the
         screen summary
       </h1>
-      <i className="fi fi-rr-screen-play text-black flex items-center"></i>
-
-      <div className="mt-2">
-        <TabWithIcon
-          currentTab={currentTab}
-          setCurrentTab={setCurrentTab}
-          tabData={screenSummaryTabData}
-        />
-      </div>
+      {pathname.split("/").splice(-2)[0] === "iknowitallplan" ? (
+        <></>
+      ) : (
+        <div className="mt-2">
+          <TabWithIcon
+            currentTab={currentTab}
+            setCurrentTab={setCurrentTab}
+            tabData={screenSummaryTabData}
+          />
+        </div>
+      )}
+  
 
       {loadingScreenSummary ? (
-        <h1>Loading...</h1>
+        <Loading />
       ) : errorScreenSummary ? (
         // <p>Error: {JSON.stringify(errorScreenSummary)}</p>
         <p></p>

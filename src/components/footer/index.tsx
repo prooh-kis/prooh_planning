@@ -22,7 +22,7 @@ export const Footer = ({
   useEffect(() => {
     dispatch(getPlanningPageFooterData({id: campaignId }));
   },[dispatch]);
-  console.log(totalScreensData)
+  // console.log(totalScreensData)
   return (
     <div className="py-4 z-10 flex justify-between">
       

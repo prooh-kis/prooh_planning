@@ -85,6 +85,7 @@ export const getScreensCostData =
       type: GET_SCREENS_COST_DATA_REQUEST,
       payload: { cohorts, gender, touchPoints, duration },
     });
+    
 
     try {
       const { data } = await axios.post(

@@ -72,42 +72,6 @@ export const IKnowItAllPlanPage: React.FC = () => {
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-  const screensAudiencesDataGet = useSelector(
-    (state: any) => state.screensAudiencesDataGet
-  );
-  const {
-    loading: loadingAudiences,
-    error: errorAudiences,
-    data: screensAudiences,
-  } = screensAudiencesDataGet;
-
-  const screensCostDataGet = useSelector(
-    (state: any) => state.screensCostDataGet
-  );
-  const {
-    loading: loadingCost,
-    error: errorCost,
-    data: screensCost,
-  } = screensCostDataGet;
-
-  const screensDataAdvanceFilterGet = useSelector(
-    (state: any) => state.screensDataAdvanceFilterGet
-  );
-  const {
-    loading: loadingAdvanceFilterScreens,
-    error: errorAdvanceFilterScreens,
-    data: advanceFilterScreens,
-  } = screensDataAdvanceFilterGet;
-
-  const screenSummaryPlanTableDataGet = useSelector(
-    (state: any) => state.screenSummaryPlanTableDataGet
-  );
-  const {
-    loading: loadingScreenSummaryPlanTable,
-    error: errorScreenSummaryPlanTable,
-    data: screenSummaryPlanTableData,
-  } = screenSummaryPlanTableDataGet;
-
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
   );
@@ -119,7 +83,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
   } = detailsToCreateCampaignAdd;
 
   useEffect(() => {
-    if (campaignDetails) {
+    if (success) {
       // const campDetails = location.state.campaign
       const campDetails = campaignDetails;
 
@@ -130,22 +94,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
           )[0]?.id || 0
         ) + 1
       );
-      dispatch(getScreensAudiencesData({ id: campDetails?._id, markets: campDetails?.markets }));
-      dispatch(
-        getScreensCostData({
-          id: campDetails?._id,
-          cohorts: campDetails?.cohorts,
-          touchPoints: campDetails?.touchPoints,
-          gender: campDetails?.gender,
-          duration: campDetails?.duration,
-        })
-      );
-      dispatch(
-        getScreenSummaryPlanTableData({
-          id: campaignId,
-          screenIds: campDetails?.screenIds,
-        })
-      );
+      
       const curr =
         Number(
           pages.filter(
@@ -156,17 +105,6 @@ export const IKnowItAllPlanPage: React.FC = () => {
         [campaignId]: curr,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
-    } else {
-      dispatch(getScreensAudiencesData({ id: "", markets: [] }));
-      dispatch(
-        getScreensCostData({
-          id: "",
-          cohorts: [],
-          touchPoints: [],
-          gender: "both",
-          duration: 30,
-        })
-      );
     }
   }, [dispatch, campaignDetails]);
 

@@ -12,13 +12,14 @@ interface Props {
 }
 
 export function TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
-  console.log(tabData);
   return (
     <div className="flex items-center gap-2">
       {tabData?.map((tab: TabInterface, index: any) => (
         <div
           key={index}
-          onClick={() => setCurrentTab(tab.id)}
+          onClick={() => {
+            setCurrentTab(tab.id);
+          }}
           className={
             currentTab === tab.id
               ? "px-1 flex gap-4 items-center text-[14px] border-b-2 border-blue-500 py-1"
