@@ -9,6 +9,9 @@ import {
   GET_FINAL_PLAN_PO_DATA_ERROR,
   GET_FINAL_PLAN_PO_DATA_REQUEST,
   GET_FINAL_PLAN_PO_DATA_SUCCESS,
+  GET_LANDING_PAGE_DATA_ERROR,
+  GET_LANDING_PAGE_DATA_REQUEST,
+  GET_LANDING_PAGE_DATA_SUCCESS,
   GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
   GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
   GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
@@ -48,11 +51,32 @@ import {
   ADVANCE_FILTER_SCREENS_MAP_DATA,
   AUDIENCE_DATA,
   COST_SUMMARY,
+  LANDING_PAGE_DATA,
   REGULAR_VS_COHORT_PRICE_DATA,
   SCREEN_SUMMARY_DATA,
   SCREEN_SUMMARY_TABLE_DATA,
   TOTAL_SCREEN_COST_DATA,
 } from "../constants/localStorageConstants";
+
+export function landingPageDataGetReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_LANDING_PAGE_DATA_REQUEST:
+      return { loading: true };
+    case GET_LANDING_PAGE_DATA_SUCCESS:
+      saveDataOnLocalStorage(LANDING_PAGE_DATA, action.payload);
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_LANDING_PAGE_DATA_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
 
 export function screensAudiencesDataGetReducer(state = [], action) {
   switch (action.type) {

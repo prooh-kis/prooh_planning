@@ -1,17 +1,20 @@
-import { Player } from "@lordicon/react";
-import { CampaignTemplates } from "../../components/index";
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AnimatedIcon } from "../../components/molecules/AnimatedIcon";
 import { PrimaryButton } from "../../components/atoms/PrimaryButton";
-import { SecondaryButton } from "../../components/atoms/SecondaryButton";
+
 import asus from "../../assets/images/asus.png";
 import samsung from "../../assets/images/samsung.png";
 import { ImageCarousel } from "../../components/molecules/ImageCarousel";
 import { LandingPageMap } from "../../components/molecules/LandingPageMap";
 import { LandingPageMapFooter } from "../../components/molecules/LandingPageMapFooter";
 import { LandingPageMapHeader } from "../../components/molecules/LandingPageMapHeader";
+import { getLandingPageData } from "../../actions/screenAction";
+import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { LANDING_PAGE_DATA } from "../../constants/localStorageConstants";
+import { LandingPageListView } from "../../components/molecules/LandingPageListView";
+import { LandingPageTableView } from "../../components/molecules/LandingPageTableView";
 
 const confetti = require("../../assets/lottie/confetti.json");
 
@@ -33,14 +36,202 @@ export const Landing: React.FC = () => {
   const navigate = useNavigate();
   const targetDivRef = useRef<HTMLDivElement>(null);
 
+  const [landingPageData, setLandingPageData] = useState<any>({});
+  const [view, setView] = useState<any>("map");
+
+  const [screenData, setScreenData] = useState<any>([]);
+
+  const [countryStates, setCountryStates] = useState<any>({});
+  const [stateCities, setStateCities] = useState<any>({});
+  const [cityTouchpoints, setCityTouchpoints] = useState<any>({});
+  const [touchpointsCities, setTouchpointsCities] = useState<any>({});
+
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
+
+  const landingPageDataGet = useSelector((state: any) => state.landingPageDataGet);
+  const {
+    loading, error, data
+  } = landingPageDataGet;
+
+
+  const [defCnt, setDefCnt] = useState<any>([]);
+  const [defSt, setDefSt] = useState<any>([]);
+  const [defCt, setDefCt] = useState<any>("");
+
+  const getTotalCountryCount = () => {
+    return Object.keys(screenData)?.length || 0;
+  };
+
+  const getTotalStatesCounts = () => {
+    let ans = 0;
+    if (defCnt?.length === 0) {
+      for (let cnt in screenData) {
+        let statesCount = Object.keys(screenData[cnt])?.length || 0;
+        ans += statesCount;
+      }
+    } else {
+      for (let cnt of defCnt) {
+        let statesCount = Object.keys(screenData[cnt])?.length || 0;
+        ans += statesCount;
+      }
+    }
+    return ans;
+  };
+
+  const getTotalCityCount = () => {
+    return Object.keys(cityTouchpoints)?.length || 0;
+  };
+
+  const getTotalScreensCountCityWise = (city: string) => {
+    let ans = 0;
+    for (let tp of Object.keys(touchpointsCities)) {
+      if (cityTouchpoints[city][tp] != undefined) {
+        let x = cityTouchpoints[city][tp].length;
+        ans += x;
+      }
+    }
+    return ans;
+  };
+
+  const getTotalScreensCountTouchpointWise = (tp: string) => {
+    let ans = 0;
+    for (let city of Object.keys(cityTouchpoints)) {
+      if (cityTouchpoints[city][tp] != undefined) {
+        let x = cityTouchpoints[city][tp].length;
+        ans += x;
+      }
+    }
+    return ans;
+  };
+
+  const getTotalScreensCount = () => {
+    let ans = 0;
+    for (let tp of Object.keys(touchpointsCities)) {
+      for (let city of Object.keys(cityTouchpoints)) {
+        if (cityTouchpoints[city][tp] != undefined) {
+          let x = cityTouchpoints[city][tp].length;
+          ans += x;
+        }
+      }
+    }
+    return ans;
+  };
+
+  const fillCntData = (myData: any) => {
+    const cs: any = {};
+    // Extracting data for cs
+    for (const country in myData) {
+      cs[country] = cs[country] || {};
+      for (const state in myData[country]) {
+        cs[country][state] = Object.keys(myData[country][state]).length;
+      }
+    }
+    return cs;
+  };
+
+  const fillStateData = (myData: any) => {
+    const sc: any = {};
+    // Extracting data for sc
+    for (const country in myData) {
+      for (const state in myData[country]) {
+        for (const city in myData[country][state]) {
+          sc[state] = sc[state] || {};
+          sc[state][city] = Object.keys(myData[country][state][city]).length;
+        }
+      }
+    }
+    return sc;
+  };
+
+  const fillCityData = (myData: any) => {
+    const ct: any = {};
+    // Extracting data for ct
+    for (const country in myData) {
+      for (const state in myData[country]) {
+        for (const city in myData[country][state]) {
+          ct[city] = ct[city] || {};
+          for (const attribute in myData[country][state][city]) {
+            ct[city][attribute] = myData[country][state][city][attribute];
+          }
+        }
+      }
+    }
+    return ct;
+  };
+
+  const fillTpData = (myData: any) => {
+    const tc: any = {};
+    // Extracting data for tc
+    for (const country in myData) {
+      for (const state in myData[country]) {
+        for (const city in myData[country][state]) {
+          for (const attribute in myData[country][state][city]) {
+            tc[attribute] = tc[attribute] || {};
+            tc[attribute][city] = myData[country][state][city][attribute];
+          }
+        }
+      }
+    }
+    const sortedArray = Object.entries(tc).sort((a, b) =>
+      a[0].localeCompare(b[0])
+    );
+    const sortedObject = Object.fromEntries(sortedArray);
+    return sortedObject;
+  };
+
+  const handleCntClick = (country: any) => {
+    const dfc = Array.from(new Set([...defCnt, country]));
+    const dataToShow: any = {};
+    dfc.map((d: any) => {
+      dataToShow[d] = screenData[d];
+    });
+    setStateCities(fillStateData(dataToShow));
+    setCityTouchpoints(fillCityData(dataToShow));
+    setTouchpointsCities(fillTpData(dataToShow));
+  };
+
+  const handleStClick = (state: any) => {
+    const dfs = Array.from(new Set([...defSt, state]));
+    const dataToUse: any = {};
+    dfs.map((d: any) => {
+      dataToUse[d] = stateCities[d];
+    });
+    const dataToShow: any = {};
+
+    for (const state in dataToUse) {
+      for (const city in dataToUse[state]) {
+        dataToShow[city] = fillCityData(screenData)[city];
+      }
+    }
+
+    setCityTouchpoints(dataToShow);
+  };
 
   const scrollToTarget = () => {
     if (targetDivRef.current) {
       targetDivRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+
+  useEffect(() => {
+    if (landingPageData && Object.keys(landingPageData).length > 0) {
+      setScreenData(landingPageData.screenData);
+      setCountryStates(fillCntData(landingPageData.screenData));
+      setStateCities(fillStateData(landingPageData.screenData));
+      setCityTouchpoints(fillCityData(landingPageData.screenData));
+      setTouchpointsCities(fillTpData(landingPageData.screenData));
+    }
+  },[landingPageData])
+
+  useEffect(() => {
+    if (getDataFromLocalStorage(LANDING_PAGE_DATA)) {
+      setLandingPageData(getDataFromLocalStorage(LANDING_PAGE_DATA));
+    } else {
+      setLandingPageData(data);
+    }
+    dispatch(getLandingPageData());
+  }, [dispatch]);
 
   return (
     <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
@@ -82,13 +273,46 @@ export const Landing: React.FC = () => {
         </div>
         <div ref={targetDivRef} className="pb-32">
           <div className="relative">
-            <LandingPageMapHeader />
+            <LandingPageMapHeader setView={setView} view={view} />
           </div>
-          <div className="h-[720px] z-0">
-            <LandingPageMap />
-          </div>
+          {view === "map" ? (
+            <div className="h-[720px] z-0">
+              <LandingPageMap data={landingPageData} />
+            </div>
+          ) : view === "list" ? (
+            <div className="h-[720px] z-0">
+              <LandingPageListView
+                screens={landingPageData?.screens}
+                countries={Object.keys(countryStates)}
+                cities={Object.keys(cityTouchpoints)}
+                touchPoints={Object.keys(touchpointsCities)}
+              />
+            </div>
+          ) : view === "table" ? (
+            <div className="h-[720px] z-0">
+              <LandingPageTableView
+                data={screenData}
+                stateCities={stateCities}
+                cityTouchpoints={cityTouchpoints}
+                touchpointsCities={touchpointsCities}
+                defCnt={defCnt}
+                setDefCnt={setDefCnt}
+                defSt={defSt}
+                setDefSt={setDefSt}
+                defCt={defCt}
+                getTotalCountryCount={getTotalCountryCount}
+                handleCntClick={handleCntClick}
+                getTotalStatesCounts={getTotalStatesCounts}
+                handleStClick={handleStClick}
+                getTotalCityCount={getTotalCityCount}
+                getTotalScreensCountTouchpointWise={getTotalScreensCountTouchpointWise}
+                getTotalScreensCount={getTotalScreensCount}
+                getTotalScreensCountCityWise={getTotalScreensCountCityWise}
+              />
+            </div>
+          ) : null}
           <div>
-            <LandingPageMapFooter />
+            <LandingPageMapFooter data={landingPageData} />
           </div>
         </div>
         <div className="px-8">

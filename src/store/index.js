@@ -5,6 +5,7 @@ import {
   campaignDashboardDataGetReducer,
   finalPlanPOTableDataGetReducer,
   getTableDataForSelectTopicalDayPageReducer,
+  landingPageDataGetReducer,
   planningPageFooterDataGetReducer,
   regularVsCohortPriceDataGetReducer,
   screenDataUploadCreativeReducer,
@@ -54,6 +55,7 @@ const initialState = {
 const store = configureStore({
   initialState,
   reducer: {
+    landingPageDataGet: landingPageDataGetReducer,
     //screen
     screensAudiencesDataGet: screensAudiencesDataGetReducer,
     screensCostDataGet: screensCostDataGetReducer,

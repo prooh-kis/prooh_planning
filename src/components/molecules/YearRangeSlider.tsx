@@ -1,46 +1,37 @@
 import { signout } from "../../actions/userAction";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 interface StepSliderProps {
-  months: number;
-  month: number;
-  setMonth?: any;
-  setMonthName: any;
+  years: number;
+  year: number;
+  setYear?: any;
 }
 
-export const MonthRangeSlider = ({
-  setMonth,
-  months,
-  month,
-  setMonthName,
+export const YearRangeSlider = ({
+  setYear,
+  years,
+  year,
 }: StepSliderProps) => {
   const dispatch = useDispatch<any>();
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
+    // Example labels for each step
+    const stepLabels = [
+      2023,
+      2024,
+      2025,
+      2026,
+      2027
+    ];
+
   // Function to handle step marker click
-  const handleStepClick = (step: number, month: string) => {
-    setMonth(step);
-    setMonthName(month);
+  const handleStepClick = (step: number) => {
+    setYear(stepLabels[step]);
   };
 
-  // Example labels for each step
-  const stepLabels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+
 
   useEffect(() => {
     if (!userInfo) {
@@ -49,7 +40,7 @@ export const MonthRangeSlider = ({
   }, [dispatch, userInfo]);
 
   return (
-    <div className="w-[100vw] py-0 mx-[-40px] px-20">
+    <div className="w-full pt-6 pr-[-20px]">
       {/* Step Line */}
       <div className="relative w-full flex items-center">
         {/* Line behind the circles */}
@@ -58,18 +49,23 @@ export const MonthRangeSlider = ({
           style={{
             // left: month === 1 ? `calc(50% / ${months})` : month === 9 ? `calc(50% / ${months})` : `calc(40% / ${months})`, // Starts the line at the center of the first step
             // right: month === 1 ? `calc(50% / ${months})` : month === 9 ? `calc(50% / ${months})` : `calc(40% / ${months})`, // Ends the line at the center of the last step
-            left: `calc(40% / ${months})`,
-            right: `calc(40% / ${months})`,
+            left: `calc(40% / ${years})`,
+            right: `calc(40% / ${years})`,
             transform: "translateY(-50%)",
           }}
         ></div>
 
         <div className="flex justify-between items-center mt-[-33px] relative z-10 w-full">
-          {stepLabels?.map((value, i) => (
+          {stepLabels?.map((value: any, i) => (
             <div
               key={i}
               className="relative flex flex-col items-center w-full"
-              onClick={() => handleStepClick(i, value)}
+              onClick={() => {
+                if (value <= new Date().getFullYear()) {
+                  handleStepClick(i)
+
+                }
+              }}
             >
               {/* Icon or Text for each step */}
               <div className="mb-2">
@@ -89,9 +85,11 @@ export const MonthRangeSlider = ({
               {/* The clickable circle for each step */}
               <div
                 className={`cursor-pointer transition-all duration-500 ${
-                  i === month
-                    ? "h-2 w-full rounded-full border-1 border-y bg-blue-500" // Larger circle with steps, same size as future
-                    : "h-1 border border-white w-full bg-blue-500" // White for future steps
+                  value < year 
+                  ? "h-2 w-2 rounded-full border border-blue-500 bg-blue-500"
+                  : value === year
+                    ? "h-3 w-3 rounded-full border-1 border bg-blue-500 border-white" // Larger circle with steps, same size as future
+                    : "h-2 w-2 rounded-full border border-blue-500 bg-white" // White for future steps
                 }`}
               ></div>
             </div>

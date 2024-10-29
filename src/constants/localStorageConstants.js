@@ -11,6 +11,8 @@ export const FILTERED_SCREENS_IN_FILTER_FIVE = "filteredFive";
 
 // used for planning page
 
+export const LANDING_PAGE_DATA = "landingPageData";
+
 export const FULL_CAMPAIGN_PLAN = "fullCampaignPlan";
 // 1
 export const CURRENT_STEP = "currentStep";

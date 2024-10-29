@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { message, Select } from "antd";
 import { AddCampaignDetails } from "../popup/AddCampaignDetails";
 import { EventCalender } from "../../components/popup/EventCalender";
@@ -10,7 +9,7 @@ import {
   getCalendarListData,
   getIndustryCategory,
 } from "../../actions/calenderAction";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { getTableDataForSelectTopicalDayPage } from "../../actions/screenAction";
 import { SingleCalenderData } from "../../components/molecules/SingleCalenderData";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
