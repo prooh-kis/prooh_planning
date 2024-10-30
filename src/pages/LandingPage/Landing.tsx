@@ -35,6 +35,10 @@ export const Landing: React.FC = () => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const targetDivRef = useRef<HTMLDivElement>(null);
+  const secondDivRef = useRef<HTMLDivElement>(null);
+  const thirdDivRef = useRef<HTMLDivElement>(null);
+  const fourthDivRef = useRef<HTMLDivElement>(null);
+
 
   const [landingPageData, setLandingPageData] = useState<any>({});
   const [view, setView] = useState<any>("map");
@@ -280,7 +284,7 @@ export const Landing: React.FC = () => {
               <LandingPageMap data={landingPageData} />
             </div>
           ) : view === "list" ? (
-            <div className="h-[720px] z-0">
+            <div className="h-[720px] pt-12 z-0">
               <LandingPageListView
                 screens={landingPageData?.screens}
                 countries={Object.keys(countryStates)}
@@ -289,7 +293,7 @@ export const Landing: React.FC = () => {
               />
             </div>
           ) : view === "table" ? (
-            <div className="h-[720px] z-0">
+            <div className="h-[720px] pt-14 z-0">
               <LandingPageTableView
                 data={screenData}
                 stateCities={stateCities}
@@ -315,7 +319,7 @@ export const Landing: React.FC = () => {
             <LandingPageMapFooter data={landingPageData} />
           </div>
         </div>
-        <div className="px-8">
+        <div ref={secondDivRef} className="pb-24 px-8">
           <div className="flex flex-col justify-center items-center">
             <h1 className="text-[48px] text-[#254354] font-bold mb-0 leading-tight">
               We sell DOOH on <span className="text-[#129BFF]">Impressions</span> only.
@@ -333,7 +337,7 @@ export const Landing: React.FC = () => {
               <h2 className="text-[14px] font-semibold pt-4">
                 Data-Driven Targeting
               </h2>
-              <p className="text-[12px] pt-2">
+              <p className="text-[12px] text-[#254354] pt-2">
                 {"PROOH's"} media planning tools uses geospatial, POI and traffic data to estimate audience impressions at specific locations.
               </p>
             </div>
@@ -344,7 +348,7 @@ export const Landing: React.FC = () => {
               <h2 className="text-[14px] font-semibold pt-4">
                 Location Insights
               </h2>
-              <p className="text-[12px] pt-2">
+              <p className="text-[12px] text-[#254354] pt-2">
                 Brands can target locations with the best audience reach using DOOH options, LTS scoring, historical site data, and direct pricing.
               </p>
             </div>
@@ -355,7 +359,7 @@ export const Landing: React.FC = () => {
               <h2 className="text-[14px] font-semibold pt-4">
                 Programmatic Deployment
               </h2>
-              <p className="text-[12px] pt-2">
+              <p className="text-[12px] text-[#254354] pt-2">
                 Deploy creatives on DOOH screens programmatically, ensuring efficient and effective targeting of your advertising campaign.                
               </p>
             </div>
@@ -371,12 +375,14 @@ export const Landing: React.FC = () => {
               </p>
             </div>
           </div>
+        </div>
+        <div ref={thirdDivRef} className="px-8">
           <div className="flex flex-col gap-2">
             <h1 className="text-[48px] text-[#254354] font-bold mb-0 leading-tight">
-              Easy, Simple, Affordable
+              <span className="text-[#129BFF]">Reduce</span> ad spend with location targeting
             </h1>
-            <p className="text-[12px] text-[#61737D] w-1/2">
-              Easily manage your DOOH advertising campaigns and optmise your media planning by buying only what truly suits your {"campaign's"} need.
+            <p className="text-[12px] text-[#61737D] w-3/4">
+              Targeting audience cohorts by location and time ensures ads reach the right people at optimal moments, minimizing wasted ad spend and boosting effectiveness.
             </p>
           </div>
           <div className="grid grid-cols-12 gap-8">
@@ -384,41 +390,146 @@ export const Landing: React.FC = () => {
               <div className="rounded-[12px] h-80 bg-gray-100 my-4">
 
               </div>
-              <h1>
-                Automatic PO Generation
-              </h1>
-              <p>
-
-              </p>
             </div>
-            <div className="col-span-4 py-4">
-              <div className="rounded-[12px] h-80 bg-gray-100 my-4">
-
+            <div className="col-span-8 py-4 flex flex-col justify-between">
+              <div className="grid grid-cols-12 my-4 gap-2">
+                <div className="col-span-2 w-full flex justify-center items-center">
+                  <div className="rounded-[12px] border border-[#129BFF] w-16 h-16 flex justify-center items-center">
+                    <i className="fi fi-sr-marker text-[24px] text-[#129BFF] flex items-center"></i>
+                  </div>
+                </div>
+                <div className="col-span-10">
+                  <h1 className="text-[24px] font-semibold">SDK-based audience segmentation</h1>
+                  <p className="text-[12px] text-[#61737D] pt-2">
+                    PROOH uses SDK data to track mobile device IDs at specific locations and times, creating audience segments and cohorts based on mobility and preferences
+                  </p>
+                </div>
               </div>
-              <h1>
-                Automatic PO Generation
-              </h1>
-              <p>
-
-              </p>
-            </div>
-            <div className="col-span-4 py-4">
-              <div className="rounded-[12px] h-80 bg-gray-100 my-4">
-
+              <div className="grid grid-cols-12 my-4 gap-2">
+                <div className="col-span-2 w-full flex justify-center items-center">
+                  <div className="rounded-[12px] border border-[#129BFF] w-16 h-16 flex justify-center items-center">
+                    <i className="fi fi-br-bullseye-arrow text-[24px] text-[#129BFF] flex items-center"></i>
+                  </div>
+                </div>
+                <div className="col-span-10">
+                  <h1 className="text-[24px] font-semibold">Spatio-Temporal ad targeting</h1>
+                  <p className="text-[12px] text-[#61737D] pt-2">
+                    PROOH uses spatio-temporal data to predict when and where audiences will be, enabling precise ad placement by targeting locations visited by specific cohorts at optimal times
+                  </p>
+                </div>
               </div>
-              <h1>
-                Automatic PO Generation
-              </h1>
-              <p>
-
-              </p>
+              <div className="grid grid-cols-12 my-4 gap-2">
+                <div className="col-span-2 w-full flex justify-center items-center">
+                  <div className="rounded-[12px] border border-[#129BFF] w-16 h-16 flex justify-center items-center">
+                    <i className="fi fi-br-target-audience text-[24px] text-[#129BFF] flex items-center"></i>
+                  </div>
+                </div>
+                <div className="col-span-10">
+                  <h1 className="text-[24px] font-semibold">Probabilistic Audience Modeling</h1>
+                  <p className="text-[12px] text-[#61737D] pt-2">
+                    PROOH uses probabilistic modelling of spatial telco data to target relevant locations for audience personas, ensuring effective, large-scale targeting without personal identifiers
+                  </p>
+                </div>
+              </div>
             </div>
-            
           </div>
           <div className="flex justify-center items-center py-20">
             <span className="block w-full border-t-[1px] border-gray-200 border-dashed"></span>
           </div>
+        </div>
+        <div ref={fourthDivRef} className="pb-24 px-8">
+          <div className="flex flex-col justify-center items-center">
+            <h1 className="text-[48px] text-[#254354] font-bold mb-0 leading-tight">
+              Contextual targeting in <span className="text-[#129BFF]">DOOH</span> & <span className="text-[#129BFF]">OOH</span>.
+            </h1>
+            <p className="text-[12px] text-[#61737D]">
+              We enable contextual targeting in DOOH and OOH, ensuring ads reach the right audience by aligning messaging with relevant events and locations.
+            </p>
+          </div>
+          <div className="grid grid-cols-12 py-6 gap-12">
+            <div className="col-span-6">
+              <div className="rounded-[12px] h-80 bg-gray-100 my-4">
 
+              </div>
+            </div>
+            <div className="col-span-6 pr-12 flex flex-col justify-center">
+              <h1 className="text-[24px] text-[#254354] font-bold pt-4">
+                Event-based ad triggering
+              </h1>
+              <p className="text-[12px] text-[#61737D] pt-2 w-2/3">
+                Contextual targeting enables brands to display ads based on specific events or situations. Marketers simply set the conditions for media buying, and when these conditions are met, the ads are automatically served on both Digital Out-of-Home (DOOH) and traditional Out-of-Home (OOH) platforms
+              </p>
+              <div className="w-full flex justify-start py-4">
+                <PrimaryButton
+                  reverse={true}
+                  title="Know More"
+                  rounded="rounded-[4px]"
+                />
+              </div>
+
+            </div>
+          </div>
+          <div className="grid grid-cols-12 py-6 gap-12">
+            <div className="col-span-6 pr-12 flex flex-col justify-center">
+              <h1 className="text-[24px] text-[#254354] font-bold pt-4">
+                Real-Time Campaign Optimization
+              </h1>
+              <p className="text-[12px] text-[#61737D] pt-2 w-2/3">
+                With the integration of APIs and IoT devices, DOOH ads can be triggered in real time or scheduled for future display. This allows advertisers to dynamically adjust content based on real-time events, such as weather or time of day, maximizing engagement.
+              </p>
+              <div className="w-full flex justify-start py-4">
+                <PrimaryButton
+                  reverse={true}
+                  title="Know More"
+                  rounded="rounded-[4px]"
+                />
+              </div>
+            </div>
+            <div className="col-span-6">
+              <div className="rounded-[12px] h-80 bg-gray-100 my-4">
+
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-12 py-6 gap-12">
+            <div className="col-span-6">
+              <div className="rounded-[12px] h-80 bg-gray-100 my-4">
+
+              </div>
+            </div>
+            <div className="col-span-6 pr-12 flex flex-col justify-center">
+              <h1 className="text-[24px] text-[#254354] font-bold pt-4">
+                Custom Ad Messaging
+              </h1>
+              <p className="text-[12px] text-[#61737D] pt-2 w-2/3">
+                DOOH campaigns should adapt creative content based on varying factors like location, time (day vs. night), or weather (sunny vs. rainy). This ensures that ads resonate with the audience in different contexts, driving higher engagement rates.
+              </p>
+              <div className="w-full flex justify-start py-4">
+                <PrimaryButton
+                  reverse={true}
+                  title="Know More"
+                  rounded="rounded-[4px]"
+                />
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div className="px-8">
+          <div className="grid grid-cols-12 gap-12">
+            <div className="col-span-6">
+              <h1 className="text-[56px] font-bold text-[#254354] mb-[-10px]">Advance Audience</h1>
+              <h1 className="text-[56px] font-bold text-[#254354] mt-[-10px]">Measurement Using IOT</h1>
+              <p className="text-[14px] text-[#83939C] text-start">
+                PROOH’s platform uses HD IP cameras to capture real-time impressions in an “audience Contact Zone,” converting vehicle and pedestrian counts into impressions by type and demographics.
+              </p>
+            </div>
+            <div className="col-span-6">
+              <div className="rounded-[12px] h-80 bg-gray-100 my-4">
+
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
