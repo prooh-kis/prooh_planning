@@ -12,3 +12,5 @@ export { VendorConfirmationStatusTable } from "./VendorConfirmationStatusTable";
 export { MyCampaignsListTable } from "./MyCampaignsListTable";
 export { MyRequestsListTable } from "./MyRequestsListTable";
 export { MyPlansListTable } from "./MyPlansListTable";
+export { AdsPlayTimeTable } from "./AdsPlayTimeTable";
+export { AdsPlaySelectedSummaryTable } from "./AdsPlaySelectedSummaryTable";

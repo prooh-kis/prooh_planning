@@ -11,6 +11,24 @@ export const screenSummaryTabData = [
   },
 ];
 
+export const AdsPlayTimeTabData = [
+  {
+    icon: <></>,
+    label: "Weekdays",
+    id: "weekdays",
+  },
+  {
+    icon: <></>,
+    label: "Saturday",
+    id: "saturdays",
+  },
+  {
+    icon: <></>,
+    label: "Sunday",
+    id: "sundays",
+  },
+];
+
 export const playCreativeTime = [
   {
     icon: <i className="fi fi-rr-settings"></i>,

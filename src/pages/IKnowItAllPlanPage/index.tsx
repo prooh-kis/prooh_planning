@@ -4,9 +4,9 @@ import {
   CreativeUploadDetails,
   EnterCampaignBasicDetails,
   ScreenSummaryDetails,
-  TriggerDetails,
   ViewFinalPlanPODetails,
   VendorConfirmationDetails,
+  SetAdsPlayTime,
 } from "../../components/planner";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -29,27 +29,27 @@ const pages = [
     value: "Topical Day Page",
   },
   {
-    id: 5,
+    id: 2,
     value: "Screen Summary Page",
   },
   {
-    id: 6,
+    id: 3,
     value: "Add Triggers Page",
   },
   {
-    id: 7,
+    id: 4,
     value: "View Final Plan Page",
   },
   {
-    id: 8,
+    id: 5,
     value: "Upload Creative Page",
   },
   {
-    id: 9,
+    id: 6,
     value: "Vendor Confirmation Page",
   },
   {
-    id: 10,
+    id: 7,
     value: "Campaign Dashboard Page",
   },
   {},
@@ -137,31 +137,32 @@ export const IKnowItAllPlanPage: React.FC = () => {
             campaignId={campaignId}
           />
         ) : currentStep === 3 ? (
-          <TriggerDetails
+          <SetAdsPlayTime
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
           />
-        ) : currentStep === 4 ? (
-          <ViewFinalPlanPODetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-            campaignId={campaignId}
-          />
-        ) : currentStep === 5 ? (
-          <CreativeUploadDetails
-            step={currentStep}
-            setCurrentStep={setCurrentStep}
-            campaignId={campaignId}
-          />
-        ) : currentStep === 6 ? (
-          <VendorConfirmationDetails
-            step={currentStep}
-            setCurrentStep={setCurrentStep}
-            campaignId={campaignId}
-            userInfo={userInfo}
-          />
-        ) : null}
+        ) : //  : currentStep === 4 ? (
+        //   <ViewFinalPlanPODetails
+        //     setCurrentStep={setCurrentStep}
+        //     step={currentStep}
+        //     campaignId={campaignId}
+        //   />
+        // ) : currentStep === 5 ? (
+        //   <CreativeUploadDetails
+        //     step={currentStep}
+        //     setCurrentStep={setCurrentStep}
+        //     campaignId={campaignId}
+        //   />
+        // ) : currentStep === 6 ? (
+        //   <VendorConfirmationDetails
+        //     step={currentStep}
+        //     setCurrentStep={setCurrentStep}
+        //     campaignId={campaignId}
+        //     userInfo={userInfo}
+        //   />
+        // )
+        null}
       </div>
     </div>
   );
