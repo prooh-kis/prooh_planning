@@ -15,6 +15,8 @@ import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { LANDING_PAGE_DATA } from "../../constants/localStorageConstants";
 import { LandingPageListView } from "../../components/molecules/LandingPageListView";
 import { LandingPageTableView } from "../../components/molecules/LandingPageTableView";
+import advanceAudience from "../../assets/images/advanceAudience.png";
+import { ContactForm } from "../../components/segments/ContactForm";
 
 const confetti = require("../../assets/lottie/confetti.json");
 
@@ -515,20 +517,74 @@ export const Landing: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="px-8">
+        <div className="pb-24 px-8">
           <div className="grid grid-cols-12 gap-12">
-            <div className="col-span-6">
+            <div className="col-span-6 flex flex-col justify-center">
               <h1 className="text-[56px] font-bold text-[#254354] mb-[-10px]">Advance Audience</h1>
               <h1 className="text-[56px] font-bold text-[#254354] mt-[-10px]">Measurement Using IOT</h1>
               <p className="text-[14px] text-[#83939C] text-start">
                 PROOH’s platform uses HD IP cameras to capture real-time impressions in an “audience Contact Zone,” converting vehicle and pedestrian counts into impressions by type and demographics.
               </p>
+              <p className="text-[14px] text-[#83939C] pt-4 text-start">
+                The platform analyses vehicles by type and color while gathering pedestrian demographics. Results are shown on a dashboard, offering validated metrics for OOH and DOOH targeting.
+              </p>
+            </div>
+            <div className="col-span-6 flex items-center justify-center">
+              <img className="h-[400px]" src={advanceAudience} alt="advanceAudienceMeasurement"/>
+            </div>
+          </div>
+        </div>
+        <div className="pb-24 px-8">
+          <div className="grid grid-cols-12 gap-12">
+            <div className="col-span-6 flex flex-col justify-center">
+              <h1 className="text-[56px] font-bold text-[#254354] mb-[-10px]">Learn How To Use</h1>
+              <h1 className="text-[56px] font-bold text-[#254354] mt-[-10px]">Our Planning Tool</h1>
+              <h1 className="text-[56px] font-bold text-[#254354] mt-[-20px]">Effectively</h1>
+
+              <p className="text-[14px] text-[#83939C] text-start">
+              Our platform helps your business in managing expenses. These are some of the reasons why you should use our platform.
+              </p>
+              <div className="w-full flex justify-start py-4">
+                <PrimaryButton
+                  reverse={true}
+                  title="Know More"
+                  rounded="rounded-[4px]"
+                />
+              </div>
             </div>
             <div className="col-span-6">
               <div className="rounded-[12px] h-80 bg-gray-100 my-4">
 
               </div>
             </div>
+          </div>
+        </div>
+        <div className="pb-24 px-8">
+          <div className="flex flex-col items-center">
+            <h1 className="text-[56px] font-bold text-[#254354]">Meet the architects of our vision</h1>
+            <p className="text-[14px] text-[#83939C] w-3/4 text-center">Meet the passionate leaders driving our mission. There expertise and commitment to excellence propel us forward, creating lasting impact and inspiring success.</p>
+          </div>
+          <div className="">
+
+          </div>
+        </div>
+        <div className="pb-20 px-8">
+          <div className="flex flex-col items-center">
+            <h1 className="text-[56px] font-bold text-[#254354] mb-[-10px]">Reach Out Anytime, {"We're"}</h1>
+            <h1 className="text-[56px] font-bold text-[#254354] mt-[-10px]">Just A Click Away</h1>
+            <p className="text-[14px] text-[#83939C] w-3/4 text-center">Contact us and start planning your DOOH advertising campaigns today</p>
+          </div>
+          <div className="">
+            <ContactForm />
+          </div>
+        </div>
+        <div className="pb-20 px-8">
+          <div className="flex flex-col items-center">
+            <h1 className="text-[56px] font-bold text-[#254354] mb-[-10px]">Find us on google map</h1>
+            <p className="text-[14px] text-[#83939C] w-3/4 text-center">Easily locate our business on Google Maps for accurate directions and nearby landmarks. Whether {"you're"} driving or walking, Google Maps will guide you directly to us</p>
+          </div>
+          <div className="">
+            
           </div>
         </div>
       </div>
