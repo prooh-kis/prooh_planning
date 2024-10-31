@@ -3,6 +3,7 @@ import { signout } from "../../actions/userAction";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CURRENT_STEP } from "../../constants/localStorageConstants";
+import { useLocation } from "react-router-dom";
 
 interface StepSliderProps {
   steps: number;
@@ -14,12 +15,14 @@ interface StepSliderProps {
 export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderProps) => {
 
   const dispatch = useDispatch<any>();
+  const { pathname } = useLocation();
+
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
   // Function to handle step marker click
   const handleStepClick = (step: number) => {
-    // console.log(getDataFromLocalStorage(CURRENT_STEP)?.[campaignId], step)
+    // console.log(getDataFromLocalStorage(CURRENT_STEP), step)
     if (campaignId && getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] >= step) {
       setStep(step);
       // console.log(":saddasd:")
@@ -27,20 +30,43 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
   };
 
   // Example Flaticon SVG URLs (replace these with actual SVG URLs or import local SVGs)
-  const icons = [
+  const icons = pathname.split("/").includes("iknowitallplan") ? [
     <i key={1} className="fi fi-sr-megaphone text-[14px]"></i>, // Example icon for step 1
-    <i key={1} className="fi fi-rr-location-crosshairs text-[14px]"></i>, // Example icon for step 2
-    <i key={1} className="fi fi-br-settings-sliders text-[14px]"></i>, // Example icon for step 3
-    <i key={1} className="fi fi-sr-users-alt text-[14px]"></i>, // Example icon for step 4
-    <i key={1} className="fi fi-sr-document-signed text-[14px]"></i>, // Example icon for step 5
-    <i key={1} className="fi fi-sr-tap text-[14px]"></i>, // Example icon for step 6
-    <i key={1} className="fi fi-ss-sack text-[14px]"></i>, // Example icon for step 7
-    <i key={1} className="fi fi-sr-cloud-upload-alt text-[14px]"></i>, // Example icon for step 8
-    <i key={1} className="fi fi-sr-dashboard-monitor text-[14px]"></i>, // Example icon for step 9
+    <i key={2} className="fi fi-br-settings-sliders text-[14px]"></i>, // Example icon for step 3
+    <i key={3} className="fi fi-sr-users-alt text-[14px]"></i>, // Example icon for step 4
+    <i key={4} className="fi fi-sr-document-signed text-[14px]"></i>, // Example icon for step 5
+    <i key={5} className="fi fi-ss-sack text-[14px]"></i>, // Example icon for step 7
+    <i key={6} className="fi fi-sr-cloud-upload-alt text-[14px]"></i>, // Example icon for step 8
+    <i key={7} className="fi fi-sr-dashboard-monitor text-[14px]"></i>, // Example icon for step 9
+  ] : pathname.split("/").includes("specialdayplan") ? [
+    <i key={1} className="fi fi-sr-megaphone text-[14px]"></i>, // Example icon for step 1
+    <i key={2} className="fi fi-rr-location-crosshairs text-[14px]"></i>, // Example icon for step 2
+    <i key={3} className="fi fi-br-settings-sliders text-[14px]"></i>, // Example icon for step 3
+    <i key={4} className="fi fi-sr-users-alt text-[14px]"></i>, // Example icon for step 4
+    <i key={5} className="fi fi-sr-document-signed text-[14px]"></i>, // Example icon for step 5
+    <i key={6} className="fi fi-ss-sack text-[14px]"></i>, // Example icon for step 7
+    <i key={7} className="fi fi-sr-cloud-upload-alt text-[14px]"></i>, // Example icon for step 8
+    <i key={8} className="fi fi-sr-dashboard-monitor text-[14px]"></i>, // Example icon for step 9
+  ] : [
+    <i key={1} className="fi fi-sr-megaphone text-[14px]"></i>, // Example icon for step 1
+    <i key={2} className="fi fi-rr-location-crosshairs text-[14px]"></i>, // Example icon for step 2
+    <i key={3} className="fi fi-br-settings-sliders text-[14px]"></i>, // Example icon for step 3
+    <i key={4} className="fi fi-sr-users-alt text-[14px]"></i>, // Example icon for step 4
+    <i key={5} className="fi fi-sr-document-signed text-[14px]"></i>, // Example icon for step 5
+    <i key={6} className="fi fi-sr-tap text-[14px]"></i>, // Example icon for step 6
+    <i key={7} className="fi fi-ss-sack text-[14px]"></i>, // Example icon for step 7
+    <i key={8} className="fi fi-sr-cloud-upload-alt text-[14px]"></i>, // Example icon for step 8
+    <i key={9} className="fi fi-sr-dashboard-monitor text-[14px]"></i>, // Example icon for step 9
   ];
 
   // Example labels for each step
-  const stepLabels = [
+  const stepLabels = pathname.split("/").includes("iknowitallplan") ? [
+    "Basic Details", "Select Screens", "Select Time", "Plan Summary",
+    "Vendor Approval", "Creative Upload", "Vendor Confirmation"
+  ] : pathname.split("/").includes("iknowitallplan") ? [
+    "Basic Details", "Audience Selection", "Advanced Filters", "Cohort Selection", "Screens Summary", 
+    "Vendor Approval", "Creative Upload", "Vendor Confirmation"
+  ] : [
     "Basic Details", "Audience Selection", "Advanced Filters", "Cohort Selection", "Screens Summary", 
     "Trigger Selection", "Vendor Approval", "Creative Upload", "Vendor Confirmation"
   ];
@@ -59,8 +85,8 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
         <div
           className="absolute top-1/2 bg-blue-500 h-[2px]"
           style={{
-            left: step === 1 ? `calc(50% / ${steps})` : step === 9 ? `calc(50% / ${steps})` : `calc(40% / ${steps})`, // Starts the line at the center of the first step
-            right: step === 1 ? `calc(50% / ${steps})` : step === 9 ? `calc(50% / ${steps})` : `calc(40% / ${steps})`, // Ends the line at the center of the last step
+            left: step === 1 ? `calc(50% / ${steps})` : step === steps ? `calc(50% / ${steps})` : `calc(40% / ${steps})`, // Starts the line at the center of the first step
+            right: step === 1 ? `calc(50% / ${steps})` : step === steps ? `calc(50% / ${steps})` : `calc(40% / ${steps})`, // Ends the line at the center of the last step
             transform: "translateY(-50%)",
           }}
         ></div>

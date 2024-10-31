@@ -16,6 +16,7 @@ export function PlanSummaryTable({
   data,
   loading,error,
   screensBuyingCount,
+  pathname,
 }: any) {
 
   const dispatch = useDispatch<any>();
@@ -30,21 +31,24 @@ export function PlanSummaryTable({
   },[dispatch]);
   return (
     <div>
-      <div className="py-4">
-        <h1 className="py-2">{regularVsCohort === "cohort" ? "Cohort" : "Regular"} slots per day buying</h1>
-        <RegularCohortSlotsCampaignTable
-          type={regularVsCohort}
-          priceData={getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[`${regularVsCohort}`]}
-          setShowSummary={setShowSummary}
-          showSummary={showSummary}
-        />
-        {showSummary === "cohort" && (
-          <RegularCohortSummaryTable
+      {pathname.split("/").splice(-2)[0] !== "iknowitallplan" && (
+        <div className="py-4">
+          <h1 className="py-2">{regularVsCohort === "cohort" ? "Cohort" : "Regular"} slots per day buying</h1>
+          <RegularCohortSlotsCampaignTable
             type={regularVsCohort}
-            touchPointData={getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[`${regularVsCohort}`]?.touchPointData}
-        />
-        )}
-      </div>
+            priceData={getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[`${regularVsCohort}`]}
+            setShowSummary={setShowSummary}
+            showSummary={showSummary}
+          />
+          {showSummary === "cohort" && (
+            <RegularCohortSummaryTable
+              type={regularVsCohort}
+              touchPointData={getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[`${regularVsCohort}`]?.touchPointData}
+          />
+          )}
+        </div>
+      )}
+      
       <div className="w-full py-4">
         <h1 className="py-2 text-[14px] font-semibold">Final Screens Summary as per you choice</h1>
 

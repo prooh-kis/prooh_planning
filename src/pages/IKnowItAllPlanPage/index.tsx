@@ -117,7 +117,15 @@ export const IKnowItAllPlanPage: React.FC = () => {
   return (
     <div className="w-full h-full">
       <div className="w-full pt-[60px]">
-        <StepperSlider step={currentStep} setStep={setCurrentStep} steps={9} />
+        <StepperSlider
+          campaignId={campaignId}
+          step={currentStep}
+          setStep={setCurrentStep}
+          steps={
+            pathname?.split("/").includes("iknowitallplan") ? 7 :
+             9
+          }
+          />
       </div>
       <div className="w-full h-full flex justify-center items-top">
         {currentStep === 1 ? (
@@ -142,26 +150,32 @@ export const IKnowItAllPlanPage: React.FC = () => {
             step={currentStep}
             campaignId={campaignId}
           />
-        ) : //  : currentStep === 4 ? (
-        //   <ViewFinalPlanPODetails
-        //     setCurrentStep={setCurrentStep}
-        //     step={currentStep}
-        //     campaignId={campaignId}
-        //   />
-        // ) : currentStep === 5 ? (
-        //   <CreativeUploadDetails
-        //     step={currentStep}
-        //     setCurrentStep={setCurrentStep}
-        //     campaignId={campaignId}
-        //   />
-        // ) : currentStep === 6 ? (
-        //   <VendorConfirmationDetails
-        //     step={currentStep}
-        //     setCurrentStep={setCurrentStep}
-        //     campaignId={campaignId}
-        //     userInfo={userInfo}
-        //   />
-        // )
+        )  : currentStep === 4 ? (
+          <ScreenSummaryDetails
+            setCurrentStep={setCurrentStep}
+            step={currentStep}
+            campaignId={campaignId}
+          />
+        ) : currentStep === 5 ? (
+          <ViewFinalPlanPODetails
+            setCurrentStep={setCurrentStep}
+            step={currentStep}
+            campaignId={campaignId}
+          />
+        ) : currentStep === 6 ? (
+          <CreativeUploadDetails
+            step={currentStep}
+            setCurrentStep={setCurrentStep}
+            campaignId={campaignId}
+          />
+        ) : currentStep === 7 ? (
+          <VendorConfirmationDetails
+            step={currentStep}
+            setCurrentStep={setCurrentStep}
+            campaignId={campaignId}
+            userInfo={userInfo}
+          />
+        ):
         null}
       </div>
     </div>

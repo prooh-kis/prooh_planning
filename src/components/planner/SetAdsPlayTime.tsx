@@ -8,6 +8,7 @@ import {
   AdsPlaySelectedSummaryTable,
   AdsPlayTimeTable,
 } from "../../components/tables";
+import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
 const tableData = {
   result: [
@@ -4549,9 +4550,17 @@ export const SetAdsPlayTime = ({
   } = screenSummaryPlanTableDataGet;
 
   const handleSaveAndContinue = async () => {
+    dispatch(
+      addDetailsToCreateCampaign({
+        pageName: "Set Ad Play time Page",
+        id: pathname.split("/").splice(-1)[0],
+        touchPointWiseDetails: {},
+      })
+    );
     setCurrentStep(step + 1);
   };
 
+  console.log(step)
   return (
     <div className="w-full py-3">
       <h1 className="text-3xl ">Set Ads Play time</h1>

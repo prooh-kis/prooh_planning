@@ -101,7 +101,6 @@ export const ScreenSummaryDetails = ({
   };
 
   const handleSelectCurrentTab = (id: string) => {
-    console.log(screensBuyingCount["Gurgaon"]);
     setCurrentSummaryTab(id);
   
     const city = citiesCreative?.find((data: any) => data.id === id)?.label || "";
@@ -148,24 +147,48 @@ export const ScreenSummaryDetails = ({
   };
 
   const handleSaveAndContinue = async () => {
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "Screen Summary Page",
-        id: pathname.split("/").splice(-1)[0],
-        totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-        totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
-          "total"
-        ].totalImpression,
-        totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"]
-          .totalReach,
-        totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
-          "total"
-        ].totalCampaignBudget,
-        totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"]
-          .totalCpm,
-      })
-    );
+    if (pathname.split("/").splice(-2)[0] === "iknowitallplan") {
+      console.log("sda")
+      if (currentTab === "1") {
+        dispatch(
+          addDetailsToCreateCampaign({
+            pageName: "Select Screens Page",
+            id: pathname.split("/").splice(-1)[0],
+            screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+          })
+        );
+        console.log("2323")
+      } else if (currentTab === "2") {
+        // dispatch(
+        //   addDetailsToCreateCampaign({
+        //     pageName: "Select Screens Page",
+        //     id: pathname.split("/").splice(-1)[0],
+        //     screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+        //   })
+        // );
+      }
+    } else {
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Screen Summary Page",
+          id: pathname.split("/").splice(-1)[0],
+          totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+          totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
+            "total"
+          ].totalImpression,
+          totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"]
+            .totalReach,
+          totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
+            "total"
+          ].totalCampaignBudget,
+          totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"]
+            .totalCpm,
+        })
+      );
+    }
+
     setCurrentStep(step + 1);
+    console.log(step)
   };
 
   useEffect(() => {
@@ -184,12 +207,11 @@ export const ScreenSummaryDetails = ({
 
   // Update localStorage whenever screensBuyingCount changes
   useEffect(() => {
-    // console.log("called first", screensBuyingCount["Gurgaon"]);
-    // console.log("called now first", getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)["Gurgaon"]);
-
+    if (pathname.split("/").splice(-2)[0] === "iknowitallplan" && step === 4) {
+      console.log(step)
+      setCurrentTab("2");
+    }
     saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, screensBuyingCount);
-    // console.log("called now", getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)["Gurgaon"]);
-    // console.log("called", screensBuyingCount["Gurgaon"]);
   }, [screensBuyingCount]);
 
   useEffect(() => {
@@ -204,6 +226,7 @@ export const ScreenSummaryDetails = ({
     saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, screenSummaryData);
     getTabValue(screenSummaryData);
   }, [screenSummaryData, screenSummaryPlanTableData]);
+
 
   return (
     <div className="w-full py-3">
@@ -336,6 +359,7 @@ export const ScreenSummaryDetails = ({
                   getSelectedScreenIdsFromAllCities={getSelectedScreenIdsFromAllCities}
                   campaignId={campaignId}
                   screensBuyingCount={screensBuyingCount}
+                  pathname={pathname}
                 />
               </div>
             )
