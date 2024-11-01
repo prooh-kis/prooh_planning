@@ -9,11 +9,11 @@ import { POIProximity } from "../../components/segments/POIProximity";
 import { Footer } from "../../components/footer";
 import { SelectManuallyScreensCheckBox } from "../../components/segments/SelectManuallyScreensCheckBox";
 import { message } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getRegularVsCohortPriceData, getScreenDataForAdvanceFilters } from "../../actions/screenAction";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { ADVANCE_FILTER_SCREENS_MAP_DATA, COST_SUMMARY, FULL_CAMPAIGN_PLAN, SELECTED_AUDIENCE_TOUCHPOINTS, SELECTED_SCREENS_ID } from "../../constants/localStorageConstants";
-import { useSelector } from "react-redux";
+import { ALL_TOUCHPOINTS } from "../../constants/helperConstants";
 
 type Coordinate = [number, number];
 
@@ -273,7 +273,7 @@ export const AdvanceFiltersDetails = ({
     dispatch(
       getScreenDataForAdvanceFilters({
         id: campId,
-        touchPoints: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).touchPoints,
+        touchPoints: pathname?.split("/").includes("storebasedplan") ? ALL_TOUCHPOINTS : getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).touchPoints,
       })
     );
     
