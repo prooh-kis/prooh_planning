@@ -26,33 +26,32 @@ import { CAMPAIGN_PLAN_TYPE_KNOW } from "../../constants/campaignConstants";
 const pages = [
   {
     id: 1,
-    value: "Topical Day Page",
+    value: "Basic Details Page",
   },
   {
     id: 2,
-    value: "Screen Summary Page",
+    value: "Select Screens Page",
   },
   {
     id: 3,
-    value: "Add Triggers Page",
+    value: "Set Ad Play time Page",
   },
   {
     id: 4,
-    value: "View Final Plan Page",
+    value: "Screen Summary Page",
   },
   {
     id: 5,
-    value: "Upload Creative Page",
+    value: "View Final Plan Page",
   },
   {
     id: 6,
-    value: "Vendor Confirmation Page",
+    value: "Upload Creative Page",
   },
   {
     id: 7,
-    value: "Campaign Dashboard Page",
+    value: "Vendor Confirmation Page",
   },
-  {},
 ];
 
 export const IKnowItAllPlanPage: React.FC = () => {

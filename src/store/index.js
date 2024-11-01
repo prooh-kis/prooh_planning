@@ -14,6 +14,7 @@ import {
   screensDataAdvanceFilterGetReducer,
   screenSummaryDataGetReducer,
   screenSummaryPlanTableDataGetReducer,
+  tableDataScreenWiseAdPlayTimeGetReducer,
   vendorConfirmationDetailsGetReducer,
   vendorConfirmationStatusTableDetailsGetReducer,
 } from "../reducers/screenReducers";
@@ -72,6 +73,7 @@ const store = configureStore({
 
     planningPageFooterDataGet: planningPageFooterDataGetReducer,
 
+    tableDataScreenWiseAdPlayTimeGet: tableDataScreenWiseAdPlayTimeGetReducer,
     // campaign
     detailsToCreateCampaignAdd: detailsToCreateCampaignAddReducer,
     myCreateCampaignsListGet: myCreateCampaignsListGetReducer,

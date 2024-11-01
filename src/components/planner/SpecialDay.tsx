@@ -55,7 +55,6 @@ export const SpecialDay = ({
   const [selectedDate, setSelectedDate] = useState<any>("");
   const [selectedSpacialDay, setSelectedSpacialDay] = useState<string>("");
 
-  console.log("ffffffffffffff : ", selectedDate);
   const industryCategory = useSelector((state: any) => state.industryCategory);
   const {
     loading: loadingCategory,

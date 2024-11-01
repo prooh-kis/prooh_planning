@@ -60,11 +60,11 @@ export const ScreenSummaryDetails = ({
   const [cityTP, setCityTP] = useState<any>({});
   const [screenTypes, setScreenTypes] = useState<any>({});
 
+  
   const [screensBuyingCount, setScreensBuyingCount] = useState(() => {
     // Check localStorage on the first load
-    return getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) || {};
+    return getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) ? getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) : {};
   });
-  
   // console.log(screensBuyingCount)
 
 
@@ -148,7 +148,6 @@ export const ScreenSummaryDetails = ({
 
   const handleSaveAndContinue = async () => {
     if (pathname.split("/").splice(-2)[0] === "iknowitallplan") {
-      console.log("sda")
       if (currentTab === "1") {
         dispatch(
           addDetailsToCreateCampaign({
@@ -157,15 +156,24 @@ export const ScreenSummaryDetails = ({
             screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
           })
         );
-        console.log("2323")
       } else if (currentTab === "2") {
-        // dispatch(
-        //   addDetailsToCreateCampaign({
-        //     pageName: "Select Screens Page",
-        //     id: pathname.split("/").splice(-1)[0],
-        //     screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-        //   })
-        // );
+        dispatch(
+          addDetailsToCreateCampaign({
+            pageName: "Screen Summary Page",
+            id: pathname.split("/").splice(-1)[0],
+            totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+            totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
+              "total"
+            ].totalImpression,
+            totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"]
+              .totalReach,
+            totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
+              "total"
+            ].totalCampaignBudget,
+            totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"]
+              .totalCpm,
+          })
+        );
       }
     } else {
       dispatch(
@@ -192,7 +200,7 @@ export const ScreenSummaryDetails = ({
   };
 
   useEffect(() => {
-    // if (!getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)) {
+    if (!getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)) {
       dispatch(
         getScreenSummaryData({
           id: campaignId,
@@ -200,32 +208,35 @@ export const ScreenSummaryDetails = ({
             ?.selectedType,
         })
       );
-    // }
+    }
  
   }, [campaignId, dispatch]);
 
 
-  // Update localStorage whenever screensBuyingCount changes
   useEffect(() => {
     if (pathname.split("/").splice(-2)[0] === "iknowitallplan" && step === 4) {
       console.log(step)
       setCurrentTab("2");
     }
-    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, screensBuyingCount);
-  }, [screensBuyingCount]);
-
-  useEffect(() => {
     setRegularVsCohort(
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType
     );
+    if (screenSummaryPlanTableData) {
+      saveDataOnLocalStorage(
+        SCREEN_SUMMARY_TABLE_DATA,
+        screenSummaryPlanTableData
+      );
+    }
 
-    saveDataOnLocalStorage(
-      SCREEN_SUMMARY_TABLE_DATA,
-      screenSummaryPlanTableData
-    );
-    saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, screenSummaryData);
-    getTabValue(screenSummaryData);
-  }, [screenSummaryData, screenSummaryPlanTableData]);
+    if (screenSummaryData) {
+      console.log(screenSummaryData)
+      saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, screenSummaryData);
+
+      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, screensBuyingCount);
+      getTabValue(screenSummaryData);
+    }
+
+  }, [screenSummaryData, screenSummaryPlanTableData, screensBuyingCount, step]);
 
 
   return (

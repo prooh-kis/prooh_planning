@@ -33,6 +33,9 @@ import {
   GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_ERROR,
   GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_REQUEST,
   GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_SUCCESS,
+  GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_ERROR,
+  GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_REQUEST,
+  GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_SUCCESS,
   GET_VENDOR_CONFIRMATION_DETAILS_ERROR,
   GET_VENDOR_CONFIRMATION_DETAILS_REQUEST,
   GET_VENDOR_CONFIRMATION_DETAILS_SUCCESS,
@@ -434,6 +437,33 @@ export const getPlanningPageFooterData = ({id}) => async (dispatch, getState)=> 
   } catch (error) {
     dispatch({
       type: PLANNING_PAGE_FOOTER_DATA_ERROR,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    });
+  }
+};
+
+
+export const getTableDataScreenWiseAdPlayTime = ({id}) => async (dispatch, getState)=> {
+  dispatch({
+    type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_REQUEST,
+    payload: {id},
+  });
+  try {
+    const { data } = await axios.post(
+      `${url}/tableDataScreenWiseAdPLayTime`,
+      {id}
+    );
+    dispatch({
+      type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_ERROR,
       payload: {
         message: error.message,
         status: error.response?.status,

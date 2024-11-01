@@ -37,6 +37,9 @@ import {
   GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_ERROR,
   GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_REQUEST,
   GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_SUCCESS,
+  GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_ERROR,
+  GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_REQUEST,
+  GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_SUCCESS,
   GET_VENDOR_CONFIRMATION_DETAILS_ERROR,
   GET_VENDOR_CONFIRMATION_DETAILS_REQUEST,
   GET_VENDOR_CONFIRMATION_DETAILS_SUCCESS,
@@ -54,6 +57,7 @@ import {
   LANDING_PAGE_DATA,
   REGULAR_VS_COHORT_PRICE_DATA,
   SCREEN_SUMMARY_DATA,
+  SCREEN_SUMMARY_SELECTION,
   SCREEN_SUMMARY_TABLE_DATA,
   TOTAL_SCREEN_COST_DATA,
 } from "../constants/localStorageConstants";
@@ -336,6 +340,26 @@ export function planningPageFooterDataGetReducer(state = {}, action) {
         data: action.payload,
       };
     case PLANNING_PAGE_FOOTER_DATA_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+
+export function tableDataScreenWiseAdPlayTimeGetReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_REQUEST:
+      return { loading: true };
+    case GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_ERROR:
       return {
         loading: false,
         error: action.payload,

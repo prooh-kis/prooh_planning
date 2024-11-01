@@ -53,7 +53,7 @@ interface BottomTableData {
 export const AdsPlaySelectedSummaryTable = ({
   currentTab,
   bottomTableData,
-}: Props) => {
+}: any) => {
   const getUpto2Decimal = (value: any) => {
     return `${Number(value)?.toFixed(2)}%`;
   };
