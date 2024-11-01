@@ -99,57 +99,68 @@ export const SportsSegment = ({
 
   return (
     <div className="py-4 border-b">
-      <div className="flex gap-4 justify-between">
-        <DropdownInput 
-          options={sportOptions}
-          setSelectedOption={setSport}
-          selectedOption={sport}
-          placeHolder="Select Sport"
-        />
-        {loadingPlayers ? (
-          <h1>Loading...</h1>
-        ) : (
-        <DropdownInput
-          options={players}
-          setSelectedOption={setPlayer}
-          selectedOption={player}
-          placeHolder="Select Player"
-        />
-      )}
-
-        {loadingMatches ? (
-          <h1>Loading....</h1>
-        ) : (
-          <DropdownInput
-            setSelectedOption={setSelectedMatchId}
-            selectedOption={selectedMatchId}
-            options={
-              myMatches?.map((m: any) => {
-                return {
-                  label: `${m.team1} vs ${m.team2}`,
-                  value: m.matchId
-                }
-              })
-            }
-            placeHolder="Select Match"
+      <div className="grid grid-cols-12 gap-4">
+        <div className="col-span-4">
+          <DropdownInput 
+            options={sportOptions}
+            setSelectedOption={setSport}
+            selectedOption={sport}
+            placeHolder="Select Sport"
           />
-        )}
+        </div>
+        
+        <div className="col-span-4">
+          {loadingPlayers ? (
+            <h1>Loading...</h1>
+          ) : (
+            <DropdownInput
+              options={players}
+              setSelectedOption={setPlayer}
+              selectedOption={player}
+              placeHolder="Select Player"
+            />
+          )}
+        </div>
+        <div className="col-span-4">
+          {loadingMatches ? (
+            <h1>Loading....</h1>
+          ) : (
+            <DropdownInput
+              setSelectedOption={setSelectedMatchId}
+              selectedOption={selectedMatchId}
+              options={
+                myMatches?.map((m: any) => {
+                  return {
+                    label: `${m.team1} vs ${m.team2}`,
+                    value: m.matchId
+                  }
+                })
+              }
+              placeHolder="Select Match"
+            />
+          )}
+        </div>
+
+        
       </div>
       {myMatches && (
-        <div className="">
-          <h1 className="px-1 pt-4 text-[14px]">Match Details</h1>
-          <MatchDetails details={myMatches?.filter((m: any) => Number(m.matchId) === Number(selectedMatchId)) || myMatches[0]} />
+        <div className="w-full">
+          <div className="w-full">
+            <h1 className="px-1 pt-4 text-[14px]">Match Details</h1>
+            <MatchDetails details={myMatches?.filter((m: any) => Number(m.matchId) === Number(selectedMatchId)) || myMatches[0]} />
+          </div>
+          <div className="w-full pt-2">
+            <DropdownInput
+              setSelectedOption={setCondition}
+              selectedOption={condition}
+              options={options}
+              placeHolder="Choose a condition"
+            />
+          </div>
         </div>
+
       )}
 
-      <div className="">
-        {/* <h1 className="px-1 py-2 text-[14px]">Choose a condition</h1> */}
-        <DropdownInput
-          setSelectedOption={setCondition}
-          selectedOption={condition}
-          options={options}
-          placeHolder="Choose a condition"
-        />
-      </div>
+      
     </div>
   )}

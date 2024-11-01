@@ -23,6 +23,8 @@ import { message } from "antd";
 import { useDispatch } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { useLocation } from "react-router-dom";
+import { RadioInput } from "../../components/atoms/RadioInput";
+import { QuickSummaryReciept } from "../../components/segments/QuickSummaryReciept";
 interface TriggerProps {
   setCurrentStep: (step: number) => void;
   step: number;
@@ -264,37 +266,68 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
         <h1 className="text-[24px] text-primaryText font-semibold">
           Add Triggers
         </h1>
-        <div className="flex items-center justify-between">
-          <p className="text-[14px] text-secondaryText py-2">
-            Choose any one of your desired triggers for contextual targeting of
-            you target audiences
-          </p>
-          <p
-            className="text-[14px] text-primaryButton underline cursor-pointer"
-            onClick={handleSkipTriggerSelection}
-          >
-            Skip trigger selection
-          </p>
-        </div>
+        {pathname?.split("/")?.includes("triggerbasedplan") ? (
+          <div className="flex items-center justify-start gap-4">
+            <div className="flex justify-between py-1">
+              <RadioInput
+                title="Weather Conditions"
+                value="1"
+                isChecked={currentStep1 === Number("1") ? true : false}
+                onChange={() => {
+                  setCurrentStep1(Number("1"));
+                  setSelectedTrigger({ triggerType: "weather" });
+                }}
+              />
+            </div>
+            <div className="flex justify-between py-1">
+              <RadioInput
+                title="Sports Event"
+                value="2"
+                isChecked={currentStep1 === Number("2") ? true : false}
+                onChange={() => {
+                  setCurrentStep1(Number("2"));
+                  setSelectedTrigger({ triggerType: "sport" });
+                }}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            <p className="text-[14px] text-secondaryText py-2">
+              Choose any one of your desired triggers for contextual targeting of
+              you target audiences
+            </p>
+            <p
+              className="text-[14px] text-primaryButton underline cursor-pointer"
+              onClick={handleSkipTriggerSelection}
+            >
+              Skip trigger selection
+            </p>
+          </div>
+        )}
+
       </div>
       <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-4 border rounded py-5 flex flex-col justify-between">
-          <div className="h-1/2">
-            <VerticalStepperSlider
-              step={currentStep1}
-              setStep={setCurrentStep1}
-              steps={3}
-              setTrigger={setSelectedTrigger}
-              trigger={selectedTrigger}
-            />
+        {!pathname?.split("/").includes("triggerbasedplan") && (
+          <div className="col-span-4 border rounded py-5 flex flex-col justify-between">
+            <div className="h-1/2">
+              <VerticalStepperSlider
+                step={currentStep1}
+                setStep={setCurrentStep1}
+                steps={3}
+                setTrigger={setSelectedTrigger}
+                trigger={selectedTrigger}
+              />
+            </div>
+            <p className="p-2 text-[14px] text-[#AF0D0D]">
+              <strong>Note:- </strong>
+              The Creative of such campaigns shall be contextual. You will be
+              asked to upload a separate creative for your trigger based campaigns
+            </p>
           </div>
-          <p className="p-2 text-[14px] text-[#AF0D0D]">
-            <strong>Note:- </strong>
-            The Creative of such campaigns shall be contextual. You will be
-            asked to upload a separate creative for your trigger based campaigns
-          </p>
-        </div>
-        <div className="col-span-8 border rounded p-5">
+        )}
+  
+        <div className={`${pathname?.split("/")?.includes("triggerbasedplan") ? "col-span-6" : "col-span-8"} border rounded p-5`}>
           {currentStep1 === 1 ? (
             <div>
               <div className="flex gap-2 justify-between">
@@ -440,6 +473,11 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
 
           </div>
         </div>
+        {pathname?.split("/").includes("triggerbasedplan") && (
+          <div className="col-span-6 h-full">
+            <QuickSummaryReciept />
+          </div>
+        )}
       </div>
       <div className="flex gap-4 py-5">
         <CheckboxInput
