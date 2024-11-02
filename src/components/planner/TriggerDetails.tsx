@@ -25,6 +25,8 @@ import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { useLocation } from "react-router-dom";
 import { RadioInput } from "../../components/atoms/RadioInput";
 import { QuickSummaryReciept } from "../../components/segments/QuickSummaryReciept";
+import { getTableDataForSelectTriggerPage } from "../../actions/screenAction";
+import { useSelector } from "react-redux";
 interface TriggerProps {
   setCurrentStep: (step: number) => void;
   step: number;
@@ -111,6 +113,15 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
       },
     ];
   };
+
+  const tableDataForSelectTriggerPageGet = useSelector(
+    (state: any) => state.tableDataForSelectTriggerPageGet
+  );
+  const {
+    loading,
+    error,
+    data: tableDataForSelectTrigger,
+  } = tableDataForSelectTriggerPageGet;
 
   const handleSelectTrigger = useCallback(() => {
     setIsDisabled(true);
@@ -260,6 +271,10 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
       handleSelectTrigger();
     }
   }, [handleSelectTrigger, selectedTrigger]);
+
+  useEffect(() => {
+    dispatch(getTableDataForSelectTriggerPage({ duration: 30, impactFactor: 0.1 }));
+}, [dispatch])
   return (
     <div className="w-full py-3">
       <div>
@@ -475,7 +490,7 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
         </div>
         {pathname?.split("/").includes("triggerbasedplan") && (
           <div className="col-span-6 h-full">
-            <QuickSummaryReciept />
+            <QuickSummaryReciept selectedTrigger={currentStep1 === 1 ? "Weather Conditions" : "Sports Event"} tableDataForSelectTrigger={tableDataForSelectTrigger} />
           </div>
         )}
       </div>

@@ -37,6 +37,9 @@ import {
   GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_ERROR,
   GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_REQUEST,
   GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_SUCCESS,
+  GET_TABLE_DATA_FOR_SELECT_TRIGGER_ERROR,
+  GET_TABLE_DATA_FOR_SELECT_TRIGGER_REQUEST,
+  GET_TABLE_DATA_FOR_SELECT_TRIGGER_SUCCESS,
   GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_ERROR,
   GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_REQUEST,
   GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_SUCCESS,
@@ -310,7 +313,7 @@ export function campaignDashboardDataGetReducer(state = {}, action) {
   }
 }
 
-export function getTableDataForSelectTopicalDayPageReducer(state = {}, action) {
+export function tableDataForSelectTopicalDayPageGetReducer(state = {}, action) {
   switch (action.type) {
     case GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_REQUEST:
       return { loading: true };
@@ -360,6 +363,26 @@ export function tableDataScreenWiseAdPlayTimeGetReducer(state = {}, action) {
         data: action.payload,
       };
     case GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+
+export function tableDataForSelectTriggerPageGetReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_TABLE_DATA_FOR_SELECT_TRIGGER_REQUEST:
+      return { loading: true };
+    case GET_TABLE_DATA_FOR_SELECT_TRIGGER_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_TABLE_DATA_FOR_SELECT_TRIGGER_ERROR:
       return {
         loading: false,
         error: action.payload,

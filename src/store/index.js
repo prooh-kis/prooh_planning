@@ -4,7 +4,8 @@ import authReducer from "./authSlice";
 import {
   campaignDashboardDataGetReducer,
   finalPlanPOTableDataGetReducer,
-  getTableDataForSelectTopicalDayPageReducer,
+  tableDataForSelectTriggerPageGetReducer,
+  tableDataForSelectTopicalDayPageGetReducer,
   landingPageDataGetReducer,
   planningPageFooterDataGetReducer,
   regularVsCohortPriceDataGetReducer,
@@ -74,6 +75,10 @@ const store = configureStore({
     planningPageFooterDataGet: planningPageFooterDataGetReducer,
 
     tableDataScreenWiseAdPlayTimeGet: tableDataScreenWiseAdPlayTimeGetReducer,
+
+    tableDataForSelectTopicalDayPageGet: tableDataForSelectTopicalDayPageGetReducer,
+    tableDataForSelectTriggerPageGet: tableDataForSelectTriggerPageGetReducer,
+
     // campaign
     detailsToCreateCampaignAdd: detailsToCreateCampaignAddReducer,
     myCreateCampaignsListGet: myCreateCampaignsListGetReducer,
@@ -104,7 +109,6 @@ const store = configureStore({
     //
     industryCategory: getIndustryCategoryReducer,
     calendarListData: getCalendarListDataReducer,
-    tableDataForSelectTopicalDay: getTableDataForSelectTopicalDayPageReducer,
   },
   // middleware: thunk
   // devTools: process.env.NODE_ENV !== 'production'

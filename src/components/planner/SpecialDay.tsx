@@ -14,6 +14,7 @@ import { getTableDataForSelectTopicalDayPage } from "../../actions/screenAction"
 import { SingleCalenderData } from "../../components/molecules/SingleCalenderData";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { endOfDay, startOfDay } from "date-fns";
+import { formatNumber } from "../../utils/formatValue";
 
 const lastDateMonthWise: any = {
   1: 31,
@@ -68,14 +69,14 @@ export const SpecialDay = ({
     data: calendarListData1,
   } = calendarListData;
 
-  const tableDataForSelectTopicalDay = useSelector(
-    (state: any) => state.tableDataForSelectTopicalDay
+  const tableDataForSelectTopicalDayPageGet = useSelector(
+    (state: any) => state.tableDataForSelectTopicalDayPageGet
   );
   const {
     loading: loadingTableDataForSelectTopicalDay,
     error: errorTableDataForSelectTopicalDay,
     data: tableDataForSelectTopicalDay1,
-  } = tableDataForSelectTopicalDay;
+  } = tableDataForSelectTopicalDayPageGet;
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -244,7 +245,7 @@ export const SpecialDay = ({
               (key: string, index: any) => (
                 <div key={index} className="pr-4">
                   <div className="flex justify-between">
-                    <h1 className="py-2">{key}</h1>
+                    <h1 className="pb-2">{key}</h1>
                     <h1
                       className={
                         key === "Total Budget"
@@ -252,7 +253,11 @@ export const SpecialDay = ({
                           : "text-[#CC1C1C]"
                       }
                     >
-                      {tableDataForSelectTopicalDay1[key]}
+                      {key === "per slot price" || key === "Total Budget" || key === "CPM" ? "\u20B9 " : ""} 
+                      {!isNaN(Number(tableDataForSelectTopicalDay1[key])) 
+                        ? formatNumber(Number(tableDataForSelectTopicalDay1[key]).toFixed(0)) 
+                        : tableDataForSelectTopicalDay1[key]}
+                      {key === "Campaign Duration" ? " Days" : ""}
                     </h1>
                   </div>
                   <div className="border border-1"></div>

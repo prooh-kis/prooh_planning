@@ -33,6 +33,9 @@ import {
   GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_ERROR,
   GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_REQUEST,
   GET_TABLE_DATA_FOR_SELECT_TOPICAL_DATA_SUCCESS,
+  GET_TABLE_DATA_FOR_SELECT_TRIGGER_ERROR,
+  GET_TABLE_DATA_FOR_SELECT_TRIGGER_REQUEST,
+  GET_TABLE_DATA_FOR_SELECT_TRIGGER_SUCCESS,
   GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_ERROR,
   GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_REQUEST,
   GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_SUCCESS,
@@ -472,3 +475,30 @@ export const getTableDataScreenWiseAdPlayTime = ({id}) => async (dispatch, getSt
     });
   }
 };
+
+export const getTableDataForSelectTriggerPage =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_TABLE_DATA_FOR_SELECT_TRIGGER_REQUEST,
+      payload: input,
+    });
+    try {
+      const { data } = await axios.post(
+        `${url}/tableDataForSelectTriggerPage`,
+        input
+      );
+      dispatch({
+        type: GET_TABLE_DATA_FOR_SELECT_TRIGGER_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_TABLE_DATA_FOR_SELECT_TRIGGER_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
