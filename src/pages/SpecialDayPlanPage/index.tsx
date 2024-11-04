@@ -50,26 +50,20 @@ const pages = [
     id: 5,
     value: "Screen Summary Page",
   },
+
   {
     id: 6,
-    value: "Add Triggers Page",
-  },
-  {
-    id: 7,
     value: "View Final Plan Page",
   },
   {
-    id: 8,
+    id: 7,
     value: "Upload Creative Page",
   },
   {
-    id: 9,
+    id: 8,
     value: "Vendor Confirmation Page",
   },
-  {
-    id: 10,
-    value: "Campaign Dashboard Page",
-  },
+
   {},
 ];
 
@@ -145,10 +139,15 @@ export const SpecialDayPlanPage: React.FC = () => {
         Number(
           pages.filter(
             (page: any) => page.value === campDetails?.currentPage
-          )[0]?.id
-        || 0) + 1
+          )[0]?.id || 0
+        ) + 1
       );
-      dispatch(getScreensAudiencesData({ id: campDetails?._id, markets: campDetails?.markets }));
+      dispatch(
+        getScreensAudiencesData({
+          id: campDetails?._id,
+          markets: campDetails?.markets,
+        })
+      );
       dispatch(
         getScreensCostData({
           id: campDetails?._id,
@@ -168,8 +167,8 @@ export const SpecialDayPlanPage: React.FC = () => {
         Number(
           pages.filter(
             (page: any) => page.value === campDetails?.currentPage
-          )[0]?.id
-        || 0) + 1;
+          )[0]?.id || 0
+        ) + 1;
       const currStep = {
         [campaignId]: curr,
       };
@@ -197,7 +196,11 @@ export const SpecialDayPlanPage: React.FC = () => {
   return (
     <div className="w-full h-full">
       <div className="w-full pt-[60px]">
-        <StepperSlider step={currentStep} setStep={setCurrentStep} steps={pathname?.split("/").includes("specialdayplan") ? 8 : 9} />
+        <StepperSlider
+          step={currentStep}
+          setStep={setCurrentStep}
+          steps={pathname?.split("/").includes("specialdayplan") ? 8 : 9}
+        />
       </div>
       <div className="w-full h-full flex justify-center items-top">
         {currentStep === 1 ? (
@@ -237,20 +240,18 @@ export const SpecialDayPlanPage: React.FC = () => {
             campaignId={campaignId}
           />
         ) : currentStep === 6 ? (
-          <TriggerDetails setCurrentStep={setCurrentStep} step={currentStep} />
-        ) : currentStep === 7 ? (
           <ViewFinalPlanPODetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
           />
-        ) : currentStep === 8 ? (
+        ) : currentStep === 7 ? (
           <CreativeUploadDetails
             step={currentStep}
             setCurrentStep={setCurrentStep}
             campaignId={campaignId}
           />
-        ) : currentStep === 9 ? (
+        ) : currentStep === 8 ? (
           <VendorConfirmationDetails
             step={currentStep}
             setCurrentStep={setCurrentStep}

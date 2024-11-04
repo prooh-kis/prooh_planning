@@ -6,8 +6,7 @@ interface AnimatedIconProps {
   size?: any;
 }
 
-export const AnimatedIcon: React.FC<AnimatedIconProps> = ({icon, size}) => {
-
+export const AnimatedIcon: React.FC<AnimatedIconProps> = ({ icon, size }) => {
   const playerRef = useRef<Player>(null);
 
   useEffect(() => {
@@ -18,7 +17,7 @@ export const AnimatedIcon: React.FC<AnimatedIconProps> = ({icon, size}) => {
     <div className="w-full flex justify-center items-center">
       <Player
         ref={playerRef}
-        size={size|| 96}
+        size={size || 96}
         icon={icon}
         onComplete={() => playerRef.current?.playFromBeginning()}
       />

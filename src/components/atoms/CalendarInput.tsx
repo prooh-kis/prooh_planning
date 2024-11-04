@@ -3,6 +3,7 @@ interface CalenderInputProps {
   value: string;
   action: any; // Updated action type to be more specific
   disabled: boolean;
+  minDate: Date;
 }
 
 export const CalendarInput = ({
@@ -10,9 +11,10 @@ export const CalendarInput = ({
   value,
   action,
   disabled = false,
+  minDate = new Date(),
 }: CalenderInputProps) => {
   const getMinDateTime = (): string => {
-    const currentDate = new Date();
+    const currentDate = new Date(minDate);
     currentDate.setMinutes(
       currentDate.getMinutes() - currentDate.getTimezoneOffset()
     ); // Adjust for time zone

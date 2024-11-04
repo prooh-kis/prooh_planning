@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import './index.css'; // Import CSS for styling
-import animationData from '../../assets/lottie/loading.json';
+import React, { useEffect, useRef, useState } from "react";
+import "./index.css"; // Import CSS for styling
+import animationData from "../../assets/lottie/loading.json";
 import { Player } from "@lordicon/react";
 
 export const Loading = (props: any) => {
@@ -14,7 +14,7 @@ export const Loading = (props: any) => {
     autoplay: true,
     animationData: animationData,
     rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
+      preserveAspectRatio: "xMidYMid slice",
     },
   };
 
@@ -38,14 +38,14 @@ export const Loading = (props: any) => {
   }, []);
 
   return (
-    <div className={`loading-container ${loadingComplete ? 'collapse' : ''}`}>
+    <div className={`loading-container ${loadingComplete ? "collapse" : ""}`}>
       {/* <Lottie
         options={defaultOptions}
         height={props.height || 300}
         width={props.width || 300}
         isStopped={loadingComplete} // Stop animation when loading completes
       /> */}
-      <Player ref={playerRef} icon={animationData}/>
+      <Player ref={playerRef} icon={animationData} />
       {props?.slider && (
         <div className="loading-slider">
           <div
@@ -54,7 +54,7 @@ export const Loading = (props: any) => {
           ></div>
         </div>
       )}
-     
+
       {/* Optionally show progress text */}
       {/* <span className="loading-text">{progress}%</span> */}
     </div>

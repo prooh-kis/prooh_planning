@@ -164,6 +164,7 @@ export const ChangeCampaignDuration = ({ campaignId }: any) => {
                 value={startDate}
                 action={setStartDate}
                 disabled={false}
+                minDate={new Date()}
               />
             </div>
             <div className="col-span-1 py-1">
@@ -191,6 +192,7 @@ export const ChangeCampaignDuration = ({ campaignId }: any) => {
                     setEndDate(e);
                   }}
                   disabled={false}
+                  minDate={startDate || new Date()}
                 />
               ) : (
                 <PrimaryInput

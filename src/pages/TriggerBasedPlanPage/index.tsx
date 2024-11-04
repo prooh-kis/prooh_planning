@@ -25,7 +25,12 @@ import {
 import { useLocation } from "react-router-dom";
 import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { CAMPAIGN_PLAN_TYPE_KNOW, CAMPAIGN_PLAN_TYPE_STORE, CAMPAIGN_PLAN_TYPE_TRIGGER } from "../../constants/campaignConstants";
+import {
+  CAMPAIGN_PLAN_TYPE_KNOW,
+  CAMPAIGN_PLAN_TYPE_STORE,
+  CAMPAIGN_PLAN_TYPE_TRIGGER,
+} from "../../constants/campaignConstants";
+import { ALL_MARKETS } from "../../constants/helperConstants";
 
 const pages = [
   {
@@ -105,7 +110,7 @@ export const TriggerBasedPlanPage: React.FC = () => {
           )[0]?.id || 0
         ) + 1
       );
-      
+
       const curr =
         Number(
           pages.filter(
@@ -123,6 +128,7 @@ export const TriggerBasedPlanPage: React.FC = () => {
     if (campaignId !== null || undefined) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
+    dispatch(getScreensAudiencesData({ id: "", markets: ALL_MARKETS }));
   }, [dispatch, campaignId]);
 
   return (
@@ -132,11 +138,8 @@ export const TriggerBasedPlanPage: React.FC = () => {
           campaignId={campaignId}
           step={currentStep}
           setStep={setCurrentStep}
-          steps={
-            pathname?.split("/").includes("triggerbasedplan") ? 9 :
-             9
-          }
-          />
+          steps={pathname?.split("/").includes("triggerbasedplan") ? 9 : 9}
+        />
       </div>
       <div className="w-full h-full flex justify-center items-top">
         {currentStep === 1 ? (
@@ -202,7 +205,7 @@ export const TriggerBasedPlanPage: React.FC = () => {
             campaignId={campaignId}
             userInfo={userInfo}
           />
-        ): null}
+        ) : null}
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 import { ImageContainer, VideoContainer } from "./ShowMyFile";
 
 export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
-  console.log(files);
   return (
     <div className="pt-4">
       {files?.length > 0 && (

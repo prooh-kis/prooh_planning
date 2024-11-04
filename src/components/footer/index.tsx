@@ -13,19 +13,18 @@ export const Footer = ({
   campaignId,
 }: any) => {
   const dispatch = useDispatch<any>();
-  
-  const planningPageFooterDataGet = useSelector((state: any) => state.planningPageFooterDataGet);
-  const {
-    loading, error, data: totalScreensData
-  } = planningPageFooterDataGet;
+
+  const planningPageFooterDataGet = useSelector(
+    (state: any) => state.planningPageFooterDataGet
+  );
+  const { loading, error, data: totalScreensData } = planningPageFooterDataGet;
 
   useEffect(() => {
-    dispatch(getPlanningPageFooterData({id: campaignId }));
-  },[dispatch]);
-  // console.log(totalScreensData)
+    dispatch(getPlanningPageFooterData({ id: campaignId }));
+  }, [dispatch]);
+  console.log(loading, error);
   return (
     <div className="py-4 z-10 flex justify-between">
-      
       <div className="flex w-full justify-start items-center gap-4">
         {totalScreensData && (
           <div className="flex">
@@ -36,7 +35,9 @@ export const Footer = ({
         {loading ? (
           <div className="animate-pulse flex w-full justify-start">
             <div className="w-full">
-              <p className="text-[14px] font-semibold">Please wait while we calculate the cost of your desired plan...</p>
+              <p className="text-[14px] font-semibold">
+                Please wait while we calculate the cost of your desired plan...
+              </p>
             </div>
             <div className="">
               <Loading height={20} width={100} />
@@ -48,7 +49,6 @@ export const Footer = ({
               <h1 className="text-[14px] truncate">Total screens</h1>
               <h1 className="text-[14px] font-semibold">
                 {totalScreensData?.totalScreens}
-                
               </h1>
             </div>
             <div className="flex gap-2 truncate">
@@ -61,7 +61,8 @@ export const Footer = ({
               <h1 className="text-[14px] truncate">Total Budget</h1>
               <h1 className="text-[14px] font-semibold">
                 {" "}
-                &#8377;{formatNumber(totalScreensData?.totalCampaignBudget || 0)}
+                &#8377;
+                {formatNumber(totalScreensData?.totalCampaignBudget || 0)}
               </h1>
             </div>
             <div className="flex gap-2 truncate">
@@ -78,7 +79,6 @@ export const Footer = ({
             </div>
           </div>
         )}
-
       </div>
       {!loading && !error && (
         <div className="flex w-full justify-end items-center gap-4">
@@ -101,7 +101,6 @@ export const Footer = ({
           </button>
         </div>
       )}
-
     </div>
   );
 };

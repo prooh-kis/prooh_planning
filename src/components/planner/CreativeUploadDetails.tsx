@@ -519,7 +519,9 @@ export const CreativeUploadDetails = ({
                   className="text-xl"
                 >
                   <Space direction="vertical">
-                    <Radio value={"Standard"}>Standard</Radio>
+                    {!pathname?.split("/").includes("triggerbasedplan") && (
+                      <Radio value={"Standard"}>Standard</Radio>
+                    )}
                     {isTriggerAvailable() && (
                       <Radio value={"Trigger"}>Trigger</Radio>
                     )}
@@ -627,10 +629,13 @@ export const CreativeUploadDetails = ({
               handleBack={() => {
                 setCurrentStep(step - 1);
               }}
+              campaignId={campaignId}
               handleSave={handleSaveAndContinue}
               loading={isLoading}
               isDisabled={isLoading}
-              totalScreensData={getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]}
+              totalScreensData={
+                getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+              }
             />
           </div>
         </div>
