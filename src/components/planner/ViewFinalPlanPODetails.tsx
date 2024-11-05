@@ -353,7 +353,7 @@ export const ViewFinalPlanPODetails = ({
           <h1 className="font-semibold text-lg">
             1.Download or share your campaign plan{" "}
           </h1>
-          <div className="flex gap-6 py-4">
+          <div className="flex flex-wrap gap-6 py-4">
             <div className="flex items-center gap-2">
               <h1 className="text-[14px] truncate">Approach</h1>
               <input
