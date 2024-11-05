@@ -11,10 +11,9 @@ interface POIProximityProps {
   setSelectedPOIs?: any;
   setPOIFilteredScreens?: any;
   finalSelectedScreens?: any;
-  handlePOIScreens?: any;
-  manuallySelected: any;
-  handleAddManualSelectedScreenIntoFinalSelectedScreens: any;
+  selectedScreensFromMap: any;
   handleConfirmScreensSelections: any;
+  handleSelectFromMap?: any;
 }
 
 export const POIProximity = ({
@@ -24,10 +23,9 @@ export const POIProximity = ({
   setSelectedPOIs,
   setPOIFilteredScreens,
   finalSelectedScreens,
-  handlePOIScreens,
-  manuallySelected,
-  handleAddManualSelectedScreenIntoFinalSelectedScreens,
+  selectedScreensFromMap,
   handleConfirmScreensSelections,
+  handleSelectFromMap
 }: POIProximityProps) => {
   // Split pois into two equal parts
   const middleIndex = Math.ceil(pois?.length / 2);
@@ -132,9 +130,13 @@ export const POIProximity = ({
             </div>
           </div>
           <SelectManuallyScreensCheckBox
-            manuallySelected={manuallySelected?.length}
+            manuallySelected={selectedScreensFromMap?.length}
             unselectedScreen={allScreens?.length - finalSelectedScreens?.length}
-            handleCheck={handleAddManualSelectedScreenIntoFinalSelectedScreens}
+            handleCheck={(checked: any) => {
+              allScreens?.filter((s: any) => !finalSelectedScreens?.map((sc: any) => sc._id)?.includes(s._id))?.forEach((sd: any) => {
+                handleSelectFromMap(sd)
+              })
+            }}
           />
         </div>
       </div>

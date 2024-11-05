@@ -126,9 +126,9 @@ export const ScreenSummaryDetails = ({
                     getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)[s]
                   )
                     ?.map((f: any) => f.status)
-                    ?.filter((s: any) => s === true).length,
+                    ?.filter((s: any) => s === true)?.length,
                   Object.values(
-                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)[s]
+                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[s]
                   )
                     ?.map((f: any) => f.status)
                     ?.filter((s: any) => s === false).length,

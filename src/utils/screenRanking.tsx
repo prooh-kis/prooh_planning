@@ -66,3 +66,19 @@ export function filterScreensByLatLong(data: any) {
   // console.log(result);
   return result
 }
+
+
+export const getUniqueScreens = (data: any) => {
+  const uniqueScreens = new Set();
+  if (data) {
+    data?.forEach((location: any) => {
+      location?.screens?.forEach((screen: any) => {
+        uniqueScreens.add(screen);
+      });
+    });
+  }
+
+  let result = Array.from(uniqueScreens);
+
+  return result;
+};

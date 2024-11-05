@@ -2,28 +2,21 @@ import { useCallback, useEffect } from "react";
 
 interface MapBoxScreenProps {
   screenData?: any;
-  setSelectedScreensFromMap: any;
+  handleSelectFromMap: any;
   isSelectedData: boolean;
   handleAddManualSelection?: any;
 }
 
 export const MapboxScreen = ({
   screenData,
-  setSelectedScreensFromMap,
+  handleSelectFromMap,
   isSelectedData,
   handleAddManualSelection
 }: MapBoxScreenProps) => {
   const handleClickScreen = useCallback(() => {
-    setSelectedScreensFromMap(screenData);
-
-    if (!isSelectedData) {
-      handleAddManualSelection(true);
-
-    } else {
-      handleAddManualSelection(false);
-
-    }
-  },[handleAddManualSelection, isSelectedData, screenData, setSelectedScreensFromMap]);
+    handleSelectFromMap(screenData);
+    handleAddManualSelection(!isSelectedData);
+  },[handleAddManualSelection, isSelectedData, screenData, handleSelectFromMap]);
 
   useEffect(() => {
 

@@ -1,38 +1,135 @@
-import React, { useEffect, useRef, useState } from "react";
-import ReactMapGL, { Source, Layer, Marker, Popup } from "react-map-gl";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import ReactMapGL, { Source, Layer, Marker, Popup, useControl } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
 import mapboxgl from "mapbox-gl";
-import { MapboxScreen } from "../../components/popup";
-// import { FaMapMarkerAlt } from "react-icons/fa";
+import { MapboxScreen } from "../popup";
+import MapboxDraw from "@mapbox/mapbox-gl-draw"
+import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
+import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 
 mapboxgl.accessToken =
   // process.env.REACT_APP_MAPBOX ||
   "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A";
-export function MapWithGeometry(props: any) {
-  const mapRef = useRef<any>(null);
-  const [routeData, setRouteData] = useState<any>([]);
-  const [selectedMarkers, setSelectedMarkers] = useState<any>(null);
-  const [unSelectedMarkers, setUnselectedMarkers] = useState<any>(null);
-  const [screenData, setScreenData] = useState<any>(null);
-  const [isSelectedData, setIsSelectedData] = useState<boolean>(false);
 
-  const [userLocation, setUserLocation] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
 
+  
+export function MapWithGeometry(props) {
+  const mapRef = useRef(null);
+  const [routeData, setRouteData] = useState([]);
+  const [selectedMarkers, setSelectedMarkers] = useState(null);
+  const [unSelectedMarkers, setUnselectedMarkers] = useState(null);
+  const [screenData, setScreenData] = useState(null);
+  const [isSelectedData, setIsSelectedData] = useState(false);
+
+  const [userLocation, setUserLocation] = useState(null);
+  const [polygons, setPolygons] = useState([]);
+
+  
   // console.log(props?.data["brand"][0]?.concat(props?.data["comp"][0]))
   const coordinates =
     Object.keys(props?.data).length > 0
       ? props?.data["brand"][0].concat(props?.data["comp"][0])
       : [];
 
-  const [viewState, setViewState] = useState<any>({
+  const [viewState, setViewState] = useState({
     longitude: props?.geometry?.coordinates[1] || 77.0891,
     latitude: props?.geometry?.coordinates[0] || 28.495,
     zoom: props?.zoom || 5,
   });
+
+
+
+function MapDrawControl({
+  onCreate = () => {},
+  onUpdate = () => {},
+  onDelete = () => {},
+  position,
+}) {
+  useControl(
+    () => new MapboxDraw({
+      displayControlsDefault: false, // Hide default controls
+      controls: {
+        polygon: true, // Enable polygon drawing
+        trash: true, // Enable delete control
+      },
+      defaultMode: "draw_polygon", // Set default mode to polygon drawing
+    }),
+    ({ map }) => {
+      map.on("draw.create", onCreate);
+      map.on("draw.update", onUpdate);
+      map.on("draw.delete", onDelete);
+    },
+    ({ map }) => {
+      map.off("draw.create", onCreate);
+      map.off("draw.update", onUpdate);
+      map.off("draw.delete", onDelete);
+    },
+    {
+      position,
+    }
+  );
+
+  return null;
+}
+
+  const updateSelectedMarkers = (polygons) => {
+    const selected = props?.allScreens.filter((screen) => {
+      const point = [
+        screen?.location.geographicalLocation?.longitude,
+        screen?.location?.geographicalLocation?.latitude,
+      ];
+      // Check if the point is inside any of the polygons
+      return polygons.some((polygon) => booleanPointInPolygon(point, polygon));
+    });
+    props?.onPolygonComplete(selected);
+    setSelectedMarkers(selected?.map((m) => [
+        m.location.geographicalLocation.longitude,
+        m.location.geographicalLocation.latitude,
+        m._id,
+      ]));
+
+    setUnselectedMarkers(
+      props.allScreens
+        ?.filter(
+          (s) =>
+            !selected?.map((f) => f._id).includes(s._id)
+        )
+        ?.map((m) => [
+          m.location.geographicalLocation.longitude,
+          m.location.geographicalLocation.latitude,
+          m._id,
+        ])
+    );
+  };
+
+  const onCreatePolygon = useCallback((e) => {
+    const newPolygon = e.features[0];
+    setPolygons((prevPolygons) => {
+      const updatedPolygons = [...prevPolygons, newPolygon];
+      updateSelectedMarkers(updatedPolygons); // Update markers with all polygons
+      return updatedPolygons;
+    });
+  }, [props?.allScreens]);
+
+  const onUpdate = useCallback((e) => {
+    const updatedPolygon = e.features[0];
+    setPolygons((prevPolygons) =>
+      prevPolygons.map((polygon) =>
+        polygon.id === updatedPolygon.id ? updatedPolygon : polygon
+      )
+    );
+    updateSelectedMarkers(polygons);
+  }, [polygons]);
+
+  const onDelete = useCallback((e) => {
+    const deletedPolygonIds = e.features.map((feature) => feature.id);
+    setPolygons((prevPolygons) =>
+      prevPolygons.filter((polygon) => !deletedPolygonIds.includes(polygon.id))
+    );
+    updateSelectedMarkers();
+
+  }, [props?.allScreens, polygons]);
+
 
   // Get user's current location
   useEffect(() => {
@@ -55,7 +152,7 @@ export function MapWithGeometry(props: any) {
     );
   }, []);
 
-  const findCoordinates = (arrays: any, target: any) => {
+  const findCoordinates = (arrays, target) => {
     for (let i = 0; i < arrays.length; i++) {
       for (let j = 0; j < arrays[i].length; j++) {
         for (let k = 0; k < arrays[i][j].length; k++) {
@@ -71,10 +168,10 @@ export function MapWithGeometry(props: any) {
   };
 
   const createGeoJSONCircle = (
-    center: [number, number],
-    radiusInKm: number,
-    points: number = 64
-  ): FeatureCollection<Geometry, GeoJsonProperties> => {
+    center,
+    radiusInKm,
+    points = 64
+  ) => {
     const coords = {
       latitude: center[1],
       longitude: center[0],
@@ -83,7 +180,7 @@ export function MapWithGeometry(props: any) {
     const km = radiusInKm;
     // const km = 10;
 
-    const ret: GeoJSON.Position[] = [];
+    const ret = [];
     const distanceX =
       km / (111.32 * Math.cos((coords.latitude * Math.PI) / 180));
     const distanceY = km / 110.574;
@@ -111,14 +208,14 @@ export function MapWithGeometry(props: any) {
     };
   };
 
-  const circlesData: FeatureCollection<Geometry, GeoJsonProperties> = {
+  const circlesData = {
     type: "FeatureCollection",
-    // features: props?.coords.map((coord: any) => ({
+    // features: props?.coords.map((coord) => ({
     //   type: "Feature",
     //   geometry: createGeoJSONCircle(coord, 30).features[0].geometry,
     //   properties: {},
     // })),
-    features: coordinates?.map((coord: any) => {
+    features: coordinates?.map((coord) => {
       // Example condition for coloring based on coordinate longitude
       let color = "red";
       if (findCoordinates(props?.data["brand"], coord)) {
@@ -136,7 +233,7 @@ export function MapWithGeometry(props: any) {
     }),
   };
 
-  const getRoute = async (route: any) => {
+  const getRoute = async (route) => {
     try {
       const start = route?.origin?.center || [-122.414, 37.776]; // Starting point
       const end = route?.destination?.center || [-122.14, 37.3]; // Ending point
@@ -151,7 +248,7 @@ export function MapWithGeometry(props: any) {
 
       const data = await response.json();
 
-      setRouteData((pre: any) => [data.routes[0].geometry, ...pre]);
+      setRouteData((pre) => [data.routes[0].geometry, ...pre]);
       props?.handleRouteData(data.routes[0].geometry, route?.id);
     } catch (error) {
       console.log("error in  finding routes : ", error);
@@ -160,28 +257,28 @@ export function MapWithGeometry(props: any) {
   // console.log("props?.filteredScreens : ", props?.filteredScreens);
   // console.log("props.unSelectedScreens : ", props.unSelectedScreens);
 
-  const getSingleScreenData = async (screenId: any) => {
+  const getSingleScreenData = async (screenId) => {
     let data;
-    data = props?.allScreens?.find((screen: any) => screen._id == screenId);
+    data = props?.allScreens?.find((screen) => screen._id == screenId);
 
     setScreenData(data);
   };
 
-  function randomColor(index: number) {
+  function randomColor(index) {
     const colors = ["#540b0e", "#e09f3e", "#073b4c", "#0f4c5c", "#ef476f"];
     return colors[index % 5];
   }
 
   useEffect(() => {
     setRouteData([]);
-    props?.routes?.map((route: any) => {
+    props?.routes?.map((route) => {
       getRoute(route);
     });
   }, [props?.routes]);
 
   useEffect(() => {
     setSelectedMarkers(
-      props?.filteredScreens?.map((m: any) => [
+      props?.filteredScreens?.map((m) => [
         m.location.geographicalLocation.longitude,
         m.location.geographicalLocation.latitude,
         m._id,
@@ -191,21 +288,21 @@ export function MapWithGeometry(props: any) {
     setUnselectedMarkers(
       props.allScreens
         ?.filter(
-          (s: any) =>
-            !props?.filteredScreens?.map((f: any) => f._id).includes(s._id)
+          (s) =>
+            !props?.filteredScreens?.map((f) => f._id).includes(s._id)
         )
-        ?.map((m: any) => [
+        ?.map((m) => [
           m.location.geographicalLocation.longitude,
           m.location.geographicalLocation.latitude,
           m._id,
         ])
     );
-  }, [props?.filteredScreens]);
+  }, [props]);
 
   useEffect(() => {
     if (selectedMarkers?.length > 0) {
       const validMarkers = selectedMarkers.filter(
-        (marker: any) =>
+        (marker) =>
           marker[1] !== undefined &&
           marker[0] !== undefined &&
           !isNaN(marker[1]) &&
@@ -213,7 +310,7 @@ export function MapWithGeometry(props: any) {
       );
 
       if (validMarkers?.length > 0) {
-        const bounds = validMarkers.reduce((bounds: any, marker: any) => {
+        const bounds = validMarkers.reduce((bounds, marker) => {
           return bounds.extend(marker);
         }, new mapboxgl.LngLatBounds(validMarkers[0], validMarkers[0]));
 
@@ -241,10 +338,19 @@ export function MapWithGeometry(props: any) {
           process.env.REACT_APP_MAPBOX ||
           "pk.eyJ1Ijoic2FjaGlucmFpbmEiLCJhIjoiY2x3N242M2thMDB0MDJsczR2eGF4dXJsZSJ9.ocBaZJ9rPSUhmS4zGRi7vQ"
         }
-        onMove={(e: any) => setViewState(e.viewState)}
+        onMove={(e) => setViewState(e.viewState)}
       >
+        {selectedMarkers && (
+          <MapDrawControl
+            position="top-left"
+            onCreate={onCreatePolygon}
+            onUpdate={onUpdate}
+            onDelete={onDelete}
+          />
+        )}
+
         {selectedMarkers &&
-          selectedMarkers.map((marker: any, i: any) => (
+          selectedMarkers.map((marker, i) => (
             <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
               <div
                 title={`Selected screens ${props?.filteredScreens?.length}`}
@@ -252,7 +358,7 @@ export function MapWithGeometry(props: any) {
               >
                 <i
                   className="fi fi-ss-circle text-primaryButton text-[14px]"
-                  onClick={(e: any) => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     setIsSelectedData(true);
                     getSingleScreenData(marker[2]);
@@ -263,13 +369,13 @@ export function MapWithGeometry(props: any) {
           ))}
         {unSelectedMarkers?.length !== selectedMarkers?.length &&
           unSelectedMarkers &&
-          unSelectedMarkers.map((marker: any, i: any) => (
+          unSelectedMarkers.map((marker, i) => (
             <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
               <div
                 title={`UnSeletced screens ${
-                  props.allScreens?.filter((s: any) =>
+                  props.allScreens?.filter((s) =>
                     props?.filteredScreens
-                      ?.map((f: any) => f._id)
+                      ?.map((f) => f._id)
                       .includes(s._id)
                   )?.length
                 }`}
@@ -301,25 +407,14 @@ export function MapWithGeometry(props: any) {
             <MapboxScreen
               handleAddManualSelection={props?.handleAddManualSelection}
               screenData={screenData}
-              setSelectedScreensFromMap={props.setSelectedScreensFromMap}
+              handleSelectFromMap={props.handleSelectFromMap}
               isSelectedData = {isSelectedData}
             />
           </Popup>
         )}
-        <Source id="circle-data" type="geojson" data={circlesData}>
-          <Layer
-            id="circle-layer"
-            type="fill"
-            paint={{
-              // "fill-color": "red",
-              "fill-color": ["get", "color"],
-              "fill-opacity": 0.5,
-            }}
-          />
-        </Source>
 
         {routeData?.length > 0 &&
-          routeData.map((route: any, index: number) => (
+          routeData.map((route, index) => (
             <Source
               key={index}
               id={`${index}`}
@@ -343,6 +438,32 @@ export function MapWithGeometry(props: any) {
               />
             </Source>
           ))}
+        
+        <Source id="circle-data" type="geojson" data={circlesData}>
+          <Layer
+            id="circle-layer"
+            type="fill"
+            paint={{
+              // "fill-color": "red",
+              "fill-color": ["get", "color"],
+              "fill-opacity": 0.5,
+            }}
+          />
+        </Source>
+
+        <Source id="polygon-data" type="geojson" data={{
+            type: "FeatureCollection",
+            features: polygons
+        }}>
+          <Layer
+            id="polygon-layer"
+            type="fill"
+            paint={{
+              "fill-color": "#088",
+              "fill-opacity": 0.5,
+            }}
+          />
+        </Source>
       </ReactMapGL>
     </div>
   );

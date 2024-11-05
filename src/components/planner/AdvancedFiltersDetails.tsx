@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
-import { MapWithGeometry } from "../../components/molecules/MapWithGeometry";
 import * as turf from "@turf/turf";
 import { getAllLocalStorageData, getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import { LocationProximity } from "../../components/segments/LocationProximity";
@@ -14,6 +13,9 @@ import { getRegularVsCohortPriceData, getScreenDataForAdvanceFilters } from "../
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { ADVANCE_FILTER_SCREENS_MAP_DATA, COST_SUMMARY, FULL_CAMPAIGN_PLAN, SELECTED_AUDIENCE_TOUCHPOINTS, SELECTED_SCREENS_ID } from "../../constants/localStorageConstants";
 import { ALL_TOUCHPOINTS } from "../../constants/helperConstants";
+import { MapWithGeometry } from "../../components/map/MapWithGeometry";
+import { getUniqueScreens } from "../../utils/screenRanking";
+// import { MapWithGeometry } from "../../components/molecules/MapWithGeometry";
 
 type Coordinate = [number, number];
 
@@ -69,21 +71,6 @@ export const AdvanceFiltersDetails = ({
     data: advanceFilterData
   } = screensDataAdvanceFilterGet;
 
-  const getUniqueScreens = (data: any) => {
-    const uniqueScreens = new Set();
-    if (data) {
-      data?.forEach((location: any) => {
-        location?.screens?.forEach((screen: any) => {
-          uniqueScreens.add(screen);
-        });
-      });
-    }
-
-    let result = Array.from(uniqueScreens);
-
-    return result;
-  };
-
   const getMapData = useCallback(
     (myData: any) => {
       setAllScreens(myData?.screens);
@@ -98,14 +85,14 @@ export const AdvanceFiltersDetails = ({
     [dataBrand, dataComp]
   );
 
-  const handleFinalSelectedScreens = ({ type, screens }: any) => {
-    console.log(type, screens);
+  const handleFinalSelectedScreens = useCallback(({ type, screens }: any) => {
     if (type === "add") {
       screens = [
         ...excelFilteredScreens,
         ...routeFilteredScreens,
         ...screens,
         ...poiFilteredScreens,
+        ...selectedScreensFromMap,
       ];
       const uniqueScreens = getUniqueScreens([{ screens }]);
       setFinalSelectedScreens(uniqueScreens);
@@ -123,7 +110,7 @@ export const AdvanceFiltersDetails = ({
         ));
 
     }
-  };
+  },[]);
 
   const handleRemoveRoute = (id: any) => {
     let arr = routes;
@@ -199,23 +186,20 @@ export const AdvanceFiltersDetails = ({
     // handleSetFIlter4(arr);
   };
 
-  const handleAddManualSelectedScreenIntoFinalSelectedScreens = (
-    checked: any
-  ) => {
+  function handleAddManualSelectedScreenIntoFinalSelectedScreens(checked: any) {
     if (checked) {
       handleFinalSelectedScreens({
         type: "add",
-        screens: selectedScreensFromMap || [],
+        screens: finalSelectedScreens || [],
         // screens: [],
-
       });
     } else {
       handleFinalSelectedScreens({
         type: "remove",
-        screens: selectedScreensFromMap,
+        screens: [],
       });
     }
-  };
+  }
 
   const handleSelectFromMap = (screenData: any) => {
     setSelectedScreensFromMap((pre: any) => {
@@ -225,14 +209,23 @@ export const AdvanceFiltersDetails = ({
         return [...pre, screenData];
       }
     });
+    setFinalSelectedScreens((pre: any) => {
+      if (pre.find((screen: any) => screen?._id == screenData?._id)) {
+        return pre;
+      } else {
+        return [...pre, screenData];
+      }
+    });
+
   };
 
   const handleConfirmScreensSelections = ({checked, screens}: any) => {
+    console.log(screens);
     setIsDisabled(!checked);
     if (checked) {
       handleFinalSelectedScreens({
         type: "add",
-        screens: screens || [],
+        screens: screens,
         // screens: [],
 
       });
@@ -266,7 +259,7 @@ export const AdvanceFiltersDetails = ({
       }
     }
     
-  }, [advanceFilterData, getMapData, excelFilteredScreens, routeFilteredScreens]);
+  }, [advanceFilterData, getMapData, excelFilteredScreens, routeFilteredScreens, handleFinalSelectedScreens]);
 
   useEffect(() => {
     
@@ -333,9 +326,10 @@ export const AdvanceFiltersDetails = ({
                   </p>
                 </div>
                 <div
-                  className="flex items-center justify-end"
+                  className="flex items-center justify-end gap-2"
                   onClick={() => setStoreFilter(!storeFilter)}
                 >
+                  <i className="fi fi-br-rotate-right text-[12px] flex items-center" onClick={() => window.location.reload()}></i>
                   <p className="text-[14px] text-[#9f9f9f]">Back</p>
                 </div>
               </div>
@@ -346,10 +340,8 @@ export const AdvanceFiltersDetails = ({
                 setPOIFilteredScreens={setPOIFilteredScreens}
                 allScreens={allScreens}
                 finalSelectedScreens={finalSelectedScreens}
-                manuallySelected={selectedScreensFromMap}
-                handleAddManualSelectedScreenIntoFinalSelectedScreens={
-                  handleAddManualSelectedScreenIntoFinalSelectedScreens
-                }
+                selectedScreensFromMap={selectedScreensFromMap}
+                handleSelectFromMap={handleSelectFromMap}
                 handleConfirmScreensSelections={handleConfirmScreensSelections}
               />
             </div>
@@ -384,16 +376,20 @@ export const AdvanceFiltersDetails = ({
         </div>
 
         <div className="col-span-1 w-full">
-          <MapWithGeometry
-            handleRouteData={handleRouteData}
-            circleRadius={circleRadius}
-            filteredScreens={finalSelectedScreens || []}
-            allScreens={allScreens}
-            routes={routes}
-            data={circleData}
-            setSelectedScreensFromMap={handleSelectFromMap}
-            handleAddManualSelection={handleAddManualSelectedScreenIntoFinalSelectedScreens}
-          />
+          {allScreens?.length > 0 && (
+            <MapWithGeometry
+              handleRouteData={handleRouteData}
+              circleRadius={circleRadius}
+              filteredScreens={finalSelectedScreens}
+              allScreens={allScreens}
+              routes={routes}
+              data={circleData}
+              handleSelectFromMap={handleSelectFromMap}
+              handleAddManualSelection={handleAddManualSelectedScreenIntoFinalSelectedScreens}
+              onPolygonComplete={(screens: any) => handleFinalSelectedScreens({ type: 'add', screens })} 
+            />
+          )}
+
         </div>
       </div>
       <div className="px-4 fixed bottom-0 left-0 w-full bg-white z-10">
