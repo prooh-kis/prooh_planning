@@ -1,6 +1,6 @@
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { formatNumber } from "../../utils/formatValue";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 function Screen({ screen }: any) {
   return (
@@ -33,6 +33,83 @@ function Screen({ screen }: any) {
 }
 
 export function ViewPlanPic({ screens, screenTypes, cityZones, cityTP }: any) {
+
+  const [zoneFilters, setZoneFilters] = useState<any>(cityZones);
+  const [tpFilters, setTpFilters] = useState<any>(cityTP);
+  const [stFilters, setStFilters] = useState<any>(screenTypes);
+
+  const filteredScreensData = useCallback(() => {
+    let result = screens;
+  
+    // Filter by zone if zoneFilters has values
+    if (zoneFilters.length > 0) {
+      result = result?.filter((s: any) => zoneFilters.includes(s.location.zoneOrRegion));
+      console.log(result, "zone");
+    }
+  
+    // Filter by touch point if tpFilters has values
+    if (tpFilters.length > 0) {
+      result = result?.filter((s: any) => tpFilters.includes(s.location.touchPoint));
+      console.log(result, "tp");
+
+    }
+  
+    // Filter by screen type if stFilters has values
+    if (stFilters.length > 0) {
+      result = result?.filter((s: any) => stFilters.includes(s.screenType));
+      console.log(result, "st");
+
+    }
+  
+    return result;
+  }, [screens, zoneFilters, tpFilters, stFilters]);
+  
+  const handleFilterSelection = ({type, value, checked}: any) => {
+    if (type === "zone") {
+      if (checked) {
+        setZoneFilters((prev: any) => {
+          return [
+            ...prev, value
+          ]
+        });
+      } else {
+        setZoneFilters((prev: any) => {
+          return prev.filter((item: any) => item !== value);
+        });
+      }
+    }
+    if (type === "tp") {
+      if (checked) {
+        setTpFilters((prev: any) => {
+          return [
+            ...prev, value
+          ]
+        });
+      } else {
+        setTpFilters((prev: any) => {
+          return prev.filter((item: any) => item !== value);
+        });
+      }
+    }
+    if (type === "st") {
+      if (checked) {
+        setStFilters((prev: any) => {
+          return [
+            ...prev, value
+          ]
+        });
+      } else {
+        setStFilters((prev: any) => {
+          return prev.filter((item: any) => item !== value);
+        });
+      }
+    }
+
+  }
+  console.log(zoneFilters, tpFilters, stFilters);
+  useEffect(() => {
+  
+  },[]);
   return (
     <div className="grid grid-cols-12 gap-8 py-2">
       <div className="col-span-3 border rounded-[12px] p-3 overflow-y-auto">
@@ -43,30 +120,46 @@ export function ViewPlanPic({ screens, screenTypes, cityZones, cityTP }: any) {
         <div className="py-2">
           <h1 className="font-semibold">Zone</h1>
           {cityZones?.map((zone: any, i: any) => (
-            <div key={i} className="p-2">
-              <CheckboxInput label={zone} />
+            <div key={i} className="flex items-center justify-between p-2">
+              <CheckboxInput
+                label={zone}
+                checked={zoneFilters?.includes(zone)}
+                onChange={(checked) => handleFilterSelection({type: "zone", value: zone, checked})}
+              />
+              <p className="text-[14px]">({filteredScreensData()?.filter((s: any) => s.location.zoneOrRegion === zone)?.length})</p>
             </div>
           ))}
         </div>
         <div className="py-2">
           <h1 className="font-semibold">Touchpoint</h1>
           {cityTP?.map((tp: any, j: any) => (
-            <div key={j} className="p-2">
-              <CheckboxInput label={tp} />
+            <div key={j} className="lex items-center justify-between p-2">
+              <CheckboxInput
+                label={tp}
+                checked={tpFilters?.includes(tp)}
+                onChange={(checked) => handleFilterSelection({type: "tp", value: tp, checked})}
+              />
+              <p className="text-[14px]">({filteredScreensData()?.filter((s: any) => s.location.touchPoint === tp)?.length})</p>
+
             </div>
           ))}
         </div>
         <div className="py-2">
           <h1 className="font-semibold">ScreenType</h1>
           {screenTypes?.map((st: any, k: any) => (
-            <div key={k} className="p-2">
-              <CheckboxInput label={st} />
+            <div key={k} className="lex items-center justify-between p-2">
+              <CheckboxInput
+                label={st}
+                checked={stFilters?.includes(st)}
+                onChange={(checked) => handleFilterSelection({type: "st", value: st, checked})}
+              />
+              <p className="text-[14px]">({filteredScreensData()?.filter((s: any) => s.screenType === st)?.length})</p>
             </div>
           ))}
         </div>
       </div>
       <div className="col-span-9 rounded-[12px] grid grid-cols-12 flex flex-wrap gap-4 overflow-scroll h-[60vh]">
-        {screens?.map((screen: any, index: any) => (
+        {filteredScreensData()?.map((screen: any, index: any) => (
           <div key={index} className="col-span-3">
             <Screen screen={screen} />
           </div>

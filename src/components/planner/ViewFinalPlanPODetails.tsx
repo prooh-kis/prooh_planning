@@ -26,6 +26,7 @@ import {
   generateScreenPicturesPptFromJSON,
 } from "../../utils/generatePdf";
 import { sendEmailForConfirmation } from "../../actions/userAction";
+import { SEND_EMAIL_FOR_CONFIRMATION_RESET } from "../../constants/userConstants";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -115,6 +116,7 @@ export const ViewFinalPlanPODetails = ({
   const {
     loading: loadingSendEmail,
     error: errorSendEmail,
+    success: successSendEmail,
     data: sendEmailData,
   } = emailSendForConfirmation;
 
@@ -259,6 +261,15 @@ export const ViewFinalPlanPODetails = ({
   };
 
   useEffect(() => {
+    if (successSendEmail) {
+      message.success("Email sent successfully!");
+      setToEmail("");
+      setCC("");
+      setFiles([]);
+      dispatch({
+        type: SEND_EMAIL_FOR_CONFIRMATION_RESET,
+      });
+    }
     dispatch(getFinalPlanPOTableData(poInput));
     dispatch(
       getScreenSummaryPlanTableData({
@@ -271,7 +282,8 @@ export const ViewFinalPlanPODetails = ({
     if (userInfo) {
       setCC(userInfo?.email);
     }
-  }, [dispatch, poInput, campaignId]);
+
+  }, [dispatch, poInput, campaignId, successSendEmail]);
 
   return (
     <div className="w-full py-3">
@@ -494,6 +506,7 @@ export const ViewFinalPlanPODetails = ({
               cc={cc}
               sendEmail={sendEmail}
               type="po"
+              loading={loadingSendEmail}
             />
           </div>
 

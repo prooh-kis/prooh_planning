@@ -1,6 +1,7 @@
 import { PrimaryInput } from "../../components/atoms/PrimaryInput"
 import { PrimaryButton } from "../../components/atoms/PrimaryButton"
 import { useState } from "react";
+import { Loading } from "../../components/Loading";
 
 interface EmailSendBoxProps {
   toEmail?: any;
@@ -10,9 +11,10 @@ interface EmailSendBoxProps {
   cc?: any;
   data?: any
   type?: any;
+  loading?: any;
 }
 
-export const EmailSendBox = ({cc, data, type, toEmail, setToEmail, sendEmail, sendEmailToAll}: EmailSendBoxProps) => {
+export const EmailSendBox = ({loading, cc, data, type, toEmail, setToEmail, sendEmail, sendEmailToAll}: EmailSendBoxProps) => {
   return (
     <div className="p-2">
       <div className="flex flex-col">
@@ -30,25 +32,35 @@ export const EmailSendBox = ({cc, data, type, toEmail, setToEmail, sendEmail, se
             />
           </div>
           <div className="col-span-1">
-            <PrimaryButton
-              title={"Send"}
-              rounded="rounded-[8px]"
-              action={sendEmail}
-              width="w-full"
-              height=""
-              textSize="14px"
-            />
-          </div>
-          {type === "vendor" && (
-            <div className="col-span-1">
+            {loading ? (
+              <Loading />
+            ) : (
               <PrimaryButton
-                title={"Send To All"}
+                title={"Send"}
                 rounded="rounded-[8px]"
-                action={sendEmailToAll}
+                action={sendEmail}
                 width="w-full"
                 height=""
                 textSize="14px"
               />
+            )}
+
+          </div>
+          {type === "vendor" && (
+            <div className="col-span-1">
+              {loading ? (
+                <Loading />
+              ) : (
+                <PrimaryButton
+                  title={"Send To All"}
+                  rounded="rounded-[8px]"
+                  action={sendEmailToAll}
+                  width="w-full"
+                  height=""
+                  textSize="14px"
+                />
+              )}
+
             </div>
           )}
           

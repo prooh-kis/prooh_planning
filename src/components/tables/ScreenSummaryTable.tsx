@@ -153,7 +153,7 @@ export const ScreenSummaryTable = ({
             </div>
           </div>
           <div className="overflow-y-auto h-96">
-            {Object.keys(data[currentCity])?.map((tp: any, i: any) => (
+            {Object.keys(data?.[currentCity])?.map((tp: any, i: any) => (
               <div key={i} className="grid grid-cols-12">
                 <div className="border-b border-l col-span-2 py-2 px-4 truncate">
                   <h1 className="text-[14px] truncate">{tp}</h1>

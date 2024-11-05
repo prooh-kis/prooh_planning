@@ -8,6 +8,7 @@ import {
   VendorConfirmationDetails,
   SetAdsPlayTime,
   AdvanceFiltersDetails,
+  TriggerDetails,
 } from "../../components/planner";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -35,7 +36,7 @@ const pages = [
   },
   {
     id: 3,
-    value: "Select Screens Page",
+    value: "Screen Summary Page",
   },
   {
     id: 4,
@@ -43,14 +44,18 @@ const pages = [
   },
   {
     id: 5,
-    value: "View Final Plan Page",
+    value: "Add Triggers Page",
   },
   {
     id: 6,
-    value: "Upload Creative Page",
+    value: "View Final Plan Page",
   },
   {
     id: 7,
+    value: "Upload Creative Page",
+  },
+  {
+    id: 8,
     value: "Vendor Confirmation Page",
   },
 ];
@@ -123,7 +128,7 @@ export const StoreBasedPlanPage: React.FC = () => {
           step={currentStep}
           setStep={setCurrentStep}
           steps={
-            pathname?.split("/").includes("storebasedplan") ? 7 :
+            pathname?.split("/").includes("storebasedplan") ? 8 :
              9
           }
           />
@@ -160,18 +165,24 @@ export const StoreBasedPlanPage: React.FC = () => {
             campaignId={campaignId}
           />
         ) : currentStep === 5 ? (
-          <ViewFinalPlanPODetails
+          <TriggerDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
           />
         ) : currentStep === 6 ? (
+          <ViewFinalPlanPODetails
+            setCurrentStep={setCurrentStep}
+            step={currentStep}
+            campaignId={campaignId}
+          />
+        ) : currentStep === 7 ? (
           <CreativeUploadDetails
             step={currentStep}
             setCurrentStep={setCurrentStep}
             campaignId={campaignId}
           />
-        ) : currentStep === 7 ? (
+        ) : currentStep === 8 ? (
           <VendorConfirmationDetails
             step={currentStep}
             setCurrentStep={setCurrentStep}
