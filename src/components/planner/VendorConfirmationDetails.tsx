@@ -278,8 +278,11 @@ export const VendorConfirmationDetails = ({
               {
                 statusTableData?.filter(
                   (c: any) =>
-                    c.status ===
-                    CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT
+                    c.status !==
+                      CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED ||
+                    c.status !==
+                      CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED ||
+                    c.status !== "Pending"
                 ).length
               }
               )
@@ -311,7 +314,9 @@ export const VendorConfirmationDetails = ({
               ).length,
               statusTableData?.filter(
                 (c: any) =>
-                  c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT
+                  c.status !== CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED ||
+                  c.status !== CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED ||
+                  c.status !== "Pending"
               ).length,
               statusTableData?.filter(
                 (c: any) =>

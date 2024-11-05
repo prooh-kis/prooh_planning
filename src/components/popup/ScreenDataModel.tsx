@@ -74,10 +74,10 @@ export function ScreenDataModel({ screen }: Props) {
           <h1 className="py-2 text-xl font-semibold">
             Your selected cohort time
           </h1>
-          <div className="flex justify-between items-end">
-            <div className="flex gap-4 text-gray-500">
+          <div className="">
+            <div className="flex flex-wrap justify-between text-gray-500">
               {screen?.selectedTime?.map((s: any, i: any) => (
-                <div key={i} className="border border-1 py-2 px-6 flex flex-col items-center">
+                <div key={i} className="border border-1 m-2 py-2 px-6 flex flex-col items-center w-[150px]">
                   <h1 className="text-[12px] font-semibold">{s.day.toUpperCase()}</h1>
                   <h1 className="text-[16px] font-semibold">{s.slot.toUpperCase()}</h1>
                   <h1 className="text-[12px]">
@@ -91,20 +91,13 @@ export function ScreenDataModel({ screen }: Props) {
               ))}
       
             </div>
-            <div className="flex  items-center gap-4 ">
+            <div className="flex items-center gap-4 py-4 px-2">
               <button
                 type="submit"
-                className="border border-1 py-2 px-4 rounded-md hover:bg-blue-500 hover:text-white"
+                className=" w-full border border-1 py-2 px-4 rounded-md hover:bg-blue-500 hover:text-white"
                 title="Go back"
               >
                 Remove screen
-              </button>
-              <button
-                type="submit"
-                className="border border-1 py-2 px-4 rounded-md bg-blue-500 text-white hover:bg-blue-600"
-                title="Save and go next"
-              >
-                Next screen
               </button>
             </div>
           </div>
