@@ -49,13 +49,12 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
     <i key={8} className="fi fi-sr-dashboard-monitor text-[14px]"></i>, // Example icon for step 9
   ] : pathname.split("/").includes("storebasedplan") ? [
     <i key={1} className="fi fi-sr-megaphone text-[14px]"></i>, // Example icon for step 1
-    <i key={2} className="fi fi-rr-location-crosshairs text-[14px]"></i>, // Example icon for step 2
-    <i key={3} className="fi fi-br-settings-sliders text-[14px]"></i>, // Example icon for step 3
-    <i key={4} className="fi fi-sr-users-alt text-[14px]"></i>, // Example icon for step 4
-    <i key={5} className="fi fi-sr-document-signed text-[14px]"></i>, // Example icon for step 5
-    <i key={6} className="fi fi-ss-sack text-[14px]"></i>, // Example icon for step 7
-    <i key={7} className="fi fi-sr-cloud-upload-alt text-[14px]"></i>, // Example icon for step 8
-    <i key={8} className="fi fi-sr-dashboard-monitor text-[14px]"></i>, // Example icon for step 9
+    <i key={2} className="fi fi-br-settings-sliders text-[14px]"></i>, // Example icon for step 3
+    <i key={3} className="fi fi-sr-users-alt text-[14px]"></i>, // Example icon for step 4
+    <i key={4} className="fi fi-sr-document-signed text-[14px]"></i>, // Example icon for step 5
+    <i key={5} className="fi fi-ss-sack text-[14px]"></i>, // Example icon for step 7
+    <i key={6} className="fi fi-sr-cloud-upload-alt text-[14px]"></i>, // Example icon for step 8
+    <i key={7} className="fi fi-sr-dashboard-monitor text-[14px]"></i>, // Example icon for step 9
   ] : pathname.split("/").includes("triggerbasedplan") ? [
     <i key={1} className="fi fi-sr-megaphone text-[14px]"></i>, // Example icon for step 1
     <i key={2} className="fi fi-sr-tap text-[14px]"></i>, // Example icon for step 6
@@ -86,7 +85,7 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
     "Basic Details", "Audience Selection", "Advanced Filters", "Cohort Selection", "Screens Summary", 
     "Vendor Approval", "Creative Upload", "Vendor Confirmation"
   ] : pathname.split("/").includes("storebasedplan") ? [
-    "Basic Details", "Map Filters", "Select Screens", "Select Time", "Plan Summary",
+    "Basic Details", "Advanced Filters", "Select Screens", "Select Time",
     "Vendor Approval", "Creative Upload", "Vendor Confirmation"
   ] : pathname.split("/").includes("triggerbasedplan") ? [
     "Basic Details", "Trigger Selection", "Audience Selection", "Advanced Filters", "Cohort Selection", "Screens Summary", 

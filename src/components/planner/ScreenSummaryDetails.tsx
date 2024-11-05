@@ -214,13 +214,25 @@ export const ScreenSummaryDetails = ({
       })
     );
     // }
+    
   }, [campaignId, dispatch]);
 
   useEffect(() => {
-    if (pathname.split("/").splice(-2)[0] === "iknowitallplan" && step === 4) {
-      console.log(step);
+    if (pathname.split("/").includes("storebasedplan")) {
+      dispatch(
+        getScreenSummaryPlanTableData({
+          id: campaignId,
+          screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+        })
+      );
+    }
+  },[dispatch, pathname]);
+  
+  useEffect(() => {
+    if (pathname.split("/").includes("iknowitallplan") && step === 4) {
       setCurrentTab("2");
     }
+
     setRegularVsCohort(
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType
     );

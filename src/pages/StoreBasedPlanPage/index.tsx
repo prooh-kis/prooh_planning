@@ -31,7 +31,7 @@ const pages = [
   },
   {
     id: 2,
-    value: "Map Filter Page",
+    value: "Advance Filter Page",
   },
   {
     id: 3,
@@ -43,18 +43,14 @@ const pages = [
   },
   {
     id: 5,
-    value: "Screen Summary Page",
-  },
-  {
-    id: 6,
     value: "View Final Plan Page",
   },
   {
-    id: 7,
+    id: 6,
     value: "Upload Creative Page",
   },
   {
-    id: 8,
+    id: 7,
     value: "Vendor Confirmation Page",
   },
 ];
@@ -91,6 +87,7 @@ export const StoreBasedPlanPage: React.FC = () => {
       // const campDetails = location.state.campaign
       const campDetails = campaignDetails;
 
+      
       setCurrentStep(
         Number(
           pages.filter(
@@ -126,7 +123,7 @@ export const StoreBasedPlanPage: React.FC = () => {
           step={currentStep}
           setStep={setCurrentStep}
           steps={
-            pathname?.split("/").includes("storebasedplan") ? 8 :
+            pathname?.split("/").includes("storebasedplan") ? 7 :
              9
           }
           />
@@ -162,25 +159,19 @@ export const StoreBasedPlanPage: React.FC = () => {
             step={currentStep}
             campaignId={campaignId}
           />
-        )  : currentStep === 5 ? (
-          <ScreenSummaryDetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-            campaignId={campaignId}
-          />
-        ) : currentStep === 6 ? (
+        ) : currentStep === 5 ? (
           <ViewFinalPlanPODetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
           />
-        ) : currentStep === 7 ? (
+        ) : currentStep === 6 ? (
           <CreativeUploadDetails
             step={currentStep}
             setCurrentStep={setCurrentStep}
             campaignId={campaignId}
           />
-        ) : currentStep === 8 ? (
+        ) : currentStep === 7 ? (
           <VendorConfirmationDetails
             step={currentStep}
             setCurrentStep={setCurrentStep}
