@@ -73,28 +73,37 @@ export const AdsPlaySelectedSummaryTable = ({
         <h1 className="w-full text-center ">Selected</h1>
         <h1 className="w-full text-center "> 8</h1>
         <h1 className="w-full text-center "> 74</h1>
-        <h1 className="w-full text-center "> T1 Morning</h1>
-        <h1 className="w-full text-center "> T2 Afternoon</h1>
-        <h1 className="w-full text-center "> T3 Evening</h1>
-        <h1 className="w-full text-center "> T4 Night</h1>
+        <h1 className="w-full text-center ">
+          {getUpto2Decimal(bottomTableData?.selected?.morning)}
+        </h1>
+        <h1 className="w-full text-center ">
+          {" "}
+          {getUpto2Decimal(bottomTableData?.selected?.afternoon)}
+        </h1>
+        <h1 className="w-full text-center ">
+          {" "}
+          {getUpto2Decimal(bottomTableData?.selected?.evening)}
+        </h1>
+        <h1 className="w-full text-center ">
+          {" "}
+          {getUpto2Decimal(bottomTableData?.selected?.night)}
+        </h1>
       </div>
       <div className="flex w-full align-center bg-[#E8F6FF] text-[#1297E2] py-2 text-[14px] ">
         <h1 className="w-full text-center ">Total</h1>
         <h1 className="w-full text-center "> 8</h1>
         <h1 className="w-full text-center "> 74</h1>
         <h1 className="w-full text-center ">
-          {getUpto2Decimal(bottomTableData?.totalTable?.[currentTab]?.morning)}
+          {getUpto2Decimal(bottomTableData?.selected?.morning)}
         </h1>
         <h1 className="w-full text-center ">
-          {getUpto2Decimal(
-            bottomTableData?.totalTable?.[currentTab]?.afternoon
-          )}
+          {getUpto2Decimal(bottomTableData?.selected?.afternoon)}
         </h1>
         <h1 className="w-full text-center ">
-          {getUpto2Decimal(bottomTableData?.totalTable?.[currentTab]?.evening)}
+          {getUpto2Decimal(bottomTableData?.selected?.evening)}
         </h1>
         <h1 className="w-full text-center ">
-          {getUpto2Decimal(bottomTableData?.totalTable?.[currentTab]?.night)}
+          {getUpto2Decimal(bottomTableData?.selected?.night)}
         </h1>
       </div>
     </div>

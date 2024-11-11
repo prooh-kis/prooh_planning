@@ -48,10 +48,12 @@ import {
   PLANNING_PAGE_FOOTER_DATA_ERROR,
   PLANNING_PAGE_FOOTER_DATA_REQUEST,
   PLANNING_PAGE_FOOTER_DATA_SUCCESS,
+  TABLE_DATA_SET_AD_PLAY_TIME_ERROR,
+  TABLE_DATA_SET_AD_PLAY_TIME_REQUEST,
+  TABLE_DATA_SET_AD_PLAY_TIME_SUCCESS,
 } from "../constants/screenConstants";
 
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/screens`;
-
 
 export const getLandingPageData = () => async (dispatch, getState) => {
   dispatch({
@@ -73,7 +75,7 @@ export const getLandingPageData = () => async (dispatch, getState) => {
       },
     });
   }
-}
+};
 
 export const getScreensAudiencesData =
   ({ id, markets }) =>
@@ -105,31 +107,21 @@ export const getScreensAudiencesData =
   };
 
 export const getScreensCostData =
-  ({
-    id,
-    cohorts,
-    gender,
-    touchPoints,
-    duration
-  }) =>
+  ({ id, cohorts, gender, touchPoints, duration }) =>
   async (dispatch, getState) => {
     dispatch({
       type: GET_SCREENS_COST_DATA_REQUEST,
       payload: { cohorts, gender, touchPoints, duration },
     });
-    
 
     try {
-      const { data } = await axios.post(
-        `${url}/tableAudienceTouchPointPage`,
-        {
-          id,
-          cohorts,
-          gender,
-          touchPoints,
-          duration,
-        }
-      );
+      const { data } = await axios.post(`${url}/tableAudienceTouchPointPage`, {
+        id,
+        cohorts,
+        gender,
+        touchPoints,
+        duration,
+      });
       dispatch({
         type: GET_SCREENS_COST_DATA_SUCCESS,
         payload: data,
@@ -423,58 +415,58 @@ export const getTableDataForSelectTopicalDayPage =
     }
   };
 
-export const getPlanningPageFooterData = ({id}) => async (dispatch, getState)=> {
-  dispatch({
-    type: PLANNING_PAGE_FOOTER_DATA_REQUEST,
-    payload: {id},
-  });
-  try {
-    const { data } = await axios.post(
-      `${url}/planningPageFooter`,
-      {id}
-    );
+export const getPlanningPageFooterData =
+  ({ id }) =>
+  async (dispatch, getState) => {
     dispatch({
-      type: PLANNING_PAGE_FOOTER_DATA_SUCCESS,
-      payload: data,
+      type: PLANNING_PAGE_FOOTER_DATA_REQUEST,
+      payload: { id },
     });
-  } catch (error) {
-    dispatch({
-      type: PLANNING_PAGE_FOOTER_DATA_ERROR,
-      payload: {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-      },
-    });
-  }
-};
+    try {
+      const { data } = await axios.post(`${url}/planningPageFooter`, { id });
+      dispatch({
+        type: PLANNING_PAGE_FOOTER_DATA_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: PLANNING_PAGE_FOOTER_DATA_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
-
-export const getTableDataScreenWiseAdPlayTime = ({id}) => async (dispatch, getState)=> {
-  dispatch({
-    type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_REQUEST,
-    payload: {id},
-  });
-  try {
-    const { data } = await axios.post(
-      `${url}/tableDataScreenWiseAdPLayTime`,
-      {id}
-    );
+export const getTableDataScreenWiseAdPlayTime =
+  ({ id }) =>
+  async (dispatch, getState) => {
     dispatch({
-      type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_SUCCESS,
-      payload: data,
+      type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_REQUEST,
+      payload: { id },
     });
-  } catch (error) {
-    dispatch({
-      type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_ERROR,
-      payload: {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-      },
-    });
-  }
-};
+    try {
+      const { data } = await axios.post(
+        `${url}/tableDataScreenWiseAdPLayTime`,
+        { id }
+      );
+      dispatch({
+        type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
 export const getTableDataForSelectTriggerPage =
   (input) => async (dispatch, getState) => {
@@ -502,3 +494,26 @@ export const getTableDataForSelectTriggerPage =
       });
     }
   };
+
+export const tableDataSetAdPlayTime = (input) => async (dispatch, getState) => {
+  dispatch({
+    type: TABLE_DATA_SET_AD_PLAY_TIME_REQUEST,
+    payload: input,
+  });
+  try {
+    const { data } = await axios.post(`${url}/tableDataSetAdPlayTime`, input);
+    dispatch({
+      type: TABLE_DATA_SET_AD_PLAY_TIME_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: TABLE_DATA_SET_AD_PLAY_TIME_ERROR,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    });
+  }
+};

@@ -18,6 +18,7 @@ import {
   tableDataScreenWiseAdPlayTimeGetReducer,
   vendorConfirmationDetailsGetReducer,
   vendorConfirmationStatusTableDetailsGetReducer,
+  tableDataSetAdPlayTimeReducer,
 } from "../reducers/screenReducers";
 import {
   emailSendForConfirmationReducer,
@@ -76,8 +77,10 @@ const store = configureStore({
 
     tableDataScreenWiseAdPlayTimeGet: tableDataScreenWiseAdPlayTimeGetReducer,
 
-    tableDataForSelectTopicalDayPageGet: tableDataForSelectTopicalDayPageGetReducer,
+    tableDataForSelectTopicalDayPageGet:
+      tableDataForSelectTopicalDayPageGetReducer,
     tableDataForSelectTriggerPageGet: tableDataForSelectTriggerPageGetReducer,
+    tableDataSetAdPlayTimeStore: tableDataSetAdPlayTimeReducer,
 
     // campaign
     detailsToCreateCampaignAdd: detailsToCreateCampaignAddReducer,

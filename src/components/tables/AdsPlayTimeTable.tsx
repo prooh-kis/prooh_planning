@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 interface TimeData {
   percentage: number;
@@ -28,18 +28,19 @@ interface ResultData {
   screenData: ScreenData[];
 }
 
-interface Data {
-  result: ResultData[];
-  bottomTableData: any;
-}
-
 interface Props {
   currentTab: keyof DayWiseData;
   data: ResultData[];
   setData: any;
+  bottomTableData: any;
 }
 
-export const AdsPlayTimeTable = ({ currentTab, data, setData }: Props) => {
+export const AdsPlayTimeTable = ({
+  currentTab,
+  data,
+  setData,
+  bottomTableData,
+}: Props) => {
   const getUpto2Decimal = (value: any) => {
     return `${Number(value)?.toFixed(2)}%`;
   };
@@ -50,7 +51,7 @@ export const AdsPlayTimeTable = ({ currentTab, data, setData }: Props) => {
     included: boolean,
     index1: number
   ) => {
-    console.log("handleSelectTime : ", index, dayData, included, index1);
+    // console.log("handleSelectTime : ", index, dayData, included, index1);
 
     const ddd = data?.map((d: ResultData, i: number) => {
       if (i === index) {
@@ -59,10 +60,6 @@ export const AdsPlayTimeTable = ({ currentTab, data, setData }: Props) => {
           screenData: d.screenData?.map((d1: ScreenData, i1: number) => {
             if (i1 === index1) {
               d1.dayWiseData[currentTab][dayData].included = !included;
-              console.log(
-                "d1.dayWiseData[currentTab][dayData].included : ",
-                d1.dayWiseData[currentTab][dayData].included
-              );
             }
             return d1;
           }),
@@ -229,20 +226,18 @@ export const AdsPlayTimeTable = ({ currentTab, data, setData }: Props) => {
           }, 0)}
         </h1>
         <h1 className="w-full text-center text-[#1297E2] border-b border-l py-2 col-span-2">
-          {" "}
-          100%
+          {getUpto2Decimal(bottomTableData?.totalTable?.[currentTab]?.morning)}
         </h1>
         <h1 className="w-full text-center text-[#1297E2] border-b border-l py-2 col-span-2">
-          {" "}
-          100%
+          {getUpto2Decimal(
+            bottomTableData?.totalTable?.[currentTab]?.afternoon
+          )}
         </h1>
         <h1 className="w-full text-center text-[#1297E2] border-b border-l py-2 col-span-2">
-          {" "}
-          100%
+          {getUpto2Decimal(bottomTableData?.totalTable?.[currentTab]?.evening)}
         </h1>
         <h1 className="w-full text-center text-[#1297E2] border-b border-l py-2 col-span-2">
-          {" "}
-          100%
+          {getUpto2Decimal(bottomTableData?.totalTable?.[currentTab]?.night)}
         </h1>
       </div>
     </div>

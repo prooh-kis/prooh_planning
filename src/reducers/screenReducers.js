@@ -52,6 +52,9 @@ import {
   PLANNING_PAGE_FOOTER_DATA_ERROR,
   PLANNING_PAGE_FOOTER_DATA_REQUEST,
   PLANNING_PAGE_FOOTER_DATA_SUCCESS,
+  TABLE_DATA_SET_AD_PLAY_TIME_ERROR,
+  TABLE_DATA_SET_AD_PLAY_TIME_REQUEST,
+  TABLE_DATA_SET_AD_PLAY_TIME_SUCCESS,
 } from "../constants/screenConstants";
 import {
   ADVANCE_FILTER_SCREENS_MAP_DATA,
@@ -332,7 +335,6 @@ export function tableDataForSelectTopicalDayPageGetReducer(state = {}, action) {
   }
 }
 
-
 export function planningPageFooterDataGetReducer(state = {}, action) {
   switch (action.type) {
     case PLANNING_PAGE_FOOTER_DATA_REQUEST:
@@ -351,7 +353,6 @@ export function planningPageFooterDataGetReducer(state = {}, action) {
       return state;
   }
 }
-
 
 export function tableDataScreenWiseAdPlayTimeGetReducer(state = {}, action) {
   switch (action.type) {
@@ -372,7 +373,6 @@ export function tableDataScreenWiseAdPlayTimeGetReducer(state = {}, action) {
   }
 }
 
-
 export function tableDataForSelectTriggerPageGetReducer(state = {}, action) {
   switch (action.type) {
     case GET_TABLE_DATA_FOR_SELECT_TRIGGER_REQUEST:
@@ -383,6 +383,25 @@ export function tableDataForSelectTriggerPageGetReducer(state = {}, action) {
         data: action.payload,
       };
     case GET_TABLE_DATA_FOR_SELECT_TRIGGER_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function tableDataSetAdPlayTimeReducer(state = {}, action) {
+  switch (action.type) {
+    case TABLE_DATA_SET_AD_PLAY_TIME_REQUEST:
+      return { loading: true };
+    case TABLE_DATA_SET_AD_PLAY_TIME_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case TABLE_DATA_SET_AD_PLAY_TIME_ERROR:
       return {
         loading: false,
         error: action.payload,
