@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./index.css"; // Import CSS for styling
 import animationData from "../../assets/lottie/loading.json";
 import { Player } from "@lordicon/react";
+import { Skeleton } from "antd";
 
 export const Loading = (props: any) => {
   const playerRef = useRef<Player>(null);
@@ -38,25 +39,28 @@ export const Loading = (props: any) => {
   }, []);
 
   return (
-    <div className={`loading-container ${loadingComplete ? "collapse" : ""}`}>
-      {/* <Lottie
-        options={defaultOptions}
-        height={props.height || 300}
-        width={props.width || 300}
-        isStopped={loadingComplete} // Stop animation when loading completes
-      /> */}
-      <Player ref={playerRef} icon={animationData} />
-      {props?.slider && (
-        <div className="loading-slider">
-          <div
-            className="loading-progress"
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
-      )}
+    // <div className={`loading-container ${loadingComplete ? "collapse" : ""}`}>
+    //   {/* <Lottie
+    //     options={defaultOptions}
+    //     height={props.height || 300}
+    //     width={props.width || 300}
+    //     isStopped={loadingComplete} // Stop animation when loading completes
+    //   /> */}
+    //   <Player ref={playerRef} icon={animationData} />
+    //   {props?.slider && (
+    //     <div className="loading-slider">
+    //       <div
+    //         className="loading-progress"
+    //         style={{ width: `${progress}%` }}
+    //       ></div>
+    //     </div>
+    //   )}
 
-      {/* Optionally show progress text */}
-      {/* <span className="loading-text">{progress}%</span> */}
+    //   {/* Optionally show progress text */}
+    //   {/* <span className="loading-text">{progress}%</span> */}
+    // </div>
+    <div className="py-4">
+      <Skeleton active paragraph={{ rows: 8 }} />
     </div>
   );
 };
