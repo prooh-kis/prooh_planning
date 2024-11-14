@@ -1,6 +1,7 @@
 import { useRef, ChangeEvent, useState } from "react";
 import { readExcelFile, validateGioData } from "../../utils/excelUtils";
 import { getDistance } from "geolib";
+import { ExcelExport } from "./ExcelExport";
 
 interface ExcelImportProps {
   selectedScreens?: any;
@@ -53,24 +54,20 @@ export function ExcelImport({
 
   const handleResetFile = () => {
     setFile(null);
-    if (type === "brand") {
-      console.log(brandScreens);
+    if (type.includes("brand")) {
       handleFinalSelectedScreens({
         type: "remove",
         screens: brandScreens
       });
-      console.log(filteredScreens.filter((s: any) => !brandScreens.map((sc: any) => sc._id).includes(s._id)))
       setFilteredScreens(filteredScreens.filter((s: any) => !brandScreens.map((sc: any) => sc._id).includes(s._id)));
       setDataBrand([]);
       setBrandScreens(null);        
 
-    } else if (type === "comp") {
-      console.log(compScreens);
+    } else if (type.includes("comp")) {
       handleFinalSelectedScreens({
         type: "remove",
         screens: compScreens
       });
-      console.log(filteredScreens.filter((s: any) => !compScreens.map((sc: any) => sc._id).includes(s._id)))
       setFilteredScreens(filteredScreens.filter((s: any) => compScreens.map((sc: any) => sc._id).includes(s._id)));
       setDataComp([]);
       setCompScreens(null);        
@@ -98,19 +95,36 @@ export function ExcelImport({
 
  
   const handleGetExcelData = (data: any) => {
-    const coordinates = data
+    const brandCoordinates = data.brand
       .map((x: any) => x.filter((y: any) => /^[+-]?\d+(\.\d+)?$/.test(y)))
       .filter((d: any) => d.length === 2);
+    
+    const compCoordinates = data.comp
+      .map((x: any) => x.filter((y: any) => /^[+-]?\d+(\.\d+)?$/.test(y)))
+      .filter((d: any) => d.length === 2);
+    
+    // const coordinates = data
+    //   .map((x: any) => x.filter((y: any) => /^[+-]?\d+(\.\d+)?$/.test(y)))
+    //   .filter((d: any) => d.length === 2);
 
-    if (validateGioData(data)) {
-      if (type === "brand") {
-        setDataBrand(coordinates);        
-      } else if (type === "comp") {
-        setDataComp(coordinates);
+    if (validateGioData(data.brand) && validateGioData(data.comp)) {
+      if (type.includes("brand")) {
+        setDataBrand(brandCoordinates);        
+      }
+      if (type.includes("comp")) {
+        setDataComp(compCoordinates);
       }
 
       const coordinatesWithScreensData: any = [];
-      for (const coordinate of coordinates) {
+      // for (const coordinate of coordinates) {
+      //   const center = coordinate;
+
+      //   let x = allScreens.filter((l: any) =>
+      //     withinRadius(center, [l.location.geographicalLocation.longitude, l.location.geographicalLocation.latitude], circleRadius)
+      //   );
+      //   coordinatesWithScreensData.push({ screens: x, coordinate: coordinate });
+      // }
+      for (const coordinate of brandCoordinates) {
         const center = coordinate;
 
         let x = allScreens.filter((l: any) =>
@@ -118,14 +132,21 @@ export function ExcelImport({
         );
         coordinatesWithScreensData.push({ screens: x, coordinate: coordinate });
       }
+      for (const coordinate of compCoordinates) {
+        const center = coordinate;
 
+        let x = allScreens.filter((l: any) =>
+          withinRadius(center, [l.location.geographicalLocation.longitude, l.location.geographicalLocation.latitude], circleRadius)
+        );
+        coordinatesWithScreensData.push({ screens: x, coordinate: coordinate });
+      }
       const filtered: any = getUniqueScreens(coordinatesWithScreensData)
       const newFiltered: any = filteredScreens;
-      console.log(filteredScreens);
-      console.log(filtered);
-      if (type === "brand") {
+
+      if (type.includes("brand")) {
         setBrandScreens(filtered);        
-      } else if (type === "comp") {
+      }
+      if (type.includes("comp")) {
         setCompScreens(filtered);
 
       }
@@ -151,6 +172,7 @@ export function ExcelImport({
     if (file) {
       try {
         const data = await readExcelFile(file);
+        console.log(data);
         handleGetExcelData(data);
       } catch (error) {
         console.error("Error reading Excel file:", error);
@@ -179,19 +201,18 @@ export function ExcelImport({
         <p className="text-sm text-primaryButton pr-2">Upload</p>
       </div>
         <div className="flex items-center justify-between pt-2">
-            <div>
-              {file !== null && (
-                <div className="flex items-center gap-2 truncate">
-                  <p className="text-sm text-green-700 truncate">{file?.name}</p>
-                  <i className="fi fi-sr-cross-small text-green-700 flex items-center" onClick={() => handleResetFile()}></i>
-                </div>
-              )}
-            </div>
-         
-          <div className="flex items-center gap-2 truncate">
-            <i className="fi fi-sr-file-excel flex items-center text-green-600"></i>
-            <p className="text-sm truncate">Download Sample</p>
+          <div>
+            {file !== null && (
+              <div className="flex items-center gap-2 truncate">
+                <p className="text-sm text-green-700 truncate">{file?.name}</p>
+                <i className="fi fi-sr-cross-small text-green-700 flex items-center" onClick={() => handleResetFile()}></i>
+              </div>
+            )}
           </div>
+         
+          <ExcelExport
+            fileName="store_location_coordinates"
+          />
         </div>
     </div>
   );

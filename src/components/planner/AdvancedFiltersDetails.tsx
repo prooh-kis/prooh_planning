@@ -11,7 +11,7 @@ import { message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getRegularVsCohortPriceData, getScreenDataForAdvanceFilters } from "../../actions/screenAction";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { ADVANCE_FILTER_SCREENS_MAP_DATA, COST_SUMMARY, FULL_CAMPAIGN_PLAN, SELECTED_AUDIENCE_TOUCHPOINTS, SELECTED_SCREENS_ID } from "../../constants/localStorageConstants";
+import { ADVANCE_FILTER_SCREENS_MAP_DATA, COST_SUMMARY, FULL_CAMPAIGN_PLAN, REGULAR_VS_COHORT_PRICE_DATA, SELECTED_AUDIENCE_TOUCHPOINTS, SELECTED_SCREENS_ID } from "../../constants/localStorageConstants";
 import { ALL_TOUCHPOINTS } from "../../constants/helperConstants";
 import { MapWithGeometry } from "../../components/map/MapWithGeometry";
 import { getUniqueScreens } from "../../utils/screenRanking";
@@ -58,6 +58,8 @@ export const AdvanceFiltersDetails = ({
   const [excelFilteredScreens, setExcelFilteredScreens] = useState<any>([]);
   const [routeFilteredScreens, setRouteFilteredScreens] = useState<any>([]);
   const [poiFilteredScreens, setPOIFilteredScreens] = useState<any>([]);
+
+  const [polygons, setPolygons] = useState([]);
 
   const [selectedScreensFromMap, setSelectedScreensFromMap] = useState<any>([]);
 
@@ -266,9 +268,10 @@ export const AdvanceFiltersDetails = ({
     dispatch(
       getScreenDataForAdvanceFilters({
         id: campId,
-        touchPoints: pathname?.split("/").includes("storebasedplan") ? ALL_TOUCHPOINTS : getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).touchPoints,
+        touchPoints: pathname?.split("/").includes("storebasedplan") ? ALL_TOUCHPOINTS : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].touchPoints,
       })
     );
+    saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, {});
     
   }, [dispatch, campId]);
 
@@ -312,6 +315,7 @@ export const AdvanceFiltersDetails = ({
                 handleRouteSetup={handleRouteSetup}
                 handleRemoveRoute={handleRemoveRoute}
                 handleFinalSelectedScreens={handleFinalSelectedScreens}
+                polygons={polygons}
               />
             </div>
           ) : (
@@ -386,7 +390,9 @@ export const AdvanceFiltersDetails = ({
               data={circleData}
               handleSelectFromMap={handleSelectFromMap}
               handleAddManualSelection={handleAddManualSelectedScreenIntoFinalSelectedScreens}
-              onPolygonComplete={(screens: any) => handleFinalSelectedScreens({ type: 'add', screens })} 
+              onPolygonComplete={(screens: any) => handleFinalSelectedScreens({ type: 'add', screens })}
+              setPolygons={setPolygons}
+              polygons={polygons}
             />
           )}
 

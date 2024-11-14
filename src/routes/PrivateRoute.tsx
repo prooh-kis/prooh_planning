@@ -1,6 +1,6 @@
 import React, { ElementType, PropsWithChildren } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { LOGIN } from './routes';
+import { AUTH } from './routes';
 
 interface IProps {
   layout: ElementType;
@@ -17,7 +17,7 @@ const PrivateRoute: React.FC<PropsWithChildren<IProps>> = (props) => {
   ) : (
     <Navigate
       to={{
-        pathname: LOGIN,
+        pathname: AUTH,
         search:
           pathname && pathname !== '/' ? `?redirect=${pathname}` : undefined,
       }}

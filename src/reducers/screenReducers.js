@@ -178,6 +178,7 @@ export function screenSummaryDataGetReducer(state = {}, action) {
       return { loading: true };
     case GET_SCREEN_SUMMARY_DATA_SUCCESS:
       saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, action.payload);
+      // saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, action.payload);
 
       return {
         loading: false,

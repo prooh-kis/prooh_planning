@@ -293,27 +293,6 @@ export const CreativeUploadDetails = ({
     return true;
   };
 
-  const handelSetCreativeUpload = (screenData: any) => {
-    console.log("handelSetCreativeUpload called: ");
-    const result: any = {};
-    for (let city in screenData) {
-      if (result[city] === undefined) {
-        result[city] = [];
-      }
-      for (let data of screenData[city]) {
-        result[city].push({
-          screenResolution: data?.resolution,
-          count: data?.count,
-          creativeDuration: data?.duration,
-          standardDayTimeCreatives: data?.standardDayTimeCreatives || [],
-          standardNightTimeCreatives: data?.standardDayTimeCreatives || [],
-          triggerCreatives: data?.triggerCreatives || [],
-        });
-      }
-    }
-    setCreativeUploadData(result);
-    saveDataOnLocalStorage(CAMPAIGN_CREATIVES, result);
-  };
 
   const isTriggerAvailable = () => {
     const result =

@@ -1,3 +1,4 @@
+import { DrawnMapPolygon } from "../../components/molecules/DrawnMapPolygon";
 import { CheckboxInput } from "../atoms/CheckboxInput";
 import { ExcelImport } from "../molecules/ExcelImport"
 import { RouteProximity } from "../molecules/RouteProximity"
@@ -19,6 +20,7 @@ interface LocationProximityProps {
   handleRouteSetup?: any;
   handleRemoveRoute?: any;
   handleFinalSelectedScreens?: any;
+  polygons?: any;
 }
 export const LocationProximity = ({
   routes,
@@ -36,32 +38,23 @@ export const LocationProximity = ({
   handleRouteSetup,
   handleRemoveRoute,
   handleFinalSelectedScreens,
+  polygons,
 }: LocationProximityProps) => {
   return (
     <div className="pt-2">
-    <ExcelImport
-      icon="fi fi-rr-shop pl-2 text text-primaryButton flex items-center"
-      text="Brand Store"
-      setDataBrand={setDataBrand}
-      allScreens={allScreens}
-      setFilteredScreens={setExcelFilteredScreens}
-      filteredScreens={excelFilteredScreens}
-      circleRadius={circleRadius}
-      type={"brand"}
-      handleFinalSelectedScreens={handleFinalSelectedScreens}
+      <ExcelImport
+        icon="fi fi-rr-shop pl-2 text text-primaryButton flex items-center"
+        text="Stores"
+        setDataBrand={setDataBrand}
+        setDataComp={setDataComp}
+        allScreens={allScreens}
+        setFilteredScreens={setExcelFilteredScreens}
+        filteredScreens={excelFilteredScreens}
+        circleRadius={circleRadius}
+        type={["brand", "comp"]}
+        handleFinalSelectedScreens={handleFinalSelectedScreens}
 
-    />
-    <ExcelImport
-      icon="fi fi-rr-shop pl-2 text text-red-600 flex items-center"
-      text="Competitor Store"
-      setDataComp={setDataComp}
-      allScreens={allScreens}
-      setFilteredScreens={setExcelFilteredScreens}
-      filteredScreens={excelFilteredScreens}
-      circleRadius={circleRadius}
-      type={"comp"}
-      handleFinalSelectedScreens={handleFinalSelectedScreens}
-    />
+      />
     <RouteProximity
       routes={routes}
       routeOrigin={routeOrigin}
@@ -71,6 +64,10 @@ export const LocationProximity = ({
       handleRouteSetup={handleRouteSetup}
       handleRemoveRoute={handleRemoveRoute}
     />
+    <DrawnMapPolygon
+      polygons={polygons}
+    />
+
     <div className="">
       <p className="text-[14px]">Showing Result</p>
       <div className="pb-1 grid grid-cols-12 gap-2 flex items-center">

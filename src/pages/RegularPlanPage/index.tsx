@@ -89,25 +89,6 @@ export const RegularPlanPage: React.FC = () => {
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-  const screensAudiencesDataGet = useSelector(
-    (state: any) => state.screensAudiencesDataGet
-  );
-  const {
-    loading: loadingAudiences,
-    error: errorAudiences,
-    data: screensAudiences,
-  } = screensAudiencesDataGet;
-
-  const screensCostDataGet = useSelector(
-    (state: any) => state.screensCostDataGet
-  );
-  const {
-    loading: loadingCost,
-    error: errorCost,
-    data: screensCost,
-  } = screensCostDataGet;
-
-
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
   );
@@ -148,7 +129,6 @@ export const RegularPlanPage: React.FC = () => {
     if (campaignId !== null || undefined) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
-    dispatch(getScreensAudiencesData({ id: "", markets: ALL_MARKETS }));
 
   }, [dispatch, campaignId]);
 
@@ -172,8 +152,6 @@ export const RegularPlanPage: React.FC = () => {
           <AudienceTouchPointsDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
-            loading={loadingAudiences || loadingCost}
-            error={errorAudiences || errorCost}
             campaignId={campaignId}
           />
         ) : currentStep === 3 ? (
@@ -195,6 +173,7 @@ export const RegularPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            regularVsCohortSuccessStatus={success}
           />
         ) : currentStep === 6 ? (
           <TriggerDetails

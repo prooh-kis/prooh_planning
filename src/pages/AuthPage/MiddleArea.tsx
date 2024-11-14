@@ -31,6 +31,9 @@ export function MiddleArea(props: any) {
     if (email.lenght == 0) {
       alert("Enter your email");
       return false;
+    } else if (name === "") {
+      alert("Enter your name");
+      return false;
     } else if (!isValidEmail(email)) {
       alert("Please enter valid email");
       return false;

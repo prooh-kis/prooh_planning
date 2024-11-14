@@ -18,7 +18,8 @@ import { Footer } from "../../components/footer";
 import { message } from "antd";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { useLocation } from "react-router-dom";
-import { CAMPAIGN, COST_SUMMARY, FULL_CAMPAIGN_PLAN, REGULAR_VS_COHORT_PRICE_DATA } from "../../constants/localStorageConstants";
+import { CAMPAIGN, COST_SUMMARY, FULL_CAMPAIGN_PLAN, REGULAR_VS_COHORT_PRICE_DATA, SCREEN_SUMMARY_SELECTION } from "../../constants/localStorageConstants";
+import { Loading } from "../../components/Loading";
 
 export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step}: any) => {
 
@@ -68,6 +69,7 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
         priceData
       );
     }
+    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {});
   }, [priceData, cohorts, dispatch, duration, gender, screenIds]);
 
   const handleRegularVsCohortSelection = (type: any) => {
@@ -98,7 +100,7 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
         </p>
       </div>
       {loadingPriceData ? (
-        <h1>Loading...</h1>
+        <Loading/>
       ) : errorPriceData ? (
         <p>Error: {errorPriceData}</p>
       ) : (
@@ -116,6 +118,7 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
                 setShowSummary={setShowSummary}
                 type="regular"
                 showSummary={showSummary}
+                loading={loadingPriceData}
               />
               {showSummary === "regular" && (
                 <RegularCohortSummaryTable

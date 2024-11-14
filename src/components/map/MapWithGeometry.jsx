@@ -22,7 +22,6 @@ export function MapWithGeometry(props) {
   const [isSelectedData, setIsSelectedData] = useState(false);
 
   const [userLocation, setUserLocation] = useState(null);
-  const [polygons, setPolygons] = useState([]);
 
   
   // console.log(props?.data["brand"][0]?.concat(props?.data["comp"][0]))
@@ -51,6 +50,7 @@ function MapDrawControl({
       controls: {
         polygon: true, // Enable polygon drawing
         trash: true, // Enable delete control
+        direct_select: true, // Allow direct selection of drawn features
       },
       defaultMode: "draw_polygon", // Set default mode to polygon drawing
     }),
@@ -104,31 +104,34 @@ function MapDrawControl({
 
   const onCreatePolygon = useCallback((e) => {
     const newPolygon = e.features[0];
-    setPolygons((prevPolygons) => {
+    console.log(newPolygon);
+
+    props?.setPolygons((prevPolygons) => {
       const updatedPolygons = [...prevPolygons, newPolygon];
       updateSelectedMarkers(updatedPolygons); // Update markers with all polygons
       return updatedPolygons;
     });
-  }, [props?.allScreens]);
+  }, [props]);
 
-  const onUpdate = useCallback((e) => {
+  const onUpdatePolygon = useCallback((e) => {
     const updatedPolygon = e.features[0];
-    setPolygons((prevPolygons) =>
+    props?.setPolygons((prevPolygons) =>
       prevPolygons.map((polygon) =>
         polygon.id === updatedPolygon.id ? updatedPolygon : polygon
       )
     );
-    updateSelectedMarkers(polygons);
-  }, [polygons]);
+    updateSelectedMarkers(props.polygons);
+  }, [props]);
 
-  const onDelete = useCallback((e) => {
+  const onDeletePolygon = useCallback((e) => {
     const deletedPolygonIds = e.features.map((feature) => feature.id);
-    setPolygons((prevPolygons) =>
+    console.log(deletedPolygonIds);
+    props?.setPolygons((prevPolygons) =>
       prevPolygons.filter((polygon) => !deletedPolygonIds.includes(polygon.id))
     );
     updateSelectedMarkers();
 
-  }, [props?.allScreens, polygons]);
+  }, [props]);
 
 
   // Get user's current location
@@ -221,7 +224,7 @@ function MapDrawControl({
       if (findCoordinates(props?.data["brand"], coord)) {
         color = "green";
       } else if (findCoordinates(props?.data["comp"], coord)) {
-        color = "brown";
+        color = "orange";
       }
 
       return {
@@ -328,143 +331,149 @@ function MapDrawControl({
   }, [selectedMarkers]);
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center">
-      <ReactMapGL
-        ref={mapRef}
-        initialViewState={viewState}
-        style={{ borderRadius: "10px" }}
-        mapStyle="mapbox://styles/mapbox/streets-v11"
-        mapboxAccessToken={
-          process.env.REACT_APP_MAPBOX ||
-          "pk.eyJ1Ijoic2FjaGlucmFpbmEiLCJhIjoiY2x3N242M2thMDB0MDJsczR2eGF4dXJsZSJ9.ocBaZJ9rPSUhmS4zGRi7vQ"
-        }
-        onMove={(e) => setViewState(e.viewState)}
-      >
-        {selectedMarkers && (
-          <MapDrawControl
-            position="top-left"
-            onCreate={onCreatePolygon}
-            onUpdate={onUpdate}
-            onDelete={onDelete}
-          />
-        )}
-
-        {selectedMarkers &&
-          selectedMarkers.map((marker, i) => (
-            <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
-              <div
-                title={`Selected screens ${props?.filteredScreens?.length}`}
-                className="cursor-pointer"
-              >
-                <i
-                  className="fi fi-ss-circle text-primaryButton text-[14px]"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsSelectedData(true);
-                    getSingleScreenData(marker[2]);
-                  }}
-                ></i>
-              </div>
-            </Marker>
-          ))}
-        {unSelectedMarkers?.length !== selectedMarkers?.length &&
-          unSelectedMarkers &&
-          unSelectedMarkers.map((marker, i) => (
-            <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
-              <div
-                title={`UnSeletced screens ${
-                  props.allScreens?.filter((s) =>
-                    props?.filteredScreens
-                      ?.map((f) => f._id)
-                      .includes(s._id)
-                  )?.length
-                }`}
-                className="cursor-pointer"
-              >
-                <i
-                  // [#F94623]
-                  className="fi-ss-circle text-[#F94623] text-[12px]"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsSelectedData(false);
-                    getSingleScreenData(marker[2]);
-                  }}
-                ></i>
-              </div>
-            </Marker>
-          ))}
-
-        {screenData && (
-          <Popup
-            key={screenData._id}
-            latitude={screenData?.location?.geographicalLocation?.latitude}
-            longitude={screenData?.location?.geographicalLocation?.longitude}
-            onClose={() => {
-              setScreenData(null);
-            }}
-            anchor="left"
-          >
-            <MapboxScreen
-              handleAddManualSelection={props?.handleAddManualSelection}
-              screenData={screenData}
-              handleSelectFromMap={props.handleSelectFromMap}
-              isSelectedData = {isSelectedData}
+    <div className="h-full w-full items-top">
+      <div className="flex flex-col items-end gap-2 right-12 pt-2 absolute z-10">
+        <div className="flex items-center gap-2 group">
+          <h1 className="text-[10px] group-hover:opacity-100 opacity-0 transition-opacity duration-300">Brand Store</h1>
+          <div className="h-4 w-4 bg-green-700 rounded-full"></div>
+        </div>
+        <div className="flex items-center gap-2 group">
+          <h1 className="text-[10px] group-hover:opacity-100 opacity-0 transition-opacity duration-300">Competitor Store</h1>
+          <div className="h-4 w-4 bg-orange-300 rounded-full"></div>
+        </div>
+      </div>
+      <div className="w-full h-full flex items-center justify-center ">
+        <ReactMapGL
+          ref={mapRef}
+          initialViewState={viewState}
+          style={{ borderRadius: "10px" }}
+          mapStyle="mapbox://styles/mapbox/streets-v11"
+          mapboxAccessToken={
+            process.env.REACT_APP_MAPBOX ||
+            "pk.eyJ1Ijoic2FjaGlucmFpbmEiLCJhIjoiY2x3N242M2thMDB0MDJsczR2eGF4dXJsZSJ9.ocBaZJ9rPSUhmS4zGRi7vQ"
+          }
+          onMove={(e) => setViewState(e.viewState)}
+        >
+          {/* {selectedMarkers && ( */}
+            <MapDrawControl
+              position="top-left"
+              onCreate={onCreatePolygon}
+              onUpdate={onUpdatePolygon}
+              onDelete={onDeletePolygon}
             />
-          </Popup>
-        )}
+          {/* )} */}
 
-        {routeData?.length > 0 &&
-          routeData.map((route, index) => (
-            <Source
-              key={index}
-              id={`${index}`}
-              type="geojson"
-              data={{
-                type: "Feature",
-                properties: {},
-                geometry: {
-                  type: "LineString",
-                  coordinates: route.coordinates,
-                },
-              }}
-            >
-              <Layer
-                id={`layer-${index}`}
-                type="line"
-                paint={{
-                  "line-color": `${randomColor(index)}`,
-                  "line-width": 4,
-                }}
-              />
-            </Source>
+          {selectedMarkers && selectedMarkers.length > 0 && selectedMarkers.map((marker, i) => (
+            <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
+              <div title={`Selected screens ${props?.filteredScreens?.length}`} className="cursor-pointer">
+                <i className="fi fi-ss-circle text-primaryButton text-[14px]" onClick={(e) => {
+                  e.stopPropagation();
+                  setIsSelectedData(true);
+                  getSingleScreenData(marker[2]);
+                }}></i>
+              </div>
+            </Marker>
           ))}
-        
-        <Source id="circle-data" type="geojson" data={circlesData}>
-          <Layer
-            id="circle-layer"
-            type="fill"
-            paint={{
-              // "fill-color": "red",
-              "fill-color": ["get", "color"],
-              "fill-opacity": 0.5,
-            }}
-          />
-        </Source>
+          {unSelectedMarkers?.length !== selectedMarkers?.length &&
+            unSelectedMarkers &&
+            unSelectedMarkers.map((marker, i) => (
+              <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
+                <div
+                  title={`UnSeletced screens ${
+                    props.allScreens?.filter((s) =>
+                      props?.filteredScreens
+                        ?.map((f) => f._id)
+                        .includes(s._id)
+                    )?.length
+                  }`}
+                  className="cursor-pointer"
+                >
+                  <i
+                    // [#F94623]
+                    className="fi-ss-circle text-[#F94623] text-[12px]"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsSelectedData(false);
+                      getSingleScreenData(marker[2]);
+                    }}
+                  ></i>
+                </div>
+              </Marker>
+            ))}
 
-        <Source id="polygon-data" type="geojson" data={{
-            type: "FeatureCollection",
-            features: polygons
-        }}>
-          <Layer
-            id="polygon-layer"
-            type="fill"
-            paint={{
-              "fill-color": "#088",
-              "fill-opacity": 0.5,
-            }}
-          />
-        </Source>
-      </ReactMapGL>
+          {screenData && (
+            <Popup
+              key={screenData._id}
+              latitude={screenData?.location?.geographicalLocation?.latitude}
+              longitude={screenData?.location?.geographicalLocation?.longitude}
+              onClose={() => {
+                setScreenData(null);
+              }}
+              anchor="left"
+            >
+              <MapboxScreen
+                handleAddManualSelection={props?.handleAddManualSelection}
+                screenData={screenData}
+                handleSelectFromMap={props.handleSelectFromMap}
+                isSelectedData={isSelectedData}
+              />
+            </Popup>
+          
+          )}
+
+          {routeData?.length > 0 &&
+            routeData.map((route, index) => (
+              <Source
+                key={index}
+                id={`${index}`}
+                type="geojson"
+                data={{
+                  type: "Feature",
+                  properties: {},
+                  geometry: {
+                    type: "LineString",
+                    coordinates: route.coordinates,
+                  },
+                }}
+              >
+                <Layer
+                  id={`layer-${index}`}
+                  type="line"
+                  paint={{
+                    "line-color": `${randomColor(index)}`,
+                    "line-width": 4,
+                  }}
+                />
+              </Source>
+            ))}
+          
+          <Source id="circle-data" type="geojson" data={circlesData}>
+            <Layer
+              id="circle-layer"
+              type="fill"
+              paint={{
+                // "fill-color": "red",
+                "fill-color": ["get", "color"],
+                "fill-opacity": 0.5,
+              }}
+            />
+          </Source>
+
+          <Source id="polygon-data" type="geojson" data={{
+              type: "FeatureCollection",
+              features: props?.polygons
+          }}>
+            <Layer
+              id="polygon-layer"
+              type="fill"
+              paint={{
+                "fill-color": "#088",
+                "fill-opacity": 0.2,
+              }}
+            />
+          </Source>
+        </ReactMapGL>
+      </div>
     </div>
   );
 }

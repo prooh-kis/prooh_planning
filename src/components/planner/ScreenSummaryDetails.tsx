@@ -35,12 +35,14 @@ interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
   campaignId?: any;
+  regularVsCohortSuccessStatus?: any;
 }
 
 export const ScreenSummaryDetails = ({
   setCurrentStep,
   step,
   campaignId,
+  regularVsCohortSuccessStatus
 }: EnterCampaignBasicDetailsProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -131,7 +133,7 @@ export const ScreenSummaryDetails = ({
                     getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[s]
                   )
                     ?.map((f: any) => f.status)
-                    ?.filter((s: any) => s === false).length,
+                    ?.filter((s: any) => s === false)?.length,
                 ]
               : [0, 0],
         };
@@ -206,6 +208,16 @@ export const ScreenSummaryDetails = ({
 
   useEffect(() => {
     // if (!getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)) {
+    // const timer = setTimeout(() => {
+    //   dispatch(
+    //     getScreenSummaryData({
+    //       id: campaignId,
+    //       type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+    //         ?.selectedType,
+    //     })
+    //   );
+    // }, 2000);
+    // return () => clearTimeout(timer);
     dispatch(
       getScreenSummaryData({
         id: campaignId,
@@ -218,15 +230,15 @@ export const ScreenSummaryDetails = ({
   }, [campaignId, dispatch]);
 
   useEffect(() => {
-    if (pathname.split("/").includes("storebasedplan")) {
+    // if (pathname.split("/").includes("storebasedplan")) {
       dispatch(
         getScreenSummaryPlanTableData({
           id: campaignId,
           screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
         })
       );
-    }
-  },[dispatch, pathname]);
+    // }
+  },[dispatch]);
   
   useEffect(() => {
     if (pathname.split("/").includes("iknowitallplan") && step === 4) {
@@ -266,11 +278,13 @@ export const ScreenSummaryDetails = ({
         <></>
       ) : (
         <div className="mt-2">
-          <TabWithIcon
-            currentTab={currentTab}
-            setCurrentTab={setCurrentTab}
-            tabData={screenSummaryTabData}
-          />
+          {screenSummaryData && (
+            <TabWithIcon
+              currentTab={currentTab}
+              setCurrentTab={setCurrentTab}
+              tabData={screenSummaryTabData}
+            />
+          )}
         </div>
       )}
 

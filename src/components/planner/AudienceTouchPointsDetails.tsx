@@ -13,7 +13,7 @@ import {
 } from "../tables";
 import { useDispatch, useSelector } from "react-redux";
 import { Footer } from "../../components/footer";
-import { getPlanningPageFooterData, getScreenDataForAdvanceFilters, getScreensCostData } from "../../actions/screenAction";
+import { getPlanningPageFooterData, getScreenDataForAdvanceFilters, getScreensAudiencesData, getScreensCostData } from "../../actions/screenAction";
 import { AUDIENCE_DATA, CAMPAIGN, COST_SUMMARY, FULL_CAMPAIGN_PLAN, SELECTED_AUDIENCE_TOUCHPOINTS, TOTAL_SCREEN_COST_DATA } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { ALL_COHORTS, ALL_MARKETS, ALL_TOUCHPOINTS } from "../../constants/helperConstants";
@@ -22,8 +22,6 @@ interface EnterAudienceTouchpointDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
   data?: any;
-  loading?: boolean;
-  error?: any;
   marketRef?: any;
   audienceRef?: any;
   touchpointRef?: any;
@@ -33,7 +31,6 @@ interface EnterAudienceTouchpointDetailsProps {
 export const AudienceTouchPointsDetails = ({
   setCurrentStep,
   step,
-  error,
   marketRef,
   audienceRef,
   touchpointRef,
@@ -143,7 +140,13 @@ export const AudienceTouchPointsDetails = ({
   }, [screensCost]);
 
   useEffect(() => {
-
+    dispatch(
+      getScreensAudiencesData({
+        id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
+        markets: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.markets,
+      })
+    );
+    
     dispatch(
       getScreensCostData({
         id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,

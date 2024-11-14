@@ -84,24 +84,6 @@ export const SpecialDayPlanPage: React.FC = () => {
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-  const screensAudiencesDataGet = useSelector(
-    (state: any) => state.screensAudiencesDataGet
-  );
-  const {
-    loading: loadingAudiences,
-    error: errorAudiences,
-    data: screensAudiences,
-  } = screensAudiencesDataGet;
-
-  const screensCostDataGet = useSelector(
-    (state: any) => state.screensCostDataGet
-  );
-  const {
-    loading: loadingCost,
-    error: errorCost,
-    data: screensCost,
-  } = screensCostDataGet;
-
   const screensDataAdvanceFilterGet = useSelector(
     (state: any) => state.screensDataAdvanceFilterGet
   );
@@ -142,27 +124,27 @@ export const SpecialDayPlanPage: React.FC = () => {
           )[0]?.id || 0
         ) + 1
       );
-      dispatch(
-        getScreensAudiencesData({
-          id: campDetails?._id,
-          markets: campDetails?.markets,
-        })
-      );
-      dispatch(
-        getScreensCostData({
-          id: campDetails?._id,
-          cohorts: campDetails?.cohorts,
-          touchPoints: campDetails?.touchPoints,
-          gender: campDetails?.gender,
-          duration: campDetails?.duration,
-        })
-      );
-      dispatch(
-        getScreenSummaryPlanTableData({
-          id: campaignId,
-          screenIds: campDetails?.screenIds,
-        })
-      );
+      // dispatch(
+      //   getScreensAudiencesData({
+      //     id: campDetails?._id,
+      //     markets: campDetails?.markets,
+      //   })
+      // );
+      // dispatch(
+      //   getScreensCostData({
+      //     id: campDetails?._id,
+      //     cohorts: campDetails?.cohorts,
+      //     touchPoints: campDetails?.touchPoints,
+      //     gender: campDetails?.gender,
+      //     duration: campDetails?.duration,
+      //   })
+      // );
+      // dispatch(
+      //   getScreenSummaryPlanTableData({
+      //     id: campaignId,
+      //     screenIds: campDetails?.screenIds,
+      //   })
+      // );
       const curr =
         Number(
           pages.filter(
@@ -174,18 +156,18 @@ export const SpecialDayPlanPage: React.FC = () => {
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     } else {
-      dispatch(getScreensAudiencesData({ id: "", markets: [] }));
-      dispatch(
-        getScreensCostData({
-          id: "",
-          cohorts: [],
-          touchPoints: [],
-          gender: "both",
-          duration: 30,
-        })
-      );
+      // dispatch(getScreensAudiencesData({ id: "", markets: [] }));
+      // dispatch(
+      //   getScreensCostData({
+      //     id: "",
+      //     cohorts: [],
+      //     touchPoints: [],
+      //     gender: "both",
+      //     duration: 30,
+      //   })
+      // );
     }
-  }, [dispatch, campaignDetails]);
+  }, [success, campaignDetails, campaignId]);
 
   useEffect(() => {
     if (campaignId !== null || undefined) {
@@ -215,16 +197,12 @@ export const SpecialDayPlanPage: React.FC = () => {
           <AudienceTouchPointsDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
-            loading={loadingAudiences || loadingCost}
-            error={errorAudiences || errorCost}
             campaignId={campaignId}
           />
         ) : currentStep === 3 ? (
           <AdvanceFiltersDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
-            loading={loadingAdvanceFilterScreens}
-            error={errorAdvanceFilterScreens}
             campaignId={campaignId}
           />
         ) : currentStep === 4 ? (

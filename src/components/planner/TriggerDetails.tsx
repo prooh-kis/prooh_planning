@@ -124,11 +124,10 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
   } = tableDataForSelectTriggerPageGet;
 
   const handleSelectTrigger = useCallback(() => {
-    setIsDisabled(true);
     saveDataOnLocalStorage(SELECTED_TRIGGER, {
-      weatherTriggers: {},
-      sportsTriggers: {},
-      vacantSlots: {},
+      weatherTriggers: [],
+      sportsTriggers: [],
+      vacantSlots: [],
     });
 
     saveDataOnLocalStorage(SELECTED_TRIGGER, {

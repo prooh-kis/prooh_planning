@@ -25,7 +25,7 @@ export const DropdownInput = ({
         value={selectedOption}
         onChange={handleSelectChange}
       >
-        <option value="">{placeHolder}</option>  {/* Default option */}
+        <option value="">{placeHolder}</option>
         {options?.map((opt: any, index: any) => (
           <option key={index} value={opt.value}>{opt.label}</option>
         ))}

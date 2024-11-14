@@ -1,6 +1,5 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { CAMPAIGN_DETAILS_PAGE } from '../../routes/routes';
 
 interface IProps {
   children?: React.ReactNode;
@@ -11,7 +10,7 @@ export const MainContentContainer: React.FC<IProps> = (props) => {
   const { children } = props;
   return (
     <div
-      className={`p-10 ${pathname.split("/").splice(1)[0] === "campaignDetailsPage" && "bg-gray-50"}`}
+      className={`p-10 bg-gray-50`}
     >
       {children}
     </div>

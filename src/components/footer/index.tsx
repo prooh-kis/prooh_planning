@@ -91,7 +91,7 @@ export const Footer = ({
           </button>
           <button
             type="submit"
-            className="border border-1 py-2 px-4 text-[14px] rounded-md bg-blue-500 text-white hover:bg-blue-600"
+            className="border border-1 py-2 px-4 text-[14px] rounded-md bg-blue-500 text-white hover:bg-blue-600 truncate"
             title="Save and go next"
             onClick={handleSave}
             disabled={isDisabled}
