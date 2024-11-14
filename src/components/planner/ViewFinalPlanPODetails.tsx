@@ -380,6 +380,8 @@ export const ViewFinalPlanPODetails = ({
                     ],
                     fileName: `${poInput?.name}_Approach`,
                   };
+                  console.log(pdfDownload);
+
                   setPdfDownload(pdfToDownload);
                 }}
               />

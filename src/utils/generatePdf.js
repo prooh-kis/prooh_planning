@@ -86,23 +86,22 @@ export const generatePlanApproachPdfFromJSON = ({ download, jsonData, fileName, 
   });
 
   // Page 4
-  addPageWithHeading(doc, "Screens", "Screen-wise Slot and Impression Details");
+  addPageWithHeading(doc, "Screens", "Screen wise slot time zone details");
   campaignData.screenWiseSlotDetails.forEach((screen, idx) => {
     doc.setFontSize(12);
       const yStart = yOffset + 10;
       doc.text(`${screen.screenName}`, 10, yOffset);
       yOffset += 10;
-
       doc.autoTable({
         head: [["Day", "Slot"]],
-        body: screen.slotsInfo.map((slot) => [slot.day, slot.slot]),
+        body: Object.entries(screen.slotsInfo.reduce((acc, { day, slot }) => ((acc[day] ??= []).push(slot), acc), {})),
         startY: yOffset,
         margin: { top: 30 },
       });
 
       yOffset = doc.lastAutoTable.finalY + 20; // Move below the last table
       if (yOffset > 280) {
-        addPageWithHeading(doc, "Screens", "Screen-wise Slot and Impression Details");
+        addPageWithHeading(doc, "Screens", "Screen-wise slot time zone details");
       }
   });
 
@@ -111,7 +110,6 @@ export const generatePlanApproachPdfFromJSON = ({ download, jsonData, fileName, 
     doc.save(`${fileName}.pdf`);
   } else {
     const pdfBlob = doc.output('blob');
-    console.log(pdfBlob);
     return pdfBlob;
   }
 }
