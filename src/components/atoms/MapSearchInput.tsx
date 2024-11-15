@@ -78,6 +78,7 @@ export function MapSearchInput(props: any) {
     } else if (e.key === "ArrowDown") {
       // setHighlightedIndex((prevIndex) => Math.min(prevIndex + 1, suggestions.length - 1));
       setHighlightedIndex((prevIndex) => prevIndex + 1);
+      // setQuery(e.target.value);
     } else if (e.key === "ArrowUp") {
       setHighlightedIndex((prevIndex) => Math.max(prevIndex - 1, 0));
     }
@@ -125,7 +126,10 @@ export function MapSearchInput(props: any) {
         onClick={() => {
           handleSuggestionClick(suggestion);
         }}
-        onMouseEnter={() => setHighlightedIndex(index)}
+        onMouseEnter={(e: any) => {
+          setHighlightedIndex(index)
+          setQuery(suggestion);
+        }}
         // onMouseDown={() => {
         //   handleSuggestionClick(suggestion);
         // }}

@@ -207,7 +207,7 @@ export const VendorConfirmationDetails = ({
 
   const handleSaveAndContinue = async () => {
     if (isDisabled) {
-      message.error("Please confirm budget for your selected trigger");
+      message.error("");
     } else {
       let imageArr: string[] = [];
       for (let data of files) {
@@ -358,7 +358,9 @@ export const VendorConfirmationDetails = ({
         </div>
       )}
 
-      <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
+      <div className="px-4 fixed bottom-0 left-0 w-full bg-white"
+        onDoubleClick={() => setIsDisabled(!isDisabled)}
+      >
         <Footer
           handleBack={() => {
             setCurrentStep(step - 1);

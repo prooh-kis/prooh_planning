@@ -428,7 +428,7 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
                       Buy Vacant Slot
                     </h1>
                     <p className="text-[14px]">
-                      Buy Vacant slots at 50% discount
+                      Buy Vacant slots at discounted cost
                     </p>
                   </div>
                 </div>
