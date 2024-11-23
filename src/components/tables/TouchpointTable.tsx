@@ -86,7 +86,7 @@ export const TouchpointTable = ({
                 <div className="col-span-2 pr-2">
                   <LinearBar
                     value={
-                    ((touchPoints[a]["Male"] + touchPoints[a]["Female"]) / 2).toFixed(2)
+                    (touchPoints[a]["Male"] + touchPoints[a]["Female"]).toFixed(2)
                   } colors={["#F3F3F3", "#7AB3A2"]}/>
                   <LinearBar value={
                     (touchPoints[a]["Screen"].toFixed(2))

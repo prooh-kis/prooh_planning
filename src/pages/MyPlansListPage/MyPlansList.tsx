@@ -6,16 +6,16 @@ import { MyPlansListTable } from '../../components/tables';
 
 const allTabs = [{
   id: "1",
-  label: "All"
+  label: "Active"
 },{
   id: "2",
-  label: "Approved"
+  label: "Upcoming"
 },{
   id: "3",
-  label: "Pending"
+  label: "Deleted"
 },{
   id: "4",
-  label: "Rejected"
+  label: "History"
 }];
 
 
