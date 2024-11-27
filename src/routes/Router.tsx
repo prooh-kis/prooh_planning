@@ -21,7 +21,19 @@ import {
 } from "../pages";
 
 import { PrivateRoute } from "./PrivateRoute";
-import { AUTH, CAMPAIGN_DETAILS_PAGE, FORGET_PASSWORD, HOME, MY_CAMPAIGNS_LIST, MY_PLANS_LIST, MY_REQUESTS_LIST, REGULARPLAN, UPDATE_PASSWORD, VERIFY_EMAIL } from "./routes";
+import {
+  AUTH,
+  CAMPAIGN_DETAILS_PAGE,
+  FORGET_PASSWORD,
+  HOME,
+  MY_CAMPAIGNS_LIST,
+  MY_PLANS_LIST,
+  MY_REQUESTS_LIST,
+  REGULARPLAN,
+  UPDATE_PASSWORD,
+  VERIFY_EMAIL,
+} from "./routes";
+import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 
 const Routers: React.FC = () => {
   return (
@@ -51,7 +63,7 @@ const Routers: React.FC = () => {
             </PrivateRoute>
           }
         />
-            <Route
+        <Route
           path={UPDATE_PASSWORD}
           element={
             <PrivateRoute layout={HomePageLayout}>
@@ -83,7 +95,7 @@ const Routers: React.FC = () => {
             </PrivateRoute>
           }
         />
-         <Route
+        <Route
           path={MY_PLANS_LIST}
           element={
             <PrivateRoute layout={HomePageLayout}>
@@ -100,7 +112,6 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          // path={REGULARPLAN}
           path={"/regularplan/:id?"}
           element={
             <PrivateRoute layout={HomePageLayout}>
@@ -109,7 +120,6 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          // path={REGULARPLAN}
           path={"/specialdayplan/:id?"}
           element={
             <PrivateRoute layout={HomePageLayout}>
@@ -118,7 +128,6 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          // path={REGULARPLAN}
           path={"/triggerbasedplan/:id?"}
           element={
             <PrivateRoute layout={HomePageLayout}>
@@ -126,8 +135,7 @@ const Routers: React.FC = () => {
             </PrivateRoute>
           }
         />
-           <Route
-          // path={REGULARPLAN}
+        <Route
           path={"/storebasedplan/:id?"}
           element={
             <PrivateRoute layout={HomePageLayout}>
@@ -136,11 +144,18 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          // path={REGULARPLAN}
           path={"/iknowitallplan/:id?"}
           element={
             <PrivateRoute layout={HomePageLayout}>
               <IKnowItAllPlanPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path={"/ppt"}
+          element={
+            <PrivateRoute layout={HomePageLayout}>
+              <PowerPointGenerator />
             </PrivateRoute>
           }
         />

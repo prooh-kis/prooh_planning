@@ -27,6 +27,7 @@ import {
 } from "../../utils/generatePdf";
 import { sendEmailForConfirmation } from "../../actions/userAction";
 import { SEND_EMAIL_FOR_CONFIRMATION_RESET } from "../../constants/userConstants";
+import { generatePPT } from "../../utils/generatePPT";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -282,7 +283,6 @@ export const ViewFinalPlanPODetails = ({
     if (userInfo) {
       setCC(userInfo?.email);
     }
-
   }, [dispatch, poInput, campaignId, successSendEmail]);
 
   return (
@@ -409,7 +409,6 @@ export const ViewFinalPlanPODetails = ({
               <input
                 title="screen-pictures"
                 type="checkbox"
-                disabled
                 onChange={() => {
                   const pdfToDownload = pdfDownload;
                   pdfToDownload["screen-pictures"] = {
@@ -418,10 +417,9 @@ export const ViewFinalPlanPODetails = ({
                       campaignId
                     ]?.screenWiseSlotDetails?.map((screen: any) => {
                       return {
-                        screenId: screen._id,
-                        name: screen.screenName,
-                        images: screen.images,
-                        location: screen.location,
+                        title: screen.screenName,
+                        imageUrl: screen.images,
+                        content: screen.location,
                       };
                     }),
                     fileName: `${poInput?.name}_Screen_Pictures`,
@@ -473,12 +471,14 @@ export const ViewFinalPlanPODetails = ({
                 }
 
                 if (pdf === "screen-pictures") {
-                  generateScreenPicturesPptFromJSON({
-                    download: true,
-                    jsonData: pdfDownload[pdf].pdfData,
-                    fileName: pdfDownload[pdf].fileName,
-                    heading: pdfDownload[pdf].heading,
-                  });
+                  if (pdfDownload[pdf].pdfData?.length > 0)
+                    generatePPT({
+                      data: pdfDownload[pdf].pdfData,
+                      fileName: pdfDownload[pdf].fileName,
+                    });
+                  else {
+                    message.error("No data found, to download!");
+                  }
                 }
 
                 if (pdf === "creative-ratio") {
