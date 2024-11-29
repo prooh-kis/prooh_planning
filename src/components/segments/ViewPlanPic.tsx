@@ -133,7 +133,7 @@ export function ViewPlanPic({ screens, screenTypes, cityZones, cityTP }: any) {
         <div className="py-2">
           <h1 className="font-semibold">Touchpoint</h1>
           {cityTP?.map((tp: any, j: any) => (
-            <div key={j} className="lex items-center justify-between p-2">
+            <div key={j} className="flex items-center justify-between p-2">
               <CheckboxInput
                 label={tp}
                 checked={tpFilters?.includes(tp)}
@@ -147,7 +147,7 @@ export function ViewPlanPic({ screens, screenTypes, cityZones, cityTP }: any) {
         <div className="py-2">
           <h1 className="font-semibold">ScreenType</h1>
           {screenTypes?.map((st: any, k: any) => (
-            <div key={k} className="lex items-center justify-between p-2">
+            <div key={k} className="flex items-center justify-between p-2">
               <CheckboxInput
                 label={st}
                 checked={stFilters?.includes(st)}
