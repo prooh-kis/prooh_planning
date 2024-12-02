@@ -22,7 +22,11 @@ export const UploadCreativeForStandardCampaign = ({
         <Radio value={"video"}>Video</Radio>
         <Radio value={"image"}>Image</Radio>
       </Radio.Group>
-      <FileUploadButton handleFile={handleAddNewFile} width={"full"} />
+      <FileUploadButton
+        handleFile={handleAddNewFile}
+        width={"full"}
+        fileType={selectFileType}
+      />
       <div className="pt-4">
         {file ? (
           selectFileType === "image" ? (
@@ -153,7 +157,11 @@ export const UploadCreativeForTriggerCampaign = ({
         <Radio value={"video"}>Video</Radio>
         <Radio value={"image"}>Image</Radio>
       </Radio.Group>
-      <FileUploadButton handleFile={handleAddNewFile} width={"full"} />
+      <FileUploadButton
+        handleFile={handleAddNewFile}
+        width={"full"}
+        fileType={selectFileType}
+      />
       <div className="pt-4">
         {file ? (
           selectFileType === "image" ? (

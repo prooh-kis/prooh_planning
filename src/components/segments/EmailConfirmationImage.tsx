@@ -16,10 +16,14 @@ export const EmailConfirmationImage = ({files, handleAddNewFile, removeImage}: E
             3.Upload email approval screenshot
           </h1>
           <div className="flex items-center">
-            <FileUploadButton handleFile={handleAddNewFile} width="" />
+            <FileUploadButton
+              handleFile={handleAddNewFile}
+              width=""
+              fileType={"any"}
+            />
           </div>
         </div>
-        
+
         <div className="flex gap-4 pt-2">
           {files?.map((file: any, index: number) => (
             <ImageViewCloseButton
@@ -29,17 +33,12 @@ export const EmailConfirmationImage = ({files, handleAddNewFile, removeImage}: E
             />
           ))}
         </div>
-        
       </div>
       {files?.length === 0 && (
-
         <div className="flex justify-end items-bottom px-2">
-          <p className="text-[12px] text-primaryButton underline">
-            Skip    
-          </p>
+          <p className="text-[12px] text-primaryButton underline">Skip</p>
         </div>
       )}
-
     </div>
-  )
+  );
 }

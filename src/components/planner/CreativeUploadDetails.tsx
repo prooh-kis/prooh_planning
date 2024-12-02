@@ -442,7 +442,7 @@ export const CreativeUploadDetails = ({
                   Duration
                 </h1>
                 <h1 className="w-48 text-center text-white font-semibold ">
-                  Resolution
+                  Screen Dimension 
                 </h1>
               </div>
               <h1 className="w-full text-center text-white font-semibold">
