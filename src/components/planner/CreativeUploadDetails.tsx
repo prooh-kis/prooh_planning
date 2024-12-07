@@ -76,6 +76,8 @@ export const CreativeUploadDetails = ({
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const [creativeUploadData, setCreativeUploadData] = useState<Data>({});
   const [citiesCreative, setCitiesCreative] = useState<any>([]);
+  const [callToSendChangeStatus, setCallToSendChangeStatus] =
+    useState<boolean>(false);
 
   const screenDataUploadCreative = useSelector(
     (state: any) => state.screenDataUploadCreative
@@ -85,6 +87,16 @@ export const CreativeUploadDetails = ({
     error: errorScreeData,
     data: screenData,
   } = screenDataUploadCreative;
+
+  const detailsToCreateCampaignAdd = useSelector(
+    (state: any) => state.detailsToCreateCampaignAdd
+  );
+  const {
+    loading,
+    error,
+    success,
+    data: campaignDetails,
+  } = detailsToCreateCampaignAdd;
 
   const filterUniqueResolutions = (data: any) => {
     const filteredData: any = {};
@@ -293,7 +305,6 @@ export const CreativeUploadDetails = ({
     return true;
   };
 
-
   const isTriggerAvailable = () => {
     const result =
       getDataFromLocalStorage(SELECTED_TRIGGER)?.weatherTriggers?.length > 0
@@ -356,18 +367,35 @@ export const CreativeUploadDetails = ({
           creatives: requestBody,
         })
       );
+      setCallToSendChangeStatus(true);
+    } else {
+      message.error("Please upload creatives for each row and foreach city");
+    }
+  };
+
+  useEffect(() => {
+    if (error && callToSendChangeStatus) {
+      setIsLoading(false);
+      message.error(error);
+    }
+    if (success && callToSendChangeStatus) {
+      console.log(
+        "Now calling to send CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT",
+        success,
+        callToSendChangeStatus
+      );
+      setIsLoading(false);
       dispatch(
         changeCampaignStatusAfterCreativeUpload({
           id: campaignId,
           status: CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT,
         })
       );
-      setIsLoading(false);
+
+      setCallToSendChangeStatus(false);
       setCurrentStep(step + 1);
-    } else {
-      message.error("Please upload creatives for each row and foreach city");
     }
-  };
+  }, [error, success, callToSendChangeStatus]);
 
   useEffect(() => {
     dispatch(
@@ -442,7 +470,7 @@ export const CreativeUploadDetails = ({
                   Duration
                 </h1>
                 <h1 className="w-48 text-center text-white font-semibold ">
-                  Screen Dimension 
+                  Screen Dimension
                 </h1>
               </div>
               <h1 className="w-full text-center text-white font-semibold">

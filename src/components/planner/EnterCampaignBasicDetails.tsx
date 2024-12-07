@@ -230,7 +230,7 @@ export const EnterCampaignBasicDetails = ({
             inputType="text"
             placeholder="Brand Name"
             value={brandName}
-            action={setBrandName}
+            action={(value) => setBrandName(value?.toUpperCase())}
           />
         </div>
       </div>

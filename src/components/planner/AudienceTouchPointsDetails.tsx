@@ -261,13 +261,13 @@ export const AudienceTouchPointsDetails = ({
               pageName: "Audience And TouchPoint Page",
               id: campaignId,
               markets: Object.keys(getDataFromLocalStorage(AUDIENCE_DATA)),
-              cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).cohorts,
-              touchPoints: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).touchPoints,
-              gender: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS).gender,
+              cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.cohorts,
+              touchPoints: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.touchPoints,
+              gender: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.gender,
               screensSelectedCount: screensCost?.screensSelectedCount, 
               impressionSelectedCount: screensCost?.impressionSelectedCount,
-              budgetSelected: screensCost.budgetSelected,
-              cpmSelected: screensCost.cpmSelected, 
+              budgetSelected: screensCost?.budgetSelected,
+              cpmSelected: screensCost?.cpmSelected, 
             }))
             
             setCurrentStep(step + 1);

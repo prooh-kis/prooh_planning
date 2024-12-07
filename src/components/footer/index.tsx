@@ -96,7 +96,7 @@ export const Footer = ({
             onClick={handleSave}
             disabled={isDisabled}
           >
-            Save and Continue
+            {loading ? "Saving data...." : "Save and Continue"}
           </button>
         </div>
       )}
