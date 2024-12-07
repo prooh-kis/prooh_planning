@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Divider, message } from "antd";
 import { Footer } from "../../components/footer";
 import { EmailConfirmationImage } from "../../components/segments/EmailConfirmationImage";
@@ -121,7 +121,7 @@ export const ViewFinalPlanPODetails = ({
     data: sendEmailData,
   } = emailSendForConfirmation;
 
-  const sendEmail = () => {
+  const sendEmail = useCallback(() => {
     const formData = new FormData();
     blobData.forEach(({ newBlob, fileName }: any) => {
       if (newBlob instanceof Blob) {
@@ -135,9 +135,9 @@ export const ViewFinalPlanPODetails = ({
     formData.append("cc", cc);
 
     dispatch(sendEmailForConfirmation(formData));
-  };
+  }, [toEmail]);
 
-  const handleBlob = (pdf: any) => {
+  const handleBlob = async (pdf: any) => {
     let newBlob: any = null;
     // Generate the blob based on the pdf type
     if (pdf === "approach") {
@@ -157,12 +157,16 @@ export const ViewFinalPlanPODetails = ({
       });
     }
     if (pdf === "screen-pictures") {
-      newBlob = generateScreenPicturesPptFromJSON({
-        download: false,
-        jsonData: pdfDownload[pdf].pdfData,
-        fileName: pdfDownload[pdf].fileName,
-        heading: pdfDownload[pdf].heading,
-      });
+      try {
+        newBlob = await generatePPT({
+          download: false,
+          data: pdfDownload[pdf].pdfData,
+          fileName: pdfDownload[pdf].fileName,
+        });
+        console.log("screen-pictures : ", newBlob);
+      } catch (error) {
+        console.error(error);
+      }
     }
     if (pdf === "creative-ratio") {
       newBlob = generateCreativeRatioPdfFromJSON({
@@ -380,8 +384,6 @@ export const ViewFinalPlanPODetails = ({
                     ],
                     fileName: `${poInput?.name}_Approach`,
                   };
-                  console.log(pdfDownload);
-
                   setPdfDownload(pdfToDownload);
                 }}
               />
@@ -473,6 +475,7 @@ export const ViewFinalPlanPODetails = ({
                 if (pdf === "screen-pictures") {
                   if (pdfDownload[pdf].pdfData?.length > 0)
                     generatePPT({
+                      download: true,
                       data: pdfDownload[pdf].pdfData,
                       fileName: pdfDownload[pdf].fileName,
                     });
@@ -495,18 +498,17 @@ export const ViewFinalPlanPODetails = ({
             Download
           </button>
           <Divider />
-          <div
-            onClick={() => {
-              Object.keys(pdfDownload).map((pdf: any) => {
-                handleBlob(pdf);
-              });
-            }}
-          >
+          <div>
             <EmailSendBox
               toEmail={toEmail}
               setToEmail={setToEmail}
               cc={cc}
-              sendEmail={sendEmail}
+              sendEmail={() => {
+                Object.keys(pdfDownload).map((pdf: any) => {
+                  handleBlob(pdf);
+                });
+                sendEmail();
+              }}
               type="po"
               loading={loadingSendEmail}
             />
