@@ -451,6 +451,11 @@ export const CreativeUploadDetails = ({
           Upload your creatives for the campaigns for your selected screens
         </h1>
       </div>
+      {isLoading && (
+        <div className="p-2 bg-yellow-200 text-yellow-700 text-md">
+          Wait for some time file is uploading....
+        </div>
+      )}
       {currentCity === "" ? null : (
         <div>
           <div className="flex gap-4">
