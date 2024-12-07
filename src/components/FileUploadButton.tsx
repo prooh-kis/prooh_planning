@@ -20,6 +20,7 @@ export const FileUploadButton: React.FC<FileUploaderProps> = ({
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const fileUploaded = event.target.files?.[0];
     if (fileUploaded) handleFile(fileUploaded);
+    event.target.value = "";
   };
 
   const getContentType = () => {
