@@ -31,7 +31,7 @@ interface Tab {
   id: string;
 }
 
-interface EnterCampaignBasicDetailsProps {
+interface ScreenSummaryDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
   campaignId?: any;
@@ -43,7 +43,7 @@ export const ScreenSummaryDetails = ({
   step,
   campaignId,
   regularVsCohortSuccessStatus
-}: EnterCampaignBasicDetailsProps) => {
+}: ScreenSummaryDetailsProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
 

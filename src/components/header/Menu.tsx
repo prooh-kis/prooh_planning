@@ -1,76 +1,78 @@
-import "./index.css";
-// import userImage from "../../assets/userImage.png";
+
+import { AUTH, MY_CAMPAIGNS_LIST, MY_PLANS_LIST, MY_REQUESTS_LIST } from "../../routes/routes";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signout } from "../../actions/userAction";
-import { AUTH, MY_CAMPAIGNS_LIST, MY_PLANS_LIST, MY_REQUESTS_LIST } from "../../routes/routes";
+import { useState } from "react";
 
 export const Menu = (props: any) => {
   const { userInfo } = props;
+  
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
-  const signOutHandler = () => {
-    dispatch(signout());
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const signOutHandler = () => {
+    toggleDropdown();
+    dispatch(signout());
     navigate(AUTH);
   };
 
+  const arr = [
+    {
+      label: "Campaigns",
+      path: MY_CAMPAIGNS_LIST,
+    },
+    {
+      label: "Requests",
+      path: MY_REQUESTS_LIST,
+    },
+    {
+      label: "Plans",
+      path: MY_PLANS_LIST,
+    },
+    // {
+    //   label: "Creatives",
+    //   path: MY_CREATIVES,
+    // },
+  ];
+
   return (
-    <div className="dropdown">
-      <i className="fi fi-ss-angle-down"></i>
-      <div className="dropdown-content">
+    <div className="relative inline-block text-left">
+      <i
+        className="fi fi-ss-angle-down flex items-center cursor-pointer"
+        onClick={toggleDropdown}
+      ></i>
+      {isOpen && (
         <div
-          onClick={() => navigate(MY_CAMPAIGNS_LIST)}
-          className="flex flex-row gap-4 items-center py-2 px-2 hover:bg-sky-600 hover:text-white"
+          onMouseLeave={() => setIsOpen(false)} // Close dropdown on mouse leave
+          className="absolute z-10 mt-2 w-[200px] bg-white border border-gray-300 rounded-md shadow-lg right-0 font-bold text-lg text-black-1000"
         >
-          <div>
-            {/* <MdCampaign className="w-6 h-6" /> */}
-          </div>
-          <h1 className="text-black-1000">My Campaigns</h1>
-        </div>
-        {userInfo && userInfo?.userRole === "primary" && (
-          <div
-            onClick={() => navigate(MY_REQUESTS_LIST)}
-            className="flex flex-row gap-4 items-center py-2 px-2 hover:bg-sky-600 hover:text-white"
-          >
-            <div>
-              {/* <MdOutlinePermMedia className="w-6 h-6" /> */}
+          {arr.map((data: any, index: any) => (
+            <div
+              key={index}
+              onClick={() => {
+                toggleDropdown();
+                navigate(data.path);
+              }}
+              className="px-4 py-2  text-gray-700 hover:bg-sky-600 hover:text-white cursor-pointer"
+            >
+              {data?.label}
             </div>
-            <h1 className="text-black-1000">My Requests</h1>
-          </div>
-        )}
-        
-        {userInfo && userInfo?.isBrand && userInfo?.userRole === "secondary" && (
+          ))}
           <div
-            onClick={() => navigate(MY_PLANS_LIST)}
-            className="flex flex-row gap-4 items-center py-2 px-2 hover:bg-sky-600 hover:text-white"
+            onClick={signOutHandler}
+            className="px-4 py-2 text-gray-700 hover:bg-sky-600 hover:text-white cursor-pointer"
           >
-            <div>
-              {/* <MdOutlinePermMedia className="w-6 h-6" /> */}
-            </div>
-            <h1 className="text-black-1000">My Plans</h1>
+            Log out
           </div>
-        )}
-        
-        <div
-          // onClick={() => navigate(MY_CREATIVES)}
-          className="flex flex-row gap-4 items-center py-2 px-2 hover:bg-sky-600 hover:text-white"
-        >
-          <div>
-            {/* <MdOutlinePermMedia className="w-6 h-6" /> */}
-          </div>
-          <h1 className="text-black-1000">My Creatives</h1>
         </div>
-        <div
-          onClick={signOutHandler}
-          className="flex flex-row gap-4 items-center py-2 px-2 hover:bg-sky-600 hover:text-white"
-        >
-          <div>
-            {/* <IoMdPower className="w-6 h-6" /> */}
-          </div>
-          <h1 className="text-black-1000">Log out</h1>
-        </div>
-      </div>
+      )}
     </div>
   );
 };
