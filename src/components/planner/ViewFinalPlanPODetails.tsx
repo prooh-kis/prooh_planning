@@ -422,6 +422,7 @@ export const ViewFinalPlanPODetails = ({
                         title: screen.screenName,
                         imageUrl: screen.images,
                         content: screen.location,
+                        resolution: screen.screenResolution,
                       };
                     }),
                     fileName: `${poInput?.name}_Screen_Pictures`,
@@ -473,13 +474,13 @@ export const ViewFinalPlanPODetails = ({
                 }
 
                 if (pdf === "screen-pictures") {
-                  if (pdfDownload[pdf].pdfData?.length > 0)
+                  if (pdfDownload[pdf].pdfData?.length > 0) {
                     generatePPT({
                       download: true,
                       data: pdfDownload[pdf].pdfData,
                       fileName: pdfDownload[pdf].fileName,
                     });
-                  else {
+                  } else {
                     message.error("No data found, to download!");
                   }
                 }
