@@ -161,7 +161,7 @@ export const ScreenSummaryTable = ({
                 <div className="col-span-10">
                   {Object.keys(cityTP?.[currentCity]?.[tp])?.map((st: any, j: any) => (
                     <div key={j} className={`grid grid-cols-10 border-l`}>
-                      <div className={`col-span-3 py-2 px-4 border-b`}>
+                      <div className={`col-span-3 py-2 px-4 border`}>
                         <div className="flex justify-between items-center">
                           <h1 className="text-[14px]">{st}</h1>
                           <div onClick={() => 
@@ -183,7 +183,7 @@ export const ScreenSummaryTable = ({
                         {Object.keys(cityZones?.[currentCity])?.map((zone: any, k: any) => (
                           <div key={k} className={`col-span-4`}>
                             {data?.[currentCity]?.[tp]?.[st]?.[zone]?.map((screen: any, m: any) => (
-                              <div key={m} className={`flex gap-4 justify-between border-x py-2 px-4 border-b truncate`}>
+                              <div key={m} className={`flex gap-4 justify-between border-x py-2 px-4 border-y truncate`}>
                                 <ScreenDataModel screen={screen || ""} />
                                 <div className="flex gap-4 justify-between items-center">
                                   <div className="flex gap-1 items-center">

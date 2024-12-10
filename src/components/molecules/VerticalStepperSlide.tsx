@@ -28,11 +28,12 @@ export const VerticalStepperSlider: React.FC<StepSliderProps> = ({ setStep, step
 
   // Function to handle step marker click
   const handleStepClick = (step: number) => {
-    setStep(step);
-    const triggerType: any = {};
-    triggerType["triggerType"] = stepLabels[step-1].value
-    setTrigger(triggerType);
-
+    if (step !== 2) {
+      setStep(step);
+      const triggerType: any = {};
+      triggerType["triggerType"] = stepLabels[step-1].value
+      setTrigger(triggerType);
+    }
   };
 
 

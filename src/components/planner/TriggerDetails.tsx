@@ -299,8 +299,8 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
                 value="2"
                 isChecked={currentStep1 === Number("2") ? true : false}
                 onChange={() => {
-                  setCurrentStep1(Number("2"));
-                  setSelectedTrigger({ triggerType: "sport" });
+                  // setCurrentStep1(Number("2"));
+                  // setSelectedTrigger({ triggerType: "sport" });
                 }}
               />
             </div>
@@ -481,7 +481,10 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
                 rounded="rounded-full"
                 title="Apply Trigger"
                 textSize="text-[14px]"
-                action={handleSelectTrigger}
+                action={() => {
+                  handleSelectTrigger();
+                  message.success("Trigger applied, please confirm and proceed...");
+                }}
               />
             )}
 
