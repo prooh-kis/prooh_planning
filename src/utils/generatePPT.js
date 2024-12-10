@@ -1,25 +1,12 @@
 import PptxGenJS from "pptxgenjs";
 
-interface SlideData {
-    title: string;
-    content: any;
-    imageUrl: string[];
-    resolution?: string; // Resolution for images (e.g., "1024x768")
-}
 
-interface Data {
-    data: SlideData[];
-    fileName: string;
-    download: boolean;
-}
-
-
-export const generatePPT = async ({ data, fileName, download }: Data): Promise<Blob | undefined> => {
+export const generatePPT = async ({ data, fileName, download }) => {
     try {
         const ppt = new PptxGenJS();
 
         // Create slides with data
-        data.forEach(async (item) => {
+        data.forEach((item) => {
             const slide = ppt.addSlide();
 
             const imageUrl = item.imageUrl?.[0] || "https://via.placeholder.com/1280x720";
@@ -38,7 +25,7 @@ export const generatePPT = async ({ data, fileName, download }: Data): Promise<B
                 h: 1,
                 fontSize: 12,
                 color: "black",
-                fill: { color: "#FFFF00" },
+                fill: { color: "FFFF00" },
                 align: "left",
             });
 
@@ -50,7 +37,7 @@ export const generatePPT = async ({ data, fileName, download }: Data): Promise<B
                 fontSize: 12,
                 color: "black",
                 align: "left",
-                fill: { color: "#FFFF00" },
+                fill: { color: "FFFF00" },
             });
 
             slide.addText(`Size:\n ${item?.resolution}`, {
@@ -61,26 +48,25 @@ export const generatePPT = async ({ data, fileName, download }: Data): Promise<B
                 fontSize: 12,
                 color: "black",
                 align: "left",
-                fill: { color: "#FFFF00" },
+                fill: { color: "FFFF00" },
             });
         });
+
         if (download) {
             await ppt.writeFile({ fileName: `${fileName}.pptx` });
         } else {
-            // Use `ppt.stream()` to get raw data
-            const result = await ppt.stream();
-
-            if (result instanceof Uint8Array || Array.isArray(result)) {
-                // Convert raw data to Blob
-                const blob = new Blob([result], { type: "application/vnd.openxmlformats-officedocument.presentationml.presentation" });
-                return blob;
-            } else {
-                console.error("Unexpected result type:", typeof result);
-                throw new Error("Failed to generate a valid Blob from the presentation.");
+            try {
+                const result = await ppt.write("blob");
+                return result;
+            } catch (err) {
+                console.error("Error generating PPT Blob:", err);
+                // throw new Error("Failed to generate PPT Blob.");
+                return err;
             }
         }
     } catch (error) {
         console.error("Error generating PPT:", error);
-        throw new Error("Failed to generate PPT");
+        // throw new Error("Failed to generate PPT");
+        return error;
     }
 };

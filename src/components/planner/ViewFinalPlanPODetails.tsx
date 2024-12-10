@@ -61,8 +61,6 @@ export const ViewFinalPlanPODetails = ({
   const [cc, setCC] = useState<any>(userInfo?.email);
   const [blobData, setBlobData] = useState<any>([]);
 
-  const [pageRefs, setPageRefs] = useState<any>([]);
-
   const [pdfDownload, setPdfDownload] = useState<any>({});
 
   const [poInput, setPoInput] = useState<any>({
@@ -135,7 +133,7 @@ export const ViewFinalPlanPODetails = ({
     formData.append("cc", cc);
 
     dispatch(sendEmailForConfirmation(formData));
-  }, [toEmail]);
+  }, [blobData, cc, dispatch, toEmail]);
 
   const handleBlob = async (pdf: any) => {
     let newBlob: any = null;
@@ -157,16 +155,11 @@ export const ViewFinalPlanPODetails = ({
       });
     }
     if (pdf === "screen-pictures") {
-      try {
-        newBlob = await generatePPT({
-          download: false,
-          data: pdfDownload[pdf].pdfData,
-          fileName: pdfDownload[pdf].fileName,
-        });
-        console.log("screen-pictures : ", newBlob);
-      } catch (error) {
-        console.error(error);
-      }
+      newBlob = await generatePPT({
+        download: false,
+        data: pdfDownload[pdf].pdfData,
+        fileName: pdfDownload[pdf].fileName,
+      });
     }
     if (pdf === "creative-ratio") {
       newBlob = generateCreativeRatioPdfFromJSON({
@@ -179,7 +172,7 @@ export const ViewFinalPlanPODetails = ({
     // uniqueFileName = pdfDownload[pdf].fileName + ".pdf";
 
     if (newBlob instanceof Blob) {
-      const uniqueFileName = pdfDownload[pdf].fileName + ".pdf";
+      const uniqueFileName = pdf === "screen-pictures" ? pdfDownload[pdf].fileName +  ".pptx" : pdfDownload[pdf].fileName + ".pdf";
       setBlobData((prev: any) => {
         const existingFileNames = new Set(
           prev.map((blob: any) => blob.fileName)
