@@ -25,6 +25,12 @@ import {
   CHANGE_CAMPAIGN_DURATION_SUCCESS,
   CHANGE_CAMPAIGN_DURATION_ERROR,
   CHANGE_CAMPAIGN_DURATION_RESET,
+  CAMPAIGN_LOGS_REQUEST,
+  CAMPAIGN_LOGS_SUCCESS,
+  CAMPAIGN_LOGS_FAIL,
+  CAMPAIGN_MONITORING_PICS_REQUEST,
+  CAMPAIGN_MONITORING_PICS_SUCCESS,
+  CAMPAIGN_MONITORING_PICS_FAIL,
 } from "../constants/campaignConstants";
 import { FULL_CAMPAIGN_PLAN } from "../constants/localStorageConstants";
 
@@ -199,3 +205,47 @@ export function campaignDurationChangeReducer(state = [], action) {
       return state;
   }
 }
+
+
+export function campaignLogsGetReducer(state = [], action) {
+  switch (action.type) {
+    case CAMPAIGN_LOGS_REQUEST:
+      return { loading: true };
+    case CAMPAIGN_LOGS_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case CAMPAIGN_LOGS_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+        success: false,
+      };
+    default:
+      return state;
+  }
+}
+
+export function campaignMonitoringPicsGetReducer(state = [], action) {
+  switch (action.type) {
+    case CAMPAIGN_MONITORING_PICS_REQUEST:
+      return { loading: true };
+    case CAMPAIGN_MONITORING_PICS_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case CAMPAIGN_MONITORING_PICS_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+        success: false,
+      };
+    default:
+      return state;
+  }
+}
+

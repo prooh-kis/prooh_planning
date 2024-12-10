@@ -21,8 +21,16 @@ import {
   CHANGE_CAMPAIGN_DURATION_SUCCESS,
   CHANGE_CAMPAIGN_DURATION_ERROR,
   CHANGE_CAMPAIGN_DURATION_REQUEST,
+  CAMPAIGN_LOGS_REQUEST,
+  CAMPAIGN_LOGS_SUCCESS,
+  CAMPAIGN_LOGS_FAIL,
+  CAMPAIGN_MONITORING_PICS_REQUEST,
+  CAMPAIGN_MONITORING_PICS_SUCCESS,
+  CAMPAIGN_MONITORING_PICS_FAIL,
 } from "../constants/campaignConstants";
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/campaigns`;
+const url2 = `${process.env.REACT_APP_PROOH_SERVER}/api/v1/analytics`;
+
 
 export const addDetailsToCreateCampaign =
   (input) => async (dispatch, getState) => {
@@ -202,6 +210,54 @@ export const changeCampaignDuration = (input) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: CHANGE_CAMPAIGN_DURATION_ERROR,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    });
+  }
+};
+
+
+export const GetCampaignLogsAction = (campaignId) => async (dispatch, getState) => {
+  dispatch({
+    type: CAMPAIGN_LOGS_REQUEST,
+    payload: campaignId,
+  });
+  try {
+    const { data } = await axios.get(`${url2}/getCampaignLogs?campaignId=${campaignId}&limit="200`);
+    dispatch({
+      type: CAMPAIGN_LOGS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: CAMPAIGN_LOGS_FAIL,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    });
+  }
+};
+
+
+export const GetCampaignMonitoringPicsAction = ({campaignId, screenId, date}) => async (dispatch, getState) => {
+  dispatch({
+    type: CAMPAIGN_MONITORING_PICS_REQUEST,
+    payload: {campaignId, screenId, date},
+  });
+  try {
+    const { data } = await axios.get(`${url}/getCampaignMonitoringData?campaignId=${campaignId}&screenId=${screenId}&date=${date}`);
+    dispatch({
+      type: CAMPAIGN_MONITORING_PICS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: CAMPAIGN_MONITORING_PICS_FAIL,
       payload: {
         message: error.message,
         status: error.response?.status,

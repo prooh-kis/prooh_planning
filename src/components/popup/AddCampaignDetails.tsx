@@ -12,6 +12,7 @@ export const AddCampaignDetails = ({
   userInfo,
   campaignId,
   router,
+  setCurrentStep,
   startDate1,
   campaignDuration = 1,
   handleSaveData,
@@ -94,6 +95,7 @@ export const AddCampaignDetails = ({
         campaignManagerEmail: userInfo?.primaryUserEmail,
       });
       handleCancel();
+      setCurrentStep(2)
     }
   };
 

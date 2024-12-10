@@ -3,6 +3,7 @@ import { CampaignDashboardTable } from '../../components/tables/CampaignDashboar
 import React, { useEffect, useState } from 'react';
 import { DashboardLinearStatus } from '../../components/segments/DashboardLinearStatus';
 import { DashboardFilters } from '../../components/segments/DashboardFilters';
+import { convertDataTimeToLocale } from '../../utils/dateAndTimeUtils';
 
 export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
 
@@ -37,10 +38,24 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
   return (
     <div className="w-full h-full pt-10 flex flex-col gap-2">
       <div className="bg-white p-2 border rounded-[12px] flex justify-between">
-        <div className="px-2 flex justify-center items-center">
+        <div className="px-2 w-1/2 flex justify-between items-center">
           <div>
             <h1 className="text-[14px] font-semibold">{campaignDetails?.name}</h1>
             <p className="text-[12px]">{campaignDetails?.brandName}</p>
+          </div>
+          <div>
+            <h1 className="text-[14px] font-semibold">
+              {convertDataTimeToLocale(campaignDetails?.startDate)}
+            </h1>
+            <p className="text-[12px]">Start Date</p>
+
+          </div>
+          <div>
+            <h1 className="text-[14px] font-semibold">
+              {convertDataTimeToLocale(campaignDetails?.endDate)}
+            </h1>
+            <p className="text-[12px]">End Date</p>
+
           </div>
         </div>
         <DashboardFilters /> 
@@ -59,7 +74,7 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
         <div className="w-full">
           {/* ICON */}
           <h1 className="text-[16px] p-2 font-semibold">Site Level Performance</h1>
-          <CampaignDashboardTable screenLevelData={screenLevelData} />
+          <CampaignDashboardTable campaignDetails={campaignDetails} screenLevelData={screenLevelData} />
         </div>
       </div>
     </div>

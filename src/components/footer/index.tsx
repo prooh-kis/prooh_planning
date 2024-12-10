@@ -5,6 +5,7 @@ import { formatNumber } from "../../utils/formatValue";
 import { Loading } from "../../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { getPlanningPageFooterData } from "../../actions/screenAction";
+import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
 
 export const Footer = ({
   handleSave,
@@ -38,8 +39,8 @@ export const Footer = ({
                 Please wait while we calculate the cost of your desired plan...
               </p>
             </div>
-            <div className="">
-              <Loading height={20} width={100} />
+            <div className="w-fulll">
+              <SkeletonLoader />
             </div>
           </div>
         ) : (

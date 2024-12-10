@@ -25,7 +25,7 @@ export const DashboardFilters = ({}: DashboardFiltersProps) => {
         selectedOption={""}
         setSelectedOption={""}
         options={[{
-          label: "All",
+          label: "Gurgaon",
           value: "",
         }]}
       />

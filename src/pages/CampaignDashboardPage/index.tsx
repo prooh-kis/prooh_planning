@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCampaignDashboardData } from '../../actions/screenAction';
 import { useLocation } from 'react-router-dom';
 import { addDetailsToCreateCampaign } from '../../actions/campaignAction';
+import { SkeletonLoader } from '../../components/molecules/SkeletonLoader';
 
 export const CampaignDashboardPage: React.FC = () => {
 
@@ -30,11 +31,27 @@ export const CampaignDashboardPage: React.FC = () => {
   return (
     <div className="w-full h-full">
       {loading || loadingDashboard ? (
-        <h1>Loading...</h1>
+        <div>
+          <div className='h-[10vh] w-full border rounded-[12px] mt-10'>
+            <SkeletonLoader />
+          </div>
+          <div className='h-[20vh] w-full border rounded-[12px] mt-2'>
+            <SkeletonLoader />
+          </div>
+          <div className='h-[40vh] w-full border rounded-[12px] mt-2'>
+            <SkeletonLoader />
+          </div>
+        </div>
+
       ) : error || errorDashboard ? (
-        <p>{error}</p>
+        <div className='h-[20vh] w-full border rounded-[12px] mt-10'>
+          <p>{error}</p>
+        </div>
       ) : (
-        <CampaignDashboard campaignDetails={campaignDetails} screenLevelData={dashboardData}/>
+        <CampaignDashboard
+          campaignDetails={campaignDetails}
+          screenLevelData={dashboardData}
+        />
       )}
     </div>
   );

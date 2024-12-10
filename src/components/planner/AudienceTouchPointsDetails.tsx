@@ -39,6 +39,11 @@ export const AudienceTouchPointsDetails = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
 
+  const [locked, setLocked] = useState<any>({
+    cohorts: false,
+    touchPoints: false,
+  });
+
   const [markets, setMarkets] = useState<any>({});
   const [audiences, setAudiences] = useState<any>({});
   const [touchPoints, setTouchPoints] = useState<any>({});
@@ -99,6 +104,7 @@ export const AudienceTouchPointsDetails = ({
         };
       }
     }
+
     setTouchPoints(touchPointsData);
     setSelectedTouchPoints(
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints.length !== 0 ?
@@ -122,6 +128,7 @@ export const AudienceTouchPointsDetails = ({
   };
 
   useEffect(() => {
+
     if (screensCost) {
       saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, screensCost);
       setCostData(screensCost);
@@ -135,8 +142,8 @@ export const AudienceTouchPointsDetails = ({
           : "both",
         duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30,
       });
-      
     }
+
   }, [screensCost]);
 
   useEffect(() => {
@@ -211,6 +218,7 @@ export const AudienceTouchPointsDetails = ({
       <div className="grid grid-cols-8 gap-1 pt-4">
         <div ref={marketRef} className="col-span-2 flex justify-center">
           <LocationTable
+            loading={loadingCost}
             markets={markets}
             handleSelection={handleSelection}
             selectedMarkets={selectedMarket}
@@ -221,6 +229,9 @@ export const AudienceTouchPointsDetails = ({
         </div>
         <div ref={audienceRef} className="col-span-3 flex justify-center">
           <AudienceCohortTable
+            loading={loadingCost}
+            locked={locked}
+            setLocked={setLocked}
             handleSelection={handleSelection}
             audiences={audiences}
             selectedAudiences={selectedAudiences}
@@ -230,6 +241,9 @@ export const AudienceTouchPointsDetails = ({
         </div>
         <div ref={touchpointRef} className="col-span-3 flex justify-center">
           <TouchpointTable
+            loading={loadingCost}
+            locked={locked}
+            setLocked={setLocked}
             handleSelection={handleSelection}
             touchPoints={touchPoints}
             selectedTouchPoints={selectedTouchPoints}
@@ -251,7 +265,14 @@ export const AudienceTouchPointsDetails = ({
           and location target audience and location location
         </h1>
       </div>
-      <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
+      <div className="px-4 fixed bottom-0 left-0 w-full bg-white"
+        onClick={() => {
+          if(locked?.cohorts === false || locked?.touchPoints === false) {
+            alert("Please confirm target audience and touch points by clicking on the lock icons...");
+            return;
+          }
+        }}
+      >
         <Footer
           handleBack={() => {
             setCurrentStep(step - 1);
@@ -268,15 +289,16 @@ export const AudienceTouchPointsDetails = ({
               impressionSelectedCount: screensCost?.impressionSelectedCount,
               budgetSelected: screensCost?.budgetSelected,
               cpmSelected: screensCost?.cpmSelected, 
-            }))
+            }));
             
             setCurrentStep(step + 1);
             saveDataOnLocalStorage(COST_SUMMARY, [
               selectedScreensData,
               totalScreensData,
-            ])
+            ]);
           }}
           campaignId={campaignId}
+          isDisabled={locked?.cohorts === false || locked?.touchPoints === false || loadingCost ? true : false}
         />
       </div>
     </div>

@@ -1,5 +1,7 @@
 import { LinearBar } from "../molecules/linearbar";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput"
+import { useEffect, useState } from "react";
+import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
 
 interface AudiencesProps {
   audiences?: any
@@ -8,26 +10,55 @@ interface AudiencesProps {
   setSelectedAudiences?: any
   loading?: any
   handleSelection?: any;
+  locked?: any;
+  setLocked?: any;
 }
-export const AudienceCohortTable = ({ handleSelection, loading, audiences, selectedAudiences, setSelectedAudiences }: AudiencesProps) => {
+export const AudienceCohortTable = ({
+  handleSelection,
+  loading,
+  audiences,
+  selectedAudiences,
+  setSelectedAudiences,
+  locked,
+  setLocked,
+}: AudiencesProps) => {
   
+  const [clicked, setClicked] = useState<any>(false);
+
   const handleCheckClick = ({ cohort, checked }: any) => {
+    setClicked(false);
     if (checked && !selectedAudiences.includes(cohort)) {
       setSelectedAudiences([...selectedAudiences, cohort])
-      handleSelection({
-        type: "cohorts",
-        data: [cohort, selectedAudiences],
-      });
+      // handleSelection({
+      //   type: "cohorts",
+      //   data: [cohort, selectedAudiences],
+      // });
 
     } else {
       const aud = selectedAudiences?.filter((audience: any) => audience !== cohort)
       setSelectedAudiences(aud);
-      handleSelection({
-        type: "cohorts",
-        data: aud,
-      });
+      // handleSelection({
+      //   type: "cohorts",
+      //   data: aud,
+      // });
     }
   }
+
+  const handleConfirmClick = () => {
+    handleSelection({
+      type: "cohorts",
+      data: selectedAudiences,
+    });
+  }
+
+  useEffect(() => {
+    const lockedData = {
+      cohorts: clicked,
+      touchPoints: locked.touchPoints,
+    }
+    setLocked(lockedData);
+  },[clicked, setLocked]);
+
   return (
     <table className="w-full">
       <thead className="bg-[#F7F7F7] w-full">
@@ -39,7 +70,22 @@ export const AudienceCohortTable = ({ handleSelection, loading, audiences, selec
               </h1>
               <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
             </div>
-            <i className="fi fi-sr-lock-open-alt flex items-center text-[#9A9A9A] text-[12px]"></i>
+            <div 
+              onClick={() => {
+                if (!loading) {
+                  setClicked(true);
+                  handleConfirmClick();
+                } else {
+                  alert("Please let us calculate the cost for you...")
+                }
+              }}
+            >
+              {clicked ? (
+                <i className="fi fi-sr-lock flex items-center text-green-600 text-[12px]"></i>
+              ) : (
+                <i className="fi fi-sr-lock-open-alt flex items-center text-[#9A9A9A] text-[12px]"></i>
+              )}
+            </div>
             
           </th>
         </tr> 
@@ -59,6 +105,13 @@ export const AudienceCohortTable = ({ handleSelection, loading, audiences, selec
             <p className="text-[12px] font-normal">{Number(Math.max(...Object.keys(audiences)?.map((a: any) => audiences[a])).toFixed(0)) + 1}</p>
           </th>
         </tr>
+        {loading && (
+          <tr className="w-full">
+            <th className="w-full">
+              <SkeletonLoader />
+            </th>
+          </tr>
+        )}
         <tr className="w-full h-[40vh] overflow-scroll py-3">
           {Object.keys(audiences)?.map((a: any, i: any) => {
             const cohortName = a;
@@ -67,6 +120,7 @@ export const AudienceCohortTable = ({ handleSelection, loading, audiences, selec
               <td key={i} className="grid grid-cols-6 gap-4 flex justify-between items-center w-full p-2">
                 <div className="col-span-4 flex justify-between w-auto truncate text font-normal">
                   <CheckboxInput
+                    disabled={loading}
                     checked={selectedAudiences?.includes(cohortName) ? true : false}
                     label={cohortName}
                     onChange={(e: any) => handleCheckClick({ cohort: cohortName, checked: e})}

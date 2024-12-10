@@ -28,7 +28,7 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
           <div className="col-span-8 pt-2">
             <CalendarScaleSlider
               days={screenLevelData?.["totalData"]?.durationPromised || 30}
-              daysPlayed={screenLevelData?.["totalData"]?.durationDelivered || 10}
+              daysPlayed={screenLevelData?.["totalData"]?.durationDelivered || 2}
             />
           </div>
           <div className="col-span-1 pt-1">
@@ -116,8 +116,8 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
             <Divider />
             <div className="w-full">
               <div className="py-1 flex gap-2">
-                <h1 className="text-[14px] font-semibold">Screen Performance Detailed View - </h1>
-                <p className="text-[14px] text-[#129BFF]">{screenLevelData?.["totalData"]?.durationDelivered?.toFixed(0) || 1}</p>
+                <h1 className="text-[14px] font-semibold">Screen Performance Detailed View </h1>
+                {/* <p className="text-[14px] text-[#129BFF]">{screenLevelData?.["totalData"]?.durationDelivered?.toFixed(0) || 1}</p> */}
               </div>
               <DashboardBarChart label={"Screen Performance"}data={screenPerformance().countsArray} labels={screenPerformance().datesArray}/>
             </div>
@@ -158,8 +158,8 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
             <Divider />
             <div className="w-full">
               <div className="py-1 flex gap-2 ">
-                <h1 className="text-[14px] font-semibold">Spot Delivery Detailed View - </h1>
-                <p className="text-[14px] text-[#129BFF]">{screenLevelData?.["totalData"]?.durationDelivered?.toFixed(0) || 1}</p>
+                <h1 className="text-[14px] font-semibold">Spot Delivery Detailed View </h1>
+                {/* <p className="text-[14px] text-[#129BFF]">{screenLevelData?.["totalData"]?.durationDelivered?.toFixed(0) || 1}</p> */}
               </div>
               <DashboardBarChart label={"Spot Delivery"} data={spotDelivery().countsArray} labels={spotDelivery().datesArray}/>
             </div>

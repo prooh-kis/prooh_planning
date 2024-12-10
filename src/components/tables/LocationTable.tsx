@@ -1,3 +1,4 @@
+import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 
 interface LocationTableProps {
@@ -68,11 +69,13 @@ export const LocationTable = ({
           </th>
           <th className="col-span-4 flex items-center justify-center gap-2">
             <CheckboxInput
+              disabled={loading}
               label="Male"
               checked={selectedGender.includes("Male") ? true : false}
               onChange={(e: any) => handleCheckClick({type: "Male", checked: e})}
             />
             <CheckboxInput
+              disabled={loading}
               label="Female"
               checked={selectedGender.includes("Female")? true : false}
               onChange={(e: any) => handleCheckClick({type: "Female", checked: e})} 
@@ -81,6 +84,13 @@ export const LocationTable = ({
         </tr>
       </thead>
       <tbody className="border overflow-scroll">
+      {loading && (
+          <tr className="w-full">
+            <th className="w-full">
+              <SkeletonLoader />
+            </th>
+          </tr>
+        )}
         {Object.keys(markets)?.map((market: any, index: any) => (
           <tr key={index} className="grid grid-cols-8 w-full h-[40px] border-b border-gray-100">
             <td className="col-span-4 flex items-center px-2">

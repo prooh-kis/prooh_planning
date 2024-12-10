@@ -4,13 +4,13 @@ export const ALL_MARKETS = [
 
 export const ALL_TOUCHPOINTS = [
   "Premium High Street",
-  "Golf course",
-  "Neighborhood premium Mall",
-  "Neighborhood hi-street",
-  "Feeder route",
+  "Golf Course",
+  "Neighborhood Premium Mall",
+  "Neighborhood Hi-Street",
+  "Feeder Route",
   "Arterial Route",
   "CBD- SOHO",
-  "luxury residential"
+  "Luxury Residential"
 ]
 
 export const ALL_COHORTS = [
