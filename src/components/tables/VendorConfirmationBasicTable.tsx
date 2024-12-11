@@ -1,3 +1,4 @@
+import { convertDataTimeToLocale } from "../../utils/dateAndTimeUtils"
 import { formatNumber } from "../../utils/formatValue"
 
 export const VendorConfirmationBasicTable = ({ vendorConfirmationData }: any) => {
@@ -58,7 +59,7 @@ export const VendorConfirmationBasicTable = ({ vendorConfirmationData }: any) =>
               <h1 className="text-[14px]">Start Date</h1>
             </div>
             <div className="border py-1 px-4">
-              <h1 className="text-[14px]">{new Date(vendorConfirmationData?.startDate).toUTCString()}</h1>
+              <h1 className="text-[14px]">{convertDataTimeToLocale(vendorConfirmationData?.startDate)}</h1>
             </div>
           </div>
           <div className="grid grid-cols-2">
@@ -66,7 +67,7 @@ export const VendorConfirmationBasicTable = ({ vendorConfirmationData }: any) =>
               <h1 className="text-[14px]">End Date</h1>
             </div>
             <div className="border py-1 px-4">
-              <h1 className="text-[14px]">{new Date(vendorConfirmationData?.endDate).toUTCString()}</h1>
+              <h1 className="text-[14px]">{convertDataTimeToLocale(vendorConfirmationData?.endDate)}</h1>
             </div>
           </div>
           <div className="grid grid-cols-2">

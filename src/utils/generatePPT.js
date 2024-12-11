@@ -10,6 +10,7 @@ export const generatePPT = async ({ data, fileName, download }) => {
             const slide = ppt.addSlide();
 
             const imageUrl = item.imageUrl?.[0] || "https://via.placeholder.com/1280x720";
+            // console.log(item, imageUrl);
             slide.addImage({
                 path: imageUrl,
                 x: 0,
@@ -53,6 +54,7 @@ export const generatePPT = async ({ data, fileName, download }) => {
         });
 
         if (download) {
+            
             await ppt.writeFile({ fileName: `${fileName}.pptx` });
         } else {
             try {

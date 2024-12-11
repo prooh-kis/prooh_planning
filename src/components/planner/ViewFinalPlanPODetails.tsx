@@ -404,7 +404,7 @@ export const ViewFinalPlanPODetails = ({
               <input
                 title="screen-pictures"
                 type="checkbox"
-                disabled={true}
+                // disabled={true}
                 onChange={() => {
                   const pdfToDownload = pdfDownload;
                   pdfToDownload["screen-pictures"] = {

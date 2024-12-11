@@ -56,7 +56,7 @@ export const CampaignTemplates: React.FC = () => {
           <div className="flex w-1/4 justify-center items-center">
             <TemplateCard
               text="Regular Campaign"
-              paratext="Create campaigns based on specific events trigger and engage with your target audiences"
+              paratext="Plan a complete outdoor campaign based on your target audiences"
               icon="fi fi-sr-megaphone"
               color="#0091E3"
               isSelected={selectedCard === 0}
@@ -67,7 +67,7 @@ export const CampaignTemplates: React.FC = () => {
           <div className="flex w-1/4 justify-center items-center">
             <TemplateCard
               text="Special Day"
-              paratext="Create campaigns based on specific events trigger and engage with your target audiences"
+              paratext="Create campaigns based for your special day and engage with your target audiences"
               icon="fi fi-sr-calendar-star"
               color="#28A61D"
               isSelected={selectedCard === 1}
