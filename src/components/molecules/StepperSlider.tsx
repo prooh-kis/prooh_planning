@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { useLocation } from "react-router-dom";
+import { Tooltip } from "antd";
 
 interface StepSliderProps {
   steps: number;
@@ -149,15 +150,20 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
               </div>
 
               {/* The clickable circle for each step */}
-              <div
-                className={`cursor-pointer rounded-full transition-all duration-500 ${
-                  i + 1 === step
-                    ? "h-4 w-4 bg-white border-2 border-blue-500" // Larger circle with ring for active step
-                    : i + 1 < step
-                    ? "h-3 w-3 bg-blue-500 border border-blue-500" // Blue for previous steps, same size as future
-                    : "h-3 w-3 bg-white border border-blue-500" // White for future steps
-                }`}
-              ></div>
+              <Tooltip
+                title={stepLabels[i]}
+              >
+                <div
+                  className={`cursor-pointer rounded-full transition-all duration-500 
+                    ${i + 1 === step
+                      ? "h-4 w-4 bg-white border-2 border-blue-500" // Larger circle with ring for active step
+                      : i + 1 < step
+                      ? "h-3 w-3 bg-blue-500 border border-blue-500" // Blue for previous steps, same size as future
+                      : "h-3 w-3 bg-white border border-blue-500" // White for future steps
+                  }`}
+                ></div>
+              </Tooltip>
+       
             </div>
           ))}
         </div>

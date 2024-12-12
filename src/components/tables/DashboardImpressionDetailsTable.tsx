@@ -51,12 +51,12 @@ export const DashboardImpressionDetailsTable = ({
       </tr>
     </thead>
     <tbody className="">
-      {Object.keys(screenLevelData["totalData"]?.impressionsCohortWise)?.map((imp: any, index: any) => (
+      {Object.keys(screenLevelData?.["totalData"]?.impressionsCohortWise)?.map((imp: any, index: any) => (
         <tr key={index} className="border-b">
           <td className="text-[12px]">
             <div className="flex items-center pl-4 border-x">
               <p>
-                {screenLevelData["totalData"]?.impressionsCohortWise[imp].cohort}
+                {screenLevelData?.["totalData"]?.impressionsCohortWise[imp]?.cohort}
               </p>
             </div>
           </td>
@@ -73,15 +73,15 @@ export const DashboardImpressionDetailsTable = ({
           <td className="">
             <div className="flex flex-col gap-1 px-2 border-x">
               <div className="flex gap-4 items-center">
-                <LinearBar value={formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredMale.toFixed(0))} colors={["","#84CBFF"]} highest={formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredTotal.toFixed(0))} />
+                <LinearBar value={formatNumber(screenLevelData?.["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredMale?.toFixed(0)) || 0} colors={["","#84CBFF"]} highest={formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredTotal?.toFixed(0))} />
                 <p className="text-[10px]">
-                  {formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredMale.toFixed(0))}
+                  {formatNumber(screenLevelData?.["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredMale?.toFixed(0)) || 0}
                 </p>
               </div>
               <div className="flex gap-4 items-center">
-                <LinearBar value={formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredFemale.toFixed(0))} colors={["","#D0B3FF"]} highest={formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredTotal.toFixed(0))} />
+                <LinearBar value={formatNumber(screenLevelData?.["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredFemale?.toFixed(0)) || 0} colors={["","#D0B3FF"]} highest={formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredTotal?.toFixed(0))} />
                 <p className="text-[10px]">
-                  {formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredFemale.toFixed(0))}
+                  {formatNumber(screenLevelData?.["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredFemale?.toFixed(0)) || 0}
                 </p>
               </div>
             </div>
@@ -89,14 +89,14 @@ export const DashboardImpressionDetailsTable = ({
           <td className="text-[12px]">
             <div className="flex items-center justify-center">
               <p>
-                {formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredTotal.toFixed(0))}
+                {formatNumber(screenLevelData?.["totalData"]?.impressionsCohortWise[imp]?.impressionDeliveredTotal?.toFixed(0)) || 0}
               </p>
             </div>
           </td>
           <td className="text-[12px]">
             <div className="flex items-center justify-center border-x">
               <p>
-                {formatNumber(screenLevelData["totalData"]?.impressionsCohortWise[imp]?.impressionPromisedTotal.toFixed(0))}
+                {formatNumber(screenLevelData?.["totalData"]?.impressionsCohortWise[imp]?.impressionPromisedTotal?.toFixed(0)) || 0}
               </p>
             </div>
           </td>

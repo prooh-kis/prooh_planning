@@ -25,7 +25,7 @@ export const CalendarInput = ({
     <div className="w-full">
       <input
         title="calendar_input"
-        type="datetime-local"
+        type="date"
         disabled={disabled}
         value={value}
         onChange={(e) => action(e.target.value)}

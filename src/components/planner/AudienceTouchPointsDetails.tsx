@@ -229,7 +229,7 @@ export const AudienceTouchPointsDetails = ({
         </div>
         <div ref={audienceRef} className="col-span-3 flex justify-center">
           <AudienceCohortTable
-            loading={loadingCost}
+            loading={loadingAudiences}
             locked={locked}
             setLocked={setLocked}
             handleSelection={handleSelection}
@@ -241,7 +241,7 @@ export const AudienceTouchPointsDetails = ({
         </div>
         <div ref={touchpointRef} className="col-span-3 flex justify-center">
           <TouchpointTable
-            loading={loadingCost}
+            loading={loadingAudiences}
             locked={locked}
             setLocked={setLocked}
             handleSelection={handleSelection}

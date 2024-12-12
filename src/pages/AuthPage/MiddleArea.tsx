@@ -25,7 +25,7 @@ export function MiddleArea(props: any) {
     localStorage.getItem("myapp-password") || ""
   );
   const [confirmPassword, setConfirmPassword] = useState<any>("");
-  const [userType, setUserType] = useState<any>(null);
+  const [userType, setUserType] = useState<any>(ALLY_USER_ROLE);
 
   const validateForm = () => {
     if (email.lenght == 0) {
@@ -75,6 +75,10 @@ export function MiddleArea(props: any) {
           password,
           isBrand: userType === ALLY_USER_ROLE ? true : false,
           isMaster: userType === MASTER_USER_ROLE ? true : false,
+          // static primary user data for new planner (secondary user)
+          primaryUserId: "670fba3a115cf43aa2348849",
+          primaryUserEmail: "vinciis2018@gmail.com",
+          userRole: "secondary"
         })
       );
     }
@@ -96,7 +100,7 @@ export function MiddleArea(props: any) {
   } = userSignin;
 
   const userSignup = useSelector((state: any) => state.userSignup);
-  const { error, success, userInfo } = userSignup;
+  const { loading, error, success, userInfo } = userSignup;
 
   const reset = () => {
     setName("");
@@ -125,7 +129,7 @@ export function MiddleArea(props: any) {
       dispatch({ type: USER_SIGNUP_RESET });
       alert(userInfo);
     }
-  }, [error, success]);
+  }, [dispatch, error, success]);
 
   useEffect(() => {
     if (errorSignIn) {
@@ -143,13 +147,13 @@ export function MiddleArea(props: any) {
 
   return (
     <div className="flex justify-center pt-16 ">
-      <div className="border border-solid p-8 gap-2 w-full max-w-96 ">
-        <div className="flex  flex-row  justify-between pb-2">
+      <div className="border border-solid rounded p-8 gap-2 w-full max-w-[480px] ">
+        <div className="flex flex-row justify-between pb-2">
           <button
             className={
               option === "signin"
-                ? "flex justify-center text-white text-center p-2 border border-solid rounded-md w-96 bg-primaryButton"
-                : "flex justify-center text-center p-2 border border-solid w-96 "
+                ? "flex justify-center text-white text-center p-2 border border-solid rounded-l w-96 bg-primaryButton"
+                : "flex justify-center text-center p-2 border border-solid w-96 rounded-l"
             }
             onClick={() => setOption("signin")}
           >
@@ -158,8 +162,8 @@ export function MiddleArea(props: any) {
           <button
             className={
               option === "signup"
-                ? "flex justify-center text-white text-center p-2 border border-solid rounded-md w-96 bg-primaryButton"
-                : "flex justify-center text-center p-2 border border-solid w-96 "
+                ? "flex justify-center text-white text-center p-2 border border-solid rounded-r w-96 bg-primaryButton"
+                : "flex justify-center text-center p-2 border border-solid w-96 rounded-r"
             }
             onClick={() => setOption("signup")}
           >
@@ -224,90 +228,79 @@ export function MiddleArea(props: any) {
         )}
         {/* signup form */}
         {option === "signup" && (
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-col gap-2">
-              <label>Name*</label>
-              <input
-                type=""
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-                placeholder="Enter name"
-                className="border border-solid rounded p-2"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label>Email*</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-                placeholder="Enter email"
-                className="border border-solid rounded p-2"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label>Password*</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-                placeholder="Enter password"
-                className="border border-solid rounded p-2"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label>Confirm Password*</label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => {
-                  setConfirmPassword(e.target.value);
-                }}
-                placeholder="Enter confirm password"
-                className="border border-solid rounded p-2"
-              />
-            </div>
-            <div className="gap-2">
-              <label>Select User Role*</label>
-              <div className="flex justify-between">
-                <div className="flex ">
+          <div>
+            {success ? (
+              <h1 className="text-[12px] text-blue-500">
+                User Registration successfull, please check your email and verify for proceeding further...
+              </h1>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <h1 className="flex justify-center py-2">Welcome Planner</h1>
+                <div className="flex flex-col gap-2">
+                  <label>Name*</label>
                   <input
-                    type="radio"
-                    id="html"
-                    name="userType"
-                    onChange={() => setUserType(ALLY_USER_ROLE)}
+                    type=""
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                    placeholder="Enter name"
+                    className="border border-solid rounded p-2"
                   />
-                   <label htmlFor="html">Campaign Manager</label>
                 </div>
-                <div className="flex">
+                <div className="flex flex-col gap-2">
+                  <label>Email*</label>
                   <input
-                    type="radio"
-                    id="css"
-                    name="userType"
-                    disabled
-                    onChange={() => setUserType(MASTER_USER_ROLE)}
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                    placeholder="Enter email"
+                    className="border border-solid rounded p-2"
                   />
-                   <label htmlFor="css">Screen Manager</label>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label>Password*</label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                    placeholder="Enter password"
+                    className="border border-solid rounded p-2"
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label>Confirm Password*</label>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                    }}
+                    placeholder="Enter confirm password"
+                    className="border border-solid rounded p-2"
+                  />
+                </div>
+                <div className="gap-2">
+                  <h4 className="text-sm text-red-500 pt-4">
+                    {`Note: Once your profile is created, you can't modify it without proper approval`}
+                  </h4>
+                </div>
+                <div className="flex justify-center pt-4">
+                  <PrimaryButton
+                    title={loading ? "Creating user" : "Sign Up"}
+                    rounded="rounded-md"
+                    width="w-[420px]"
+                    action={handleSignUp}
+                    disabled={loading}
+                  />
                 </div>
               </div>
-              <h4 className="text-sm text-red-500 pt-4">
-                {`Note: Once your profile is created, you can't modify it without proper approval`}
-              </h4>
-            </div>
-            <div className="flex justify-center pt-4">
-              <PrimaryButton
-                title="Sign Up"
-                rounded="rounded-md"
-                width="w-[320px]"
-                action={handleSignUp}
-              />
-            </div>
+            )}
+
           </div>
         )}
       </div>

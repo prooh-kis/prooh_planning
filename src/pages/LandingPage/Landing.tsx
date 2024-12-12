@@ -228,14 +228,14 @@ export const Landing: React.FC = () => {
       setCityTouchpoints(fillCityData(landingPageData.screenData));
       setTouchpointsCities(fillTpData(landingPageData.screenData));
     }
-  },[landingPageData])
-
-  useEffect(() => {
     if (getDataFromLocalStorage(LANDING_PAGE_DATA)) {
       setLandingPageData(getDataFromLocalStorage(LANDING_PAGE_DATA));
     } else {
       setLandingPageData(data);
     }
+  },[landingPageData, data])
+
+  useEffect(() => {
     dispatch(getLandingPageData());
   }, [dispatch]);
 
@@ -321,7 +321,7 @@ export const Landing: React.FC = () => {
             <LandingPageMapFooter data={landingPageData} />
           </div>
         </div>
-        <div ref={secondDivRef} className="pb-24 px-8">
+        <div ref={secondDivRef} className="pb-24 pt-24 px-8">
           <div className="flex flex-col justify-center items-center">
             <h1 className="text-[48px] text-[#254354] font-bold mb-0 leading-tight">
               We sell DOOH on <span className="text-[#129BFF]">Impressions</span> only.

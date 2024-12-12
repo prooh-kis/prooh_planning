@@ -122,22 +122,22 @@ export const CampaignDashboardTable = ({
               </td>
               <td className="w-full flex items-center justify-center">
                 <p className="text-[12px]">
-                  {formatNumber(screenLevelData[data]?.impressionsDelivered.toFixed(0))}
+                  {formatNumber(screenLevelData[data]?.impressionsDelivered?.toFixed(0))}
                 </p>
               </td>
               <td className="w-full flex items-center justify-center">
                 <p className="text-[12px]">
-                  {formatNumber(screenLevelData[data]?.costConsumed.toFixed(0))}
+                  {formatNumber(screenLevelData[data]?.costConsumed?.toFixed(0))}
                 </p>
               </td>
               <td className="w-full flex items-center justify-center">
                 <p className="text-[12px]">
-                  {(screenLevelData[data]?.slotsDelivered * 100 / screenLevelData[data]?.slotsPromised).toFixed(2)} %
+                  {(screenLevelData?.[data]?.slotsDelivered * 100 / screenLevelData?.[data]?.slotsPromised)?.toFixed(2)} %
                 </p>
               </td>
               <td className="w-full flex items-center justify-center"
                 onClick={() => {
-                  console.log("Logs clicked...")
+                  // console.log("Logs clicked...")
 
                   dispatch(GetCampaignMonitoringPicsAction({
                     campaignId: screenLevelData[data]?.campaignId,

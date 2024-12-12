@@ -60,8 +60,8 @@ export const CampaignTemplates: React.FC = () => {
               icon="fi fi-sr-megaphone"
               color="#0091E3"
               isSelected={selectedCard === 0}
-              handleCardClick={() => handleCardClick(0)}
-              navigate={() => navigate("/regularplan")}
+              // handleCardClick={() => handleCardClick(0)}
+              handleCardClick={() => navigate("/regularplan")}
             />
           </div>
           <div className="flex w-1/4 justify-center items-center">
@@ -71,8 +71,8 @@ export const CampaignTemplates: React.FC = () => {
               icon="fi fi-sr-calendar-star"
               color="#28A61D"
               isSelected={selectedCard === 1}
-              handleCardClick={() => handleCardClick(1)}
-              navigate={() => navigate("/specialdayplan")}
+              // handleCardClick={() => handleCardClick(1)}
+              handleCardClick={() => navigate("/specialdayplan")}
             />
           </div>
           <div className="flex w-1/4 justify-center items-center">
@@ -82,8 +82,8 @@ export const CampaignTemplates: React.FC = () => {
               icon="fi fi-sr-condition-alt"
               color="#3523D1"
               isSelected={selectedCard === 2}
-              handleCardClick={() => handleCardClick(2)}
-              navigate={() => navigate("/triggerbasedplan")}
+              // handleCardClick={() => handleCardClick(2)}
+              handleCardClick={() => navigate("/triggerbasedplan")}
             />
           </div>
         </div>
@@ -97,8 +97,8 @@ export const CampaignTemplates: React.FC = () => {
               icon="fi fi-sr-shop"
               color="#FF5252"
               isSelected={selectedCard === 3}
-              handleCardClick={() => handleCardClick(3)}
-              navigate={() => navigate("/storebasedplan")}
+              // handleCardClick={() => handleCardClick(3)}
+              handleCardClick={() => navigate("/storebasedplan")}
             />
           </div>
           <div className="flex w-1/4 justify-center items-center">
@@ -108,19 +108,19 @@ export const CampaignTemplates: React.FC = () => {
               icon="fi fi-sr-head-side-brain"
               color="#FF5E00"
               isSelected={selectedCard === 4}
-              handleCardClick={() => handleCardClick(4)}
-              navigate={() => navigate("/iknowitallplan")}
+              // handleCardClick={() => handleCardClick(4)}
+              handleCardClick={() => navigate("/iknowitallplan")}
             />
           </div>
         </div>
 
-        <div className="flex justify-center mt-6">
+        {/* <div className="flex justify-center mt-6">
           <PrimaryButton
             rounded="rounded-[30px]"
             title="Plan Campaign"
             action={handleNext}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

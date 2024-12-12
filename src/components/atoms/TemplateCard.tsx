@@ -14,7 +14,7 @@ export const TemplateCard = ({navigate, text, paratext, icon, color, isSelected,
   return (
     <div 
       onClick={handleCardClick}
-      onDoubleClick={navigate}
+      // onDoubleClick={navigate}
       className={clsx(
         "border rounded-[20px] p-2 h-[272px] w-[360px] flex justify-center items-center transition-colors cursor-pointer",
         {

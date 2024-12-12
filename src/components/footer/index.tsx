@@ -22,7 +22,7 @@ export const Footer = ({
 
   useEffect(() => {
     dispatch(getPlanningPageFooterData({ id: campaignId }));
-  }, [dispatch]);
+  }, [dispatch, campaignId]);
   return (
     <div className="py-4 z-10 flex justify-between">
       <div className="flex w-full justify-start items-center gap-4">

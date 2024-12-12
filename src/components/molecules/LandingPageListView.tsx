@@ -1,6 +1,6 @@
 import { CheckboxInput } from "../atoms/CheckboxInput";
 import { formatNumber } from "../../utils/formatValue";
-import React from "react";
+import React, { useState } from "react";
 
 function Screen({ screen }: any) {
   return (
@@ -33,6 +33,8 @@ function Screen({ screen }: any) {
 }
 
 export function LandingPageListView({ screens, countries, cities, touchPoints }: any) {
+
+  const [screensData, setScreensData] = useState<any>(screens);
   return (
     <div className="grid grid-cols-12 gap-8 py-2">
       <div className="col-span-3 border rounded-[12px] p-3 overflow-y-auto">
@@ -44,23 +46,23 @@ export function LandingPageListView({ screens, countries, cities, touchPoints }:
           <h1 className="font-semibold">Country</h1>
           {countries?.map((zone: any, i: any) => (
             <div key={i} className="p-2">
-              <CheckboxInput label={zone} />
+              <CheckboxInput label={`${zone} (${screens?.filter((screen: any) => screen.location.country === zone)?.length})`} />
             </div>
           ))}
         </div>
         <div className="py-2">
           <h1 className="font-semibold">Cities</h1>
-          {cities?.map((tp: any, j: any) => (
+          {cities?.map((ct: any, j: any) => (
             <div key={j} className="p-2">
-              <CheckboxInput label={tp} />
+              <CheckboxInput label={`${ct} (${screens?.filter((screen: any) => screen.location.city === ct)?.length})`} />
             </div>
           ))}
         </div>
-        <div className="py-2 h-60">
+        <div className="py-2 h-80 overflow-y-auto">
           <h1 className="font-semibold">Touchpoints</h1>
-          {touchPoints?.map((st: any, k: any) => (
+          {touchPoints?.map((tp: any, k: any) => (
             <div key={k} className="p-2">
-              <CheckboxInput label={st} />
+              <CheckboxInput label={`${tp} (${screens?.filter((screen: any) => screen.location.touchPoint === tp)?.length})`} />
             </div>
           ))}
         </div>

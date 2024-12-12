@@ -10,15 +10,17 @@ interface PrimaryInputProps {
   rounded?: any;
   height?: any;
   width?: any;
+  disabled?: boolean;
 }
 
-export const PrimaryInput = ({height, width, placeholder, rounded, prefix, suffix, value, action, inputType }: PrimaryInputProps) => {
+export const PrimaryInput = ({disabled, height, width, placeholder, rounded, prefix, suffix, value, action, inputType }: PrimaryInputProps) => {
   const navigate = useNavigate();
 
   return (
     <div className="relative w-full">
       {prefix}
       <input
+        disabled={disabled}
         title="input_box"
         type={inputType}
         value={value}

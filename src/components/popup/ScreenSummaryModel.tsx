@@ -15,9 +15,9 @@ export function ScreenSummaryModel({ }: any) {
       <button
         type="submit"
         onClick={() => setOpen(true)}
-        className="w-[160px] border border-1 rounded-full py-2 px-4 text-[14px] hover:bg-blue-500 hover:text-white"
+        className="w-[140px] border border-1 rounded-full py-2 px-4 text-[14px] hover:bg-blue-500 hover:text-white"
       >
-        Screen Summary
+        Plan Summary
       </button>
       <Modal open={open} onCancel={handleCancel} footer={[]} width={1100}>
         <div className="p-2">

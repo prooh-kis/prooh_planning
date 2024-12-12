@@ -15,30 +15,31 @@ export function LandingPageMap(props: any) {
   } | null>(null);
 
   const [viewState, setViewState] = useState<any>({
-    longitude: props?.geometry?.coordinates[1] || 77.0891,
-    latitude: props?.geometry?.coordinates[0] || 28.495,
-    zoom: props?.zoom || 5,
+    // longitude: 77.0891,
+    // latitude: 28.495,
+    // zoom: 5,
   });
 
   // Get user's current location
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setUserLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
-        setViewState({
-          ...viewState,
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
-      },
-      (error) => {
-        console.error("Error getting user location:", error);
-      },
-      { enableHighAccuracy: true }
-    );
+    // navigator.geolocation.getCurrentPosition(
+    //   (position) => {
+    //     setUserLocation({
+    //       latitude: position.coords.latitude,
+    //       longitude: position.coords.longitude,
+    //     });
+    //     setViewState({
+    //       ...viewState,
+    //       latitude: position.coords.latitude,
+    //       longitude: position.coords.longitude,
+    //       zoom: 5,
+    //     });
+    //   },
+    //   (error) => {
+    //     console.error("Error getting user location:", error);
+    //   },
+    //   { enableHighAccuracy: true }
+    // );
   }, []);
 
   // Add markers from props data

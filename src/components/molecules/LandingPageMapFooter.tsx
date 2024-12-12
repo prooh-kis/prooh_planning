@@ -7,7 +7,7 @@ export function LandingPageMapFooter({data}: any) {
   const [year, setYear] = useState<any>(new Date().getFullYear());
   return (
     <div
-      className="absolute mt-[-120px] left-1/2 transform -translate-x-1/2 w-[90%] z-10 p-4 border bg-white rounded-[12px] shadow-lg"
+      className="absolute mt-4 left-1/2 transform -translate-x-1/2 w-[90%] z-10 p-4 border bg-white rounded-[12px] shadow-lg"
       style={{ marginBottom: "0px" }}
     >
       <div className="grid grid-cols-12 pb-6">
@@ -48,7 +48,7 @@ export function LandingPageMapFooter({data}: any) {
           <p className="text-[#129BFF] text-[12px]">Reach</p>
         </div>
         <div className="rounded-[12px] bg-[#F6FBFF] w-36 px-2 py-4 flex flex-col justify-center items-center truncate">
-          <h1 className="text-[#129BFF] text-[14px] font-bold">&#8377;{data?.averagePricePerSlot}</h1>
+          <h1 className="text-[#129BFF] text-[14px] font-bold">&#8377;{data?.averagePricePerSlot?.toFixed(0)}</h1>
           <p className="text-[#129BFF] text-[12px] truncate">Per Slot Price</p>
         </div>
         <div className="rounded-[12px] bg-[#F6FBFF] w-36 px-1 py-4 flex flex-col justify-center items-center truncate">
