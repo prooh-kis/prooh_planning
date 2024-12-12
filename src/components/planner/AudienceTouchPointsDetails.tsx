@@ -229,7 +229,7 @@ export const AudienceTouchPointsDetails = ({
         </div>
         <div ref={audienceRef} className="col-span-3 flex justify-center">
           <AudienceCohortTable
-            loading={loadingAudiences}
+            loading={loadingCost}
             locked={locked}
             setLocked={setLocked}
             handleSelection={handleSelection}
@@ -241,7 +241,7 @@ export const AudienceTouchPointsDetails = ({
         </div>
         <div ref={touchpointRef} className="col-span-3 flex justify-center">
           <TouchpointTable
-            loading={loadingAudiences}
+            loading={loadingCost}
             locked={locked}
             setLocked={setLocked}
             handleSelection={handleSelection}
@@ -265,40 +265,38 @@ export const AudienceTouchPointsDetails = ({
           and location target audience and location location
         </h1>
       </div>
-      <div className="px-4 fixed bottom-0 left-0 w-full bg-white"
-        onClick={() => {
-          if(locked?.cohorts === false || locked?.touchPoints === false) {
-            alert("Please confirm target audience and touch points by clicking on the lock icons...");
-            return;
-          }
-        }}
-      >
+      <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
         <Footer
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
           handleSave={() => {
-            dispatch(addDetailsToCreateCampaign({
-              pageName: "Audience And TouchPoint Page",
-              id: campaignId,
-              markets: Object.keys(getDataFromLocalStorage(AUDIENCE_DATA)),
-              cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.cohorts,
-              touchPoints: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.touchPoints,
-              gender: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.gender,
-              screensSelectedCount: screensCost?.screensSelectedCount, 
-              impressionSelectedCount: screensCost?.impressionSelectedCount,
-              budgetSelected: screensCost?.budgetSelected,
-              cpmSelected: screensCost?.cpmSelected, 
-            }));
-            
-            setCurrentStep(step + 1);
-            saveDataOnLocalStorage(COST_SUMMARY, [
-              selectedScreensData,
-              totalScreensData,
-            ]);
+            if(locked?.cohorts === false || locked?.touchPoints === false) {
+              alert("Please confirm target audience and touch points by clicking on the lock icons...");
+              return;
+            } else {
+              dispatch(addDetailsToCreateCampaign({
+                pageName: "Audience And TouchPoint Page",
+                id: campaignId,
+                markets: Object.keys(getDataFromLocalStorage(AUDIENCE_DATA)),
+                cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.cohorts,
+                touchPoints: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.touchPoints,
+                gender: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.gender,
+                screensSelectedCount: screensCost?.screensSelectedCount, 
+                impressionSelectedCount: screensCost?.impressionSelectedCount,
+                budgetSelected: screensCost?.budgetSelected,
+                cpmSelected: screensCost?.cpmSelected, 
+              }));
+              
+              setCurrentStep(step + 1);
+              saveDataOnLocalStorage(COST_SUMMARY, [
+                selectedScreensData,
+                totalScreensData,
+              ]);
+            }
           }}
           campaignId={campaignId}
-          isDisabled={locked?.cohorts === false || locked?.touchPoints === false || loadingCost ? true : false}
+          // isDisabled={locked?.cohorts === false || locked?.touchPoints === false || loadingCost ? true : false}
         />
       </div>
     </div>

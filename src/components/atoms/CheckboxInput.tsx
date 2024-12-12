@@ -29,7 +29,7 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({ disabled, color, textSi
         disabled={disabled}
         onChange={handleCheckboxChange}
       />
-      <span className={`text-[${color ? color : "#21394F"}] text-[${textSize ? textSize : "14px"}] truncate`}>
+      <span className={`text-[${color ? color : "#21394F"}] text-[${textSize ? textSize : "14px"}] lg:text-[14px] md:text-[12px] sm:text-[10px] truncate`}>
         {label}
         </span>
     </label>

@@ -203,10 +203,14 @@ export function ExcelImport({
         <div className="flex items-center justify-between pt-2">
           <div>
             {file !== null && (
-              <div className="flex items-center gap-2 truncate">
-                <p className="text-sm text-green-700 truncate">{file?.name}</p>
-                <i className="fi fi-sr-cross-small text-green-700 flex items-center" onClick={() => handleResetFile()}></i>
+              <div>
+                <div className="flex items-center gap-2 truncate">
+                  <p className="text-sm text-green-700 truncate">{file?.name}</p>
+                  <i className="fi fi-sr-cross-small text-green-700 flex items-center" onClick={() => handleResetFile()}></i>
+                </div>
+                <p className="text-sm text-blue-500 truncate">({filteredScreens.length} matching locations found)</p>
               </div>
+     
             )}
           </div>
          

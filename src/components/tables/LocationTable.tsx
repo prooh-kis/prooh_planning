@@ -1,5 +1,6 @@
 import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
+import { Tooltip } from "antd";
 
 interface LocationTableProps {
   markets?: any;
@@ -62,10 +63,14 @@ export const LocationTable = ({
       <thead className="bg-[#F7F7F7] w-full">
         <tr className="grid grid-cols-8 w-full h-[40px]">
           <th className="col-span-4 flex items-center px-2 gap-2">
-            <h1 className="text-[14px] text-[#21394F]">
+            <h1 className="md:text-[14px] sm:text-[12px] text-[#21394F]">
               Location
             </h1>
-            <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
+            <Tooltip
+              title="Choose your target audience gender wise in the given locations"
+            >
+              <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
+            </Tooltip>
           </th>
           <th className="col-span-4 flex items-center justify-center gap-2">
             <CheckboxInput
@@ -84,7 +89,7 @@ export const LocationTable = ({
         </tr>
       </thead>
       <tbody className="border overflow-scroll">
-      {loading && (
+        {loading && (
           <tr className="w-full">
             <th className="w-full">
               <SkeletonLoader />

@@ -1,6 +1,6 @@
 import { PrimaryInput } from "../atoms/PrimaryInput";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
-import { message, Modal } from "antd";
+import { message, Modal, Tooltip } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import {
@@ -71,29 +71,21 @@ export const ChangeCampaignDuration = ({ campaignId }: any) => {
     [startDate]
   );
 
-  const handleSetNewDuration = useCallback(() => {
-    if (!enterDuration) {
-      setDuration(getNumberOfDaysBetweenTwoDates(startDate, endDate));
-    } else {
-      updateEndDateBasedOnDuration(duration);
-    }
+  const handleSetNewDuration = useCallback((dur: any) => {
+      updateEndDateBasedOnDuration(dur);
   }, [
-    duration,
-    endDate,
-    enterDuration,
-    startDate,
     updateEndDateBasedOnDuration,
   ]);
 
   const saveCampaignDetailsOnLocalStorage = useCallback(() => {
-    handleSetNewDuration();
+    handleSetNewDuration(duration);
     if (validateForm()) {
       dispatch(
         changeCampaignDuration({
           id: campaignId,
           startDate: startDate,
           endDate: endDate,
-          duration: getNumberOfDaysBetweenTwoDates(startDate, endDate),
+          duration: duration,
         })
       );
     }
@@ -109,7 +101,7 @@ export const ChangeCampaignDuration = ({ campaignId }: any) => {
       handleClose();
       window.location.reload();
     }
-  }, [successChangeDuration, errorChangeDuration]);
+  }, [dispatch, successChangeDuration, errorChangeDuration]);
 
   useEffect(() => {
     const endDate = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
@@ -128,10 +120,12 @@ export const ChangeCampaignDuration = ({ campaignId }: any) => {
       : "";
     const duration =
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30;
-    setStartDate(startDate);
+    setStartDate(startDate?.split("T")[0]);
     setEndDate(endDate);
     setDuration(duration);
   }, [campaignId]);
+
+  console.log(startDate)
 
   return (
     <div>
@@ -154,59 +148,54 @@ export const ChangeCampaignDuration = ({ campaignId }: any) => {
             Change Start and End Date
           </h1>
 
-          <div className="grid grid-cols-2 gap-8 pt-2">
-            <div className="col-span-1 py-1">
-              <label className="block text-secondaryText text-[14px] mb-2">
-                Start Date
-              </label>
-              <CalendarInput
-                placeholder="Start Date"
-                value={startDate}
-                action={setStartDate}
-                disabled={false}
-                minDate={new Date()}
-              />
-            </div>
-            <div className="col-span-1 py-1">
-              <div className="flex justify-between">
-                <label className="block text-secondaryText text-[14px] mb-2">
-                  {!enterDuration ? "End Date" : "Duration"}
-                </label>
-                <input
-                  className="mr-2 h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
-                  type="checkbox"
-                  role="switch"
-                  title="toggle"
-                  id="flexSwitchCheckDefault"
-                  onChange={() => {
-                    handleSetNewDuration();
-                    setEnterDuration(!enterDuration);
-                  }}
-                />
-              </div>
-              {!enterDuration ? (
-                <CalendarInput
-                  placeholder={!enterDuration ? "End Date" : "0"}
-                  value={endDate}
-                  action={(e: any) => {
-                    setEndDate(e);
-                  }}
-                  disabled={false}
-                  minDate={startDate || new Date()}
-                />
-              ) : (
-                <PrimaryInput
-                  inputType="number"
-                  placeholder="duration"
-                  value={duration}
-                  action={(e: any) => {
-                    setDuration(e);
-                    handleSetNewDuration();
-                  }}
-                />
-              )}
-            </div>
+          <div className="grid grid-cols-3 gap-8 pt-2">
+        <div className="col-span-1 py-1">
+          <div className="block flex justify-between gap-2 items-center mb-2">
+            <label className="block text-secondaryText text-[14px]">
+              Start Date
+            </label>
+            <Tooltip
+              title="Select Date from when the campaign is to be started"
+            >
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+            </Tooltip>
           </div>
+          <CalendarInput
+            placeholder="Start Date"
+            value={startDate}
+            action={setStartDate}
+            disabled={false}
+            minDate={new Date()}
+          />
+        </div>
+        <div className="col-span-1 py-1">
+          <div className="block flex justify-between gap-2 items-center mb-2">
+            <label className="block text-secondaryText text-[14px]">
+              Duration (Days)
+            </label>
+            <Tooltip
+              title="Enter total duration of campaigns in days"
+            >
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+            </Tooltip>
+          </div>
+            <PrimaryInput
+              inputType="number"
+              placeholder="30"
+              value={duration}
+              disabled={startDate === ""}
+              action={(e: any) => {
+                setDuration(e);
+                handleSetNewDuration(e);
+              }}
+            />
+        </div>
+      </div>
+      {endDate !== "" && startDate !== "" && duration && (
+        <h1 className="text-[12px] pt-4 text-blue-500">
+          Note: The billing of your campaign will start from {new Date(startDate).toLocaleDateString()} to {new Date(endDate).toLocaleDateString()}...
+        </h1> 
+      )}
           <button
             className="px-8 py-2 mt-4 text-[16px] font-semibold bg-[#1297E2] text-white rounded-md w-full"
             onClick={saveCampaignDetailsOnLocalStorage}

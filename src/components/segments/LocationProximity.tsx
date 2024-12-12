@@ -21,6 +21,7 @@ interface LocationProximityProps {
   handleRemoveRoute?: any;
   handleFinalSelectedScreens?: any;
   polygons?: any;
+  setPolygons?: any;
 }
 export const LocationProximity = ({
   routes,
@@ -39,9 +40,10 @@ export const LocationProximity = ({
   handleRemoveRoute,
   handleFinalSelectedScreens,
   polygons,
+  setPolygons,
 }: LocationProximityProps) => {
   return (
-    <div className="pt-2">
+    <div className="pt-2 h-full">
       <ExcelImport
         icon="fi fi-rr-shop pl-2 text text-primaryButton flex items-center"
         text="Stores"
@@ -66,9 +68,10 @@ export const LocationProximity = ({
     />
     <DrawnMapPolygon
       polygons={polygons}
+      setPolygons={setPolygons}
     />
 
-    <div className="">
+    <div className="mt-8">
       <p className="text-[14px]">Showing Result</p>
       <div className="pb-1 grid grid-cols-12 gap-2 flex items-center">
         <div className="col-span-2">

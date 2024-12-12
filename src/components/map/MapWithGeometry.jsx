@@ -6,6 +6,7 @@ import { MapboxScreen } from "../popup";
 import MapboxDraw from "@mapbox/mapbox-gl-draw"
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
+import * as turf from "@turf/turf";
 
 mapboxgl.accessToken =
   // process.env.REACT_APP_MAPBOX ||
@@ -72,67 +73,96 @@ function MapDrawControl({
   return null;
 }
 
-  const updateSelectedMarkers = (polygons) => {
-    const selected = props?.allScreens.filter((screen) => {
+const updateSelectedMarkers = (polygons) => {
+  const updatedPolygons = polygons.map((polygon) => {
+    const selectedScreens = props?.allScreens.filter((screen) => {
       const point = [
         screen?.location.geographicalLocation?.longitude,
         screen?.location?.geographicalLocation?.latitude,
       ];
-      // Check if the point is inside any of the polygons
-      return polygons.some((polygon) => booleanPointInPolygon(point, polygon));
+      // Check if the point is inside the current polygon
+      return booleanPointInPolygon(point, polygon);
     });
-    props?.onPolygonComplete(selected);
-    setSelectedMarkers(selected?.map((m) => [
-        m.location.geographicalLocation.longitude,
-        m.location.geographicalLocation.latitude,
-        m._id,
-      ]));
+    return { ...polygon, screens: selectedScreens };
+  });
 
-    setUnselectedMarkers(
-      props.allScreens
-        ?.filter(
-          (s) =>
-            !selected?.map((f) => f._id).includes(s._id)
-        )
-        ?.map((m) => [
-          m.location.geographicalLocation.longitude,
-          m.location.geographicalLocation.latitude,
-          m._id,
-        ])
-    );
-  };
+  // Update polygons in state
+  console.log(updatedPolygons);
+  props?.setPolygons(updatedPolygons);
 
-  const onCreatePolygon = useCallback((e) => {
-    const newPolygon = e.features[0];
-    console.log(newPolygon);
+  // Collect all selected markers from all polygons
+  const allSelectedScreens = updatedPolygons.flatMap((polygon) => polygon.screens || []);
+
+  props?.onPolygonComplete(allSelectedScreens);
+
+  setSelectedMarkers(
+    allSelectedScreens.map((screen) => [
+      screen.location.geographicalLocation.longitude,
+      screen.location.geographicalLocation.latitude,
+      screen._id,
+    ])
+  );
+
+  setUnselectedMarkers(
+    props.allScreens
+      ?.filter((screen) => !allSelectedScreens.map((s) => s._id).includes(screen._id))
+      ?.map((screen) => [
+        screen.location.geographicalLocation.longitude,
+        screen.location.geographicalLocation.latitude,
+        screen._id,
+      ])
+  );
+  return updatedPolygons;
+};
+
+const onCreatePolygon = useCallback(
+  (e) => {
+    if (props?.polygons?.length < 3) {
+      const newPolygon = e.features[0];
+
+      props?.setPolygons((prevPolygons) => {
+        const updatedPolygons = [...prevPolygons, newPolygon];
+        return updateSelectedMarkers(updatedPolygons); // Update markers with all polygons
+        // return updatedPolygons;
+      });
+    } else {
+      alert("You can only create 3 polygons for selection...")
+    }
+  
+  },
+  [props]
+);
+
+const onUpdatePolygon = useCallback(
+  (e) => {
+    const updatedPolygon = e.features[0];
 
     props?.setPolygons((prevPolygons) => {
-      const updatedPolygons = [...prevPolygons, newPolygon];
-      updateSelectedMarkers(updatedPolygons); // Update markers with all polygons
-      return updatedPolygons;
-    });
-  }, [props]);
-
-  const onUpdatePolygon = useCallback((e) => {
-    const updatedPolygon = e.features[0];
-    props?.setPolygons((prevPolygons) =>
-      prevPolygons.map((polygon) =>
+      const updatedPolygons = prevPolygons.map((polygon) =>
         polygon.id === updatedPolygon.id ? updatedPolygon : polygon
-      )
-    );
-    updateSelectedMarkers(props.polygons);
-  }, [props]);
+      );
+      return updateSelectedMarkers(updatedPolygons);
+      // return updatedPolygons;
+    });
+  },
+  [props]
+);
 
-  const onDeletePolygon = useCallback((e) => {
+const onDeletePolygon = useCallback(
+  (e) => {
     const deletedPolygonIds = e.features.map((feature) => feature.id);
     console.log(deletedPolygonIds);
-    props?.setPolygons((prevPolygons) =>
-      prevPolygons.filter((polygon) => !deletedPolygonIds.includes(polygon.id))
-    );
-    updateSelectedMarkers();
 
-  }, [props]);
-
+    props?.setPolygons((prevPolygons) => {
+      const remainingPolygons = prevPolygons.filter(
+        (polygon) => !deletedPolygonIds.includes(polygon.id)
+      );
+      return updateSelectedMarkers(remainingPolygons);
+      // return remainingPolygons;
+    });
+  },
+  [props]
+);
 
   // Get user's current location
   useEffect(() => {
@@ -334,12 +364,28 @@ function MapDrawControl({
     <div className="h-full w-full items-top">
       <div className="flex flex-col items-end gap-2 right-12 pt-2 absolute z-10">
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] group-hover:opacity-100 opacity-0 transition-opacity duration-300">Brand Store</h1>
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-blue-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Selected Screens</h1>
+          <div className="h-4 w-4 bg-primaryButton rounded-full"></div>
+        </div>
+        <div className="flex items-center gap-2 group">
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-[#F9462310] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Unselected Screens</h1>
+          <div className="h-4 w-4 bg-[#F94623] rounded-full"></div>
+        </div>
+        <div className="flex items-center gap-2 group">
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-green-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Near Brand Store</h1>
           <div className="h-4 w-4 bg-green-700 rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] group-hover:opacity-100 opacity-0 transition-opacity duration-300">Competitor Store</h1>
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-orange-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Near Competitor Store</h1>
           <div className="h-4 w-4 bg-orange-300 rounded-full"></div>
+        </div>
+        <div className="flex items-center gap-2 group">
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-violet-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Route Starting Point</h1>
+          <div className="h-4 w-4 bg-violet-500 rounded-full"></div>
+        </div>
+        <div className="flex items-center gap-2 group">
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-pink-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Route Ending Point</h1>
+          <div className="h-4 w-4 bg-pink-500 rounded-full"></div>
         </div>
       </div>
       <div className="w-full h-full flex items-center justify-center ">
@@ -347,7 +393,7 @@ function MapDrawControl({
           ref={mapRef}
           initialViewState={viewState}
           style={{ borderRadius: "10px" }}
-          mapStyle="mapbox://styles/mapbox/streets-v11"
+          mapStyle="mapbox://styles/vviicckkyy55/cm4l7klx300fx01sf61uthrog"
           mapboxAccessToken={
             process.env.REACT_APP_MAPBOX ||
             "pk.eyJ1Ijoic2FjaGlucmFpbmEiLCJhIjoiY2x3N242M2thMDB0MDJsczR2eGF4dXJsZSJ9.ocBaZJ9rPSUhmS4zGRi7vQ"
@@ -421,32 +467,76 @@ function MapDrawControl({
           
           )}
 
-          {routeData?.length > 0 &&
-            routeData.map((route, index) => (
-              <Source
-                key={index}
-                id={`${index}`}
-                type="geojson"
-                data={{
+          {routeData?.length > 0 && routeData?.map((route, index) => (
+            <Marker key={index} latitude={route?.coordinates[0]?.[1]} longitude={route?.coordinates[0]?.[0]}>
+              <div>
+              <i className="fi fi-sr-marker text-violet-500 text-[24px]"></i>
+              </div>
+            </Marker>
+          ))}
+          {routeData?.length > 0 && routeData?.map((route, index) => (
+            <Marker key={index} latitude={route?.coordinates[route?.coordinates?.length - 1]?.[1]} longitude={route?.coordinates[route?.coordinates?.length - 1]?.[0]}>
+              <div>
+              <i className="fi fi-sr-marker text-pink-500 text-[24px]"></i>
+              </div>
+            </Marker>
+          ))}
+           {routeData?.length > 0 &&
+              routeData.map((route, index) => {
+                // Create the route LineString
+                const lineString = {
                   type: "Feature",
                   properties: {},
                   geometry: {
                     type: "LineString",
                     coordinates: route.coordinates,
                   },
-                }}
-              >
-                <Layer
-                  id={`layer-${index}`}
-                  type="line"
-                  paint={{
-                    "line-color": `${randomColor(index)}`,
-                    "line-width": 4,
-                  }}
-                />
-              </Source>
-            ))}
-          
+                };
+
+                // Generate the buffer polygon using turf.buffer
+                const bufferPolygon = turf.buffer(lineString, 1, { units: "kilometers" }); // Buffer of 1km
+
+                // Generate colors
+                const lineColor = randomColor(index);
+                const bufferColor = `${lineColor}`; // Lighter shade using 80% opacity
+
+                return (
+                  <React.Fragment key={index}>
+                    {/* Render the buffer */}
+                    <Source
+                      id={`buffer-${index}`}
+                      type="geojson"
+                      data={bufferPolygon}
+                    >
+                      <Layer
+                        id={`buffer-layer-${index}`}
+                        type="fill"
+                        paint={{
+                          "fill-color": bufferColor,
+                          "fill-opacity": 0.4, // Optional opacity adjustment
+                        }}
+                      />
+                    </Source>
+
+                    {/* Render the route */}
+                    <Source
+                      id={`route-${index}`}
+                      type="geojson"
+                      data={lineString}
+                    >
+                      <Layer
+                        id={`route-layer-${index}`}
+                        type="line"
+                        paint={{
+                          "line-color": lineColor,
+                          "line-width": 4,
+                        }}
+                      />
+                    </Source>
+                  </React.Fragment>
+                );
+              })}
+
           <Source id="circle-data" type="geojson" data={circlesData}>
             <Layer
               id="circle-layer"

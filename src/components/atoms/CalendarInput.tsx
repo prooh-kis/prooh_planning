@@ -11,15 +11,12 @@ export const CalendarInput = ({
   value,
   action,
   disabled = false,
-  minDate = new Date(),
 }: CalenderInputProps) => {
-  const getMinDateTime = (): string => {
-    const currentDate = new Date(minDate);
-    currentDate.setMinutes(
-      currentDate.getMinutes() - currentDate.getTimezoneOffset()
-    ); // Adjust for time zone
-    return currentDate.toISOString().slice(0, 16); // Get the format 'YYYY-MM-DDTHH:MM'
-  };
+
+  console.log(value);
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate());
+  const formattedYesterday = yesterday.toISOString().split("T")[0];
 
   return (
     <div className="w-full">
@@ -30,7 +27,7 @@ export const CalendarInput = ({
         value={value}
         onChange={(e) => action(e.target.value)}
         className="h-[48px] w-full border rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 active:bg-blue-100 transition-colors"
-        min={getMinDateTime()}
+        min={formattedYesterday}
       />
     </div>
   );

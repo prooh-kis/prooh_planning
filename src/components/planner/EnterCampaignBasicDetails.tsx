@@ -219,7 +219,7 @@ export const EnterCampaignBasicDetails = ({
             <Tooltip
               title="Enter a unique name for your campaign"
             >
-              <i className="fi fi-sr-info text-[10px] text-gray-400 flex justify-center items-center"></i>
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
 
@@ -238,7 +238,7 @@ export const EnterCampaignBasicDetails = ({
             <Tooltip
               title="Enter campaign's brand name"
             >
-              <i className="fi fi-sr-info text-[10px] text-gray-400 flex justify-center items-center"></i>
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
 
@@ -254,17 +254,17 @@ export const EnterCampaignBasicDetails = ({
         <div className="col-span-1 py-1">
           <div className="block flex justify-between justify-betweengap-2 items-center mb-2">
             <label className="block text-secondaryText text-[14px]">
-              Industry            
+              Industry Type
             </label>
             <Tooltip
               title="Enter industry name your brand belongs to"
             >
-              <i className="fi fi-sr-info text-[10px] text-gray-400 flex justify-center items-center"></i>
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
           <PrimaryInput
             inputType="text"
-            placeholder="Industry"
+            placeholder="Industry Type"
             value={industry}
             action={setIndustry}
           />
@@ -277,7 +277,7 @@ export const EnterCampaignBasicDetails = ({
             <Tooltip
               title="Enter Agency's name or client's name who is managing the campaign"
             >
-              <i className="fi fi-sr-info text-[10px] text-gray-400 flex justify-center items-center"></i>
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
           <PrimaryInput
@@ -298,7 +298,7 @@ export const EnterCampaignBasicDetails = ({
             <Tooltip
               title="Select Date from when the campaign is to be started"
             >
-              <i className="fi fi-sr-info text-[10px] text-gray-400 flex justify-center items-center"></i>
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
           <CalendarInput
@@ -312,39 +312,17 @@ export const EnterCampaignBasicDetails = ({
         <div className="col-span-1 py-1">
           <div className="block flex justify-between gap-2 items-center mb-2">
             <label className="block text-secondaryText text-[14px]">
-              Duration
+              Duration (Days)
             </label>
             <Tooltip
               title="Enter total duration of campaigns in days"
             >
-              <i className="fi fi-sr-info text-[10px] text-gray-400 flex justify-center items-center"></i>
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
-          {/* <input
-            className="mr-2 h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
-            type="checkbox"
-            role="switch"
-            title="Enter duration"
-            id="flexSwitchCheckDefault"
-            onChange={() => {
-              handleSetNewDuration();
-              setEnterDuration(!enterDuration);
-            }}
-          /> */}
-          {/* {!enterDuration ? (
-            <CalendarInput
-              placeholder={!enterDuration ? "End Date" : "0"}
-              value={endDate}
-              action={(e: any) => {
-                setEndDate(e);
-              }}
-              minDate={startDate || new Date()}
-              disabled={false}
-            />
-          ) : ( */}
             <PrimaryInput
               inputType="number"
-              placeholder="duration"
+              placeholder="30"
               value={duration}
               disabled={startDate === ""}
               action={(e: any) => {
@@ -352,7 +330,6 @@ export const EnterCampaignBasicDetails = ({
                 handleSetNewDuration(e);
               }}
             />
-          {/* )} */}
         </div>
       </div>
       {endDate !== "" && startDate !== "" && duration && (

@@ -4,7 +4,7 @@ import MapboxGeocoder from "@mapbox/mapbox-sdk/services/geocoding";
 import mapboxgl from "mapbox-gl"
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX ||
-  "pk.eyJ1Ijoic2FjaGlucmFpbmEiLCJhIjoiY2x3N242M2thMDB0MDJsczR2eGF4dXJsZSJ9.ocBaZJ9rPSUhmS4zGRi7vQ";
+  "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A";
 
 const geocoder = MapboxGeocoder({ 
   accessToken: mapboxgl.accessToken,
@@ -50,26 +50,23 @@ export function MapSearchInput(props: any) {
   }, []);
 
   const handleSuggestionClick = async (suggestion: any) => {
-    if (suggestion?.place_name === "query") {
-      setQuery(suggestion?.place_name);
-    } else {
-      setQuery(suggestions[0]?.place_name);
-    }
+    // Set the query to the place_name of the clicked suggestion
+    setQuery(suggestion.place_name);
+  
     const response = await geocoder
       .forwardGeocode({
-        query,
-        countries: ['ind'], // Restrict to United States
+        query: suggestion.place_name, // Use the place_name of the clicked suggestion
+        countries: ['ind'], // Restrict to India
         proximity: userLocation ? [userLocation.longitude, userLocation.latitude] : undefined,
-        limit: 1,
+        limit: 2,
       })
       .send();
+  
     if (response.body.features.length > 0) {
-      // const location = response.body.features[0].center;
       setSuggestions([]);
       props?.handleClick(response.body.features);
-
     }
-  }
+  };
 
   const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -110,7 +107,7 @@ export function MapSearchInput(props: any) {
       const filteredCustomSuggestions = customSuggestions.filter((suggestion) =>
         suggestion.place_name.toLowerCase().includes(value.toLowerCase())
       );
-
+      
       // console.log(response);
       setSuggestions([...filteredCustomSuggestions, ...mapBoxSuggestions]);
     } else {
@@ -128,11 +125,11 @@ export function MapSearchInput(props: any) {
         }}
         onMouseEnter={(e: any) => {
           setHighlightedIndex(index)
-          setQuery(suggestion);
+          setQuery(suggestion?.place_name);
         }}
-        // onMouseDown={() => {
-        //   handleSuggestionClick(suggestion);
-        // }}
+        onMouseDown={() => {
+          handleSuggestionClick(suggestion);
+        }}
         className={
           highlightedIndex === index
             ? "cursor-pointer p-4 bg-gray-200"

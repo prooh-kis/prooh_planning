@@ -152,20 +152,20 @@ export const AdvanceFiltersDetails = ({
 
   const handleRouteData = (routeData: any, id: any) => {
     const radiusInMeters = 1000; // 1000 meters radius
+    const line = turf.lineString(routeData.coordinates); // Create a LineString from route coordinates
+    const bufferedArea: any = turf.buffer(line, radiusInMeters / 1000, { units: "kilometers" }); // Buffer area around the route
+  
     const filteredRecords = allScreens?.filter((point: any) => {
-      let x: Coordinate = [
+      const screenPoint = turf.point([
         point.location.geographicalLocation.longitude,
         point.location.geographicalLocation.latitude,
-      ];
-      return routeData?.coordinates.some((coord: Coordinate) => {
-        const from = turf.point([Number(coord[0]), Number(coord[1])]);
-        const to = turf.point(x);
-        const distance = turf.distance(from, to, { units: "meters" });
-        return distance <= radiusInMeters; // Convert meters to kilometers
-      });
+      ]);
+      return turf.booleanPointInPolygon(screenPoint, bufferedArea); // Check if screen is within the buffer
     });
+  
     let arr = routes;
     const screens: any = routeFilteredScreens;
+  
     for (let data of arr) {
       if (data?.id === id) {
         data.selectedScreens = filteredRecords;
@@ -176,18 +176,16 @@ export const AdvanceFiltersDetails = ({
         });
       }
     }
+  
     setRouteFilteredScreens(screens);
     setRoutes(arr);
+  
     handleFinalSelectedScreens({
       type: "add",
       screens: filteredRecords || [],
-      // screens: [],
-
     });
-
-    // handleSetFIlter4(arr);
   };
-
+  
   function handleAddManualSelectedScreenIntoFinalSelectedScreens(checked: any) {
     if (checked) {
       handleFinalSelectedScreens({
@@ -277,13 +275,13 @@ export const AdvanceFiltersDetails = ({
 
   return (
     <div className="w-full">
-      <div className="h-[640px] w-full py-3 grid grid-cols-2 gap-4">
-        <div className="col-span-1 py-2 pr-4">
+      <div className="h-[80vh] w-full py-3 grid grid-cols-2 gap-4">
+        <div className="col-span-1 h-full py-2 pr-4">
           {storeFilter ? (
-            <div className="">
+            <div className="h-full">
               <div className="flex justify-between">
                 <div className="truncate">
-                  <h1 className="text-[24px] text-primaryText font-semibold truncate">
+                  <h1 className="border text-[24px] text-primaryText font-semibold truncate">
                     Store & Route Proximity
                   </h1>
                   <p className="text-[14px] text-secondaryText">
@@ -291,10 +289,10 @@ export const AdvanceFiltersDetails = ({
                   </p>
                 </div>
                 <div
-                  className="flex items-center justify-end gap-2"
+                  className="flex mt-3 items-top justify-end gap-2"
                   
                 >
-                  <i className="fi fi-br-rotate-right text-[12px] flex items-center" onClick={() => window.location.reload()}></i>
+                  <i className="fi fi-br-rotate-right text-[12px] pt-1 flex items-top" onClick={() => window.location.reload()}></i>
                   <p className="text-[14px] text-[#9f9f9f]" onClick={() => setStoreFilter(!storeFilter)}>Next</p>
                 </div>
               </div>
@@ -316,6 +314,7 @@ export const AdvanceFiltersDetails = ({
                 handleRemoveRoute={handleRemoveRoute}
                 handleFinalSelectedScreens={handleFinalSelectedScreens}
                 polygons={polygons}
+                setPolygons={setPolygons}
               />
             </div>
           ) : (
@@ -350,7 +349,7 @@ export const AdvanceFiltersDetails = ({
               />
             </div>
           )}
-          <div className="flex items-center pt-4 mx-[-1px]">
+          <div className="flex items-center pb-4 mx-[-1px]">
             <CheckboxInput
               label={
                 <>
@@ -379,7 +378,15 @@ export const AdvanceFiltersDetails = ({
           </div>
         </div>
 
-        <div className="col-span-1 w-full">
+        <div className="col-span-1 w-full pt-2">
+          <div className="flex items-center justify-end">
+            <p
+              className="text-[14px] py-2 text-primaryButton underline cursor-pointer"
+              // onClick={handleSkipTriggerSelection}
+            >
+              Skip Advance Filters
+            </p>
+          </div>
           {allScreens?.length > 0 && (
             <MapWithGeometry
               handleRouteData={handleRouteData}

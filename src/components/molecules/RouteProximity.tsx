@@ -67,16 +67,27 @@ export const RouteProximity = ({
           <p className="text-sm text-[#9f9f9f]">Added Route</p>
           <p className="text-sm text-[#9f9f9f]">{routes.length}</p>
         </div>
-        <div className="overflow-scroll h-24">
+        <div className="overflow-scroll h-36">
           {routes?.map((route: any, index: any) => (
             <div key={index} className="bg-[#F6F6F6] p-2 my-1">
-              <div className="flex justify-between items-center" onClick={() => setShowDetails(index)}>
-                <p className="text-sm">
-                  {index + 1}. <span className="font-bold">{route.origin.place_name?.split(",")[0]}</span> to {" "}
-                  <span className="font-bold">{route.destination.place_name?.split(",")[0]}</span>
-                </p>
-                <i className="fi fi-sr-cross-small text-gray-700 flex items-center" onClick={() => handleRemoveRoute(route.id)}></i>
+              <div className="">
+                <div className="flex justify-between items-center" onClick={() => {
+                  setShowDetails(index);
+                  console.log(route);
+                }}>
+                  <p className="text-sm">
+                    {index + 1}. <span className="font-bold">{route.origin.place_name?.split(",")[0]}</span> to {" "}
+                    <span className="font-bold">
+                      {route.destination.place_name?.split(",")[0]}
+                    </span>
+                    <span className="text-blue-600">
+                    ({route?.selectedScreens?.length})
+                    </span>
+                  </p>
+                  <i className="fi fi-sr-cross-small text-gray-700 flex items-center" onClick={() => handleRemoveRoute(route.id)}></i>
+                </div>
               </div>
+
               {showDetails === index && (
                 <div>
                   <div className="flex gap-2 items-center">
