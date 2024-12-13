@@ -25,6 +25,7 @@ import {
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { Loading } from "../../components/Loading";
+import { message } from "antd";
 
 interface Tab {
   label: string;
@@ -42,7 +43,7 @@ export const ScreenSummaryDetails = ({
   setCurrentStep,
   step,
   campaignId,
-  regularVsCohortSuccessStatus
+  regularVsCohortSuccessStatus,
 }: ScreenSummaryDetailsProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -68,7 +69,7 @@ export const ScreenSummaryDetails = ({
       ? getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)
       : {};
   });
-  // console.log(screensBuyingCount)
+  const [visitedTab, setVisitedTab] = useState<any>([]);
 
   const screenSummaryDataGet = useSelector(
     (state: any) => state.screenSummaryDataGet
@@ -108,6 +109,14 @@ export const ScreenSummaryDetails = ({
     const city =
       citiesCreative?.find((data: any) => data.id === id)?.label || "";
     setCurrentCity(city);
+    setVisitedTab((pre: any) => {
+      return pre.map((data: any) => {
+        if (data?.id == id) {
+          data.visited = true;
+        }
+        return data;
+      });
+    });
   };
 
   const getTabValue = (dataScreenSummary: any) => {
@@ -148,6 +157,24 @@ export const ScreenSummaryDetails = ({
         screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
       })
     );
+  };
+
+  const handleSetVisitedValue = (dataScreenSummary: any) => {
+    let data: any = [];
+    if (
+      dataScreenSummary &&
+      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) &&
+      Object.keys(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) || {})
+        ?.length !== 0
+    ) {
+      data = Object.keys(dataScreenSummary).map((s: any, index: any) => {
+        return {
+          id: `${index + 1}`,
+          visited: index == 0 ? true : false,
+        };
+      });
+    }
+    setVisitedTab([...data]);
   };
 
   const handleSaveAndContinue = async () => {
@@ -207,17 +234,6 @@ export const ScreenSummaryDetails = ({
   };
 
   useEffect(() => {
-    // if (!getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)) {
-    // const timer = setTimeout(() => {
-    //   dispatch(
-    //     getScreenSummaryData({
-    //       id: campaignId,
-    //       type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-    //         ?.selectedType,
-    //     })
-    //   );
-    // }, 2000);
-    // return () => clearTimeout(timer);
     dispatch(
       getScreenSummaryData({
         id: campaignId,
@@ -225,21 +241,21 @@ export const ScreenSummaryDetails = ({
           ?.selectedType,
       })
     );
-    // }
-    
   }, [campaignId, dispatch]);
 
   useEffect(() => {
-    // if (pathname.split("/").includes("storebasedplan")) {
-      dispatch(
-        getScreenSummaryPlanTableData({
-          id: campaignId,
-          screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-        })
-      );
-    // }
-  },[dispatch]);
-  
+    dispatch(
+      getScreenSummaryPlanTableData({
+        id: campaignId,
+        screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+      })
+    );
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (screenSummaryData) handleSetVisitedValue(screenSummaryData);
+  }, [screenSummaryData]);
+
   useEffect(() => {
     if (pathname.split("/").includes("iknowitallplan") && step === 4) {
       setCurrentTab("2");
@@ -291,8 +307,9 @@ export const ScreenSummaryDetails = ({
       {loadingScreenSummary ? (
         <Loading />
       ) : errorScreenSummary ? (
-        // <p>Error: {JSON.stringify(errorScreenSummary)}</p>
-        <p></p>
+        <div className="p-4 bg-red-300 text-[#FFFFFF] ">
+          Something wend wrong! please refresh the page
+        </div>
       ) : (
         <div className="">
           {currentTab === "1" ? (
@@ -310,12 +327,12 @@ export const ScreenSummaryDetails = ({
                 <div className="flex gap-2">
                   <div className="px-1 border rounded flex items-center gap-1 ">
                     <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
-                    <p className="text-[12px]">&#8377;200 - &#8377;400</p>
+                    <p className="text-[12px]">&#8377;1 - &#8377;100</p>
                   </div>
                   <div className="px-1 border rounded flex items-center gap-1">
                     <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
                     <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
-                    <p className="text-[12px]">&#8377;400 - &#8377;600</p>
+                    <p className="text-[12px]">&#8377;101 - &#8377;300</p>
                   </div>
                   <div
                     className={`px-1 border rounded flex items-center gap-1 ${
@@ -410,7 +427,16 @@ export const ScreenSummaryDetails = ({
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={handleSaveAndContinue}
+          handleSave={() => {
+            let result =
+              visitedTab?.filter((data: any) => data.visited == false)?.length >
+              0;
+            if (result) {
+              message.warning("Please visit all city wise screens once");
+            } else {
+              handleSaveAndContinue();
+            }
+          }}
           campaignId={campaignId}
         />
       </div>
