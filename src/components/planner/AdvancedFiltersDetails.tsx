@@ -230,10 +230,10 @@ export const AdvanceFiltersDetails = ({
 
       });
     } else {
-      handleFinalSelectedScreens({
-        type: "remove",
-        screens: screens,
-      });
+      // handleFinalSelectedScreens({
+      //   type: "remove",
+      //   screens: screens,
+      // });
     }
     // saveDataOnLocalStorage(SELECTED_SCREENS_ID, getUniqueScreens([{screens: selectedScreenIds}]));
   };
@@ -281,16 +281,12 @@ export const AdvanceFiltersDetails = ({
             <div className="h-full">
               <div className="flex justify-between">
                 <div className="truncate">
-                  <h1 className="border text-[24px] text-primaryText font-semibold truncate">
+                  <h1 className="text-[24px] text-primaryText font-semibold truncate">
                     Store & Route Proximity
                   </h1>
-                  <p className="text-[14px] text-secondaryText">
-                    Viewing Store & Competitor Matches
-                  </p>
                 </div>
                 <div
                   className="flex mt-3 items-top justify-end gap-2"
-                  
                 >
                   <i className="fi fi-br-rotate-right text-[12px] pt-1 flex items-top" onClick={() => window.location.reload()}></i>
                   <p className="text-[14px] text-[#9f9f9f]" onClick={() => setStoreFilter(!storeFilter)}>Next</p>
@@ -298,6 +294,7 @@ export const AdvanceFiltersDetails = ({
               </div>
 
               <LocationProximity
+                routeFilteredScreens={routeFilteredScreens}
                 routes={routes}
                 routeOrigin={routeOrigin}
                 setRouteOrigin={setRouteOrigin}
@@ -324,16 +321,12 @@ export const AdvanceFiltersDetails = ({
                   <h1 className="text-[24px] text-primaryText font-semibold truncate">
                     POI Proximity
                   </h1>
-                  <p className="text-[14px] text-secondaryText">
-                    Select your desired POIs for filtering screens
-                  </p>
                 </div>
                 <div
-                  className="flex items-center justify-end gap-2"
-                  onClick={() => setStoreFilter(!storeFilter)}
+                  className="flex mt-3 items-top justify-end gap-2"
                 >
-                  <i className="fi fi-br-rotate-right text-[12px] flex items-center" onClick={() => window.location.reload()}></i>
-                  <p className="text-[14px] text-[#9f9f9f]">Back</p>
+                  <i className="fi fi-br-rotate-right text-[12px] pt-1 flex items-top" onClick={() => window.location.reload()}></i>
+                  <p className="text-[14px] text-[#9f9f9f]" onClick={() => setStoreFilter(!storeFilter)}>Back</p>
                 </div>
               </div>
               <POIProximity
@@ -361,7 +354,7 @@ export const AdvanceFiltersDetails = ({
                 </>
               }
               onChange={(e) => {
-                handleConfirmScreensSelections({checked: e, screens: e ? finalSelectedScreens : []});
+                handleConfirmScreensSelections({checked: e, screens: finalSelectedScreens});
                 if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)) {
                   dispatch(
                     getRegularVsCohortPriceData({
@@ -382,7 +375,18 @@ export const AdvanceFiltersDetails = ({
           <div className="flex items-center justify-end">
             <p
               className="text-[14px] py-2 text-primaryButton underline cursor-pointer"
-              // onClick={handleSkipTriggerSelection}
+              onClick={() => {
+                if (isDisabled) {
+                  message.error("Please  confirm screen selection");
+                } else {
+                  dispatch(addDetailsToCreateCampaign({
+                    pageName: "Advance Filter Page",
+                    id: pathname.split("/").splice(-1)[0],
+                    screenIds: finalSelectedScreens.map((s: any) => s._id)
+                  }));
+                  setCurrentStep(step + 1);
+                };
+              }}
             >
               Skip Advance Filters
             </p>

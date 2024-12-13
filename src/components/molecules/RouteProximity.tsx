@@ -4,6 +4,7 @@ import { CheckboxInput } from "../atoms/CheckboxInput"
 import { PrimaryButton } from "../atoms/PrimaryButton";
 import { LinearBar } from "../../components/molecules/linearbar";
 import { MapSearchInput } from "../../components/atoms/MapSearchInput";
+import { Tooltip } from "antd";
 
 
 interface RouteProximityProps {
@@ -14,6 +15,7 @@ interface RouteProximityProps {
   setRouteDestination?: any;
   handleRouteSetup?: any;
   handleRemoveRoute?: any;
+  routeFilteredScreens?: any;
 }
 
 export const RouteProximity = ({
@@ -24,14 +26,21 @@ export const RouteProximity = ({
   setRouteDestination,
   handleRouteSetup,
   handleRemoveRoute,
+  routeFilteredScreens,
 }: RouteProximityProps) => {
 
   const [showDetails, setShowDetails] = useState<any>(null);
 
   return (
-    <div className="py-2">
-      <div className="flex justify-between pt-2">
-        <h1 className="text-[20px] text-primaryText">2. Route Proximity</h1>
+    <div className="py-4 border-b border-gray-100">
+      <div className="flex justify-start gap-2 items-center pt-2">
+        <h1 className="md:text-[16px] sm:text-[14px] text-gray-500">2. Choose your desired routes </h1>
+        <Tooltip
+            title="Enter the origin and destination of your desired routes and select all the screens in proximity of your desired routes"
+            >
+          <i className="fi fi-rs-info pr-1 text-[14px] text-gray-400 flex justify-center items-center"></i>
+        </Tooltip>
+        <h1 className="text-blue-500">({routeFilteredScreens?.length})</h1>
       </div>
       
       <div className="grid grid-cols-5 gap-2 flex items-center pt-2">
@@ -56,7 +65,13 @@ export const RouteProximity = ({
         <div className="col-span-1">
           <PrimaryButton
             title="Check"
-            action={() => handleRouteSetup(routeOrigin, routeDestination)}
+            action={() => {
+              if (routes?.length >= 5) {
+                alert("Oops! you can only choose upto 5 routes...")
+              } else {
+                handleRouteSetup(routeOrigin, routeDestination);
+              }
+            }}
             rounded="rounded-[10px]"
             disabled={routeOrigin && routeDestination ? false : true}
           />
@@ -67,13 +82,12 @@ export const RouteProximity = ({
           <p className="text-sm text-[#9f9f9f]">Added Route</p>
           <p className="text-sm text-[#9f9f9f]">{routes.length}</p>
         </div>
-        <div className="overflow-scroll h-36">
+        <div className="overflow-scroll h-36 mb-1">
           {routes?.map((route: any, index: any) => (
             <div key={index} className="bg-[#F6F6F6] p-2 my-1">
               <div className="">
                 <div className="flex justify-between items-center" onClick={() => {
                   setShowDetails(index);
-                  console.log(route);
                 }}>
                   <p className="text-sm">
                     {index + 1}. <span className="font-bold">{route.origin.place_name?.split(",")[0]}</span> to {" "}

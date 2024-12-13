@@ -1,6 +1,7 @@
 import React from "react";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { LinearBar } from "../../components/molecules/linearbar";
+import { Tooltip } from "antd";
 
 export const SelectManuallyScreensCheckBox = ({
   manuallySelected,
@@ -8,8 +9,16 @@ export const SelectManuallyScreensCheckBox = ({
   handleCheck,
 }: any) => {
   return (
-    <div className="pt-2">
-      <h2 className="text-[12px] font-semibold">Manually Selected</h2>
+    <div className="py-2">
+      <div className="flex justify-start items-center gap-2">
+        <h2 className="text-[12px] font-semibold">Manually Selected</h2>
+        <Tooltip
+          title="Check to select all the screens having none of the POIs in the proximity"
+          >
+            <i className="fi fi-rs-info text-[12px] text-gray-400 flex justify-center items-center"></i>
+        </Tooltip>
+      </div>
+
       <p className="text-[12px] text-[#9f9f9f]">
         Select manually all the screens you need to select from unselected
         screens

@@ -1,3 +1,4 @@
+import { Tooltip } from "antd";
 import { DrawnMapPolygon } from "../../components/molecules/DrawnMapPolygon";
 import { CheckboxInput } from "../atoms/CheckboxInput";
 import { ExcelImport } from "../molecules/ExcelImport"
@@ -22,6 +23,7 @@ interface LocationProximityProps {
   handleFinalSelectedScreens?: any;
   polygons?: any;
   setPolygons?: any;
+  routeFilteredScreens?: any;
 }
 export const LocationProximity = ({
   routes,
@@ -41,6 +43,7 @@ export const LocationProximity = ({
   handleFinalSelectedScreens,
   polygons,
   setPolygons,
+  routeFilteredScreens,
 }: LocationProximityProps) => {
   return (
     <div className="pt-2 h-full">
@@ -58,6 +61,7 @@ export const LocationProximity = ({
 
       />
     <RouteProximity
+      routeFilteredScreens={routeFilteredScreens}
       routes={routes}
       routeOrigin={routeOrigin}
       setRouteOrigin={setRouteOrigin}
@@ -71,14 +75,23 @@ export const LocationProximity = ({
       setPolygons={setPolygons}
     />
 
-    <div className="mt-8">
-      <p className="text-[14px]">Showing Result</p>
+    <div className="pt-16">
+      <div className="flex justify-start gap-2">
+        <p className="text-[14px]">Showing Result</p>
+        <Tooltip
+            title="Only showing unique screens from all the above filters selected"
+            >
+          <i className="fi fi-rs-info pr-1 text-[14px] text-gray-400 flex justify-center items-center"></i>
+        </Tooltip>
+      </div>
+
       <div className="pb-1 grid grid-cols-12 gap-2 flex items-center">
         <div className="col-span-2">
           <CheckboxInput
             color="#52A2FF"
             label={finalSelectedScreens.length}
             checked={true}
+            disabled
             onChange={() => {}}
           />
         </div>

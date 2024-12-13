@@ -50,10 +50,10 @@ function MapDrawControl({
       displayControlsDefault: false, // Hide default controls
       controls: {
         polygon: true, // Enable polygon drawing
-        trash: true, // Enable delete control
-        direct_select: true, // Allow direct selection of drawn features
+        trash: false, // Enable delete control
+        direct_select: false, // Allow direct selection of drawn features
       },
-      defaultMode: "draw_polygon", // Set default mode to polygon drawing
+      // defaultMode: "draw_polygon", // Set default mode to polygon drawing
     }),
     ({ map }) => {
       map.on("draw.create", onCreate);
@@ -87,7 +87,6 @@ const updateSelectedMarkers = (polygons) => {
   });
 
   // Update polygons in state
-  console.log(updatedPolygons);
   props?.setPolygons(updatedPolygons);
 
   // Collect all selected markers from all polygons
@@ -281,7 +280,7 @@ const onDeletePolygon = useCallback(
 
       const data = await response.json();
 
-      setRouteData((pre) => [data.routes[0].geometry, ...pre]);
+      setRouteData((pre) => [ ...pre, data.routes[0].geometry]);
       props?.handleRouteData(data.routes[0].geometry, route?.id);
     } catch (error) {
       console.log("error in  finding routes : ", error);

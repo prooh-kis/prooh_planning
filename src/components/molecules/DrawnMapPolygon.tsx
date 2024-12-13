@@ -1,3 +1,4 @@
+import { Tooltip } from "antd";
 import { PolygonShape } from "../../components/atoms/PolygonShape";
 
 
@@ -11,17 +12,49 @@ export const DrawnMapPolygon = ({
   setPolygons
 }: DrawnMapPolygonProps) => {
 
+  function getUniqueScreens(poly: any) {
+    const screenMap = new Map();
+
+    poly.forEach((feature: any) => {
+        feature.screens.forEach((screen: any) => {
+            if (!screenMap.has(screen._id)) {
+                screenMap.set(screen._id, screen);
+            }
+        });
+    });
+
+    // Convert the Map values to an array
+    return Array.from(screenMap.values());
+  }
+  console.log(getUniqueScreens(polygons))
 console.log(polygons);
   return (
-    <div className="pt-2 pb-4 h-[20vh]">
-      <div className="flex justify-between pt-2">
-        <h1 className="text-[20px] text-primaryText">3. Selected Locations</h1>
+    <div className="h-[16vh]">
+      <div className="flex justify-start gap-2 pt-2">
+        <h1 className="md:text-[16px] sm:text-[14px] text-gray-500">3. Selected Location Areas </h1>
+        <Tooltip
+            title="Choose your screens by drawing an area that you want to target and get all the screens within that area"
+            >
+          <i className="fi fi-rs-info pr-1 text-[14px] text-gray-400 flex justify-center items-center"></i>
+        </Tooltip>
+        <h1 className="text-blue-500">({getUniqueScreens(polygons)?.length})</h1>
+
       </div>
-      <div className="p-4 my-2 border rounded h-full grid grid-cols-3 flex justify-start items-center gap-4">
+      <div className="border mt-2 rounded h-full grid grid-cols-3 flex justify-start items-center gap-4">
+        {polygons?.length === 0 && (
+          <div className="col-span-3 w-full h-full bg-blue-100 flex justify-center items-center">
+            <div className="w-full">
+              <i className="fi fi-sr-map-location-track md:text-[40px] sm:text-[32px] text-blue-500 flex justify-center items-center"></i>
+              <h1 className="md:text-[12px] sm:text-[10px] text-blue-500 text-center">
+                Draw polygons on the map and select your screens
+              </h1>
+            </div>
+          </div>
+        )}
         {polygons?.map((polygon: any, i: any) => (
-          <div key={i} className="h-28">
-            <div>
-              <i className="fi fi-br-cross-circle flex justify-end"
+          <div key={i} className="h-full p-4">
+            <div className="relative h-[12vh]">
+              <i className="absolute right-0 z-1 fi fi-br-cross-circle flex justify-end"
                 onClick={() => {
                   const polygonsData = polygons?.filter((p: any) => p.id !== polygon.id)
                   setPolygons(polygonsData);
@@ -33,7 +66,6 @@ console.log(polygons);
               <h1 className="text-[12px]">Area {i+1} ({polygon.screens.length})</h1>
             </div>
           </div>
-
         ))}
       </div>
     </div>

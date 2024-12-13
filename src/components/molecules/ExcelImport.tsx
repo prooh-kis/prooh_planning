@@ -2,6 +2,7 @@ import { useRef, ChangeEvent, useState } from "react";
 import { readExcelFile, validateGioData } from "../../utils/excelUtils";
 import { getDistance } from "geolib";
 import { ExcelExport } from "./ExcelExport";
+import { Tooltip } from "antd";
 
 interface ExcelImportProps {
   selectedScreens?: any;
@@ -180,7 +181,18 @@ export function ExcelImport({
     }
   };
   return (
-    <div className="w-full py-2">
+    <div className="w-full border-b border-gray-100">
+      <div className="py-2 flex justify-start gap-2 items-center">
+        <h1 className="md:text-[16px] sm:text-[14px] text-gray-500">
+          1. Upload your target stores location data 
+        </h1>
+        <Tooltip
+            title="Download the sample excel sheet to edit it with the details of your desired stores and select screens in proximity of your desired locations"
+            >
+          <i className="fi fi-rs-info pr-1 text-[14px] text-gray-400 flex justify-center items-center"></i>
+        </Tooltip>
+        <h1 className="text-blue-500">({filteredScreens.length})</h1>
+      </div>
       <div
         className="border border-dashed w-full h-[40px] rounded-md flex justify-between items-center p-1"
         onClick={handleClick}
@@ -200,7 +212,7 @@ export function ExcelImport({
         />
         <p className="text-sm text-primaryButton pr-2">Upload</p>
       </div>
-        <div className="flex items-center justify-between pt-2">
+        <div className="flex items-center justify-between py-2">
           <div>
             {file !== null && (
               <div>

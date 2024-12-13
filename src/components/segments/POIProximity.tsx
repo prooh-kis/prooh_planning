@@ -3,6 +3,7 @@ import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { LinearBar } from "../../components/molecules/linearbar";
 import { useState } from "react";
 import { SelectManuallyScreensCheckBox } from "./SelectManuallyScreensCheckBox";
+import { Tooltip } from "antd";
 
 interface POIProximityProps {
   pois?: any;
@@ -34,54 +35,105 @@ export const POIProximity = ({
 
   return (
     <div className="pt-2 w-full">
-      <h1 className="text-[20px] truncate pb-2">
-        Select sites with most POI exposure
-      </h1>
-      <div className="h-[35vh] overflow-scroll">
+      <div className="flex justify-start items-center gap-2 pb-4">
+        <h1 className="text-[14px] text-gray-500 truncate">
+          Select sites with most POI exposure
+        </h1>
+        <Tooltip
+            title="Click to deselect and select your desired POIs and get screens located in the proximity of those POIs"
+            >
+          <i className="fi fi-rs-info text-[14px] text-gray-400 flex justify-center items-center"></i>
+        </Tooltip>
+        <h1 className="text-[14px] text-blue-500">({selectedPOIs?.length})</h1>
+      </div>
+
+      <div className="h-[48vh] overflow-scroll">
         <div className="grid grid-cols-2 gap-4">
           {/* First column */}
-          <div>
+          <div className="col-span-1">
             {firstColumnPois?.map((poi: any, index: any) => (
-              <div key={index} className="pt-1">
-                <CheckboxInput
-                  onChange={() => {
-                    if (selectedPOIs.includes(poi)) {
-                      setSelectedPOIs(selectedPOIs.filter((p: any) => p !== poi));
-                    } else {
-                      setSelectedPOIs([...selectedPOIs, poi]);
+              <div key={index} className="py-1">
+                <div className={
+                  `
+                  border rounded-[10px] relative p-4
+                   ${selectedPOIs.includes(poi) ? "border border-blue-500" : ""}
+                  `
+                }
+                onClick={() => {
+                  if (selectedPOIs.includes(poi)) {
+                    setSelectedPOIs(selectedPOIs.filter((p: any) => p !== poi));
+                  } else {
+                    setSelectedPOIs([...selectedPOIs, poi]);
+                  }
+                }}
+                >
+                  {selectedPOIs?.includes(poi) && (
+                    <i className={
+                      `
+                      text-red-400
+                      absolute right-0 top-0 z-1 fi fi-br-cross-circle flex justify-end
+                      `
                     }
-                  }}
-                  checked={selectedPOIs.includes(poi) ? true : false}
-                  label={poi}
-                />
+                    ></i>
+                  )}
+                  <div className="flex justify-center items-center">
+                    <h1 className="text-[14px] truncate">{poi}</h1>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
           {/* Second column */}
-          <div>
+          <div className="col-span-1">
             {secondColumnPois?.map((poi: any, index: any) => (
-              <div key={index} className="pt-1">
-                <CheckboxInput
-                  onChange={() => {
+              <div key={index} className="py-1">
+                <div className={
+                  `
+                  border rounded-[10px] relative p-4
+                   ${selectedPOIs.includes(poi) ? "border border-blue-500" : ""}
+                  `
+                }
+                  onClick={() => {
                     if (selectedPOIs.includes(poi)) {
                       setSelectedPOIs(selectedPOIs.filter((p: any) => p !== poi));
                     } else {
                       setSelectedPOIs([...selectedPOIs, poi]);
                     }
                   }}
-                  checked={selectedPOIs.includes(poi) ? true : false}
-                  label={poi}
-                />
+                >
+                  {selectedPOIs?.includes(poi) && (
+                    <i className={
+                      `
+                      text-red-400
+                      absolute right-0 top-0 z-1 fi fi-br-cross-circle flex justify-end
+                      `
+                    }
+                    ></i>
+                  )}
+                  <div className="flex justify-center items-center">
+                    <h1 className="text-[14px] truncate">{poi}</h1>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </div>
       <div className="pt-2">
-        <h1 className="text-[14px] font-semibold">Showing Results Below</h1>
+        <div className="flex justify-start items-center gap-2">
+          <h1 className="text-[14px] font-semibold">Showing Results Below</h1>
+        </div>
         <div className="pt-1">
           <div className="pt-2">
-            <h2 className="text-[12px] font-semibold">Atleast One</h2>
+            <div className="flex justify-start items-center gap-2">
+              <h2 className="text-[12px] font-semibold">Atleast One</h2>
+              <Tooltip
+                title="Check to select all the screens having any one POI in the proximity"
+                >
+                  <i className="fi fi-rs-info text-[12px] text-gray-400 flex justify-center items-center"></i>
+              </Tooltip>
+            </div>
+
             <p className="text-[12px] text-[#9f9f9f]">
               These {filterScreensByInterests(finalSelectedScreens, selectedPOIs).screensWithAnyInterest.length} locations have been shortlisted even if anyone of the
               filters above are matched
@@ -129,15 +181,18 @@ export const POIProximity = ({
               </p>
             </div>
           </div>
-          <SelectManuallyScreensCheckBox
-            manuallySelected={selectedScreensFromMap?.length}
-            unselectedScreen={allScreens?.length - finalSelectedScreens?.length}
-            handleCheck={(checked: any) => {
-              allScreens?.filter((s: any) => !finalSelectedScreens?.map((sc: any) => sc._id)?.includes(s._id))?.forEach((sd: any) => {
-                handleSelectFromMap(sd)
-              })
-            }}
-          />
+          <div className="pb-6">
+            <SelectManuallyScreensCheckBox
+              manuallySelected={selectedScreensFromMap?.length}
+              unselectedScreen={allScreens?.length - finalSelectedScreens?.length}
+              handleCheck={(checked: any) => {
+                allScreens?.filter((s: any) => !finalSelectedScreens?.map((sc: any) => sc._id)?.includes(s._id))?.forEach((sd: any) => {
+                  handleSelectFromMap(sd)
+                })
+              }}
+            />
+          </div>
+   
         </div>
       </div>
     </div>
