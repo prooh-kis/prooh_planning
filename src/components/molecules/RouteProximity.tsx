@@ -31,6 +31,11 @@ export const RouteProximity = ({
 
   const [showDetails, setShowDetails] = useState<any>(null);
 
+  function randomColor(index: any) {
+    const colors = ["#540b0e", "#e09f3e", "#073b4c", "#0f4c5c", "#ef476f"];
+    return colors[index % 5];
+  }
+
   return (
     <div className="py-4 border-b border-gray-100">
       <div className="flex justify-start gap-2 items-center pt-2">
@@ -82,9 +87,23 @@ export const RouteProximity = ({
           <p className="text-sm text-[#9f9f9f]">Added Route</p>
           <p className="text-sm text-[#9f9f9f]">{routes.length}</p>
         </div>
-        <div className="overflow-scroll h-36 mb-1">
+        <div className="overflow-scroll h-44 mb-1">
           {routes?.map((route: any, index: any) => (
-            <div key={index} className="bg-[#F6F6F6] p-2 my-1">
+            <div key={index} className={`
+                ${
+                  index === 0 ? "bg-[#540b0e20]" : 
+                  index === 1 ? "bg-[#e09f3e20]" : 
+                  index === 2 ? "bg-[#073b4c20]" : 
+                  index === 3 ? "bg-[#0f4c5c20]" : 
+                  index === 4 ? "bg-[#ef476f20]" : 
+                  "bg-[#F6F6F6]"
+                }
+                p-2 my-1 rounded
+              `}
+              onClick={() => {
+                console.log(randomColor(index));
+              }}
+            >
               <div className="">
                 <div className="flex justify-between items-center" onClick={() => {
                   setShowDetails(index);

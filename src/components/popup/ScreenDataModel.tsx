@@ -1,5 +1,5 @@
 import { CarouselImageView } from "../molecules/CarouselImageView";
-import { Modal } from "antd";
+import { Modal, Tooltip } from "antd";
 import React, { useCallback, useState } from "react";
 
 interface Props {
@@ -36,7 +36,11 @@ export function ScreenDataModel({ screen, handleRemove, isAdded }: Props) {
   return (
     <div className="truncate">
       <div className="truncate" onClick={handleOpen}>
-        <h1 className="text-[14px] truncate">{screen?.screenName}</h1>
+        <Tooltip
+          title={screen?.screenName}
+        >
+          <h1 className="text-[14px] truncate">{screen?.screenName}</h1>
+        </Tooltip>
       </div>
       <Modal open={open} onCancel={handleCancel} footer={[]} width={1100}>
         <div className="flex gap-8">

@@ -24,18 +24,18 @@ export function MapWithGeometry(props) {
 
   const [userLocation, setUserLocation] = useState(null);
 
-  
+  const [viewState, setViewState] = useState({
+    longitude: props?.geometry?.coordinates[1] || 77.0891,
+    latitude: props?.geometry?.coordinates[0] || 28.495,
+    zoom: props?.zoom || 5,
+  });
+
   // console.log(props?.data["brand"][0]?.concat(props?.data["comp"][0]))
   const coordinates =
     Object.keys(props?.data).length > 0
       ? props?.data["brand"][0].concat(props?.data["comp"][0])
       : [];
 
-  const [viewState, setViewState] = useState({
-    longitude: props?.geometry?.coordinates[1] || 77.0891,
-    latitude: props?.geometry?.coordinates[0] || 28.495,
-    zoom: props?.zoom || 5,
-  });
 
 
 
@@ -171,11 +171,11 @@ const onDeletePolygon = useCallback(
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
-        setViewState({
-          ...viewState,
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
+        // setViewState({
+        //   ...viewState,
+        //   latitude: position.coords.latitude,
+        //   longitude: position.coords.longitude,
+        // });
       },
       (error) => {
         console.error("Error getting user location:", error);
@@ -410,12 +410,26 @@ const onDeletePolygon = useCallback(
 
           {selectedMarkers && selectedMarkers.length > 0 && selectedMarkers.map((marker, i) => (
             <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
-              <div title={`Selected screens ${props?.filteredScreens?.length}`} className="cursor-pointer">
-                <i className="fi fi-ss-circle text-primaryButton text-[14px]" onClick={(e) => {
+              <div 
+                title={`Selected screens ${props?.filteredScreens?.length}`}
+                className="cursor-pointer"
+                onMouseEnter={(e) => {
                   e.stopPropagation();
                   setIsSelectedData(true);
                   getSingleScreenData(marker[2]);
-                }}></i>
+                }}
+                onMouseLeave={(e) => {
+                  e.stopPropagation();
+                  setScreenData(null);
+                }}
+              >
+                <i className="fi fi-ss-circle text-primaryButton text-[14px]"
+                  onClick={(e) => {
+                    // e.stopPropagation();
+                    // setIsSelectedData(true);
+                    // getSingleScreenData(marker[2]);
+                  }}
+                ></i>
               </div>
             </Marker>
           ))}
@@ -432,14 +446,22 @@ const onDeletePolygon = useCallback(
                     )?.length
                   }`}
                   className="cursor-pointer"
+                  onMouseEnter={(e) => {
+                    e.stopPropagation();
+                    setIsSelectedData(false);
+                    getSingleScreenData(marker[2]);
+                  }}
+                  onMouseLeave={(e) => {
+                    e.stopPropagation();
+                    setScreenData(null);
+                  }}
                 >
                   <i
-                    // [#F94623]
                     className="fi-ss-circle text-[#F94623] text-[12px]"
                     onClick={(e) => {
-                      e.stopPropagation();
-                      setIsSelectedData(false);
-                      getSingleScreenData(marker[2]);
+                      // e.stopPropagation();
+                      // setIsSelectedData(false);
+                      // getSingleScreenData(marker[2]);
                     }}
                   ></i>
                 </div>

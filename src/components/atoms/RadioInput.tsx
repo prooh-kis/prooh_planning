@@ -21,7 +21,7 @@ export const RadioInput = ({ isChecked, title, value, onChange }: RadioInputProp
         onChange={(e: any) => onChange(e)}
         className="h-4 w-4 border border-gray-300 rounded-full checked:bg-green-600 checked:border-gray-600 transition duration-200"
       />
-      <span className={`ml-2 ${isChecked ? "text-primaryButton" : "text-primaryText"} text-[14px]`}>{title}</span>
+      <span className={`ml-2 hover:text-primaryButton ${isChecked ? "text-primaryButton" : "text-primaryText"} md:text-[16px] sm:text-[14px]`}>{title}</span>
     </label>
   )
 }

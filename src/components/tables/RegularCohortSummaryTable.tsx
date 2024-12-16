@@ -1,3 +1,4 @@
+import { Tooltip } from "antd";
 import { TabWithIcon } from "../../components/molecules/TabWithIcon";
 import { useState } from "react";
 
@@ -14,6 +15,43 @@ export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohor
   };
 
   const [day, setDay] = useState<any>("weekdays");
+
+  const calculateIncludedVsTotal = (data: any) => {
+    const result: any = {
+      morning: { included: 0, total: 0 },
+      afternoon: { included: 0, total: 0 },
+      evening: { included: 0, total: 0 },
+      night: { included: 0, total: 0 },
+      overall: { included: 0, total: 0 }
+    };
+  
+    data.forEach((entry: any) => {
+      const dayWiseData = entry.dayWiseData;
+      Object.values(dayWiseData).forEach((dayData: any) => {
+        Object.keys(result).forEach((period: any) => {
+          if (period !== "overall" && dayData[period]) {
+            // Update counts for individual periods
+            result[period].total += 1;
+            if (dayData[period].included) {
+              result[period].included += 1;
+            }
+            // Update overall counts
+            result.overall.total += 1;
+            if (dayData[period].included) {
+              result.overall.included += 1;
+            }
+          }
+        });
+      });
+    });
+
+    const saved: any = (result["overall"]["included"] * 100/
+    result["overall"]["total"]).toFixed(0);
+    const wastagePercentage = 100 - Number(saved);
+    return wastagePercentage;
+  };
+  
+  console.log(calculateIncludedVsTotal(touchPointData));
   return (
     <div className="py-4">
       <div className="flex gap-2">
@@ -37,8 +75,16 @@ export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohor
           <h1 className="text-[14px]">
             Wastage Controlled
           </h1>
-          <h1 className="text-[14px]">
-            22%
+          <Tooltip
+            title={
+              calculateIncludedVsTotal(touchPointData) > 0 ? `We have ommitted ${calculateIncludedVsTotal(touchPointData)}% of overall slots, which have lower exposure to your target audience and reduced your wastage` : 
+              `All the slots are relevantly exposed to your target audience`
+            }
+          >
+            <i className="fi fi-rs-info pr-1 text-[14px] text-gray-400 flex justify-center items-center"></i>
+          </Tooltip>
+          <h1 className="text-[14px] text-green-500">
+            {calculateIncludedVsTotal(touchPointData)}%
           </h1>
         </div>
       </div>

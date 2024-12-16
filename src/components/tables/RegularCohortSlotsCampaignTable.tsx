@@ -18,7 +18,7 @@ export const RegularCohortSlotsCampaignTable = ({
   return (
     <table className="w-full">
       <thead
-        className={`border
+        className={`border rounded-t
           bg-${type === "regular" ? "[#F7F7F7]" : "[#DFE8FF]" }
         flex justify-between items-center w-full`}
       >
@@ -54,13 +54,13 @@ export const RegularCohortSlotsCampaignTable = ({
           </th>
         </tr>
       </thead>
-      <tbody className="border overflow-scroll">
+      <tbody className="overflow-scroll">
         {loading ? (
-          <tr className="flex justify-between border-b w-full h-[45px]">
+          <tr className="flex border rounded-b justify-between w-full h-[45px]">
             <Loading />
           </tr>
         ) : (
-          <tr className="flex justify-between border-b w-full h-[45px]">
+          <tr className="flex justify-between border rounded-b w-full h-[45px]">
             <th className="flex w-full items-center justify-center gap-2">
               <h1 className="text-[14px] text-[#21394F]">
                 {priceData?.tableData?.totalScreens}

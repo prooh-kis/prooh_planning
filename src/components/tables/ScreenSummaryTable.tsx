@@ -8,6 +8,7 @@ import {
   SCREEN_SUMMARY_SELECTION,
   SCREEN_TYPE_TOGGLE_SELECTION,
 } from "../../constants/localStorageConstants";
+import { Tooltip } from "antd";
 
 export const ScreenSummaryTable = ({
   data,
@@ -22,6 +23,7 @@ export const ScreenSummaryTable = ({
   cityTP,
   setScreenTypes,
   refreshScreenSummary,
+  priceFilter,
 }: any) => {
   const [screenTypeToggle, setScreenTypeToggle] = useState<any>(
     getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)
@@ -108,7 +110,7 @@ export const ScreenSummaryTable = ({
     }
   }, [data, handleData]);
 
-  const handleScreenClick = ({ screen, city, touchpoint, statusRes }: any) => {
+  const handleScreenClick = ({ screen, city, statusRes }: any) => {
     const screenId = screen._id;
 
     // Create a deep clone to avoid modifying the original state directly
@@ -160,13 +162,13 @@ export const ScreenSummaryTable = ({
     );
 
     stToggle[city][touchpoint][screenType] = !allSelected;
-
+    console.log(stToggle[city][touchpoint][screenType])
     // Toggle screen type status based on current status
     setScreenTypeToggle(stToggle);
     saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, stToggle);
 
     screens.forEach((s: any) => {
-      handleScreenClick({ screen: s, city, touchpoint, statusRes: statusNow }); // Update individual screen status
+      handleScreenClick({ screen: s, city, touchpoint, statusRes: !allSelected }); // Update individual screen status
     });
 
     // Update the screens buying count and save
@@ -174,9 +176,9 @@ export const ScreenSummaryTable = ({
   };
 
   return (
-    <div className="">
+    <div className="h-full">
       {currentCity && data && Object.keys(cityZones).length > 0 && (
-        <div className="w-full border-r border-b">
+        <div className="w-full h-full border-r border-b">
           <div className="bg-blue-200 grid grid-cols-12 flex items-center">
             <div className="py-2 col-span-2">
               <h1 className="text-[16px] font-bold flex justify-center">
@@ -188,40 +190,43 @@ export const ScreenSummaryTable = ({
                 Screen Type
               </h1>
             </div>
-            {Object.keys(cityZones[currentCity])?.map((d: any, i: any) => (
-              <div className="py-2 col-span-2 border-l" key={i}>
-                <h1 className="text-[16px] font-bold flex justify-center">
-                  {d}
-                </h1>
+            <div className="py-2 col-span-8 overflow-x-auto no-scrollbar">
+              <div
+                className="grid grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-0"
+                style={{ width: 'calc(8rem * 8)' }} // Ensures each column has a fixed width
+              
+              >
+                {Object.keys(cityZones[currentCity])?.map((d: any, i: any) => (
+                  <div className="col-span-1 border-x min-w-[2rem] truncate" key={i}>
+                    <h1 className="md:text-[16px] sm:text-[14px] font-bold flex justify-center truncate">
+                      {d}
+                    </h1>
+                  </div>
+                ))}
               </div>
-            ))}
-
-            {/* <div className={`col-span-7 grid grid-cols-8 flex items-center`}>
-              {Object.keys(cityZones[currentCity])?.map((d: any, i: any) => (
-                <div
-                  className="border-x py-2 px-3 col-span-4 flex justify-center truncate"
-                  key={i}
-                >
-                  <h1 className="text-[16px] font-bold flex justify-center truncate">
-                    {d}
-                  </h1>
-                </div>
-              ))}
-            </div> */}
+            </div>
           </div>
-          <div className="overflow-y-auto h-96">
+          <div className="overflow-y-auto h-[60vh]">
             {Object.keys(data?.[currentCity])?.map((tp: any, i: any) => (
               <div key={i} className="grid grid-cols-12">
                 <div className="border-b border-l col-span-2 py-2 px-4 truncate">
-                  <h1 className="text-[14px] truncate">{tp}</h1>
+                  <Tooltip
+                    title={tp}
+                  >
+                    <h1 className="text-[14px] truncate">{tp}</h1>
+                  </Tooltip>
                 </div>
-                <div className="col-span-10">
+                <div className="col-span-10 ">
                   {Object.keys(cityTP?.[currentCity]?.[tp])?.map(
                     (st: any, j: any) => (
-                      <div key={j} className={`grid grid-cols-10 border-l`}>
-                        <div className={`col-span-2 py-2 px-4 border`}>
+                      <div key={j} className={`grid grid-cols-10 border-b`}>
+                        <div className={`col-span-2 py-2 px-4 border-l`}>
                           <div className="flex justify-between items-center">
-                            <h1 className="text-[14px]">{st}</h1>
+                            <Tooltip
+                              title={`${st}`}
+                            >
+                              <h1 className="text-[14px] truncate">{st}</h1>
+                            </Tooltip>
                             <div
                               onClick={() => {
                                 handleScreenTypeClick({
@@ -232,8 +237,8 @@ export const ScreenSummaryTable = ({
                                   statusNow: screenTypeToggle?.[currentCity]?.[
                                     tp
                                   ]?.[st]
-                                    ? true
-                                    : false,
+                                    // ? true
+                                    // : false,
                                 });
                               }}
                             >
@@ -247,65 +252,75 @@ export const ScreenSummaryTable = ({
                             </div>
                           </div>
                         </div>
-                        <div className={`col-span-8 grid grid-cols-8`}>
-                          {Object.keys(cityZones?.[currentCity])?.map(
-                            (zone: any, k: any) => (
-                              <div key={k} className={`col-span-2`}>
-                                {data?.[currentCity]?.[tp]?.[st]?.[zone]?.map(
-                                  (screen: any, m: any) => (
-                                    <div
-                                      key={m}
-                                      className={`flex gap-4 justify-between border-x py-2 px-4 border-y truncate`}
-                                    >
-                                      <ScreenDataModel
-                                        screen={screen || ""}
-                                        handleRemove={() => {
-                                          handleScreenClick({
-                                            screen,
-                                            city: currentCity,
-                                            touchpoint: tp,
-                                          });
-                                        }}
-                                        isAdded={
-                                          screensBuyingCount[currentCity]?.[
-                                            screen._id
-                                          ]?.status
-                                        }
-                                      />
-                                      <div className="flex gap-4 justify-between items-center">
-                                        <div className="flex gap-1 items-center">
-                                          <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
-                                          <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
-                                        </div>
-                                        <div
-                                          onClick={() => {
+                        <div className={`col-span-8 overflow-x-auto no-scrollbar`}>
+                          <div
+                            className="grid grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-0"
+                            style={{ width: 'calc(8rem * 8)' }} // Ensures each column has a fixed width
+                          >
+                            {Object.keys(cityZones?.[currentCity])?.map(
+                              (zone: any, k: any) => (
+                                <div key={k} className={`col-span-1 border-x min-w-[2rem] truncate`}>
+                                  {data?.[currentCity]?.[tp]?.[st]?.[zone]?.filter((sc: any) => {
+                                      return sc.pricePerSlot >= priceFilter?.min && sc.pricePerSlot <= priceFilter?.max
+                                    })?.map(
+                                    (screen: any, m: any) => (
+                                      <div
+                                        key={m}
+                                        className={`flex gap-4 justify-between py-2 px-4 border-y truncate`}
+                                      >
+                                        <ScreenDataModel
+                                          screen={screen || ""}
+                                          handleRemove={() => {
                                             handleScreenClick({
                                               screen,
                                               city: currentCity,
                                               touchpoint: tp,
-                                              // status: screensBuyingCount[currentCity]?.[screen._id]?.status
                                             });
                                           }}
-                                        >
-                                          {screensBuyingCount[currentCity]?.[
-                                            screen._id
-                                          ]?.status === false ? (
-                                            <i
-                                              className={`fi fi-br-cross flex items-center text-red-500 text-[12px]`}
-                                            ></i>
-                                          ) : (
-                                            <i
-                                              className={`fi fi-br-check flex items-center text-green-500 text-[12px]`}
-                                            ></i>
-                                          )}
+                                          isAdded={
+                                            screensBuyingCount[currentCity]?.[
+                                              screen._id
+                                            ]?.status
+                                          }
+                                        />
+                                        <div className="flex gap-4 justify-between items-center">
+                                          <div className="flex gap-1 items-center">
+                                            <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+                                            {screen.pricePerSlot > 100 && (
+                                              <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+                                            )}
+                                          </div>
+                                          <div
+                                            onClick={() => {
+                                              handleScreenClick({
+                                                screen,
+                                                city: currentCity,
+                                                touchpoint: tp,
+                                                // status: screensBuyingCount[currentCity]?.[screen._id]?.status
+                                              });
+                                            }}
+                                          >
+                                            {screensBuyingCount[currentCity]?.[
+                                              screen._id
+                                            ]?.status === false ? (
+                                              <i
+                                                className={`fi fi-br-cross flex items-center text-red-500 text-[12px]`}
+                                              ></i>
+                                            ) : (
+                                              <i
+                                                className={`fi fi-br-check flex items-center text-green-500 text-[12px]`}
+                                              ></i>
+                                            )}
+                                          </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  )
-                                )}
-                              </div>
-                            )
-                          )}
+                                    )
+                                  )}
+                                </div>
+                              )
+                            )}
+                          </div>
+
                         </div>
                       </div>
                     )

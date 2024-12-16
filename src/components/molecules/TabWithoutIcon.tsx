@@ -1,3 +1,4 @@
+import { Tooltip } from "antd";
 import React, { useState } from "react";
 interface TabInterface {
   params: any;
@@ -29,14 +30,23 @@ export function TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
           <h1 className={currentTab === tab.id ? "text-blue-500" : "text-gray-500"}>{tab.label}</h1>
           {tab.params && (
             <div className="flex gap-2 items-center">
-              <div className="flex gap-1 items-center">
-                <p className={currentTab === tab.id ? "text-green-500 text-[12px]" : "text-gray-500 text-[12px]"}>{tab.params[0]}</p>
-                <i className={`fi fi-br-check flex items-center ${currentTab === tab.id ? "text-green-500" : "text-gray-500"} text-[12px]`}></i>
-              </div>
-              <div className="flex gap-1 items-center">
-                <p className={currentTab === tab.id ? "text-red-500 text-[12px]" : "text-gray-500 text-[12px]"}>{tab.params[1]}</p>
-                <i className={`fi fi-br-cross flex items-center ${currentTab === tab.id ? "text-red-500" : "text-gray-500"} text-[10px]`}></i>
-              </div>
+              <Tooltip
+                title={`Selected Screens`}
+              >
+                <div className="flex gap-1 items-center">
+                  <p className={currentTab === tab.id ? "text-green-500 text-[12px]" : "text-gray-500 text-[12px]"}>{tab.params[0]}</p>
+                  <i className={`fi fi-br-check flex items-center ${currentTab === tab.id ? "text-green-500" : "text-gray-500"} text-[12px]`}></i>
+                </div>
+              </Tooltip>
+              <Tooltip
+                title={`Unselected Screens`}
+              >
+                <div className="flex gap-1 items-center">
+                  <p className={currentTab === tab.id ? "text-red-500 text-[12px]" : "text-gray-500 text-[12px]"}>{tab.params[1]}</p>
+                  <i className={`fi fi-br-cross flex items-center ${currentTab === tab.id ? "text-red-500" : "text-gray-500"} text-[10px]`}></i>
+                </div>
+              </Tooltip>
+
             </div>
           )}
         </div>

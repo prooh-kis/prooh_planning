@@ -25,7 +25,7 @@ import {
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { Loading } from "../../components/Loading";
-import { message } from "antd";
+import { message, Tooltip } from "antd";
 
 interface Tab {
   label: string;
@@ -52,6 +52,11 @@ export const ScreenSummaryDetails = ({
   const [currentSummaryTab, setCurrentSummaryTab] = useState<any>("1");
   const [currentCity, setCurrentCity] = useState<string>("");
   const [citiesCreative, setCitiesCreative] = useState<any>([]);
+
+  const [priceFilter, setPriceFilter] = useState<any>({
+    min: 1,
+    max: 300
+  });
 
   const [regularVsCohort, setRegularVsCohort] = useState<any>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType
@@ -104,11 +109,17 @@ export const ScreenSummaryDetails = ({
   };
 
   const handleSelectCurrentTab = (id: string) => {
+    console.log(id);
     setCurrentSummaryTab(id);
 
+    console.log(citiesCreative);
     const city =
-      citiesCreative?.find((data: any) => data.id === id)?.label || "";
-    setCurrentCity(city);
+      citiesCreative?.find((data: any) => data.id === id)?.label;
+    if (city) {
+      setCurrentCity(city);
+    } else {
+      setCurrentCity(currentCity);
+    }
     setVisitedTab((pre: any) => {
       return pre.map((data: any) => {
         if (data?.id == id) {
@@ -174,6 +185,7 @@ export const ScreenSummaryDetails = ({
         };
       });
     }
+    console.log(data);
     setVisitedTab([...data]);
   };
 
@@ -272,13 +284,13 @@ export const ScreenSummaryDetails = ({
     }
 
     if (screenSummaryData) {
-      console.log(screenSummaryData);
+      // console.log(screenSummaryData);
       saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, screenSummaryData);
 
       saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, screensBuyingCount);
       getTabValue(screenSummaryData);
     }
-  }, [screenSummaryData, screenSummaryPlanTableData, screensBuyingCount, step]);
+  }, [campaignId, pathname, screenSummaryData, screenSummaryPlanTableData, screensBuyingCount, step]);
 
   return (
     <div className="w-full py-3">
@@ -308,11 +320,11 @@ export const ScreenSummaryDetails = ({
         <Loading />
       ) : errorScreenSummary ? (
         <div className="p-4 bg-red-300 text-[#FFFFFF] ">
-          Something wend wrong! please refresh the page
+          Something went wrong! please refresh the page...
         </div>
       ) : (
         <div className="">
-          {currentTab === "1" ? (
+          {screenSummaryData && currentTab === "1" ? (
             <div>
               <div className="py-2 flex justify-between">
                 <div className="">
@@ -325,53 +337,95 @@ export const ScreenSummaryDetails = ({
                   )}
                 </div>
                 <div className="flex gap-2">
-                  <div className="px-1 border rounded flex items-center gap-1 ">
-                    <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
-                    <p className="text-[12px]">&#8377;1 - &#8377;100</p>
-                  </div>
-                  <div className="px-1 border rounded flex items-center gap-1">
-                    <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
-                    <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
-                    <p className="text-[12px]">&#8377;101 - &#8377;300</p>
-                  </div>
-                  <div
-                    className={`px-1 border rounded flex items-center gap-1 ${
-                      listView && "border-primaryButton"
-                    }`}
-                    onClick={() => setListView(true)}
+                  <Tooltip
+                    title="Single click to select the filter and Double click to deselect the filter"
                   >
-                    <i
-                      className={`fi fi-rr-table-list flex items-center
-                        text-[12px]
-                        ${listView && "text-primaryButton"}`}
-                    ></i>
-                    <p
-                      className={`${
-                        listView && "text-primaryButton"
-                      } text-[12px]`}
+                    <div className={`px-1 border ${priceFilter.min === 1 && priceFilter.max === 100 ? "border-blue-500" : ""} rounded flex items-center gap-1`}
+                      onClick={() => {
+                        setPriceFilter({
+                          min: 1,
+                          max: 100,
+                        });
+                      }}
+                      onDoubleClick={() => {
+                        setPriceFilter({
+                          min: 1,
+                          max: 300
+                        })
+                      }}
                     >
-                      List View
-                    </p>
-                  </div>
-                  <div
-                    className={`px-1 border rounded flex items-center gap-1 ${
-                      !listView && "border-primaryButton"
-                    }`}
-                    onClick={() => setListView(false)}
+                      <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+                      <p className="text-[12px]">&#8377;1 - &#8377;100</p>
+                    </div>
+                  </Tooltip>
+                  <Tooltip
+                    title="Single click to select the filter and Double click to deselect the filter"
                   >
-                    <i
-                      className={`fi fi-sr-apps flex items-center
-                        text-[12px]
-                        ${!listView && "text-primaryButton"}`}
-                    ></i>
-                    <p
-                      className={`${
-                        !listView && "text-primaryButton"
-                      } text-[12px]`}
+                    <div className={`px-1 border ${priceFilter.min === 100 && priceFilter.max === 300 ? "border-blue-500" : ""} rounded flex items-center gap-1`}
+                      onClick={() => {
+                        setPriceFilter({
+                          min: 100,
+                          max: 300
+                        })
+                      }}
+                      onDoubleClick={() => {
+                        setPriceFilter({
+                          min: 1,
+                          max: 300
+                        })
+                      }}
                     >
-                      Grid View
-                    </p>
-                  </div>
+                      <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+                      <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+                      <p className="text-[12px]">&#8377;101 - &#8377;300</p>
+                    </div>
+                  </Tooltip>
+                  <Tooltip
+                    title="Click to see the list view"
+                  >
+                    <div
+                      className={`px-1 border rounded flex items-center gap-1 ${
+                        listView && "border-primaryButton"
+                      }`}
+                      onClick={() => setListView(true)}
+                    >
+                      <i
+                        className={`fi fi-rr-table-list flex items-center
+                          text-[12px]
+                          ${listView && "text-primaryButton"}`}
+                      ></i>
+                      <p
+                        className={`${
+                          listView && "text-primaryButton"
+                        } text-[12px]`}
+                      >
+                        List View
+                      </p>
+                    </div>
+                  </Tooltip>
+                  <Tooltip
+                    title="Click to see the grid view"
+                  >
+                    <div
+                      className={`px-1 border rounded flex items-center gap-1 ${
+                        !listView && "border-primaryButton"
+                      }`}
+                      onClick={() => setListView(false)}
+                    >
+                      <i
+                        className={`fi fi-sr-apps flex items-center
+                          text-[12px]
+                          ${!listView && "text-primaryButton"}`}
+                      ></i>
+                      <p
+                        className={`${
+                          !listView && "text-primaryButton"
+                        } text-[12px]`}
+                      >
+                        Grid View
+                      </p>
+                    </div>
+                  </Tooltip>
                 </div>
               </div>
               {listView ? (
@@ -388,15 +442,17 @@ export const ScreenSummaryDetails = ({
                   cityTP={cityTP}
                   setScreenTypes={setScreenTypes}
                   refreshScreenSummary={refreshScreenSummary}
+                  priceFilter={priceFilter}
                 />
               ) : (
                 <ViewPlanPic
-                  screens={Object.values(screensBuyingCount[currentCity])?.map(
-                    (f: any) => f.data
-                  )}
-                  cityZones={Object.keys(cityZones[currentCity])}
-                  cityTP={Object.keys(cityTP[currentCity])}
-                  screenTypes={Object.keys(screenTypes[currentCity])}
+                  currentSummaryTab={currentSummaryTab}
+                  screens={screensBuyingCount}
+                  cityZones={cityZones}
+                  cityTP={cityTP}
+                  screenTypes={screenTypes}
+                  currentCity={currentCity}
+                  setCurrentCity={setCurrentCity}
                 />
               )}
             </div>

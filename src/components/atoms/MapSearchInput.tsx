@@ -136,7 +136,9 @@ export function MapSearchInput(props: any) {
             : "cursor-pointer p-4 bg-white"
           }
       >
-        {suggestion.place_name}
+        <h1 className="text-[12px]">
+          {suggestion.place_name}
+        </h1>
       </li>
     ))}
   </ul>
