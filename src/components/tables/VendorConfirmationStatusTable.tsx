@@ -214,6 +214,11 @@ export const VendorConfirmationStatusTable = ({
               </h1>
             </td>
             <td className="p-2">
+              <h1 className="text-[14px]">
+                {status?.sov}
+              </h1>
+            </td>
+            <td className="p-2">
               <div className="flex justify-center items-center"
                 onClick={() => {
 
