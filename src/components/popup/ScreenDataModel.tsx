@@ -39,7 +39,7 @@ export function ScreenDataModel({ screen, handleRemove, isAdded }: Props) {
         <Tooltip
           title={screen?.screenName}
         >
-          <h1 className="text-[14px] truncate">{screen?.screenName}</h1>
+          <h1 className="text-[14px] font-semibold truncate">{screen?.screenName}</h1>
         </Tooltip>
       </div>
       <Modal open={open} onCancel={handleCancel} footer={[]} width={1100}>

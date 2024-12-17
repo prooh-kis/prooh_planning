@@ -1,3 +1,4 @@
+import { Tooltip } from "antd";
 import { RadioInput } from "../../components/atoms/RadioInput";
 
 interface WeatherSegmentProps {
@@ -27,9 +28,14 @@ export const WeatherSegment = ({
     <div className="pt-4">
       {currentTab === 1 ? (
         <div className="border-b p-2">
-          <div className="flex gap-2">
-            <i className="fi fi-tr-summer flex items-center"></i>
-            <h1>Play my ad when temperature turns</h1>
+          <div className="flex gap-2 items-center">
+            {/* <i className="fi fi-tr-summer flex items-center"></i> */}
+            <h1 className="md:text-[16px] sm:text-[14px]">Play my ad when temperature turns</h1>
+            <Tooltip
+              title="Choose temperature range for adding contextual ads in your campaign for targetting your audience in context of temperature related events"
+            >
+              <i className="fi fi-rs-info p-1 text-[12px] text-gray-400 flex justify-center items-center"></i>
+            </Tooltip>
           </div>
           <div className="py-2">
             <div className="flex justify-between py-1">
@@ -96,9 +102,13 @@ export const WeatherSegment = ({
         </div>
       ) : currentTab === 2 ? (
         <div className="border-b p-2">
-          <div className="flex gap-2">
-            <i className="fi fi-tr-summer flex items-center"></i>
-            <h1>Play my ad when rain forecast is</h1>
+          <div className="flex gap-2 items-center">
+            <h1 className="md:text-[16px] sm:text-[14px]">Play my ad when rain forecast is</h1>
+            <Tooltip
+              title="Choose raining conditions for adding contextual ads in your campaign for targetting your audience in context of rain related events"
+            >
+              <i className="fi fi-rs-info p-1 text-[12px] text-gray-400 flex justify-center items-center"></i>
+            </Tooltip>
           </div>
           <div className="py-2">
             <div className="flex justify-between py-1">
@@ -150,9 +160,13 @@ export const WeatherSegment = ({
         </div>
       ) : currentTab === 3 ? (
         <div className="border-b p-2">
-          <div className="flex gap-2">
-            <i className="fi fi-tr-summer flex items-center"></i>
-            <h1>Play my ad when AQI is</h1>
+          <div className="flex gap-2 items-center">
+            <h1 className="md:text-[16px] sm:text-[14px]">Play my ad when AQI is</h1>
+            <Tooltip
+              title="Choose AQI range for adding contextual ads in your campaign for targetting your audience in context of AQI related events"
+            >
+              <i className="fi fi-rs-info p-1 text-[12px] text-gray-400 flex justify-center items-center"></i>
+            </Tooltip>
           </div>
           <div className="py-2">
             <div className="flex justify-between py-1">

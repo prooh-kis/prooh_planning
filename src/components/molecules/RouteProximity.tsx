@@ -124,13 +124,16 @@ export const RouteProximity = ({
               {showDetails === index && (
                 <div>
                   <div className="flex gap-2 items-center">
-                    <i className="fi fi-br-arrow-from-left text-[12px] text-green-600"></i>
+                    {/* <i className="fi fi-br-arrow-from-left text-[12px] text-green-600"></i> */}
+                    <i className="fi fi-sr-marker text-violet-500 text-[12px]"></i>
+
                     <p className="text-[12px]">
                       {route.origin.place_name}
                     </p>
                   </div>
                   <div className="flex gap-2 items-center">
-                    <i className="fi fi-br-arrow-alt-to-left text-[12px] text-red-600"></i>
+                    {/* <i className="fi fi-br-arrow-alt-to-left text-[12px] text-red-600"></i> */}
+                    <i className="fi fi-sr-marker text-pink-500 text-[12px]"></i>
                     <p className="text-[12px]">
                       {route.destination.place_name}
                     </p>

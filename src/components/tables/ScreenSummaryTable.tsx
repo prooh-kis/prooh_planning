@@ -110,7 +110,7 @@ export const ScreenSummaryTable = ({
     }
   }, [data, handleData]);
 
-  const handleScreenClick = ({ screen, city, statusRes }: any) => {
+  const handleScreenClick = useCallback(({ screen, city, statusRes }: any) => {
     const screenId = screen._id;
 
     // Create a deep clone to avoid modifying the original state directly
@@ -136,7 +136,8 @@ export const ScreenSummaryTable = ({
     setScreensBuyingCount(updatedScreensBuyingCount);
 
     refreshScreenSummary();
-  };
+  },[refreshScreenSummary, screensBuyingCount]);
+
 
   const handleScreenTypeClick = ({
     screenType,
@@ -174,7 +175,7 @@ export const ScreenSummaryTable = ({
     // Update the screens buying count and save
     setScreensBuyingCount({ ...screensBuyingCount });
   };
-
+  
   return (
     <div className="h-full">
       {currentCity && data && Object.keys(cityZones).length > 0 && (
@@ -220,7 +221,7 @@ export const ScreenSummaryTable = ({
                   {Object.keys(cityTP?.[currentCity]?.[tp])?.map(
                     (st: any, j: any) => (
                       <div key={j} className={`grid grid-cols-10 border-b`}>
-                        <div className={`col-span-2 py-2 px-4 border-l`}>
+                        <div className={`col-span-2 py-2 px-4 border-x`}>
                           <div className="flex justify-between items-center">
                             <Tooltip
                               title={`${st}`}

@@ -45,34 +45,40 @@ export const Footer = ({
           </div>
         ) : (
           <div className="flex justify-between items-center gap-4">
-            <div className="flex gap-2 truncate">
-              <h1 className="text-[14px] truncate">Total screens</h1>
+            <div className="flex gap-2 truncate items-center">
+              <h1 className="text-[12px] truncate">Screens</h1>
               <h1 className="text-[14px] font-semibold">
                 {totalScreensData?.totalScreens}
               </h1>
             </div>
-            <div className="flex gap-2 truncate">
-              <h1 className="text-[14px] truncate">Total impression</h1>
+            <div className="flex gap-2 truncate items-center">
+              <h1 className="text-[12px] truncate">Touchpoints</h1>
+              <h1 className="text-[14px] font-semibold">
+                {totalScreensData?.totalTouchPoints}
+              </h1>
+            </div>
+            <div className="flex gap-2 truncate items-center">
+              <h1 className="text-[12px] truncate">Impressions</h1>
               <h1 className="text-[14px] font-semibold">
                 {formatNumber(totalScreensData?.totalImpression || 0)}
               </h1>
             </div>
-            <div className="flex gap-2 truncate">
-              <h1 className="text-[14px] truncate">Total Budget</h1>
+            <div className="flex gap-2 truncate items-center">
+              <h1 className="text-[12px] truncate">Budget</h1>
               <h1 className="text-[14px] font-semibold">
                 {" "}
                 &#8377;
                 {formatNumber(totalScreensData?.totalCampaignBudget || 0)}
               </h1>
             </div>
-            <div className="flex gap-2 truncate">
-              <h1 className="text-[14px] truncate">CPM</h1>
+            <div className="flex gap-2 truncate items-center">
+              <h1 className="text-[12px] truncate">CPM</h1>
               <h1 className="text-[14px] font-semibold">
                 &#8377;{totalScreensData?.totalCpm?.toFixed(2) || 0}
               </h1>
             </div>
-            <div className="flex gap-2 truncate">
-              <h1 className="text-[14px] truncate">Price Per Slot</h1>
+            <div className="flex gap-2 truncate items-center">
+              <h1 className="text-[12px] truncate">Price Per Slot</h1>
               <h1 className="text-[14px] font-semibold">
                 &#8377;{totalScreensData?.pricePerSlot?.toFixed(0) || 0}
               </h1>

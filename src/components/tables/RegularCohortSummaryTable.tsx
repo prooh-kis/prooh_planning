@@ -51,12 +51,15 @@ export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohor
     return wastagePercentage;
   };
   
-  console.log(calculateIncludedVsTotal(touchPointData));
   return (
     <div className="py-4">
-      <div className="flex gap-2">
-        <h1>{type === "cohort" ? "Cohort" : "Regular"} Time & Day Summary</h1>
-        <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
+      <div className="flex gap-2 pt-2">
+        <h1 className="md:text-[14px] sm:text-[12px]">{type === "cohort" ? "Cohort" : "Regular"} Time & Day Summary</h1>
+        <Tooltip
+          className=""
+        >
+          <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[10px]"></i>
+        </Tooltip>
       </div>
       <div className="flex justify-between border-b my-2">
         <div className="flex gap-10">

@@ -10,22 +10,38 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
             title="1/18"
             value={"1"}
             isChecked={selectedSOV === 1 ? true : false}
-            onChange={() => setSelectedSOV(1)}
+            onChange={() => {
+              setSelectedSOV(1);
+              setSelectedBudget(`${0.01 * totalCost}`);
+            }}
           />
           <RadioInput
             title="3/18"
             value={"3"}
             isChecked={selectedSOV === 3 ? true : false}
-            onChange={() => setSelectedSOV(3)}
+            onChange={() => {
+              setSelectedSOV(3);
+              setSelectedBudget(`${0.01 * totalCost}`);
+            }}
           />
           <RadioInput
             title="6/18"
             value={"6"}
             isChecked={selectedSOV === 6 ? true : false}
-            onChange={() => setSelectedSOV(6)}
+            onChange={() => {
+              setSelectedSOV(6);
+              setSelectedBudget(`${0.01 * totalCost}`);
+            }}
           />
         </div>
       </div>
+      {selectedSOV === 1 && (
+        <div className="pt-4">
+          <h1 className="text-[12px] text-gray-400">
+            No additional cost is required for single SOV, please continue
+          </h1>
+        </div>
+      )}
       {selectedSOV !== 1 && (
         <div className="pt-4">
           <h1>Kindly approve maximum budget for this trigger</h1>

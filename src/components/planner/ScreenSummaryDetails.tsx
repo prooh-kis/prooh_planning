@@ -1,6 +1,6 @@
 import { TabWithoutIcon } from "../molecules/TabWithoutIcon";
 import { TabWithIcon } from "../molecules/TabWithIcon";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { screenSummaryTabData } from "../../utils/hardCoddedData";
 import { ScreenSummaryTable } from "../tables/ScreenSummaryTable";
 import { ViewPlanPic } from "../segments/ViewPlanPic";
@@ -109,10 +109,8 @@ export const ScreenSummaryDetails = ({
   };
 
   const handleSelectCurrentTab = (id: string) => {
-    console.log(id);
     setCurrentSummaryTab(id);
 
-    console.log(citiesCreative);
     const city =
       citiesCreative?.find((data: any) => data.id === id)?.label;
     if (city) {
@@ -292,6 +290,7 @@ export const ScreenSummaryDetails = ({
     }
   }, [campaignId, pathname, screenSummaryData, screenSummaryPlanTableData, screensBuyingCount, step]);
 
+  console.log(screenSummaryData)
   return (
     <div className="w-full py-3">
       <h1 className="text-3xl ">
@@ -328,7 +327,7 @@ export const ScreenSummaryDetails = ({
             <div>
               <div className="py-2 flex justify-between">
                 <div className="">
-                  {screenSummaryData && screensBuyingCount && (
+                  {screenSummaryData && (
                     <TabWithoutIcon
                       currentTab={currentSummaryTab}
                       setCurrentTab={handleSelectCurrentTab}
@@ -447,18 +446,20 @@ export const ScreenSummaryDetails = ({
               ) : (
                 <ViewPlanPic
                   currentSummaryTab={currentSummaryTab}
-                  screens={screensBuyingCount}
+                  screensBuyingCount={screensBuyingCount}
+                  setScreensBuyingCount={setScreensBuyingCount}
+                  refreshScreenSummary={refreshScreenSummary}
                   cityZones={cityZones}
                   cityTP={cityTP}
                   screenTypes={screenTypes}
-                  currentCity={currentCity}
                   setCurrentCity={setCurrentCity}
+                  priceFilter={priceFilter}
                 />
               )}
             </div>
           ) : (
             currentTab === "2" && (
-              <div>
+              <div className="w-full">
                 <PlanSummaryTable
                   showSummary={showSummary}
                   setShowSummary={setShowSummary}

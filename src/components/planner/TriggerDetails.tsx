@@ -205,7 +205,7 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
           triggers: getDataFromLocalStorage(SELECTED_TRIGGER),
         })
       );
-      setCurrentStep(step + 1);
+      // setCurrentStep(step + 1);
     }
   };
 
@@ -383,7 +383,7 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
                 setAqi={setAqi}
               />
             </div>
-          ) : currentStep1 === 2 ? (
+          ) : currentStep1 === 3 ? (
             <div>
               <div className="flex gap-2 justify-between">
                 <div className="flex items-center gap-4">
@@ -454,7 +454,7 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
             />
           </div>
 
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center px-2">
             <div className="flex items-center gap-4">
               <p className="text-[12px] text-[#969696]">
                 Click here to change the time period for the trigger

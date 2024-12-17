@@ -69,6 +69,9 @@ export const VendorConfirmationStatusTable = ({
               </div>
             </th>
             <th className="py-2">
+              <h1 className="text-[14px] flex justify-start">SOV</h1>
+            </th>
+            <th className="py-2">
               <h1 className="text-[14px]">
                 Creative
               </h1>
@@ -211,21 +214,14 @@ export const VendorConfirmationStatusTable = ({
               </h1>
             </td>
             <td className="p-2">
-              {/* {status.creatives} */}
-              <i className="fi fi-sr-photo-video text-[20px] text-violet-500 flex justify-center"></i>
-            </td>
-            {/* <td className="p-2">
-                {userInfo?.isMaster ? (
-                  <div className="flex justify-center">
-                    {selectedCampaignIds?.length > 0 && (
-                      <ActionMenu ids={selectedCampaignIds}/>
-                    )}
-                  </div>
-                ) : (
-                  <i className="fi fi-bs-menu-dots text-[20px] flex justify-center"></i>
-                )}
+              <div className="flex justify-center items-center"
+                onClick={() => {
 
-            </td> */}
+                }}
+              >
+                <i className="fi fi-sr-photo-video text-[20px] text-violet-500 flex justify-center"></i>
+              </div>
+            </td>
           </tr>
         ))}
         {userInfo?.isMaster && statusTableData?.map((status: any, i: any) => (
@@ -315,8 +311,13 @@ export const VendorConfirmationStatusTable = ({
               </h1>
             </td>
             <td className="p-2">
-              {/* {status.creatives} */}
-              <i className="fi fi-sr-photo-video text-[20px] text-violet-500 flex justify-center"></i>
+              <div className="flex justify-center items-center"
+                onClick={() => {
+
+                }}
+              >
+                <i className="fi fi-sr-photo-video text-[20px] text-violet-500 flex justify-center"></i>
+              </div>
             </td>
           </tr>
         ))}

@@ -76,7 +76,7 @@ export const TouchpointTable = ({
               </Tooltip>
             </div>
             <Tooltip
-                title="Click to lock your selections"
+                title="Click to lock your touchpoints selections"
             >
               <div
                 onClick={() => {

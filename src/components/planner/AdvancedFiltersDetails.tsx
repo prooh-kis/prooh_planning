@@ -342,7 +342,7 @@ export const AdvanceFiltersDetails = ({
               />
             </div>
           )}
-          <div className="flex items-center pb-4 mx-[-1px]">
+          <div className="flex items-center mx-[-1px]">
             <CheckboxInput
               label={
                 <>

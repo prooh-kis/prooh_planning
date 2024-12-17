@@ -126,7 +126,14 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
                   <i className="fi fi-rs-info md:text-[14px] sm:text-[12px] text-gray-400 flex justify-center items-center"></i>
                 </Tooltip>
               </div>
-              <div className={`w-full ${selecting === "regular" ? "border border-blue-300 rounded" : ""}`}>
+              <div className={`w-full ${selecting === "regular" ? "border border-blue-300 rounded" : ""}`}
+                onMouseEnter={() => {
+                  setSelecting("regular");
+                }}
+                onMouseLeave={() => {
+                  setSelecting(null);
+                }}
+              >
                 <RegularCohortSlotsCampaignTable
                   priceData={priceData?.regular}
                   setShowSummary={setShowSummary}
@@ -151,7 +158,14 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
                   <i className="fi fi-rs-info md:text-[14px] sm:text-[12px] text-gray-400 flex justify-center items-center"></i>
                 </Tooltip>
               </div>
-              <div className={`w-full ${selecting === "cohort" ? "border border-blue-300 rounded" : ""}`}>
+              <div className={`w-full ${selecting === "cohort" ? "border border-blue-300 rounded" : ""}`}
+                onMouseEnter={() => {
+                  setSelecting("cohort");
+                }}
+                onMouseLeave={() => {
+                  setSelecting(null);
+                }}
+              >
                 <RegularCohortSlotsCampaignTable
                   type="cohort"
                   priceData={priceData?.cohort}

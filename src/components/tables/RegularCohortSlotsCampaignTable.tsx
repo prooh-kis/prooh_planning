@@ -23,34 +23,34 @@ export const RegularCohortSlotsCampaignTable = ({
         flex justify-between items-center w-full`}
       >
         <tr className="flex justify-between w-full h-[40px]">
-          <th className="flex w-full items-center justify-center gap-2">
+          <th className="flex w-full items-center justify-center gap-2 border-r">
             <h1 className="text-[14px] text-[#21394F]">Total Screens</h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2">
+          <th className="flex w-full items-center justify-center gap-2 border-r">
             <h1 className="text-[14px] text-[#21394F]">CPM</h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="text-[14px] text-[#21394F]">Impressions/Day</h1>
+          <th className="flex w-full items-center justify-center gap-2 border-r truncate">
+            <h1 className="text-[14px] text-[#21394F] truncate">Impressions/Day</h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="text-[14px] text-[#21394F]">Total Slots/Day</h1>
+          <th className="flex w-full items-center justify-center gap-2 border-r truncate">
+            <h1 className="text-[14px] text-[#21394F] truncate">Total Slots/Day</h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2">
+          <th className="flex w-full items-center justify-center gap-2 border-r">
             <h1 className="text-[14px] text-[#21394F]">Price/Slot</h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2">
+          <th className="flex w-full items-center justify-center gap-2 border-r">
             <h1 className="text-[14px] text-[#21394F]">Total Cost</h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2">
+          <th className="flex w-full items-center justify-center gap-2 border-r">
             <h1 className="text-[14px] text-[#21394F]">
               SOV
             </h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2">
+          <th className="flex w-full items-center justify-center gap-2 border-r">
             <h1 className="text-[14px] text-[#21394F]">Duration</h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="text-[14px] text-[#21394F]">Details</h1>
+            <h1 className="text-[14px] text-[#21394F]">View</h1>
           </th>
         </tr>
       </thead>
@@ -112,6 +112,9 @@ export const RegularCohortSlotsCampaignTable = ({
             <th
               className="flex w-full items-center justify-center gap-2"
               onClick={() => {
+                console.log(showSummary);
+                console.log(type, "type");
+
                 if (showSummary === type) {
                   setShowSummary(null);
                 } else {

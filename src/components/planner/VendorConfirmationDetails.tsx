@@ -124,14 +124,12 @@ export const VendorConfirmationDetails = ({
 
 
   const sendEmail = () => {
-    // const emailContent = ReactDOMServer.renderToString(
-    //   <VendorMailTemplate
-    //     tableData={[]}
-    //     buttonText="Approve"
-    //     onButtonClick={() => {}}
-    //   />
-    // );
-    // dispatch(sendEmailForConfirmation(emailContent));
+    const formData = new FormData();
+    formData.append("toEmail", toEmail);
+    formData.append("cc", cc);
+    formData.append("message", `Please confirm `)
+
+    dispatch(sendEmailForConfirmation(formData));
   };
 
   const sendEmailToAll = () => {
@@ -157,9 +155,10 @@ export const VendorConfirmationDetails = ({
           }
           buttonText="See Details"
           onButtonClick={() => {
-            dispatch(changeCampaignStatusAfterVendorApproval({
-              ids: statusTableData?.filter((s: any) => s.screenVendorEmail === email) 
-            }));
+            // dispatch(changeCampaignStatusAfterVendorApproval({
+            //   ids: statusTableData?.filter((s: any) => s.screenVendorEmail === email) 
+            // }));
+            
           }}
         />
       );
@@ -207,7 +206,7 @@ export const VendorConfirmationDetails = ({
 
   const handleSaveAndContinue = async () => {
     if (isDisabled) {
-      message.error("");
+      message.error("You will be redirected to campaign dashboard, once the campaign has started. Please wait...");
     } else {
       let imageArr: string[] = [];
       for (let data of files) {
@@ -257,48 +256,60 @@ export const VendorConfirmationDetails = ({
       />
 
       <div className="py-4 w-full">
-        <div className="flex gap-4">
-          <div className="flex">
-            <h1 className="text-[14px]">
-              Approved (
-              {
-                statusTableData?.filter(
-                  (c: any) =>
-                    c.status ===
-                      CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED ||
-                    c.status === "Pending"
-                ).length
-              }
-              )
-            </h1>
+        <div className="flex justify-between">
+          <div className="flex gap-8">
+            <div className="flex">
+              <h1 className="text-[14px]">
+                Approved (
+                {
+                  statusTableData?.filter(
+                    (c: any) =>
+                      c.status ===
+                        CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED ||
+                      c.status === "Pending"
+                  ).length
+                }
+                )
+              </h1>
+            </div>
+            <div className="flex">
+              <h1 className="text-[14px]">
+                Pending (
+                {
+                  statusTableData?.filter(
+                    (c: any) =>
+                      c.status ===
+                        CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT
+                      // c.status !==
+                      //   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED ||
+                      // c.status !== "Pending"
+                  ).length
+                }
+                )
+              </h1>
+            </div>
+            <div className="flex">
+              <h1 className="text-[14px]">
+                Rejected (
+                {
+                  statusTableData?.filter(
+                    (c: any) =>
+                      c.status ===
+                      CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
+                  ).length
+                }
+                )
+              </h1>
+            </div>
           </div>
-          <div className="flex">
+          <div className="flex gap-4">
             <h1 className="text-[14px]">
-              Pending (
-              {
-                statusTableData?.filter(
-                  (c: any) =>
-                    c.status !==
-                      CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED ||
-                    c.status !==
-                      CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED ||
-                    c.status !== "Pending"
-                ).length
-              }
-              )
+              Total Screen 
             </h1>
-          </div>
-          <div className="flex">
-            <h1 className="text-[14px]">
-              Rejected (
+            <h1 className="text-[14px] font-semibold">
               {
-                statusTableData?.filter(
-                  (c: any) =>
-                    c.status ===
-                    CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
-                ).length
+                statusTableData?.length
               }
-              )
             </h1>
           </div>
         </div>
@@ -314,9 +325,9 @@ export const VendorConfirmationDetails = ({
               ).length,
               statusTableData?.filter(
                 (c: any) =>
-                  c.status !== CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED ||
-                  c.status !== CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED ||
-                  c.status !== "Pending"
+                  c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT
+                  // c.status !== CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED ||
+                  // c.status !== "Pending"
               ).length,
               statusTableData?.filter(
                 (c: any) =>

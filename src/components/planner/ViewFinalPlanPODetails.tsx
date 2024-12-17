@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Divider, message } from "antd";
+import { Divider, message, Tooltip } from "antd";
 import { Footer } from "../../components/footer";
 import { EmailConfirmationImage } from "../../components/segments/EmailConfirmationImage";
 import { EmailSendBox } from "../../components/segments/EmailSendBox";
@@ -18,7 +18,7 @@ import {
 import { formatNumber } from "../../utils/formatValue";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
-import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
+import { getAWSUrlToUploadFile, getDocUrlToSaveOnAWS, sanitizeUrlForS3, saveDocsOnAws, saveFileOnAWS } from "../../utils/awsUtils";
 import {
   generateCreativeRatioPdfFromJSON,
   generatePlanApproachPdfFromJSON,
@@ -28,6 +28,7 @@ import {
 import { sendEmailForConfirmation } from "../../actions/userAction";
 import { SEND_EMAIL_FOR_CONFIRMATION_RESET } from "../../constants/userConstants";
 import { generatePPT } from "../../utils/generatePPT";
+import { convertDataTimeToLocale, convertIntoDateAndTime } from "../../utils/dateAndTimeUtils";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -56,7 +57,7 @@ export const ViewFinalPlanPODetails = ({
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-  const [files, setFiles] = useState<any>([]);
+  const [confirmationImageFiles, setConfirmationImageFiles] = useState<any>([]);
   const [toEmail, setToEmail] = useState<any>("");
   const [cc, setCC] = useState<any>(userInfo?.email);
   const [blobData, setBlobData] = useState<any>([]);
@@ -119,25 +120,19 @@ export const ViewFinalPlanPODetails = ({
     data: sendEmailData,
   } = emailSendForConfirmation;
 
-  const sendEmail = useCallback(() => {
+  const sendEmail = (fileLinks: string) => {
     const formData = new FormData();
-    blobData.forEach(({ newBlob, fileName }: any) => {
-      if (newBlob instanceof Blob) {
-        // Ensure blob is a valid Blob
-        formData.append("files", newBlob, fileName); // Append each blob with its name
-      } else {
-        console.error("Invalid blob for file:", fileName);
-      }
-    });
     formData.append("toEmail", toEmail);
     formData.append("cc", cc);
+    formData.append("message", `Please find the files at the following links:\n${fileLinks}`)
 
     dispatch(sendEmailForConfirmation(formData));
-  }, [blobData, cc, dispatch, toEmail]);
+  };
+
 
   const handleBlob = async (pdf: any) => {
     let newBlob: any = null;
-    // Generate the blob based on the pdf type
+  
     if (pdf === "approach") {
       newBlob = generatePlanApproachPdfFromJSON({
         download: false,
@@ -169,29 +164,83 @@ export const ViewFinalPlanPODetails = ({
         heading: pdfDownload[pdf].heading,
       });
     }
-    // uniqueFileName = pdfDownload[pdf].fileName + ".pdf";
-
+  
     if (newBlob instanceof Blob) {
-      const uniqueFileName = pdf === "screen-pictures" ? pdfDownload[pdf].fileName +  ".pptx" : pdfDownload[pdf].fileName + ".pdf";
-      setBlobData((prev: any) => {
-        const existingFileNames = new Set(
-          prev.map((blob: any) => blob.fileName)
-        );
-        if (!existingFileNames.has(uniqueFileName)) {
-          return [...prev, { fileName: uniqueFileName, newBlob }];
-        }
-        return prev; // Return previous state if the blob is not unique
-      });
+      const uniqueFileName =
+        pdf === "screen-pictures"
+          ? pdfDownload[pdf].fileName + ".pptx"
+          : pdfDownload[pdf].fileName + ".pdf";
+  
+      return { fileName: uniqueFileName, newBlob };
     } else {
       console.error("Generated value is not a Blob:", newBlob);
+      return null;
     }
   };
 
+  const sendMultipleAttachments = async () => {
+    try {
+      // Step 1: Collect all Blobs
+      const blobPromises = Object.keys(pdfDownload).map((pdf) => handleBlob(pdf));
+      const attachments: any = (await Promise.all(blobPromises)).filter(Boolean); // Wait for all blobs to resolve
+      // Step 2: Upload each file to S3
+      const uploadPromises = attachments.map(async ({ fileName, newBlob }: any) => {
+        try {
+          if (!(newBlob instanceof Blob)) {
+            throw new Error(`Invalid blob for file: ${fileName}`);
+          }
+  
+          // Step 2.1: Get S3 pre-signed URL for upload
+          const aws = await getDocUrlToSaveOnAWS(fileName, newBlob.type,); // Assume fileName is passed to include in S3 key
+          if (!aws?.url) {
+            throw new Error(`Failed to retrieve pre-signed URL for: ${fileName}`);
+          }
+  
+          // Step 2.2: Upload file to S3 using pre-signed URL
+          const response = await fetch(aws.url, {
+            method: "PUT",
+            headers: {
+              "Content-Type": newBlob.type,
+            },
+            body: newBlob,
+          })
+
+          if (!response.ok) {
+            throw new Error(`Failed to upload file: ${fileName}`);
+          }
+          return { fileName, fileUrl: aws.awsURL}
+        } catch (err) {
+          console.error(`Error uploading file ${fileName}:`, err);
+          return null; // Skip invalid files
+        }
+      });
+  
+      // Step 3: Wait for all uploads to complete
+      const uploadedFiles = (await Promise.all(uploadPromises)).filter(Boolean);
+  
+      if (uploadedFiles.length === 0) {
+        console.error("No files were uploaded to S3.");
+        return;
+      }
+  
+      // Step 4: Prepare email content with file URLs
+      const fileLinks = uploadedFiles
+        .map(({fileName, fileUrl}: any) => `<br></br>${fileName?.replace(/_/g, " ")}: ${sanitizeUrlForS3(fileUrl)}<br></br>`)
+        .join("\n");
+  
+  
+      // Step 5: Send email with file links
+      sendEmail(fileLinks);
+    } catch (error) {
+      console.error("Error while sending attachments:", error);
+    }
+  };
+  
   const handleAddNewFile = async (file: File) => {
     if (file) {
       const fileURL = URL.createObjectURL(file);
 
-      setFiles((pre: any) => [
+      setConfirmationImageFiles((pre: any) => [
         ...pre,
         {
           file: file,
@@ -205,7 +254,7 @@ export const ViewFinalPlanPODetails = ({
   };
 
   const removeImage = (file: any) => {
-    setFiles(files.filter((singleFile: any) => singleFile.url !== file.url));
+    setConfirmationImageFiles(confirmationImageFiles.filter((singleFile: any) => singleFile.url !== file.url));
   };
 
   const getAWSUrl = async (data: any) => {
@@ -221,7 +270,7 @@ export const ViewFinalPlanPODetails = ({
 
   const handleSaveAndContinue = async () => {
     let imageArr: string[] = [];
-    for (let data of files) {
+    for (let data of confirmationImageFiles) {
       let url = await getAWSUrl(data);
       imageArr.push(url);
     }
@@ -263,7 +312,7 @@ export const ViewFinalPlanPODetails = ({
       message.success("Email sent successfully!");
       setToEmail("");
       setCC("");
-      setFiles([]);
+      setConfirmationImageFiles([]);
       dispatch({
         type: SEND_EMAIL_FOR_CONFIRMATION_RESET,
       });
@@ -307,17 +356,17 @@ export const ViewFinalPlanPODetails = ({
           />
           <MyDiv
             left={"Start Date"}
-            right={new Date(poTableData?.startDate).toUTCString()}
+            right={convertIntoDateAndTime(poTableData?.startDate)}
           />
           <MyDiv
             left={"End Date"}
-            right={new Date(poTableData?.endDate).toUTCString()}
+            right={convertIntoDateAndTime(poTableData?.endDate)}
           />
           <MyDiv left={"Duration"} right={`${poTableData?.duration} Days`} />
           <Divider />
           <h1 className="font-semibold py-2	">Performance Metrics</h1>
           <MyDiv
-            left={"audience impression"}
+            left={"Audience Impression"}
             right={Number(poTableData?.totalImpression).toFixed(0)}
           />
           <MyDiv left={"Total screens"} right={poTableData?.screens} />
@@ -349,9 +398,16 @@ export const ViewFinalPlanPODetails = ({
           />
           <Divider />
           <div className="flex font-semibold ">
-            <h1 className="text-left basis-1/2">Total Cost</h1>
+            <div className="basis-1/2 flex items-center justify-start gap-2">
+              <h1 className="text-left">Total Cost</h1>
+              <Tooltip
+                  title={`${poTableData?.trigger !== "None" ? "*Additional trigger cost also included in the total campaign budget" : "Total expected campaign budget."}`}
+                >
+                  <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+              </Tooltip>
+            </div>
             <h1 className="text-left basis-1/2">
-              &#8377; {formatNumber(Number(poTableData?.totalCampaignBudget))}
+              &#8377; {formatNumber(Number(poTableData?.totalCampaignBudget))}*
             </h1>
           </div>
         </div>
@@ -375,7 +431,7 @@ export const ViewFinalPlanPODetails = ({
                     pdfData: [
                       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId],
                     ],
-                    fileName: `${poInput?.name}_Approach`,
+                    fileName: `${poInput?.brandName}_Campaign_Approach`,
                   };
                   setPdfDownload(pdfToDownload);
                 }}
@@ -393,7 +449,7 @@ export const ViewFinalPlanPODetails = ({
                     pdfData: [
                       getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA),
                     ],
-                    fileName: `${poInput?.name}_Plan_Summary`,
+                    fileName: `${poInput?.brandName}_Campaign_Plan_Summary`,
                   };
                   setPdfDownload(pdfToDownload);
                 }}
@@ -419,7 +475,7 @@ export const ViewFinalPlanPODetails = ({
                         resolution: screen.screenResolution,
                       };
                     }),
-                    fileName: `${poInput?.name}_Screen_Pictures`,
+                    fileName: `${poInput?.brandName}_Campaign_Screen_Pictures`,
                   };
                   setPdfDownload(pdfToDownload);
                 }}
@@ -438,7 +494,7 @@ export const ViewFinalPlanPODetails = ({
                       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
                         ?.screenWiseSlotDetails
                     ),
-                    fileName: `${poInput?.name}_Creative_Ratio`,
+                    fileName: `${poInput?.brandName}_Campaign_Creative_Ratio`,
                   };
                   setPdfDownload(pdfToDownload);
                 }}
@@ -469,11 +525,13 @@ export const ViewFinalPlanPODetails = ({
 
                 if (pdf === "screen-pictures") {
                   if (pdfDownload[pdf].pdfData?.length > 0) {
+                    console.log("start");
                     generatePPT({
                       download: true,
                       data: pdfDownload[pdf].pdfData,
                       fileName: pdfDownload[pdf].fileName,
                     });
+                    console.log("end");
                   } else {
                     message.error("No data found, to download!");
                   }
@@ -499,10 +557,11 @@ export const ViewFinalPlanPODetails = ({
               setToEmail={setToEmail}
               cc={cc}
               sendEmail={() => {
-                Object.keys(pdfDownload).map((pdf: any) => {
-                  handleBlob(pdf);
-                });
-                sendEmail();
+                // Object.keys(pdfDownload).map((pdf: any) => {
+                //   handleBlob(pdf);
+                // });
+                // sendEmail();
+                sendMultipleAttachments();
               }}
               type="po"
               loading={loadingSendEmail}
@@ -511,7 +570,7 @@ export const ViewFinalPlanPODetails = ({
 
           <Divider />
           <EmailConfirmationImage
-            files={files}
+            files={confirmationImageFiles}
             handleAddNewFile={handleAddNewFile}
             removeImage={removeImage}
           />

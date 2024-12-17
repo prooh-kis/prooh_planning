@@ -1,3 +1,4 @@
+import { Tooltip } from "antd";
 import React, { useState } from "react";
 
 interface StepSliderProps {
@@ -17,18 +18,18 @@ export const VerticalStepperSlider: React.FC<StepSliderProps> = ({ setStep, step
       value: "weather",
     },
     {
+      label: "Empty Slots",
+      value: "empty",
+    },
+    {
       label: "Conditional To Sporting Events",
       value: "sport",
     },
-    {
-      label: "Empty Slots",
-      value: "empty",
-    }
   ];
 
   // Function to handle step marker click
   const handleStepClick = (step: number) => {
-    if (step !== 2) {
+    if (step !== 3) {
       setStep(step);
       const triggerType: any = {};
       triggerType["triggerType"] = stepLabels[step-1].value
@@ -59,13 +60,18 @@ export const VerticalStepperSlider: React.FC<StepSliderProps> = ({ setStep, step
               ></div>
 
               {/* Step label */}
-              <span
-                className={`px-2 ${
-                  i + 1 === step ? "text-[#166235]" : "text-gray-400"
-                } text-[14px] truncate`}
+              <Tooltip
+                title={i+1 === 3 ? "Sporting events based triggers coming soon..." : `Click to select "${stepLabels[i]?.label}" trigger`}
               >
-                {stepLabels[i]?.label}
-              </span>
+                <span
+                  className={`px-2 ${
+                    i + 1 === step ? "text-[#166235]" : "text-gray-400"
+                  } text-[14px] truncate`}
+                >
+                  {stepLabels[i]?.label}
+                </span>
+              </Tooltip>
+
             </div>
           ))}
         </div>

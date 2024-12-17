@@ -77,7 +77,7 @@ export const AudienceCohortTable = ({
               </Tooltip>
             </div>
             <Tooltip
-                title="Click to lock your selections"
+                title="Click to lock your audience cohort selections"
             >
               <div 
                 onClick={() => {

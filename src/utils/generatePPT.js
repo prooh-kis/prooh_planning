@@ -3,6 +3,7 @@ import PptxGenJS from "pptxgenjs";
 
 export const generatePPT = async ({ data, fileName, download }) => {
     try {
+        console.log("Generating PPT...");
         const ppt = new PptxGenJS();
 
         // Create slides with data
@@ -10,7 +11,6 @@ export const generatePPT = async ({ data, fileName, download }) => {
             const slide = ppt.addSlide();
 
             const imageUrl = item.imageUrl?.[0] || "https://via.placeholder.com/1280x720";
-            // console.log(item, imageUrl);
             slide.addImage({
                 path: imageUrl,
                 x: 0,
@@ -54,21 +54,19 @@ export const generatePPT = async ({ data, fileName, download }) => {
         });
 
         if (download) {
-            
+            // Download the PPT directly
             await ppt.writeFile({ fileName: `${fileName}.pptx` });
+            console.log("PPT downloaded successfully.");
+            return null; // Return null when download happens
         } else {
-            try {
-                const result = await ppt.write("blob");
-                return result;
-            } catch (err) {
-                console.error("Error generating PPT Blob:", err);
-                // throw new Error("Failed to generate PPT Blob.");
-                return err;
-            }
+            // Return the PPT as a Blob
+            const pptxBlob = await ppt.write("blob");
+            console.log("PPT Blob generated successfully.");
+            const pptxFile = new File([pptxBlob], 'presentation.pptx', { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
+            return pptxFile; // Return the Blob
         }
     } catch (error) {
         console.error("Error generating PPT:", error);
-        // throw new Error("Failed to generate PPT");
-        return error;
+        throw new Error("Failed to generate PPT");
     }
 };
