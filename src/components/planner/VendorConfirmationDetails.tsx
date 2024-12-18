@@ -21,8 +21,6 @@ import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { CAMPAIGN_DETAILS_PAGE } from "../../routes/routes";
 import { CountdownTimer } from "../../components/molecules/CountdownTimer";
 import { sendEmailForConfirmation, sendEmailForVendorConfirmation } from "../../actions/userAction";
-import { VendorMailTemplate } from "../../components/segments/VendorMailTemplate";
-import ReactDOMServer from "react-dom/server";
 import {
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED,
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED,
@@ -47,7 +45,7 @@ export const VendorConfirmationDetails = ({
   const { pathname } = useLocation();
 
   const [toEmail, setToEmail] = useState<any>("");
-  const [cc, setCC] = useState<any>(userInfo?.email);
+  const [cc, setCC] = useState<any>(["itisvinciis@gmail.com"]);
 
   const [files, setFiles] = useState<any>([]);
   const [isDisabled, setIsDisabled] = useState<any>(true);
@@ -127,7 +125,40 @@ export const VendorConfirmationDetails = ({
     const formData = new FormData();
     formData.append("toEmail", toEmail);
     formData.append("cc", cc);
-    formData.append("message", `Please confirm `)
+    formData.append("message", `
+      <div style='max-width: 720px; margin: auto; padding: 16px; background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;'>
+          <table style='width: 100%; border-collapse: collapse; margin-bottom: 16px;'>
+            <thead>
+              <tr style='background-color: #007BFF; color: white;'>
+                <th style='padding: 8px; text-align: left;'>Screen Name</th>
+                <th style='padding: 8px; text-align: left;'>Touchpoint</th>
+                <th style='padding: 8px; text-align: left;'>Start Date</th>
+                <th style='padding: 8px; text-align: left;'>End Date</th>
+                <th style='padding: 8px; text-align: left;'>Cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${statusTableData?.map((d: any) => {
+                return {
+                  screenName: d.screenName,
+                  touchPoint: d.touchPoint,
+                  startDate: new Date(d.startDate).toLocaleDateString(),
+                  endDate: new Date(d.endDate).toLocaleDateString(),
+                  cost: `${'\u20B9'}${d.cost.toFixed(0)}`
+                }
+              })?.map((c: any, i: any) => (
+                `<tr key=${i} style='background-color: #F8F9FA;'>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.screenName}</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.touchPoint}</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.startDate}</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.endDate}</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.cost}</td>
+                </tr>`
+              ))}
+            </tbody>
+          </table>
+        </div>
+      `)
 
     dispatch(sendEmailForConfirmation(formData));
   };
@@ -140,31 +171,62 @@ export const VendorConfirmationDetails = ({
     const plannerEmail = userInfo?.email;
     const managerEmail = userInfo?.primaryUserEmail;
     screenOwnerEmails?.forEach((email: any) => {
-      const emailContent = ReactDOMServer.renderToString(
-        <VendorMailTemplate
-          tableData={
-            statusTableData?.filter((s: any) => s.screenVendorEmail === email)?.map((d: any) => {
-              return {
-                screenName: d.screenName,
-                touchPoint: d.touchPoint,
-                startDate: new Date(d.startDate).toLocaleDateString(),
-                endDate: new Date(d.endDate).toLocaleDateString(),
-                cost: `${'\u20B9'}${d.cost.toFixed(0)}`
-              }
-            })
-          }
-          buttonText="See Details"
-          onButtonClick={() => {
-            // dispatch(changeCampaignStatusAfterVendorApproval({
-            //   ids: statusTableData?.filter((s: any) => s.screenVendorEmail === email) 
-            // }));
-            
-          }}
-        />
-      );
+      const approvalIds = statusTableData?.filter((s: any) => s.screenVendorEmail === email)?.map((c: any) => c.campaignId).join(",");
+      const approvalUrl = `https://prooh.vinciis.in/api/v2/campaigns/approveCampaignScreenVendor?ids=${encodeURIComponent(
+        approvalIds
+      )}`;
+      
+      const emailContent = `
+        <div style='max-width: 600px; margin: auto; padding: 16px; background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;'>
+          <table style='width: 100%; border-collapse: collapse; margin-bottom: 16px;'>
+            <thead>
+              <tr style='background-color: #007BFF; color: white;'>
+                <th style='padding: 8px; text-align: left;'>Screen Name</th>
+                <th style='padding: 8px; text-align: left;'>Touchpoint</th>
+                <th style='padding: 8px; text-align: left;'>Start Date</th>
+                <th style='padding: 8px; text-align: left;'>End Date</th>
+                <th style='padding: 8px; text-align: left;'>Cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${statusTableData?.filter((s: any) => s.screenVendorEmail === email)?.map((d: any) => {
+                return {
+                  screenName: d.screenName,
+                  touchPoint: d.touchPoint,
+                  startDate: new Date(d.startDate).toLocaleDateString(),
+                  endDate: new Date(d.endDate).toLocaleDateString(),
+                  cost: `${'\u20B9'}${d.cost.toFixed(0)}`
+                }
+              })?.map((c: any, i: any) => (
+                `<tr key=${i} style='background-color: #F8F9FA;'>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.screenName}</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.touchPoint}</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.startDate}</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.endDate}</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.cost}</td>
+                </tr>`
+              ))}
+            </tbody>
+          </table>
+          <div>
+            <a href='https://prooh.vinciis.in/api/v2/campaigns/approveCampaignScreenVendorByEmail?ids=675444bf5f0f6350debffce1%2C675444bf5f0f6350debffce1%2C675444bf5f0f6350debffce1'
+              style='display: inline-block; background-color: #007BFF; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;'>
+              See Details
+            </a>
+          </div>
+        </div>
+      `
+      ;
+
+
+      if (!emailContent) {
+        console.error("Failed to generate email content");
+        return;
+      }
+      
       dispatch(sendEmailForVendorConfirmation({
         toEmail: email,
-        cc: [plannerEmail, managerEmail],
+        cc: cc,
         emailContent: JSON.stringify(emailContent),
       }))
 
@@ -265,8 +327,8 @@ export const VendorConfirmationDetails = ({
                   statusTableData?.filter(
                     (c: any) =>
                       c.status ===
-                        CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED ||
-                      c.status === "Pending"
+                        CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
+                      // c.status === "Pending"
                   ).length
                 }
                 )
@@ -278,10 +340,13 @@ export const VendorConfirmationDetails = ({
                 {
                   statusTableData?.filter(
                     (c: any) =>
-                      c.status ===
-                        CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT
-                      // c.status !==
-                      //   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED ||
+                      c.status !==
+                        CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
+                      // c.status !== "Pending"
+                  )?.filter(
+                    (c: any) =>
+                      c.status !==
+                        CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
                       // c.status !== "Pending"
                   ).length
                 }
@@ -320,13 +385,17 @@ export const VendorConfirmationDetails = ({
               statusTableData?.filter(
                 (c: any) =>
                   c.status ===
-                    CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED ||
-                  c.status === "Pending"
+                    CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
               ).length,
               statusTableData?.filter(
                 (c: any) =>
-                  c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT
-                  // c.status !== CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED ||
+                  c.status !==
+                    CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
+                  // c.status !== "Pending"
+              )?.filter(
+                (c: any) =>
+                  c.status !==
+                    CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
                   // c.status !== "Pending"
               ).length,
               statusTableData?.filter(
