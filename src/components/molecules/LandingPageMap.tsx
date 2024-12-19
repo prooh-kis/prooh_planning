@@ -44,6 +44,7 @@ export function LandingPageMap(props: any) {
 
   // Add markers from props data
   useEffect(() => {
+    
     const newMarkers: any[] = [];
     props?.data?.locations?.forEach((s: any) => {
       const [screenId, details]: any = Object.entries(s)[0];
@@ -56,10 +57,7 @@ export function LandingPageMap(props: any) {
       }
     });
     setMarkers(newMarkers);
-  }, [props]);
 
-  // Update view state to fit all markers
-  useEffect(() => {
     if (markers.length > 0 && landingMapRef.current) {
       const latitudes = markers.map((marker: any) => marker[0]);
       const longitudes = markers.map((marker: any) => marker[1]);
@@ -72,7 +70,8 @@ export function LandingPageMap(props: any) {
       const map = landingMapRef.current.getMap();
       map.fitBounds(bounds, { padding: 20, maxZoom: 15 });
     }
-  }, [markers]);
+  }, [props?.data?.locations, markers]);
+
 
   return (
     <div className="h-full w-full flex flex-col items-center justify-center">
@@ -81,12 +80,14 @@ export function LandingPageMap(props: any) {
         // {...viewState}
         initialViewState={viewState}
         style={{ borderRadius: "10px", zIndex: 0 }}
-        mapStyle="mapbox://styles/mapbox/streets-v11"
+        mapStyle="mapbox://styles/vviicckkyy55/cm4l7klx300fx01sf61uthrog"
         mapboxAccessToken={
           process.env.REACT_APP_MAPBOX ||
           "pk.eyJ1Ijoic2FjaGlucmFpbmEiLCJhIjoiY2x3N242M2thMDB0MDJsczR2eGF4dXJsZSJ9.ocBaZJ9rPSUhmS4zGRi7vQ"
         }
-        onMove={(e: any) => setViewState(e.viewState)}
+        onMove={(e: any) => {
+          // setViewState(e.viewState);
+        }}
       >
         {markers?.map((marker: any, i: any) => (
           <Marker key={i} latitude={marker[0]} longitude={marker[1]}>

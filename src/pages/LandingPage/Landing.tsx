@@ -323,10 +323,10 @@ export const Landing: React.FC = () => {
         </div>
         <div ref={secondDivRef} className="pb-24 pt-24 px-8">
           <div className="flex flex-col justify-center items-center">
-            <h1 className="text-[48px] text-[#254354] font-bold mb-0 leading-tight">
+            <h1 className="text-[48px] text-[#254354] font-bold mb-0 leading-tight truncate">
               We sell DOOH on <span className="text-[#129BFF]">Impressions</span> only.
             </h1>
-            <h1 className="text-[48px] text-[#254354] font-bold mb-0 leading-tight">
+            <h1 className="text-[48px] text-[#254354] font-bold mb-0 leading-tight truncate">
               No Fixed Rental.
             </h1>
           </div>
@@ -561,7 +561,7 @@ export const Landing: React.FC = () => {
         </div>
         <div className="pb-24 px-8">
           <div className="flex flex-col items-center">
-            <h1 className="text-[56px] font-bold text-[#254354]">Meet the architects of our vision</h1>
+            <h1 className="text-[56px] font-bold text-[#254354] truncate">Meet the architects of our vision</h1>
             <p className="text-[14px] text-[#83939C] w-3/4 text-center">Meet the passionate leaders driving our mission. There expertise and commitment to excellence propel us forward, creating lasting impact and inspiring success.</p>
           </div>
           <div className="">

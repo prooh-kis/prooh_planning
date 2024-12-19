@@ -61,7 +61,7 @@ export const EmailSendBox = ({
         <div className="py-4 flex items-center gap-2"
           onClick={sendEmailToAll}
         >
-          <p className="text-gray-500 text-[14px]">
+          <p className="text-gray-500 text-[14px] truncate">
             Click here to send request for email confirmation to vendor
           </p>
           <i className="fi fi-ss-paper-plane text-primaryButton text-[14px] flex items-center"></i>

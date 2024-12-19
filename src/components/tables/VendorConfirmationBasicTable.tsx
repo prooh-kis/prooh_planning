@@ -58,7 +58,7 @@ export const VendorConfirmationBasicTable = ({ vendorConfirmationData }: any) =>
             <div className="border py-1 px-4 bg-[#F7F7F7]">
               <h1 className="text-[14px]">Start Date</h1>
             </div>
-            <div className="border py-1 px-4">
+            <div className="border py-1 px-4 truncate">
               <h1 className="text-[14px]">{convertIntoDateAndTime(vendorConfirmationData?.startDate)}</h1>
             </div>
           </div>
@@ -66,7 +66,7 @@ export const VendorConfirmationBasicTable = ({ vendorConfirmationData }: any) =>
             <div className="border py-1 px-4 bg-[#F7F7F7]">
               <h1 className="text-[14px]">End Date</h1>
             </div>
-            <div className="border py-1 px-4">
+            <div className="border py-1 px-4 truncate">
               <h1 className="text-[14px]">{convertIntoDateAndTime(vendorConfirmationData?.endDate)}</h1>
             </div>
           </div>

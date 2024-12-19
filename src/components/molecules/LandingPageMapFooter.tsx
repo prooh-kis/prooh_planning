@@ -12,7 +12,7 @@ export function LandingPageMapFooter({data}: any) {
     >
       <div className="grid grid-cols-12 pb-6">
         <div className="col-span-3">
-          <h1 className="text-[32px] text-[#1F485F] font-semibold">Our journey so far</h1>
+          <h1 className="text-[32px] text-[#1F485F] font-semibold truncate">Our journey so far</h1>
         </div>
         <div className="col-span-9">
           <YearRangeSlider
@@ -25,27 +25,27 @@ export function LandingPageMapFooter({data}: any) {
       <div className="flex justify-between items-center">
         <div className="rounded-[12px] bg-[#F6FBFF] w-36 px-2 py-4 flex flex-col justify-center items-center">
           <h1 className="text-[#129BFF] text-[14px] font-bold">{data?.countries}</h1>
-          <p className="text-[#129BFF] text-[12px]">Country</p>
+          <p className="text-[#129BFF] text-[12px] truncate">Country</p>
         </div>
         <div className="rounded-[12px] bg-[#F6FBFF] w-36 px-2 py-4 flex flex-col justify-center items-center">
           <h1 className="text-[#129BFF] text-[14px] font-bold">{data?.cities}</h1>
-          <p className="text-[#129BFF] text-[12px]">Cities</p>
+          <p className="text-[#129BFF] text-[12px] truncate">Cities</p>
         </div>
         <div className="rounded-[12px] bg-[#F6FBFF] w-36 px-2 py-4 flex flex-col justify-center items-center">
           <h1 className="text-[#129BFF] text-[14px] font-bold">{data?.touchPoints}</h1>
-          <p className="text-[#129BFF] text-[12px]">Touchpoints</p>
+          <p className="text-[#129BFF] text-[12px] truncate">Touchpoints</p>
         </div>
         <div className="rounded-[12px] bg-[#F6FBFF] w-36 px-2 py-4 flex flex-col justify-center items-center">
           <h1 className="text-[#129BFF] text-[14px] font-bold">{data?.venues}</h1>
-          <p className="text-[#129BFF] text-[12px]">Venues</p>
+          <p className="text-[#129BFF] text-[12px] truncate">Venues</p>
         </div>
         <div className="rounded-[12px] bg-[#F6FBFF] w-36 px-2 py-4 flex flex-col justify-center items-center">
           <h1 className="text-[#129BFF] text-[14px] font-bold">{data?.screens?.length}</h1>
-          <p className="text-[#129BFF] text-[12px]">Screens</p>
+          <p className="text-[#129BFF] text-[12px] truncate">Screens</p>
         </div>
         <div className="rounded-[12px] bg-[#F6FBFF] w-36 px-2 py-4 flex flex-col justify-center items-center">
           <h1 className="text-[#129BFF] text-[14px] font-bold">{formatNumber(Number(data?.reach))}</h1>
-          <p className="text-[#129BFF] text-[12px]">Reach</p>
+          <p className="text-[#129BFF] text-[12px] truncate">Reach</p>
         </div>
         <div className="rounded-[12px] bg-[#F6FBFF] w-36 px-2 py-4 flex flex-col justify-center items-center truncate">
           <h1 className="text-[#129BFF] text-[14px] font-bold">&#8377;{data?.averagePricePerSlot?.toFixed(0)}</h1>

@@ -14,8 +14,8 @@ interface ContactFormProps {
 
 export const ContactForm = ({name, setName, email, setEmail, phone, setPhone, sendEmail }: ContactFormProps) => {
   return (
-    <div className="py-10 px-60">
-      <div className="col-span-4 py-2">
+    <div className="py-10 px-40 w-full">
+      <div className="py-2">
         <PrimaryInput
           placeholder="Enter Full Name"
           value={name}
@@ -24,7 +24,7 @@ export const ContactForm = ({name, setName, email, setEmail, phone, setPhone, se
           rounded="rounded-[8px]"
         />
       </div>
-      <div className="col-span-4 py-2">
+      <div className="py-2">
         <PrimaryInput
           placeholder="Enter Email Address"
           value={email}
@@ -33,7 +33,7 @@ export const ContactForm = ({name, setName, email, setEmail, phone, setPhone, se
           rounded="rounded-[8px]"
         />
       </div>
-      <div className="col-span-4 py-2">
+      <div className="py-2">
         <PrimaryInput
           placeholder="Enter Phone Number"
           value={phone}
@@ -42,7 +42,7 @@ export const ContactForm = ({name, setName, email, setEmail, phone, setPhone, se
           rounded="rounded-[8px]"
         />
       </div>
-      <div className="col-span-4 py-2">
+      <div className="py-2">
         <PrimaryButton
           title={"Send"}
           rounded="rounded-[8px]"
@@ -52,36 +52,36 @@ export const ContactForm = ({name, setName, email, setEmail, phone, setPhone, se
           textSize="14px"
         />
       </div>
-      <div className="col-span-4 grid grid-cols-3 py-4">
-        <div className="col-span-1 flex items-center justify-center gap-2">
-          <i className="fi fi-sr-phone-call text-[36px] text-[#129BFF] flex items-center justify-center"></i>
+      <div className="grid grid-cols-6 py-4">
+        <div className="col-span-2 lg:flex lg:items-center lg:justify-center gap-2">
+          <i className="fi fi-sr-phone-call lg:text-[36px] md:text-[18px] text-[#129BFF] flex items-center justify-center"></i>
           <div>
-            <h1 className="text-[16px] font-bold mb-[-2px]">
+            <h1 className="lg:text-[16px] md:text-[12px] md:text-center font-bold mb-[-2px] truncate">
               Phone Number
             </h1>
-            <p className="text-[16px] mt-[-2px]">
+            <p className="lg:text-[16px] md:text-[12px] md:text-center mt-[-2px] truncate">
               8125480000
             </p>
           </div>
         </div>
-        <div className="col-span-1 flex items-center justify-center gap-2">
-          <i className="fi fi-sr-envelope text-[36px] text-[#129BFF] flex items-center justify-center"></i>
+        <div className="col-span-2 lg:flex lg:items-center lg:justify-center gap-2">
+          <i className="fi fi-sr-envelope lg:text-[36px] md:text-[18px] text-[#129BFF] flex items-center justify-center"></i>
           <div>
-            <h1 className="text-[16px] font-bold mb-[-2px]">
+            <h1 className="lg:text-[16px] md:text-[12px] md:text-center font-bold mb-[-2px] truncate">
               Email ID
             </h1>
-            <p className="text-[16px] mt-[-2px]">
+            <p className="lg:text-[16px] md:text-[12px] md:text-center mt-[-2px] truncate">
               contact@prooh.ai
             </p>
           </div>
         </div>
-        <div className="col-span-1 flex items-center justify-center gap-2">
-          <i className="fi fi-sr-marker text-[36px] text-[#129BFF] flex items-center justify-center"></i>
+        <div className="col-span-2 lg:flex lg:items-center lg:justify-center gap-2">
+          <i className="fi fi-sr-marker lg:text-[36px] md:text-[18px] text-[#129BFF] flex items-center justify-center"></i>
           <div>
-            <h1 className="text-[16px] font-bold mb-[-2px]">
+            <h1 className="lg:text-[16px] md:text-[12px] md:text-center font-bold mb-[-2px] truncate">
               Address
             </h1>
-            <p className="text-[16px] mt-[-2px]">
+            <p className="=lg:text-[16px] md:text-[12px] md:text-center mt-[-2px] truncate">
               Paras TC, Gurgaon, India
             </p>
           </div>

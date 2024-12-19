@@ -45,7 +45,7 @@ export const VendorConfirmationStatusTable = ({
         creativesToShow={creativesToShow}
       />
       <table className="w-full">
-        <thead>
+        <thead className="">
           {userInfo?.isBrand && (
             <tr className="bg-[#D6EEFF]">
               <th className="py-2">

@@ -52,6 +52,8 @@ export const ScreenSummaryDetails = ({
   const [currentSummaryTab, setCurrentSummaryTab] = useState<any>("1");
   const [currentCity, setCurrentCity] = useState<string>("");
   const [citiesCreative, setCitiesCreative] = useState<any>([]);
+  const [cityTabData, setCityTabData] = useState<any>([]);
+
 
   const [priceFilter, setPriceFilter] = useState<any>({
     min: 1,
@@ -129,6 +131,7 @@ export const ScreenSummaryDetails = ({
   };
 
   const getTabValue = (dataScreenSummary: any) => {
+    console.log(dataScreenSummary)
     if (
       dataScreenSummary &&
       getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) &&
@@ -263,10 +266,6 @@ export const ScreenSummaryDetails = ({
   }, [dispatch]);
 
   useEffect(() => {
-    if (screenSummaryData) handleSetVisitedValue(screenSummaryData);
-  }, [screenSummaryData]);
-
-  useEffect(() => {
     if (pathname.split("/").includes("iknowitallplan") && step === 4) {
       setCurrentTab("2");
     }
@@ -286,11 +285,11 @@ export const ScreenSummaryDetails = ({
       saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, screenSummaryData);
 
       saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, screensBuyingCount);
-      getTabValue(screenSummaryData);
+      handleSetVisitedValue(screenSummaryData);
+      setCityTabData(getTabValue(screenSummaryData));
     }
   }, [campaignId, pathname, screenSummaryData, screenSummaryPlanTableData, screensBuyingCount, step]);
 
-  console.log(screenSummaryData)
   return (
     <div className="w-full py-3">
       <h1 className="text-3xl ">
@@ -323,15 +322,15 @@ export const ScreenSummaryDetails = ({
         </div>
       ) : (
         <div className="">
-          {screenSummaryData && currentTab === "1" ? (
+          {currentTab === "1" ? (
             <div>
               <div className="py-2 flex justify-between">
                 <div className="">
-                  {screenSummaryData && (
+                  {screenSummaryData && cityTabData?.length !== 0 && (
                     <TabWithoutIcon
                       currentTab={currentSummaryTab}
                       setCurrentTab={handleSelectCurrentTab}
-                      tabData={getTabValue(screenSummaryData) || []}
+                      tabData={cityTabData}
                     />
                   )}
                 </div>
