@@ -277,7 +277,7 @@ export const AdvanceFiltersDetails = ({
 
   return (
     <div className="w-full">
-      <div className="h-full w-full py-3 grid grid-cols-2 gap-4 border">
+      <div className="h-full w-full py-3 grid grid-cols-2 gap-4">
         <div className="col-span-1 h-full py-2 pr-4">
           {storeFilter ? (
             <div className="h-auto">
@@ -398,7 +398,7 @@ export const AdvanceFiltersDetails = ({
               />
             </div>
           )}
-          <div className="flex items-center mx-[-1px] mb-12 mt-4">
+          <div className="flex items-center mx-[-1px] mb-20 mt-4">
             <CheckboxInput
               label={
                 <>
@@ -427,7 +427,7 @@ export const AdvanceFiltersDetails = ({
           </div>
         </div>
 
-        <div className="col-span-1 w-full h-full border py-2">
+        <div className="col-span-1 w-full h-full py-2">
           {allScreens?.length > 0 && (
             <MapWithGeometry
               handleRouteData={handleRouteData}
