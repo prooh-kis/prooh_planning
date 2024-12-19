@@ -13,7 +13,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   getScreensAudiencesData,
-  getScreensCostData,
   getScreenSummaryPlanTableData,
 } from "../../actions/screenAction";
 import {

@@ -78,7 +78,8 @@ export const AudienceTouchPointsDetails = ({
   } = screensCostDataGet;
 
   const getMatchedData = (myData: any) => {
-    setMarkets(myData);
+    const {id, ...marketData} = myData;
+    setMarkets(marketData);
     
     let audiencesData: any = {};
     for (const market in myData) {
@@ -130,9 +131,9 @@ export const AudienceTouchPointsDetails = ({
   useEffect(() => {
 
     if (screensCost) {
-      saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, screensCost);
+      saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, {[campaignId]: screensCost});
       setCostData(screensCost);
-      saveDataOnLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS, {
+      saveDataOnLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS, {[campaignId]: {
         cohorts: selectedAudiences,
         touchPoints: selectedTouchPoints,
         gender: selectedGender.length === 1 && selectedGender.includes("Male")
@@ -141,7 +142,7 @@ export const AudienceTouchPointsDetails = ({
           ? "female"
           : "both",
         duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30,
-      });
+      }});
     }
 
   }, [screensCost]);
@@ -156,7 +157,7 @@ export const AudienceTouchPointsDetails = ({
     
     dispatch(
       getScreensCostData({
-        id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
+        id: campaignId,
         cohorts: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts.length !== 0 ? getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts : ALL_COHORTS,
         touchPoints: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints.length !== 0 ? getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints : ALL_TOUCHPOINTS,
         duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
@@ -179,19 +180,19 @@ export const AudienceTouchPointsDetails = ({
       getMatchedData(screensAudiences);
     } else {
       getMatchedData(
-        getDataFromLocalStorage(AUDIENCE_DATA) || {}
+        getDataFromLocalStorage(AUDIENCE_DATA)?.[campaignId] || {}
       );
     }
 
     setCostData(
-      getDataFromLocalStorage(TOTAL_SCREEN_COST_DATA) || {}
+      getDataFromLocalStorage(TOTAL_SCREEN_COST_DATA)?.[campaignId] || {}
     );
   }, [screensAudiences]);
 
   const handleSelection = (input: any) => {
     dispatch(
       getScreensCostData({
-        id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
+        id: campaignId,
         cohorts: input.type === "cohorts" ? input.data : selectedAudiences,
         touchPoints: input.type === "touchPoints" ? input.data : selectedTouchPoints,
         duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
@@ -278,10 +279,10 @@ export const AudienceTouchPointsDetails = ({
               dispatch(addDetailsToCreateCampaign({
                 pageName: "Audience And TouchPoint Page",
                 id: campaignId,
-                markets: Object.keys(getDataFromLocalStorage(AUDIENCE_DATA)),
-                cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.cohorts,
-                touchPoints: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.touchPoints,
-                gender: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.gender,
+                markets: Object.keys(getDataFromLocalStorage(AUDIENCE_DATA)?.[campaignId]),
+                cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.[campaignId]?.cohorts,
+                touchPoints: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.[campaignId]?.touchPoints,
+                gender: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.[campaignId]?.gender,
                 screensSelectedCount: screensCost?.screensSelectedCount, 
                 impressionSelectedCount: screensCost?.impressionSelectedCount,
                 budgetSelected: screensCost?.budgetSelected,
@@ -289,10 +290,10 @@ export const AudienceTouchPointsDetails = ({
               }));
               
               setCurrentStep(step + 1);
-              saveDataOnLocalStorage(COST_SUMMARY, [
+              saveDataOnLocalStorage(COST_SUMMARY, {[campaignId]:[
                 selectedScreensData,
                 totalScreensData,
-              ]);
+              ]});
             }
           }}
           campaignId={campaignId}

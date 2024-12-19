@@ -63,7 +63,7 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
   useEffect(() => {
     if (!priceData) {
       dispatch(getRegularVsCohortPriceData({
-        id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
+        id: campaignId,
         screenIds: screenIds,
         cohorts: cohorts,
         gender: gender,
@@ -72,11 +72,11 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
     } else {
       saveDataOnLocalStorage(
         REGULAR_VS_COHORT_PRICE_DATA,
-        priceData
+        {[campaignId]: priceData}
       );
     }
-    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {});
-  }, [priceData, cohorts, dispatch, duration, gender, screenIds]);
+    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {[campaignId]: {}});
+  }, [priceData, cohorts, dispatch, duration, gender, screenIds, campaignId]);
 
   const handleRegularVsCohortSelection = (type: any) => {
     setSelectedBuyingOption(type);
@@ -123,7 +123,7 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
                 <Tooltip
                   title="Regular slots only have those slots in a timezone, which have more than 4% of total audiences available on the site"
                 >
-                  <i className="fi fi-rs-info md:text-[14px] sm:text-[12px] text-gray-400 flex justify-center items-center"></i>
+                  <i className="fi fi-rs-info lg:text-[12px] md:text-[10px] text-gray-400 flex justify-center items-center"></i>
                 </Tooltip>
               </div>
               <div className={`w-full ${selecting === "regular" ? "border border-blue-300 rounded" : ""}`}
@@ -155,7 +155,7 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
                 <Tooltip
                   title="Cohort slots target your selected audiences using those slots in a timezone, which have more than 7% of total audiences available on the site"
                 >
-                  <i className="fi fi-rs-info md:text-[14px] sm:text-[12px] text-gray-400 flex justify-center items-center"></i>
+                  <i className="fi fi-rs-info lg:text-[12px] md:text-[10px] text-gray-400 flex justify-center items-center"></i>
                 </Tooltip>
               </div>
               <div className={`w-full ${selecting === "cohort" ? "border border-blue-300 rounded" : ""}`}
@@ -193,7 +193,7 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
           <Tooltip
             title="Cohort slots target your selected audiences using those slots in a timezone, which have more than 7% of total audiences available on the site"
           >
-            <i className="fi fi-rs-info md:text-[14px] sm:text-[12px] text-gray-400 flex justify-center items-center"></i>
+            <i className="fi fi-rs-info sm:text-[14px] md:text-[12px] text-gray-400 flex justify-center items-center"></i>
           </Tooltip>
         </div>
         <div className="flex justify-start gap-4 pt-1">

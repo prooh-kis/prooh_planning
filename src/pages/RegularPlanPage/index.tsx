@@ -14,7 +14,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   getScreensAudiencesData,
-  getScreensCostData,
 } from "../../actions/screenAction";
 import {
   getDataFromLocalStorage,

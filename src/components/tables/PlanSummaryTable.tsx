@@ -40,10 +40,10 @@ export function PlanSummaryTable({
       })
     );
 
-    if (getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[
+    if (getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[campaignId]?.[
       `${regularVsCohort}`] === undefined) {
         dispatch(getRegularVsCohortPriceData({
-          id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
+          id: campaignId,
           screenIds: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
           cohorts: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts,
           gender: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender,
@@ -74,7 +74,7 @@ export function PlanSummaryTable({
             <RegularCohortSlotsCampaignTable
               type={regularVsCohort}
               priceData={
-                getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[
+                getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[campaignId]?.[
                   `${regularVsCohort}`
                 ]
               }
@@ -87,7 +87,7 @@ export function PlanSummaryTable({
             <RegularCohortSummaryTable
               type={regularVsCohort}
               touchPointData={
-                getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[
+                getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[campaignId]?.[
                   `${regularVsCohort}`
                 ]?.touchPointData
               }

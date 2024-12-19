@@ -181,16 +181,12 @@ export function ViewPlanPic({ screensBuyingCount, setScreensBuyingCount, refresh
 
   }, [cityTP, cityZones, currentSummaryTab, screenTypes, screensBuyingCount, setCurrentCity]);
 
-
-  console.log(zoneFilters);
-  console.log(tpFilters);
-  console.log(stFilters);
   return (
     <div className="grid grid-cols-12 gap-8 py-2">
       <div className="col-span-3 border rounded-[12px] p-3 overflow-y-auto">
         <div className="flex justify-between items-center">
           <h1 className="text-[16px]">Filters</h1>
-          <p className="text-[12px]">Clear All</p>
+          {/* <p className="text-[12px]">Clear All</p> */}
         </div>
         <div className="py-2">
           <h1 className="font-semibold">Zone</h1>

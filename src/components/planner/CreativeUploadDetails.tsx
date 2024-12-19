@@ -180,7 +180,7 @@ export const CreativeUploadDetails = ({
         return data;
       });
       setCitiesCreative(citiesCreativeData);
-      saveDataOnLocalStorage(CAMPAIGN_CREATIVES, myData);
+      saveDataOnLocalStorage(CAMPAIGN_CREATIVES, {[campaignId]: myData});
     } else {
       message.error("Please select file to save!");
     }
@@ -307,11 +307,11 @@ export const CreativeUploadDetails = ({
 
   const isTriggerAvailable = () => {
     const result =
-      getDataFromLocalStorage(SELECTED_TRIGGER)?.weatherTriggers?.length > 0
+      getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]?.weatherTriggers?.length > 0
         ? true
-        : getDataFromLocalStorage(SELECTED_TRIGGER)?.sportsTriggers?.length > 0
+        : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]?.sportsTriggers?.length > 0
         ? true
-        : getDataFromLocalStorage(SELECTED_TRIGGER)?.vacantSlots?.length > 0
+        : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]?.vacantSlots?.length > 0
         ? true
         : false;
 
@@ -359,7 +359,7 @@ export const CreativeUploadDetails = ({
         }
       }
       console.log("ssss : ", sss);
-      saveDataOnLocalStorage(CAMPAIGN_CREATIVES, sss);
+      saveDataOnLocalStorage(CAMPAIGN_CREATIVES, {[campaignId]: sss});
       dispatch(
         addDetailsToCreateCampaign({
           pageName: "Upload Creative Page",
@@ -408,12 +408,12 @@ export const CreativeUploadDetails = ({
   useEffect(() => {
     if (screenData) {
       // console.log("screenData : ", screenData);
-      if (getDataFromLocalStorage(CAMPAIGN_CREATIVES)) {
-        handleSetInitialData(getDataFromLocalStorage(CAMPAIGN_CREATIVES) || {});
+      if (getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId]) {
+        handleSetInitialData(getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId] || {});
       } else {
         handleSetInitialData(screenData);
       }
-      const result: any = getDataFromLocalStorage(CAMPAIGN_CREATIVES) || {};
+      const result: any = getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId] || {};
       for (let city in screenData) {
         if (result[city] === undefined) {
           result[city] = [];
@@ -440,7 +440,7 @@ export const CreativeUploadDetails = ({
 
     const result =
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.triggers;
-    saveDataOnLocalStorage(SELECTED_TRIGGER, result);
+    saveDataOnLocalStorage(SELECTED_TRIGGER, {[campaignId]: result});
   }, [errorScreeData, screenData]);
 
   return (
@@ -570,26 +570,26 @@ export const CreativeUploadDetails = ({
                       triggerData={
                         getDataFromLocalStorage(SELECTED_TRIGGER)
                           ?.weatherTriggers[0]?.type !== ""
-                          ? getDataFromLocalStorage(SELECTED_TRIGGER)
+                          ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
                               ?.weatherTriggers
-                          : getDataFromLocalStorage(SELECTED_TRIGGER)
+                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
                               ?.sportsTriggers[0]?.sport !== ""
-                          ? getDataFromLocalStorage(SELECTED_TRIGGER)
+                          ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
                               ?.sportsTriggers
-                          : getDataFromLocalStorage(SELECTED_TRIGGER)
+                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
                               ?.vacantSlots[0]?.slotType !== ""
-                          ? getDataFromLocalStorage(SELECTED_TRIGGER)
+                          ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
                               ?.vacantSlots
                           : {}
                       }
                       triggerType={
-                        getDataFromLocalStorage(SELECTED_TRIGGER)
+                        getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
                           ?.weatherTriggers[0]?.type !== ""
                           ? "Weather Trigger"
-                          : getDataFromLocalStorage(SELECTED_TRIGGER)
+                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
                               ?.sportsTriggers[0]?.sport !== ""
                           ? "Sports Trigger"
-                          : getDataFromLocalStorage(SELECTED_TRIGGER)
+                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
                               ?.vacantSlots[0]?.slotType !== ""
                           ? "Fill Vacancy Trigger"
                           : "No Trigger"

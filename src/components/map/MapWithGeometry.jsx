@@ -360,8 +360,8 @@ const onDeletePolygon = useCallback(
   }, [selectedMarkers]);
 
   return (
-    <div className="h-full w-auto items-top">
-      <div className="flex flex-col items-end gap-2 right-12 pt-2 absolute z-10">
+    <div className="relative h-full w-full items-top">
+      <div className="flex flex-col items-end gap-2 right-2 pt-2 absolute z-10">
         <div className="flex items-center gap-2 group">
           <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-blue-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Selected Screens</h1>
           <div className="h-4 w-4 bg-primaryButton rounded-full"></div>
@@ -387,11 +387,11 @@ const onDeletePolygon = useCallback(
           <div className="h-4 w-4 bg-pink-500 rounded-full"></div>
         </div>
       </div>
-      <div className="w-full h-full flex items-center justify-center ">
+      <div className="w-full h-full flex">
         <ReactMapGL
           ref={mapRef}
           initialViewState={viewState}
-          style={{ borderRadius: "10px" }}
+          style={{ borderRadius: "10px"}}
           mapStyle="mapbox://styles/vviicckkyy55/cm4l7klx300fx01sf61uthrog"
           mapboxAccessToken={
             process.env.REACT_APP_MAPBOX ||

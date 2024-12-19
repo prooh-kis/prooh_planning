@@ -56,9 +56,9 @@ export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohor
       <div className="flex gap-2 pt-2">
         <h1 className="md:text-[14px] sm:text-[12px]">{type === "cohort" ? "Cohort" : "Regular"} Time & Day Summary</h1>
         <Tooltip
-          className=""
+          title="See time wise distribution of your selected audience cohorts at your selected touchpoints"
         >
-          <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[10px]"></i>
+          <i className="fi fi-rs-info flex items-center text-[#9A9A9A] lg:text-[12px] md:text-[10px]"></i>
         </Tooltip>
       </div>
       <div className="flex justify-between border-b my-2">
@@ -75,7 +75,7 @@ export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohor
           ))}
         </div>
         <div className="flex gap-2 items-center">
-          <h1 className="text-[14px]">
+          <h1 className="lg:text-[14px] md:text-[12px]">
             Wastage Controlled
           </h1>
           <Tooltip
@@ -84,38 +84,38 @@ export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohor
               `All the slots are relevantly exposed to your target audience`
             }
           >
-            <i className="fi fi-rs-info pr-1 text-[14px] text-gray-400 flex justify-center items-center"></i>
+            <i className="fi fi-rs-info pr-1 lg:text-[12px] md:text-[10px] text-gray-400 flex justify-center items-center"></i>
           </Tooltip>
           <h1 className="text-[14px] text-green-500">
             {calculateIncludedVsTotal(touchPointData)}%
           </h1>
         </div>
       </div>
-      <table className="w-full">
+      <table className="w-full border">
         <thead className={`w-full`}>
           <tr className="bg-[#C9E9FF] w-full h-[40px]">
             <th className="text-[14px] font-semibold px-2">
               Touchpoint
             </th>
-            <th className="text-[14px] font-semibold px-2">
+            <th className="text-[14px] border-l font-semibold px-2">
               Morning
             </th>
-            <th className="text-[14px] font-semibold  px-2">
+            <th className="text-[14px] border-l font-semibold  px-2">
               Afternoon
             </th>
-            <th className="text-[14px] font-semibold  px-2">
+            <th className="text-[14px] border-l font-semibold  px-2">
               Evening
             </th>
-            <th className="text-[14px] font-semibold px-2">
+            <th className="text-[14px] border-l font-semibold px-2">
               Night
             </th>
           </tr>
           <tr className="bg-[#FAFAFA] h-[40px]">
             <th>{" "}</th>
-            <th className="text-[12px] font-semibold px-2">08 AM - 12 Noon</th>
-            <th className="text-[12px] font-semibold px-2">12 Noon - 05 PM</th>
-            <th className="text-[12px] font-semibold px-2">05 PM - 09 PM</th>
-            <th className="text-[12px] font-semibold px-2">09 PM - 01 AM</th>
+            <th className="text-[12px] border-l font-semibold px-2">08 AM - 12 Noon</th>
+            <th className="text-[12px] border-l font-semibold px-2">12 Noon - 05 PM</th>
+            <th className="text-[12px] border-l font-semibold px-2">05 PM - 09 PM</th>
+            <th className="text-[12px] border-l font-semibold px-2">09 PM - 01 AM</th>
 
           </tr>
         </thead>
@@ -127,20 +127,19 @@ export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohor
                   {tp?.touchPoint}
                 </p>
               </td>
-              <td className="p-2">
+              <td className="p-2 border-l">
                 <div className="grid grid-cols-3 flex justify-center items-center">
-                    {tp?.dayWiseData[day]["morning"]["included"] ? 
-                      <i className="fi fi-br-check flex items-center text-green-500 text-[12px]"></i>
-                    :
-                      <i className="fi fi-br-cross flex items-center text-red-500 text-[12px]"></i>
-                    }
-                    <p className={`${!tp?.dayWiseData[day]["morning"]["included"] && "text-red-500"} col-span-1 text-[12px] flex justify-center`}>
-                      {tp?.dayWiseData[day]["morning"]["percentage"].toFixed(1)}%
-                    </p>
+                  {tp?.dayWiseData[day]["morning"]["included"] ? 
+                    <i className="fi fi-br-check flex items-center text-green-500 text-[12px]"></i>
+                  :
+                    <i className="fi fi-br-cross flex items-center text-red-500 text-[12px]"></i>
+                  }
+                  <p className={`${!tp?.dayWiseData[day]["morning"]["included"] && "text-red-500"} col-span-1 text-[12px] flex justify-center`}>
+                    {tp?.dayWiseData[day]["morning"]["percentage"].toFixed(1)}%
+                  </p>
                 </div>
-               
               </td>
-              <td className="p-2">
+              <td className="p-2 border-l">
                 <div className="grid grid-cols-3 flex justify-center items-center">
                   {tp?.dayWiseData[day]["afternoon"]["included"] ? 
                     <i className="fi fi-br-check flex items-center text-green-500 text-[12px]"></i>
@@ -152,7 +151,7 @@ export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohor
                   </p>
                 </div>
               </td>
-              <td className="p-2">
+              <td className="p-2 border-l">
                 <div className="grid grid-cols-3 flex justify-center items-center">
                   {tp?.dayWiseData[day]["evening"]["included"] ? 
                     <i className="fi fi-br-check flex items-center text-green-500 text-[12px]"></i>
@@ -164,7 +163,7 @@ export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohor
                   </p>
                 </div>
               </td>
-              <td className="p-2">
+              <td className="p-2 border-l">
                 <div className="grid grid-cols-3 flex justify-center items-center">
                   {tp?.dayWiseData[day]["night"]["included"] ? 
                     <i className="fi fi-br-check flex items-center text-green-500 text-[12px]"></i>

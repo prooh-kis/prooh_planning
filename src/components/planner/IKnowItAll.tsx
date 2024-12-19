@@ -36,7 +36,7 @@ export const IKnowItAll = ({
   const [citiesCreative, setCitiesCreative] = useState<any>([]);
 
   const [screensBuyingCount, setScreensBuyingCount] = useState<any>(
-    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)
+    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
   );
 
 
@@ -69,15 +69,15 @@ export const IKnowItAll = ({
           id: `${index + 1}`,
           label: s,
           params:
-            getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) !== null
+            getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !== null
               ? [
                   Object.values(
-                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)[s]
+                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]?.[s]
                   )
                     ?.map((f: any) => f.status)
                     ?.filter((s: any) => s === true).length,
                   Object.values(
-                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)[s]
+                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]?.[s]
                   )
                     ?.map((f: any) => f.status)
                     ?.filter((s: any) => s === false).length,

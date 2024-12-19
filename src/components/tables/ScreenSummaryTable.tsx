@@ -27,7 +27,7 @@ export const ScreenSummaryTable = ({
   campaignId,
 }: any) => {
   const [screenTypeToggle, setScreenTypeToggle] = useState<any>(
-    getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)
+    getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[campaignId]
   );
 
   const handleData = useCallback(
@@ -51,7 +51,7 @@ export const ScreenSummaryTable = ({
             tps[city][tp][st] = [];
             types[city][st] = [];
             stToggle[city][tp][st] =
-              getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[city]?.[
+              getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[campaignId]?.[city]?.[
                 tp
               ]?.[st] || true;
             for (const zone in myData[city][tp][st]) {
@@ -81,18 +81,18 @@ export const ScreenSummaryTable = ({
       setCityTP(tps);
       setScreenTypes(types);
       if (
-        !getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) ||
-        Object.keys(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION))
+        !getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] ||
+        Object.keys(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId])
           ?.length === 0
       ) {
         setScreensBuyingCount(screens);
       } else {
         setScreensBuyingCount(
-          getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)
+          getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
         );
       }
       setScreenTypeToggle(stToggle);
-      saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, stToggle);
+      saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, {[campaignId]: stToggle});
     },
     [
       currentSummaryTab,
@@ -167,7 +167,7 @@ export const ScreenSummaryTable = ({
     console.log(stToggle[city][touchpoint][screenType])
     // Toggle screen type status based on current status
     setScreenTypeToggle(stToggle);
-    saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, stToggle);
+    saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, {[campaignId]: stToggle});
 
     screens.forEach((s: any) => {
       handleScreenClick({ screen: s, city, touchpoint, statusRes: !allSelected }); // Update individual screen status
@@ -194,7 +194,7 @@ export const ScreenSummaryTable = ({
             </div>
             <div className="py-2 col-span-8 overflow-x-auto no-scrollbar">
               <div
-                className="grid grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-0"
+                className="grid grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))] gap-0"
                 style={{ width: 'calc(8rem * 8)' }} // Ensures each column has a fixed width
               
               >
@@ -256,7 +256,7 @@ export const ScreenSummaryTable = ({
                         </div>
                         <div className={`col-span-8 overflow-x-auto no-scrollbar`}>
                           <div
-                            className="grid grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-0"
+                            className="grid grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))] gap-0"
                             style={{ width: 'calc(8rem * 8)' }} // Ensures each column has a fixed width
                           >
                             {Object.keys(cityZones?.[currentCity])?.map(

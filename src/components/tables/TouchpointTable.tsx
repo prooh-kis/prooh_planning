@@ -66,13 +66,13 @@ export const TouchpointTable = ({
         <tr className="flex justify-between w-full h-[40px] px-2">
           <th className="flex items-center justify-between w-full gap-2">
             <div className="flex gap-2 items-center">
-              <h1 className="md:text-[14px] sm:text-[12px] text-[#21394F]">
+              <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">
                 Touchpoints
               </h1>
               <Tooltip
                 title="Choose your target touchpoints and click on the lock icon to confirm"
               >
-                <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
+                <i className="fi fi-rs-info flex items-center text-[#9A9A9A] md:text-[12px]"></i>
               </Tooltip>
             </div>
             <Tooltip
@@ -89,9 +89,9 @@ export const TouchpointTable = ({
                 }}
               >
                 {clicked ? (
-                  <i className="fi fi-sr-lock flex items-center text-green-600 text-[12px]"></i>
+                  <i className="fi fi-sr-lock flex items-center text-green-600 md:text-[12px]"></i>
                 ) : (
-                  <i className="fi fi-sr-lock-open-alt flex items-center text-[#9A9A9A] text-[12px]"></i>
+                  <i className="fi fi-sr-lock-open-alt flex items-center text-[#9A9A9A] md:text-[12px]"></i>
                 )}
               </div>
             </Tooltip>
@@ -103,22 +103,22 @@ export const TouchpointTable = ({
           <th className="col-span-4 flex items-center w-full gap-2">
             <div className="flex items-center gap-1 w-auto">
               <div className="h-2 w-2 bg-[#7AB3A2]"></div>
-              <p className="md:text-[12px] sm:text-[10px] font-normal">
+              <p className="lg:text-[12px] md:text-[10px] font-normal">
                 audience %
               </p>
             </div>
             <div className="flex items-center gap-1 w-auto">
               <div className="h-2 w-2 bg-[#00A0FA]"></div>
-              <p className="md:text-[12px] sm:text-[10px] font-normal">
+              <p className="lg:text-[12px] md:text-[10px] font-normal">
                 screen %
               </p>
             </div>
           </th>
           <th className="col-span-2 flex justify-between pr-2 truncate">
-            <p className="md:text-[12px] sm:text-[10px] font-normal">0,</p>
-            <p className="md:text-[12px] sm:text-[10px] font-normal">25,</p>
-            <p className="md:text-[12px] sm:text-[10px] font-normal">50,</p>
-            <p className="md:text-[12px] sm:text-[10px] font-normal">100</p>
+            <p className="lg:text-[12px] md:text-[10px] font-normal">0,</p>
+            <p className="lg:text-[12px] md:text-[10px] font-normal">25,</p>
+            <p className="lg:text-[12px] md:text-[10px] font-normal">50,</p>
+            <p className="lg:text-[12px] md:text-[10px] font-normal">100</p>
           </th>
         </tr>
         {loading && (

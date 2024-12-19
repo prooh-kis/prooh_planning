@@ -124,13 +124,13 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
   } = tableDataForSelectTriggerPageGet;
 
   const handleSelectTrigger = useCallback(() => {
-    saveDataOnLocalStorage(SELECTED_TRIGGER, {
+    saveDataOnLocalStorage(SELECTED_TRIGGER, {[campaignId]: {
       weatherTriggers: [],
       sportsTriggers: [],
       vacantSlots: [],
-    });
+    }});
 
-    saveDataOnLocalStorage(SELECTED_TRIGGER, {
+    saveDataOnLocalStorage(SELECTED_TRIGGER, {[campaignId]: {
       weatherTriggers:
         selectedTrigger?.triggerType === "weather"
           ? [
@@ -174,7 +174,7 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
               },
             ]
           : [],
-    });
+    }});
   }, [
     currentTab,
     selectedTrigger,
@@ -192,7 +192,7 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
   ]);
 
   const handleSaveAndContinue = () => {
-    console.log("handle save : ", getDataFromLocalStorage(SELECTED_TRIGGER));
+    console.log("handle save : ", getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]);
     if (isDisabled) {
       message.error(
         "Please confirm budget for your selected trigger or skip this step"
@@ -202,7 +202,7 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
         addDetailsToCreateCampaign({
           pageName: "Add Triggers Page",
           id: pathname.split("/").splice(-1)[0],
-          triggers: getDataFromLocalStorage(SELECTED_TRIGGER),
+          triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
         })
       );
       // setCurrentStep(step + 1);
@@ -221,7 +221,7 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
         addDetailsToCreateCampaign({
           pageName: "Add Triggers Page",
           id: pathname.split("/").splice(-1)[0],
-          triggers: getDataFromLocalStorage(SELECTED_TRIGGER),
+          triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
         })
       );
       setCurrentStep(step + 1);
@@ -230,7 +230,7 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
 
   // setting initial value  when page reload or came from future
   useEffect(() => {
-    const trigger = getDataFromLocalStorage(SELECTED_TRIGGER);
+    const trigger = getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId];
     if (trigger?.weatherTriggers?.length > 0) {
       setSelectedTrigger({
         triggerType: "weather",
@@ -405,6 +405,7 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
               </div>
               <div className="py-2">
                 <SportsSegment
+                  campaignId={campaignId}
                   selectedMatchId={selectedMatchId}
                   setSelectedMatchId={setSelectedMatchId}
                   sport={sport}

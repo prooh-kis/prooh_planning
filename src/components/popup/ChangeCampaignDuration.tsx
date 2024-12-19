@@ -125,8 +125,6 @@ export const ChangeCampaignDuration = ({ campaignId }: any) => {
     setDuration(duration);
   }, [campaignId]);
 
-  console.log(startDate)
-
   return (
     <div>
       <h1

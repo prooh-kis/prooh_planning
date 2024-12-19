@@ -98,7 +98,7 @@ export const AdvanceFiltersDetails = ({
       ];
       const uniqueScreens = getUniqueScreens([{ screens }]);
       setFinalSelectedScreens(uniqueScreens);
-      saveDataOnLocalStorage(SELECTED_SCREENS_ID, uniqueScreens);
+      saveDataOnLocalStorage(SELECTED_SCREENS_ID, {[campId]: uniqueScreens});
 
     } else if (type === "remove") {
       const uniqueScreens = getUniqueScreens([{ screens }]);
@@ -108,9 +108,9 @@ export const AdvanceFiltersDetails = ({
           (fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)
         )
       );
-      saveDataOnLocalStorage(SELECTED_SCREENS_ID, finalSelectedScreens.filter(
+      saveDataOnLocalStorage(SELECTED_SCREENS_ID, {[campId]: finalSelectedScreens.filter(
           (fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)
-        ));
+        )});
 
     }
   },[]);
@@ -271,27 +271,24 @@ export const AdvanceFiltersDetails = ({
         touchPoints: pathname?.split("/").includes("storebasedplan") ? ALL_TOUCHPOINTS : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].touchPoints,
       })
     );
-    saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, {});
+    saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, {[campId]: {}});
     
   }, [dispatch, campId]);
 
   return (
     <div className="w-full">
-      <div className="h-auto w-full py-3 grid grid-cols-2 gap-4">
+      <div className="h-full w-full py-3 grid grid-cols-2 gap-4 border">
         <div className="col-span-1 h-full py-2 pr-4">
           {storeFilter ? (
-            <div className="">
+            <div className="h-auto">
               <div className="flex justify-between">
                 <div className="truncate w-full flex items-center">
-                  <h1 className="text-[24px] text-primaryText font-semibold truncate">
+                  <h1 className="lg:text-[24px] md:text-[18px] text-primaryText font-semibold truncate">
                     Store & Route Proximity
                   </h1>
                 </div>
 
-                <div
-                  className="flex mt-3 items-top justify-end gap-2"
-                >
-
+                <div className="flex mt-3 items-top justify-end gap-2">
                   <Tooltip
                     title="Click to refresh the map data"
                   >
@@ -322,7 +319,6 @@ export const AdvanceFiltersDetails = ({
                   >
                     <i className="fi fi-br-angle-right text-[12px] text-green-500 cursor-pointer flex items-center" onClick={() => setStoreFilter(!storeFilter)}></i>
                   </Tooltip>
-                  
                 </div>
               </div>
 
@@ -348,17 +344,15 @@ export const AdvanceFiltersDetails = ({
               />
             </div>
           ) : (
-            <div className="">
+            <div className="h-auto">
               <div className="flex w-full justify-between">
                 <div className="truncate w-full flex items-center">
 
-                  <h1 className="text-[24px] text-primaryText font-semibold truncate">
+                  <h1 className="lg:text-[24px] md:text-[18px] text-primaryText font-semibold truncate">
                     POI Proximity
                   </h1>
                 </div>
-                <div
-                  className="flex mt-3 items-top justify-end gap-2"
-                >
+                <div className="flex mt-3 items-top justify-end gap-2">
                   <Tooltip
                     title="Click to filter using location proximity"
                   >
@@ -369,22 +363,26 @@ export const AdvanceFiltersDetails = ({
                   >
                     <i className="fi fi-br-rotate-right text-[12px] flex items-center cursor-pointer" onClick={() => window.location.reload()}></i>
                   </Tooltip>
-                  <i
-                    className="fi fi-br-ban text-[12px] text-red-500 flex items-center cursor-pointer"
-                    onClick={() => {
-                      if (isDisabled) {
-                        message.error("Please  confirm screen selection");
-                      } else {
-                        dispatch(addDetailsToCreateCampaign({
-                          pageName: "Advance Filter Page",
-                          id: pathname.split("/").splice(-1)[0],
-                          screenIds: finalSelectedScreens.map((s: any) => s._id)
-                        }));
-                        setCurrentStep(step + 1);
-                      };
-                    }}
+                  <Tooltip
+                    title="Click to filter using location proximity"
                   >
-                  </i>
+                    <i
+                      className="fi fi-br-ban text-[12px] text-red-500 flex items-center cursor-pointer"
+                      onClick={() => {
+                        if (isDisabled) {
+                          message.error("Please  confirm screen selection");
+                        } else {
+                          dispatch(addDetailsToCreateCampaign({
+                            pageName: "Advance Filter Page",
+                            id: pathname.split("/").splice(-1)[0],
+                            screenIds: finalSelectedScreens.map((s: any) => s._id)
+                          }));
+                          setCurrentStep(step + 1);
+                        };
+                      }}
+                    >
+                    </i>
+                  </Tooltip>
                 </div>
               </div>
               <POIProximity
@@ -400,7 +398,7 @@ export const AdvanceFiltersDetails = ({
               />
             </div>
           )}
-          <div className="flex items-center mx-[-1px] my-8">
+          <div className="flex items-center mx-[-1px] mb-12 mt-4">
             <CheckboxInput
               label={
                 <>
@@ -416,7 +414,7 @@ export const AdvanceFiltersDetails = ({
                 if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)) {
                   dispatch(
                     getRegularVsCohortPriceData({
-                      id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?._id,
+                      id: campId,
                       screenIds: getDataFromLocalStorage(SELECTED_SCREENS_ID),
                       cohorts: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].cohorts,
                       gender: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].gender,
@@ -429,10 +427,7 @@ export const AdvanceFiltersDetails = ({
           </div>
         </div>
 
-        <div className="col-span-1 w-full py-2">
-          <div className="flex items-center justify-end">
-            
-          </div>
+        <div className="col-span-1 w-full h-full border py-2">
           {allScreens?.length > 0 && (
             <MapWithGeometry
               handleRouteData={handleRouteData}

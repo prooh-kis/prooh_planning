@@ -29,11 +29,11 @@ export const DrawnMapPolygon = ({
   return (
     <div className="h-[16vh]">
       <div className="flex justify-start gap-2 pt-2">
-        <h1 className="md:text-[16px] sm:text-[14px] text-gray-500">3. Selected Location Areas </h1>
+        <h1 className="lg:text-[16px] md:text-[14px] text-gray-500">3. Selected Location Areas </h1>
         <Tooltip
             title="Choose your screens by drawing an area that you want to target and get all the screens within that area"
             >
-          <i className="fi fi-rs-info pr-1 text-[14px] text-gray-400 flex justify-center items-center"></i>
+          <i className="fi fi-rs-info pr-1 lg:text-[14px] md:text-[12px] text-gray-400 flex justify-center items-center"></i>
         </Tooltip>
         <h1 className="text-blue-500">({getUniqueScreens(polygons)?.length})</h1>
 

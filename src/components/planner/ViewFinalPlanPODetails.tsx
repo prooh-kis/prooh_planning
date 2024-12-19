@@ -447,7 +447,7 @@ export const ViewFinalPlanPODetails = ({
                   pdfToDownload["plan-summary"] = {
                     heading: "PLAN SUMMARY",
                     pdfData: [
-                      getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA),
+                      getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId],
                     ],
                     fileName: `${poInput?.brandName}_Campaign_Plan_Summary`,
                   };

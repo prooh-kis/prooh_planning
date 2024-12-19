@@ -72,8 +72,8 @@ export const ScreenSummaryDetails = ({
 
   const [screensBuyingCount, setScreensBuyingCount] = useState(() => {
     // Check localStorage on the first load
-    return getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)
-      ? getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)
+    return getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
+      ? getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
       : {};
   });
   const [visitedTab, setVisitedTab] = useState<any>([]);
@@ -134,8 +134,8 @@ export const ScreenSummaryDetails = ({
     console.log(dataScreenSummary)
     if (
       dataScreenSummary &&
-      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) &&
-      Object.keys(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) || {})
+      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] &&
+      Object.keys(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] || {})
         ?.length !== 0
     ) {
       return Object.keys(dataScreenSummary).map((s: any, index: any) => {
@@ -143,15 +143,15 @@ export const ScreenSummaryDetails = ({
           id: `${index + 1}`,
           label: s,
           params:
-            getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) !== null
+            getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !== null || getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !== undefined
               ? [
                   Object.values(
-                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[s]
+                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]?.[s]
                   )
                     ?.map((f: any) => f.status)
                     ?.filter((s: any) => s === true)?.length,
                   Object.values(
-                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[s]
+                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]?.[s]
                   )
                     ?.map((f: any) => f.status)
                     ?.filter((s: any) => s === false)?.length,
@@ -175,8 +175,8 @@ export const ScreenSummaryDetails = ({
     let data: any = [];
     if (
       dataScreenSummary &&
-      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) &&
-      Object.keys(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION) || {})
+      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] &&
+      Object.keys(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] || {})
         ?.length !== 0
     ) {
       data = Object.keys(dataScreenSummary).map((s: any, index: any) => {
@@ -206,16 +206,16 @@ export const ScreenSummaryDetails = ({
             pageName: "Screen Summary Page",
             id: pathname.split("/").splice(-1)[0],
             totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-            totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
+            totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.[
               "total"
             ].totalImpression,
-            totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
+            totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.[
               "total"
             ].totalReach,
             totalCampaignBudget: getDataFromLocalStorage(
               SCREEN_SUMMARY_TABLE_DATA
-            )["total"].totalCampaignBudget,
-            totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
+            )?.[campaignId]?.["total"].totalCampaignBudget,
+            totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.[
               "total"
             ].totalCpm,
           })
@@ -227,16 +227,16 @@ export const ScreenSummaryDetails = ({
           pageName: "Screen Summary Page",
           id: pathname.split("/").splice(-1)[0],
           totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-          totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
+          totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.[
             "total"
           ].totalImpression,
-          totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)[
+          totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.[
             "total"
           ].totalReach,
           totalCampaignBudget: getDataFromLocalStorage(
             SCREEN_SUMMARY_TABLE_DATA
-          )["total"].totalCampaignBudget,
-          totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"]
+          )?.[campaignId]?.["total"].totalCampaignBudget,
+          totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.["total"]
             .totalCpm,
         })
       );
@@ -276,15 +276,15 @@ export const ScreenSummaryDetails = ({
     if (screenSummaryPlanTableData) {
       saveDataOnLocalStorage(
         SCREEN_SUMMARY_TABLE_DATA,
-        screenSummaryPlanTableData
+        {[campaignId]: screenSummaryPlanTableData}
       );
     }
 
     if (screenSummaryData) {
       // console.log(screenSummaryData);
-      saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, screenSummaryData);
+      saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, {[campaignId]: screenSummaryData});
 
-      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, screensBuyingCount);
+      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {[campaignId]: screensBuyingCount});
       handleSetVisitedValue(screenSummaryData);
       setCityTabData(getTabValue(screenSummaryData));
     }
@@ -325,7 +325,7 @@ export const ScreenSummaryDetails = ({
           {currentTab === "1" ? (
             <div>
               <div className="py-2 flex justify-between">
-                <div className="">
+                <div className="truncate">
                   {screenSummaryData && cityTabData?.length !== 0 && (
                     <TabWithoutIcon
                       currentTab={currentSummaryTab}
@@ -334,11 +334,11 @@ export const ScreenSummaryDetails = ({
                     />
                   )}
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 truncate">
                   <Tooltip
                     title="Single click to select the filter and Double click to deselect the filter"
                   >
-                    <div className={`px-1 border ${priceFilter.min === 1 && priceFilter.max === 100 ? "border-blue-500" : ""} rounded flex items-center gap-1`}
+                    <div className={`truncate px-1 border ${priceFilter.min === 1 && priceFilter.max === 100 ? "border-blue-500" : ""} rounded flex items-center gap-1`}
                       onClick={() => {
                         setPriceFilter({
                           min: 1,
@@ -353,13 +353,13 @@ export const ScreenSummaryDetails = ({
                       }}
                     >
                       <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
-                      <p className="text-[12px]">&#8377;1 - &#8377;100</p>
+                      <p className="text-[12px] truncate">&#8377;1 - &#8377;100</p>
                     </div>
                   </Tooltip>
                   <Tooltip
                     title="Single click to select the filter and Double click to deselect the filter"
                   >
-                    <div className={`px-1 border ${priceFilter.min === 100 && priceFilter.max === 300 ? "border-blue-500" : ""} rounded flex items-center gap-1`}
+                    <div className={`truncate px-1 border ${priceFilter.min === 100 && priceFilter.max === 300 ? "border-blue-500" : ""} rounded flex items-center gap-1`}
                       onClick={() => {
                         setPriceFilter({
                           min: 100,
@@ -375,14 +375,14 @@ export const ScreenSummaryDetails = ({
                     >
                       <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
                       <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
-                      <p className="text-[12px]">&#8377;101 - &#8377;300</p>
+                      <p className="text-[12px] truncate">&#8377;101 - &#8377;300</p>
                     </div>
                   </Tooltip>
                   <Tooltip
                     title="Click to see the list view"
                   >
                     <div
-                      className={`px-1 border rounded flex items-center gap-1 ${
+                      className={`truncate px-1 border rounded flex items-center gap-1 ${
                         listView && "border-primaryButton"
                       }`}
                       onClick={() => setListView(true)}
@@ -395,7 +395,7 @@ export const ScreenSummaryDetails = ({
                       <p
                         className={`${
                           listView && "text-primaryButton"
-                        } text-[12px]`}
+                        } text-[12px] truncate`}
                       >
                         List View
                       </p>
@@ -405,7 +405,7 @@ export const ScreenSummaryDetails = ({
                     title="Click to see the grid view"
                   >
                     <div
-                      className={`px-1 border rounded flex items-center gap-1 ${
+                      className={`truncate px-1 border rounded flex items-center gap-1 ${
                         !listView && "border-primaryButton"
                       }`}
                       onClick={() => setListView(false)}
@@ -418,7 +418,7 @@ export const ScreenSummaryDetails = ({
                       <p
                         className={`${
                           !listView && "text-primaryButton"
-                        } text-[12px]`}
+                        } text-[12px] truncate`}
                       >
                         Grid View
                       </p>

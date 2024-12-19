@@ -9,7 +9,6 @@ import {
 } from "../../utils/dateAndTimeUtils";
 import {
   getDataFromLocalStorage,
-  saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import { message, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";

@@ -23,8 +23,8 @@ export const RegularCohortSlotsCampaignTable = ({
         flex justify-between items-center w-full`}
       >
         <tr className="flex justify-between w-full h-[40px]">
-          <th className="flex w-full items-center justify-center gap-2 border-r">
-            <h1 className="text-[14px] text-[#21394F]">Total Screens</h1>
+          <th className="flex w-full items-center justify-center gap-2 border-r truncate">
+            <h1 className="text-[14px] text-[#21394F] truncate">Total Screens</h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2 border-r">
             <h1 className="text-[14px] text-[#21394F]">CPM</h1>

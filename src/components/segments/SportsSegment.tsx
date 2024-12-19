@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getCricketMatchesList, getPlayersList } from "../../actions/externaApiAction";
 import { useDispatch, useSelector } from "react-redux";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 
 interface SportsSegmentProps {
   sportOption?: any;
@@ -16,9 +17,10 @@ interface SportsSegmentProps {
   setPlayer?: any;
   condition?: any;
   setCondition?: any
+  campaignId?: any;
 }
 export const SportsSegment = ({
-
+  campaignId,
   selectedMatchId,
   setSelectedMatchId,
   sport,
@@ -87,7 +89,7 @@ export const SportsSegment = ({
 
   useEffect(() => {
     if (matches && !myMatches) {
-      const campaign = getDataFromLocalStorage("campaign")?.basicDetails;
+      const campaign = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.basicDetails;
       const filteredMatches = matches.filter((match: any) => {
         const currentDate = new Date(match?.startDate);
         return currentDate >= new Date(campaign?.startDate) && currentDate <= new Date(campaign?.endDate);

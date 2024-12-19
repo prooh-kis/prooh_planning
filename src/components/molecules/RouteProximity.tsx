@@ -39,11 +39,11 @@ export const RouteProximity = ({
   return (
     <div className="py-4 border-b border-gray-100">
       <div className="flex justify-start gap-2 items-center pt-2">
-        <h1 className="md:text-[16px] sm:text-[14px] text-gray-500">2. Choose your desired routes </h1>
+        <h1 className="lg:text-[16px] md:text-[14px] text-gray-500">2. Choose your desired routes </h1>
         <Tooltip
             title="Enter the origin and destination of your desired routes and select all the screens in proximity of your desired routes"
             >
-          <i className="fi fi-rs-info pr-1 text-[14px] text-gray-400 flex justify-center items-center"></i>
+          <i className="fi fi-rs-info pr-1 lg:text-[14px] md:text-[12px] text-gray-400 flex justify-center items-center"></i>
         </Tooltip>
         <h1 className="text-blue-500">({routeFilteredScreens?.length})</h1>
       </div>

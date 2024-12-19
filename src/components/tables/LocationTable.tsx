@@ -63,7 +63,7 @@ export const LocationTable = ({
       <thead className="bg-[#F7F7F7] w-full">
         <tr className="grid grid-cols-8 w-full h-[40px]">
           <th className="col-span-4 flex items-center px-2 gap-2">
-            <h1 className="md:text-[14px] sm:text-[12px] text-[#21394F]">
+            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">
               Location
             </h1>
             <Tooltip
