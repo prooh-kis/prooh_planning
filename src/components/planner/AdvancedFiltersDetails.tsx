@@ -7,7 +7,7 @@ import { LocationProximity } from "../../components/segments/LocationProximity";
 import { POIProximity } from "../../components/segments/POIProximity";
 import { Footer } from "../../components/footer";
 import { SelectManuallyScreensCheckBox } from "../../components/segments/SelectManuallyScreensCheckBox";
-import { message } from "antd";
+import { message, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getRegularVsCohortPriceData, getScreenDataForAdvanceFilters } from "../../actions/screenAction";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
@@ -102,6 +102,7 @@ export const AdvanceFiltersDetails = ({
 
     } else if (type === "remove") {
       const uniqueScreens = getUniqueScreens([{ screens }]);
+
       setFinalSelectedScreens(
         finalSelectedScreens.filter(
           (fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)
@@ -186,7 +187,7 @@ export const AdvanceFiltersDetails = ({
     });
   };
   
-  function handleAddManualSelectedScreenIntoFinalSelectedScreens(checked: any) {
+  function handleAddManualSelectedScreenIntoFinalSelectedScreens(checked: any, screen: any) {
     if (checked) {
       handleFinalSelectedScreens({
         type: "add",
@@ -194,9 +195,10 @@ export const AdvanceFiltersDetails = ({
         // screens: [],
       });
     } else {
+      // console.log("sdadasa", finalSelectedScreens?.filter((sc: any) => sc._id !== screen._id))
       handleFinalSelectedScreens({
         type: "remove",
-        screens: [],
+        screens: [screen],
       });
     }
   }
@@ -275,21 +277,52 @@ export const AdvanceFiltersDetails = ({
 
   return (
     <div className="w-full">
-      <div className="h-[80vh] w-full py-3 grid grid-cols-2 gap-4">
+      <div className="h-auto w-full py-3 grid grid-cols-2 gap-4">
         <div className="col-span-1 h-full py-2 pr-4">
           {storeFilter ? (
-            <div className="h-full">
+            <div className="">
               <div className="flex justify-between">
-                <div className="truncate">
+                <div className="truncate w-full flex items-center">
                   <h1 className="text-[24px] text-primaryText font-semibold truncate">
                     Store & Route Proximity
                   </h1>
                 </div>
+
                 <div
                   className="flex mt-3 items-top justify-end gap-2"
                 >
-                  <i className="fi fi-br-rotate-right text-[12px] pt-1 flex items-top" onClick={() => window.location.reload()}></i>
-                  <p className="text-[14px] text-[#9f9f9f]" onClick={() => setStoreFilter(!storeFilter)}>Next</p>
+
+                  <Tooltip
+                    title="Click to refresh the map data"
+                  >
+                    <i className="fi fi-br-rotate-right text-[12px] flex items-center cursor-pointer" onClick={() => window.location.reload()}></i>
+                  </Tooltip>
+                  <Tooltip
+                    title="Click to skip the advance filters"
+                  >
+                    <i
+                      className="fi fi-br-ban text-[12px] text-red-500 flex items-center cursor-pointer"
+                      onClick={() => {
+                        if (isDisabled) {
+                          message.error("Please  confirm screen selection");
+                        } else {
+                          dispatch(addDetailsToCreateCampaign({
+                            pageName: "Advance Filter Page",
+                            id: pathname.split("/").splice(-1)[0],
+                            screenIds: finalSelectedScreens.map((s: any) => s._id)
+                          }));
+                          setCurrentStep(step + 1);
+                        };
+                      }}
+                    >
+                    </i>
+                  </Tooltip>
+                  <Tooltip
+                    title="Click to filter using POIs proximity"
+                  >
+                    <i className="fi fi-br-angle-right text-[12px] text-green-500 cursor-pointer flex items-center" onClick={() => setStoreFilter(!storeFilter)}></i>
+                  </Tooltip>
+                  
                 </div>
               </div>
 
@@ -317,7 +350,8 @@ export const AdvanceFiltersDetails = ({
           ) : (
             <div className="">
               <div className="flex w-full justify-between">
-                <div className="truncate w-full ">
+                <div className="truncate w-full flex items-center">
+
                   <h1 className="text-[24px] text-primaryText font-semibold truncate">
                     POI Proximity
                   </h1>
@@ -325,8 +359,32 @@ export const AdvanceFiltersDetails = ({
                 <div
                   className="flex mt-3 items-top justify-end gap-2"
                 >
-                  <i className="fi fi-br-rotate-right text-[12px] pt-1 flex items-top" onClick={() => window.location.reload()}></i>
-                  <p className="text-[14px] text-[#9f9f9f]" onClick={() => setStoreFilter(!storeFilter)}>Back</p>
+                  <Tooltip
+                    title="Click to filter using location proximity"
+                  >
+                    <i className="fi fi-br-angle-left text-[14px] text-green-500 cursor-pointer flex items-center" onClick={() => setStoreFilter(!storeFilter)}></i>
+                  </Tooltip>
+                  <Tooltip
+                    title="Click to refresh the map data"
+                  >
+                    <i className="fi fi-br-rotate-right text-[12px] flex items-center cursor-pointer" onClick={() => window.location.reload()}></i>
+                  </Tooltip>
+                  <i
+                    className="fi fi-br-ban text-[12px] text-red-500 flex items-center cursor-pointer"
+                    onClick={() => {
+                      if (isDisabled) {
+                        message.error("Please  confirm screen selection");
+                      } else {
+                        dispatch(addDetailsToCreateCampaign({
+                          pageName: "Advance Filter Page",
+                          id: pathname.split("/").splice(-1)[0],
+                          screenIds: finalSelectedScreens.map((s: any) => s._id)
+                        }));
+                        setCurrentStep(step + 1);
+                      };
+                    }}
+                  >
+                  </i>
                 </div>
               </div>
               <POIProximity
@@ -342,7 +400,7 @@ export const AdvanceFiltersDetails = ({
               />
             </div>
           )}
-          <div className="flex items-center mx-[-1px]">
+          <div className="flex items-center mx-[-1px] my-8">
             <CheckboxInput
               label={
                 <>
@@ -371,25 +429,9 @@ export const AdvanceFiltersDetails = ({
           </div>
         </div>
 
-        <div className="col-span-1 w-full pt-2">
+        <div className="col-span-1 w-full py-2">
           <div className="flex items-center justify-end">
-            <p
-              className="text-[14px] py-2 text-primaryButton underline cursor-pointer"
-              onClick={() => {
-                if (isDisabled) {
-                  message.error("Please  confirm screen selection");
-                } else {
-                  dispatch(addDetailsToCreateCampaign({
-                    pageName: "Advance Filter Page",
-                    id: pathname.split("/").splice(-1)[0],
-                    screenIds: finalSelectedScreens.map((s: any) => s._id)
-                  }));
-                  setCurrentStep(step + 1);
-                };
-              }}
-            >
-              Skip Advance Filters
-            </p>
+            
           </div>
           {allScreens?.length > 0 && (
             <MapWithGeometry

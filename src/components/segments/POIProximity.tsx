@@ -181,7 +181,7 @@ export const POIProximity = ({
               </p>
             </div>
           </div>
-          <div className="pb-6">
+          <div className="">
             <SelectManuallyScreensCheckBox
               manuallySelected={selectedScreensFromMap?.length}
               unselectedScreen={allScreens?.length - finalSelectedScreens?.length}

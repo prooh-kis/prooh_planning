@@ -26,8 +26,6 @@ export const DrawnMapPolygon = ({
     // Convert the Map values to an array
     return Array.from(screenMap.values());
   }
-  console.log(getUniqueScreens(polygons))
-console.log(polygons);
   return (
     <div className="h-[16vh]">
       <div className="flex justify-start gap-2 pt-2">

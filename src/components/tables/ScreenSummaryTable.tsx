@@ -24,6 +24,7 @@ export const ScreenSummaryTable = ({
   setScreenTypes,
   refreshScreenSummary,
   priceFilter,
+  campaignId,
 }: any) => {
   const [screenTypeToggle, setScreenTypeToggle] = useState<any>(
     getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)
@@ -270,6 +271,7 @@ export const ScreenSummaryTable = ({
                                         className={`flex gap-4 justify-between py-2 px-4 border-y truncate`}
                                       >
                                         <ScreenDataModel
+                                          campaignId={campaignId}
                                           screen={screen || ""}
                                           handleRemove={() => {
                                             handleScreenClick({

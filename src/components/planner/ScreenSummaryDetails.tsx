@@ -442,6 +442,7 @@ export const ScreenSummaryDetails = ({
                   setScreenTypes={setScreenTypes}
                   refreshScreenSummary={refreshScreenSummary}
                   priceFilter={priceFilter}
+                  campaignId={campaignId}
                 />
               ) : (
                 <ViewPlanPic

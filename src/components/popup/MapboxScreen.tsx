@@ -15,7 +15,7 @@ export const MapboxScreen = ({
 }: MapBoxScreenProps) => {
   const handleClickScreen = useCallback(() => {
     handleSelectFromMap(screenData);
-    handleAddManualSelection(!isSelectedData);
+    handleAddManualSelection(!isSelectedData, screenData);
   },[handleAddManualSelection, isSelectedData, screenData, handleSelectFromMap]);
 
   useEffect(() => {

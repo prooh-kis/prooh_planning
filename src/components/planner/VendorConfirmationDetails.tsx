@@ -168,8 +168,7 @@ export const VendorConfirmationDetails = ({
       new Set(statusTableData?.map((s: any) => s.screenVendorEmail))
     );
     
-    const plannerEmail = userInfo?.email;
-    const managerEmail = userInfo?.primaryUserEmail;
+
     screenOwnerEmails?.forEach((email: any) => {
       const approvalIds = statusTableData?.filter((s: any) => s.screenVendorEmail === email)?.map((c: any) => c.campaignId).join(",");
       const approvalUrl = `https://prooh.vinciis.in/api/v2/campaigns/approveCampaignScreenVendor?ids=${encodeURIComponent(

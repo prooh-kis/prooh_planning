@@ -1,15 +1,47 @@
+import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import { CarouselImageView } from "../molecules/CarouselImageView";
 import { Modal, Tooltip } from "antd";
 import React, { useCallback, useState } from "react";
+import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 
 interface Props {
   screen: any;
   handleRemove: any;
   isAdded: boolean;
+  campaignId?: any;
 }
 
-export function ScreenDataModel({ screen, handleRemove, isAdded }: Props) {
+const allTabs = [{
+  id: "1",
+  label: "Why This?"
+},{
+  id: "2",
+  label: "Specification"
+},{
+  id: "3",
+  label: "Cohort Time"
+}];
+
+
+export function ScreenDataModel({ campaignId, screen, handleRemove, isAdded }: Props) {
   const [open, setOpen] = useState<boolean>(false);
+  const [currentTab, setCurrentTab] = useState<any>("1");
+  const [currentDayTab, setCurrentDayTab] = useState<any>("1");
+
+  const [allDays, setAllDays] = useState<any>([{
+    id: "1",
+    label: "Weekdays",
+    value: "weekdays"
+  },{
+    id: "2",
+    label: "Saturdays",
+    value: "saturdays"
+  },{
+    id: "3",
+    label: "Sundays",
+    value: "sundays"
+  }])
 
   const handleCancel = useCallback(() => {
     setOpen(false);
@@ -33,6 +65,8 @@ export function ScreenDataModel({ screen, handleRemove, isAdded }: Props) {
     }
   };
 
+  console.log(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints)
+  console.log(screen.location?.touchPoint)
   return (
     <div className="truncate">
       <div className="truncate" onClick={handleOpen}>
@@ -43,99 +77,245 @@ export function ScreenDataModel({ screen, handleRemove, isAdded }: Props) {
         </Tooltip>
       </div>
       <Modal open={open} onCancel={handleCancel} footer={[]} width={1100}>
-        <div className="flex gap-8">
-          <div className="w-96">
-            <CarouselImageView images={screen.images} />
+        <div className="">
+          <div className="py-2">
+            <h1 className="text-xl font-semibold">{screen.screenName}</h1>
+            <h1 className="text-sm">{screen.location.address}, {screen.location.city}, {screen.location.zoneOrRegion}</h1>
           </div>
-          <div className="w-100%">
-            <h1 className="text-xl font-semibold pb-4">{screen.screenName}</h1>
-            <div className="flex justify-between gap-4">
-              <div className="flex flex-col gap-2 font-semibold">
-                <h1 className="">Placement area</h1>
-                <h1>Integration status</h1>
-                <h1>Hardware pitch</h1>
-                <h1>Pine code</h1>
-                <h1>Operational hours</h1>
-                <h1>Operational time</h1>
-                <h1>Resolution</h1>
-                <h1>Size</h1>
-                <h1>Network Type</h1>
-                <h1>Slots Per Day</h1>
-                <h1>Slot length in sec.</h1>
-                <h1>Screen Rent</h1>
-              </div>
-              <div className="flex flex-col gap-2">
-                <div className="flex flex-col gap-2 font-normal">
-                  <h1>
-                    {screen.location.touchPoint}, {screen?.location?.city}
-                  </h1>
-                  <h1>{screen?.integrationStatus ? "Yes" : "No"}</h1>
-                  <h1>{screen?.hardwarePitch || "P8"}</h1>
-                  <h1>{screen?.location?.pincode || 221008}</h1>
-                  <h1>{screen?.operationalDuration?.totalDuration } Hrs</h1>
-                  <h1>
-                    {screen?.operationalDuration?.onTime}AM -{" "}
-                    {screen?.operationalDuration?.offTime}AM
-                  </h1>
-                  <h1>{screen?.screenResolution}</h1>
-                  <h1>
-                    {screen?.screenLength}
-                    {""} x {screen?.screenWidth}
-                    {""}
-                  </h1>
-                  <h1>{screen?.networkType || "Single"}</h1>
-                  <h1>{screen?.slotsPerDay.toFixed(0)}</h1>
-                  <h1>{screen?.slotLengthSeconds} secs</h1>
-                  <h1>&#8377; {screen?.pricePerSlot}</h1>
-                </div>
-              </div>
+          <div className="grid grid-cols-12 gap-4">
+            <div className="col-span-6">
+              <CarouselImageView images={screen.images} />
             </div>
+            <div className="col-span-6">
+              <div className="">
+                <div className="border-b w-full">
+                  <TabWithoutIcon
+                    currentTab={currentTab}
+                    setCurrentTab={setCurrentTab}
+                    tabData={allTabs}
+                  />
+                </div>
+                {currentTab === "1" ? (
+                  <div>
+                    <div className="p-2">
+                      <h1 className="text-[14px]">Your campaign parameters have {getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints?.length} touchpoints, with {getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts?.length} cohorts selection.</h1>
+                    </div>
+                    <div className="flex gap-2 p-2">
+                      <div className="">
+                        <span className="bg-blue-500 h-4 w-4 rounded-full" />
+                      </div>
+                      <div>
+                        <h1 className="text-[12px]">Target Touchpoint</h1>
+                        <h1 className="text-[14px] font-semibold">{getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints?.filter((t: any) => t === screen.location.touchPoint)[0]}</h1>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 p-2">
+                      <div className="">
+                        <span className="bg-blue-500 h-4 w-4 rounded-full" />
+                      </div>
+                      <div>
+                        <h1 className="text-[12px]">Target Audience</h1>
+                        <div>
+                          {getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts?.map((c: any, i: any) => (
+                              <h1 key={i} className="text-[14px] font-semibold">{c}</h1>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 p-2">
+                      <div className="">
+                        <span className="bg-blue-500 h-4 w-4 rounded-full" />
+                      </div>
+                      <div>
+                        <h1 className="text-[12px]">Screen Type</h1>
+                        <h1 className="text-[14px] font-semibold">{screen.screenType}</h1>
+                      </div>
+                    </div>
+                  </div>
+                ) : currentTab === "2" ? (
+                  <div className="p-2">
+                    <div className="pb-4">
+                      <h1 className="text-[14px]">Please find the details of the screen selected below.</h1>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 flex items-center py-1">
+                      <div className="col-span-1 flex gap-2">
+                        <h1 className="text-[12px]">Placement area</h1>
+                        <Tooltip>
+                          <i></i>
+                        </Tooltip>
+                      </div>
+                      <div className="col-span-1">
+                        <h1 className="text-[14px] font-semibold">
+                          {screen.location.touchPoint}, {screen?.location?.city}
+                        </h1>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 flex items-center py-1">
+                      <div className="col-span-1">
+                        <h1 className="text-[12px]">Integration status</h1>
+                      </div>
+                      <div className="col-span-1">
+                        <h1 className="text-[14px] font-semibold">
+                          {screen?.integrationStatus ? "Yes" : "No"}
+                        </h1>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 flex items-center py-1">
+                      <div className="col-span-1">
+                        <h1 className="text-[12px]">Hardware pitch</h1>
+                      </div>
+                      <div className="col-span-1">
+                        <h1 className="text-[14px] font-semibold">
+                          {screen?.hardwarePitch || "P8"}
+                        </h1>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 flex items-center py-1">
+                      <div className="col-span-1">
+                        <h1 className="text-[12px]">Pin Code</h1>
+                      </div>
+                      <div className="col-span-1">
+                        <h1 className="text-[14px] font-semibold">
+                          {screen?.location?.pincode || 221008}
+                        </h1>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 flex items-center py-1">
+                      <div className="col-span-1">
+                        <h1 className="text-[12px]">Operational hours</h1>
+                      </div>
+                      <div className="col-span-1">
+                        <h1 className="text-[14px] font-semibold">
+                          {screen?.operationalDuration?.totalDuration / 60 } Hrs
+                        </h1>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 flex items-center py-1">
+                      <div className="col-span-1">
+                        <h1 className="text-[12px]">Operational time</h1>
+                      </div>
+                      <div className="col-span-1">
+                        <h1 className="text-[14px] font-semibold">
+                        {screen?.operationalDuration?.onTime} -{" "}
+                        {screen?.operationalDuration?.offTime}
+                        </h1>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 flex items-center py-1">
+                      <div className="col-span-1">
+                        <h1 className="text-[12px]">Resolution</h1>
+                      </div>
+                      <div className="col-span-1">
+                        <h1 className="text-[14px] font-semibold">
+                          {screen?.screenResolution}
+                        </h1>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 flex items-center py-1">
+                      <div className="col-span-1">
+                        <h1 className="text-[12px]">Size</h1>
+                      </div>
+                      <div className="col-span-1">
+                        <h1 className="text-[14px] font-semibold">
+                          {screen?.screenLength}
+                            {""} x {screen?.screenWidth}
+                            {""}
+                        </h1>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 flex items-center py-1">
+                      <div className="col-span-1">
+                        <h1 className="text-[12px]">Network Type</h1>
+                      </div>
+                      <div className="col-span-1">
+                        <h1 className="text-[14px] font-semibold">
+                          {screen?.networkType || "Individual"}
+                        </h1>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 flex items-center py-1">
+                      <div className="col-span-1">
+                        <h1 className="text-[12px]">Slots Per Day</h1>
+                      </div>
+                      <div className="col-span-1">
+                        <h1 className="text-[14px] font-semibold">
+                          {screen?.slotsPerDay.toFixed(0)}
+                        </h1>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 flex items-center py-1">
+                      <div className="col-span-1">
+                        <h1 className="text-[12px]">Slot length in seconds</h1>
+                      </div>
+                      <div className="col-span-1">
+                        <h1 className="text-[14px] font-semibold">
+                          {screen?.slotLengthSeconds} secs
+                        </h1>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 flex items-center py-1">
+                      <div className="col-span-1">
+                        <h1 className="text-[12px]">Screen Rent</h1>
+                      </div>
+                      <div className="col-span-1">
+                        <h1 className="text-[14px] font-semibold">
+                          &#8377; {screen?.pricePerSlot}
+                        </h1>
+                      </div>
+                    </div>
+                  </div>
+                ) : currentTab === "3" ? (
+                  <div>
+                    <div className="p-2">
+                      <h1 className="text-[14px]">Your campaign parameters have {getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts?.length} cohorts selections for audiences having maximum penetration at these times.</h1>
+                    </div>
+                    <div className="">
+                      {allDays?.map((day: any, i: any) => (
+                        <div className="p-2" key={i}>
+                          <h1 className="text-[14px] font-semibold">{day?.label}</h1>
+                          <div className="grid grid-cols-4 gap-2">
+                            {screen?.selectedTime?.filter((ss: any) => ss.day === day.value)?.map((s: any, j: any) => (
+                              <div key={j} className="col-span-1 rounded bg-blue-50 my-2 py-1 flex flex-col items-center">
+                                <h1 className="text-[12px] font-semibold">
+                                  {s.slot.toUpperCase()}
+                                </h1>
+                                <h1 className="text-[12px] truncate">
+                                  {s.slot === "morning"
+                                    ? "8 AM to 12 Noon"
+                                    : s.slot === "noon"
+                                    ? "12 Noon to 4 PM"
+                                    : s.slot === "evening"
+                                    ? "4 PM to 8 PM"
+                                    : "8 PM to 12 PM"}
+                                </h1>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+              
+            </div>
+            
+          </div>
+          <div className="flex items-center gap-4 py-4 px-2">
+            <button
+              onClick={handleRemoveScreen}
+              type="submit"
+              className={
+                !isAdded
+                  ? "w-full border border-1 py-2 px-4 rounded-md hover:bg-sky-400 hover:text-white text-lg"
+                  : "w-full border border-1 py-2 px-4 rounded-md hover:bg-red-400 hover:text-white text-lg"
+              }
+            >
+              {isAdded ? "Remove Screen" : "Add this screen"}
+            </button>
           </div>
         </div>
-        <div className="pt-4">
-          <h1 className="py-2 text-xl font-semibold">
-            Your selected cohort time
-          </h1>
-          <div className="">
-            <div className="flex flex-wrap justify-between text-gray-500">
-              {screen?.selectedTime?.map((s: any, i: any) => (
-                <div
-                  key={i}
-                  className="border border-1 m-2 py-2 px-6 flex flex-col items-center w-[150px]"
-                >
-                  <h1 className="text-[12px] font-semibold">
-                    {s.day.toUpperCase()}
-                  </h1>
-                  <h1 className="text-[16px] font-semibold">
-                    {s.slot.toUpperCase()}
-                  </h1>
-                  <h1 className="text-[12px]">
-                    {s.slot === "morning"
-                      ? "8 AM to 12 Noon"
-                      : s.slot === "noon"
-                      ? "12 Noon to 4 PM"
-                      : s.slot === "evening"
-                      ? "4 PM to 8 PM"
-                      : "8 PM to 12 PM"}
-                  </h1>
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center gap-4 py-4 px-2">
-              <button
-                onClick={handleRemoveScreen}
-                type="submit"
-                className={
-                  !isAdded
-                    ? "w-full border border-1 py-2 px-4 rounded-md hover:bg-sky-400 hover:text-white text-lg"
-                    : "w-full border border-1 py-2 px-4 rounded-md hover:bg-red-400 hover:text-white text-lg"
-                }
-              >
-                {isAdded ? "Remove Screen" : "Add this screen"}
-              </button>
-            </div>
-          </div>
-        </div>
+
       </Modal>
     </div>
   );

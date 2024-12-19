@@ -360,7 +360,7 @@ const onDeletePolygon = useCallback(
   }, [selectedMarkers]);
 
   return (
-    <div className="h-full w-full items-top">
+    <div className="h-full w-auto items-top">
       <div className="flex flex-col items-end gap-2 right-12 pt-2 absolute z-10">
         <div className="flex items-center gap-2 group">
           <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-blue-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Selected Screens</h1>
@@ -419,15 +419,15 @@ const onDeletePolygon = useCallback(
                   getSingleScreenData(marker[2]);
                 }}
                 onMouseLeave={(e) => {
-                  e.stopPropagation();
-                  setScreenData(null);
+                  // e.stopPropagation();
+                  // setScreenData(null);
                 }}
               >
                 <i className="fi fi-ss-circle text-primaryButton text-[14px]"
                   onClick={(e) => {
-                    // e.stopPropagation();
-                    // setIsSelectedData(true);
-                    // getSingleScreenData(marker[2]);
+                    e.stopPropagation();
+                    setIsSelectedData(true);
+                    getSingleScreenData(marker[2]);
                   }}
                 ></i>
               </div>
@@ -452,16 +452,16 @@ const onDeletePolygon = useCallback(
                     getSingleScreenData(marker[2]);
                   }}
                   onMouseLeave={(e) => {
-                    e.stopPropagation();
-                    setScreenData(null);
+                    // e.stopPropagation();
+                    // setScreenData(null);
                   }}
                 >
                   <i
                     className="fi-ss-circle text-[#F94623] text-[12px]"
                     onClick={(e) => {
-                      // e.stopPropagation();
-                      // setIsSelectedData(false);
-                      // getSingleScreenData(marker[2]);
+                      e.stopPropagation();
+                      setIsSelectedData(false);
+                      getSingleScreenData(marker[2]);
                     }}
                   ></i>
                 </div>
