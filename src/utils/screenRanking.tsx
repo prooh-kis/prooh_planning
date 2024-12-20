@@ -4,6 +4,7 @@ interface InterestCounts1 {
   intrest: string;
 }
 export function filterScreensByInterests(screens: any, interests: string[]) {
+  console.log("filterScreensByInterests", interests.length, screens.length);
   const hasAllInterests = (poi: string[]) =>
     interests?.every((interest) => poi?.includes(interest));
   const hasAnyInterest = (poi: string[]) =>

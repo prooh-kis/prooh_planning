@@ -94,7 +94,7 @@ export function screensAudiencesDataGetReducer(state = [], action) {
     case GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS:
       const campaign = action.payload;
       const saveData = {};
-      saveData[campaign._id] = campaign;
+      saveData[campaign.id] = campaign;
       saveDataOnLocalStorage(AUDIENCE_DATA, saveData);
       return {
         loading: false,
@@ -143,7 +143,7 @@ export function screensDataAdvanceFilterGetReducer(state = [], action) {
     case GET_SCREENS_DATA_ADVANCE_FILTER_SUCCESS:
       const campaign = action.payload;
       const saveData = {};
-      saveData[campaign._id] = campaign;
+      saveData[campaign.id] = campaign;
       saveDataOnLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA, saveData);
       return {
         loading: false,
@@ -166,7 +166,7 @@ export function regularVsCohortPriceDataGetReducer(state = [], action) {
     case GET_SCREENS_PRICE_FOR_REGULAR_COHORT_SUCCESS:
       const campaign = action.payload;
       const saveData = {};
-      saveData[campaign._id] = campaign;
+      saveData[campaign.id] = campaign;
       saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, saveData);
       return {
         loading: false,
@@ -187,13 +187,13 @@ export function screenSummaryDataGetReducer(state = {}, action) {
     case GET_SCREEN_SUMMARY_DATA_REQUEST:
       return { loading: true };
     case GET_SCREEN_SUMMARY_DATA_SUCCESS:
-      const campaign = action.payload;
+      const {id, ...campaign} = action.payload;
       const saveData = {};
-      saveData[campaign._id] = campaign;
+      saveData[id] = campaign;
       saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, saveData);
       return {
         loading: false,
-        data: action.payload,
+        data: campaign,
       };
     case GET_SCREEN_SUMMARY_DATA_ERROR:
       return {

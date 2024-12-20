@@ -122,16 +122,20 @@ export const ScreenSummaryDetails = ({
     }
     setVisitedTab((pre: any) => {
       return pre.map((data: any) => {
+        console.log(data);
+        console.log(id);
         if (data?.id == id) {
           data.visited = true;
+          console.log(data);
         }
-        return data;
+        console.log(data, "2");
+
+        return {pre, ...data};
       });
     });
   };
 
   const getTabValue = (dataScreenSummary: any) => {
-    console.log(dataScreenSummary)
     if (
       dataScreenSummary &&
       getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] &&
@@ -186,9 +190,9 @@ export const ScreenSummaryDetails = ({
         };
       });
     }
-    console.log(data);
     setVisitedTab([...data]);
   };
+  console.log(visitedTab);
 
   const handleSaveAndContinue = async () => {
     if (pathname.split("/").splice(-2)[0] === "iknowitallplan") {
@@ -243,7 +247,6 @@ export const ScreenSummaryDetails = ({
     }
 
     setCurrentStep(step + 1);
-    console.log(step);
   };
 
   useEffect(() => {
@@ -488,11 +491,11 @@ export const ScreenSummaryDetails = ({
             let result =
               visitedTab?.filter((data: any) => data.visited == false)?.length >
               0;
-            if (result) {
-              message.warning("Please visit all city wise screens once");
-            } else {
+            // if (result) {
+            //   message.warning("Please visit all city wise screens once");
+            // } else {
               handleSaveAndContinue();
-            }
+            // }
           }}
           campaignId={campaignId}
         />

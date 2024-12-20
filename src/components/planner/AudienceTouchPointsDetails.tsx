@@ -259,7 +259,7 @@ export const AudienceTouchPointsDetails = ({
           selectedData={selectedScreensData}
         />
       </div>
-      <div className="flex justify-start items-center gap-2 pt-2">
+      <div className="flex justify-start items-center gap-2 pt-2 pb-20">
         <i className="fi fi-sr-lightbulb-on text-[#FFB904]"></i>
         <h1 className="text-[14px] text-[#178967]">
           Prooh Tip:- select target audience and select select target audience

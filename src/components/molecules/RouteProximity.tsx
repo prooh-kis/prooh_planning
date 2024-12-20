@@ -52,19 +52,23 @@ export const RouteProximity = ({
         <div className="col-span-2 flex items-center">
           <MapSearchInput 
             handleClick={(e: any) => setRouteOrigin(e)}
+            value={routeOrigin}
             placeholder="Origin"
             prefix={
               <i className="fi fi-sr-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 w-5 h-5"></i>
             }
+            reset={routeOrigin.length === 0 ? true : false}
           />
         </div>
         <div className="col-span-2">
         <MapSearchInput 
             handleClick={(e: any) => setRouteDestination(e)}
+            value={routeDestination}
             placeholder="Destination"
             prefix={
               <i className="fi fi-sr-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 w-5 h-5"></i>
             }
+            reset={routeDestination.length === 0 ? true : false}
           />
         </div>
         <div className="col-span-1">
@@ -75,6 +79,8 @@ export const RouteProximity = ({
                 alert("Oops! you can only choose upto 5 routes...")
               } else {
                 handleRouteSetup(routeOrigin, routeDestination);
+                setRouteOrigin([]);
+                setRouteDestination([]);
               }
             }}
             rounded="rounded-[10px]"

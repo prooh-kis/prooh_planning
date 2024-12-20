@@ -7,6 +7,7 @@ export const SelectManuallyScreensCheckBox = ({
   manuallySelected,
   unselectedScreen,
   handleCheck,
+  checked,
 }: any) => {
   return (
     <div className="py-2">
@@ -30,6 +31,7 @@ export const SelectManuallyScreensCheckBox = ({
             label={manuallySelected}
             // checked={manuallySelected > 0 ? true : false}
             onChange={handleCheck}
+            checked={checked}
           />
         </div>
         <div className="col-span-8">

@@ -73,6 +73,35 @@ export const AdvanceFiltersDetails = ({
     data: advanceFilterData
   } = screensDataAdvanceFilterGet;
 
+  // Handle Final screen selection
+  const handleFinalSelectedScreens =({ type, screens }: any) => {
+
+    if (type === "add") {
+      screens = [
+        ...excelFilteredScreens,
+        ...routeFilteredScreens,
+        ...screens,
+        ...poiFilteredScreens,
+        ...selectedScreensFromMap,
+      ];
+      const uniqueScreens = getUniqueScreens([{ screens }]);
+      setFinalSelectedScreens(uniqueScreens);
+      saveDataOnLocalStorage(SELECTED_SCREENS_ID, {[campId]: uniqueScreens});
+    } else if (type === "remove") {
+      const uniqueScreens = getUniqueScreens([{ screens }]);
+
+      setFinalSelectedScreens(
+        finalSelectedScreens.filter(
+          (fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)
+        )
+      );
+      saveDataOnLocalStorage(SELECTED_SCREENS_ID, {[campId]: finalSelectedScreens.filter(
+          (fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)
+        )});
+    }
+  };
+
+  // Brand comp store latlong data for map
   const getMapData = useCallback(
     (myData: any) => {
       setAllScreens(myData?.screens);
@@ -87,34 +116,7 @@ export const AdvanceFiltersDetails = ({
     [dataBrand, dataComp]
   );
 
-  const handleFinalSelectedScreens = useCallback(({ type, screens }: any) => {
-    if (type === "add") {
-      screens = [
-        ...excelFilteredScreens,
-        ...routeFilteredScreens,
-        ...screens,
-        ...poiFilteredScreens,
-        ...selectedScreensFromMap,
-      ];
-      const uniqueScreens = getUniqueScreens([{ screens }]);
-      setFinalSelectedScreens(uniqueScreens);
-      saveDataOnLocalStorage(SELECTED_SCREENS_ID, {[campId]: uniqueScreens});
-
-    } else if (type === "remove") {
-      const uniqueScreens = getUniqueScreens([{ screens }]);
-
-      setFinalSelectedScreens(
-        finalSelectedScreens.filter(
-          (fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)
-        )
-      );
-      saveDataOnLocalStorage(SELECTED_SCREENS_ID, {[campId]: finalSelectedScreens.filter(
-          (fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)
-        )});
-
-    }
-  },[]);
-
+  // Remove screens from selection after removing routes
   const handleRemoveRoute = (id: any) => {
     let arr = routes;
     for (let data of arr) {
@@ -135,22 +137,7 @@ export const AdvanceFiltersDetails = ({
     setRoutes(arr);
   };
 
-  const handleRouteSetup = async (originData: any, destinationData: any) => {
-    let route: any = {};
-
-    route["origin"] = originData[0];
-    route["destination"] = destinationData[0];
-    route["selectedScreens"] = [];
-    route["id"] = routes?.length + 1;
-
-    if (routes.includes(route)) {
-    } else {
-      routes.push(route);
-    }
-
-    setRoutes([...routes]);
-  };
-
+  // Add screens for selection after adding routes
   const handleRouteData = (routeData: any, id: any) => {
     const radiusInMeters = 1000; // 1000 meters radius
     const line = turf.lineString(routeData.coordinates); // Create a LineString from route coordinates
@@ -186,8 +173,26 @@ export const AdvanceFiltersDetails = ({
       screens: filteredRecords || [],
     });
   };
-  
-  function handleAddManualSelectedScreenIntoFinalSelectedScreens(checked: any, screen: any) {
+
+  // Add/remove routes to select screens
+  const handleRouteSetup = async (originData: any, destinationData: any) => {
+    let route: any = {};
+
+    route["origin"] = originData[0];
+    route["destination"] = destinationData[0];
+    route["selectedScreens"] = [];
+    route["id"] = routes?.length + 1;
+
+    if (routes.includes(route)) {
+    } else {
+      routes.push(route);
+    }
+
+    setRoutes([...routes]);
+  };
+
+  // Add screens mannually from the map
+  const handleAddManualSelectedScreenIntoFinalSelectedScreens = (checked: any, screen: any) => {
     if (checked) {
       handleFinalSelectedScreens({
         type: "add",
@@ -203,7 +208,9 @@ export const AdvanceFiltersDetails = ({
     }
   }
 
-  const handleSelectFromMap = (screenData: any) => {
+  // Select all from map mannually
+  const handleSelectFromMap = (checked: any, screenData: any) => {
+    console.log(screenData, "age")
     setSelectedScreensFromMap((pre: any) => {
       if (pre.find((screen: any) => screen?._id == screenData?._id)) {
         return pre;
@@ -211,6 +218,7 @@ export const AdvanceFiltersDetails = ({
         return [...pre, screenData];
       }
     });
+
     setFinalSelectedScreens((pre: any) => {
       if (pre.find((screen: any) => screen?._id == screenData?._id)) {
         return pre;
@@ -218,18 +226,20 @@ export const AdvanceFiltersDetails = ({
         return [...pre, screenData];
       }
     });
-
+    
+    handleFinalSelectedScreens({
+      type: checked ? "add" : "remove",
+      screens: [screenData],
+    });
   };
 
+  // Confirm all screens selection
   const handleConfirmScreensSelections = ({checked, screens}: any) => {
-    console.log(screens);
     setIsDisabled(!checked);
     if (checked) {
       handleFinalSelectedScreens({
         type: "add",
         screens: screens,
-        // screens: [],
-
       });
     } else {
       // handleFinalSelectedScreens({
@@ -242,29 +252,28 @@ export const AdvanceFiltersDetails = ({
 
 
   useEffect(() => {
-    if (advanceFilterData) {
-      
+    if (advanceFilterData?.screens.length > 0) {
       getMapData(advanceFilterData || {});
       setPOIs(advanceFilterData.poiList || []);
       setSelectedPOIs(advanceFilterData.poiList || []);
-
+      
       if (
         excelFilteredScreens.length === 0 &&
-        routeFilteredScreens.length === 0
+        routeFilteredScreens.length === 0 &&
+        selectedScreensFromMap.length === 0 &&
+        poiFilteredScreens.length === 0
       ) {
+        setFinalSelectedScreens(advanceFilterData?.screens)
         handleFinalSelectedScreens({
           type: "add",
-          screens: advanceFilterData?.screens || [],
-          // screens: [],
-  
+          screens: advanceFilterData?.screens,
         });
       }
     }
     
-  }, [advanceFilterData, getMapData, excelFilteredScreens, routeFilteredScreens, handleFinalSelectedScreens]);
+  }, [advanceFilterData, getMapData, excelFilteredScreens, routeFilteredScreens]);
 
   useEffect(() => {
-    
     dispatch(
       getScreenDataForAdvanceFilters({
         id: campId,
@@ -272,7 +281,6 @@ export const AdvanceFiltersDetails = ({
       })
     );
     saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, {[campId]: {}});
-    
   }, [dispatch, campId]);
 
   return (

@@ -150,6 +150,14 @@ export function MapSearchInput(props: any) {
     }
   }, [highlightedIndex, suggestions]);
 
+  useEffect(() => {
+    if (props?.reset) {
+      setQuery("");
+      setSuggestions([]);
+      setHighlightedIndex(-1);
+    }
+  },[props?.reset])
+
   return (
     <div className="relative w-full">
       {props?.prefix}

@@ -22,42 +22,29 @@ export function LandingPageMap(props: any) {
 
   // Get user's current location
   useEffect(() => {
-    // navigator.geolocation.getCurrentPosition(
-    //   (position) => {
-    //     setUserLocation({
-    //       latitude: position.coords.latitude,
-    //       longitude: position.coords.longitude,
-    //     });
-    //     setViewState({
-    //       ...viewState,
-    //       latitude: position.coords.latitude,
-    //       longitude: position.coords.longitude,
-    //       zoom: 5,
-    //     });
-    //   },
-    //   (error) => {
-    //     console.error("Error getting user location:", error);
-    //   },
-    //   { enableHighAccuracy: true }
-    // );
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+        setViewState({
+          ...viewState,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          zoom: 5,
+        });
+      },
+      (error) => {
+        console.error("Error getting user location:", error);
+      },
+      { enableHighAccuracy: true }
+    );
   }, []);
 
   // Add markers from props data
   useEffect(() => {
     
-    const newMarkers: any[] = [];
-    props?.data?.locations?.forEach((s: any) => {
-      const [screenId, details]: any = Object.entries(s)[0];
-      const exists = newMarkers.some(
-        (marker: any) => marker[0] === details.lat && marker[1] === details.lng && marker[2] === screenId
-      );
-
-      if (!exists) {
-        newMarkers.push([details.lat, details.lng, screenId]);
-      }
-    });
-    setMarkers(newMarkers);
-
     if (markers.length > 0 && landingMapRef.current) {
       const latitudes = markers.map((marker: any) => marker[0]);
       const longitudes = markers.map((marker: any) => marker[1]);
@@ -70,7 +57,22 @@ export function LandingPageMap(props: any) {
       const map = landingMapRef.current.getMap();
       map.fitBounds(bounds, { padding: 20, maxZoom: 15 });
     }
-  }, [props?.data?.locations, markers]);
+  }, [markers]);
+
+  useEffect(() => {
+    const newMarkers: any[] = [];
+    props?.data?.locations?.forEach((s: any) => {
+      const [screenId, details]: any = Object.entries(s)[0];
+      const exists = newMarkers.some(
+        (marker: any) => marker[0] === details.lat && marker[1] === details.lng && marker[2] === screenId
+      );
+
+      if (!exists) {
+        newMarkers.push([details.lat, details.lng, screenId]);
+      }
+    });
+    setMarkers(newMarkers);
+  },[props]);
 
 
   return (

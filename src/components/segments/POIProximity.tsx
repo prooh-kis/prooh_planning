@@ -1,7 +1,7 @@
 import { filterScreensByInterests } from "../../utils/screenRanking";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { LinearBar } from "../../components/molecules/linearbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SelectManuallyScreensCheckBox } from "./SelectManuallyScreensCheckBox";
 import { Tooltip } from "antd";
 
@@ -33,6 +33,23 @@ export const POIProximity = ({
   const firstColumnPois = pois?.slice(0, middleIndex);
   const secondColumnPois = pois?.slice(middleIndex);
 
+  const [checked1, setChecked1] = useState<any>(false);
+  const [checked2, setChecked2] = useState<any>(false);
+  const [screensForPOIFilters, setScreensForPOIFilters] = useState<any>([])
+
+  console.log(checked1, "1 checked", selectedPOIs?.length);
+  console.log(checked2, "2 checked", selectedPOIs?.length);
+  console.log("selected", selectedPOIs)
+  console.log("selected length", selectedPOIs.length);
+
+  useEffect(() => {
+    if(finalSelectedScreens) {
+      setScreensForPOIFilters(finalSelectedScreens);
+    }
+  },[finalSelectedScreens]);
+  console.log(finalSelectedScreens, "ootioieieo");
+  console.log(screensForPOIFilters, "assfklsfks");
+
   return (
     <div className="pt-2 w-full">
       <div className="flex justify-start items-center gap-2 pb-4">
@@ -60,6 +77,8 @@ export const POIProximity = ({
                   `
                 }
                 onClick={() => {
+                  setChecked1(false);
+                  setChecked2(false);
                   if (selectedPOIs.includes(poi)) {
                     setSelectedPOIs(selectedPOIs.filter((p: any) => p !== poi));
                   } else {
@@ -94,6 +113,8 @@ export const POIProximity = ({
                   `
                 }
                   onClick={() => {
+                    setChecked1(false);
+                    setChecked2(false);
                     if (selectedPOIs.includes(poi)) {
                       setSelectedPOIs(selectedPOIs.filter((p: any) => p !== poi));
                     } else {
@@ -135,7 +156,7 @@ export const POIProximity = ({
             </div>
 
             <p className="text-[12px] text-[#9f9f9f]">
-              These {filterScreensByInterests(finalSelectedScreens, selectedPOIs).screensWithAnyInterest.length} locations have been shortlisted even if anyone of the
+              These {filterScreensByInterests(screensForPOIFilters, selectedPOIs).screensWithAnyInterest.length} locations have been shortlisted even if anyone of the
               filters above are matched
             </p>
             <div className="pt-1 grid grid-cols-12 gap-2 flex items-center">
@@ -143,24 +164,27 @@ export const POIProximity = ({
                 <CheckboxInput
                   color="#52A2FF"
                   label={
-                    filterScreensByInterests(finalSelectedScreens, selectedPOIs)
+                    filterScreensByInterests(screensForPOIFilters, selectedPOIs)
                       .screensWithAnyInterest.length
                   }
                   onChange={(checked) => {
+                    setChecked1(checked);
                     if (checked) {
                       setPOIFilteredScreens(
                         filterScreensByInterests(
-                          finalSelectedScreens,
+                          screensForPOIFilters,
                           selectedPOIs
                         ).screensWithAnyInterest
                       );
                     }
+
                     handleConfirmScreensSelections({
                       checked, screens: filterScreensByInterests(
                       finalSelectedScreens,
                       selectedPOIs
                     ).screensWithAnyInterest});
                   }}
+                  checked={checked1}
                 />
               </div>
               <div className="col-span-8">
@@ -186,10 +210,13 @@ export const POIProximity = ({
               manuallySelected={selectedScreensFromMap?.length}
               unselectedScreen={allScreens?.length - finalSelectedScreens?.length}
               handleCheck={(checked: any) => {
+                setChecked2(checked);
+           
                 allScreens?.filter((s: any) => !finalSelectedScreens?.map((sc: any) => sc._id)?.includes(s._id))?.forEach((sd: any) => {
-                  handleSelectFromMap(sd)
+                  handleSelectFromMap(checked, sd)
                 })
               }}
+              checked={checked2}
             />
           </div>
    

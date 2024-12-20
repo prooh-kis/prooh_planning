@@ -101,12 +101,12 @@ export const LocationTable = ({
             <td className="col-span-4 flex items-center px-2">
               <CheckboxInput label={`${market}`} disabled={true} checked={true} onChange={() => {}}/>
             </td>
-            <td className="col-span-4 flex items-center justify-around gap-2">
-              <p className="text-[14px] text-[#21394F]">
-                {(markets[market]["gender"]["Male"]).toFixed(1)}
+            <td className="col-span-4 flex items-center justify-around gap-2 truncate">
+              <p className="lg:text-[14px] md:text-[12px] text-[#21394F] truncate">
+                {(markets[market]["gender"]["Male"]).toFixed(1)}%
               </p>
-              <p className="text-[14px] text-[#21394F]">
-                {(markets[market]["gender"]["Female"]).toFixed(1)}
+              <p className="lg:text-[14px] md:text-[12px] text-[#21394F] truncate">
+                {(markets[market]["gender"]["Female"]).toFixed(1)}%
               </p>
             </td>
           </tr>

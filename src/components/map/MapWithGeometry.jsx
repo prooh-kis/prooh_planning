@@ -481,11 +481,11 @@ const onDeletePolygon = useCallback(
               <MapboxScreen
                 handleAddManualSelection={props?.handleAddManualSelection}
                 screenData={screenData}
+                setScreenData={setScreenData}
                 handleSelectFromMap={props.handleSelectFromMap}
                 isSelectedData={isSelectedData}
               />
             </Popup>
-          
           )}
 
           {routeData?.length > 0 && routeData?.map((route, index) => (

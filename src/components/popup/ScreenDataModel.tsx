@@ -65,8 +65,7 @@ export function ScreenDataModel({ campaignId, screen, handleRemove, isAdded }: P
     }
   };
 
-  console.log(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints)
-  console.log(screen.location?.touchPoint)
+
   return (
     <div className="truncate">
       <div className="truncate" onClick={handleOpen}>
