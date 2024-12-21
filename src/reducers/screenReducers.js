@@ -210,14 +210,14 @@ export function screenSummaryPlanTableDataGetReducer(state = [], action) {
     case GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_REQUEST:
       return { loading: true };
     case GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_SUCCESS:
-      const campaign = action.payload;
+      const {id, ...campaign} = action.payload;
       const saveData = {};
-      saveData[campaign._id] = campaign;
+      saveData[id] = campaign;
       saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, saveData);
 
       return {
         loading: false,
-        data: action.payload,
+        data: campaign,
       };
     case GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_ERROR:
       return {

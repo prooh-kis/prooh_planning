@@ -60,7 +60,7 @@ export const ViewFinalPlanPODetails = ({
   const [confirmationImageFiles, setConfirmationImageFiles] = useState<any>([]);
   const [toEmail, setToEmail] = useState<any>("");
   const [cc, setCC] = useState<any>(userInfo?.email);
-  const [blobData, setBlobData] = useState<any>([]);
+  const [loadingEmailReady, setLoadingEmailReady] = useState<any>(false);
 
   const [pdfDownload, setPdfDownload] = useState<any>({});
 
@@ -132,7 +132,6 @@ export const ViewFinalPlanPODetails = ({
 
   const handleBlob = async (pdf: any) => {
     let newBlob: any = null;
-  
     if (pdf === "approach") {
       newBlob = generatePlanApproachPdfFromJSON({
         download: false,
@@ -179,6 +178,7 @@ export const ViewFinalPlanPODetails = ({
   };
 
   const sendMultipleAttachments = async () => {
+    setLoadingEmailReady(true);
     try {
       // Step 1: Collect all Blobs
       const blobPromises = Object.keys(pdfDownload).map((pdf) => handleBlob(pdf));
@@ -225,7 +225,7 @@ export const ViewFinalPlanPODetails = ({
   
       // Step 4: Prepare email content with file URLs
       const fileLinks = uploadedFiles
-        .map(({fileName, fileUrl}: any) => `<br></br>${fileName?.replace(/_/g, " ")}: ${sanitizeUrlForS3(fileUrl)}<br></br>`)
+        .map(({fileName, fileUrl}: any) => `<br></br>${fileName?.replace(/_/g, " ")}:<br><br/> ${sanitizeUrlForS3(fileUrl)}<br></br>`)
         .join("\n");
   
   
@@ -234,6 +234,7 @@ export const ViewFinalPlanPODetails = ({
     } catch (error) {
       console.error("Error while sending attachments:", error);
     }
+    setLoadingEmailReady(true);
   };
   
   const handleAddNewFile = async (file: File) => {
@@ -328,6 +329,7 @@ export const ViewFinalPlanPODetails = ({
 
     if (userInfo) {
       setCC(userInfo?.email);
+      setLoadingEmailReady(loadingSendEmail)
     }
   }, [dispatch, poInput, campaignId, successSendEmail]);
 
@@ -434,6 +436,7 @@ export const ViewFinalPlanPODetails = ({
                     fileName: `${poInput?.brandName}_Campaign_Approach`,
                   };
                   setPdfDownload(pdfToDownload);
+                  console.log(pdfToDownload["approach"])
                 }}
               />
             </div>
@@ -557,14 +560,10 @@ export const ViewFinalPlanPODetails = ({
               setToEmail={setToEmail}
               cc={cc}
               sendEmail={() => {
-                // Object.keys(pdfDownload).map((pdf: any) => {
-                //   handleBlob(pdf);
-                // });
-                // sendEmail();
                 sendMultipleAttachments();
               }}
               type="po"
-              loading={loadingSendEmail}
+              loading={loadingEmailReady}
             />
           </div>
 

@@ -120,6 +120,7 @@ export const generatePlanSummaryPdfFromJSON = ({ download, jsonData, fileName, h
   const lineHeight = 5; // Define consistent line height
   const spaceBetweenSections = 5; // Define space between sections
 
+  console.log(jsonData);
   // Add the main heading and subheading to the first page
   const addHeading = (heading) => {
     // Main Heading

@@ -208,7 +208,7 @@ export const VendorConfirmationDetails = ({
             </tbody>
           </table>
           <div>
-            <a href='https://prooh.vinciis.in/api/v2/campaigns/approveCampaignScreenVendorByEmail?ids=675444bf5f0f6350debffce1%2C675444bf5f0f6350debffce1%2C675444bf5f0f6350debffce1'
+            <a href='${approvalUrl}'
               style='display: inline-block; background-color: #007BFF; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;'>
               See Details
             </a>

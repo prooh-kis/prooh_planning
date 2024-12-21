@@ -10,13 +10,15 @@ export const generatePPT = async ({ data, fileName, download }) => {
         data.forEach((item) => {
             const slide = ppt.addSlide();
 
-            const imageUrl = item.imageUrl?.[0] || "https://via.placeholder.com/1280x720";
+            // console.log(item.imageUrl?.[0]?.replace(/\+/g, ' '));
+            const imageUrl = item.imageUrl?.[0]?.replace(/\+/g, ' ') || "https://via.placeholder.com/1280x720";
             slide.addImage({
                 path: imageUrl,
                 x: 0,
                 y: 0,
                 w: "100%",
                 h: "100%",
+                crossOrigin: "anonymous"
             });
 
             slide.addText(`Location:\n${item?.content?.address}`, {
