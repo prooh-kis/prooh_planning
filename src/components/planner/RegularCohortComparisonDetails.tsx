@@ -121,7 +121,7 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
               <div className="py-2 flex items-center gap-2">
                 <h1 className="md:text-[16px] sm:text-[14px]">Regular slots per day buying</h1>
                 <Tooltip
-                  title="Regular slots only have those slots in a timezone, which have more than 4% of total audiences available on the site"
+                  title="Regular slots only have those slots in a timezone, which have more than 7% of total audiences available on the site"
                 >
                   <i className="fi fi-rs-info lg:text-[12px] md:text-[10px] text-gray-400 flex justify-center items-center"></i>
                 </Tooltip>
@@ -153,7 +153,7 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
               <div className="py-2 flex items-center gap-2">
                 <h1 className="md:text-[16px] sm:text-[14px]">Cohort slots per day buying</h1>
                 <Tooltip
-                  title="Cohort slots target your selected audiences using those slots in a timezone, which have more than 7% of total audiences available on the site"
+                  title="Cohort slots target your selected audiences using those slots in a timezone, which have more than 15% of total audiences available on the site"
                 >
                   <i className="fi fi-rs-info lg:text-[12px] md:text-[10px] text-gray-400 flex justify-center items-center"></i>
                 </Tooltip>
