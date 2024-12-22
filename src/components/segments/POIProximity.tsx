@@ -35,7 +35,7 @@ export const POIProximity = ({
 
   const [checked1, setChecked1] = useState<any>(false);
   const [checked2, setChecked2] = useState<any>(false);
-  const [screensForPOIFilters, setScreensForPOIFilters] = useState<any>([])
+  const [screensForPOIFilters, setScreensForPOIFilters] = useState<any>(filterScreensByInterests(finalSelectedScreens, selectedPOIs).screensWithAnyInterest)
 
   console.log(checked1, "1 checked", selectedPOIs?.length);
   console.log(checked2, "2 checked", selectedPOIs?.length);
@@ -43,10 +43,8 @@ export const POIProximity = ({
   console.log("selected length", selectedPOIs.length);
 
   useEffect(() => {
-    if(finalSelectedScreens) {
-      setScreensForPOIFilters(finalSelectedScreens);
-    }
-  },[finalSelectedScreens]);
+    // setScreensForPOIFilters(filterScreensByInterests(screensForPOIFilters, selectedPOIs).screensWithAnyInterest);
+  },[]);
   console.log(finalSelectedScreens, "ootioieieo");
   console.log(screensForPOIFilters, "assfklsfks");
 
@@ -169,6 +167,7 @@ export const POIProximity = ({
                   }
                   onChange={(checked) => {
                     setChecked1(checked);
+                    console.log(screensForPOIFilters);
                     if (checked) {
                       setPOIFilteredScreens(
                         filterScreensByInterests(

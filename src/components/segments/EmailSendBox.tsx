@@ -14,10 +14,12 @@ interface EmailSendBoxProps {
   data?: any;
   type?: any;
   loading?: any;
+  page?: any;
 }
 
 export const EmailSendBox = ({
   loading,
+  page,
   cc,
   data,
   type,
@@ -58,15 +60,23 @@ export const EmailSendBox = ({
             )}
           </div>
         </div>
-        <div className="py-4 flex items-center gap-2"
-          onClick={sendEmailToAll}
-        >
-          <p className="text-gray-500 text-[14px] truncate">
-            Click here to send request for email confirmation to vendor
-          </p>
-          <i className="fi fi-ss-paper-plane text-primaryButton text-[14px] flex items-center"></i>
-        </div>
-
+        {page !== "VendorApproval" ? (
+          <div className="py-4 flex items-center gap-2"
+            onClick={sendEmailToAll}
+          >
+            <p className="text-gray-500 text-[14px] truncate">
+              Click here to send request for email confirmation to vendor
+            </p>
+            <i className="fi fi-ss-paper-plane text-primaryButton text-[14px] flex items-center"></i>
+          </div>
+        ) : (
+          <div className="py-4 flex items-center gap-2"
+          >
+            <p className="text-gray-500 text-[14px] truncate">
+              Send email to client for budget approval with selected attachments
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

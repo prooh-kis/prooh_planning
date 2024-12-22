@@ -16,6 +16,8 @@ mapboxgl.accessToken =
   
 export function MapWithGeometry(props) {
   const mapRef = useRef(null);
+  const popupRef = useRef(null);
+
   const [routeData, setRouteData] = useState([]);
   const [selectedMarkers, setSelectedMarkers] = useState(null);
   const [unSelectedMarkers, setUnselectedMarkers] = useState(null);
@@ -357,7 +359,9 @@ const onDeletePolygon = useCallback(
         console.error("No valid markers to display.");
       }
     }
-  }, [selectedMarkers]);
+    popupRef.current?.trackPointer();
+
+  }, [selectedMarkers, popupRef.current]);
 
   return (
     <div className="relative h-full w-full items-top">
@@ -470,13 +474,14 @@ const onDeletePolygon = useCallback(
 
           {screenData && (
             <Popup
+              ref={popupRef}
               key={screenData._id}
               latitude={screenData?.location?.geographicalLocation?.latitude}
               longitude={screenData?.location?.geographicalLocation?.longitude}
               onClose={() => {
                 setScreenData(null);
               }}
-              anchor="left"
+              anchor="right"
             >
               <MapboxScreen
                 handleAddManualSelection={props?.handleAddManualSelection}

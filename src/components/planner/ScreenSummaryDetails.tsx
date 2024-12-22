@@ -445,6 +445,7 @@ export const ScreenSummaryDetails = ({
                   refreshScreenSummary={refreshScreenSummary}
                   priceFilter={priceFilter}
                   campaignId={campaignId}
+                  listView={listView}
                 />
               ) : (
                 <ViewPlanPic
@@ -457,6 +458,7 @@ export const ScreenSummaryDetails = ({
                   screenTypes={screenTypes}
                   setCurrentCity={setCurrentCity}
                   priceFilter={priceFilter}
+                  listView={listView}
                 />
               )}
             </div>

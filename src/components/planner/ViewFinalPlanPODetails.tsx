@@ -556,6 +556,7 @@ export const ViewFinalPlanPODetails = ({
           <Divider />
           <div>
             <EmailSendBox
+              page="VendorApproval"
               toEmail={toEmail}
               setToEmail={setToEmail}
               cc={cc}

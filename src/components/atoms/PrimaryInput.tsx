@@ -26,6 +26,8 @@ export const PrimaryInput = ({disabled, height, width, placeholder, rounded, pre
         value={value}
         placeholder={placeholder || "Type to input"}
         onChange={(e) => action(e.target.value)}
+        onWheel={(e) => inputType === "number" && e.currentTarget.blur()}
+        min={inputType === "number" ? 1 : undefined}
         className={`${height ? height : "h-[48px]"} ${width ? width : "w-full"} border ${rounded ? rounded : "rounded-lg"} pl-5 py-2 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 active:bg-blue-100 transition-colors`}
       />
       {suffix}

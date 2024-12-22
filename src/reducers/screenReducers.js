@@ -255,9 +255,10 @@ export function screenDataUploadCreativeReducer(state = {}, action) {
     case GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_REQUEST:
       return { loading: true };
     case GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_SUCCESS:
+      const { id, ...campaign} = action.payload
       return {
         loading: false,
-        data: action.payload,
+        data: campaign,
       };
     case GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_ERROR:
       return {

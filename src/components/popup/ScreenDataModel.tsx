@@ -10,6 +10,7 @@ interface Props {
   handleRemove: any;
   isAdded: boolean;
   campaignId?: any;
+  listView?: any;
 }
 
 const allTabs = [{
@@ -24,7 +25,7 @@ const allTabs = [{
 }];
 
 
-export function ScreenDataModel({ campaignId, screen, handleRemove, isAdded }: Props) {
+export function ScreenDataModel({ campaignId, screen, handleRemove, isAdded, listView }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<any>("1");
   const [currentDayTab, setCurrentDayTab] = useState<any>("1");
@@ -72,7 +73,7 @@ export function ScreenDataModel({ campaignId, screen, handleRemove, isAdded }: P
         <Tooltip
           title={screen?.screenName}
         >
-          <h1 className="text-[14px] font-semibold truncate">{screen?.screenName}</h1>
+          <h1 className={`text-[14px] ${listView ? "font-regular" : "font-semibold"} truncate`}>{screen?.screenName}</h1>
         </Tooltip>
       </div>
       <Modal open={open} onCancel={handleCancel} footer={[]} width={1100}>
