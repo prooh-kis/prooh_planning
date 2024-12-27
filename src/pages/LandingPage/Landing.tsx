@@ -6,6 +6,18 @@ import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 
 import asus from "../../assets/images/asus.png";
 import samsung from "../../assets/images/samsung.png";
+import blinkit from "../../assets/images/blinkit-a.png";
+import builderai from "../../assets/images/builderai.png";
+import cityflo from "../../assets/images/cityflo.png";
+import flebo from "../../assets/images/flebo.png";
+import gomechanic from "../../assets/images/gomechanic.png";
+import healthians from "../../assets/images/healthians-a.png";
+import indewild from "../../assets/images/indewild.png";
+import ixigo from "../../assets/images/ixigo.png";
+import magicpin from "../../assets/images/magicpin.png";
+import oneplus from "../../assets/images/oneplus.png";
+import puma from "../../assets/images/puma.png";
+import timesprime from "../../assets/images/timesprime.png";
 import { ImageCarousel } from "../../components/molecules/ImageCarousel";
 import { LandingPageMap } from "../../components/molecules/LandingPageMap";
 import { LandingPageMapFooter } from "../../components/molecules/LandingPageMapFooter";
@@ -23,14 +35,18 @@ const confetti = require("../../assets/lottie/confetti.json");
 const images = [
   asus,
   samsung,
-  asus,
-  samsung,
-  asus,
-  samsung,
-  asus,
-  samsung,
-  asus,
-  samsung,
+  blinkit,
+  builderai,
+  cityflo,
+  flebo,
+  gomechanic,
+  healthians,
+  indewild,
+  ixigo,
+  magicpin,
+  oneplus,
+  puma,
+  timesprime,
 ];
 
 export const Landing: React.FC = () => {
@@ -228,74 +244,76 @@ export const Landing: React.FC = () => {
       setCityTouchpoints(fillCityData(landingPageData.screenData));
       setTouchpointsCities(fillTpData(landingPageData.screenData));
     }
+
+  },[landingPageData])
+
+  useEffect(() => {
     if (getDataFromLocalStorage(LANDING_PAGE_DATA)) {
       setLandingPageData(getDataFromLocalStorage(LANDING_PAGE_DATA));
     } else {
       setLandingPageData(data);
     }
-  },[landingPageData, data])
-
-  useEffect(() => {
     dispatch(getLandingPageData());
-  }, [dispatch]);
+  }, [dispatch, data]);
 
   return (
     <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
-      <div className="w-full">
-        <div className="w-full flex justify-center items-center gap-2">
-          <div className="flex items-center">
-            <AnimatedIcon size={20} icon={confetti} />
+
+      <div className="w-full h-full">
+        <div className="h-full grid grid-cols-12 gap-2">
+          <div className="col-span-4">
+            <div className="w-full flex justify-start items-center gap-2">
+              <div className="flex items-center">
+                <AnimatedIcon size={20} icon={confetti} />
+              </div>
+              <p className="lg:text-[14px]">
+                Prooh planner is now live
+              </p>
+            </div>
+            <div className="truncate">
+              <h1 className="lg:text-[120px] md:text-[80px] font-black text-[#254354] mb-[-40px] text-wrap truncate">
+                Because
+              </h1>
+              <h1 className="lg:text-[64px] md:text-[40px] font-[1000] text-[#254354] text-wrap truncate">
+                AUDIENCE DATA
+              </h1>
+              <h1 className="lg:text-[120px] md:text-[80px] font-black text-[#254354] mt-[-40px] text-wrap truncate">
+                Matters
+              </h1>
+              <p className="text-[16px] text-start text-wrap">
+                {"PROOH's"} media planning tool uses geospatial data, POI data, Govt. Traffic Data amongst other Data sets to determine total
+              </p>
+              <div className="py-4 flex justify-start">
+                <PrimaryButton
+                  title="Start Planning"
+                  rounded="rounded-[5px]"
+                  action={scrollToTarget} // Scroll to the target on click
+                />
+              </div>
+            </div>
           </div>
-          <p className="text-[14px]">Prooh planner is now live</p>
-        </div>
-        <div className="w-full flex flex-col justify-center items-center pb-4">
-          <h1 className="text-[64px] font-bold text-[#254354] mb-[-10px]">Pay For Reach, Not For Space</h1>
-          <h1 className="text-[64px] font-bold text-[#254354] mt-[-10px]">Impressions Advertising</h1>
-          <p className="text-[14px] w-[500px] text-center">
-            {"PROOH's"} media planning tool uses geospatial data, POI data, Govt. Traffic Data amongst other Data sets to determine total
-          </p>
-        </div>
-        <div className="flex gap-2 justify-center py-4">
-          <PrimaryButton
-            title="Start Planning"
-            rounded="rounded-[5px]"
-            action={scrollToTarget} // Scroll to the target on click
-          />
-          <PrimaryButton
-            title="Call Us"
-            rounded="rounded-[5px]"
-            reverse={true}
-            icon={<i className="fi fi-sr-phone-call flex items-center pr-2"></i>}
-          />
-        </div>
-        <div className="pt-12 pb-8">
-          <div className="flex justify-center gap-2 py-2">
-            <h1 className="text-[12px] font-bold text-primaryButton">Demand</h1>
-            <h1 className="text-[12px] text-secondaryButton">Supply</h1>
-          </div>
-          <div className="flex gap-4 items-center">
-            <ImageCarousel images={images} imagesToShow={6} />
-          </div>
-        </div>
-        <div ref={targetDivRef} className="pb-32">
+          <div className="col-span-1"></div>
+          <div className="col-span-7">
           <div className="relative">
-            <LandingPageMapHeader setView={setView} view={view} />
+            <LandingPageMapHeader scrollToTarget={scrollToTarget} setView={setView} view={view} />
           </div>
-          {view === "map" ? (
-            <div className="h-[720px] z-0">
+            <div className="h-[680px] w-auto z-0">
               <LandingPageMap data={landingPageData} />
             </div>
-          ) : view === "list" ? (
-            <div className="h-[720px] pt-12 z-0">
+          </div>
+        </div>
+        <div ref={targetDivRef} className="">
+          <div className="py-4">
+            <LandingPageMapFooter data={landingPageData} />
+          </div>
+          {view === "list" ? (
+            <div className="pt-8 z-0">
               <LandingPageListView
                 screens={landingPageData?.screens}
-                countries={Object.keys(countryStates)}
-                cities={Object.keys(cityTouchpoints)}
-                touchPoints={Object.keys(touchpointsCities)}
               />
             </div>
           ) : view === "table" ? (
-            <div className="h-[720px] pt-14 z-0">
+            <div className="pt-8 z-0">
               <LandingPageTableView
                 data={screenData}
                 stateCities={stateCities}
@@ -317,11 +335,23 @@ export const Landing: React.FC = () => {
               />
             </div>
           ) : null}
-          <div>
-            <LandingPageMapFooter data={landingPageData} />
-          </div>
+            <div className="py-8">
+              <div className="flex justify-center gap-2 pt-8">
+                <h1 className="lg:text-[14px] md:text-[12px] font-bold text-primaryButton">Demand</h1>
+                <h1 className="lg:text-[14px] md:text-[12px] text-secondaryButton">Supply</h1>
+              </div>
+              <div className="flex justify-center">
+                <p className="lg:text-[14px] md:text-[12px]">We have worked with some of the prestigous brands and helped them in their brand presence endevours and campaigns</p>
+              </div>
+              <div className="flex gap-4 items-center py-8">
+                <ImageCarousel images={images} imagesToShow={6} />
+              </div>
+            </div>
         </div>
-        <div ref={secondDivRef} className="pb-24 pt-24 px-8">
+        
+
+
+        <div ref={secondDivRef} className="pb-24 pt-4 px-8">
           <div className="flex flex-col justify-center items-center">
             <h1 className="text-[48px] text-[#254354] font-bold mb-0 leading-tight truncate">
               We sell DOOH on <span className="text-[#129BFF]">Impressions</span> only.

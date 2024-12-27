@@ -14,6 +14,7 @@ interface AudiencesProps {
   handleSelection?: any;
   locked?: any;
   setLocked?: any;
+  showIconHighlight?: any;
 }
 export const AudienceCohortTable = ({
   handleSelection,
@@ -23,6 +24,7 @@ export const AudienceCohortTable = ({
   setSelectedAudiences,
   locked,
   setLocked,
+  showIconHighlight,
 }: AudiencesProps) => {
   
   const [clicked, setClicked] = useState<any>(false);
@@ -74,12 +76,14 @@ export const AudienceCohortTable = ({
                 title="Choose your target audience type and click on the lock icon to confirm "
               >
                 <i className="fi fi-rs-info flex items-center text-[#9A9A9A] md:text-[12px]"></i>
+
               </Tooltip>
             </div>
             <Tooltip
                 title="Click to lock your audience cohort selections"
             >
               <div 
+                className={`${showIconHighlight ? "" : "animate-pulse duration-200 ease-in-out forwards bg-green-300 rounded-full p-1"}`}
                 onClick={() => {
                   if (!loading) {
                     setClicked(true);

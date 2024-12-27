@@ -59,6 +59,8 @@ export const AudienceTouchPointsDetails = ({
   const [selectedAudiences, setSelectedAudiences] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts || []);
   const [selectedTouchPoints, setSelectedTouchPoints] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints || []);
 
+  const [showIconHighlight, setShowIconHighlight] = useState<any>(false);
+
   const screensAudiencesDataGet = useSelector(
     (state: any) => state.screensAudiencesDataGet
   );
@@ -230,6 +232,7 @@ export const AudienceTouchPointsDetails = ({
         </div>
         <div ref={audienceRef} className="col-span-3 flex justify-center">
           <AudienceCohortTable
+            showIconHighlight={showIconHighlight}
             loading={loadingCost}
             locked={locked}
             setLocked={setLocked}
@@ -273,7 +276,9 @@ export const AudienceTouchPointsDetails = ({
           }}
           handleSave={() => {
             if(locked?.cohorts === false || locked?.touchPoints === false) {
+              setShowIconHighlight(true);
               alert("Please confirm target audience and touch points by clicking on the lock icons...");
+              // setShowIconHighlight(false);
               return;
             } else {
               dispatch(addDetailsToCreateCampaign({

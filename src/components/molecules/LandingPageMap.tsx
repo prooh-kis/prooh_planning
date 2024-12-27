@@ -61,18 +61,21 @@ export function LandingPageMap(props: any) {
 
   useEffect(() => {
     const newMarkers: any[] = [];
-    props?.data?.locations?.forEach((s: any) => {
-      const [screenId, details]: any = Object.entries(s)[0];
-      const exists = newMarkers.some(
-        (marker: any) => marker[0] === details.lat && marker[1] === details.lng && marker[2] === screenId
-      );
+    if (markers?.length === 0) {
+      props?.data?.locations?.forEach((s: any) => {
+        const [screenId, details]: any = Object.entries(s)[0];
+        const exists = newMarkers.some(
+          (marker: any) => marker[0] === details.lat && marker[1] === details.lng && marker[2] === screenId
+        );
+  
+        if (!exists) {
+          newMarkers.push([details.lat, details.lng, screenId]);
+        }
+      });
+      setMarkers(newMarkers);
+    }
 
-      if (!exists) {
-        newMarkers.push([details.lat, details.lng, screenId]);
-      }
-    });
-    setMarkers(newMarkers);
-  },[props]);
+  },[props, markers]);
 
 
   return (

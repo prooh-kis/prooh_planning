@@ -6,10 +6,11 @@ export function LandingPageMapFooter({data}: any) {
   
   const [year, setYear] = useState<any>(new Date().getFullYear());
   return (
-    <div
-      className="absolute mt-4 left-1/2 transform -translate-x-1/2 w-[90%] z-10 p-4 border bg-white rounded-[12px] shadow-lg"
-      style={{ marginBottom: "0px" }}
-    >
+    // <div
+    //   className="absolute mt-4 left-1/2 transform -translate-x-1/2 w-[90%] z-10 p-4 border bg-white rounded-[12px] shadow-lg"
+    //   style={{ marginBottom: "0px" }}
+    // >
+    <div className="w-full p-4 border bg-white rounded-[12px] shadow-lg">
       <div className="grid grid-cols-12 pb-6">
         <div className="col-span-3">
           <h1 className="text-[32px] text-[#1F485F] font-semibold truncate">Our journey so far</h1>

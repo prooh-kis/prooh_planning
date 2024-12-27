@@ -64,6 +64,7 @@ function Screen({ screens, screen, currentSummaryTab, handleScreenClick }: any) 
 
 export function ViewPlanPic({ screensBuyingCount, setScreensBuyingCount, refreshScreenSummary, screenTypes, currentSummaryTab, setCurrentCity, priceFilter, cityZones, cityTP }: any) {
 
+  
   const [zoneFilters, setZoneFilters] = useState<any>(Object.keys(cityZones[Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]]));
   const [tpFilters, setTpFilters] = useState<any>(Object.keys(cityTP[Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]]));
   const [stFilters, setStFilters] = useState<any>(Object.keys(screenTypes[Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]]));
