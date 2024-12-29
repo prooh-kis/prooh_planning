@@ -33,7 +33,7 @@ export function LandingPageMapFooter({data}: any) {
           <p className="text-[#129BFF] text-[12px] truncate">Cities</p>
         </div>
         <div className="rounded-[12px] bg-[#F6FBFF] w-36 px-2 py-4 flex flex-col justify-center items-center">
-          <h1 className="text-[#129BFF] text-[14px] font-bold">{data?.touchPoints}</h1>
+          <h1 className="text-[#129BFF] text-[14px] font-bold">{data?.touchPoints?.length}</h1>
           <p className="text-[#129BFF] text-[12px] truncate">Touchpoints</p>
         </div>
         <div className="rounded-[12px] bg-[#F6FBFF] w-36 px-2 py-4 flex flex-col justify-center items-center">

@@ -2,13 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import mapboxgl from "mapbox-gl";
+import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { LANDING_PAGE_DATA } from "../../constants/localStorageConstants";
 
 mapboxgl.accessToken = "YOUR_MAPBOX_ACCESS_TOKEN";
 
 export function LandingPageMap(props: any) {
   const landingMapRef = useRef<any>(null);
 
-  const [markers, setMarkers] = useState<any>([]);
+  const [markers, setMarkers] = useState<any>(null);
+  const [touchPoints, setTouchPoints] = useState<any>([]);
   const [userLocation, setUserLocation] = useState<{
     latitude: number;
     longitude: number;
@@ -19,6 +22,17 @@ export function LandingPageMap(props: any) {
     // latitude: 28.495,
     // zoom: 5,
   });
+
+  const colors = [
+    "violet",
+    "indigo",
+    "blue",
+    "cyan",
+    "green",
+    "yellow",
+    "amber",
+    "red",
+  ]
 
   // Get user's current location
   useEffect(() => {
@@ -45,41 +59,86 @@ export function LandingPageMap(props: any) {
   // Add markers from props data
   useEffect(() => {
     
-    if (markers.length > 0 && landingMapRef.current) {
-      const latitudes = markers.map((marker: any) => marker[0]);
-      const longitudes = markers.map((marker: any) => marker[1]);
+    if (markers && markers?.length > 0 && landingMapRef?.current) {
+      const latitudes = markers?.map((marker: any) => marker[0]);
+      const longitudes = markers?.map((marker: any) => marker[1]);
 
       const bounds = [
         [Math.min(...longitudes), Math.min(...latitudes)],
         [Math.max(...longitudes), Math.max(...latitudes)],
       ];
 
-      const map = landingMapRef.current.getMap();
+      const map = landingMapRef?.current?.getMap();
       map.fitBounds(bounds, { padding: 20, maxZoom: 15 });
     }
   }, [markers]);
 
   useEffect(() => {
     const newMarkers: any[] = [];
-    if (markers?.length === 0) {
+    const tpColors: any[] = []
+    if (props?.data?.location) {
       props?.data?.locations?.forEach((s: any) => {
         const [screenId, details]: any = Object.entries(s)[0];
-        const exists = newMarkers.some(
-          (marker: any) => marker[0] === details.lat && marker[1] === details.lng && marker[2] === screenId
+        const exists = newMarkers?.some(
+          (marker: any) => marker?.[0] === details?.lat && marker[1] === details?.lng && marker[2] === screenId
         );
   
         if (!exists) {
-          newMarkers.push([details.lat, details.lng, screenId]);
+          newMarkers?.push([details?.lat, details?.lng, screenId, details.touchpoint]);
         }
-      });
+      })
       setMarkers(newMarkers);
-    }
 
-  },[props, markers]);
+      props?.data?.touchPoints?.forEach((t: any, j: any) => {
+        tpColors.push({
+          tp: t,
+          color: colors[j]
+        });
+      });
+      setTouchPoints(tpColors);
+      console.log(tpColors, "1");
+
+    } else {
+      getDataFromLocalStorage(LANDING_PAGE_DATA)?.locations?.forEach((s: any) => {
+        const [screenId, details]: any = Object.entries(s)[0];
+        const exists = newMarkers?.some(
+          (marker: any) => marker?.[0] === details?.lat && marker[1] === details?.lng && marker[2] === screenId
+        );
+  
+        if (!exists) {
+          newMarkers?.push([details?.lat, details?.lng, screenId, details.touchpoint]);
+          
+        }
+      })
+      setMarkers(newMarkers);
+
+      getDataFromLocalStorage(LANDING_PAGE_DATA)?.touchPoints?.forEach((t: any, j: any) => {
+        tpColors.push({
+          tp: t,
+          color: colors[j]
+        });
+      });
+      setTouchPoints(tpColors)
+      console.log(tpColors, "2");
+
+    }
+  }, [props?.data]);
+  console.log(markers);
+  console.log(touchPoints);
 
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center">
+    <div className="h-full w-full flex flex-col items-start">
+      <div className="flex flex-col items-end gap-2 right-2 pt-20 pr-2 absolute z-10">
+        {touchPoints?.map((tp: any, i: any) => (
+          <div key={i} className="flex items-center gap-2 group">
+            <h1 className={`text-[10px] group-hover:opacity-100 group-hover:bg-${colors[i]}-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300`}>{tp?.tp}</h1>
+            <div className={`h-4 w-4 bg-${colors[i]}-500 rounded-full`}></div>
+          </div>
+        ))}
+
+        
+      </div>
       <ReactMapGL
         ref={landingMapRef}
         // {...viewState}
@@ -98,10 +157,11 @@ export function LandingPageMap(props: any) {
           <Marker key={i} latitude={marker[0]} longitude={marker[1]}>
             <div title={`${marker[2]}`} className="cursor-pointer">
               <i
-                className="fi fi-ss-circle text-red-500 border border-[0.5px] border-black rounded-full text-[14px] flex items-center justify-center"
+              className={`fi fi-ss-circle text-${touchPoints?.filter((c: any) => c.tp === marker[3])[0]?.color}-500 border border-[0.5px] border-${touchPoints?.filter((c: any) => c.tp === marker[3])[0]?.color}-500 rounded-full text-[14px] flex items-center justify-center`}
                 onClick={(e: any) => {
                   e.stopPropagation();
                   // Handle marker click, if needed
+
                 }}
               ></i>
             </div>

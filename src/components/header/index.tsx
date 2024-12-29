@@ -35,7 +35,16 @@ export const Header: React.FC = () => {
           <h1 className="text-xl font-black">Prooh.Ai</h1>
         </div>
       </div>
-      <div className="col-span-2 flex items-center justify-end">
+      <div className="col-span-2 flex items-center justify-end gap-8">
+        <button type="submit" className={`${location.pathname === "/" ? "lg:text-[14px] text-[12px] font-semibold text-blue-500" : "lg:text-[14px] text-[12px]"}`}>
+          <h1>Home</h1>
+        </button>
+        <button type="submit" className={`${location.pathname === "/marketers" ? "lg:text-[14px] text-[12px] font-semibold text-blue-500" : "lg:text-[14px] text-[12px]"}`}>
+          <h1>Marketers</h1>
+        </button>
+        <button type="submit" className={`${location.pathname === "/media-owner" ? "lg:text-[14px] text-[12px] font-semibold text-blue-500" : "lg:text-[14px] text-[12px]"}`}>
+          <h1>Media Owner</h1>
+        </button>
         {userInfo ? (
           <div className="h-10 w-auto flex items-center space-x-2 pr-10">
             <div className="h-10 flex items-center gap-2">

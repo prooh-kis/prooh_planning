@@ -29,6 +29,7 @@ import { LandingPageListView } from "../../components/molecules/LandingPageListV
 import { LandingPageTableView } from "../../components/molecules/LandingPageTableView";
 import advanceAudience from "../../assets/images/advanceAudience.png";
 import { ContactForm } from "../../components/segments/ContactForm";
+import { AUTH } from "../../routes/routes";
 
 const confetti = require("../../assets/lottie/confetti.json");
 
@@ -287,7 +288,7 @@ export const Landing: React.FC = () => {
                 <PrimaryButton
                   title="Start Planning"
                   rounded="rounded-[5px]"
-                  action={scrollToTarget} // Scroll to the target on click
+                  action={() => navigate(AUTH)} // Scroll to the target on click
                 />
               </div>
             </div>
