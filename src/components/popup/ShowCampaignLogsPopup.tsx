@@ -1,88 +1,95 @@
-import { convertDataTimeToLocale } from "../../utils/dateAndTimeUtils";
-import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
+import { Skeleton } from "antd";
 import React, { useEffect } from "react";
+import { convertDataTimeToLocale } from "../../utils/dateAndTimeUtils";
+import { DownLoadCampaignLogReport } from "../../components/molecules/DownLoadCampaignLogReport";
+import { NoDataView } from "../../components/molecules/NoDataView";
 
-interface ShowCampaignLogsPopupProps {
-  openLogsPopup?: any;
-  logs?: any;
-  loading?: any;
-  onClose?: any;
-  error?: any;
-  screenName?: any;
-}
-
-export function ShowCampaignLogsPopup({
-  openLogsPopup,
-  logs,
-  loading,
-  error,
-  onClose,
-  screenName,
-}: ShowCampaignLogsPopupProps) {
+export const ShowCampaignLogsPopup = ({ open, onClose, logs, loading }: any) => {
   useEffect(() => {
-    if (openLogsPopup) {
+    if (open) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
     }
+    // Clean up the effect when the component unmounts
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
-  }, [openLogsPopup]);
+  }, [open]);
 
-  if (!openLogsPopup) {
+  if (!open) {
     return null;
   }
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
-      <div className="border bg-white rounded-[10px] h-3/4 w-3/4 p-1">
-        <div
-          className="relative inset-0 flex items-center justify-between gap-4 p-3"
-          onClick={() => onClose()}
-        >
-          <h1>Screen: {screenName}</h1>
-          <i className="fi fi-br-circle-xmark"></i>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 ">
+      <div
+        className="bg-white p-4 rounded-lg shadow-lg w-full max-w-full relative overflow-auto max-h-auto "
+        style={{ height: "80vh", width: "70vw" }}
+      >
+        <div className="flex justify-between">
+          <h1 className="text-[16px] font-bold">
+            Campaign Logs : <span className="">{logs?.campaign?.name}</span>
+          </h1>
+          <i className="fi fi-br-circle-xmark" onClick={() => onClose()}></i>
         </div>
-        <div className="p-2 overflow-scroll no-scrollbar h-[65vh]">
-          <div className="flex flex-wrap justify-center items-center gap-2">
-            {loading? (
-              <div className="w-full h-[50vh] border">
-                <SkeletonLoader />
-              </div>
-            ) : error ? (
-              <div>
-                <h1>
-                  {error}
-                </h1>
-              </div>
-            ) : (
-              <div>
-            <table className="w-full">
-              <thead className="w-full">
-                <tr>
-                  <th className="border px-4">Sl. No</th>
-                  <th className="border px-4">Playback Time</th>
-                  <th className="border px-4">Device Status</th>
+        {!loading && logs?.logs?.length > 0 && (
+          <DownLoadCampaignLogReport
+            campaignLog={logs?.logs}
+            campaign={logs?.campaign}
+          />
+        )}
+        {loading ? (
+          <div className="py-4">
+            <Skeleton active paragraph={{ rows: 12 }} />
+          </div>
+        ) : logs?.logs?.length > 0 ? (
+          <div className="p-2">
+            <table className="auto h-[20rem] ">
+              <thead>
+                <tr className="gap-4">
+                  <th className="border p-2 ">Sl. No</th>
+                  <th className="border p-2">Log Time</th>
+                  <th className="border p-2">Device Time</th>
+                  <th className="border p-2">Creative Name</th>
+                  <th className="border p-2">ScreenName</th>
+                  <th className="border p-2">Device Status</th>
                 </tr>
               </thead>
-              <tbody className="overflow-auto">
-                {logs?.map((c: any, i: any) => (
+              <tbody className="overflow-scroll h-[60vh] no-scrollbar text-[14px]">
+                {logs.logs?.map((c: any, i: any) => (
                   <tr className="" key={i}>
-                    <td className="border px-4">{i + 1}</td>
-                    <td className="border px-4">
-                      {convertDataTimeToLocale(c.time)}
+                    <td className="border p-2">{i + 1}</td>
+                    <td className="border p-2">
+                      {convertDataTimeToLocale(c.logTime)}
                     </td>
-                    <td className="border px-4">{c.screenStatus}</td>
+                    <td className="border p-2">
+                      {convertDataTimeToLocale(c.deviceTime)}
+                    </td>
+                    <td className="border p-2">
+                      {c.mediaId?.split("_")[1]}
+                    </td>
+                    <td className="border p-2">{logs?.campaign?.screenName}</td>
+                    <td
+                      className={
+                        c.screenStatus === "online"
+                          ? "border p-2 bg-greenbg text-black"
+                          : "border p-2 bg-redbg text-black"
+                      }
+                      onClick={() => {
+                        console.log(c.screenStatus);
+                      }}
+                    >
+                      {c.screenStatus}
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-              </div>
-            )}
           </div>
-        </div>
+        ) : (
+          <NoDataView />
+        )}
       </div>
     </div>
   );
-}
+};

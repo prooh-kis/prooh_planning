@@ -54,12 +54,10 @@ export const CampaignDashboardTable = ({
       
       />
       <ShowCampaignLogsPopup
-        onClose={onClose}
-        openLogsPopup={openLogsPopup}
-        loading={loadingLogs}
-        error={errorLogs}
         logs={logs}
-        screenName={screenName}
+        loading={loadingLogs}
+        open={openLogsPopup}
+        onClose={onClose}
       />
       <table className="table-auto w-full">
         <thead className="bg-[#F7F7F7] w-full flex justify-between items-center">

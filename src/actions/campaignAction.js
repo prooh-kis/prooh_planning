@@ -226,7 +226,7 @@ export const GetCampaignLogsAction = (campaignId) => async (dispatch, getState) 
     payload: campaignId,
   });
   try {
-    const { data } = await axios.get(`${url2}/getCampaignLogs?campaignId=${campaignId}&limit="200`);
+    const { data } = await axios.get(`${url2}/getAllCampaignLogs?campaignId=${campaignId}&limit="200`);
     dispatch({
       type: CAMPAIGN_LOGS_SUCCESS,
       payload: data,
