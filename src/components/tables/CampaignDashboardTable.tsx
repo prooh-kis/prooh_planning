@@ -18,6 +18,7 @@ export const CampaignDashboardTable = ({
 
   const [openLogsPopup, setOpenLogsPopup] = useState<any>(false);
   const [openMonitoringPicsPopup, setOpenMonitoringPicsPopup] = useState<any>(false);
+  const [screenId, setScreenId] = useState<any>(null);
 
   const [screenName, setscreenName] = useState<any>(null);
   const campaignLogsGet = useSelector((state: any) => state.campaignLogsGet);
@@ -27,12 +28,6 @@ export const CampaignDashboardTable = ({
     data: logs
   } = campaignLogsGet;
 
-  const campaignMonitoringPicsGet = useSelector((state: any) => state.campaignMonitoringPicsGet);
-  const {
-    loading: loadingMonitoringPics,
-    error: errorMonitoringPics,
-    data: monitoringPics
-  } = campaignMonitoringPicsGet;
 
   useEffect(() => {
     
@@ -41,17 +36,16 @@ export const CampaignDashboardTable = ({
   const onClose = () => {
     setOpenLogsPopup(false);
     setOpenMonitoringPicsPopup(false)
+    setScreenId(null);
   }
   return (
     <div>
       <ShowMonitoringPicsPopup
+        campaign={screenLevelData?.[screenId]}
+        screenId={screenId}
+        campaignCreation={campaignDetails}
         onClose={onClose}
-        openMonitoringPicsPopup={openMonitoringPicsPopup}
-        loading={loadingMonitoringPics}
-        error={errorMonitoringPics}
-        monitoringPics={monitoringPics}
-        screenName={screenName}
-      
+        open={openMonitoringPicsPopup}
       />
       <ShowCampaignLogsPopup
         logs={logs}
@@ -142,6 +136,7 @@ export const CampaignDashboardTable = ({
                     screenId: data,
                     date: campaignDetails.startDate,
                   }));
+                  setScreenId(data);
                   setOpenMonitoringPicsPopup(true);
 
                 }}

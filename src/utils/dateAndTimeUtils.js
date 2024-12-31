@@ -56,3 +56,15 @@ export function convertIntoDateAndTime(string) {
   }
 }
 
+export function getAllDatesBetween(startDate, endDate) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const dates = [];
+
+  while (start <= end) {
+    dates.push(new Date(start)); // Format as YYYY-MM-DD
+    start.setDate(start.getDate() + 1);
+  }
+
+  return dates;
+}

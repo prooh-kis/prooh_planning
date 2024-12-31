@@ -108,7 +108,11 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
             <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
           </div>
           <div className="p-2">
-            <h1 className="lg:text-[40px] text-[36px] text-gray-400"><span className="text-gray-900">{getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date())}</span> / {campaignDetails?.duration}</h1>
+            <h1 className="lg:text-[40px] text-[36px] text-gray-400">
+              <span className="text-gray-900">
+                {getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date())}
+              </span> / {campaignDetails?.duration}
+            </h1>
           </div>
           <div className="p-2">
             <LinearBar

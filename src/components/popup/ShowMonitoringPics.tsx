@@ -1,68 +1,194 @@
-import { convertDataTimeToLocale } from "../../utils/dateAndTimeUtils";
-import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import moment from "moment";
+import { useSelector, useDispatch } from "react-redux";
+import { getAllDatesBetween } from "../../utils/dateAndTimeUtils";
+import { CalendarPopup } from "./CalendarPopup";
+import { NoDataView } from "../../components/molecules/NoDataView";
+import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
+import { MonitoringPictures } from "../../components/segments/MonitoringPictures";
+import { campaignMonitoringTab } from "../../constants/tabDataConstant";
+import { GetCampaignMonitoringPicsAction } from "../../actions/campaignAction";
 
-interface ShowMonitoringPicsPopupProps {
-  openMonitoringPicsPopup?: any;
-  monitoringPics?: any;
-  loading?: any;
-  onClose?: any;
-  error?: any;
-  screenName?: any;
-}
+export const ShowMonitoringPicsPopup = (props: any) => {
+  const dispatch = useDispatch<any>();
+  const { campaign, screenId, campaignCreation } = props;
+  const dateToday = new Date();
+  const [isShow, setShow] = useState<boolean>(true);
+  const [currentTab, setCurrentTab] = useState<any>("1");
+  const [openCalendarPopup, setOpenCalendarPopup] = useState<any>(false);
+  const [monitoringDate, setMonitoringDate] = useState<any>(dateToday);
+  const [allDates, setAllDates] = useState<any>([]);
+  const [monitoringTime, setMonitoringTime] = useState<any>("day");
+ 
+  const campaignMonitoringPicsGet = useSelector((state: any) => state.campaignMonitoringPicsGet);
+  const {
+    loading: loadingMonitoringPics,
+    error: errorMonitoringPics,
+    data: monitoringPics
+  } = campaignMonitoringPicsGet;
 
-export function ShowMonitoringPicsPopup({
-  openMonitoringPicsPopup,
-  monitoringPics,
-  loading,
-  error,
-  onClose,
-  screenName,
-}: ShowMonitoringPicsPopupProps) {
+  console.log(campaign)
+  const handleCampaignClick = () => {
+    setAllDates(() => {
+      return getAllDatesBetween(campaignCreation.startDate, campaignCreation.endDate);
+    });
+  };
+
+  const handleSetCurrentTab = (id: string) => {
+    setCurrentTab(id);
+    switch (id) {
+      case "1":
+        setMonitoringTime("day");
+        break;
+      case "2":
+        setMonitoringTime("night");
+        break;
+      case "3":
+        setMonitoringTime("misc");
+        break;
+      default:
+        setMonitoringTime("day");
+        break;
+    }
+  };
+
+  const handleCallGetScreenCampaignMonitoring = useCallback(() => {
+
+    if (campaign?.campaignId && screenId) {
+      dispatch(
+        GetCampaignMonitoringPicsAction({
+          screenId,
+          campaignId: campaign?.campaignId,
+          date: monitoringDate,
+        })
+      );
+    }
+  }, [campaign, screenId]);
+
+  const handleClick = useCallback(
+    (value: boolean) => {
+      setShow(value);
+    },
+    [isShow]
+  );
+
   useEffect(() => {
-    if (openMonitoringPicsPopup) {
+    if (campaign && screenId) {
+      handleCallGetScreenCampaignMonitoring();
+      handleCampaignClick();
+    }
+  }, [props]);
+
+  const handleDateChange = (date: Date) => {
+    setMonitoringDate(date);
+    console.log(campaign)
+    dispatch(
+      GetCampaignMonitoringPicsAction({
+        screenId,
+        campaignId: campaign?.campaignId,
+        date: date,
+      })
+    );
+  };
+
+  useEffect(() => {
+    if (props?.open) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
     }
+    // Clean up the effect when the component unmounts
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
-  }, [openMonitoringPicsPopup]);
+  }, [props?.open]);
 
-  if (!openMonitoringPicsPopup) {
+  if (!props?.open) {
     return null;
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
-      <div className="border bg-white rounded-[10px] h-3/4 w-3/4 p-1">
-        <div
-          className="relative inset-0 flex items-center justify-end gap-4 p-3"
-          onClick={() => onClose()}
-        >
-          <i className="fi fi-br-circle-xmark"></i>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 ">
+       <div
+        className="bg-white p-4 rounded-lg shadow-lg w-full max-w-full relative overflow-auto max-h-auto "
+        style={{ height: "80vh", width: "70vw" }}
+      >
+
+        {openCalendarPopup && (
+          <div className="p-1 overflow-scroll no-scrollbar">
+            <CalendarPopup
+              onClose={() => setOpenCalendarPopup(false)}
+              dates={allDates}
+              monitoringDate={monitoringDate}
+              setMonitoringDate={handleDateChange}
+              openCalendarPopup={openCalendarPopup}
+            />
+          </div>
+        )}
+        <div className="flex justify-between">
+          <div className="w-full flex items-center justify-between">
+            <h1 className="text-[16px] font-semibold">Campaign Monitoring</h1>
+
+            <i className="fi fi-br-circle-xmark" onClick={() => props?.onClose()}></i>
+          </div>
+          {/* {isShow ? (
+            <i
+              className="fi fi-br-angle-small-down"
+              onClick={() => handleClick(false)}
+            ></i>
+          ) : (
+            <i
+              className="fi fi-rr-angle-small-up"
+              onClick={() => handleClick(true)}
+            ></i>
+          )} */}
         </div>
-        <div className="p-2 overflow-scroll no-scrollbar h-[65vh]">
-          <div className="flex flex-wrap justify-center items-center gap-2">
-            {loading? (
-              <div className="w-full h-[50vh] border">
-                <SkeletonLoader />
+        {isShow && (
+          <div>
+            <div className="flex justify-end ">
+              <div
+                className="border border-1 py-2 px-4 text-blue-500 text-[14px] cursor-pointer flex gap-2 items-center rounded-md"
+                title="click to change date"
+                onClick={() => setOpenCalendarPopup(true)}
+              >
+                <i className="fi fi-rr-calendar-lines-pen"></i>
+                {moment(monitoringDate).format("DD-MM-YYYY")}
               </div>
-            ) : error ? (
-              <div>
-                <h1>
-                  {error?.message}
-                </h1>
-              </div>
+            </div>
+
+            {loadingMonitoringPics ? (
+              <h1 className="w-full py-1 px-4 border border-1 border-yellow-500 bg-yellow-100 text-[#000000] rounded-md mt-2">
+                Loading Data...., please wait
+              </h1>
+            ) : !monitoringPics ? (
+              <NoDataView />
             ) : (
               <div>
-                <h1>{`"Pictures coming soon..."`}</h1>
+                <TabWithoutIcon
+                  currentTab={currentTab}
+                  setCurrentTab={handleSetCurrentTab}
+                  tabData={campaignMonitoringTab}
+                />
+                <div className="h-auto pt-2">
+                  <div className="w-full">
+                    <MonitoringPictures
+                      isUsedForShow={true}
+                      handleUploadClick={() => {}}
+                      time={monitoringTime}
+                      setMonitoringMedia={() => {}}
+                      setMonitoringTime={() => {}}
+                      monitoringData={monitoringPics}
+                      screenId={monitoringPics?.screenId}
+                      campaignId={monitoringPics?.campaignId}
+                      setFileType={() => {}}
+                    />
+                  </div>
+                </div>
               </div>
             )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
-}
+};

@@ -244,13 +244,13 @@ export const GetCampaignLogsAction = (campaignId) => async (dispatch, getState) 
 };
 
 
-export const GetCampaignMonitoringPicsAction = ({campaignId, screenId, date}) => async (dispatch, getState) => {
+export const GetCampaignMonitoringPicsAction = (input) => async (dispatch, getState) => {
   dispatch({
     type: CAMPAIGN_MONITORING_PICS_REQUEST,
-    payload: {campaignId, screenId, date},
+    payload: input,
   });
   try {
-    const { data } = await axios.get(`${url}/getCampaignMonitoringData?campaignId=${campaignId}&screenId=${screenId}&date=${date}`);
+    const { data } = await axios.get(`${url}/getCampaignMonitoringData?screenId=${input?.screenId}&campaignId=${input?.campaignId}&date=${input?.date}`);
     dispatch({
       type: CAMPAIGN_MONITORING_PICS_SUCCESS,
       payload: data,
