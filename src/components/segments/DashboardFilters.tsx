@@ -1,24 +1,32 @@
 import { DropdownInput } from "../../components/atoms/DropdownInput";
 
 interface DashboardFiltersProps {
-
+  campaignDetails?: any;
 }
-export const DashboardFilters = ({}: DashboardFiltersProps) => {
+export const DashboardFilters = ({campaignDetails}: DashboardFiltersProps) => {
  
   return (
     <div className="flex gap-2 py-2">
       <DropdownInput
+        border="border-gray-100"
         height="h-8"
-        width="w-20"
-        placeHolder="All"
+        width="w-full"
+        placeHolder={`${new Date(campaignDetails?.startDate).toDateString()?.split(" ")?.splice(1, 2)?.join(" ")} - ${new Date(campaignDetails?.endDate).toDateString()?.split(" ")?.splice(1, 3)?.join(" ")}`}
         selectedOption={""}
         setSelectedOption={""}
         options={[{
-          label: "All",
+          label: `Start Date: ${new Date(campaignDetails?.startDate).toDateString()?.split(" ")?.splice(0, 4)?.join(" ")}`,
+          value: "",
+        },{
+          label: `End Date: ${new Date(campaignDetails?.endDate).toDateString()?.split(" ")?.splice(0, 4)?.join(" ")}`,
+          value: "",
+        },{
+          label: `Duration: ${campaignDetails?.duration} Days`,
           value: "",
         }]}
       />
       <DropdownInput
+        border="border-gray-100"
         height="h-8"
         width="w-20"
         placeHolder="Gurgaon"
@@ -30,17 +38,19 @@ export const DashboardFilters = ({}: DashboardFiltersProps) => {
         }]}
       />
       <DropdownInput
+        border="border-gray-100"
         height="h-8"
         width="w-20"
         placeHolder="QSR"
         selectedOption={""}
         setSelectedOption={""}
         options={[{
-          label: "QSR",
+          label: "tty",
           value: "",
         }]}
       />
       <DropdownInput
+        border="border-gray-100"
         height="h-8"
         width="w-20"
         placeHolder="Premium"
@@ -48,17 +58,6 @@ export const DashboardFilters = ({}: DashboardFiltersProps) => {
         setSelectedOption={""}
         options={[{
           label: "Premium",
-          value: "",
-        }]}
-      />
-      <DropdownInput
-        height="h-8"
-        width="w-20"
-        placeHolder="Regular"
-        selectedOption={""}
-        setSelectedOption={""}
-        options={[{
-          label: "Regular",
           value: "",
         }]}
       />

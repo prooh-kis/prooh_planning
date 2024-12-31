@@ -119,7 +119,7 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
                 <h1 className="text-[14px] font-semibold">Screen Performance Detailed View </h1>
                 {/* <p className="text-[14px] text-[#129BFF]">{screenLevelData?.["totalData"]?.durationDelivered?.toFixed(0) || 1}</p> */}
               </div>
-              <DashboardBarChart label={"Screen Performance"}data={screenPerformance().countsArray} labels={screenPerformance().datesArray}/>
+              {/* <DashboardBarChart label={"Screen Performance"}data={screenPerformance().countsArray} labels={screenPerformance().datesArray}/> */}
             </div>
             <Divider />
           </div>
@@ -161,7 +161,7 @@ export const DashboardLinearStatus = ({screenPerformance, spotDelivery, handleSh
                 <h1 className="text-[14px] font-semibold">Spot Delivery Detailed View </h1>
                 {/* <p className="text-[14px] text-[#129BFF]">{screenLevelData?.["totalData"]?.durationDelivered?.toFixed(0) || 1}</p> */}
               </div>
-              <DashboardBarChart label={"Spot Delivery"} data={spotDelivery().countsArray} labels={spotDelivery().datesArray}/>
+              {/* <DashboardBarChart label={"Spot Delivery"} data={spotDelivery().countsArray} labels={spotDelivery().datesArray}/> */}
             </div>
             <Divider />
           </div>

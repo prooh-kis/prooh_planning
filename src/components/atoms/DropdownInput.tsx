@@ -7,6 +7,7 @@ export const DropdownInput = ({
   selectedOption,
   setSelectedOption,
   options,
+  border = "border-gray-200"
 }: any) => {
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -21,7 +22,7 @@ export const DropdownInput = ({
     <div className={height ? "relative" : "relative w-full"}>
       <select
         title="dropdown"
-        className={`truncate w-full ${dropdownHeight} ${dropdownWidth} text-[14px] border rounded-lg ${height ? "pr-4 pl-2" : "px-3"} py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 active:bg-blue-100 transition-colors appearance-none`}
+        className={`truncate w-full ${dropdownHeight} ${dropdownWidth} text-[14px] border ${border} rounded-lg ${height ? "pr-4 pl-2" : "px-3"} py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 active:bg-blue-100 transition-colors appearance-none`}
         value={selectedOption}
         onChange={handleSelectChange}
       >

@@ -33,6 +33,16 @@ export function LandingPageMap(props: any) {
     "amber",
     "red",
   ]
+  const colorsbg = [
+    "violetbg",
+    "indigobg",
+    "bluebg",
+    "cyanbg",
+    "greenbg",
+    "yellowbg",
+    "amberbg",
+    "redbg",
+  ]
 
   // Get user's current location
   useEffect(() => {
@@ -132,8 +142,8 @@ export function LandingPageMap(props: any) {
       <div className="flex flex-col items-end gap-2 right-2 pt-20 pr-2 absolute z-10">
         {touchPoints?.map((tp: any, i: any) => (
           <div key={i} className="flex items-center gap-2 group">
-            <h1 className={`text-[10px] group-hover:opacity-100 group-hover:bg-${colors[i]}-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300`}>{tp?.tp}</h1>
-            <div className={`h-4 w-4 bg-${colors[i]}-500 rounded-full`}></div>
+            <h1 className={`text-[10px] group-hover:opacity-100 group-hover:bg-${colorsbg[i]} group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300`}>{tp?.tp}</h1>
+            <div className={`h-4 w-4 bg-${colors[i]} rounded-full`}></div>
           </div>
         ))}
 

@@ -2,9 +2,10 @@ interface LinearBarProps {
   value: any;
   colors: any;
   highest?: any
+  percent?: any;
 }
 
-export const LinearBar = ({ value, colors, highest}: LinearBarProps) => {
+export const LinearBar = ({ percent= true, value, colors, highest}: LinearBarProps) => {
   return (
     <div
       className="rounded flex items-center w-full h-1 mt-1 relative group"
@@ -19,7 +20,7 @@ export const LinearBar = ({ value, colors, highest}: LinearBarProps) => {
       >
         {/* Tooltip for percentage value on hover */}
         <span className="absolute hidden group-hover:inline-block bg-gray-700 text-white text-[12px] rounded px-2 py-1 -top-7 right-0 z-10">
-          {value}%
+          {value}{percent ? "%" : ""}
         </span>
       </div>
    

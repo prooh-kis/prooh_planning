@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -8,12 +8,10 @@ import {
   Title,
   Tooltip,
   Legend,
-  BarController,
   Filler,
-  ArcElement,
 } from "chart.js";
 
-// Register the required chart components
+// Register required chart components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -21,52 +19,58 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement,
-  LinearScale,
-  CategoryScale,
-  BarElement,
-  BarController,
   Filler
 );
 
 interface BarChartProps {
-  data: number[];
+  currentData: number[];
+  targetData?: number[]; // Make targetData optional
   labels: string[];
   label?: string;
+  total?: any;
+  color?: any;
+  bgColor?: any;
 }
 
 export const DashboardBarChart: React.FC<BarChartProps> = ({
-  data,
+  currentData,
+  targetData,
   labels,
   label,
+  total,
+  color="rgba(138, 43, 226, 1)",
+  bgColor="rgba(138, 43, 226, 0.5)"
 }) => {
+  // Dynamically calculate the total value
+
   const chartData = {
     labels,
     datasets: [
       {
-        label: label,
-        data,
-        borderColor: "#129BFF10",
-        // borderColor: '#129BFF',
+        label: `${label || "Current Value"}`,
+        data: currentData,
+        backgroundColor: bgColor,
+        borderColor: color,
         borderWidth: 1,
         borderRadius: 5,
-        barThickness: "flex" as const, // Cast "flex" as a valid type
-        barPercentage: 0.9,
-        categoryPercentage: 0.8,
-        backgroundColor: function (context: any) {
-          const chart = context.chart;
-          const { ctx, chartArea } = chart;
-
-          if (!chartArea) {
-            return null;
-          }
-          const gradient = ctx.createLinearGradient(0, 0, 0, chart.height);
-          gradient.addColorStop(0, "rgba(153, 102, 255, 1)");
-          gradient.addColorStop(0.5, "rgba(153, 102, 255, 0.7)");
-          gradient.addColorStop(1, "rgba(255, 255, 255, 0.5");
-          return gradient;
-        },
+        barThickness: "flex" as const,
       },
+      // Only include the target data if it's passed
+      ...(targetData
+        ? [
+            {
+              label: "Target Value",
+              data: targetData.map(
+                (target, index) => Math.max(0, target - currentData[index])
+              ),
+              backgroundColor: "rgba(255, 99, 132, 0.5)",
+              borderColor: "rgba(255, 99, 132, 1)",
+              borderWidth: 1,
+              borderRadius: 5,
+              barThickness: "flex" as const,
+            },
+          ]
+        : []),
     ],
   };
 
@@ -75,41 +79,65 @@ export const DashboardBarChart: React.FC<BarChartProps> = ({
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "top" as const, // Explicitly cast "top" as a valid value
-        display: false,
+        position: "bottom" as const,
+        align: "start" as const,
+        labels: {
+          boxWidth: 10,
+          boxHeight: 10,
+          font: {
+            size: 10,
+          },
+        },
       },
-      title: {
-        display: false,
-        text: "Screens Summary",
+      tooltip: {
+        callbacks: {
+          label: function (context: any) {
+            const label = context.dataset.label || "";
+            const value = context.raw;
+            return `${label}: ${value}`;
+          },
+        },
       },
     },
     scales: {
       x: {
-        categoryPercentage: 1, // Adjust category spacing to 100%
         stacked: true,
-        ticks: {
-          callback: function (_: any, val: any) {
-            const newthis = this as any;
-            return newthis.getLabelForValue(val).substring(0, 5);
-          },
-        },
       },
       y: {
         beginAtZero: true,
-        title: {
-          text: "Total Campaigns",
-          display: false,
-        },
         stacked: true,
       },
     },
-    layout: {
-      padding: 0,
-    },
   };
 
+  // Register a dynamic custom plugin
+  useEffect(() => {
+    const dynamicTotalPlugin = {
+      id: "totalValue",
+      afterDraw(chart: any) {
+        const ctx = chart.ctx;
+        const { width, height } = chart;
+
+        // Draw the dynamic total value in the bottom-right corner
+        ctx.save();
+        ctx.font = "12px Arial";
+        ctx.fillStyle = "#666";
+        ctx.textAlign = "right";
+        ctx.clearRect(width - 100, height - 30, 100, 30); // Clear previous total
+        ctx.fillText(`Total: ${total}`, width - 10, height - 10);
+        ctx.restore();
+      },
+    };
+
+    ChartJS.register(dynamicTotalPlugin);
+
+    return () => {
+      ChartJS.unregister(dynamicTotalPlugin);
+    };
+  }, [total]);
+
   return (
-    <div className="w-full h-[300px]">
+    <div className="w-full h-[260px]">
       <Bar data={chartData} options={options} />
     </div>
   );
