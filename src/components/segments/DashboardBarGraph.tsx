@@ -30,6 +30,7 @@ interface BarChartProps {
   total?: any;
   color?: any;
   bgColor?: any;
+  percent?: any;
 }
 
 export const DashboardBarChart: React.FC<BarChartProps> = ({
@@ -39,7 +40,8 @@ export const DashboardBarChart: React.FC<BarChartProps> = ({
   label,
   total,
   color="rgba(138, 43, 226, 1)",
-  bgColor="rgba(138, 43, 226, 0.5)"
+  bgColor="rgba(138, 43, 226, 0.5)",
+  percent=true
 }) => {
   // Dynamically calculate the total value
 
@@ -94,7 +96,7 @@ export const DashboardBarChart: React.FC<BarChartProps> = ({
           label: function (context: any) {
             const label = context.dataset.label || "";
             const value = context.raw;
-            return `${label}: ${value}`;
+            return `${label}: ${percent ? "" : "\u20B9"} ${value.toFixed(0)}`;
           },
         },
       },
@@ -115,22 +117,28 @@ export const DashboardBarChart: React.FC<BarChartProps> = ({
     const dynamicTotalPlugin = {
       id: "totalValue",
       afterDraw(chart: any) {
-        const ctx = chart.ctx;
-        const { width, height } = chart;
-
-        // Draw the dynamic total value in the bottom-right corner
-        ctx.save();
-        ctx.font = "12px Arial";
-        ctx.fillStyle = "#666";
-        ctx.textAlign = "right";
-        ctx.clearRect(width - 100, height - 30, 100, 30); // Clear previous total
-        ctx.fillText(`Total: ${total}`, width - 10, height - 10);
-        ctx.restore();
+        // Check if the chart is a bar chart
+        if (chart.config.type === "bar") {
+          const ctx = chart.ctx;
+          const { width, height } = chart;
+    
+          // Draw the dynamic total value in the bottom-right corner
+          ctx.save();
+          ctx.font = "12px Arial";
+          ctx.fillStyle = "#666";
+          ctx.textAlign = "right";
+          ctx.clearRect(width - 100, height - 30, 100, 30); // Clear previous total
+          const total = chart.data.datasets[0].data.reduce(
+            (sum: number, value: number) => sum + value,
+            0
+          );
+          ctx.fillText(`Total: ${percent ? "" : "\u20B9"} ${total}`, width - 10, height - 10);
+          ctx.restore();
+        }
       },
     };
-
+    
     ChartJS.register(dynamicTotalPlugin);
-
     return () => {
       ChartJS.unregister(dynamicTotalPlugin);
     };

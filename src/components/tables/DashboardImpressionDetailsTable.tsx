@@ -59,20 +59,18 @@ export const DashboardImpressionDetailsTable = ({
               <td className="col-span-2">
                 <div className="flex gap-4 items-center">
                   <LinearBar
+                    percent={false}
                     value={
-                      formatNumber(
                         screenLevelData?.["totalData"]?.impressionsCohortWise[
                           imp
                         ]?.impressionDeliveredMale?.toFixed(0)
-                      ) || 0
+                      || 0
                     }
                     colors={["", "#84CBFF"]}
                     highest={
-                      formatNumber(
                         screenLevelData["totalData"]?.impressionsCohortWise[
                           imp
-                        ]?.impressionDeliveredTotal?.toFixed(0)
-                      )
+                        ]?.impressionPromisedMale?.toFixed(0)
                     }
                   />
                   <p className="text-[10px]">
@@ -87,20 +85,18 @@ export const DashboardImpressionDetailsTable = ({
               <td className="col-span-2">
                 <div className="flex gap-4 items-center">
                   <LinearBar
+                    percent={false}
                     value={
-                      formatNumber(
                         screenLevelData?.["totalData"]?.impressionsCohortWise[
                           imp
                         ]?.impressionDeliveredFemale?.toFixed(0)
-                      ) || 0
+                      || 0
                     }
                     colors={["", "#D0B3FF"]}
                     highest={
-                      formatNumber(
                         screenLevelData["totalData"]?.impressionsCohortWise[
                           imp
-                        ]?.impressionDeliveredTotal?.toFixed(0)
-                      )
+                        ]?.impressionPromisedFemale?.toFixed(0)
                     }
                   />
                   <p className="text-[10px]">

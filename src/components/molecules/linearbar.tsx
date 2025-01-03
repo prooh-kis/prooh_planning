@@ -8,7 +8,7 @@ interface LinearBarProps {
 export const LinearBar = ({ percent= true, value, colors, highest}: LinearBarProps) => {
   return (
     <div
-      className="rounded flex items-center w-full h-1 mt-1 relative group"
+      className="rounded flex items-center w-full h-1 mt-1 relative group z-10"
       style={{ backgroundColor: colors[0] || '#F3F3F3' }}
     >
       <div

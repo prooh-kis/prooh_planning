@@ -9,34 +9,37 @@ import { MultiColorLinearBar2 } from '../../components/molecules/MultiColorLinea
 import { CalendarScaleSlider } from '../../components/molecules/CalenderScaleSlider';
 import { DashboardImpressionDetailsTable } from '../../components/tables/DashboardImpressionDetailsTable';
 import { DashboardBarChart } from '../../components/segments/DashboardBarGraph';
+import { DashboardPieChart } from '../../components/segments/DashboardPieChart';
+import { formatNumber } from '../../utils/formatValue';
 
 export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
 
   const [clicked, setClicked] = useState<any>("1");
 
   const getScreenPerformanceData = () => {
-    const datesArray = screenLevelData["totalData"]?.screenPerformanceDateWise?.map((slot: any) => slot.date);
-    const countsArray = screenLevelData["totalData"]?.screenPerformanceDateWise?.map((slot: any) => slot.screenPerformance);
+    const datesArray = screenLevelData?.result["totalData"]?.screenPerformanceDateWise?.map((slot: any) => slot.date);
+    const countsArray = screenLevelData?.result["totalData"]?.screenPerformanceDateWise?.map((slot: any) => slot.screenPerformance);
+
     return { datesArray, countsArray };
 
   }
 
   const getPromisedScreenPerformanceData = () => {
-    const datesArray = screenLevelData["totalData"]?.screenPerformanceDateWise?.map((slot: any) => slot.date);
-    const countsArray = screenLevelData["totalData"]?.screenPerformanceDateWise?.map((slot: any) => 100);
+    const datesArray = screenLevelData?.result["totalData"]?.screenPerformanceDateWise?.map((slot: any) => slot.date);
+    const countsArray = screenLevelData?.result["totalData"]?.screenPerformanceDateWise?.map((slot: any) => 100);
     return { datesArray, countsArray };
 
   }
 
   const getSpotDeliveryData = () => {
-    const datesArray = screenLevelData["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.date);
-    const countsArray = screenLevelData["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.count);
+    const datesArray = screenLevelData?.result["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.date);
+    const countsArray = screenLevelData?.result["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.count);
     return { datesArray, countsArray };
   }
 
   const getPromisedSpotDeliveryData = () => {
-    const datesArray = screenLevelData["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.date);
-    const countsArray = screenLevelData["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.countPromised);
+    const datesArray = screenLevelData?.result["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.date);
+    const countsArray = screenLevelData?.result["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.countPromised);
     return { datesArray, countsArray };
   }
 
@@ -44,8 +47,8 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
     const totalPerSlotCost = campaignDetails?.screenWiseSlotDetails.reduce((acc: any, { pricePerSlot }: any) => acc + pricePerSlot, 0);
     const avgPerSlotCost = totalPerSlotCost / campaignDetails?.screenWiseSlotDetails.length;
 
-    const datesArray = screenLevelData["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.date);
-    const countsArray = screenLevelData["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.count * 10);
+    const datesArray = screenLevelData?.result["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.date);
+    const countsArray = screenLevelData?.result["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.count * 10);
     return { datesArray, countsArray };
   }
 
@@ -60,12 +63,9 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
     setShow((prev: any) => ({
       ...prev,
       [input]: !prev[input],
-  }));
-    console.log(show);
-    
+    }));
   }
 
-  console.log(screenLevelData?.totalData?.impressionsDelivered?.toFixed(0));
   return (
     <div className="w-full h-full pt-10 flex flex-col gap-2">
       <div className="bg-white p-2 rounded-[12px] flex justify-between">
@@ -98,7 +98,7 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
           className={`col-span-1 bg-white p-4 border ${clicked === "1" ? "border-blue" : "border-gray-100"} rounded-[12px]`}
           onClick={() => {
             setClicked("1");
-          }}  
+          }}
         >
           <div className="flex items-center gap-2">
             <div className="rounded-full bg-violetbg p-2">
@@ -139,13 +139,13 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
             <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
           </div>
           <div className="p-2">
-            <h1 className="lg:text-[40px] text-[36px] text-gray-900">{screenLevelData?.totalData?.impressionsDelivered?.toFixed(0)}</h1>
+            <h1 className="lg:text-[40px] text-[36px] text-gray-900">{formatNumber(screenLevelData?.result?.totalData?.impressionsDelivered?.toFixed(0))}</h1>
           </div>
           <div className="p-2">
             <MultiColorLinearBar2
-              delivered={screenLevelData?.totalData?.impressionsDelivered?.toFixed(0)}
-              expected={screenLevelData?.totalData?.impressionsPromised?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration}
-              total={screenLevelData?.totalData?.impressionsPromised?.toFixed(0)}
+              delivered={screenLevelData?.result?.totalData?.impressionsDelivered?.toFixed(0)}
+              expected={screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration}
+              total={screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(0)}
             />
           </div>
         </div>
@@ -164,11 +164,11 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
             <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
           </div>
           <div className="p-2">
-            <h1 className="lg:text-[40px] text-[36px] text-gray-900">{screenLevelData?.totalData?.screenPerformance?.toFixed(0)}%</h1>
+            <h1 className="lg:text-[40px] text-[36px] text-gray-900">{formatNumber(screenLevelData?.result?.totalData?.screenPerformance?.toFixed(0))}%</h1>
           </div>
           <div className="p-2">
             <LinearBar
-              value={screenLevelData?.totalData?.screenPerformance?.toFixed(0)}
+              value={screenLevelData?.result?.totalData?.screenPerformance?.toFixed(0)}
               colors={["#F3F3F3", "#7AB3A2"]}
               highest={100}
             />
@@ -189,18 +189,16 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
             <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
           </div>
           <div className="p-2">
-            <h1 className="lg:text-[40px] text-[36px] text-gray-900">{screenLevelData?.totalData?.slotsDelivered?.toFixed(0)}</h1>
+            <h1 className="lg:text-[40px] text-[36px] text-gray-900">{formatNumber(screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(0))}</h1>
           </div>
           <div className="p-2">
             <MultiColorLinearBar2
-              delivered={screenLevelData?.totalData?.slotsDelivered?.toFixed(0)}
-              expected={screenLevelData?.totalData?.slotsPromised?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration}
-              total={screenLevelData?.totalData?.slotsPromised?.toFixed(0)}
+              delivered={screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(0)}
+              expected={screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration}
+              total={screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0)}
             />
           </div>
-          
         </div>
-
         <div
           className={`col-span-1 bg-white p-4 border ${clicked === "5" ? "border-blue" : "border-gray-100"} rounded-[12px]`}
           onClick={() => {
@@ -215,17 +213,16 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
             <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
           </div>
           <div className="p-2">
-            <h1 className="lg:text-[40px] text-[36px] text-gray-900">{screenLevelData?.totalData?.costConsumed?.toFixed(0)}</h1>
+            <h1 className="lg:text-[40px] text-[36px] text-gray-900">&#8377;{screenLevelData?.result?.totalData?.costConsumed?.toFixed(0)}</h1>
           </div>
           <div className="p-2">
             <LinearBar
               percent={false}
-              value={screenLevelData?.totalData?.costConsumed?.toFixed(0)}
+              value={screenLevelData?.result?.totalData?.costConsumed?.toFixed(0)}
               colors={["#F3F3F3", "#7AB3A2"]}
-              highest={screenLevelData?.totalData?.costTaken?.toFixed(0)}
+              highest={screenLevelData?.result?.totalData?.costTaken?.toFixed(0)}
             />
           </div>
-          
         </div>
       </div>
       {clicked === "1" ? (
@@ -254,10 +251,13 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
               <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">Audience Impressions</h1>
               <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
             </div>
-            <div className="grid grid-cols-3">
-              <div className="col-span-1"></div>
-              <div className="col-span-1"></div>
-              <div className="col-span-1"></div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="col-span-1">
+                <DashboardPieChart type="city" data={screenLevelData?.audiencePerformanceData?.cityWise}/>
+              </div>
+              <div className="col-span-1">
+                <DashboardPieChart type="touchpoint" data={screenLevelData?.audiencePerformanceData?.touchPointWise}/>
+              </div>
             </div>
           </div>
           <div className="col-span-3 bg-white py-4 rounded-[12px] border border-gray-100">
@@ -266,14 +266,28 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
               <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
             </div>
             <div className="p-2">
-              <DashboardImpressionDetailsTable screenLevelData={screenLevelData} />
+              <DashboardImpressionDetailsTable screenLevelData={screenLevelData?.result} />
             </div>
           </div>
         </div>
       ) : clicked === "3" ? (
         <div className="grid grid-cols-5 gap-2">
           <div className="col-span-2 bg-white py-4 rounded-[12px] border border-gray-100">
-          
+            <div className="flex items-center gap-2 px-4">
+              <div className="rounded-full bg-bluebg p-2">
+                <i className="fi fi-rr-target-audience text-blue lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+              </div>
+              <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">Screen Performance</h1>
+              <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+            </div>
+            <div className="grid grid-cols-2 gap-2 p-2">
+              <div className="col-span-1">
+                <DashboardPieChart type="city" data={screenLevelData?.screenPerformanceData?.cityWise}/>
+              </div>
+              <div className="col-span-1">
+                <DashboardPieChart type="touchpoint" data={screenLevelData?.screenPerformanceData?.touchPointWise}/>
+              </div>
+            </div>
           </div>
           <div className="col-span-3 bg-white py-4 rounded-[12px] border border-gray-100">
             <div className="flex items-center gap-2 px-4 py-1">
@@ -288,7 +302,21 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
       ) : clicked === "4" ? (
         <div className="grid grid-cols-5 gap-2">
           <div className="col-span-2 bg-white py-4 rounded-[12px] border border-gray-100">
-
+            <div className="flex items-center gap-2 px-4">
+              <div className="rounded-full bg-bluebg p-2">
+                <i className="fi fi-rr-target-audience text-blue lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+              </div>
+              <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">Spot Delivery</h1>
+              <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+            </div>
+            <div className="grid grid-cols-2 gap-2 p-2">
+              <div className="col-span-1">
+                <DashboardPieChart type="city" data={screenLevelData?.spotDeliveryData?.cityWise}/>
+              </div>
+              <div className="col-span-1">
+                <DashboardPieChart type="touchpoint" data={screenLevelData?.spotDeliveryData?.touchPointWise}/>
+              </div>
+            </div>
           </div>
           <div className="col-span-3 bg-white py-4 rounded-[12px] border border-gray-100">
             <div className="flex items-center gap-2 px-4 py-1">
@@ -296,20 +324,36 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
               <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
             </div>
             <div className="p-2">
-              <DashboardBarChart total={`${screenLevelData?.totalData?.slotsDelivered?.toFixed(0)}/${screenLevelData?.totalData?.slotsPromised?.toFixed(0)}`} label={"Spot Delivery"} targetData={getPromisedSpotDeliveryData().countsArray} currentData={getSpotDeliveryData().countsArray} labels={getSpotDeliveryData().datesArray} />
+              <DashboardBarChart total={`${screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(0)}/${screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0)}`} label={"Spot Delivery"} targetData={getPromisedSpotDeliveryData().countsArray} currentData={getSpotDeliveryData().countsArray} labels={getSpotDeliveryData().datesArray} />
             </div>
           </div>
         </div>
       ) : (
         <div className="grid grid-cols-5 gap-2">
-          <div className="col-span-2 bg-white py-4 rounded-[12px] border border-gray-100"></div>
+          <div className="col-span-2 bg-white py-4 rounded-[12px] border border-gray-100">
+            <div className="flex items-center gap-2 px-4">
+              <div className="rounded-full bg-bluebg p-2">
+                <i className="fi fi-rr-target-audience text-blue lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+              </div>
+              <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">Spot Delivery</h1>
+              <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+            </div>
+            <div className="grid grid-cols-2 p-2">
+              <div className="col-span-1">
+                <DashboardPieChart type="city" data={screenLevelData?.costConsumedData?.cityWise}/>
+              </div>
+              <div className="col-span-1">
+                <DashboardPieChart type="touchpoint" data={screenLevelData?.costConsumedData?.touchPointWise}/>
+              </div>
+            </div>
+          </div>
           <div className="col-span-3 bg-white py-4 rounded-[12px] border border-gray-100">
             <div className="flex items-center gap-2 px-4 py-1">
               <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">Day Wise Cost Consumed</h1>
               <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
             </div>
             <div className="p-2">
-              <DashboardBarChart bgColor="rgba(75, 192, 192, 0.5)" color="rgba(75, 192, 192, 1)" total={`${screenLevelData?.totalData?.costConsumed?.toFixed(0)}/${screenLevelData?.totalData?.costTaken?.toFixed(0)}`} label={"Cost Consumed"} currentData={getCostData().countsArray} labels={getCostData().datesArray} />
+              <DashboardBarChart percent={false} bgColor="rgba(75, 192, 192, 0.5)" color="rgba(75, 192, 192, 1)" total={`${screenLevelData?.result?.totalData?.costConsumed?.toFixed(0)}/${screenLevelData?.result?.totalData?.costTaken?.toFixed(0)}`} label={"Cost Consumed"} currentData={getCostData().countsArray} labels={getCostData().datesArray} />
             </div>
           </div>
         </div>
@@ -318,7 +362,7 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
         <div className="w-full">
           {/* ICON */}
           <h1 className="text-[16px] p-2 font-semibold">Site Level Performance</h1>
-          <CampaignDashboardTable campaignDetails={campaignDetails} screenLevelData={screenLevelData} />
+          <CampaignDashboardTable campaignDetails={campaignDetails} screenLevelData={screenLevelData?.result} />
         </div>
       </div>
     </div>

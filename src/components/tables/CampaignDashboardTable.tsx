@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetCampaignLogsAction, GetCampaignMonitoringPicsAction } from "../../actions/campaignAction";
 import { ShowCampaignLogsPopup } from "../../components/popup/ShowCampaignLogsPopup";
 import { ShowMonitoringPicsPopup } from "../../components/popup/ShowMonitoringPics";
+import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
 
 interface CostSummartTabelProps {
   screenLevelData?: any,
@@ -110,22 +111,42 @@ export const CampaignDashboardTable = ({
                 <p className="text-[12px]">{screenLevelData[data]?.durationPromised}</p>
               </td>
               <td className="w-full flex items-center justify-center">
-                <p className="text-[12px]">{screenLevelData[data]?.slotsDelivered}</p>
+                <div className="flex flex-row justify-center items-center gap-1">
+                  <p className="text-[12px]">
+                    {screenLevelData[data]?.slotsDelivered}
+                  </p>
+                  <p className="text-[10px] text-red">
+                    {`(-${screenLevelData[data]?.slotsPromised * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData[data]?.slotsDelivered})`}
+                  </p>
+                </div>
+                
               </td>
               <td className="w-full flex items-center justify-center">
-                <p className="text-[12px]">
-                  {formatNumber(screenLevelData[data]?.impressionsDelivered?.toFixed(0))}
-                </p>
+                <div className="flex flex-row justify-center items-center gap-1">
+                  <p className="text-[12px]">
+                    {formatNumber(screenLevelData[data]?.impressionsDelivered?.toFixed(0))}
+                  </p>
+                  <p className="text-[10px] text-red">
+                    {`(-${(screenLevelData[data]?.impressionsPromised?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData?.[data]?.impressionsDelivered?.toFixed(0))?.toFixed(0)})`}
+                  </p>
+                </div>
               </td>
               <td className="w-full flex items-center justify-center">
-                <p className="text-[12px]">
-                  {formatNumber(screenLevelData[data]?.costConsumed?.toFixed(0))}
-                </p>
+                <div className="flex flex-row justify-center items-center gap-1">
+                  <p className="text-[12px]">
+                    {formatNumber(screenLevelData[data]?.costConsumed?.toFixed(0))}
+                  </p>
+                  <p className="text-[10px] text-red">
+                    {`(-${(screenLevelData[data]?.costTaken?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData?.[data]?.costConsumed?.toFixed(0))?.toFixed(0)})`}
+                  </p>
+                </div>
               </td>
               <td className="w-full flex items-center justify-center">
-                <p className="text-[12px]">
-                  {(screenLevelData?.[data]?.slotsDelivered * 100 / screenLevelData?.[data]?.slotsPromised)?.toFixed(2)} %
-                </p>
+                <div className="flex flex-col justify-center items-center gap-1">
+                  <p className="text-[12px]">
+                    {(screenLevelData?.[data]?.slotsDelivered * 100 / screenLevelData?.[data]?.slotsPromised)?.toFixed(2)} %
+                  </p>
+                </div>
               </td>
               <td className="w-full flex items-center justify-center"
                 onClick={() => {

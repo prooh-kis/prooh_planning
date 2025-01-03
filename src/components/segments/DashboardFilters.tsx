@@ -49,7 +49,7 @@ export const DashboardFilters = ({campaignDetails}: DashboardFiltersProps) => {
           value: "",
         }]}
       />
-      <DropdownInput
+      {/* <DropdownInput
         border="border-gray-100"
         height="h-8"
         width="w-20"
@@ -60,7 +60,7 @@ export const DashboardFilters = ({campaignDetails}: DashboardFiltersProps) => {
           label: "Premium",
           value: "",
         }]}
-      />
+      /> */}
     </div>
   )
 }
