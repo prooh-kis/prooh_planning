@@ -17,7 +17,7 @@ interface DoughnutChartProps {
   total?: number;
 }
 
-export const DashboardPieChart: React.FC<DoughnutChartProps> = ({ type, data }) => {
+export const DashboardPieChart: React.FC<DoughnutChartProps> = ({ total, type, data }) => {
   // Extract labels (cities) and values (audience numbers) from the object
   const labels = Object.keys(data);
   const values = Object.values(data);
@@ -89,7 +89,7 @@ export const DashboardPieChart: React.FC<DoughnutChartProps> = ({ type, data }) 
       </div>
       <div className="w-full flex items-center justify-center">
         <h1 className="text-[14px]">{type === "city" ? "City wise" : "Touchpoints wise" }</h1>
-        {/* <h1 className="text-[14px]">{type === "city" ? "City wise" : "Touchpoints wise" }</h1> */}
+        <h1 className="text-[14px]">{total}</h1>
       </div>
     </div>
   );
