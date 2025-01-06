@@ -19,6 +19,7 @@ import {
   IKnowItAllPlanPage,
   StoreBasedPlanPage,
   MediaOwnerPage,
+  MarketsPage,
 } from "../pages";
 
 import { PrivateRoute } from "./PrivateRoute";
@@ -27,6 +28,7 @@ import {
   CAMPAIGN_DETAILS_PAGE,
   FORGET_PASSWORD,
   HOME,
+  MARKETS_PAGE,
   MEDIA_OWNER_PAGE,
   MY_CAMPAIGNS_LIST,
   MY_PLANS_LIST,
@@ -103,6 +105,15 @@ const Routers: React.FC = () => {
           element={
             <PublicRoute>
               <MediaOwnerPage />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path={MARKETS_PAGE}
+          element={
+            <PublicRoute>
+              <MarketsPage />
             </PublicRoute>
           }
         />

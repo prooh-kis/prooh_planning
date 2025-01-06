@@ -9,7 +9,7 @@ import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 // import { ADD_SCREEN_CODE_RESET } from "../../../constants/screenDataConstant";
 import userImage from "../../assets/userImage.png";
 import { PrimaryButton } from "../../components/atoms/PrimaryButton";
-import { AUTH, MEDIA_OWNER_PAGE } from "../../routes/routes";
+import { AUTH, MARKETS_PAGE, MEDIA_OWNER_PAGE } from "../../routes/routes";
 
 // import { getCreatives } from "../../../actions/creativeAction";
 // import { USER_ROLE_PRIMARY } from "../../../constants/userConstants";
@@ -48,6 +48,7 @@ export const Header: React.FC = () => {
         </button>
         <button
           type="submit"
+          onClick={() => navigate(MARKETS_PAGE)}
           className={`${
             location.pathname === "/marketers"
               ? "lg:text-[14px] text-[12px] font-semibold text-[#0094FF]"
