@@ -12,7 +12,7 @@ import {
 } from "../../assets/index";
 import { PageFooter } from "../../components/PageFooter";
 
-export const MarketsPage: React.FC = () => {
+export const MarketersPage: React.FC = () => {
   return (
     <div className="w-screen h-full pb-0">
       <div

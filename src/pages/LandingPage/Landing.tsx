@@ -3,7 +3,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AnimatedIcon } from "../../components/molecules/AnimatedIcon";
 import { PrimaryButton } from "../../components/atoms/PrimaryButton";
-
+import { ImageCarousel } from "../../components/molecules/ImageCarousel";
+import { LandingPageMap } from "../../components/molecules/LandingPageMap";
+import { LandingPageMapFooter } from "../../components/molecules/LandingPageMapFooter";
+import { LandingPageMapHeader } from "../../components/molecules/LandingPageMapHeader";
+import { getLandingPageData } from "../../actions/screenAction";
+import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { LANDING_PAGE_DATA } from "../../constants/localStorageConstants";
+import { LandingPageListView } from "../../components/molecules/LandingPageListView";
+import { LandingPageTableView } from "../../components/molecules/LandingPageTableView";
+import advanceAudience from "../../assets/images/advanceAudience.png";
+import { ContactForm } from "../../components/segments/ContactForm";
+import { AUTH } from "../../routes/routes";
+import { CarouselImageView, TabWithoutIcon } from "../../components";
+import { CircleImageCarousel } from "../../components/molecules/CircleImageCrousel";
+import imageA from "../../assets/images/imageA.png";
+import imageB from "../../assets/images/imageB.png";
+import imageC from "../../assets/images/imageC.png";
+import imageD from "../../assets/images/imageD.png";
+import imageE from "../../assets/images/imageE.png";
+import basicDetails from "../../assets/images/basicDetails.png";
+import targetAudienceTP from "../../assets/images/targetAudienceTP.png";
+import advanceFilters from "../../assets/images/advanceFilters.png";
+import comparePlan from "../../assets/images/comparePlan.png";
 import asus from "../../assets/images/asus.png";
 import samsung from "../../assets/images/samsung.png";
 import blinkit from "../../assets/images/blinkit-a.png";
@@ -18,18 +40,22 @@ import magicpin from "../../assets/images/magicpin.png";
 import oneplus from "../../assets/images/oneplus.png";
 import puma from "../../assets/images/puma.png";
 import timesprime from "../../assets/images/timesprime.png";
-import { ImageCarousel } from "../../components/molecules/ImageCarousel";
-import { LandingPageMap } from "../../components/molecules/LandingPageMap";
-import { LandingPageMapFooter } from "../../components/molecules/LandingPageMapFooter";
-import { LandingPageMapHeader } from "../../components/molecules/LandingPageMapHeader";
-import { getLandingPageData } from "../../actions/screenAction";
-import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
-import { LANDING_PAGE_DATA } from "../../constants/localStorageConstants";
-import { LandingPageListView } from "../../components/molecules/LandingPageListView";
-import { LandingPageTableView } from "../../components/molecules/LandingPageTableView";
-import advanceAudience from "../../assets/images/advanceAudience.png";
-import { ContactForm } from "../../components/segments/ContactForm";
-import { AUTH } from "../../routes/routes";
+import ankur from "../../assets/images/ankur.jpg";
+import anuj from "../../assets/images/anuj.jpg";
+import partha from "../../assets/images/partha.jpg";
+import vishnu from "../../assets/images/vishnu.jpg";
+import testiO1 from "../../assets/images/testi01.png";
+import testiO2 from "../../assets/images/testi02.png";
+import testiO3 from "../../assets/images/testi03.png";
+import testiO4 from "../../assets/images/testi04.png";
+
+
+import UserImage from "../../assets/userImage.png";
+import { RightSideArrowsImageCarousel } from "../../components/molecules/RightSideArrowsImageCrousel";
+import { TestimonialCarousel } from "../../components/molecules/TestimonialCarousel";
+import { PageFooter } from "../../components/PageFooter";
+
+
 
 const confetti = require("../../assets/lottie/confetti.json");
 
@@ -50,6 +76,109 @@ const images = [
   timesprime,
 ];
 
+const carouselImages = [
+  imageA,
+  imageB,
+  imageC,
+  imageD,
+  imageE,
+];
+
+const tabData = [{
+  id: "1",
+  label: "Advertiser",
+  params: ""
+},{
+  id: "2",
+  label: "Media Owner",
+  params: ""
+},{
+  id: "3",
+  label: "Data Hero",
+  params: ""
+}];
+
+const advertisersSteps = [{
+  id: "1",
+  label: "Basic Details"
+},{
+  id: "2",
+  label: "Target Audience And Touchpoints"
+},{
+  id: "3",
+  label: "Advance Filters"
+},{
+  id: "4",
+  label: "Compare Plan"
+},{
+  id: "5",
+  label: "Billing"
+},{
+  id: "6",
+  label: "Campaign Report"
+}];
+
+const dataHeroTabs = [{
+  id: "1",
+  label: "All(98)"
+},{
+  id: "2",
+  label: "Media Owner"
+},{
+  id: "3",
+  label: "Advertiser"
+},{
+  id: "4",
+  label: "Food & Beverage"
+}];
+
+const dataHeroUsersImages = [
+  UserImage,
+  UserImage,
+  UserImage,
+  UserImage,
+  UserImage,
+  UserImage,
+  UserImage,
+  UserImage,
+  UserImage,
+  UserImage,
+  UserImage,
+  UserImage,
+  UserImage,
+  UserImage,
+  UserImage,
+];
+
+const meetArchitects = [{
+  id: "1",
+  image: ankur,
+  name: "Ankur Rastogi",
+  role: "Founder, All About Outdoor, India",
+},{
+  id: "2",
+  image: vishnu,
+  name: "Vishnu Mohan",
+  role: "Founder, Avyan Holdings, Singapore",
+},{
+  id: "3",
+  image: anuj,
+  name: "Anuj Bhandari",
+  role: "CEO, All About Outdoor, India",
+},{
+  id: "4",
+  image: partha,
+  name: "Partha Sinha",
+  role: "Advisory Board, Prooh Technologies, India",
+}];
+
+const testimonials = [
+  testiO1,
+  testiO2,
+  testiO3,
+  testiO4
+]
+
 export const Landing: React.FC = () => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
@@ -61,6 +190,13 @@ export const Landing: React.FC = () => {
 
   const [landingPageData, setLandingPageData] = useState<any>({});
   const [view, setView] = useState<any>("map");
+
+  const [currentTab, setCurrentTab] = useState<any>("1");
+  const [currentAdvertiserTab, setCurrentAdvertiserTab] = useState<any>("1");
+  const [currentMOTab, setCurrentMOTab] = useState<any>("1");
+  const [currentDHTab, setCurrentDHTab] = useState<any>("1");
+
+  const [currentMeetDataHeroTab, setCurrentMeetDataHeroTab] = useState<any>("1");
 
   const [screenData, setScreenData] = useState<any>([]);
 
@@ -261,7 +397,7 @@ export const Landing: React.FC = () => {
     <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
 
       <div className="w-full h-full">
-        <div className="h-full grid grid-cols-12 gap-2">
+        <div className="h-full grid grid-cols-12 gap-4">
           <div className="col-span-4">
             <div className="w-full flex justify-start items-center gap-2">
               <div className="flex items-center">
@@ -271,18 +407,12 @@ export const Landing: React.FC = () => {
                 Prooh planner is now live
               </p>
             </div>
-            <div className="truncate">
-              <h1 className="lg:text-[120px] md:text-[80px] font-black text-[#254354] mb-[-40px] text-wrap truncate">
-                Because
-              </h1>
-              <h1 className="lg:text-[64px] md:text-[40px] font-[1000] text-[#254354] text-wrap truncate">
-                AUDIENCE DATA
-              </h1>
-              <h1 className="lg:text-[120px] md:text-[80px] font-black text-[#254354] mt-[-40px] text-wrap truncate">
-                Matters
+            <div className="">
+              <h1 className="lg:text-[48px] md:text-[40px] font-black text-[#254354] text-wrap truncate">
+                End-to-end campaign management platform for <span className="bg-primaryButton text-white rounded p-1">DOOH</span>
               </h1>
               <p className="text-[16px] text-start text-wrap">
-                {"PROOH's"} media planning tool uses geospatial data, POI data, Govt. Traffic Data amongst other Data sets to determine total
+                {"Prooh: India’s 1st 'Audience Guarantee' OOH Media Company, delivering data-driven planning, audience measurement, performance proof, and 100% cost transparency"}
               </p>
               <div className="py-4 flex justify-start">
                 <PrimaryButton
@@ -293,19 +423,46 @@ export const Landing: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="col-span-1"></div>
-          <div className="col-span-7">
-          <div className="relative">
-            <LandingPageMapHeader scrollToTarget={scrollToTarget} setView={setView} view={view} />
-          </div>
-            <div className="h-[680px] w-auto z-0">
-              <LandingPageMap data={landingPageData} />
-            </div>
+          <div className="col-span-8 flex items-center justify-center">
+            <CarouselImageView showThumbnails={false} images={carouselImages}/>
           </div>
         </div>
+        <div>
+        <div className="py-8">
+          <div className="flex justify-center gap-2 pt-8">
+            <button
+              className="border rounded-full p-2"
+              onClick={() => {}}
+            >
+              <h1 className="lg:text-[14px] md:text-[12px] font-bold text-gray-500">Demand</h1>
+            </button>
+            <button
+              className=""
+              onClick={() => {}}
+            >
+              <h1 className="lg:text-[14px] md:text-[12px] text-secondaryButton">Supply</h1>
+            </button>
+          </div>
+          <div className="flex gap-4 items-center py-8">
+            <ImageCarousel images={images} imagesToShow={6} />
+          </div>
+        </div>
+        </div>
         <div ref={targetDivRef} className="">
-          <div className="py-4">
-            <LandingPageMapFooter data={landingPageData} />
+          <div className="grid grid-cols-12 gap-8">
+            <div className="col-span-4">
+              <div className="py-4">
+                <LandingPageMapFooter data={landingPageData} />
+              </div>
+            </div>
+            <div className="col-span-8">
+              <div className="relative">
+                <LandingPageMapHeader scrollToTarget={scrollToTarget} setView={setView} view={view} />
+              </div>
+              <div className="lg:h-[680px] md:h-[540px] sm:h-[480px] w-auto z-0">
+                <LandingPageMap data={landingPageData} />
+              </div>
+            </div>
           </div>
           {view === "list" ? (
             <div className="pt-8 z-0">
@@ -336,270 +493,233 @@ export const Landing: React.FC = () => {
               />
             </div>
           ) : null}
-            <div className="py-8">
-              <div className="flex justify-center gap-2 pt-8">
-                <h1 className="lg:text-[14px] md:text-[12px] font-bold text-primaryButton">Demand</h1>
-                <h1 className="lg:text-[14px] md:text-[12px] text-secondaryButton">Supply</h1>
-              </div>
-              <div className="flex justify-center">
-                <p className="lg:text-[14px] md:text-[12px]">We have worked with some of the prestigous brands and helped them in their brand presence endevours and campaigns</p>
-              </div>
-              <div className="flex gap-4 items-center py-8">
-                <ImageCarousel images={images} imagesToShow={6} />
-              </div>
-            </div>
         </div>
-        
 
-
-        <div ref={secondDivRef} className="pb-24 pt-4 px-8">
-          <div className="flex flex-col justify-center items-center">
-            <h1 className="text-[48px] text-[#254354] font-bold mb-0 leading-tight truncate">
-              We sell DOOH on <span className="text-[#129BFF]">Impressions</span> only.
-            </h1>
-            <h1 className="text-[48px] text-[#254354] font-bold mb-0 leading-tight truncate">
-              No Fixed Rental.
-            </h1>
+        <div ref={secondDivRef} className="py-16">
+          <h1 className="px-8 lg:text-[16px] text-[14px] text-gray-500 text-space-2 whitespace-pre">H O W    D O E S    I T    W O R K</h1>
+          <div className="px-8 py-4">
+            <TabWithoutIcon
+              tabData={tabData}
+              currentTab={currentTab}
+              setCurrentTab={setCurrentTab}
+            />
           </div>
-          
-          <div className="grid grid-cols-12 my-8">
-            <div className="col-span-3 px-12 py-4">
-              <div className="rounded-[12px] border border-[#129BFF] w-1/4 flex justify-center items-center p-4">
-                <i className="fi fi-br-bullseye-arrow text-[30px] text-[#129BFF] flex items-center"></i>
+          <div className="px-8 py-4">
+            {currentTab === "1" ? (
+              <div className="pb-4">
+                <h1 className="lg:text-[40px] text-[32px] font-semibold">Plan Your Campaign In Just Few Clicks</h1>
+                <div className="py-4 flex items-center gap-4">
+                  {advertisersSteps?.map((step: any, i: any) => (
+                    <button
+                      key={i} className={`${step.id === currentAdvertiserTab ? "bg-primaryButton" : "bg-gray-100 border border-gray-200"} rounded-[8px] px-4 py-2 truncate cursor-pointer`}
+                      onClick={() => setCurrentAdvertiserTab(step.id)}
+                    >
+                      <h1 className={`lg:text-[14px] text-[12px] ${step.id === currentAdvertiserTab ? "text-white font-semibold" : "text-gray-600"} truncate`}>{step.label}</h1>
+                    </button>
+                  ))}
+                </div>
+                <div className="border-t w-4/5 mt-2" />
+                {currentAdvertiserTab === "1" ? (
+                  <div className="grid grid-cols-12 gap-4 py-4">
+                    <div className="col-span-7 flex items-center justify-center">
+                      <div className="rounded-[12px] shadow-lg m-1">
+                        <img src={basicDetails} alt="basic details"/>
+                      </div>
+                    </div>
+                    <div className="col-span-4 flex items-center justify-center">
+                      <div className="bg-gray-100 rounded-[12px] p-4">
+                        <p className="lg:text-[14px] text-[12px] font-semibold text-gray-400 p-1">Step 1</p>
+                        <h1 className="lg:text-[24px] text-[18px] font-semibold text-wrap p-1">Add Your Campaign Basic Details</h1>
+                        <p className="lg:text-[20px] text-[16px] text-gray-400 p-1">
+                          Add basic details for your campaign to begin with and get recommendation based on your industry, start date and duration of your campaign.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : currentAdvertiserTab === "2" ? (
+                  <div className="grid grid-cols-12 gap-4 py-4">
+                    <div className="col-span-7 flex items-center justify-center">
+                      <div className="rounded-[12px] shadow-lg m-1">
+                        <img src={targetAudienceTP} alt="basic details"/>
+                      </div>
+                    </div>
+                    <div className="col-span-4 flex items-center justify-center">
+                      <div className="bg-gray-100 rounded-[12px] p-4">
+                        <p className="lg:text-[14px] text-[12px] font-semibold text-gray-400 p-1">Step 2</p>
+                        <h1 className="lg:text-[24px] text-[18px] font-semibold text-wrap p-1">Select Your Target Audience And Touchpoint</h1>
+                        <p className="lg:text-[20px] text-[16px] text-gray-400 p-1">
+                          Select your target audience group and touchpoints where they are available to get an approximate budget for your campaign
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : currentAdvertiserTab === "3" ? (
+                  <div className="grid grid-cols-12 gap-4 py-4">
+                    <div className="col-span-7 flex items-center justify-center">
+                      <div className="rounded-[12px] shadow-lg m-1">
+                        <img src={advanceFilters} alt="basic details"/>
+                      </div>
+                    </div>
+                    <div className="col-span-4 flex items-center justify-center">
+                      <div className="bg-gray-100 rounded-[12px] p-4">
+                        <p className="lg:text-[14px] text-[12px] font-semibold text-gray-400 p-1">Step 3</p>
+                        <h1 className="lg:text-[24px] text-[18px] font-semibold text-wrap p-1">Apply Advance Filters For Location Proximity</h1>
+                        <p className="lg:text-[20px] text-[16px] text-gray-400 p-1">
+                          Filter your selected screens based on their proximity with your brand or competitor stores, target routes, geographical location and selected POIs
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-12 gap-4 py-4">
+                    <div className="col-span-7 flex items-center justify-center">
+                      <div className="rounded-[12px] shadow-lg m-1">
+                        <img src={comparePlan} alt="basic details"/>
+                      </div>
+                    </div>
+                    <div className="col-span-4 flex items-center justify-center">
+                      <div className="bg-gray-100 rounded-[12px] p-4">
+                        <p className="lg:text-[14px] text-[12px] font-semibold text-gray-400 p-1">Step 4</p>
+                        <h1 className="lg:text-[24px] text-[18px] font-semibold text-wrap p-1">Compare Plan Based On Your Selections</h1>
+                        <p className="lg:text-[20px] text-[16px] text-gray-400 p-1">
+                          Compare your plan budget as per regular spots and spots based on your selected audience penetration and further optimise your campaign plan
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
-              <h2 className="text-[14px] font-semibold pt-4">
-                Data-Driven Targeting
-              </h2>
-              <p className="text-[12px] text-[#254354] pt-2">
-                {"PROOH's"} media planning tools uses geospatial, POI and traffic data to estimate audience impressions at specific locations.
-              </p>
-            </div>
-            <div className="col-span-3 px-12 py-4 border-x">
-              <div className="rounded-[12px] border border-[#129BFF] w-1/4 flex justify-center items-center p-4">
-                <i className="fi fi-sr-marker text-[30px] text-[#129BFF] flex items-center"></i>
-              </div>
-              <h2 className="text-[14px] font-semibold pt-4">
-                Location Insights
-              </h2>
-              <p className="text-[12px] text-[#254354] pt-2">
-                Brands can target locations with the best audience reach using DOOH options, LTS scoring, historical site data, and direct pricing.
-              </p>
-            </div>
-            <div className="col-span-3 px-12 py-4 border-r">
-              <div className="rounded-[12px] border border-[#129BFF] w-1/4 flex justify-center items-center p-4">
-                <i className="fi fi-ss-laptop-code text-[30px] text-[#129BFF] flex items-center"></i>
-              </div>
-              <h2 className="text-[14px] font-semibold pt-4">
-                Programmatic Deployment
-              </h2>
-              <p className="text-[12px] text-[#254354] pt-2">
-                Deploy creatives on DOOH screens programmatically, ensuring efficient and effective targeting of your advertising campaign.                
-              </p>
-            </div>
-            <div className="col-span-3 px-12 py-4">
-              <div className="rounded-[12px] border border-[#129BFF] w-1/4 flex justify-center items-center p-4">
-                <i className="fi fi-sr-document text-[30px] text-[#129BFF] flex items-center"></i>
-              </div>
-              <h2 className="text-[14px] font-semibold pt-4">
-                Planning To Deployment
-              </h2>
-              <p className="text-[12px] pt-2">
-                Plan your campaign and track live data on a client-accessible dashboard, measuring actual impressions against predictions.               
-              </p>
-            </div>
+            ) : currentTab === "2" ? (
+              <div className="pb-4"></div>
+            ) : (
+              <div className="pb-4"></div>
+            )}
           </div>
-        </div>
-        <div ref={thirdDivRef} className="px-8">
-          <div className="flex flex-col gap-2">
-            <h1 className="text-[48px] text-[#254354] font-bold mb-0 leading-tight">
-              <span className="text-[#129BFF]">Reduce</span> ad spend with location targeting
-            </h1>
-            <p className="text-[12px] text-[#61737D] w-3/4">
-              Targeting audience cohorts by location and time ensures ads reach the right people at optimal moments, minimizing wasted ad spend and boosting effectiveness.
-            </p>
-          </div>
-          <div className="grid grid-cols-12 gap-8">
-            <div className="col-span-4 py-4">
-              <div className="rounded-[12px] h-80 bg-gray-100 my-4">
-
-              </div>
-            </div>
-            <div className="col-span-8 py-4 flex flex-col justify-between">
-              <div className="grid grid-cols-12 my-4 gap-2">
-                <div className="col-span-2 w-full flex justify-center items-center">
-                  <div className="rounded-[12px] border border-[#129BFF] w-16 h-16 flex justify-center items-center">
-                    <i className="fi fi-sr-marker text-[24px] text-[#129BFF] flex items-center"></i>
+          <div className="relative mx-[-80px]">
+            <div className="relative z-10 mx-28 text-white bg-primaryButton rounded-[16px] px-4 py-2 flex justify-between items-center">
+              <div className="flex items-center gap-4">
+                <i className="fi fi-sr-time-fast text-[28px]"></i>
+                <div>
+                  <h1 className="lg:text-[40px] text-[32px] font-semibold">Plan Your Campaign Now</h1>
+                  <div className="pb-2">
+                    <p className="lg:text-[14px] text-[12px]">+40 Advertisers Have Already Planned</p>
                   </div>
                 </div>
-                <div className="col-span-10">
-                  <h1 className="text-[24px] font-semibold">SDK-based audience segmentation</h1>
-                  <p className="text-[12px] text-[#61737D] pt-2">
-                    PROOH uses SDK data to track mobile device IDs at specific locations and times, creating audience segments and cohorts based on mobility and preferences
-                  </p>
-                </div>
               </div>
-              <div className="grid grid-cols-12 my-4 gap-2">
-                <div className="col-span-2 w-full flex justify-center items-center">
-                  <div className="rounded-[12px] border border-[#129BFF] w-16 h-16 flex justify-center items-center">
-                    <i className="fi fi-br-bullseye-arrow text-[24px] text-[#129BFF] flex items-center"></i>
+              <div className="px-4">
+                <PrimaryButton
+                  title="Request Demo"
+                  rounded="rounded-full"
+                  reverse={true}
+                />
+              </div>
+            </div>
+            <div className="absolute top-1/2 left-0 w-full bg-gradient-to-b from-[#13202A] to-[#072E4A]">
+              <div className="grid grid-cols-12 text-white gap-2">
+                <div className="col-span-6 p-32">
+                  <div className="flex items-center gap-2">
+                    <i className="fi fi-ss-sparkles"></i>
+                    <h1 className="lg:text-[20px] text-[16px] whitespace-pre">W H A T    W E    D O</h1>
+                  </div>
+                  <h1 className="lg:text-[48px] text-[40px] text-wrap font-bold py-2">Simplify & Optimize Your Advertising</h1>
+                  <p className="lg:text-[20px] text-[16px] text-wrap py-2">
+                    We simplify the way you buy outdoor media and also help you in optimizing your for maximum output and efficient costing
+                  </p>
+                  <div className="flex justify-start items-center py-4">
+                    <PrimaryButton
+                      title="Know More"
+                      rounded="rounded-[12px]"
+                    />
                   </div>
                 </div>
-                <div className="col-span-10">
-                  <h1 className="text-[24px] font-semibold">Spatio-Temporal ad targeting</h1>
-                  <p className="text-[12px] text-[#61737D] pt-2">
-                    PROOH uses spatio-temporal data to predict when and where audiences will be, enabling precise ad placement by targeting locations visited by specific cohorts at optimal times
-                  </p>
-                </div>
-              </div>
-              <div className="grid grid-cols-12 my-4 gap-2">
-                <div className="col-span-2 w-full flex justify-center items-center">
-                  <div className="rounded-[12px] border border-[#129BFF] w-16 h-16 flex justify-center items-center">
-                    <i className="fi fi-br-target-audience text-[24px] text-[#129BFF] flex items-center"></i>
+                <div className="col-span-1 flex justify-center items-center p-10">
+                  <div className="rounded-full bg-[#1E3241] w-4 h-3/4 flex items-center">
+                    <div className="rounded-full bg-primaryButton w-full h-1/5"></div>
                   </div>
                 </div>
-                <div className="col-span-10">
-                  <h1 className="text-[24px] font-semibold">Probabilistic Audience Modeling</h1>
-                  <p className="text-[12px] text-[#61737D] pt-2">
-                    PROOH uses probabilistic modelling of spatial telco data to target relevant locations for audience personas, ensuring effective, large-scale targeting without personal identifiers
-                  </p>
+                <div className="col-span-5 p-32 flex justify-start items-center w-full">
+                  <div className="">
+                    <div className="flex justify-start">
+                      <div className="bg-[#1E3E53] rounded-[12px] p-2">
+                        <i className="fi fi-sr-display-chart-up"></i>
+                      </div>
+                    </div>
+                   
+                    <h1 className="lg:text-[32px] md:text-[24px] font-bold">We Sell OOH & PDOOH On Impressions Only. No Fixed Rental</h1>
+                    <p>
+                      {"PROOH'S Media Planning Tool Uses Geospatial Data, POI Data, Govt. Traffic Data amongst other data to determine total audience impressions delivered at any specific locations."}
+                      {/* <span className="text-primaryButton font-semibold underline">See More</span> */}
+                    </p>
+                  </div>
+                  
                 </div>
               </div>
             </div>
           </div>
-          <div className="flex justify-center items-center py-20">
-            <span className="block w-full border-t-[1px] border-gray-200 border-dashed"></span>
-          </div>
         </div>
-        <div ref={fourthDivRef} className="pb-24 px-8">
-          <div className="flex flex-col justify-center items-center">
-            <h1 className="text-[48px] text-[#254354] font-bold mb-0 leading-tight">
-              Contextual targeting in <span className="text-[#129BFF]">DOOH</span> & <span className="text-[#129BFF]">OOH</span>.
-            </h1>
-            <p className="text-[12px] text-[#61737D]">
-              We enable contextual targeting in DOOH and OOH, ensuring ads reach the right audience by aligning messaging with relevant events and locations.
-            </p>
-          </div>
-          <div className="grid grid-cols-12 py-6 gap-12">
-            <div className="col-span-6">
-              <div className="rounded-[12px] h-80 bg-gray-100 my-4">
 
-              </div>
+        <div className="flex justify-center lg:pt-[720px] pt-[600px] pb-20">
+          <div className="relative flex flex-col items-center">
+            <h1 className="lg:text-[48px] text-[40px] font-semibold">Meet Our Data Hero</h1>
+            <div className="border-b">
+              <TabWithoutIcon
+                tabData={dataHeroTabs}
+                currentTab={currentMeetDataHeroTab}
+                setCurrentTab={setCurrentMeetDataHeroTab}
+              />
             </div>
-            <div className="col-span-6 pr-12 flex flex-col justify-center">
-              <h1 className="text-[24px] text-[#254354] font-bold pt-4">
-                Event-based ad triggering
-              </h1>
-              <p className="text-[12px] text-[#61737D] pt-2 w-2/3">
-                Contextual targeting enables brands to display ads based on specific events or situations. Marketers simply set the conditions for media buying, and when these conditions are met, the ads are automatically served on both Digital Out-of-Home (DOOH) and traditional Out-of-Home (OOH) platforms
-              </p>
-              <div className="w-full flex justify-start py-4">
+            <div className="py-4">
+              <CircleImageCarousel
+                images={dataHeroUsersImages}
+              />
+              <div className="flex items-center justify-center py-4">
                 <PrimaryButton
-                  reverse={true}
-                  title="Know More"
-                  rounded="rounded-[4px]"
-                />
-              </div>
-
-            </div>
-          </div>
-          <div className="grid grid-cols-12 py-6 gap-12">
-            <div className="col-span-6 pr-12 flex flex-col justify-center">
-              <h1 className="text-[24px] text-[#254354] font-bold pt-4">
-                Real-Time Campaign Optimization
-              </h1>
-              <p className="text-[12px] text-[#61737D] pt-2 w-2/3">
-                With the integration of APIs and IoT devices, DOOH ads can be triggered in real time or scheduled for future display. This allows advertisers to dynamically adjust content based on real-time events, such as weather or time of day, maximizing engagement.
-              </p>
-              <div className="w-full flex justify-start py-4">
-                <PrimaryButton
-                  reverse={true}
-                  title="Know More"
-                  rounded="rounded-[4px]"
+                  title="Participate"
+                  rounded="rounded-full"
+                  action={() => {}}
                 />
               </div>
             </div>
-            <div className="col-span-6">
-              <div className="rounded-[12px] h-80 bg-gray-100 my-4">
-
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-12 py-6 gap-12">
-            <div className="col-span-6">
-              <div className="rounded-[12px] h-80 bg-gray-100 my-4">
-
-              </div>
-            </div>
-            <div className="col-span-6 pr-12 flex flex-col justify-center">
-              <h1 className="text-[24px] text-[#254354] font-bold pt-4">
-                Custom Ad Messaging
-              </h1>
-              <p className="text-[12px] text-[#61737D] pt-2 w-2/3">
-                DOOH campaigns should adapt creative content based on varying factors like location, time (day vs. night), or weather (sunny vs. rainy). This ensures that ads resonate with the audience in different contexts, driving higher engagement rates.
-              </p>
-              <div className="w-full flex justify-start py-4">
-                <PrimaryButton
-                  reverse={true}
-                  title="Know More"
-                  rounded="rounded-[4px]"
-                />
-              </div>
-
-            </div>
           </div>
         </div>
-        <div className="pb-24 px-8">
-          <div className="grid grid-cols-12 gap-12">
-            <div className="col-span-6 flex flex-col justify-center">
-              <h1 className="text-[56px] font-bold text-[#254354] mb-[-10px]">Advance Audience</h1>
-              <h1 className="text-[56px] font-bold text-[#254354] mt-[-10px]">Measurement Using IOT</h1>
-              <p className="text-[14px] text-[#83939C] text-start">
-                PROOH’s platform uses HD IP cameras to capture real-time impressions in an “audience Contact Zone,” converting vehicle and pedestrian counts into impressions by type and demographics.
-              </p>
-              <p className="text-[14px] text-[#83939C] pt-4 text-start">
-                The platform analyses vehicles by type and color while gathering pedestrian demographics. Results are shown on a dashboard, offering validated metrics for OOH and DOOH targeting.
-              </p>
-            </div>
-            <div className="col-span-6 flex items-center justify-center">
-              <img className="h-[400px]" src={advanceAudience} alt="advanceAudienceMeasurement"/>
-            </div>
+
+        <div className="bg-gradient-to-b from-[#F3FAFF] to-[#FFFFFF] p-16 mx-[-40px]">
+          <div className="flex gap-2 items-center ">
+            <i className="fi fi-sr-heart lg:text-[14px] text-[12px] text-primaryButton flex items-center"></i>
+            <h1 className="lg:text-[14px] text-[12px]">Wall of love</h1>
+          </div>
+          <div className="w-3/5">
+            <h1 className="lg:text-[48px] text-[40px] font-semibold">Feedback From Those {"We've"} Shared Experiences With</h1>
+            <p></p>
+          </div>
+          <div className="h-64 w-full rounded-lg overflow-hidden">
+            <TestimonialCarousel images={testimonials} />
           </div>
         </div>
-        <div className="pb-24 px-8">
-          <div className="grid grid-cols-12 gap-12">
-            <div className="col-span-6 flex flex-col justify-center">
-              <h1 className="text-[56px] font-bold text-[#254354] mb-[-10px]">Learn How To Use</h1>
-              <h1 className="text-[56px] font-bold text-[#254354] mt-[-10px]">Our Planning Tool</h1>
-              <h1 className="text-[56px] font-bold text-[#254354] mt-[-20px]">Effectively</h1>
 
-              <p className="text-[14px] text-[#83939C] text-start">
-              Our platform helps your business in managing expenses. These are some of the reasons why you should use our platform.
+        <div className="p-8">
+          <div className="flex gap-2 items-center">
+            <i className="fi fi-sr-heart lg:text-[14px] text-[12px] text-primaryButton flex items-center"></i>
+            <h1 className="lg:text-[14px] text-[12px]">Our Team</h1>
+          </div>
+          <div className="grid grid-cols-12">
+            <div className="col-span-5">
+              <h1 className="lg:text-[48px] md:text-[40px] font-bold">Meet The Creators Behind Our Vision</h1>
+            </div>
+            <div className="col-span-7 flex items-center">
+              <p className="lg:text-[20px] text-[16px]">
+                Meet the passionate leaders driving our mission. Their expertise and commitment to excellence propel us forward, creating lasting impact and inspiring success
               </p>
-              <div className="w-full flex justify-start py-4">
-                <PrimaryButton
-                  reverse={true}
-                  title="Know More"
-                  rounded="rounded-[4px]"
-                />
-              </div>
-            </div>
-            <div className="col-span-6">
-              <div className="rounded-[12px] h-80 bg-gray-100 my-4">
-
-              </div>
             </div>
           </div>
-        </div>
-        <div className="pb-24 px-8">
-          <div className="flex flex-col items-center">
-            <h1 className="text-[56px] font-bold text-[#254354] truncate">Meet the architects of our vision</h1>
-            <p className="text-[14px] text-[#83939C] w-3/4 text-center">Meet the passionate leaders driving our mission. There expertise and commitment to excellence propel us forward, creating lasting impact and inspiring success.</p>
+          <div >
+            <RightSideArrowsImageCarousel
+              images={meetArchitects}
+             />
           </div>
-          <div className="">
+        </div>
 
-          </div>
-        </div>
-        <div className="pb-20 px-8">
+        <div className="py-20 px-8">
           <div className="flex flex-col items-center">
             <h1 className="text-[56px] font-bold text-[#254354] mb-[-10px]">Reach Out Anytime, {"We're"}</h1>
             <h1 className="text-[56px] font-bold text-[#254354] mt-[-10px]">Just A Click Away</h1>
@@ -609,14 +729,8 @@ export const Landing: React.FC = () => {
             <ContactForm />
           </div>
         </div>
-        <div className="pb-20 px-8">
-          <div className="flex flex-col items-center">
-            <h1 className="text-[56px] font-bold text-[#254354] mb-[-10px]">Find us on google map</h1>
-            <p className="text-[14px] text-[#83939C] w-3/4 text-center">Easily locate our business on Google Maps for accurate directions and nearby landmarks. Whether {"you're"} driving or walking, Google Maps will guide you directly to us</p>
-          </div>
-          <div className="">
-            
-          </div>
+        <div className="mx-[-80px] mb-[-60px] bottom-0">
+          <PageFooter />
         </div>
       </div>
     </div>

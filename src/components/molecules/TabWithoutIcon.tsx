@@ -23,11 +23,11 @@ export function TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
           }}
           className={
             currentTab === tab.id
-              ? "px-1 flex gap-4 items-center text-[14px] border-b-2 border-blue-500 py-1"
+              ? "px-1 flex gap-4 items-center text-[14px] border-b-2 border-primaryButton py-1"
               : "px-1 flex gap-2 items-center text-[14px] py-1 px-2"
           }
         >
-          <h1 className={currentTab === tab.id ? "text-blue-500 truncate" : "text-gray-500 truncate"}>{tab.label}</h1>
+          <h1 className={currentTab === tab.id ? "text-primaryButton font-semibold truncate" : "text-gray-500 truncate"}>{tab.label}</h1>
           {tab.params && (
             <div className="flex gap-2 items-center">
               <Tooltip

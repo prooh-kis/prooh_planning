@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  purge: true,
+  mode: 'jit',
+  content: ['./src/**/*.{js,jsx,ts,tsx,html}'],
   darkMode: 'class',
   theme: {
     fontSize: {
@@ -27,6 +29,10 @@ module.exports = {
         brand: "#52A2FF",
         competitor: "#20AA70",
         brand_competitor: "#FF5252",
+        'purple': '#3F3CBB',
+        'tahiti': '#3AB7BF',
+        'bubble-gum': '#FF77E9',
+        'bermuda': '#78DCCA',
         violet: "#8B5CF6",
         indigo: "#6366F1",
         blue: "#3B82F6",

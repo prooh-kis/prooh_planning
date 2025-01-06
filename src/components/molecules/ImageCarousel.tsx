@@ -54,7 +54,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
             <img
               src={image}
               alt={`Slide ${index}`}
-              className="w-full h-24 object-fit" // Adjust height here
+              className="w-full h-full object-fit" // Adjust height here
             />
           </div>
         ))}

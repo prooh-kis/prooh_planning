@@ -19,7 +19,7 @@ import {
   IKnowItAllPlanPage,
   StoreBasedPlanPage,
   MediaOwnerPage,
-  MarketsPage,
+  MarketersPage,
 } from "../pages";
 
 import { PrivateRoute } from "./PrivateRoute";
@@ -113,7 +113,7 @@ const Routers: React.FC = () => {
           path={MARKETS_PAGE}
           element={
             <PublicRoute>
-              <MarketsPage />
+              <MarketersPage />
             </PublicRoute>
           }
         />

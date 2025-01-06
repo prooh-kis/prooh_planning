@@ -38,6 +38,7 @@ export const Header: React.FC = () => {
       <div className="col-span-2 flex items-center justify-end gap-8">
         <button
           type="submit"
+          onClick={() => navigate("/")}
           className={`${
             location.pathname === "/"
               ? "lg:text-[14px] text-[12px] font-semibold text-[#0094FF]"

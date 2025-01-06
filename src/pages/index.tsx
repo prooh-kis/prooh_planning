@@ -16,4 +16,4 @@ export { StoreBasedPlanPage } from "./StoreBasedPlanPage";
 export { IKnowItAllPlanPage } from "./IKnowItAllPlanPage";
 
 export { MediaOwnerPage } from "./MediaOwnerPage";
-export { MarketsPage } from "./MarketsPage";
+export { MarketersPage } from "./MarketersPage";
