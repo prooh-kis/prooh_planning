@@ -18,6 +18,7 @@ import {
   TriggerBasedPlanPage,
   IKnowItAllPlanPage,
   StoreBasedPlanPage,
+  MediaOwnerPage,
 } from "../pages";
 
 import { PrivateRoute } from "./PrivateRoute";
@@ -26,6 +27,7 @@ import {
   CAMPAIGN_DETAILS_PAGE,
   FORGET_PASSWORD,
   HOME,
+  MEDIA_OWNER_PAGE,
   MY_CAMPAIGNS_LIST,
   MY_PLANS_LIST,
   MY_REQUESTS_LIST,
@@ -34,6 +36,7 @@ import {
   VERIFY_EMAIL,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
+import { PublicRoute } from "./PublicRoute";
 
 const Routers: React.FC = () => {
   return (
@@ -93,6 +96,14 @@ const Routers: React.FC = () => {
             <PrivateRoute layout={HomePageLayout}>
               <MyRequestsListPage />
             </PrivateRoute>
+          }
+        />
+        <Route
+          path={MEDIA_OWNER_PAGE}
+          element={
+            <PublicRoute>
+              <MediaOwnerPage />
+            </PublicRoute>
           }
         />
         <Route

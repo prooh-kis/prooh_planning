@@ -14,3 +14,5 @@ export { SpecialDayPlanPage } from "./SpecialDayPlanPage";
 export { TriggerBasedPlanPage } from "./TriggerBasedPlanPage";
 export { StoreBasedPlanPage } from "./StoreBasedPlanPage";
 export { IKnowItAllPlanPage } from "./IKnowItAllPlanPage";
+
+export { MediaOwnerPage } from "./MediaOwnerPage";

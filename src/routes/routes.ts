@@ -11,6 +11,8 @@ export const MY_PLANS_LIST = "/myPlansList"
 
 export const CAMPAIGN_DETAILS_PAGE = "/campaignDetails";
 
+export const MEDIA_OWNER_PAGE = "/media-owner"
+
 
 export const REGULARPLAN = "/regularplan/:id?";
 export const SPECIALDAYPLAN = "/specialdayplan/:id?";

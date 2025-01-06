@@ -9,7 +9,7 @@ import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 // import { ADD_SCREEN_CODE_RESET } from "../../../constants/screenDataConstant";
 import userImage from "../../assets/userImage.png";
 import { PrimaryButton } from "../../components/atoms/PrimaryButton";
-import { AUTH } from "../../routes/routes";
+import { AUTH, MEDIA_OWNER_PAGE } from "../../routes/routes";
 
 // import { getCreatives } from "../../../actions/creativeAction";
 // import { USER_ROLE_PRIMARY } from "../../../constants/userConstants";
@@ -32,17 +32,39 @@ export const Header: React.FC = () => {
           className="flex flex-col mb-2 -space-y-1 pt-2"
           onClick={() => navigate("/")}
         >
-          <h1 className="text-xl font-black">Prooh.Ai</h1>
+          <h1 className="text-xl font-black">PROOH.AI</h1>
         </div>
       </div>
       <div className="col-span-2 flex items-center justify-end gap-8">
-        <button type="submit" className={`${location.pathname === "/" ? "lg:text-[14px] text-[12px] font-semibold text-blue-500" : "lg:text-[14px] text-[12px]"}`}>
+        <button
+          type="submit"
+          className={`${
+            location.pathname === "/"
+              ? "lg:text-[14px] text-[12px] font-semibold text-[#0094FF]"
+              : "lg:text-[14px] text-[12px]"
+          }`}
+        >
           <h1>Home</h1>
         </button>
-        <button type="submit" className={`${location.pathname === "/marketers" ? "lg:text-[14px] text-[12px] font-semibold text-blue-500" : "lg:text-[14px] text-[12px]"}`}>
+        <button
+          type="submit"
+          className={`${
+            location.pathname === "/marketers"
+              ? "lg:text-[14px] text-[12px] font-semibold text-[#0094FF]"
+              : "lg:text-[14px] text-[12px]"
+          }`}
+        >
           <h1>Marketers</h1>
         </button>
-        <button type="submit" className={`${location.pathname === "/media-owner" ? "lg:text-[14px] text-[12px] font-semibold text-blue-500" : "lg:text-[14px] text-[12px]"}`}>
+        <button
+          type="submit"
+          onClick={() => navigate(MEDIA_OWNER_PAGE)}
+          className={`${
+            location.pathname === "/media-owner"
+              ? "lg:text-[14px] text-[12px] text-[#0094FF] font-semibold"
+              : "lg:text-[14px] text-[12px]"
+          }`}
+        >
           <h1>Media Owner</h1>
         </button>
         {userInfo ? (
