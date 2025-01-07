@@ -7,7 +7,7 @@ export const CreateCampaignOption = () => {
         <h1 className="text-white text-[30px] sm:text-[49px] font-bold w-full sm:w-[593px]">
           {` Ready to build your team's dream Campaign`}
         </h1>
-        <button className="bg-white text-black px-[20px] sm:px-[58px] py-[10px] sm:py-[20px] rounded-[9px] text-[14px] sm:text-[16px] font-bold mt-8">
+        <button className="bg-white text-black px-[20px] sm:px-[58px] py-[10px] sm:py-[20px] rounded-[9px] text-[14px] sm:text-[16px] font-bold mt-8 hover:bg-black hover:text-white hover:text-[18px]">
           Create Campaign
         </button>
       </div>

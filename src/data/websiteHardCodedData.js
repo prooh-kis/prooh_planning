@@ -1,4 +1,5 @@
 import {
+  icon33,
   image1,
   image10,
   image11,
@@ -30,8 +31,8 @@ export const marketPageData1 = [
     description: `Unprecedented access to 800+ OOH & DOOH media units via multiple
                 purchase agreements media owners & through programmatic SSP
                 integrations.`,
-    icon: <i className="fi fi-sr-users-alt text-white text-[30px]" />,
-    isImage: false,
+    icon: <img src={icon33} alt="rewards" />,
+    isImage: true,
   },
   {
     title: "Assured 20% Savings",
@@ -163,8 +164,8 @@ export const mediaOwnerPageData1 = [
     description: `Unprecedented access to 800+ OOH & DOOH media units via multiple
                 purchase agreements media owners & through programmatic SSP
                 integrations.`,
-    icon: <i className="fi fi-sr-users-alt text-white text-[30px]" />,
-    isImage: false,
+    icon: <img src={icon33} alt="rewards" />,
+    isImage: true,
   },
   {
     title: "Assured Business With Quarterly MG",
