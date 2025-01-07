@@ -1,5 +1,9 @@
-
-import { AUTH, MY_CAMPAIGNS_LIST, MY_PLANS_LIST, MY_REQUESTS_LIST } from "../../routes/routes";
+import {
+  AUTH,
+  MY_CAMPAIGNS_LIST,
+  MY_PLANS_LIST,
+  MY_REQUESTS_LIST,
+} from "../../routes/routes";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signout } from "../../actions/userAction";
@@ -7,7 +11,7 @@ import { useState } from "react";
 
 export const Menu = (props: any) => {
   const { userInfo } = props;
-  
+
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
 
@@ -60,14 +64,14 @@ export const Menu = (props: any) => {
                 toggleDropdown();
                 navigate(data.path);
               }}
-              className="px-4 py-2  text-gray-700 hover:bg-sky-600 hover:text-white cursor-pointer"
+              className="px-4 py-2  text-gray-700 hover:bg-[#129BFF] hover:text-white cursor-pointer"
             >
               {data?.label}
             </div>
           ))}
           <div
             onClick={signOutHandler}
-            className="px-4 py-2 text-gray-700 hover:bg-sky-600 hover:text-white cursor-pointer"
+            className="px-4 py-2 text-gray-700 hover:bg-[#129BFF] hover:text-white cursor-pointer"
           >
             Log out
           </div>

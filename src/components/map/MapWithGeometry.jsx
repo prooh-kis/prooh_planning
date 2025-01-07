@@ -1,9 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import ReactMapGL, { Source, Layer, Marker, Popup, useControl } from "react-map-gl";
+import ReactMapGL, {
+  Source,
+  Layer,
+  Marker,
+  Popup,
+  useControl,
+} from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import mapboxgl from "mapbox-gl";
 import { MapboxScreen } from "../popup";
-import MapboxDraw from "@mapbox/mapbox-gl-draw"
+import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import * as turf from "@turf/turf";
@@ -12,8 +18,6 @@ mapboxgl.accessToken =
   // process.env.REACT_APP_MAPBOX ||
   "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A";
 
-
-  
 export function MapWithGeometry(props) {
   const mapRef = useRef(null);
   const popupRef = useRef(null);
@@ -26,12 +30,15 @@ export function MapWithGeometry(props) {
 
   const [userLocation, setUserLocation] = useState(null);
 
+<<<<<<< Updated upstream
   const [viewState, setViewState] = useState({
     longitude: props?.geometry?.coordinates[1] || 77.0891,
     latitude: props?.geometry?.coordinates[0] || 28.495,
     zoom: props?.zoom || 5,
   });
 
+=======
+>>>>>>> Stashed changes
   // console.log(props?.data["brand"][0]?.concat(props?.data["comp"][0]))
   const coordinates =
     Object.keys(props?.data).length > 0
@@ -39,6 +46,7 @@ export function MapWithGeometry(props) {
       : [];
 
 
+<<<<<<< Updated upstream
 
 
 function MapDrawControl({
@@ -71,9 +79,41 @@ function MapDrawControl({
       position,
     }
   );
+=======
+  function MapDrawControl({
+    onCreate = () => {},
+    onUpdate = () => {},
+    onDelete = () => {},
+    position,
+  }) {
+    useControl(
+      () =>
+        new MapboxDraw({
+          displayControlsDefault: false, // Hide default controls
+          controls: {
+            polygon: true, // Enable polygon drawing
+            trash: true, // Enable delete control
+          },
+          defaultMode: "draw_polygon", // Set default mode to polygon drawing
+        }),
+      ({ map }) => {
+        map.on("draw.create", onCreate);
+        map.on("draw.update", onUpdate);
+        map.on("draw.delete", onDelete);
+      },
+      ({ map }) => {
+        map.off("draw.create", onCreate);
+        map.off("draw.update", onUpdate);
+        map.off("draw.delete", onDelete);
+      },
+      {
+        position,
+      }
+    );
+>>>>>>> Stashed changes
 
-  return null;
-}
+    return null;
+  }
 
 const updateSelectedMarkers = (polygons) => {
   const updatedPolygons = polygons.map((polygon) => {
@@ -85,6 +125,7 @@ const updateSelectedMarkers = (polygons) => {
       // Check if the point is inside the current polygon
       return booleanPointInPolygon(point, polygon);
     });
+<<<<<<< Updated upstream
     return { ...polygon, screens: selectedScreens };
   });
 
@@ -164,6 +205,65 @@ const onDeletePolygon = useCallback(
   },
   [props]
 );
+=======
+    props?.onPolygonComplete(selected);
+    setSelectedMarkers(
+      selected?.map((m) => [
+        m.location.geographicalLocation.longitude,
+        m.location.geographicalLocation.latitude,
+        m._id,
+      ])
+    );
+
+    setUnselectedMarkers(
+      props.allScreens
+        ?.filter((s) => !selected?.map((f) => f._id).includes(s._id))
+        ?.map((m) => [
+          m.location.geographicalLocation.longitude,
+          m.location.geographicalLocation.latitude,
+          m._id,
+        ])
+    );
+  };
+
+  const onCreatePolygon = useCallback(
+    (e) => {
+      const newPolygon = e.features[0];
+      setPolygons((prevPolygons) => {
+        const updatedPolygons = [...prevPolygons, newPolygon];
+        updateSelectedMarkers(updatedPolygons); // Update markers with all polygons
+        return updatedPolygons;
+      });
+    },
+    [props?.allScreens]
+  );
+
+  const onUpdate = useCallback(
+    (e) => {
+      const updatedPolygon = e.features[0];
+      setPolygons((prevPolygons) =>
+        prevPolygons.map((polygon) =>
+          polygon.id === updatedPolygon.id ? updatedPolygon : polygon
+        )
+      );
+      updateSelectedMarkers(polygons);
+    },
+    [polygons]
+  );
+
+  const onDelete = useCallback(
+    (e) => {
+      const deletedPolygonIds = e.features.map((feature) => feature.id);
+      setPolygons((prevPolygons) =>
+        prevPolygons.filter(
+          (polygon) => !deletedPolygonIds.includes(polygon.id)
+        )
+      );
+      updateSelectedMarkers();
+    },
+    [props?.allScreens, polygons]
+  );
+>>>>>>> Stashed changes
 
   // Get user's current location
   useEffect(() => {
@@ -201,11 +301,7 @@ const onDeletePolygon = useCallback(
     return false;
   };
 
-  const createGeoJSONCircle = (
-    center,
-    radiusInKm,
-    points = 64
-  ) => {
+  const createGeoJSONCircle = (center, radiusInKm, points = 64) => {
     const coords = {
       latitude: center[1],
       longitude: center[0],
@@ -322,8 +418,7 @@ const onDeletePolygon = useCallback(
     setUnselectedMarkers(
       props.allScreens
         ?.filter(
-          (s) =>
-            !props?.filteredScreens?.map((f) => f._id).includes(s._id)
+          (s) => !props?.filteredScreens?.map((f) => f._id).includes(s._id)
         )
         ?.map((m) => [
           m.location.geographicalLocation.longitude,
@@ -437,6 +532,7 @@ const onDeletePolygon = useCallback(
               </div>
             </Marker>
           ))}
+<<<<<<< Updated upstream
           {unSelectedMarkers?.length !== selectedMarkers?.length &&
             unSelectedMarkers &&
             unSelectedMarkers.map((marker, i) => (
@@ -451,6 +547,24 @@ const onDeletePolygon = useCallback(
                   }`}
                   className="cursor-pointer"
                   onMouseEnter={(e) => {
+=======
+        {unSelectedMarkers?.length !== selectedMarkers?.length &&
+          unSelectedMarkers &&
+          unSelectedMarkers.map((marker, i) => (
+            <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
+              <div
+                title={`UnSeletced screens ${
+                  props.allScreens?.filter((s) =>
+                    props?.filteredScreens?.map((f) => f._id).includes(s._id)
+                  )?.length
+                }`}
+                className="cursor-pointer"
+              >
+                <i
+                  // [#F94623]
+                  className="fi-ss-circle text-[#F94623] text-[12px]"
+                  onClick={(e) => {
+>>>>>>> Stashed changes
                     e.stopPropagation();
                     setIsSelectedData(false);
                     getSingleScreenData(marker[2]);
@@ -500,6 +614,7 @@ const onDeletePolygon = useCallback(
               </div>
             </Marker>
           ))}
+<<<<<<< Updated upstream
           {routeData?.length > 0 && routeData?.map((route, index) => (
             <Marker key={index} latitude={route?.coordinates[route?.coordinates?.length - 1]?.[1]} longitude={route?.coordinates[route?.coordinates?.length - 1]?.[0]}>
               <div>
@@ -572,6 +687,24 @@ const onDeletePolygon = useCallback(
                 "fill-color": ["get", "color"],
                 "fill-opacity": 0.5,
               }}
+=======
+
+        {screenData && (
+          <Popup
+            key={screenData._id}
+            latitude={screenData?.location?.geographicalLocation?.latitude}
+            longitude={screenData?.location?.geographicalLocation?.longitude}
+            onClose={() => {
+              setScreenData(null);
+            }}
+            anchor="left"
+          >
+            <MapboxScreen
+              handleAddManualSelection={props?.handleAddManualSelection}
+              screenData={screenData}
+              handleSelectFromMap={props.handleSelectFromMap}
+              isSelectedData={isSelectedData}
+>>>>>>> Stashed changes
             />
           </Source>
 
@@ -586,10 +719,55 @@ const onDeletePolygon = useCallback(
                 "fill-color": "#088",
                 "fill-opacity": 0.2,
               }}
+<<<<<<< Updated upstream
             />
           </Source>
         </ReactMapGL>
       </div>
+=======
+            >
+              <Layer
+                id={`layer-${index}`}
+                type="line"
+                paint={{
+                  "line-color": `${randomColor(index)}`,
+                  "line-width": 4,
+                }}
+              />
+            </Source>
+          ))}
+
+        <Source id="circle-data" type="geojson" data={circlesData}>
+          <Layer
+            id="circle-layer"
+            type="fill"
+            paint={{
+              // "fill-color": "red",
+              "fill-color": ["get", "color"],
+              "fill-opacity": 0.5,
+            }}
+          />
+        </Source>
+
+        <Source
+          id="polygon-data"
+          type="geojson"
+          data={{
+            type: "FeatureCollection",
+            features: polygons,
+          }}
+        >
+          <Layer
+            id="polygon-layer"
+            type="fill"
+            paint={{
+              "fill-color": "#088",
+              "fill-opacity": 0.5,
+            }}
+          />
+        </Source>
+      </ReactMapGL>
+>>>>>>> Stashed changes
     </div>
   );
 }

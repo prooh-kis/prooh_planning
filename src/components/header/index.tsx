@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Menu } from "./Menu";
@@ -19,82 +19,191 @@ export const Header: React.FC = () => {
   const location = useLocation();
   const dispatch = useDispatch<any>();
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
+  const handleMenuToggle = () => setIsMenuOpen((prev) => !prev);
+
+  const data = [
+    {
+      title: "Home",
+      path: "/",
+    },
+    {
+      title: "Markets",
+      path: MARKETS_PAGE,
+    },
+    {
+      title: "Media Owner",
+      path: MEDIA_OWNER_PAGE,
+    },
+  ];
+
   useEffect(() => {}, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="w-full h-16 bg-white border border-b flex items-center justify-between fixed z-50">
-      <div className="col-span-2 flex items-center mx-10">
-        <ToastContainer />
+    <div className="w-full h-16 bg-white border-b flex items-center justify-between fixed z-50 sm:px-16 px-4">
+      {/* Logo Section */}
+      <div className="flex items-center">
         <div
-          className="flex flex-col mb-2 -space-y-1 pt-2"
+          className="flex flex-col items-center justify-center cursor-pointer p-2"
           onClick={() => navigate("/")}
         >
-          <h1 className="text-xl font-black">PROOH.AI</h1>
+          <h1 className="text-xl sm:text-2xl font-extrabold tracking-[-0.02em]">
+            PROOH.AI
+          </h1>
         </div>
       </div>
-      <div className="col-span-2 flex items-center justify-end gap-8">
-        <button
-          type="submit"
-          onClick={() => navigate("/")}
-          className={`${
-            location.pathname === "/"
-              ? "lg:text-[14px] text-[12px] font-semibold text-[#0094FF]"
-              : "lg:text-[14px] text-[12px]"
-          }`}
-        >
-          <h1>Home</h1>
-        </button>
-        <button
-          type="submit"
-          onClick={() => navigate(MARKETS_PAGE)}
-          className={`${
-            location.pathname === "/marketers"
-              ? "lg:text-[14px] text-[12px] font-semibold text-[#0094FF]"
-              : "lg:text-[14px] text-[12px]"
-          }`}
-        >
-          <h1>Marketers</h1>
-        </button>
-        <button
-          type="submit"
-          onClick={() => navigate(MEDIA_OWNER_PAGE)}
-          className={`${
-            location.pathname === "/media-owner"
-              ? "lg:text-[14px] text-[12px] text-[#0094FF] font-semibold"
-              : "lg:text-[14px] text-[12px]"
-          }`}
-        >
-          <h1>Media Owner</h1>
-        </button>
-        {userInfo ? (
-          <div className="h-10 w-auto flex items-center space-x-2 pr-10">
-            <div className="h-10 flex items-center gap-2">
-              <img src={userImage} alt="userImage" className="h-10" />
-              <div className="justify-center w-30 truncate">
-                <h3 className="text-lg">{userInfo.name}</h3>
-                <p className="text-xs font-semibold text-gray-700">
-                  {userInfo.isBrand && "Campaign Planner"}
-                </p>
-              </div>
-              <div>
-                <Menu userInfo={userInfo} />
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="px-4">
+
+      {/* Navigation Links */}
+      {!userInfo && (
+        <div className="hidden md:block md:flex items-center gap-4">
+          {data?.map((d1) => (
             <button
-              onClick={() => navigate(AUTH)}
-              className="border border-2 px-6 py-2 rounded-md bg-[#00A0FA] font-bold text-[#FFFFFF] hover:text-[#00A0FA] hover:bg-white hover:border-[#00A0FA]"
+              key={d1.title}
+              type="button"
+              onClick={() => navigate(d1.path)}
+              className={`${
+                location.pathname === d1.path
+                  ? "text-sm lg:text-base font-semibold text-[#0094FF] border-b-2 border-[#129BFF] py-5"
+                  : "text-sm lg:text-base py-1"
+              }`}
             >
-              Get In
+              {d1.title}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* User Info or Auth Buttons */}
+      {userInfo ? (
+        <div className="flex items-center space-x-2 pr-4">
+          <img
+            src={userImage}
+            alt="User"
+            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full"
+          />
+          <div className="truncate">
+            <h3 className="text-md sm:text-lg font-semibold">
+              {userInfo.name}
+            </h3>
+            {userInfo.isBrand && (
+              <p className="text-xs font-semibold text-gray-700">
+                Campaign Planner
+              </p>
+            )}
+          </div>
+          <Menu userInfo={userInfo} />
+        </div>
+      ) : (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => navigate(AUTH)}
+            className="bg-[#129BFF] text-white rounded-full px-4 py-2 text-sm sm:text-base font-bold hover:bg-white hover:text-[#129BFF] border hover:border-[#129BFF] hidden md:block "
+          >
+            Login
+          </button>
+          <button
+            onClick={() => navigate(AUTH)}
+            className="bg-white text-[#888888] border border-[#DBDBDB] rounded-full px-4 py-2 text-sm sm:text-base font-bold hover:bg-[#888888] hover:text-white hidden md:block"
+          >
+            Sign Up
+          </button>
+          {/* Mobile Menu Icon */}
+          <div className="md:hidden flex items-center">
+            <button onClick={handleMenuToggle} className="focus:outline-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-8 h-8 text-gray-700"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
             </button>
           </div>
-        )}
-      </div>
+          {/* Mobile Dropdown Menu */}
+          {isMenuOpen && (
+            <div
+              ref={dropdownRef}
+              className="absolute top-16 right-4 bg-white shadow-md rounded-lg w-48 z-50"
+            >
+              <ul className="flex flex-col p-2">
+                <li className="border-b">
+                  <button
+                    onClick={() => {
+                      navigate("/");
+                      setIsMenuOpen(false);
+                    }}
+                    className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100"
+                  >
+                    Home
+                  </button>
+                </li>
+                <li className="border-b">
+                  <button
+                    onClick={() => {
+                      navigate(MARKETS_PAGE);
+                      setIsMenuOpen(false);
+                    }}
+                    className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100"
+                  >
+                    Marketers
+                  </button>
+                </li>
+                <li className="border-b">
+                  <button
+                    onClick={() => {
+                      navigate(MEDIA_OWNER_PAGE);
+                      setIsMenuOpen(false);
+                    }}
+                    className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100"
+                  >
+                    Media Owner
+                  </button>
+                </li>
+
+                <li className="">
+                  <button
+                    onClick={() => {
+                      navigate(AUTH);
+                      setIsMenuOpen(false);
+                    }}
+                    className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100"
+                  >
+                    Get In
+                  </button>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
