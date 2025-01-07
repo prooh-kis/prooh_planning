@@ -25,3 +25,6 @@ export { CarouselImageView } from "./molecules/CarouselImageView";
 export { ViewPlanPic } from "./segments/ViewPlanPic";
 
 export { FileUploadButton } from "./FileUploadButton";
+
+//molecule
+export { CreateCampaignOption } from "./molecules/CreateCampaignOption";
