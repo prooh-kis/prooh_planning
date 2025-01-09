@@ -39,7 +39,7 @@ const MyCarousel = ({ images, showThumbnails=true }: Props) => {
         ))}
       </Carousel>
       {showThumbnails && (
-        <div className="py-2 grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {images?.map((image, index) => (
             <div className="col-span-1" key={index}
               onClick={() => {

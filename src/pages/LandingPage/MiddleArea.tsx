@@ -22,9 +22,7 @@ export const MiddleArea: React.FC = () => {
       {userInfo && userInfo?.isBrand && userInfo?.userRole === "secondary" ? (
         <CampaignTemplates />
       ) : (
-        <div className="">
-          <Landing />
-        </div>
+        <Landing />
       )}
     </div>
   );

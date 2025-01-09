@@ -12,7 +12,7 @@ export const ContactForm = () => {
   };
 
   return (
-    <div className="px-4">
+    <div className="px-4 w-full">
       <div className="py-20 px-4 sm:px-8 bg-gray-100 flex justify-center rounded-[50px]">
         <div className="flex flex-col items-center max-w-[90%] sm:max-w-[640px]">
           {/* Title */}
