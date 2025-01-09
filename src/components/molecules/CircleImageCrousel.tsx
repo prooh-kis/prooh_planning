@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import quotes from "../../assets/icons/quotes.png";
 
 interface CarouselProps {
@@ -21,9 +21,9 @@ export const CircleImageCarousel: React.FC<CarouselProps> = ({ images }) => {
   };
 
   return (
-    <div className="relative w-full mx-auto overflow-hidden p-2">
+    <div className="relative w-full mx-auto overflow-hidden p-2 w-[1144px]">
       {/* Carousel Wrapper */}
-      <div className="flex items-center justify-center p-4">
+      <div className="flex items-center justify-center p-4 ">
         {/* Arrows */}
         <button
           onClick={handlePrevious}
@@ -33,16 +33,17 @@ export const CircleImageCarousel: React.FC<CarouselProps> = ({ images }) => {
         </button>
         <div className="flex space-x-4 relative p-2 px-8">
           {images.map((image, index) => {
-            const position = (index - currentIndex + images.length) % images.length;
-            let scale = 'scale-75';
-            let opacity = 'opacity-70 grayscale';
-            let zIndex = 'z-0';
+            const position =
+              (index - currentIndex + images.length) % images.length;
+            let scale = "scale-75";
+            let opacity = "opacity-70 grayscale";
+            let zIndex = "z-0";
 
             // Center image styles
             if (position === 0) {
-              scale = 'scale-125';
-              opacity = 'opacity-100';
-              zIndex = 'z-10';
+              scale = "scale-125";
+              opacity = "opacity-100";
+              zIndex = "z-10";
             }
 
             return (
@@ -53,7 +54,7 @@ export const CircleImageCarousel: React.FC<CarouselProps> = ({ images }) => {
                 <img
                   src={image}
                   alt={`Image ${index + 1}`}
-                  className="w-auto h-auto md:w-auto md:h-auto object-cover rounded-full shadow-lg"
+                  className="w-auto h-auto mx-h-[114px] max-w-[114px] object-cover rounded-full shadow-lg"
                 />
               </div>
             );
@@ -68,7 +69,11 @@ export const CircleImageCarousel: React.FC<CarouselProps> = ({ images }) => {
       </div>
       <div className="flex items-end justify-center gap-4 py-8">
         <div className="flex flex-col items-center">
-          <img className="h-8 w-8 bg-blue-500 mask mask-image" src={quotes} alt={"quotes"} />
+          <img
+            className="h-8 w-8 bg-blue-500 mask mask-image"
+            src={quotes}
+            alt={"quotes"}
+          />
           <h1 className="lg:text-[24px] text-[18px] font-bold">
             Mr. Vinay Talwar,
           </h1>
@@ -76,7 +81,9 @@ export const CircleImageCarousel: React.FC<CarouselProps> = ({ images }) => {
         </div>
         <div className="flex items-end justify-center w-3/4">
           <p className="lg:text-[20px] text-[20px] text-wrap">
-            Being a tech company, we believe in everything which can demonstrate measurability. Prooh practices are extremely fresh and delivers the assurances around accountability.
+            Being a tech company, we believe in everything which can demonstrate
+            measurability. Prooh practices are extremely fresh and delivers the
+            assurances around accountability.
           </p>
         </div>
       </div>

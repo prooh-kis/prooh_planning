@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import "./index.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AnimatedIcon } from "../../components/molecules/AnimatedIcon";
@@ -12,20 +13,20 @@ import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { LANDING_PAGE_DATA } from "../../constants/localStorageConstants";
 import { LandingPageListView } from "../../components/molecules/LandingPageListView";
 import { LandingPageTableView } from "../../components/molecules/LandingPageTableView";
-import advanceAudience from "../../assets/images/advanceAudience.png";
 import { ContactForm } from "../../components/segments/ContactForm";
 import { AUTH } from "../../routes/routes";
-import { CarouselImageView, TabWithoutIcon } from "../../components";
+import {
+  CarouselImageView,
+  CreateCampaignOption,
+  TabWithoutIcon,
+} from "../../components";
+import quotes from "../../assets/icons/quotes.png";
 import { CircleImageCarousel } from "../../components/molecules/CircleImageCrousel";
 import imageA from "../../assets/images/imageA.png";
 import imageB from "../../assets/images/imageB.png";
 import imageC from "../../assets/images/imageC.png";
 import imageD from "../../assets/images/imageD.png";
 import imageE from "../../assets/images/imageE.png";
-import basicDetails from "../../assets/images/basicDetails.png";
-import targetAudienceTP from "../../assets/images/targetAudienceTP.png";
-import advanceFilters from "../../assets/images/advanceFilters.png";
-import comparePlan from "../../assets/images/comparePlan.png";
 import asus from "../../assets/images/asus.png";
 import samsung from "../../assets/images/samsung.png";
 import blinkit from "../../assets/images/blinkit-a.png";
@@ -49,14 +50,12 @@ import testiO2 from "../../assets/images/testi02.png";
 import testiO3 from "../../assets/images/testi03.png";
 import testiO4 from "../../assets/images/testi04.png";
 
-
 import UserImage from "../../assets/userImage.png";
 import { RightSideArrowsImageCarousel } from "../../components/molecules/RightSideArrowsImageCrousel";
 import { TestimonialCarousel } from "../../components/molecules/TestimonialCarousel";
 import { PageFooter } from "../../components/PageFooter";
-
-
-
+import { steps } from "../../data/LandingPageData";
+import { testO11 } from "../../assets";
 const confetti = require("../../assets/lottie/confetti.json");
 
 const images = [
@@ -76,61 +75,71 @@ const images = [
   timesprime,
 ];
 
-const carouselImages = [
-  imageA,
-  imageB,
-  imageC,
-  imageD,
-  imageE,
+const carouselImages = [imageA, imageB, imageC, imageD, imageE];
+
+const tabData = [
+  {
+    id: "1",
+    label: "Advertiser",
+    params: "",
+  },
+  {
+    id: "2",
+    label: "Media Owner",
+    params: "",
+  },
+  {
+    id: "3",
+    label: "Data Hero",
+    params: "",
+  },
 ];
 
-const tabData = [{
-  id: "1",
-  label: "Advertiser",
-  params: ""
-},{
-  id: "2",
-  label: "Media Owner",
-  params: ""
-},{
-  id: "3",
-  label: "Data Hero",
-  params: ""
-}];
+const advertisersSteps = [
+  {
+    id: "1",
+    label: "Basic Details",
+  },
+  {
+    id: "2",
+    label: "Target Audience And Touchpoints",
+  },
+  {
+    id: "3",
+    label: "Advance Filters",
+  },
+  {
+    id: "4",
+    label: "Compare Plan",
+  },
+  {
+    id: "5",
+    label: "Billing",
+  },
+  {
+    id: "6",
+    label: "Campaign Report",
+  },
+];
 
-const advertisersSteps = [{
-  id: "1",
-  label: "Basic Details"
-},{
-  id: "2",
-  label: "Target Audience And Touchpoints"
-},{
-  id: "3",
-  label: "Advance Filters"
-},{
-  id: "4",
-  label: "Compare Plan"
-},{
-  id: "5",
-  label: "Billing"
-},{
-  id: "6",
-  label: "Campaign Report"
-}];
-
-const dataHeroTabs = [{
-  id: "1",
-  label: "All(98)"
-},{
-  id: "2",
-  label: "Media Owner"
-},{
-  id: "3",
-  label: "Advertiser"
-},{
-  id: "4",
-  label: "Food & Beverage"
-}];
+const dataHeroTabs = [
+  {
+    id: "1",
+    label: "All(98)",
+  },
+  {
+    id: "2",
+    label: "Media Owner",
+  },
+  {
+    id: "3",
+    label: "Advertiser",
+  },
+  {
+    id: "4",
+    label: "Food & Beverage",
+  },
+];
 
 const dataHeroUsersImages = [
   UserImage,
@@ -140,44 +149,43 @@ const dataHeroUsersImages = [
   UserImage,
   UserImage,
   UserImage,
-  UserImage,
-  UserImage,
-  UserImage,
-  UserImage,
-  UserImage,
-  UserImage,
-  UserImage,
-  UserImage,
 ];
 
-const meetArchitects = [{
-  id: "1",
-  image: ankur,
-  name: "Ankur Rastogi",
-  role: "Founder, All About Outdoor, India",
-},{
-  id: "2",
-  image: vishnu,
-  name: "Vishnu Mohan",
-  role: "Founder, Avyan Holdings, Singapore",
-},{
-  id: "3",
-  image: anuj,
-  name: "Anuj Bhandari",
-  role: "CEO, All About Outdoor, India",
-},{
-  id: "4",
-  image: partha,
-  name: "Partha Sinha",
-  role: "Advisory Board, Prooh Technologies, India",
-}];
+const meetArchitects = [
+  {
+    id: "1",
+    image: ankur,
+    name: "Ankur Rastogi",
+    role: "Founder, All About Outdoor, India",
+  },
+  {
+    id: "2",
+    image: vishnu,
+    name: "Vishnu Mohan",
+    role: "Founder, Avyan Holdings, Singapore",
+  },
+  {
+    id: "3",
+    image: anuj,
+    name: "Anuj Bhandari",
+    role: "CEO, All About Outdoor, India",
+  },
+  {
+    id: "4",
+    image: partha,
+    name: "Partha Sinha",
+    role: "Advisory Board, Prooh Technologies, India",
+  },
+];
 
-const testimonials = [
-  testiO1,
-  testiO2,
-  testiO3,
-  testiO4
-]
+// const testimonials = [testiO1, testiO2, testiO3, testiO4]?.map((value) => {
+//   return {
+//     src: value,
+//     alt: value,
+//   };
+// });
+
+const testimonials = [testiO1, testiO2, testiO3, testiO4];
 
 export const Landing: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -187,16 +195,17 @@ export const Landing: React.FC = () => {
   const thirdDivRef = useRef<HTMLDivElement>(null);
   const fourthDivRef = useRef<HTMLDivElement>(null);
 
-
   const [landingPageData, setLandingPageData] = useState<any>({});
   const [view, setView] = useState<any>("map");
+  const [selectOption, setSelectOption] = useState<string>("Demand");
 
   const [currentTab, setCurrentTab] = useState<any>("1");
   const [currentAdvertiserTab, setCurrentAdvertiserTab] = useState<any>("1");
   const [currentMOTab, setCurrentMOTab] = useState<any>("1");
   const [currentDHTab, setCurrentDHTab] = useState<any>("1");
 
-  const [currentMeetDataHeroTab, setCurrentMeetDataHeroTab] = useState<any>("1");
+  const [currentMeetDataHeroTab, setCurrentMeetDataHeroTab] =
+    useState<any>("1");
 
   const [screenData, setScreenData] = useState<any>([]);
 
@@ -208,11 +217,10 @@ export const Landing: React.FC = () => {
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-  const landingPageDataGet = useSelector((state: any) => state.landingPageDataGet);
-  const {
-    loading, error, data
-  } = landingPageDataGet;
-
+  const landingPageDataGet = useSelector(
+    (state: any) => state.landingPageDataGet
+  );
+  const { loading, error, data } = landingPageDataGet;
 
   const [defCnt, setDefCnt] = useState<any>([]);
   const [defSt, setDefSt] = useState<any>([]);
@@ -369,7 +377,10 @@ export const Landing: React.FC = () => {
 
   const scrollToTarget = () => {
     if (targetDivRef.current) {
-      targetDivRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      targetDivRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
   };
 
@@ -381,8 +392,7 @@ export const Landing: React.FC = () => {
       setCityTouchpoints(fillCityData(landingPageData.screenData));
       setTouchpointsCities(fillTpData(landingPageData.screenData));
     }
-
-  },[landingPageData])
+  }, [landingPageData]);
 
   useEffect(() => {
     if (getDataFromLocalStorage(LANDING_PAGE_DATA)) {
@@ -393,28 +403,54 @@ export const Landing: React.FC = () => {
     dispatch(getLandingPageData());
   }, [dispatch, data]);
 
-  return (
-    <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
+  const CampaignStep = ({ step, image, title, description }: any) => (
+    <div className="grid grid-cols-12 gap-4 py-4">
+      <div className="col-span-7 flex items-center justify-center">
+        <div className="rounded-[12px] shadow-lg m-1">
+          <img src={image} alt={title} />
+        </div>
+      </div>
+      <div className="col-span-4 p-4 flex flex-col gap-4">
+        <p className="lg:text-[14px] text-[12px] font-bold text-[#B5B5B5]">
+          {step}
+        </p>
+        <h1 className="lg:text-[24px] text-[18px] text-[#254354] font-semibold text-wrap tracking-[0.04em]">
+          {title}
+        </h1>
+        <p className="lg:text-[20px] text-[16px] text-[#6D8596] tracking-[0.02em]">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
 
+  const CampaignSteps = ({
+    currentAdvertiserTab,
+  }: {
+    currentAdvertiserTab: string;
+  }) => {
+    const step = steps.find((s) => s.id === currentAdvertiserTab) || steps[0];
+    return <CampaignStep {...step} />;
+  };
+
+  return (
+    <div className="w-screen h-full pb-0 flex justify-center items-center">
       <div className="w-full h-full">
-        <div className="h-full grid grid-cols-12 gap-4">
-          <div className="col-span-4">
-            <div className="w-full flex justify-start items-center gap-2">
-              <div className="flex items-center">
-                <AnimatedIcon size={20} icon={confetti} />
-              </div>
-              <p className="lg:text-[14px]">
-                Prooh planner is now live
-              </p>
-            </div>
-            <div className="">
-              <h1 className="lg:text-[48px] md:text-[40px] font-black text-[#254354] text-wrap truncate">
-                End-to-end campaign management platform for <span className="bg-primaryButton text-white rounded p-1">DOOH</span>
+        <div className="h-full grid grid-cols-12 gap-16 px-16 py-32">
+          <div className="col-span-5">
+            <div className="w-[516px]">
+              <h1 className="lg:text-[48px] md:text-[40px] font-black text-[#20272C] text-wrap">
+                End-to-end campaign management platform for
+                <span className="bg-primaryButton text-white rounded-[10px] text-[32px] px-1 ml-2">
+                  DOOH
+                </span>
               </h1>
-              <p className="text-[16px] text-start text-wrap">
-                {"Prooh: India’s 1st 'Audience Guarantee' OOH Media Company, delivering data-driven planning, audience measurement, performance proof, and 100% cost transparency"}
+              <p className="text-[14px] text-[#4C6590] text-start text-wrap mt-8">
+                {
+                  "Prooh: India’s 1st 'Audience Guarantee' OOH Media Company, delivering data-driven planning, audience measurement, performance proof, and 100% cost transparency"
+                }
               </p>
-              <div className="py-4 flex justify-start">
+              <div className="mt-8 flex justify-start">
                 <PrimaryButton
                   title="Start Planning"
                   rounded="rounded-[5px]"
@@ -423,32 +459,30 @@ export const Landing: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="col-span-8 flex items-center justify-center">
-            <CarouselImageView showThumbnails={false} images={carouselImages}/>
+          <div className="col-span-7  p-0 m-0 flex flex-start">
+            <CarouselImageView showThumbnails={false} images={carouselImages} />
           </div>
         </div>
-        <div>
-        <div className="py-8">
-          <div className="flex justify-center gap-2 pt-8">
-            <button
-              className="border rounded-full p-2"
-              onClick={() => {}}
-            >
-              <h1 className="lg:text-[14px] md:text-[12px] font-bold text-gray-500">Demand</h1>
-            </button>
-            <button
-              className=""
-              onClick={() => {}}
-            >
-              <h1 className="lg:text-[14px] md:text-[12px] text-secondaryButton">Supply</h1>
-            </button>
+        <div className="px-16">
+          <div className="flex justify-center gap-2">
+            {["Demand", "Supply"].map((option) => (
+              <button
+                key={option}
+                className={`rounded-[15px] px-4 py-2 lg:text-[14px] md:text-[12px]  ${
+                  selectOption === option ? "active-button" : "inactive-button"
+                }`}
+                onClick={() => setSelectOption(option)}
+              >
+                {option}
+              </button>
+            ))}
           </div>
-          <div className="flex gap-4 items-center py-8">
+          <div className="flex gap-4 items-center ">
             <ImageCarousel images={images} imagesToShow={6} />
           </div>
         </div>
-        </div>
-        <div ref={targetDivRef} className="">
+        {/* seaction 2 */}
+        <div ref={targetDivRef} className="px-16">
           <div className="grid grid-cols-12 gap-8">
             <div className="col-span-4">
               <div className="py-4">
@@ -457,7 +491,11 @@ export const Landing: React.FC = () => {
             </div>
             <div className="col-span-8">
               <div className="relative">
-                <LandingPageMapHeader scrollToTarget={scrollToTarget} setView={setView} view={view} />
+                <LandingPageMapHeader
+                  scrollToTarget={scrollToTarget}
+                  setView={setView}
+                  view={view}
+                />
               </div>
               <div className="lg:h-[680px] md:h-[540px] sm:h-[480px] w-auto z-0">
                 <LandingPageMap data={landingPageData} />
@@ -466,9 +504,7 @@ export const Landing: React.FC = () => {
           </div>
           {view === "list" ? (
             <div className="pt-8 z-0">
-              <LandingPageListView
-                screens={landingPageData?.screens}
-              />
+              <LandingPageListView screens={landingPageData?.screens} />
             </div>
           ) : view === "table" ? (
             <div className="pt-8 z-0">
@@ -487,17 +523,22 @@ export const Landing: React.FC = () => {
                 getTotalStatesCounts={getTotalStatesCounts}
                 handleStClick={handleStClick}
                 getTotalCityCount={getTotalCityCount}
-                getTotalScreensCountTouchpointWise={getTotalScreensCountTouchpointWise}
+                getTotalScreensCountTouchpointWise={
+                  getTotalScreensCountTouchpointWise
+                }
                 getTotalScreensCount={getTotalScreensCount}
                 getTotalScreensCountCityWise={getTotalScreensCountCityWise}
               />
             </div>
           ) : null}
         </div>
+        {/* seaction3 */}
 
-        <div ref={secondDivRef} className="py-16">
-          <h1 className="px-8 lg:text-[16px] text-[14px] text-gray-500 text-space-2 whitespace-pre">H O W    D O E S    I T    W O R K</h1>
-          <div className="px-8 py-4">
+        <div ref={secondDivRef} className="px-16 mt-16">
+          <h1 className="px-8  text-[16px] leading-[24px] font-normal tracking-[0.21em] text-left ">
+            {`HOW IT'S WORK`}
+          </h1>
+          <div className="border-b my-4 ml-8 inline-flex items-center gap-2 w-fit">
             <TabWithoutIcon
               tabData={tabData}
               currentTab={currentTab}
@@ -507,87 +548,34 @@ export const Landing: React.FC = () => {
           <div className="px-8 py-4">
             {currentTab === "1" ? (
               <div className="pb-4">
-                <h1 className="lg:text-[40px] text-[32px] font-semibold">Plan Your Campaign In Just Few Clicks</h1>
+                <h1 className="text-[32px] leading-[24px] font-semibold tracking-[0.01em] text-left">
+                  Plan Your Campaign In Just Few Clicks
+                </h1>
                 <div className="py-4 flex items-center gap-4">
                   {advertisersSteps?.map((step: any, i: any) => (
                     <button
-                      key={i} className={`${step.id === currentAdvertiserTab ? "bg-primaryButton" : "bg-gray-100 border border-gray-200"} rounded-[8px] px-4 py-2 truncate cursor-pointer`}
+                      key={i}
+                      className={`${
+                        step.id === currentAdvertiserTab
+                          ? "bg-primaryButton"
+                          : "bg-gray-100 border border-gray-200"
+                      } rounded-[8px] px-4 py-2 truncate cursor-pointer`}
                       onClick={() => setCurrentAdvertiserTab(step.id)}
                     >
-                      <h1 className={`lg:text-[14px] text-[12px] ${step.id === currentAdvertiserTab ? "text-white font-semibold" : "text-gray-600"} truncate`}>{step.label}</h1>
+                      <h1
+                        className={`lg:text-[14px] text-[12px] ${
+                          step.id === currentAdvertiserTab
+                            ? "text-white font-semibold"
+                            : "text-gray-600"
+                        } truncate`}
+                      >
+                        {step.label}
+                      </h1>
                     </button>
                   ))}
                 </div>
                 <div className="border-t w-4/5 mt-2" />
-                {currentAdvertiserTab === "1" ? (
-                  <div className="grid grid-cols-12 gap-4 py-4">
-                    <div className="col-span-7 flex items-center justify-center">
-                      <div className="rounded-[12px] shadow-lg m-1">
-                        <img src={basicDetails} alt="basic details"/>
-                      </div>
-                    </div>
-                    <div className="col-span-4 flex items-center justify-center">
-                      <div className="bg-gray-100 rounded-[12px] p-4">
-                        <p className="lg:text-[14px] text-[12px] font-semibold text-gray-400 p-1">Step 1</p>
-                        <h1 className="lg:text-[24px] text-[18px] font-semibold text-wrap p-1">Add Your Campaign Basic Details</h1>
-                        <p className="lg:text-[20px] text-[16px] text-gray-400 p-1">
-                          Add basic details for your campaign to begin with and get recommendation based on your industry, start date and duration of your campaign.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ) : currentAdvertiserTab === "2" ? (
-                  <div className="grid grid-cols-12 gap-4 py-4">
-                    <div className="col-span-7 flex items-center justify-center">
-                      <div className="rounded-[12px] shadow-lg m-1">
-                        <img src={targetAudienceTP} alt="basic details"/>
-                      </div>
-                    </div>
-                    <div className="col-span-4 flex items-center justify-center">
-                      <div className="bg-gray-100 rounded-[12px] p-4">
-                        <p className="lg:text-[14px] text-[12px] font-semibold text-gray-400 p-1">Step 2</p>
-                        <h1 className="lg:text-[24px] text-[18px] font-semibold text-wrap p-1">Select Your Target Audience And Touchpoint</h1>
-                        <p className="lg:text-[20px] text-[16px] text-gray-400 p-1">
-                          Select your target audience group and touchpoints where they are available to get an approximate budget for your campaign
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ) : currentAdvertiserTab === "3" ? (
-                  <div className="grid grid-cols-12 gap-4 py-4">
-                    <div className="col-span-7 flex items-center justify-center">
-                      <div className="rounded-[12px] shadow-lg m-1">
-                        <img src={advanceFilters} alt="basic details"/>
-                      </div>
-                    </div>
-                    <div className="col-span-4 flex items-center justify-center">
-                      <div className="bg-gray-100 rounded-[12px] p-4">
-                        <p className="lg:text-[14px] text-[12px] font-semibold text-gray-400 p-1">Step 3</p>
-                        <h1 className="lg:text-[24px] text-[18px] font-semibold text-wrap p-1">Apply Advance Filters For Location Proximity</h1>
-                        <p className="lg:text-[20px] text-[16px] text-gray-400 p-1">
-                          Filter your selected screens based on their proximity with your brand or competitor stores, target routes, geographical location and selected POIs
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-12 gap-4 py-4">
-                    <div className="col-span-7 flex items-center justify-center">
-                      <div className="rounded-[12px] shadow-lg m-1">
-                        <img src={comparePlan} alt="basic details"/>
-                      </div>
-                    </div>
-                    <div className="col-span-4 flex items-center justify-center">
-                      <div className="bg-gray-100 rounded-[12px] p-4">
-                        <p className="lg:text-[14px] text-[12px] font-semibold text-gray-400 p-1">Step 4</p>
-                        <h1 className="lg:text-[24px] text-[18px] font-semibold text-wrap p-1">Compare Plan Based On Your Selections</h1>
-                        <p className="lg:text-[20px] text-[16px] text-gray-400 p-1">
-                          Compare your plan budget as per regular spots and spots based on your selected audience penetration and further optimise your campaign plan
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                <CampaignSteps currentAdvertiserTab={currentAdvertiserTab} />
               </div>
             ) : currentTab === "2" ? (
               <div className="pb-4"></div>
@@ -595,72 +583,84 @@ export const Landing: React.FC = () => {
               <div className="pb-4"></div>
             )}
           </div>
-          <div className="relative mx-[-80px]">
+        </div>
+        {/* seaction 4 */}
+        <div className="px-4">
+          <div className="relative ">
             <div className="relative z-10 mx-28 text-white bg-primaryButton rounded-[16px] px-4 py-2 flex justify-between items-center">
               <div className="flex items-center gap-4">
                 <i className="fi fi-sr-time-fast text-[28px]"></i>
                 <div>
-                  <h1 className="lg:text-[40px] text-[32px] font-semibold">Plan Your Campaign Now</h1>
+                  <h1 className="lg:text-[40px] text-[32px] font-bold tracking-[0.02em]">
+                    Plan Your Campaign Now
+                  </h1>
                   <div className="pb-2">
-                    <p className="lg:text-[14px] text-[12px]">+40 Advertisers Have Already Planned</p>
+                    <p className="lg:text-[14px] text-[12px]">
+                      <span className="font-bold">+40</span> Advertisers Have
+                      Already Planned
+                    </p>
                   </div>
                 </div>
               </div>
               <div className="px-4">
-                <PrimaryButton
-                  title="Request Demo"
-                  rounded="rounded-full"
-                  reverse={true}
-                />
+                <button className="text-[#183246] text-[20px] font-bold h-[60pz] w-[181px] bg-white rounded-[72px] px-[3px] py-[20px] hover:bg-white hover:text-[#183246]">
+                  Request Demo
+                </button>
               </div>
             </div>
-            <div className="absolute top-1/2 left-0 w-full bg-gradient-to-b from-[#13202A] to-[#072E4A]">
-              <div className="grid grid-cols-12 text-white gap-2">
+            <div className="absolute top-1/2 left-0 w-full bg-gradient-to-b from-[#13202A] to-[#072E4A] rounded-[26px]">
+              <div className="grid grid-cols-12 text-white gap-2 mt-16">
                 <div className="col-span-6 p-32">
                   <div className="flex items-center gap-2">
                     <i className="fi fi-ss-sparkles"></i>
-                    <h1 className="lg:text-[20px] text-[16px] whitespace-pre">W H A T    W E    D O</h1>
+                    <h1 className="lg:text-[20px] text-[16px] tracking-[0.21em]">
+                      WHAT WE DO
+                    </h1>
                   </div>
-                  <h1 className="lg:text-[48px] text-[40px] text-wrap font-bold py-2">Simplify & Optimize Your Advertising</h1>
-                  <p className="lg:text-[20px] text-[16px] text-wrap py-2">
-                    We simplify the way you buy outdoor media and also help you in optimizing your for maximum output and efficient costing
+                  <h1 className="lg:text-[48px] text-[40px]  font-bold mt-8 hover:bg-white hover:text-[#129BFF} w-[320px] leading-[48.96px] tracking-[-0.05em] h-[147px]">
+                    Simplify & Optimize Your Advertising
+                  </h1>
+                  <p className="lg:text-[20px] text-[16px] text-[#88A8BF] text-wrap mt-8 hover:bg-white hover:text-[#129BFF} leading-[30px] tracking-[-0.02em]">
+                    Our platform helps your business in managing expenses. These
+                    are some of the reasons why you should use our platform in
                   </p>
-                  <div className="flex justify-start items-center py-4">
-                    <PrimaryButton
-                      title="Know More"
-                      rounded="rounded-[12px]"
-                    />
-                  </div>
+                  <button className="text-[#FFFFFF] text-[20px] font-bold h-[50pz] w-[153px] bg-[#129BFF] rounded-[12px] px-[31px] py-[7px] mt-8 hover:bg-white hover:text-[#129BFF]">
+                    Plan Now
+                  </button>
                 </div>
                 <div className="col-span-1 flex justify-center items-center p-10">
-                  <div className="rounded-full bg-[#1E3241] w-4 h-3/4 flex items-center">
+                  <div className="rounded-full bg-[#1E3241] w-4 h-2/4 flex items-center">
                     <div className="rounded-full bg-primaryButton w-full h-1/5"></div>
                   </div>
                 </div>
-                <div className="col-span-5 p-32 flex justify-start items-center w-full">
+                <div className="col-span-4 px-6 py-32 flex justify-start items-center w-full">
                   <div className="">
                     <div className="flex justify-start">
-                      <div className="bg-[#1E3E53] rounded-[12px] p-2">
-                        <i className="fi fi-sr-display-chart-up"></i>
+                      <div className="bg-[#1E3E53] rounded-[20px] p-5 h-[86px] w-[86px] flex justify-center items-center">
+                        <i className="fi fi-sr-display-chart-up text-[37px]"></i>
                       </div>
                     </div>
-                   
-                    <h1 className="lg:text-[32px] md:text-[24px] font-bold">We Sell OOH & PDOOH On Impressions Only. No Fixed Rental</h1>
-                    <p>
-                      {"PROOH'S Media Planning Tool Uses Geospatial Data, POI Data, Govt. Traffic Data amongst other data to determine total audience impressions delivered at any specific locations."}
+
+                    <h1 className="lg:text-[32px] text-[24px] text-[#FFFFFF]  font-[800] text-wrap mt-8 leading-[40.96px] tracking-[-0.04em] w-[541px] h-[82px]">
+                      We Sell OOH & PDOOH On Impressions Only. No Fixed Rental
+                    </h1>
+                    <p className="lg:text-[20px] text-[14px] text-[#FFFFFF]  font-normal text-wrap mt-8 leading-[30px] tracking-[-0.02em]">
+                      {`PROOH'S Media Planning Tool Uses Geospatial Data, POI Data, Govt. Traffic Data amongst other data to determine total audience impressions delivered at any specific locations.`}
                       {/* <span className="text-primaryButton font-semibold underline">See More</span> */}
                     </p>
                   </div>
-                  
                 </div>
               </div>
             </div>
           </div>
         </div>
+        {/* seaction 5 */}
 
-        <div className="flex justify-center lg:pt-[720px] pt-[600px] pb-20">
+        <div className="flex justify-center lg:pt-[720px] pt-16px pb-20">
           <div className="relative flex flex-col items-center">
-            <h1 className="lg:text-[48px] text-[40px] font-semibold">Meet Our Data Hero</h1>
+            <h1 className="lg:text-[48px] text-[40px] font-semibold">
+              Meet Our Data Hero
+            </h1>
             <div className="border-b">
               <TabWithoutIcon
                 tabData={dataHeroTabs}
@@ -669,69 +669,135 @@ export const Landing: React.FC = () => {
               />
             </div>
             <div className="py-4">
-              <CircleImageCarousel
-                images={dataHeroUsersImages}
-              />
+              <CircleImageCarousel images={dataHeroUsersImages} />
               <div className="flex items-center justify-center py-4">
-                <PrimaryButton
-                  title="Participate"
-                  rounded="rounded-full"
-                  action={() => {}}
-                />
+                <button className="text-[#FFFFFF] text-[20px] font-bold h-[50pz] w-[153px] bg-[#129BFF] rounded-[109px] px-[31px] py-[7px] mt-8 hover:bg-white hover:text-[#129BFF] border border-2 hover:border-[#129BFF]">
+                  Participate
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-gradient-to-b from-[#F3FAFF] to-[#FFFFFF] p-16 mx-[-40px]">
-          <div className="flex gap-2 items-center ">
-            <i className="fi fi-sr-heart lg:text-[14px] text-[12px] text-primaryButton flex items-center"></i>
-            <h1 className="lg:text-[14px] text-[12px]">Wall of love</h1>
-          </div>
-          <div className="w-3/5">
-            <h1 className="lg:text-[48px] text-[40px] font-semibold">Feedback From Those {"We've"} Shared Experiences With</h1>
-            <p></p>
-          </div>
-          <div className="h-64 w-full rounded-lg overflow-hidden">
-            <TestimonialCarousel images={testimonials} />
+        {/* section */}
+        <div className="px-4">
+          <div className="bg-gradient-to-b from-[#F3FAFF] to-[#FFFFFF] py-8 px-4 md:py-16 lg:px-16 rounded-[21px]">
+            {/* Section Header */}
+            <div className="flex gap-2 items-center mb-4">
+              <i className="fi fi-sr-heart lg:text-[14px] text-[12px] text-primaryButton flex items-center"></i>
+              <h1 className="lg:text-[14px] text-[12px] text-[#183246]">
+                Wall of Love
+              </h1>
+            </div>
+
+            {/* Title and Description */}
+            <h1 className="text-[24px] md:text-[32px] lg:text-[48px] font-semibold text-[#183246] leading-[32px] md:leading-[42px] lg:leading-[55.2px] tracking-[-0.03em] mb-4">
+              Feedback From Those {"We've"} Shared Experiences With
+            </h1>
+            <p className="text-[12px] md:text-[14px] lg:text-[16px] text-[#4B5563] font-normal leading-[20px] md:leading-[22px] lg:leading-[24px]">
+              Hopeful and confident, he overcame shyness and found happiness in
+              life, embracing joy without hesitation.
+            </p>
+
+            {/* Testimonial Content */}
+            <div className="mt-8 flex flex-col lg:flex-row gap-4 lg:gap-8 items-center">
+              {/* Testimonial Image */}
+              <img
+                src={testO11}
+                alt="Testimonial Visual"
+                className="h-[200px] w-full md:h-[260px] md:w-[373px] object-cover rounded-lg shadow-md"
+              />
+
+              {/* Testimonial Text */}
+              <div className="w-full md:w-[630px] h-auto flex flex-col">
+                {/* Quotation Mark Icon */}
+                <img
+                  src={quotes}
+                  alt="Quotes"
+                  className="h-8 w-8 mb-4 bg-blue-500 mask mask-image"
+                />
+
+                {/* Quote Content */}
+                <h1 className="text-[16px] md:text-[20px] lg:text-[24px] text-[#254354] font-normal leading-[24px] md:leading-[30px] lg:leading-[34px] tracking-[-0.02em]">
+                  Being a Tech Company, we believe in everything which can
+                  demonstrate measurability. PROOH practices are extremely fresh
+                  and deliver the assurances around accountability.
+                </h1>
+
+                {/* Author Info */}
+                <h1 className="text-[16px] md:text-[18px] lg:text-[20px] text-[#254354] font-bold leading-[24px] mt-2">
+                  Ms. Bhawna Talwar,
+                </h1>
+                <h1 className="text-[14px] md:text-[16px] text-[#688799] font-normal leading-[19.36px]">
+                  Brand Marketing,
+                </h1>
+
+                {/* Pagination and Navigation */}
+                <div className="flex justify-between items-center mt-4">
+                  {/* Page Counter */}
+                  <h1 className="text-[14px] md:text-[16px] text-[#5A5A5A] font-normal">
+                    <span className="text-[#129BFF]">01</span> / 04
+                  </h1>
+
+                  {/* Navigation Arrows */}
+                  <div className="flex gap-4 items-center">
+                    <i className="fi fi-rr-arrow-small-left text-[#8E8E8E]"></i>
+                    <i className="fi fi-rr-arrow-small-right"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="p-8">
-          <div className="flex gap-2 items-center">
-            <i className="fi fi-sr-heart lg:text-[14px] text-[12px] text-primaryButton flex items-center"></i>
-            <h1 className="lg:text-[14px] text-[12px]">Our Team</h1>
-          </div>
-          <div className="grid grid-cols-12">
-            <div className="col-span-5">
-              <h1 className="lg:text-[48px] md:text-[40px] font-bold">Meet The Creators Behind Our Vision</h1>
+        {/* section */}
+        <div className="px-16">
+          <div className="p-4 sm:p-8">
+            <div className="flex gap-2 items-center">
+              <i className="fi fi-sr-heart text-[12px] sm:text-[14px] text-primaryButton flex items-center"></i>
+              <h1 className="text-[12px] sm:text-[14px]">Our Team</h1>
             </div>
-            <div className="col-span-7 flex items-center">
-              <p className="lg:text-[20px] text-[16px]">
-                Meet the passionate leaders driving our mission. Their expertise and commitment to excellence propel us forward, creating lasting impact and inspiring success
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4">
+              <div className="md:col-span-5">
+                <h1 className="text-[28px] sm:text-[40px] lg:text-[48px] font-semibold text-[#0E212E] leading-[38px] sm:leading-[50px] lg:leading-[50.88px] tracking-[-0.03em] w-[409px] h-[153px] pr-8">
+                  Meet The Creators Behind Our Vision
+                </h1>
+              </div>
+              <div className="md:col-span-7 flex w-[627px]">
+                <p className="text-[14px] sm:text-[16px] lg:text-[20px] leading-relaxed text-[#254354]">
+                  Meet the passionate leaders driving our mission. Their
+                  expertise and commitment to excellence propel us forward,
+                  creating lasting impact and inspiring success.
+                </p>
+              </div>
             </div>
-          </div>
-          <div >
-            <RightSideArrowsImageCarousel
-              images={meetArchitects}
-             />
+            <div>
+              <RightSideArrowsImageCarousel images={meetArchitects} />
+            </div>
           </div>
         </div>
 
-        <div className="py-20 px-8">
-          <div className="flex flex-col items-center">
-            <h1 className="text-[56px] font-bold text-[#254354] mb-[-10px]">Reach Out Anytime, {"We're"}</h1>
-            <h1 className="text-[56px] font-bold text-[#254354] mt-[-10px]">Just A Click Away</h1>
-            <p className="text-[14px] text-[#83939C] w-3/4 text-center">Contact us and start planning your DOOH advertising campaigns today</p>
-          </div>
-          <div className="">
-            <ContactForm />
+        {/* section */}
+        <ContactForm />
+
+        {/* Section */}
+        <div className="flex justify-center mt-16 px-4">
+          <div className="text-center max-w-[90%] md:max-w-[80%] lg:max-w-[677px]">
+            <h1 className="text-[24px] sm:text-[32px] lg:text-[40px] font-semibold text-[#0E212E] leading-tight lg:leading-[64px] tracking-tight">
+              Find Us On Google Map
+            </h1>
+            <p className="mt-4 text-[14px] sm:text-[16px] lg:text-[16px] text-[#254354] leading-relaxed lg:leading-[24px] tracking-[-0.02em]">
+              Our platform helps your business in managing expenses. These are
+              some examples of how our platform provides support for expense
+              management.
+            </p>
+            <div className="mt-4">{/* Add any content here if needed */}</div>
           </div>
         </div>
-        <div className="mx-[-80px] mb-[-60px] bottom-0">
-          <PageFooter />
-        </div>
+        {/* Section */}
+
+        <CreateCampaignOption />
+        <PageFooter />
       </div>
     </div>
   );

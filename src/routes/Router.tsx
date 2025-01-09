@@ -79,9 +79,9 @@ const Routers: React.FC = () => {
         <Route
           path={HOME}
           element={
-            <PrivateRoute layout={HomePageLayout}>
+            <PublicRoute>
               <LandingPage />
-            </PrivateRoute>
+            </PublicRoute>
           }
         />
         <Route

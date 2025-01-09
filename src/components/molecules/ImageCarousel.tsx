@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface ImageCarouselProps {
   images: string[];
@@ -26,13 +26,15 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
 
     const carouselRect = e.currentTarget.getBoundingClientRect();
     const mouseX = e.clientX - carouselRect.left; // Get mouse X position relative to carousel
-    const index = Math.floor((mouseX / carouselRect.width) * duplicatedImages.length);
+    const index = Math.floor(
+      (mouseX / carouselRect.width) * duplicatedImages.length
+    );
     setCurrentIndex(index % images.length); // Set the current index, ensuring it wraps around
   };
 
   return (
     <div
-      className="relative w-full overflow-hidden py-2"
+      className="relative w-full overflow-hidden"
       // onMouseEnter={() => setIsHovered(true)} // Stop on hover
       // onMouseLeave={() => setIsHovered(false)} // Resume sliding when not hovered
       onMouseMove={handleMouseMove} // Update index on mouse move
@@ -40,7 +42,9 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
       <div
         className="flex justify-around gap-4 py-1"
         style={{
-          animation: `${isHovered ? 'none' : `slide-left ${slideDuration}s linear infinite`}`,
+          animation: `${
+            isHovered ? "none" : `slide-left ${slideDuration}s linear infinite`
+          }`,
           width: `${(duplicatedImages.length * 100) / imagesToShow}%`,
           transform: `translateX(-${currentIndex * imageWidth}%)`, // Adjust position based on current index
         }}
@@ -49,12 +53,12 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
           <div
             key={index}
             className="flex-shrink-0 px-2"
-            style={{ width: `${imageWidth/4}%` }}
+            style={{ width: `${imageWidth / 4}%` }}
           >
             <img
               src={image}
               alt={`Slide ${index}`}
-              className="w-full h-full object-fit" // Adjust height here
+              className="h-32 w-32 object-contain"
             />
           </div>
         ))}

@@ -1,0 +1,18 @@
+/* Common styles for buttons */
+button {
+    border: none;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+/* Active button styles */
+.active-button {
+    border: 1px solid #c8c8c8;
+    color: #444444;
+    font-weight: bold;
+}
+
+/* Inactive button styles */
+.inactive-button {
+    color: #859fad;
+}

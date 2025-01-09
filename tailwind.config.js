@@ -18,7 +18,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ['"Open Sans"', 'sans-serif'], // Replace 'Roboto' with your custom font
+        inter: ['Inter', 'sans-serif'],
       },
       colors: {
         primaryText: '#0E212E',
