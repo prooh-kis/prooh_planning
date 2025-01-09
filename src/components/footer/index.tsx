@@ -20,15 +20,12 @@ export const Footer = ({
   );
   const { loading, error, data: totalScreensData } = planningPageFooterDataGet;
 
-  useEffect(() => {
-    dispatch(getPlanningPageFooterData({ id: campaignId }));
-  }, [dispatch, campaignId]);
   return (
     <div className="py-4 z-10 flex justify-between">
       <div className="flex w-full justify-start items-center gap-4">
         {totalScreensData && (
           <div className="flex">
-            <ScreenSummaryModel />
+            <ScreenSummaryModel loadingCost={loading} totalScreensData={totalScreensData}/>
           </div>
         )}
 
@@ -90,7 +87,7 @@ export const Footer = ({
         <div className="flex w-full justify-end items-center gap-4">
           <button
             type="submit"
-            className="border border-1 py-2 px-4 text-[14px] rounded-md hover:bg-blue-500 hover:text-white"
+            className="border border-1 py-2 px-4 text-[14px] rounded-md hover:bg-[#00A0FA] hover:text-white"
             title="Go back"
             onClick={handleBack}
           >
@@ -98,7 +95,7 @@ export const Footer = ({
           </button>
           <button
             type="submit"
-            className="border border-1 py-2 px-4 text-[14px] rounded-md bg-blue-500 text-white hover:bg-blue-600 truncate"
+            className="border border-1 py-2 px-4 text-[14px] rounded-md bg-[#00A0FA] text-white hover:bg-[#D7D7D7] hover:text-black truncate"
             title="Save and go next"
             onClick={handleSave}
             disabled={isDisabled}

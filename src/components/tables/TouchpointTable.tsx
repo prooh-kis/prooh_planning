@@ -65,15 +65,13 @@ export const TouchpointTable = ({
       <thead className="bg-[#F7F7F7] w-full">
         <tr className="flex justify-between w-full h-[40px] px-2">
           <th className="flex items-center justify-between w-full gap-2">
-            <div className="flex gap-2 items-center">
-              <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">
-                Touchpoints
-              </h1>
+            <div className="flex gap-2 items-center px-1">
               <Tooltip
                 title="Choose your target touchpoints and click on the lock icon to confirm"
               >
-                <i className="fi fi-rs-info flex items-center text-[#9A9A9A] md:text-[12px]"></i>
+                <i className="fi fi-ss-visit flex items-center lg:text-[14px] text-[12px] text-[#21394F]"></i>
               </Tooltip>
+              <h1 className="lg:text-[14px] text-[12px] text-[#21394F]">Touchpoints</h1>
             </div>
             <Tooltip
                 title="Click to lock your touchpoints selections"
@@ -101,24 +99,24 @@ export const TouchpointTable = ({
       <tbody className="border overflow-scroll">
         <tr className="grid grid-cols-6 w-full px-2 gap-4">
           <th className="col-span-4 flex items-center w-full gap-2">
-            <div className="flex items-center gap-1 w-auto">
+            <div className="flex items-center gap-1 px-1 w-auto">
               <div className="h-2 w-2 bg-[#7AB3A2]"></div>
-              <p className="lg:text-[12px] md:text-[10px] font-normal">
+              <p className="lg:text-[14px] text-[12px] font-normal">
                 audience %
               </p>
             </div>
             <div className="flex items-center gap-1 w-auto">
               <div className="h-2 w-2 bg-[#00A0FA]"></div>
-              <p className="lg:text-[12px] md:text-[10px] font-normal">
+              <p className="lg:text-[14px] text-[12px] font-normal">
                 screen %
               </p>
             </div>
           </th>
           <th className="col-span-2 flex justify-between pr-2 truncate">
-            <p className="lg:text-[12px] md:text-[10px] font-normal">0,</p>
-            <p className="lg:text-[12px] md:text-[10px] font-normal">25,</p>
-            <p className="lg:text-[12px] md:text-[10px] font-normal">50,</p>
-            <p className="lg:text-[12px] md:text-[10px] font-normal">100</p>
+            <p className="lg:text-[14px] text-[12px] font-normal">0,</p>
+            <p className="lg:text-[14px] text-[12px] font-normal">25,</p>
+            <p className="lg:text-[14px] text-[12px] font-normal">50,</p>
+            <p className="lg:text-[14px] text-[12px] font-normal">100</p>
           </th>
         </tr>
         {loading && (
@@ -131,7 +129,7 @@ export const TouchpointTable = ({
         <tr className="w-full overflow-scroll py-3">
           {Object.keys(touchPoints)?.map((tp: any, i: any) => {
             return (
-              <td key={i} className="grid grid-cols-6 gap-4 flex justify-between items-center w-full p-2">
+              <td key={i} className="grid grid-cols-6 gap-4 flex justify-between items-center w-full px-2 lg:py-2 py-1">
                 <div className="col-span-4 flex justify-between w-auto truncate text font-normal">
                   <CheckboxInput
                     disabled={loading}
@@ -143,7 +141,7 @@ export const TouchpointTable = ({
                     title={`${DEFINE_ALL_TOUCHPOINTS?.filter((c: any) => c.type === tp)[0]?.definition}`}
                   >
                     <i  
-                      className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"
+                      className="fi fi-rs-info flex items-center text-[#9A9A9A] lg:text-[14px] text-[12px]"
                     ></i>
                   </Tooltip>
                 </div>

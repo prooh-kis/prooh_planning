@@ -109,7 +109,7 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
       <div className="relative w-full flex items-center">
         {/* Line behind the circles */}
         <div
-          className="absolute top-1/2 bg-blue-500 h-[2px]"
+          className="absolute top-1/2 bg-[#00A0FA] h-[2px]"
           style={{
             left: step === 1 ? `calc(50% / ${steps})` : step === steps ? `calc(50% / ${steps})` : `calc(40% / ${steps})`, // Starts the line at the center of the first step
             right: step === 1 ? `calc(50% / ${steps})` : step === steps ? `calc(50% / ${steps})` : `calc(40% / ${steps})`, // Ends the line at the center of the last step
@@ -129,10 +129,10 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
                 {i + 1 === step ? (
                   <span className={
                     step === 1 ?
-                      `text-blue-500 text-[14px] pr-0 pl-0 truncate` :
+                      `text-primaryButton text-[14px] pr-0 pl-0 truncate` :
                     step === 9 ?
-                      `text-blue-500 text-[14px] text-right pr-0 pl-0 truncate` :
-                      `text-blue-500 text-[14px] pr-40 pl-40 truncate`
+                      `text-primaryButton text-[14px] text-right pr-0 pl-0 truncate` :
+                      `text-primaryButton text-[14px] pr-40 pl-40 truncate`
                   }>
                     {stepLabels[i]} {/* Show the label text for the current step */}
                   </span>
@@ -140,7 +140,7 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
                   <i
                     className={`fi ${
                       i + 1 <= step
-                        ? "text-blue-500" // Blue for selected steps
+                        ? "text-primaryButton" // Blue for selected steps
                         : "text-gray-300" // Gray for unselected steps
                     }`}
                   >
@@ -156,10 +156,10 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
                 <div
                   className={`cursor-pointer rounded-full transition-all duration-500 
                     ${i + 1 === step
-                      ? "h-4 w-4 bg-white border-2 border-blue-500" // Larger circle with ring for active step
+                      ? "h-4 w-4 bg-[#ffffff] border-2 border-primaryButton" // Larger circle with ring for active step
                       : i + 1 < step
-                      ? "h-3 w-3 bg-blue-500 border border-blue-500" // Blue for previous steps, same size as future
-                      : "h-3 w-3 bg-white border border-blue-500" // White for future steps
+                      ? "h-3 w-3 bg-[#00A0FA] border border-primaryButton" // Blue for previous steps, same size as future
+                      : "h-3 w-3 bg-[#ffffff] border border-primaryButton" // White for future steps
                   }`}
                 ></div>
               </Tooltip>

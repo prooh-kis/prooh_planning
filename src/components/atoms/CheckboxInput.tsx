@@ -1,3 +1,4 @@
+import { Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 
 interface CheckboxProps {
@@ -8,9 +9,11 @@ interface CheckboxProps {
   small?: any;
   onChange?: (checked: boolean) => void;
   disabled?: boolean;  // Added disabled prop to be more specific
+  icon?: any;
+  showIcon?: any;
 }
 
-export const CheckboxInput: React.FC<CheckboxProps> = ({ small, disabled, color, textSize, label, checked, onChange }) => {
+export const CheckboxInput: React.FC<CheckboxProps> = ({ showIcon, icon, small, disabled, color, textSize, label, checked, onChange }) => {
   // const [isChecked, setIsChecked] = useState(false);
 
   // const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,17 +31,29 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({ small, disabled, color,
   // console.log("CheckboxInput: `isChecked` state is", isChecked);
 
   return (
-    <label className="flex items-center space-x-2 cursor-pointer truncate">
+    <label className="border grid grid-cols-12 flex items-center space-x-2 cursor-pointer truncate p-1">
       <input
         type="checkbox"
-        className={`form-checkbox h-4 w-4 text-[#52A2FF]`}
+        className={`col-span-1 form-checkbox h-4 w-4 text-[#52A2FF]`}
         checked={checked}
         disabled={disabled}
         onChange={(checked: any) => onChange?.(checked)}
       />
-      <span className={`text-[${color ? color : "#21394F"}] text-[${textSize ? textSize : "14px"}] lg:text-[14px] md:text-[12px] sm:text-[10px] truncate`}>
-        {label}
+
+      {showIcon ? (
+        <span className={`col-span-11`}>
+          <Tooltip
+            title={label}
+          >
+            <i className={`${icon} flex justify-center items-center text-[${color ? color : "#21394F"}] text-[${textSize ? textSize : "12px"}]`}></i>
+          </Tooltip>
         </span>
+      ) : (
+        <span className={`col-span-11 flex justify-start text-[${color ? color : "#21394F"}] text-[${textSize ? textSize : "12px"}] truncate`}>
+          {label}
+        </span>
+      )}
+
     </label>
   );
 };

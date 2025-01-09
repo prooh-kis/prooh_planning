@@ -416,14 +416,14 @@ export const getTableDataForSelectTopicalDayPage =
   };
 
 export const getPlanningPageFooterData =
-  ({ id }) =>
+  ({ id, pageName }) =>
   async (dispatch, getState) => {
     dispatch({
       type: PLANNING_PAGE_FOOTER_DATA_REQUEST,
-      payload: { id },
+      payload: { id, pageName },
     });
     try {
-      const { data } = await axios.post(`${url}/planningPageFooter`, { id });
+      const { data } = await axios.post(`${url}/planningPageFooter`, { id, pageName });
       dispatch({
         type: PLANNING_PAGE_FOOTER_DATA_SUCCESS,
         payload: data,

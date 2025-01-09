@@ -167,6 +167,11 @@ export const AudienceTouchPointsDetails = ({
       })
     );
 
+    dispatch(getPlanningPageFooterData({
+      id: campaignId,
+      pageName: "step1"
+    }));
+
     dispatch(
       getScreenDataForAdvanceFilters({
         id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
@@ -254,13 +259,6 @@ export const AudienceTouchPointsDetails = ({
             setSelectedTouchPoints={setSelectedTouchPoints}
           />
         </div>
-      </div>
-      <div className="pt-2">
-        <CostSummaryTable1
-          loading={loadingCost}
-          totalData={totalScreensData}
-          selectedData={selectedScreensData}
-        />
       </div>
       <div className="flex justify-start items-center gap-2 pt-2 pb-20">
         <i className="fi fi-sr-lightbulb-on text-[#FFB904]"></i>

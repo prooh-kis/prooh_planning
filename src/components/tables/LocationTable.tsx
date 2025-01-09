@@ -61,29 +61,33 @@ export const LocationTable = ({
 
     <table className="w-full">
       <thead className="bg-[#F7F7F7] w-full">
-        <tr className="grid grid-cols-8 w-full h-[40px]">
-          <th className="col-span-4 flex items-center px-2 gap-2">
-            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">
-              Location
-            </h1>
-            <Tooltip
-              title="Choose your target audience gender wise in the given locations"
-            >
-              <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
-            </Tooltip>
+        <tr className="grid grid-cols-12 w-full h-[40px] px-2">
+          <th className="col-span-6 flex items-center px-1 gap-2">
+            <div className="flex gap-2 items-center px-1">
+              <Tooltip
+                title="Choose your target audience gender wise in the given locations"
+              >
+                <i className="fi fi-sr-land-layer-location flex items-center lg:text-[14px] text-[12px] text-[#21394F]"></i>
+              </Tooltip>
+              <h1 className="lg:text-[14px] text-[12px] text-[#21394F]">Locations</h1>
+            </div>
           </th>
-          <th className="col-span-4 flex items-center justify-center gap-2">
+          <th className="col-span-6 flex items-center justify-center gap-1">
             <CheckboxInput
               disabled={loading}
               label="Male"
               checked={selectedGender.includes("Male") ? true : false}
               onChange={(e: any) => handleCheckClick({type: "Male", checked: e})}
+              icon="fi fi-sr-man-head"
+              showIcon={true}
             />
             <CheckboxInput
               disabled={loading}
               label="Female"
               checked={selectedGender.includes("Female")? true : false}
               onChange={(e: any) => handleCheckClick({type: "Female", checked: e})} 
+              icon="fi fi-sr-woman-head"
+              showIcon={true}
             />
           </th>
         </tr>
@@ -97,15 +101,15 @@ export const LocationTable = ({
           </tr>
         )}
         {Object.keys(markets)?.map((market: any, index: any) => (
-          <tr key={index} className="grid grid-cols-8 w-full h-[40px] border-b border-gray-100">
-            <td className="col-span-4 flex items-center px-2">
+          <tr key={index} className="grid grid-cols-12 w-full h-[40px] border-b border-gray-100">
+            <td className="col-span-6 flex items-center px-2">
               <CheckboxInput label={`${market}`} disabled={true} checked={true} onChange={() => {}}/>
             </td>
-            <td className="col-span-4 flex items-center justify-around gap-2 truncate">
-              <p className="lg:text-[14px] md:text-[12px] text-[#21394F] truncate">
+            <td className="col-span-6 flex items-center justify-around gap-2 truncate">
+              <p className="lg:text-[14px] text-[12px] text-[#21394F] truncate">
                 {(markets[market]["gender"]["Male"]).toFixed(1)}%
               </p>
-              <p className="lg:text-[14px] md:text-[12px] text-[#21394F] truncate">
+              <p className="lg:text-[14px] text-[12px] text-[#21394F] truncate">
                 {(markets[market]["gender"]["Female"]).toFixed(1)}%
               </p>
             </td>

@@ -3,7 +3,7 @@ import { CostSummaryTable1 } from "../../components/tables";
 import Modal from "antd/es/modal/Modal";
 import React, { useEffect, useState } from "react";
 
-export function ScreenSummaryModel({ }: any) {
+export function ScreenSummaryModel({ loadingCost, totalScreensData}: any) {
   const [open, setOpen] = useState<boolean>(false);
 
   const handleCancel = () => {
@@ -15,16 +15,17 @@ export function ScreenSummaryModel({ }: any) {
       <button
         type="submit"
         onClick={() => setOpen(true)}
-        className="w-[140px] border border-1 rounded-full py-2 px-4 text-[14px] hover:bg-blue-500 hover:text-white"
+        className="w-[140px] border border-1 rounded-full py-2 px-4 text-[14px] hover:bg-[#00A0FA] hover:text-white"
       >
         Plan Summary
       </button>
       <Modal open={open} onCancel={handleCancel} footer={[]} width={1100}>
         <div className="p-2">
-          {/* <CostSummaryTable1
+          <CostSummaryTable1
+            loading={loadingCost}
             totalData={totalScreensData}
-            selectedData={totalScreensData}
-          /> */}
+            // selectedData={selectedScreensData}
+          />
         </div>
       </Modal>
     </div>
