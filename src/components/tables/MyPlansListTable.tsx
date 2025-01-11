@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { formatNumber } from "../../utils/formatValue"
+import { CAMPAIGN_PLAN_TYPE_KNOW, CAMPAIGN_PLAN_TYPE_REGULAR, CAMPAIGN_PLAN_TYPE_STORE, CAMPAIGN_PLAN_TYPE_TOPICAL, CAMPAIGN_PLAN_TYPE_TRIGGER } from "../../constants/campaignConstants";
 
 interface MyRequestsListTableProps {
   plansList?: any,
@@ -100,11 +101,21 @@ export const MyPlansListTable = ({
             </td>
             <td className="p-2 truncate">
               <h1 className="text-[14px] truncate">
-                {campaign?.campaignType}
+                { campaign?.campaignType === CAMPAIGN_PLAN_TYPE_REGULAR ? "Regular Plan"
+                  : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_TRIGGER ? "Trigger Based Plan"
+                  : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_STORE ? "Stores Based Plan"
+                  : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_TOPICAL ? "Special Day Plan"
+                  : campaign?.campaignType ===  CAMPAIGN_PLAN_TYPE_KNOW ? "I Know It All Plan" : "None"}
               </h1>
             </td>
             <td className="p-2"
-              onClick={() => navigate(`/regularplan/${campaign._id}`)}
+              onClick={() => navigate(`/${
+                  campaign?.campaignType === CAMPAIGN_PLAN_TYPE_REGULAR ? "regularplan"
+                  : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_TRIGGER ? "triggerbasedplan"
+                  : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_STORE ? "storebasedplan"
+                  : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_TOPICAL ? "specialdayplan"
+                  : campaign?.campaignType ===  CAMPAIGN_PLAN_TYPE_KNOW ? "iknowitallplan" : ""
+                }/${campaign._id}`)}
             >
               <i className="fi fi-bs-menu-dots text-[20px] flex justify-center"></i>
             </td>

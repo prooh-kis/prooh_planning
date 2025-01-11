@@ -32,10 +32,10 @@ export const Menu = (props: any) => {
       label: "Campaigns",
       path: MY_CAMPAIGNS_LIST,
     },
-    {
-      label: "Requests",
-      path: MY_REQUESTS_LIST,
-    },
+    // {
+    //   label: "Requests",
+    //   path: MY_REQUESTS_LIST,
+    // },
     {
       label: "Plans",
       path: MY_PLANS_LIST,

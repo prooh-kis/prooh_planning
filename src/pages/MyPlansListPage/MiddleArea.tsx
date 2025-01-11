@@ -32,7 +32,7 @@ export const MiddleArea: React.FC = () => {
   },[dispatch, navigate, userInfo]);
   console.log(campaignsList);
   return (
-    <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
+    <div className="mt-6 w-full h-full pb-5 flex justify-center">
       {!loadingCampaignsList && !errorCampaignsList && userInfo && userInfo?.isBrand ? (
         <MyPlansList plansList={campaignsList} 
         />

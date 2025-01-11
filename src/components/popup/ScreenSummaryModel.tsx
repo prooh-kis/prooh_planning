@@ -15,7 +15,7 @@ export function ScreenSummaryModel({ loadingCost, totalScreensData}: any) {
       <button
         type="submit"
         onClick={() => setOpen(true)}
-        className="w-[140px] border border-1 rounded-full py-2 px-4 text-[14px] hover:bg-[#00A0FA] hover:text-white"
+        className="w-[140px] border border-1 bg-[#D7D7D7] rounded-full py-2 px-4 text-[14px] hover:bg-[#00A0FA] hover:text-white"
       >
         Plan Summary
       </button>

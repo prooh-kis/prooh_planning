@@ -50,7 +50,7 @@ export const MiddleArea: React.FC = () => {
     }
   },[dispatch, navigate, userInfo]);
   return (
-    <div className="mt-6 w-full h-full pb-5 flex justify-center items-center">
+    <div className="mt-6 w-full h-full pb-5 flex justify-center">
       {userInfo ? (
         <MyCampaignsList
           campaignsList={

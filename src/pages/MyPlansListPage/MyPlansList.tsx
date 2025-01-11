@@ -49,13 +49,13 @@ export const MyPlansList = ({plansList}: any) => {
           />
         </div>
       </div>
-      <div className="py-2">
+      {/* <div className="py-2">
         <TabWithoutIcon
           currentTab={currentTab}
           setCurrentTab={setCurrentTab}
           tabData={allTabs}
         />
-      </div>
+      </div> */}
       <div className="w-full bg-gray-50">
         <MyPlansListTable plansList={plansList} />
       </div>

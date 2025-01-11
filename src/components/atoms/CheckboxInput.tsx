@@ -31,7 +31,7 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({ showIcon, icon, small, 
   // console.log("CheckboxInput: `isChecked` state is", isChecked);
 
   return (
-    <label className="border grid grid-cols-12 flex items-center space-x-2 cursor-pointer truncate p-1">
+    <label className="grid grid-cols-12 flex items-center space-x-2 cursor-pointer truncate p-1">
       <input
         type="checkbox"
         className={`col-span-1 form-checkbox h-4 w-4 text-[#52A2FF]`}
@@ -49,7 +49,7 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({ showIcon, icon, small, 
           </Tooltip>
         </span>
       ) : (
-        <span className={`col-span-11 flex justify-start text-[${color ? color : "#21394F"}] text-[${textSize ? textSize : "12px"}] truncate`}>
+        <span className={`${disabled ? "pl-2": ""} col-span-11 flex justify-start text-[${color ? color : "#21394F"}] text-[${textSize ? textSize : "12px"}] truncate`}>
           {label}
         </span>
       )}

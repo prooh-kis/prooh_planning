@@ -13,9 +13,6 @@ import {
 } from "../../components/planner";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getScreensAudiencesData,
-} from "../../actions/screenAction";
-import {
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";

@@ -116,7 +116,9 @@ export const CampaignDashboardTable = ({
                     {screenLevelData[data]?.slotsDelivered}
                   </p>
                   <p className="text-[10px] text-red">
-                    {`(-${screenLevelData[data]?.slotsPromised * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData[data]?.slotsDelivered})`}
+                    {`(${Number((screenLevelData[data]?.slotsPromised * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData[data]?.slotsDelivered.toFixed(0))) ? "" : ""} ${
+                      (screenLevelData[data]?.slotsPromised * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData[data]?.slotsDelivered).toFixed(0)
+                    })`}
                   </p>
                 </div>
                 
@@ -127,7 +129,9 @@ export const CampaignDashboardTable = ({
                     {formatNumber(screenLevelData[data]?.impressionsDelivered?.toFixed(0))}
                   </p>
                   <p className="text-[10px] text-red">
-                    {`(-${(screenLevelData[data]?.impressionsPromised?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData?.[data]?.impressionsDelivered?.toFixed(0))?.toFixed(0)})`}
+                    {`(${Number((screenLevelData[data]?.impressionsPromised?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData?.[data]?.impressionsDelivered?.toFixed(0))?.toFixed(0)) > 0 ? "-" : ""} ${
+                      (screenLevelData[data]?.impressionsPromised?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData?.[data]?.impressionsDelivered?.toFixed(0))?.toFixed(0)
+                    })`}
                   </p>
                 </div>
               </td>
@@ -137,7 +141,9 @@ export const CampaignDashboardTable = ({
                     {formatNumber(screenLevelData[data]?.costConsumed?.toFixed(0))}
                   </p>
                   <p className="text-[10px] text-red">
-                    {`(-${(screenLevelData[data]?.costTaken?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData?.[data]?.costConsumed?.toFixed(0))?.toFixed(0)})`}
+                    {`(${Number((screenLevelData[data]?.costTaken?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData?.[data]?.costConsumed?.toFixed(0))?.toFixed(0)) > 0 ? "-" : ""} ${
+                      (screenLevelData[data]?.costTaken?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData?.[data]?.costConsumed?.toFixed(0))?.toFixed(0)
+                    })`}
                   </p>
                 </div>
               </td>

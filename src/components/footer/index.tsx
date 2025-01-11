@@ -1,4 +1,4 @@
-import { getAllLocalStorageData } from "../../utils/localStorageUtils";
+import { getAllLocalStorageData, getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import { ScreenSummaryModel } from "../../components/popup/ScreenSummaryModel";
 import React, { useEffect, useState } from "react";
 import { formatNumber } from "../../utils/formatValue";
@@ -6,12 +6,15 @@ import { Loading } from "../../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { getPlanningPageFooterData } from "../../actions/screenAction";
 import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
+import { FULL_CAMPAIGN_PLAN, SELECTED_AUDIENCE_TOUCHPOINTS, TOTAL_SCREEN_COST_DATA } from "../../constants/localStorageConstants";
 
 export const Footer = ({
   handleSave,
   handleBack,
   isDisabled = false,
   campaignId,
+  loadingCost,
+  screensCost
 }: any) => {
   const dispatch = useDispatch<any>();
 
@@ -25,7 +28,7 @@ export const Footer = ({
       <div className="flex w-full justify-start items-center gap-4">
         {totalScreensData && (
           <div className="flex">
-            <ScreenSummaryModel loadingCost={loading} totalScreensData={totalScreensData}/>
+            <ScreenSummaryModel loadingCost={loadingCost} totalScreensData={screensCost}/>
           </div>
         )}
 
@@ -87,7 +90,7 @@ export const Footer = ({
         <div className="flex w-full justify-end items-center gap-4">
           <button
             type="submit"
-            className="border border-1 py-2 px-4 text-[14px] rounded-md hover:bg-[#00A0FA] hover:text-white"
+            className="border border-1 bg-[#D7D7D7] py-2 px-4 text-[14px] rounded-md hover:bg-[#00A0FA] hover:text-white"
             title="Go back"
             onClick={handleBack}
           >

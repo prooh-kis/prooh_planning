@@ -131,25 +131,6 @@ export const AudienceTouchPointsDetails = ({
   };
 
   useEffect(() => {
-
-    if (screensCost) {
-      saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, {[campaignId]: screensCost});
-      setCostData(screensCost);
-      saveDataOnLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS, {[campaignId]: {
-        cohorts: selectedAudiences,
-        touchPoints: selectedTouchPoints,
-        gender: selectedGender.length === 1 && selectedGender.includes("Male")
-          ? "male"
-          : selectedGender.length === 1 && selectedGender.includes("Female")
-          ? "female"
-          : "both",
-        duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30,
-      }});
-    }
-
-  }, [screensCost]);
-
-  useEffect(() => {
     dispatch(
       getScreensAudiencesData({
         id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
@@ -179,6 +160,25 @@ export const AudienceTouchPointsDetails = ({
       })
     );
   }, [dispatch]);
+
+  useEffect(() => {
+
+    if (screensCost) {
+      saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, {[campaignId]: screensCost});
+      setCostData(screensCost);
+      saveDataOnLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS, {[campaignId]: {
+        cohorts: selectedAudiences,
+        touchPoints: selectedTouchPoints,
+        gender: selectedGender.length === 1 && selectedGender.includes("Male")
+          ? "male"
+          : selectedGender.length === 1 && selectedGender.includes("Female")
+          ? "female"
+          : "both",
+        duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30,
+      }});
+    }
+
+  }, [screensCost]);
 
   useEffect(() => {
     if (
@@ -226,7 +226,7 @@ export const AudienceTouchPointsDetails = ({
       <div className="grid grid-cols-8 gap-1 pt-4">
         <div ref={marketRef} className="col-span-2 flex justify-center">
           <LocationTable
-            loading={loadingCost}
+            loading={""}
             markets={markets}
             handleSelection={handleSelection}
             selectedMarkets={selectedMarket}
@@ -238,7 +238,7 @@ export const AudienceTouchPointsDetails = ({
         <div ref={audienceRef} className="col-span-3 flex justify-center">
           <AudienceCohortTable
             showIconHighlight={showIconHighlight}
-            loading={loadingCost}
+            loading={""}
             locked={locked}
             setLocked={setLocked}
             handleSelection={handleSelection}
@@ -250,7 +250,7 @@ export const AudienceTouchPointsDetails = ({
         </div>
         <div ref={touchpointRef} className="col-span-3 flex justify-center">
           <TouchpointTable
-            loading={loadingCost}
+            loading={""}
             locked={locked}
             setLocked={setLocked}
             handleSelection={handleSelection}
@@ -300,6 +300,8 @@ export const AudienceTouchPointsDetails = ({
             }
           }}
           campaignId={campaignId}
+          screensCost={screensCost}
+          loadingCost={loadingCost}
           // isDisabled={locked?.cohorts === false || locked?.touchPoints === false || loadingCost ? true : false}
         />
       </div>
