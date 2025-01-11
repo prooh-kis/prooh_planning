@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { CircleImageCarousel } from "../../components/molecules/CircleImageCrousel";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
-import { dataHeroTabs, dataHeroUsersImages } from "../../data/LandingPageData";
+import { dataHeroTabs, heroData } from "../../data/LandingPageData";
 
 export const MeetOurDataHero = () => {
   const [currentMeetDataHeroTab, setCurrentMeetDataHeroTab] = useState("1");
@@ -31,7 +31,7 @@ export const MeetOurDataHero = () => {
         {/* Carousel and Button */}
         <div className="py-4 w-full flex flex-col items-center">
           {/* Circle Image Carousel */}
-          <CircleImageCarousel images={dataHeroUsersImages} />
+          <CircleImageCarousel heroData={heroData} />
           <div className="flex items-center justify-center py-4">
             {/* Participate Button */}
             <button

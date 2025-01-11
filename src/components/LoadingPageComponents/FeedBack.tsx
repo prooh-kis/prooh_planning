@@ -1,25 +1,39 @@
-import React, { useState } from "react";
-import { testO11 } from "../../assets";
+import React, { useEffect, useState } from "react";
 import quotes from "../../assets/icons/quotes.png";
+import { feedbackData } from "./../../data/LandingPageData";
 
-const testimonials = [
-  {
-    image: testO11,
-    quote:
-      "Being a Tech Company, we believe in everything which can demonstrate measurability. PROOH practices are extremely fresh and deliver the assurances around accountability.",
-    author: "Ms. Bhawna Talwar",
-    position: "Brand Marketing",
-  },
-  // Add more testimonials here
-];
+interface Testimonial {
+  image: string;
+  quote: string;
+  author: string;
+  position: string;
+}
 
-export const FeedBack = ({
-  title = "Wall of Love",
-  sectionDescription = "Feedback From Those We've Shared Experiences With",
-  testimonialsData = testimonials,
-}) => {
+interface FeedBackProps {
+  title?: string;
+  sectionDescription?: string;
+  testimonialsData?: Testimonial[];
+}
+
+export const FeedBack: React.FC<FeedBackProps> = (props) => {
+  const {
+    title = "Wall of Love",
+    sectionDescription = "Feedback From Those We've Shared Experiences With",
+    testimonialsData = feedbackData,
+  } = props;
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const totalTestimonials = testimonialsData.length;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === totalTestimonials - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000); // Change interval time as needed (e.g., every 3 seconds)
+
+    return () => clearInterval(interval);
+  }, [totalTestimonials]);
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
@@ -29,9 +43,13 @@ export const FeedBack = ({
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === totalTestimonials - 1 ? 0 : prevIndex + 1
+      prevIndex === testimonialsData.length - 1 ? 0 : prevIndex + 1
     );
   };
+
+  if (totalTestimonials === 0) {
+    return null; // Handle case when there are no testimonials
+  }
 
   const { image, quote, author, position } = testimonialsData[currentIndex];
 
@@ -59,7 +77,7 @@ export const FeedBack = ({
           <img
             src={image}
             alt="Testimonial Visual"
-            className="h-[200px] w-full md:h-[260px] md:w-[373px] object-cover rounded-lg shadow-md"
+            className="h-[200px] w-full md:h-[260px] md:w-[373px] object-cover rounded-md"
           />
 
           {/* Testimonial Text */}
@@ -68,7 +86,7 @@ export const FeedBack = ({
             <img
               src={quotes}
               alt="Quotes"
-              className="h-8 w-8 mb-4 bg-blue-500 mask mask-image"
+              className="h-8 w-8 mb-4 bg-blue-500 mask mask-image "
             />
 
             {/* Quote Content */}
@@ -80,7 +98,7 @@ export const FeedBack = ({
             <p className="text-[16px] md:text-[18px] lg:text-[20px] text-[#254354] font-bold leading-[24px] mt-2">
               {author}
             </p>
-            <p className="text-[14px] md:text-[16px] text-[#688799] font-normal leading-[19.36px]">
+            <p className="text-[14px] md:text-[16px] text-[#688799] font-normal leading-[19.36px] w-full lg:w-[269px]">
               {position}
             </p>
 

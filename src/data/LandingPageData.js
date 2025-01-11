@@ -32,6 +32,7 @@ import testiO3 from "../assets/images/testi03.png";
 import testiO4 from "../assets/images/testi04.png";
 
 import UserImage from "../assets/userImage.png";
+import { testO11, testO12, testO13, testO14 } from "../assets";
 
 export const steps = [
   {
@@ -135,7 +136,7 @@ export const advertisersSteps = [
 export const dataHeroTabs = [
   {
     id: "1",
-    label: "All(98)",
+    label: "All",
   },
   {
     id: "2",
@@ -196,3 +197,161 @@ export const meetArchitects = [
 // });
 
 const testimonials = [testiO1, testiO2, testiO3, testiO4];
+
+export const feedbackData = [
+  {
+    image: testO11,
+    quote:
+      "Being a Tech Company, we believe in everything which can demonstrate measurability. PROOH practices are extremely fresh and deliver the assurances around accountability.",
+    author: "Ms. Bhawna Talwar",
+    position: "Brand Marketing",
+  },
+  {
+    image: testO12,
+    quote:
+      "PROOH promises to bring the advertising experience closer to audience-driven buying of digital ads.",
+    author: "Ms. Akriti Thakur",
+    position: "AVP - Branding & Communications, Founding Member",
+  },
+  {
+    image: testO13,
+    quote:
+      "  Being an International tech company, Our mandate to select the OOH partner was based on measurement and Cost efficiencies. PROOH is an interesting Find.",
+    author: "Ms. Ridhima Gupta",
+    position: "Global Head Of Product Marketing",
+  },
+  {
+    image: testO14,
+    quote:
+      "PROOH uses far superior tech than other Exiting Large agencies helping media buying on impressions (never happened before) and guaranteed cost savings.",
+    author: "Mr. Ankit Kumar",
+    position: "Head Brand & Marketing",
+  },
+
+  // Add more testimonials here
+];
+
+export const heroData = [
+  {
+    image: "https://randomuser.me/api/portraits/men/1.jpg",
+    name: "John Doe",
+    position: "Software Engineer",
+    aboutMe: "I love building scalable applications.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/women/2.jpg",
+    name: "Jane Smith",
+    position: "Product Manager",
+    aboutMe: "Passionate about creating user-centered products.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/men/3.jpg",
+    name: "Sam Johnson",
+    position: "Designer",
+    aboutMe: "I specialize in UI/UX design with a focus on user experience.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/women/4.jpg",
+    name: "Alice Brown",
+    position: "Marketing Lead",
+    aboutMe: "I help brands grow through innovative marketing strategies.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/men/5.jpg",
+    name: "Michael Lee",
+    position: "Data Scientist",
+    aboutMe: "Data-driven decisions are the foundation of everything I do.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/women/6.jpg",
+    name: "Sarah Williams",
+    position: "Content Strategist",
+    aboutMe: "I craft compelling narratives that engage audiences.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/men/7.jpg",
+    name: "David Wilson",
+    position: "Software Engineer",
+    aboutMe: "Focused on full-stack development and cloud solutions.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/women/8.jpg",
+    name: "Emma Davis",
+    position: "HR Specialist",
+    aboutMe: "I focus on creating a positive workplace culture.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/men/9.jpg",
+    name: "Lucas Martinez",
+    position: "Front-End Developer",
+    aboutMe: "Creating visually appealing, responsive websites.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/women/10.jpg",
+    name: "Olivia Clark",
+    position: "Back-End Developer",
+    aboutMe: "Passionate about building robust and scalable systems.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/men/11.jpg",
+    name: "Ethan Moore",
+    position: "Business Analyst",
+    aboutMe: "I help companies optimize their processes and operations.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+    name: "Sophia Taylor",
+    position: "UX/UI Designer",
+    aboutMe: "Designing experiences that delight users.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/men/13.jpg",
+    name: "Benjamin Harris",
+    position: "Project Manager",
+    aboutMe:
+      "I thrive in managing cross-functional teams to deliver projects on time.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/women/14.jpg",
+    name: "Charlotte Lewis",
+    position: "QA Engineer",
+    aboutMe: "Ensuring the highest quality in every product release.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/men/15.jpg",
+    name: "Mason Walker",
+    position: "Web Developer",
+    aboutMe: "Building clean, efficient, and scalable web applications.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/women/16.jpg",
+    name: "Amelia Young",
+    position: "Marketing Manager",
+    aboutMe: "I drive marketing campaigns that amplify brand presence.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/men/17.jpg",
+    name: "Henry Allen",
+    position: "Customer Success Manager",
+    aboutMe:
+      "I ensure our customers have the best experience with our product.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/women/18.jpg",
+    name: "Isabella King",
+    position: "Product Designer",
+    aboutMe: "Designing products that make a meaningful impact.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/men/19.jpg",
+    name: "Jack Scott",
+    position: "Network Engineer",
+    aboutMe: "I manage infrastructure and optimize network performance.",
+  },
+  {
+    image: "https://randomuser.me/api/portraits/women/20.jpg",
+    name: "Ava Green",
+    position: "DevOps Engineer",
+    aboutMe: "I automate the deployment pipeline for faster releases.",
+  },
+];

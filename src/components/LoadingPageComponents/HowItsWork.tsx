@@ -9,19 +9,19 @@ export const HowItsWork = () => {
 
   const CampaignStep = ({ step, image, title, description }: any) => (
     <div className="grid grid-cols-1 md:grid-cols-12 gap-4 py-4 w-full">
-      <div className="md:col-span-7 flex items-center justify-center">
-        <div className="rounded-[12px] shadow-lg m-1">
+      <div className="md:col-span-5 flex items-center">
+        <div className="rounded-[12px] shadow-lg lg:w-[576px] lg:h-[419px]">
           <img src={image} alt={title} />
         </div>
       </div>
-      <div className="md:col-span-4 p-4 flex flex-col gap-4">
+      <div className="md:col-span-5  p-1 md:p-4 flex flex-col gap-4">
         <p className="lg:text-[14px] text-[12px] font-bold text-[#B5B5B5]">
           {step}
         </p>
-        <h1 className="lg:text-[24px] text-[18px] text-[#254354] font-semibold text-wrap tracking-[0.04em]">
+        <h1 className="lg:text-[24px] text-[18px] text-[#254354] font-semibold leading-[29.52px] text-wrap tracking-[-0.04em]">
           {title}
         </h1>
-        <p className="lg:text-[20px] text-[16px] text-[#6D8596] tracking-[0.02em]">
+        <p className="lg:text-[20px] text-[16px] text-[#6D8596] leading-[30px] tracking-[-0.02em]">
           {description}
         </p>
       </div>
@@ -38,21 +38,21 @@ export const HowItsWork = () => {
   };
 
   return (
-    <div ref={secondDivRef} className="lg:px-16  mt-16">
-      <h1 className="px-8 text-[16px] leading-[24px] font-normal tracking-[0.21em] text-left">
-        {`HOW IT'S WORK`}
+    <div ref={secondDivRef} className="px-4 lg:px-16  mt-16">
+      <h1 className="text-[16px] leading-[24px] tracking-[0.21em] font-normal tracking-[0.21em] text-left">
+        {`HOW DOES IT WORK`}
       </h1>
-      <div className="border-b my-4 ml-8 inline-flex items-center gap-2 w-fit">
+      <div className="border-b my-4 inline-flex items-center gap-2 w-fit">
         <TabWithoutIcon
           tabData={tabData}
           currentTab={currentTab}
           setCurrentTab={setCurrentTab}
         />
       </div>
-      <div className="px-8 py-4">
+      <div className="py-4">
         {currentTab === "1" ? (
           <div className="pb-4">
-            <h1 className="text-[24px] lg:text-[32px] leading-[24px] font-semibold tracking-[0.01em] text-left">
+            <h1 className="text-[20px] lg:text-[32px] leading-[36.48px] font-semibold tracking-[-0.04em] text-left">
               Plan Your Campaign In Just Few Clicks
             </h1>
             <div className="py-4 flex items-center gap-4">

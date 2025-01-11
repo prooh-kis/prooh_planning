@@ -40,7 +40,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
       onMouseMove={handleMouseMove} // Update index on mouse move
     >
       <div
-        className="flex justify-around gap-4 py-1"
+        className="flex justify-around py-1"
         style={{
           animation: `${
             isHovered ? "none" : `slide-left ${slideDuration}s linear infinite`
@@ -50,11 +50,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
         }}
       >
         {duplicatedImages.map((image, index) => (
-          <div
-            key={index}
-            className="flex-shrink-0 px-2"
-            style={{ width: `${imageWidth / 4}%` }}
-          >
+          <div key={index} className="flex-shrink-0">
             <img
               src={image}
               alt={`Slide ${index}`}

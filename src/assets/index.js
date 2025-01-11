@@ -15,7 +15,10 @@ export { default as image12 } from "./images/image12.png";
 export { default as image13 } from "./images/image13.png";
 export { default as image14 } from "./images/image14.png";
 export { default as image15 } from "./images/image15.png";
-export { default as testO11 } from "./images/testiO11.png";
+export { default as testO11 } from "./images/testiO11.svg";
+export { default as testO12 } from "./images/testiO12.svg";
+export { default as testO13 } from "./images/testiO13.svg";
+export { default as testO14 } from "./images/testiO14.svg";
 
 //icons
 

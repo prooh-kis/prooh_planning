@@ -39,7 +39,7 @@ export const CampaignTemplates: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-10 flex items-center justify-center w-full h-full">
+    <div className="p-10 mt-16 flex items-center justify-center w-full h-full">
       <div className="border border-transparent rounded-lg w-full h-full">
         <div className="flex flex-col items-center justify-center p-2">
           <h1 className="text-[24px] font-sans font-bold text-center text-primaryText">

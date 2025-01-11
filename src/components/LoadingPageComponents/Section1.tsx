@@ -12,8 +12,9 @@ export const Section1 = () => {
       {/* Text Content */}
       <div className="col-span-1 md:col-span-5 flex justify-center md:justify-start">
         <div className="w-full md:w-[516px]">
-          <h1 className="text-[28px] md:text-[40px] lg:text-[48px] font-bold text-[#20272C]">
-            End-to-end campaign management platform for
+          <h1 className="text-[28px] md:text-[40px] lg:text-[48px] font-bold text-[#20272C]  leading-[45px] tracking-[-0.02em]">
+            End-to-end <br />
+            campaign management platform for
             <span className="bg-primaryButton text-white rounded-[10px] text-[20px] md:text-[32px] px-2 ml-2">
               DOOH
             </span>

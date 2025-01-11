@@ -184,7 +184,7 @@ export const OurAdvertisingJourney = ({ landingPageData }: any) => {
   }, [landingPageData]);
 
   return (
-    <div ref={targetDivRef} className="px-4 md:px-16 w-full">
+    <div ref={targetDivRef} className="px-4 md:px-16 w-full mt-16">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
         {/* Left Column */}
         <div className="col-span-1 md:col-span-4">

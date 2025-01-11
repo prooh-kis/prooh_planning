@@ -1,6 +1,50 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 
 export const PlanYourCampaign = () => {
+  const [currentIndex, setCurrentIndex] = useState(0); // Track the current item index
+  const scrollRef = useRef<HTMLDivElement>(null); // Ref for the scrollable middle column
+
+  const data = [
+    {
+      title: "We Sell OOH & PDOOH on Impressions Only. No Fixed Rental.",
+      description:
+        "PROOH’s Media Planning Tool uses Geospatial Data, POI Data, Govt. Traffic Data amongst other Data sets to determine Total Count of people at specific locations and",
+    },
+    {
+      title:
+        "We Minimize Ad-Spend Wastage By Targeting Cohorts By Location And Time Of The Day",
+      description:
+        "On-the-Go audiences tend to follow daily routines faithfully. The collection, processing and analysis of SDK data enables attribution of a mobile device ID on POI’s and",
+    },
+    {
+      title: "We Bring Advanced Audience Measurement Through Iot Devices",
+      description:
+        "Prooh’s Advanced Audience Measurement Platform is composed of Computer Vision and uses a HD IP Camera at the site level for recording live scene analysis pointing at the intended direction capturing data within a defined",
+    },
+  ];
+
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const scrollTop = scrollRef.current.scrollTop; // How far scrolled
+      const containerHeight = scrollRef.current.offsetHeight; // Height of scroll container
+      const totalHeight = scrollRef.current.scrollHeight; // Total scrollable height
+
+      // Item height based on total scrollable height divided by the number of items
+      const itemHeight = totalHeight / data.length;
+
+      // Calculate the index of the currently visible item
+      const index = Math.min(
+        Math.floor(scrollTop / itemHeight),
+        data.length - 1
+      );
+
+      // Update current index if it has changed
+      if (index !== currentIndex) {
+        setCurrentIndex(index);
+      }
+    }
+  };
+
   return (
     <div className="px-4 w-full">
       {/* so in mobile and hide in tablet and laptop */}
@@ -76,12 +120,10 @@ export const PlanYourCampaign = () => {
                   ></i>
                 </div>
                 <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold mt-8">
-                  We Sell OOH & PDOOH On Impressions Only. No Fixed Rental
+                  {data[currentIndex]?.title}
                 </h1>
                 <p className="text-sm sm:text-base lg:text-lg text-gray-300 mt-4">
-                  {`PROOH's Media Planning Tool uses geospatial data, POI data,
-                  and government traffic data to determine audience impressions
-                  delivered at specific locations.`}
+                  {data[currentIndex]?.description}
                 </p>
               </div>
             </div>
@@ -132,8 +174,40 @@ export const PlanYourCampaign = () => {
                 </button>
               </div>
               <div className="col-span-1 flex justify-center items-center p-10">
-                <div className="rounded-full bg-[#1E3241] w-4 h-2/4 flex items-center">
-                  <div className="rounded-full bg-primaryButton w-full h-1/5"></div>
+                <div className="rounded-full bg-[#1E3241] w-4 h-2/4 flex items-center flex-col justify-between py-4">
+                  {currentIndex == 0 ? (
+                    <div
+                      onClick={() => setCurrentIndex(0)}
+                      className="rounded-full bg-primaryButton w-full h-1/3"
+                    ></div>
+                  ) : (
+                    <div
+                      onClick={() => setCurrentIndex(0)}
+                      className="bg-[#1E3241] w-full h-1/3"
+                    ></div>
+                  )}
+                  {currentIndex == 1 ? (
+                    <div
+                      onClick={() => setCurrentIndex(1)}
+                      className="rounded-full bg-primaryButton w-full h-1/3"
+                    ></div>
+                  ) : (
+                    <div
+                      onClick={() => setCurrentIndex(1)}
+                      className="bg-[#1E3241] w-full h-1/3"
+                    ></div>
+                  )}
+                  {currentIndex == 2 ? (
+                    <div
+                      onClick={() => setCurrentIndex(2)}
+                      className="rounded-full bg-primaryButton w-full h-1/3"
+                    ></div>
+                  ) : (
+                    <div
+                      onClick={() => setCurrentIndex(2)}
+                      className="bg-[#1E3241] w-full h-1/3"
+                    ></div>
+                  )}
                 </div>
               </div>
               <div className="col-span-4 px-6 py-32 flex justify-start items-center w-full">
@@ -145,11 +219,13 @@ export const PlanYourCampaign = () => {
                   </div>
 
                   <h1 className="lg:text-[32px] text-[24px] text-[#FFFFFF]  font-[800] text-wrap mt-8 leading-[40.96px] tracking-[-0.04em] w-[541px] h-[82px]">
-                    We Sell OOH & PDOOH On Impressions Only. No Fixed Rental
+                    {data[currentIndex]?.title}
                   </h1>
                   <p className="lg:text-[20px] text-[14px] text-[#FFFFFF]  font-normal text-wrap mt-8 leading-[30px] tracking-[-0.02em]">
-                    {`PROOH'S Media Planning Tool Uses Geospatial Data, POI Data, Govt. Traffic Data amongst other data to determine total audience impressions delivered at any specific locations.`}
-                    {/* <span className="text-primaryButton font-semibold underline">See More</span> */}
+                    {data[currentIndex]?.description}
+                    {/* <span className="text-primaryButton font-semibold underline">
+                      See More
+                    </span> */}
                   </p>
                 </div>
               </div>
