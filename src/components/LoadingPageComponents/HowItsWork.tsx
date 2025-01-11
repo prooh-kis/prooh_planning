@@ -8,13 +8,13 @@ export const HowItsWork = () => {
   const [currentAdvertiserTab, setCurrentAdvertiserTab] = useState<any>("1");
 
   const CampaignStep = ({ step, image, title, description }: any) => (
-    <div className="grid grid-cols-12 gap-4 py-4 w-full">
-      <div className="col-span-7 flex items-center justify-center">
+    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 py-4 w-full">
+      <div className="md:col-span-7 flex items-center justify-center">
         <div className="rounded-[12px] shadow-lg m-1">
           <img src={image} alt={title} />
         </div>
       </div>
-      <div className="col-span-4 p-4 flex flex-col gap-4">
+      <div className="md:col-span-4 p-4 flex flex-col gap-4">
         <p className="lg:text-[14px] text-[12px] font-bold text-[#B5B5B5]">
           {step}
         </p>
@@ -38,8 +38,8 @@ export const HowItsWork = () => {
   };
 
   return (
-    <div ref={secondDivRef} className="px-16 mt-16">
-      <h1 className="px-8  text-[16px] leading-[24px] font-normal tracking-[0.21em] text-left ">
+    <div ref={secondDivRef} className="lg:px-16  mt-16">
+      <h1 className="px-8 text-[16px] leading-[24px] font-normal tracking-[0.21em] text-left">
         {`HOW IT'S WORK`}
       </h1>
       <div className="border-b my-4 ml-8 inline-flex items-center gap-2 w-fit">
@@ -52,7 +52,7 @@ export const HowItsWork = () => {
       <div className="px-8 py-4">
         {currentTab === "1" ? (
           <div className="pb-4">
-            <h1 className="text-[32px] leading-[24px] font-semibold tracking-[0.01em] text-left">
+            <h1 className="text-[24px] lg:text-[32px] leading-[24px] font-semibold tracking-[0.01em] text-left">
               Plan Your Campaign In Just Few Clicks
             </h1>
             <div className="py-4 flex items-center gap-4">

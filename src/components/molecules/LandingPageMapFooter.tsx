@@ -6,8 +6,8 @@ export function LandingPageMapFooter({ data }: any) {
   const [year, setYear] = useState<any>("All");
 
   return (
-    <div className="w-full p-4 bg-white rounded-[12px]">
-      <div className="flex flex-col gap-4 py-2 w-[413px]">
+    <div className="w-full bg-white rounded-[12px]">
+      <div className="flex flex-col gap-4 py-2 w-full lg:w-[413px]">
         <h1 className="text-[40px] leading-[48px] font-bold tracking-[-0.03em] text-[#20272C] text-left font-inter">
           Our Advertising Journey
         </h1>
@@ -17,7 +17,7 @@ export function LandingPageMapFooter({ data }: any) {
           of the reasons why you
         </p>
       </div>
-      <div className="flex items-center gap-2 py-4 w-[413px]">
+      <div className="flex items-center gap-2 py-4 w-full lg:w-[413px]">
         {["All", "2021", "2022", "2023"].map((value: string) => (
           <div
             key={value}
@@ -32,7 +32,7 @@ export function LandingPageMapFooter({ data }: any) {
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-3 py-4 w-[413px]">
+      <div className="grid grid-cols-3 py-4 w-full lg:w-[413px]">
         {[
           { label: "Countries", value: data?.countries, border: "border-b" },
           { label: "Cities", value: data?.cities, border: "border-x border-b" },
@@ -69,7 +69,7 @@ export function LandingPageMapFooter({ data }: any) {
         ].map((item, index) => (
           <div
             key={index}
-            className={`py-4 px-8 col-span-1 flex flex-col items-center text-[#20272C] justify-center ${
+            className={`py-4 px-6 lg:px-8 col-span-1 flex flex-col items-center text-[#20272C] justify-center ${
               item.border || ""
             }`}
           >

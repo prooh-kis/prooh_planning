@@ -1,70 +1,78 @@
 import { Carousel } from "antd";
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useRef } from "react";
 
 interface Props {
   images: string[];
-  showThumbnails?: any;
+  showThumbnails?: boolean;
 }
 
-const MyCarousel = ({ images, showThumbnails=true }: Props) => {
+const MyCarousel = ({ images, showThumbnails = true }: Props) => {
   const carouselRef = useRef<any>(null);
-  const onChange = (currentSlide: any) => {
-  };
 
-  const handleThumbnailClick = (index: any) => {
+  const handleThumbnailClick = (index: number) => {
     if (carouselRef.current) {
       carouselRef.current.goTo(index, true);
     }
-  }
+  };
+
   return (
     <div className="w-full">
-      <Carousel ref={carouselRef} effect={"fade"} arrows autoplay autoplaySpeed={2000} infinite={true} afterChange={onChange}>
+      {/* Main Carousel */}
+      <Carousel
+        ref={carouselRef}
+        effect="fade"
+        arrows
+        autoplay
+        autoplaySpeed={3000}
+        infinite
+        className="rounded-md"
+      >
         {images.map((image, index) => (
           <div key={index}>
-            {image.split(".")[image.split(".")?.length - 1] === "mp4" ? (
+            {image.endsWith(".mp4") ? (
               <video
                 src={image}
-                className="h-auto w-full object-fill rounded-md"
-                controls={true}
+                className="h-auto w-full object-cover rounded-md"
+                controls
               />
             ) : (
               <img
                 src={image}
-                alt=""
-                className="h-auto w-full object-fill rounded-md"
+                alt={`carousel-img-${index}`}
+                className="h-auto w-full object-cover rounded-md"
               />
             )}
-
           </div>
         ))}
       </Carousel>
+
+      {/* Thumbnails */}
       {showThumbnails && (
-        <div className="grid grid-cols-3 gap-2">
-          {images?.map((image, index) => (
-            <div className="col-span-1" key={index}
-              onClick={() => {
-                handleThumbnailClick(index);
-              }}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 mt-4">
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className="cursor-pointer rounded-md overflow-hidden border border-gray-200 hover:border-blue-500"
+              onClick={() => handleThumbnailClick(index)}
             >
-              {image?.split(".")[image.split(".")?.length - 1] !== "mp4" ? (
-                <img
-                  src={image}
-                  alt=""
-                  className="rounded h-full w-full object-fill"
-                />
-              ) : (
+              {image.endsWith(".mp4") ? (
                 <video
                   src={image}
-                  className="rounded h-full w-full object-fill"
+                  className="h-full w-full object-cover"
+                  muted
+                />
+              ) : (
+                <img
+                  src={image}
+                  alt={`thumbnail-${index}`}
+                  className="h-full w-full object-cover"
                 />
               )}
             </div>
           ))}
         </div>
       )}
-
     </div>
-
   );
 };
 

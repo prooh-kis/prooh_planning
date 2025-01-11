@@ -3,68 +3,155 @@ import React from "react";
 export const PlanYourCampaign = () => {
   return (
     <div className="px-4 w-full">
-      <div className="relative ">
-        <div className="relative z-10 mx-28 text-white bg-primaryButton rounded-[16px] px-4 py-2 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <i className="fi fi-sr-time-fast text-[28px]"></i>
-            <div>
-              <h1 className="lg:text-[40px] text-[32px] font-bold tracking-[0.02em]">
-                Plan Your Campaign Now
-              </h1>
-              <div className="pb-2">
-                <p className="lg:text-[14px] text-[12px]">
+      {/* so in mobile and hide in tablet and laptop */}
+      <div className="block lg:hidden">
+        <section className="relative px-4 w-full">
+          {/* Header Section */}
+          <div className="relative z-10 mx-auto max-w-6xl bg-primaryButton text-white rounded-lg px-4 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+            <div className="flex items-start sm:items-center gap-4">
+              <i
+                className="fi fi-sr-time-fast text-2xl sm:text-3xl"
+                aria-label="Time icon"
+              ></i>
+              <div>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
+                  Plan Your Campaign Now
+                </h1>
+                <p className="text-sm sm:text-base mt-2">
                   <span className="font-bold">+40</span> Advertisers Have
                   Already Planned
                 </p>
               </div>
             </div>
-          </div>
-          <div className="px-4">
-            <button className="text-[#183246] text-[20px] font-bold h-[60pz] w-[181px] bg-white rounded-[72px] px-[3px] py-[20px] hover:bg-white hover:text-[#183246]">
+            <button
+              className="mt-4 sm:mt-0 text-[#183246]  text-lg sm:text-xl font-bold w-full sm:w-auto bg-white rounded-full px-6 py-3 hover:bg-gray-100 transition-all"
+              onClick={() => alert("Request Demo clicked")}
+            >
               Request Demo
             </button>
           </div>
-        </div>
-        <div className="absolute top-1/2 left-0 w-full bg-gradient-to-b from-[#13202A] to-[#072E4A] rounded-[26px]">
-          <div className="grid grid-cols-12 text-white gap-2 mt-16">
-            <div className="col-span-6 p-32">
-              <div className="flex items-center gap-2">
-                <i className="fi fi-ss-sparkles"></i>
-                <h1 className="lg:text-[20px] text-[16px] tracking-[0.21em]">
-                  WHAT WE DO
-                </h1>
-              </div>
-              <h1 className="lg:text-[48px] text-[40px]  font-bold mt-8 hover:bg-white hover:text-[#129BFF} w-[320px] leading-[48.96px] tracking-[-0.05em] h-[147px]">
-                Simplify & Optimize Your Advertising
-              </h1>
-              <p className="lg:text-[20px] text-[16px] text-[#88A8BF] text-wrap mt-8 hover:bg-white hover:text-[#129BFF} leading-[30px] tracking-[-0.02em]">
-                Our platform helps your business in managing expenses. These are
-                some of the reasons why you should use our platform in
-              </p>
-              <button className="text-[#FFFFFF] text-[20px] font-bold h-[50pz] w-[153px] bg-[#129BFF] rounded-[12px] px-[31px] py-[7px] mt-8 hover:bg-white hover:text-[#129BFF]">
-                Plan Now
-              </button>
-            </div>
-            <div className="col-span-1 flex justify-center items-center p-10">
-              <div className="rounded-full bg-[#1E3241] w-4 h-2/4 flex items-center">
-                <div className="rounded-full bg-primaryButton w-full h-1/5"></div>
-              </div>
-            </div>
-            <div className="col-span-4 px-6 py-32 flex justify-start items-center w-full">
-              <div className="">
-                <div className="flex justify-start">
-                  <div className="bg-[#1E3E53] rounded-[20px] p-5 h-[86px] w-[86px] flex justify-center items-center">
-                    <i className="fi fi-sr-display-chart-up text-[37px]"></i>
-                  </div>
-                </div>
 
-                <h1 className="lg:text-[32px] text-[24px] text-[#FFFFFF]  font-[800] text-wrap mt-8 leading-[40.96px] tracking-[-0.04em] w-[541px] h-[82px]">
+          {/* Main Content Section */}
+          <div className="mt-8 bg-gradient-to-b from-[#13202A] to-[#072E4A] rounded-lg py-8 px-4 sm:px-8 lg:px-16 text-white">
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-6">
+              {/* Left Column */}
+              <div className="sm:col-span-6 flex flex-col">
+                <div className="flex items-center gap-2">
+                  <i
+                    className="fi fi-ss-sparkles"
+                    aria-label="Sparkles icon"
+                  ></i>
+                  <h2 className="text-sm sm:text-base lg:text-lg uppercase">
+                    What We Do
+                  </h2>
+                </div>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mt-4">
+                  Simplify & Optimize Your Advertising
+                </h1>
+                <p className="text-sm sm:text-base lg:text-lg text-gray-300 mt-4">
+                  Our platform helps your business manage expenses. Here are
+                  some reasons why you should use our platform:
+                </p>
+                <button
+                  className="mt-8 bg-[#129BFF] text-white text-base font-bold py-3 px-6 rounded-md hover:bg-white hover:text-[#129BFF] transition-all"
+                  onClick={() => alert("Plan Now clicked")}
+                >
+                  Plan Now
+                </button>
+              </div>
+
+              {/* Middle Divider */}
+              <div className="hidden sm:block sm:col-span-1 flex justify-center items-center">
+                <div className="w-2 h-full bg-[#1E3241] rounded-full">
+                  <div className="w-full h-1/4 bg-primaryButton rounded-full"></div>
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div className="sm:col-span-5 flex flex-col">
+                <div className="bg-[#1E3E53] rounded-lg p-6 w-16 h-16 flex items-center justify-center">
+                  <i
+                    className="fi fi-sr-display-chart-up text-xl sm:text-3xl"
+                    aria-label="Chart icon"
+                  ></i>
+                </div>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold mt-8">
                   We Sell OOH & PDOOH On Impressions Only. No Fixed Rental
                 </h1>
-                <p className="lg:text-[20px] text-[14px] text-[#FFFFFF]  font-normal text-wrap mt-8 leading-[30px] tracking-[-0.02em]">
-                  {`PROOH'S Media Planning Tool Uses Geospatial Data, POI Data, Govt. Traffic Data amongst other data to determine total audience impressions delivered at any specific locations.`}
-                  {/* <span className="text-primaryButton font-semibold underline">See More</span> */}
+                <p className="text-sm sm:text-base lg:text-lg text-gray-300 mt-4">
+                  {`PROOH's Media Planning Tool uses geospatial data, POI data,
+                  and government traffic data to determine audience impressions
+                  delivered at specific locations.`}
                 </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div className="hidden lg:block">
+        <div className="relative ">
+          <div className="relative z-10 mx-28 text-white bg-primaryButton rounded-[16px] px-4 py-2 flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <i className="fi fi-sr-time-fast text-[28px]"></i>
+              <div>
+                <h1 className="lg:text-[40px] text-[32px] font-bold tracking-[0.02em]">
+                  Plan Your Campaign Now
+                </h1>
+                <div className="pb-2">
+                  <p className="lg:text-[14px] text-[12px]">
+                    <span className="font-bold">+40</span> Advertisers Have
+                    Already Planned
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="px-4">
+              <button className="text-[#183246] text-[20px] font-bold h-[60pz] w-[181px] bg-white rounded-[72px] px-[3px] py-[20px] hover:bg-white hover:text-[#183246]">
+                Request Demo
+              </button>
+            </div>
+          </div>
+          <div className="absolute top-1/2 left-0 w-full bg-gradient-to-b from-[#13202A] to-[#072E4A] rounded-[26px]">
+            <div className="grid grid-cols-12 text-white gap-2 mt-16">
+              <div className="col-span-6 p-32">
+                <div className="flex items-center gap-2">
+                  <i className="fi fi-ss-sparkles"></i>
+                  <h1 className="lg:text-[20px] text-[16px] tracking-[0.21em]">
+                    WHAT WE DO
+                  </h1>
+                </div>
+                <h1 className="lg:text-[48px] text-[40px]  font-bold mt-8 hover:bg-white hover:text-[#129BFF} w-[320px] leading-[48.96px] tracking-[-0.05em] h-[147px]">
+                  Simplify & Optimize Your Advertising
+                </h1>
+                <p className="lg:text-[20px] text-[16px] text-[#88A8BF] text-wrap mt-8 hover:bg-white hover:text-[#129BFF} leading-[30px] tracking-[-0.02em]">
+                  Our platform helps your business in managing expenses. These
+                  are some of the reasons why you should use our platform in
+                </p>
+                <button className="text-[#FFFFFF] text-[20px] font-bold h-[50pz] w-[153px] bg-[#129BFF] rounded-[12px] px-[31px] py-[7px] mt-8 hover:bg-white hover:text-[#129BFF]">
+                  Plan Now
+                </button>
+              </div>
+              <div className="col-span-1 flex justify-center items-center p-10">
+                <div className="rounded-full bg-[#1E3241] w-4 h-2/4 flex items-center">
+                  <div className="rounded-full bg-primaryButton w-full h-1/5"></div>
+                </div>
+              </div>
+              <div className="col-span-4 px-6 py-32 flex justify-start items-center w-full">
+                <div className="">
+                  <div className="flex justify-start">
+                    <div className="bg-[#1E3E53] rounded-[20px] p-5 h-[86px] w-[86px] flex justify-center items-center">
+                      <i className="fi fi-sr-display-chart-up text-[37px]"></i>
+                    </div>
+                  </div>
+
+                  <h1 className="lg:text-[32px] text-[24px] text-[#FFFFFF]  font-[800] text-wrap mt-8 leading-[40.96px] tracking-[-0.04em] w-[541px] h-[82px]">
+                    We Sell OOH & PDOOH On Impressions Only. No Fixed Rental
+                  </h1>
+                  <p className="lg:text-[20px] text-[14px] text-[#FFFFFF]  font-normal text-wrap mt-8 leading-[30px] tracking-[-0.02em]">
+                    {`PROOH'S Media Planning Tool Uses Geospatial Data, POI Data, Govt. Traffic Data amongst other data to determine total audience impressions delivered at any specific locations.`}
+                    {/* <span className="text-primaryButton font-semibold underline">See More</span> */}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

@@ -184,14 +184,17 @@ export const OurAdvertisingJourney = ({ landingPageData }: any) => {
   }, [landingPageData]);
 
   return (
-    <div ref={targetDivRef} className="px-16 w-full">
-      <div className="grid grid-cols-12 gap-8">
-        <div className="col-span-4">
+    <div ref={targetDivRef} className="px-4 md:px-16 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+        {/* Left Column */}
+        <div className="col-span-1 md:col-span-4">
           <div className="py-4">
             <LandingPageMapFooter data={landingPageData} />
           </div>
         </div>
-        <div className="col-span-8">
+
+        {/* Right Column */}
+        <div className="col-span-1 md:col-span-8">
           <div className="relative">
             <LandingPageMapHeader
               scrollToTarget={scrollToTarget}
@@ -199,16 +202,19 @@ export const OurAdvertisingJourney = ({ landingPageData }: any) => {
               view={view}
             />
           </div>
-          <div className="lg:h-[680px] md:h-[540px] sm:h-[480px] w-auto z-0">
+          <div className="lg:h-[680px] md:h-[540px] sm:h-[480px] w-full z-0">
             <LandingPageMap data={landingPageData} />
           </div>
         </div>
       </div>
-      {view === "list" ? (
+
+      {/* List or Table View */}
+      {view === "list" && (
         <div className="pt-8 z-0">
           <LandingPageListView screens={landingPageData?.screens} />
         </div>
-      ) : view === "table" ? (
+      )}
+      {view === "table" && (
         <div className="pt-8 z-0">
           <LandingPageTableView
             data={screenData}
@@ -232,7 +238,7 @@ export const OurAdvertisingJourney = ({ landingPageData }: any) => {
             getTotalScreensCountCityWise={getTotalScreensCountCityWise}
           />
         </div>
-      ) : null}
+      )}
     </div>
   );
 };

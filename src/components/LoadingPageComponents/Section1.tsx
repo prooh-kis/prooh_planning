@@ -8,21 +8,22 @@ import { carouselImages } from "../../data/LandingPageData";
 export const Section1 = () => {
   const navigate = useNavigate();
   return (
-    <div className="w-full grid grid-cols-12 gap-16 px-16 py-32">
-      <div className="col-span-5">
-        <div className="w-[516px]">
-          <h1 className="lg:text-[48px] md:text-[40px] font-black text-[#20272C] text-wrap">
+    <div className="w-full grid grid-cols-2 md:grid-cols-12 gap-8 md:gap-16 px-6 md:px-16 py-16 md:py-32">
+      {/* Text Content */}
+      <div className="col-span-1 md:col-span-5 flex justify-center md:justify-start">
+        <div className="w-full md:w-[516px]">
+          <h1 className="text-[28px] md:text-[40px] lg:text-[48px] font-bold text-[#20272C]">
             End-to-end campaign management platform for
-            <span className="bg-primaryButton text-white rounded-[10px] text-[32px] px-1 ml-2">
+            <span className="bg-primaryButton text-white rounded-[10px] text-[20px] md:text-[32px] px-2 ml-2">
               DOOH
             </span>
           </h1>
-          <p className="text-[14px] text-[#4C6590] text-start text-wrap mt-8">
-            {
-              "Prooh: India’s 1st 'Audience Guarantee' OOH Media Company, delivering data-driven planning, audience measurement, performance proof, and 100% cost transparency"
-            }
+          <p className="text-[12px] md:text-[14px] text-[#4C6590] text-start mt-4 md:mt-8">
+            {`Prooh: India’s 1st 'Audience Guarantee' OOH Media Company,
+            delivering data-driven planning, audience measurement, performance
+            proof, and 100% cost transparency.`}
           </p>
-          <div className="mt-8 flex justify-start">
+          <div className="mt-6 md:mt-8 flex justify-start">
             <PrimaryButton
               title="Start Planning"
               rounded="rounded-[5px]"
@@ -31,8 +32,12 @@ export const Section1 = () => {
           </div>
         </div>
       </div>
-      <div className="col-span-7  p-0 m-0 flex flex-start max-w-[738px] max-h-[370px]">
-        <CarouselImageView showThumbnails={false} images={carouselImages} />
+
+      {/* Carousel Section */}
+      <div className="col-span-1 md:col-span-7 flex justify-center md:justify-start">
+        <div className="w-full max-w-[738px]">
+          <CarouselImageView showThumbnails={false} images={carouselImages} />
+        </div>
       </div>
     </div>
   );

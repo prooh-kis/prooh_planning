@@ -1,33 +1,48 @@
+import React, { useState } from "react";
 import { CircleImageCarousel } from "../../components/molecules/CircleImageCrousel";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import { dataHeroTabs, dataHeroUsersImages } from "../../data/LandingPageData";
-import React, { useState } from "react";
 
 export const MeetOurDataHero = () => {
-  const [currentMeetDataHeroTab, setCurrentMeetDataHeroTab] =
-    useState<any>("1");
+  const [currentMeetDataHeroTab, setCurrentMeetDataHeroTab] = useState("1");
+
+  // Event handler for the Participate button
+  const handleParticipateClick = () => {
+    alert("Participation action triggered!");
+  };
+
   return (
-    <div className="flex justify-center lg:pt-[720px] pt-16px pb-20 w-full">
-      <div className="relative flex flex-col items-center">
-        <h1 className="lg:text-[48px] text-[40px] font-semibold">
+    <section className="flex justify-center lg:pt-[720px] pt-4 pb-20 w-full">
+      <div className="relative flex flex-col items-center w-full max-w-screen-lg">
+        {/* Title */}
+        <h1 className="text-[32px] lg:text-[48px] font-semibold text-center mb-4">
           Meet Our Data Hero
         </h1>
-        <div className="border-b">
+
+        {/* Tabs Section */}
+        <div className="border-b mb-4">
           <TabWithoutIcon
             tabData={dataHeroTabs}
             currentTab={currentMeetDataHeroTab}
             setCurrentTab={setCurrentMeetDataHeroTab}
           />
         </div>
-        <div className="py-4">
+
+        {/* Carousel and Button */}
+        <div className="py-4 w-full flex flex-col items-center">
+          {/* Circle Image Carousel */}
           <CircleImageCarousel images={dataHeroUsersImages} />
           <div className="flex items-center justify-center py-4">
-            <button className="text-[#FFFFFF] text-[20px] font-bold h-[50pz] w-[153px] bg-[#129BFF] rounded-[109px] px-[31px] py-[7px] mt-8 hover:bg-white hover:text-[#129BFF] border border-2 hover:border-[#129BFF]">
+            {/* Participate Button */}
+            <button
+              className="text-white text-[20px] font-bold h-[50px] w-[153px] bg-[#129BFF] rounded-full px-6 py-2 mt-8 hover:bg-white hover:text-[#129BFF] border-2 border-transparent hover:border-[#129BFF] transition-all"
+              onClick={handleParticipateClick}
+            >
               Participate
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
