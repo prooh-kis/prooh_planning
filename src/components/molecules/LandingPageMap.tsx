@@ -6,13 +6,16 @@ import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { LANDING_PAGE_DATA } from "../../constants/localStorageConstants";
 import clsx from "clsx";
 
-mapboxgl.accessToken = "YOUR_MAPBOX_ACCESS_TOKEN";
+mapboxgl.accessToken = "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A";
 
 const colors = [
-  "violet", "red", "green", "blue", "ecebff", "ff77e9", "78dcca", "emerald",
+  "bg-[#8B5CF6]", "bg-[#6366F1]", "bg-[#3B82F6]", "bg-[#06B6D4]", "bg-[#22C55E]", "bg-[#F59E0B]", "bg-[#EF4444]", "bg-[#FF77E9]"
+];
+const textColors = [
+  "text-[#8B5CF6]", "text-[#6366F1]", "text-[#3B82F6]", "text-[#06B6D4]", "text-[#22C55E]", "text-[#F59E0B]", "text-[#EF4444]", "text-[#FF77E9]"
 ];
 const colorsbg = [
-  "purple", "121063", "565584", "3ab7bf", "ecebff", "ff77e9", "78dcca", "emerald",
+  "group-hover:bg-[#8B5CF630]", "group-hover:bg-[#6366F130]", "group-hover:bg-[#3B82F630]", "group-hover:bg-[#06B6D430]", "group-hover:bg-[#22C55E30]", "group-hover:bg-[#F59E0B30]", "group-hover:bg-[#EF444430]", "group-hover:bg-[#FF77E9]"
 ];
 
 export function LandingPageMap(props: any) {
@@ -39,7 +42,7 @@ export function LandingPageMap(props: any) {
     });
 
     touchPoints?.forEach((t: any, j: any) => {
-      tpColors.push({ tp: t, color: colors[j] });
+      tpColors.push({ tp: t, color: textColors[j] });
     });
 
     return { markers: newMarkers, touchPoints: tpColors };
@@ -89,8 +92,8 @@ export function LandingPageMap(props: any) {
       <div className="flex flex-col items-end gap-2 right-2 pt-20 pr-2 absolute z-10">
         {memoizedTouchPoints?.map((tp: any, i: any) => (
           <div key={i} className="flex items-center gap-2 group">
-            <h1 className={clsx(`text-[10px] group-hover:opacity-100 group-hover:bg-${colorsbg[i]} group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300`)}>{tp?.tp}</h1>
-            <div className={clsx(`h-4 w-4 bg-[#${colors[i]}] rounded-full`)}></div>
+            <h1 className={clsx(`text-[10px] group-hover:opacity-100 ${colorsbg[i]} group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300`)}>{tp?.tp}</h1>
+            <div className={clsx(`h-4 w-4 ${colors[i]} rounded-full`)}></div>
           </div>
         ))}
       </div>
@@ -99,7 +102,7 @@ export function LandingPageMap(props: any) {
         initialViewState={viewState}
         style={{ borderRadius: "10px", zIndex: 0 }}
         mapStyle="mapbox://styles/vviicckkyy55/cm4l7klx300fx01sf61uthrog"
-        mapboxAccessToken={process.env.REACT_APP_MAPBOX || "YOUR_MAPBOX_ACCESS_TOKEN"}
+        mapboxAccessToken={process.env.REACT_APP_MAPBOX || "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A"}
         onMove={(e: any) => setViewState(e.viewState)}
       >
         {memoizedMarkers?.map((marker: any, i: any) => (
@@ -107,7 +110,7 @@ export function LandingPageMap(props: any) {
             <div title={`${marker[2]}`} className="cursor-pointer">
               <i
                 className={clsx(
-                  `fi fi-ss-circle text-${memoizedTouchPoints?.find((c: any) => c.tp === marker[3])?.color} border border-[0.5px] border-${memoizedTouchPoints?.find((c: any) => c.tp === marker[3])?.color}-500 rounded-full text-[14px] flex items-center justify-center`
+                  `fi fi-ss-circle ${memoizedTouchPoints?.find((c: any) => c.tp === marker[3])?.color} border border-[0.5px] rounded-full text-[14px] flex items-center justify-center`
                 )}
                 onClick={(e: any) => {
                   e.stopPropagation();

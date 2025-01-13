@@ -10,7 +10,6 @@ import {
   FloatingBrandIcon,
   HowItsWork,
   OurAdvertisingJourney,
-  PlanYourCampaign,
   Section1,
   MeetOurDataHero,
   FeedBack,
@@ -38,7 +37,7 @@ export const Landing: React.FC = () => {
       setLandingPageData(data);
     }
     dispatch(getLandingPageData());
-  }, [dispatch, data]);
+  }, [dispatch]);
 
   return (
     <div className="w-screen h-full">
@@ -46,7 +45,6 @@ export const Landing: React.FC = () => {
       <FloatingBrandIcon />
       <OurAdvertisingJourney landingPageData={landingPageData} />
       <HowItsWork />
-      <PlanYourCampaign />
       <MeetOurDataHero />
       <FeedBack />
       <ProohCreator />

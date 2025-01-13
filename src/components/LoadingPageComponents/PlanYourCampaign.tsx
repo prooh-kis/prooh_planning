@@ -1,9 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-export const PlanYourCampaign = () => {
+export const PlanYourCampaign = ({ }: any) => {
   const [currentIndex, setCurrentIndex] = useState(0); // Track the current item index
   const scrollRef = useRef<HTMLDivElement>(null); // Ref for the scrollable middle column
-
   const data = [
     {
       title: "We Sell OOH & PDOOH on Impressions Only. No Fixed Rental.",
@@ -44,6 +43,7 @@ export const PlanYourCampaign = () => {
       }
     }
   };
+
 
   return (
     <div className="px-4 w-full">

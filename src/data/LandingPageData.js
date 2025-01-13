@@ -3,6 +3,14 @@ import basicDetails from "../assets/images/basicDetails.png";
 import targetAudienceTP from "../assets/images/targetAudienceTP.png";
 import comparePlan from "../assets/images/comparePlan.png";
 
+import inventoryExcel from "../assets/images/inventoryExcel.png";
+import audienceDataMap from "../assets/images/audienceDataMap.png";
+import screenDetails from "../assets/images/screenDetails.png";
+import VendorConfirmation from "../assets/images/vendorConfirmation.png";
+import applyDataHero from "../assets/images/applyDataHero.png";
+import audienceDataInput from "../assets/images/audienceDataInput.png";
+import dmpDashboard from "../assets/images/dmpDashboard.png";
+
 import imageA from "../assets/images/imageA.png";
 import imageB from "../assets/images/imageB.png";
 import imageC from "../assets/images/imageC.png";
@@ -34,7 +42,7 @@ import testiO4 from "../assets/images/testi04.png";
 import UserImage from "../assets/userImage.png";
 import { testO11, testO12, testO13, testO14 } from "../assets";
 
-export const steps = [
+export const advertisersStepsDetails = [
   {
     id: "1",
     image: basicDetails,
@@ -67,8 +75,86 @@ export const steps = [
     description:
       "Compare your plan budget as per regular spots and spots based on your selected audience penetration and further optimize your campaign plan.",
   },
+  {
+    id: "5",
+    image: comparePlan,
+    step: "Step 5",
+    title: "Vendor Confirmation Status",
+    description:
+      "Get real time vendor confirmation status through a dedicated panel on the planning page as well as on your email.",
+  },
+  {
+    id: "6",
+    image: comparePlan,
+    step: "Step 6",
+    title: "Campaing Monitoring Report",
+    description:
+      "Monitor your campaign in real time with your campaign dedicated dashboard and optmize your campaign by analysing data in real-time.",
+  }
 ];
 
+export const mediaOwnersStepsDetails = [
+  {
+    id: "1",
+    image: inventoryExcel,
+    step: "Step 1",
+    title: "Add Screen To Inventory List",
+    description:
+      "Add your screen details in the Prooh Screen Inventory list with all the necessary fields required for your screens.",
+  },
+  {
+    id: "2",
+    image: audienceDataMap,
+    step: "Step 2",
+    title: "Map Audience Data With Screens",
+    description:
+      "Our CMS will map your screens with the touchpoint wise audience data and make it more discoverable and sellable for the campaign planner.",
+  },
+  {
+    id: "3",
+    image: screenDetails,
+    step: "Step 3",
+    title: "Manage Your Screen Playlist",
+    description:
+      "Watch real time playlist of your screens with log reports and manage your screen playlists and campaing deliverables mannually.",
+  },
+  {
+    id: "4",
+    image: VendorConfirmation,
+    step: "Step 4",
+    title: "Approve Campaigns And Creatives",
+    description:
+      "Get campaigns and Creative approval requests for your screens in real time and earn more by selling your screens' unsold slots.",
+  },
+];
+
+
+export const dataHeroStepsDetails = [
+  {
+    id: "1",
+    image: applyDataHero,
+    step: "Step 1",
+    title: "Apply By Adding Few Basic Details",
+    description:
+      "Add your basic details and information to proceed with your application, after which you will get a link on your email for completion of your application.",
+  },
+  {
+    id: "2",
+    image: audienceDataInput,
+    step: "Step 2",
+    title: "Enter Data For The Selected Locations",
+    description:
+      "Enter audience data for each of your selected location, based on audience type and time zone of their availabilty at the location.",
+  },
+  {
+    id: "3",
+    image: dmpDashboard,
+    step: "Step 3",
+    title: "View Your Response On A Dedicated Dashboard",
+    description:
+      "Analyze your input by viewing the results on a dedicated dashboard for your input.",
+  },
+];
 export const images = [
   asus,
   samsung,
