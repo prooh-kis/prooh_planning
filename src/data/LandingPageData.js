@@ -133,6 +133,40 @@ export const advertisersSteps = [
   },
 ];
 
+export const mediaOwnersSteps = [
+  {
+    id: "1",
+    label: "Inventory Listing",
+  },
+  {
+    id: "2",
+    label: "Audience Data Mapping",
+  },
+  {
+    id: "3",
+    label: "Screen Management",
+  },
+  {
+    id: "4",
+    label: "Creative Confirmation",
+  }
+];
+
+export const dataHeroSteps = [
+  {
+    id: "1",
+    label: "Application Process",
+  },
+  {
+    id: "2",
+    label: "Audience Segregation",
+  },
+  {
+    id: "3",
+    label: "Data Dashboard",
+  }
+];
+
 export const dataHeroTabs = [
   {
     id: "1",

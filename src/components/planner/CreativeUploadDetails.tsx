@@ -569,28 +569,28 @@ export const CreativeUploadDetails = ({
                       handleSaveFile={handleSaveFile}
                       triggerData={
                         getDataFromLocalStorage(SELECTED_TRIGGER)
-                          ?.weatherTriggers[0]?.type !== ""
+                          ?.weatherTriggers?.[0]?.type !== ""
                           ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
                               ?.weatherTriggers
                           : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                              ?.sportsTriggers[0]?.sport !== ""
+                              ?.sportsTriggers?.[0]?.sport !== ""
                           ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
                               ?.sportsTriggers
                           : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                              ?.vacantSlots[0]?.slotType !== ""
+                              ?.vacantSlots?.[0]?.slotType !== ""
                           ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
                               ?.vacantSlots
                           : {}
                       }
                       triggerType={
                         getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                          ?.weatherTriggers[0]?.type !== ""
+                          ?.weatherTriggers?.[0]?.type !== ""
                           ? "Weather Trigger"
                           : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                              ?.sportsTriggers[0]?.sport !== ""
+                              ?.sportsTriggers?.[0]?.sport !== ""
                           ? "Sports Trigger"
                           : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                              ?.vacantSlots[0]?.slotType !== ""
+                              ?.vacantSlots?.[0]?.slotType !== ""
                           ? "Fill Vacancy Trigger"
                           : "No Trigger"
                       }

@@ -46,6 +46,13 @@ export const Menu = (props: any) => {
     // },
   ];
 
+  const arr1 = [
+    {
+      label: "Requests",
+      path: MY_REQUESTS_LIST,
+    }
+  ];
+
   return (
     <div className="relative inline-block text-left">
       <i
@@ -57,7 +64,19 @@ export const Menu = (props: any) => {
           onMouseLeave={() => setIsOpen(false)} // Close dropdown on mouse leave
           className="absolute z-10 mt-2 w-[200px] bg-white border border-gray-300 rounded-md shadow-lg right-0 font-bold text-lg text-black-1000"
         >
-          {arr.map((data: any, index: any) => (
+          {userInfo?.isBrand && arr.map((data: any, index: any) => (
+            <div
+              key={index}
+              onClick={() => {
+                toggleDropdown();
+                navigate(data.path);
+              }}
+              className="px-4 py-2  text-gray-700 hover:bg-[#129BFF] hover:text-white cursor-pointer"
+            >
+              {data?.label}
+            </div>
+          ))}
+          {userInfo?.isMaster && arr1.map((data: any, index: any) => (
             <div
               key={index}
               onClick={() => {

@@ -1,11 +1,13 @@
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
-import { advertisersSteps, steps, tabData } from "../../data/LandingPageData";
+import { advertisersSteps, mediaOwnersSteps, steps, tabData } from "../../data/LandingPageData";
 import React, { useRef, useState } from "react";
 
 export const HowItsWork = () => {
   const secondDivRef = useRef<HTMLDivElement>(null);
   const [currentTab, setCurrentTab] = useState<any>("1");
   const [currentAdvertiserTab, setCurrentAdvertiserTab] = useState<any>("1");
+  const [currentMediaOwnerTab, setCurrentMediaOwnerTab] = useState<any>("1");
+
 
   const CampaignStep = ({ step, image, title, description }: any) => (
     <div className="grid grid-cols-1 md:grid-cols-12 gap-4 py-4 w-full">
@@ -29,11 +31,12 @@ export const HowItsWork = () => {
   );
 
   const CampaignSteps = ({
-    currentAdvertiserTab,
+    currentSubTab,
+
   }: {
-    currentAdvertiserTab: string;
+    currentSubTab: string;
   }) => {
-    const step = steps.find((s) => s.id === currentAdvertiserTab) || steps[0];
+    const step = steps.find((s) => s.id === currentSubTab) || steps[0];
     return <CampaignStep {...step} />;
   };
 
@@ -79,10 +82,39 @@ export const HowItsWork = () => {
               ))}
             </div>
             <div className="border-t w-4/5 mt-2" />
-            <CampaignSteps currentAdvertiserTab={currentAdvertiserTab} />
+            <CampaignSteps currentSubTab={currentAdvertiserTab} />
           </div>
         ) : currentTab === "2" ? (
-          <div className="pb-4"></div>
+          <div className="pb-4">
+            <h1 className="text-[24px] lg:text-[32px] leading-[24px] font-semibold tracking-[0.01em] text-left">
+              Plan Your Campaign In Just Few Clicks
+            </h1>
+            <div className="py-4 flex items-center gap-4">
+              {mediaOwnersSteps?.map((step: any, i: any) => (
+                <button
+                  key={i}
+                  className={`${
+                    step.id === currentMediaOwnerTab
+                      ? "bg-primaryButton"
+                      : "bg-gray-100 border border-gray-200"
+                  } rounded-[8px] px-4 py-2 truncate cursor-pointer`}
+                  onClick={() => setCurrentMediaOwnerTab(step.id)}
+                >
+                  <h1
+                    className={`lg:text-[14px] text-[12px] ${
+                      step.id === currentMediaOwnerTab
+                        ? "text-white font-semibold"
+                        : "text-gray-600"
+                    } truncate`}
+                  >
+                    {step.label}
+                  </h1>
+                </button>
+              ))}
+            </div>
+            <div className="border-t w-4/5 mt-2" />
+            <CampaignSteps currentSubTab={currentMediaOwnerTab} />
+          </div>
         ) : (
           <div className="pb-4"></div>
         )}
