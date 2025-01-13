@@ -46,7 +46,7 @@ export const PlanYourCampaign = ({ }: any) => {
 
 
   return (
-    <div className="px-4 w-full">
+    <div className="lg:px-4 px-0 w-full">
       {/* so in mobile and hide in tablet and laptop */}
       <div className="block lg:hidden">
         <section className="relative px-4 w-full">

@@ -2,7 +2,7 @@ import advanceFilters from "../assets/images/advanceFilters.png";
 import basicDetails from "../assets/images/basicDetails.png";
 import targetAudienceTP from "../assets/images/targetAudienceTP.png";
 import comparePlan from "../assets/images/comparePlan.png";
-
+import campaignDashboard from "../assets/images/campaignDashboard.png";
 import inventoryExcel from "../assets/images/inventoryExcel.png";
 import audienceDataMap from "../assets/images/audienceDataMap.png";
 import screenDetails from "../assets/images/screenDetails.png";
@@ -77,7 +77,7 @@ export const advertisersStepsDetails = [
   },
   {
     id: "5",
-    image: comparePlan,
+    image: VendorConfirmation,
     step: "Step 5",
     title: "Vendor Confirmation Status",
     description:
@@ -85,7 +85,7 @@ export const advertisersStepsDetails = [
   },
   {
     id: "6",
-    image: comparePlan,
+    image: campaignDashboard,
     step: "Step 6",
     title: "Campaing Monitoring Report",
     description:

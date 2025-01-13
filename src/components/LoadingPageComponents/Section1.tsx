@@ -10,7 +10,7 @@ export const Section1 = () => {
   return (
     <div className="w-full grid grid-cols-2 md:grid-cols-12 gap-8 md:gap-16 px-6 md:px-16 py-16 md:py-32">
       {/* Text Content */}
-      <div className="col-span-1 md:col-span-5 flex justify-center md:justify-start">
+      <div className="col-span-2 md:col-span-5 flex justify-center md:justify-start">
         <div className="w-full md:w-[516px]">
           <h1 className="text-[28px] md:text-[40px] lg:text-[48px] font-bold text-[#20272C]  leading-[45px] tracking-[-0.02em]">
             End-to-end <br />
@@ -35,7 +35,7 @@ export const Section1 = () => {
       </div>
 
       {/* Carousel Section */}
-      <div className="col-span-1 md:col-span-7 flex justify-center md:justify-start">
+      <div className="col-span-2 md:col-span-7 flex justify-center md:justify-start">
         <div className="w-full max-w-[738px]">
           <CarouselImageView showThumbnails={false} images={carouselImages} />
         </div>

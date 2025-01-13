@@ -1,7 +1,7 @@
 export function LandingPageMapHeader({scrollToTarget, view, setView}: any) {
   return (
     <div
-      className="cursor-pointer absolute flex justify-around top-1 right-4 transform translate-x-0 w-[20%] z-10 px-2 pt-1 border bg-white rounded-[12px] shadow-lg"
+      className="absolute flex justify-around top-1 right-4 transform translate-x-0 w-[20%] z-20 px-2 pt-1 border bg-white rounded-[12px] shadow-lg cursor-pointer"
       style={{ marginTop: "0px" }}
     >
       <div

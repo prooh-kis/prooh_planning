@@ -69,14 +69,14 @@ export function LandingPageMapFooter({ data }: any) {
         ].map((item, index) => (
           <div
             key={index}
-            className={`py-4 px-6 lg:px-8 col-span-1 flex flex-col items-center text-[#20272C] justify-center ${
+            className={`py-4 px-6 lg:px-8 col-span-1 flex flex-col items-center text-[#20272C] justify-center truncate ${
               item.border || ""
             }`}
           >
             <h1 className="lg:text-[32px] text-[24px] font-bold">
               {item.value}
             </h1>
-            <p className="text-[16px] truncate">{item.label}</p>
+            <p className="lg:text-[16px] text-[12px]truncate">{item.label}</p>
           </div>
         ))}
       </div>

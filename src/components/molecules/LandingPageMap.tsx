@@ -88,39 +88,41 @@ export function LandingPageMap(props: any) {
   }, [memoizedMarkers]);
 
   return (
-    <div className="h-full w-full flex flex-col items-start">
-      <div className="flex flex-col items-end gap-2 right-2 pt-20 pr-2 absolute z-10">
+    <div className="relative h-full w-full flex flex-col items-start">
+      <div className="flex flex-col items-end gap-2 right-4 pt-20 absolute z-10">
         {memoizedTouchPoints?.map((tp: any, i: any) => (
-          <div key={i} className="flex items-center gap-2 group">
+          <div key={i} className="cursor-pointer flex items-center gap-2 group">
             <h1 className={clsx(`text-[10px] group-hover:opacity-100 ${colorsbg[i]} group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300`)}>{tp?.tp}</h1>
             <div className={clsx(`h-4 w-4 ${colors[i]} rounded-full`)}></div>
           </div>
         ))}
       </div>
-      <ReactMapGL
-        ref={landingMapRef}
-        initialViewState={viewState}
-        style={{ borderRadius: "10px", zIndex: 0 }}
-        mapStyle="mapbox://styles/vviicckkyy55/cm4l7klx300fx01sf61uthrog"
-        mapboxAccessToken={process.env.REACT_APP_MAPBOX || "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A"}
-        onMove={(e: any) => setViewState(e.viewState)}
-      >
-        {memoizedMarkers?.map((marker: any, i: any) => (
-          <Marker key={i} latitude={marker[0]} longitude={marker[1]}>
-            <div title={`${marker[2]}`} className="cursor-pointer">
-              <i
-                className={clsx(
-                  `fi fi-ss-circle ${memoizedTouchPoints?.find((c: any) => c.tp === marker[3])?.color} border border-[0.5px] rounded-full text-[14px] flex items-center justify-center`
-                )}
-                onClick={(e: any) => {
-                  e.stopPropagation();
-                  // Handle marker click, if needed
-                }}
-              ></i>
-            </div>
-          </Marker>
-        ))}
-      </ReactMapGL>
+      <div className="h-[480px] w-full lg:h-full">
+        <ReactMapGL
+          ref={landingMapRef}
+          initialViewState={viewState}
+          style={{ borderRadius: "10px", zIndex: 0 }}
+          mapStyle="mapbox://styles/vviicckkyy55/cm4l7klx300fx01sf61uthrog"
+          mapboxAccessToken={process.env.REACT_APP_MAPBOX || "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A"}
+          onMove={(e: any) => setViewState(e.viewState)}
+        >
+          {memoizedMarkers?.map((marker: any, i: any) => (
+            <Marker key={i} latitude={marker[0]} longitude={marker[1]}>
+              <div title={`${marker[2]}`} className="cursor-pointer">
+                <i
+                  className={clsx(
+                    `fi fi-ss-circle ${memoizedTouchPoints?.find((c: any) => c.tp === marker[3])?.color} border border-[0.5px] rounded-full text-[14px] flex items-center justify-center`
+                  )}
+                  onClick={(e: any) => {
+                    e.stopPropagation();
+                    // Handle marker click, if needed
+                  }}
+                ></i>
+              </div>
+            </Marker>
+          ))}
+        </ReactMapGL>
+      </div>
     </div>
   );
 }

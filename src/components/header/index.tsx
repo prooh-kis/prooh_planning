@@ -61,7 +61,7 @@ export const Header: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full h-16 bg-white border-b flex items-center justify-between fixed z-50 sm:px-16 px-4">
+    <div className="w-full h-16 bg-white flex items-center justify-between fixed z-50 sm:px-16 px-4">
       {/* Logo Section */}
       <div className="flex items-center">
         <div

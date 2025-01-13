@@ -2,7 +2,7 @@ import { image9 } from "../../assets";
 
 export const CreateCampaignOption = () => {
   return (
-    <div className="w-full p-8 sm:px-40 bg-[#129BFF] flex flex-col sm:flex-row justify-between mt-4 lg:mt-8">
+    <div className="border border-black w-full p-8 sm:px-40 bg-[#129BFF] flex flex-col sm:flex-row justify-between mt-4 lg:mt-8">
       <div>
         <h1 className="text-white text-[30px] sm:text-[49px] font-bold w-full sm:w-[593px] leading-[57.2px] tracking-[-0.01em]">
           {` Ready to build your team's dream Campaign`}
@@ -11,7 +11,9 @@ export const CreateCampaignOption = () => {
           Create Campaign
         </button>
       </div>
-      <img src={image9} alt="" className="w-full sm:w-auto mt-8 sm:mt-0" />
+      <div className="w-full sm:w-auto mt-8 sm:mt-0">
+        <img src={image9} alt="" className="w-full h-full" />
+      </div>
     </div>
   );
 };

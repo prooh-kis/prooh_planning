@@ -47,7 +47,7 @@ export const HowItsWork = () => {
   };
 
   return (
-    <div ref={secondDivRef} className="px-4 lg:px-16  mt-16">
+    <div ref={secondDivRef} className="px-6 lg:px-16 mt-16">
       <h1 className="text-[16px] leading-[24px] tracking-[0.21em] font-normal tracking-[0.21em] text-left">
         {`HOW DOES IT WORK`}
       </h1>

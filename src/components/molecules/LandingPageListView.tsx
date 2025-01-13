@@ -25,11 +25,11 @@ function Screen({ screen }: any) {
             <h1 className="text-[12px] font-semibold">
               &#8377;{screen.pricePerSlot} / Slot
             </h1>
-            <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
-            <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+            <i className="fi fi-sr-star flex items-center text-[12px] text-yellow"></i>
+            <i className="fi fi-sr-star flex items-center text-[12px] text-yellow"></i>
           </div>
           <div className="flex items-center">
-            <i className="fi-ss-minus-circle flex items-center text-[12px] text-red-500"></i>
+            <i className="fi-ss-minus-circle flex items-center text-[12px] text-red"></i>
           </div>
         </div>
       </div>
@@ -127,14 +127,12 @@ export function LandingPageListView({ screens }: any) {
 
   return (
     <div className="grid grid-cols-12 gap-8 py-2">
-      <div className="col-span-12 lg:col-span-3 border rounded-[12px] p-3 h-[60vh] overflow-y-auto">
+      {/* <div className="col-span-12 lg:col-span-3 border rounded-[12px] p-3 h-[60vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-[16px] font-semibold">Filters</h1>
           <p className="text-[12px] cursor-pointer">Clear All</p>
         </div>
-        {/* Filter Sections for Mobile/Tablet/Desktop */}
-        {/* For now, filters are commented out */}
-      </div>
+      </div> */}
 
       <div className="col-span-12 lg:col-span-9 rounded-[12px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-x-auto h-[60vh]">
         {screens?.map((screen: any, index: any) => (

@@ -184,7 +184,7 @@ export const OurAdvertisingJourney = ({ landingPageData }: any) => {
   }, [landingPageData]);
 
   return (
-    <div ref={targetDivRef} className="px-4 md:px-16 w-full mt-16">
+    <div className="px-4 sm:px-2 md:px-8 w-full mt-16">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
         {/* Left Column */}
         <div className="col-span-1 md:col-span-4">
@@ -210,12 +210,12 @@ export const OurAdvertisingJourney = ({ landingPageData }: any) => {
 
       {/* List or Table View */}
       {view === "list" && (
-        <div className="pt-8 z-0">
+        <div ref={targetDivRef} className="pt-8 z-0">
           <LandingPageListView screens={landingPageData?.screens} />
         </div>
       )}
       {view === "table" && (
-        <div className="pt-8 z-0">
+        <div ref={targetDivRef} className="pt-8 z-0">
           <LandingPageTableView
             data={screenData}
             stateCities={stateCities}
