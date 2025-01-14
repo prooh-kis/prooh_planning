@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { MyCampaignsList } from "./MyCampaignsList";
 import { getMyCreateCampaignsList, getMyCreateCampaignsManagerRequestsList, getMyCreateCampaignsVendorRequestsList } from "../../actions/campaignAction";
-import { Loading } from "../../components/Loading";
-import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
 
 
 export const MiddleArea: React.FC = () => {
@@ -44,10 +42,10 @@ export const MiddleArea: React.FC = () => {
     }
     if (userInfo?.isBrand && userInfo?.userRole === "secondary") {
       if (currentTab === "1") {
-        dispatch(getMyCreateCampaignsList({id: userInfo?._id, type: "running"}));
+        dispatch(getMyCreateCampaignsList({id: userInfo?._id, type: "complete"}));
       }
       if (currentTab === "2") {
-        dispatch(getMyCreateCampaignsList({id: userInfo?._id, type: "completed"}));
+        dispatch(getMyCreateCampaignsList({id: userInfo?._id, type: "incomplete"}));
       }
     }
     if (userInfo?.isMaster) {
@@ -59,7 +57,6 @@ export const MiddleArea: React.FC = () => {
   },[dispatch, navigate, currentTab, userInfo]);
   return (
     <div className="mt-6 w-full h-full pb-5 flex justify-center">
-      
       {userInfo ? (
         <MyCampaignsList
           loading={loadingCampaignsList}
