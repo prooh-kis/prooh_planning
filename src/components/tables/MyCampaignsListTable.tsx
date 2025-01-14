@@ -2,15 +2,16 @@ import { useNavigate } from "react-router-dom"
 import { formatNumber } from "../../utils/formatValue"
 import { useDispatch } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
 
 interface MyCampaignsListTableProps {
   campaignsList?: any,
-  currentTab?: any;
+  loading?: any;
 }
 
 export const MyCampaignsListTable = ({
   campaignsList,
-  currentTab,
+  loading,
 }: MyCampaignsListTableProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -40,16 +41,6 @@ export const MyCampaignsListTable = ({
           </th>
           <th className="py-2 font-semibold">
             <h1 className="text-[14px] flex justify-start">
-              Performance
-            </h1>
-          </th>
-          <th className="py-2 font-semibold">
-            <h1 className="text-[14px] flex justify-start">
-              Status
-            </h1>
-          </th>
-          <th className="py-2 font-semibold">
-            <h1 className="text-[14px] flex justify-start">
               Start Date
             </h1>
           </th>
@@ -66,6 +57,15 @@ export const MyCampaignsListTable = ({
         </tr>
       </thead>
       <tbody>
+      {loading && (
+        <tr className="w-full">
+          <div className="h-full w-full">
+            <h1>Loading data, please wait...</h1>
+            <SkeletonLoader />
+          </div>
+        </tr>
+        
+      ) }
         {campaignsList?.map((campaign: any, i: any) => (
           <tr key={i}>
             <td className="p-2">
@@ -86,16 +86,6 @@ export const MyCampaignsListTable = ({
             <td className="p-2">
               <h1 className="text-[14px]">
                 {campaign.campaignType}
-              </h1>
-            </td>
-            <td className="p-2">
-              <h1 className="text-[14px]">
-                0 %
-              </h1>
-            </td>
-            <td className="p-2">
-              <h1 className="text-[14px]">
-                {campaign.status || "Pending"}
               </h1>
             </td>
             <td className="p-2 truncate">

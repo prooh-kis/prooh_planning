@@ -3,6 +3,7 @@ import { PrimaryButton } from '../../components/atoms/PrimaryButton';
 import { PrimaryInput } from '../../components/atoms/PrimaryInput';
 import React, { useState } from 'react';
 import { MyCampaignsListTable } from '../../components/tables';
+import { SkeletonLoader } from '../../components/molecules/SkeletonLoader';
 
 const allTabs = [{
   id: "1",
@@ -13,7 +14,7 @@ const allTabs = [{
 }];
 
 
-export const MyCampaignsList = ({ campaignsList, currentTab, setCurrentTab }: any) => {
+export const MyCampaignsList = ({ loading, campaignsList, currentTab, setCurrentTab }: any) => {
   return (
     <div className="w-full">
       <div className="flex justify-between border-b py-2">
@@ -50,7 +51,8 @@ export const MyCampaignsList = ({ campaignsList, currentTab, setCurrentTab }: an
         />
       </div>
       <div className="w-full bg-gray-50">
-        <MyCampaignsListTable currentTab={currentTab} campaignsList={campaignsList} />
+  
+        <MyCampaignsListTable loading={loading} campaignsList={campaignsList} />
       </div>
     </div>
   );
