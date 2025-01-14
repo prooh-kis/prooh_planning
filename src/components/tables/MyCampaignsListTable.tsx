@@ -5,10 +5,12 @@ import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
 interface MyCampaignsListTableProps {
   campaignsList?: any,
+  currentTab?: any;
 }
 
 export const MyCampaignsListTable = ({
-  campaignsList
+  campaignsList,
+  currentTab,
 }: MyCampaignsListTableProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();

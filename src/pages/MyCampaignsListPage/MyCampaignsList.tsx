@@ -6,21 +6,14 @@ import { MyCampaignsListTable } from '../../components/tables';
 
 const allTabs = [{
   id: "1",
-  label: "All"
-},{
-  id: "2",
   label: "Active"
 },{
-  id: "3",
-  label: "Pending"
-},{
-  id: "4",
-  label: "Archived"
+  id: "2",
+  label: "Completed"
 }];
 
 
-export const MyCampaignsList = ({ campaignsList }: any) => {
-  const [currentTab, setCurrentTab] = useState<any>("1");
+export const MyCampaignsList = ({ campaignsList, currentTab, setCurrentTab }: any) => {
   return (
     <div className="w-full">
       <div className="flex justify-between border-b py-2">
@@ -57,7 +50,7 @@ export const MyCampaignsList = ({ campaignsList }: any) => {
         />
       </div>
       <div className="w-full bg-gray-50">
-        <MyCampaignsListTable campaignsList={campaignsList} />
+        <MyCampaignsListTable currentTab={currentTab} campaignsList={campaignsList} />
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ export const MiddleArea: React.FC = () => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const targetDivRef = useRef<HTMLDivElement>(null);
+  const [currentTab, setCurrentTab] = useState<any>("1");
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
@@ -40,7 +41,12 @@ export const MiddleArea: React.FC = () => {
       navigate("/login");
     }
     if (userInfo?.isBrand && userInfo?.userRole === "secondary") {
-      dispatch(getMyCreateCampaignsList({id: userInfo?._id, type: "complete"}));
+      if (currentTab === "1") {
+        dispatch(getMyCreateCampaignsList({id: userInfo?._id, type: "complete"}));
+      }
+      if (currentTab === "2") {
+        dispatch(getMyCreateCampaignsList({id: userInfo?._id, type: "incomplete"}));
+      }
     }
     if (userInfo?.isMaster) {
       dispatch(getMyCreateCampaignsVendorRequestsList({id: userInfo?._id, status: "Active"}))
@@ -48,11 +54,13 @@ export const MiddleArea: React.FC = () => {
     if (userInfo?.isBrand && userInfo?.userRole === "primary") {
       dispatch(getMyCreateCampaignsManagerRequestsList({id: userInfo?._id, type: "complete"}))
     }
-  },[dispatch, navigate, userInfo]);
+  },[dispatch, navigate, currentTab, userInfo]);
   return (
     <div className="mt-6 w-full h-full pb-5 flex justify-center">
       {userInfo ? (
         <MyCampaignsList
+          currentTab={currentTab}
+          setCurrentTab={setCurrentTab}
           campaignsList={
             userInfo?.isBrand && userInfo?.userRole === "secondary" ? campaignsList :
             userInfo?.isBrand && userInfo?.userRole === "primary" ? clientRequestsList :
