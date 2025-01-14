@@ -583,6 +583,7 @@ export const ViewFinalPlanPODetails = ({
           }}
           handleSave={handleSaveAndContinue}
           campaignId={campaignId}
+          pageName="View Final Plan Page"
         />
       </div>
     </div>

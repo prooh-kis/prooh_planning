@@ -3,7 +3,7 @@ import { CostSummaryTable1 } from "../../components/tables";
 import Modal from "antd/es/modal/Modal";
 import React, { useEffect, useState } from "react";
 
-export function ScreenSummaryModel({ loadingCost, totalScreensData}: any) {
+export function ScreenSummaryModel({ pageName, loadingCost, totalScreensData}: any) {
   const [open, setOpen] = useState<boolean>(false);
 
   const handleCancel = () => {
@@ -24,7 +24,7 @@ export function ScreenSummaryModel({ loadingCost, totalScreensData}: any) {
           <CostSummaryTable1
             loading={loadingCost}
             totalData={totalScreensData}
-            // selectedData={selectedScreensData}
+            pageName={pageName}
           />
         </div>
       </Modal>

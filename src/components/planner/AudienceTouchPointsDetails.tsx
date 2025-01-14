@@ -300,8 +300,7 @@ export const AudienceTouchPointsDetails = ({
             }
           }}
           campaignId={campaignId}
-          screensCost={screensCost}
-          loadingCost={loadingCost}
+          pageName="Audience And TouchPoint Page"
           // isDisabled={locked?.cohorts === false || locked?.touchPoints === false || loadingCost ? true : false}
         />
       </div>

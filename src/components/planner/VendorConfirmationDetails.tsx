@@ -446,6 +446,7 @@ export const VendorConfirmationDetails = ({
           }}
           handleSave={handleSaveAndContinue}
           campaignId={campaignId}
+          pageName="Vendor Confirmation Page"
         />
       </div>
     </div>

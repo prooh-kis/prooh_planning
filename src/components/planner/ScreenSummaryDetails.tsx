@@ -500,6 +500,8 @@ export const ScreenSummaryDetails = ({
             // }
           }}
           campaignId={campaignId}
+          pageName="Screen Summary Page"
+
         />
       </div>
     </div>

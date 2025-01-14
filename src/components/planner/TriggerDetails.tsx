@@ -522,6 +522,8 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
           }}
           handleSave={handleSaveAndContinue}
           campaignId={campaignId}
+          pageName="Add Triggers Page"
+
         />
       </div>
     </div>

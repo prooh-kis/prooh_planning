@@ -257,6 +257,8 @@ export const RegularCohortComparisonDetails = ({campaignId, setCurrentStep, step
             };
           }}
           campaignId={campaignId}
+          pageName="Compare Plan Page"
+
         />
       </div>
     </div>

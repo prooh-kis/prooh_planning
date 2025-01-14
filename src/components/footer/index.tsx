@@ -14,21 +14,37 @@ export const Footer = ({
   isDisabled = false,
   campaignId,
   loadingCost,
-  screensCost
+  screensCost,
+  pageName
 }: any) => {
   const dispatch = useDispatch<any>();
 
+  console.log(pageName)
+  const [footerData, setFooterData] = useState({
+    totalScreens: 0,
+    totalTouchPoints: 0,
+    totalImpression: 0,
+    totalCampaignBudget: 0,
+    totalCpm: 0,
+    pricePerSlot: 0,
+  });
   const planningPageFooterDataGet = useSelector(
     (state: any) => state.planningPageFooterDataGet
   );
   const { loading, error, data: totalScreensData } = planningPageFooterDataGet;
 
+  useEffect(() => {
+    if (totalScreensData) {
+      setFooterData(totalScreensData?.finalSummaryStepWise?.filter((data: any) => data.step === pageName)[0])
+    }
+  },[totalScreensData]);
+  console.log(footerData);
   return (
     <div className="py-4 z-10 flex justify-between">
       <div className="flex w-full justify-start items-center gap-4">
         {totalScreensData && (
           <div className="flex">
-            <ScreenSummaryModel loadingCost={loadingCost} totalScreensData={screensCost}/>
+            <ScreenSummaryModel pageName={pageName} loadingCost={loadingCost} totalScreensData={totalScreensData?.finalSummaryStepWise}/>
           </div>
         )}
 
@@ -48,19 +64,19 @@ export const Footer = ({
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">Screens</h1>
               <h1 className="text-[14px] font-semibold">
-                {totalScreensData?.totalScreens}
+                {footerData?.totalScreens}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">Touchpoints</h1>
               <h1 className="text-[14px] font-semibold">
-                {totalScreensData?.totalTouchPoints}
+                {footerData?.totalTouchPoints}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">Impressions</h1>
               <h1 className="text-[14px] font-semibold">
-                {formatNumber(totalScreensData?.totalImpression || 0)}
+                {formatNumber(footerData?.totalImpression || 0)}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">
@@ -68,19 +84,19 @@ export const Footer = ({
               <h1 className="text-[14px] font-semibold">
                 {" "}
                 &#8377;
-                {formatNumber(totalScreensData?.totalCampaignBudget || 0)}
+                {formatNumber(footerData?.totalCampaignBudget || 0)}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">CPM</h1>
               <h1 className="text-[14px] font-semibold">
-                &#8377;{totalScreensData?.totalCpm?.toFixed(2) || 0}
+                &#8377;{footerData?.totalCpm?.toFixed(2) || 0}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">Price Per Slot</h1>
               <h1 className="text-[14px] font-semibold">
-                &#8377;{totalScreensData?.pricePerSlot?.toFixed(0) || 0}
+                &#8377;{footerData?.pricePerSlot?.toFixed(0) || 0}
               </h1>
             </div>
           </div>

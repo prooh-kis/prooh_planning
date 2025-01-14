@@ -472,6 +472,7 @@ export const AdvanceFiltersDetails = ({
             };
           }}
           campaignId={campaignId}
+          pageName="Advance Filter Page"
         />
       </div>
     </div>
