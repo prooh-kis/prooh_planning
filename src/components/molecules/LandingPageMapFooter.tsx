@@ -63,7 +63,7 @@ export function LandingPageMapFooter({ data }: any) {
             border: "border-x border-t",
           },
           {
-            label: "Avg Sq.ft/ Screen",
+            label: "Avg sq. ft",
             value: 204,
           },
         ].map((item, index) => (

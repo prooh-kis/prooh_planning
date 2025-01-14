@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import { CircleImageCarousel } from "../../components/molecules/CircleImageCrousel";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import { dataHeroTabs, heroData } from "../../data/LandingPageData";
+import { useNavigate } from "react-router-dom";
 
 export const MeetOurDataHero = () => {
+  const navigate = useNavigate();
   const [currentMeetDataHeroTab, setCurrentMeetDataHeroTab] = useState("1");
 
   // Event handler for the Participate button
   const handleParticipateClick = () => {
     alert("Participation action triggered!");
+    window.location.replace("https://prooh-dmp.vercel.app/")
   };
 
   return (

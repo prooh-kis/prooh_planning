@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const PlanYourCampaign = ({ }: any) => {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0); // Track the current item index
   const scrollRef = useRef<HTMLDivElement>(null); // Ref for the scrollable middle column
   const data = [
@@ -69,7 +71,8 @@ export const PlanYourCampaign = ({ }: any) => {
             </div>
             <button
               className="mt-4 sm:mt-0 text-[#183246]  text-lg sm:text-xl font-bold w-full sm:w-auto bg-white rounded-full px-6 py-3 hover:bg-gray-100 transition-all"
-              onClick={() => alert("Request Demo clicked")}
+              // onClick={() => alert("Request Demo clicked")}
+              onClick={() => navigate("/auth")}
             >
               Request Demo
             </button>
@@ -98,7 +101,7 @@ export const PlanYourCampaign = ({ }: any) => {
                 </p>
                 <button
                   className="mt-8 bg-[#129BFF] text-white text-base font-bold py-3 px-6 rounded-md hover:bg-white hover:text-[#129BFF] transition-all"
-                  onClick={() => alert("Plan Now clicked")}
+                  onClick={() => navigate("/auth")}
                 >
                   Plan Now
                 </button>
@@ -148,7 +151,9 @@ export const PlanYourCampaign = ({ }: any) => {
               </div>
             </div>
             <div className="px-4">
-              <button className="text-[#183246] text-[20px] font-bold h-[60pz] w-[181px] bg-white rounded-[72px] px-[3px] py-[20px] hover:bg-white hover:text-[#183246]">
+              <button className="text-[#183246] text-[20px] font-bold h-[60pz] w-[181px] bg-white rounded-[72px] px-[3px] py-[20px] hover:bg-white hover:text-[#183246]"
+                onClick={() => navigate("/auth")}
+              >
                 Request Demo
               </button>
             </div>
@@ -162,14 +167,16 @@ export const PlanYourCampaign = ({ }: any) => {
                     WHAT WE DO
                   </h1>
                 </div>
-                <h1 className="lg:text-[48px] text-[40px]  font-bold mt-8 hover:bg-white hover:text-[#129BFF} w-[320px] leading-[48.96px] tracking-[-0.05em] h-[147px]">
+                <h1 className="lg:text-[48px] text-[40px]  font-bold mt-8 w-[320px] leading-[48.96px] tracking-[-0.05em] h-[147px]">
                   Simplify & Optimize Your Advertising
                 </h1>
-                <p className="lg:text-[20px] text-[16px] text-[#88A8BF] text-wrap mt-8 hover:bg-white hover:text-[#129BFF} leading-[30px] tracking-[-0.02em]">
+                <p className="lg:text-[20px] text-[16px] text-[#88A8BF] text-wrap mt-8 leading-[30px] tracking-[-0.02em]">
                   Our platform helps your business in managing expenses. These
                   are some of the reasons why you should use our platform in
                 </p>
-                <button className="text-[#FFFFFF] text-[20px] font-bold h-[50pz] w-[153px] bg-[#129BFF] rounded-[12px] px-[31px] py-[7px] mt-8 hover:bg-white hover:text-[#129BFF]">
+                <button className="text-[#FFFFFF] text-[20px] font-bold h-[50pz] w-[153px] bg-[#129BFF] rounded-[12px] px-[31px] py-[7px] mt-8 hover:bg-white hover:text-[#129BFF]"
+                  onClick={() => navigate("/auth")}
+                >
                   Plan Now
                 </button>
               </div>
@@ -210,15 +217,15 @@ export const PlanYourCampaign = ({ }: any) => {
                   )}
                 </div>
               </div>
-              <div className="col-span-4 px-6 py-32 flex justify-start items-center w-full">
-                <div className="">
+              <div className="col-span-5 px-6 py-32 flex justify-start items-center w-full">
+                <div className="w-full">
                   <div className="flex justify-start">
                     <div className="bg-[#1E3E53] rounded-[20px] p-5 h-[86px] w-[86px] flex justify-center items-center">
                       <i className="fi fi-sr-display-chart-up text-[37px]"></i>
                     </div>
                   </div>
 
-                  <h1 className="lg:text-[32px] text-[24px] text-[#FFFFFF]  font-[800] text-wrap mt-8 leading-[40.96px] tracking-[-0.04em] w-[541px] h-[82px]">
+                  <h1 className="lg:text-[32px] text-[24px] text-[#FFFFFF]  font-[800] text-wrap mt-8 leading-[40.96px] tracking-[-0.04em]">
                     {data[currentIndex]?.title}
                   </h1>
                   <p className="lg:text-[20px] text-[14px] text-[#FFFFFF]  font-normal text-wrap mt-8 leading-[30px] tracking-[-0.02em]">
