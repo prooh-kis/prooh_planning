@@ -49,7 +49,7 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
     const avgPerSlotCost = totalPerSlotCost / campaignDetails?.screenWiseSlotDetails.length;
 
     const datesArray = screenLevelData?.result["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.date);
-    const countsArray = screenLevelData?.result["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.count * 10);
+    const countsArray = screenLevelData?.result["totalData"]?.slotsPlayedPerDay?.map((slot: any) => slot.count * (screenLevelData?.result["totalData"]?.costConsumed/screenLevelData?.result["totalData"]?.slotsDelivered));
     return { datesArray, countsArray };
   }
 
@@ -265,7 +265,7 @@ export const CampaignDashboard = ({campaignDetails, screenLevelData}: any) => {
               <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
             </div>
             <div className="p-2">
-              <DashboardBarChart percent={false} bgColor="rgba(75, 192, 192, 0.5)" color="rgba(75, 192, 192, 1)" total={`${screenLevelData?.result?.totalData?.costConsumed?.toFixed(0)}/${screenLevelData?.result?.totalData?.costTaken?.toFixed(0)}`} label={"Cost Consumed"} currentData={getCostData().countsArray} labels={getCostData().datesArray} />
+              <DashboardBarChart percent={false} bgColor="rgba(75, 192, 192, 0.5)" color="rgba(75, 192, 192, 1)" total={`${screenLevelData?.result?.totalData?.costConsumed?.toFixed(0)}/${screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(0)}`} label={"Cost Consumed"} currentData={getCostData().countsArray} labels={getCostData().datesArray} />
             </div>
           </div>
         </div>
