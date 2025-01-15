@@ -175,7 +175,7 @@ export const SpecialDayPlanPage: React.FC = () => {
   }, [dispatch, campaignId]);
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full px-8">
       <div className="w-full pt-[60px]">
         <StepperSlider
           step={currentStep}

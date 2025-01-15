@@ -67,7 +67,7 @@ export function ConformationModel({ handleConfirm }: Props) {
               No
             </button>
             <button
-              className="border border-1 py-1 px-8 bg-blue-600 text-white rounded-md"
+              className="border border-1 py-1 px-8 bg-[#129BFF] text-white rounded-md"
               onClick={() => {
                 confirm(true);
               }}

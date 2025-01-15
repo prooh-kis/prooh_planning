@@ -15,7 +15,7 @@ export function SingleCalenderData({
     setSelectedSpacialDay(data?.specialDay);
   };
   return (
-    <div className="flex justify-between hover:border hover:border-1 hover:border-blue-500 hover:text-blue-500 py-4 px-4 rounded-lg">
+    <div className="flex justify-between hover:border hover:border-1 hover:border-[#129BFF] hover:text-[#129BFF] border-b py-4 px-4 rounded-lg">
       <div className="flex gap-2">
         <div className="rounded-[100%] h-8 w-8 p-2 bg-gray-100 i justify-center">
           <i className="fi fi-ss-cake-birthday text-[#28A61D] "></i>

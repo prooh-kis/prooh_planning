@@ -166,7 +166,7 @@ export const SpecialDay = ({
         handleSaveData={handleSaveData}
         selectedSpacialDay={selectedSpacialDay}
       />
-      <h1 className="text-[24px] text-primaryText font-semibold">
+      <h1 className="text-[24px] text-[#232323] font-semibold leading-[32.68px] tracking-[-0.02em]">
         Select Topical Day
       </h1>
       <div className="flex  justify-between">
@@ -186,12 +186,12 @@ export const SpecialDay = ({
           />
           <button
             onClick={() => setCategory("")}
-            className="border border-1 px-4 py-2 rounded-md"
+            className="border border-[#D9D9D9] px-4 py-2 rounded-md text-[#D9D9D9]"
           >
             Reset
           </button>
         </div>
-        <EventCalender events={calendarListData1?.filteredCalendar || []} />
+        {/* <EventCalender events={calendarListData1?.filteredCalendar || []} /> */}
       </div>
       <div className="">
         <h1 className="py-2">Months</h1>
@@ -207,55 +207,84 @@ export const SpecialDay = ({
       </div>
       <div className="flex gap-8">
         <div className="w-full border border-1 rounded-xl p-8">
-          <h1>Topical days in {monthName} </h1>
-          <h1 className="text-[#888888]">
-            You have found {calendarListData1?.filteredCalendar?.length} events
-            according to your category{" "}
+          <h1 className="text-[16px] font-semibold text-[#212121] leading-[21.79px]">
+            Topical days in {monthName}{" "}
+          </h1>
+          <h1 className="text-[16px] font-normal text-[#737373]  leading-[21.79px] tracking-[-0.02em]">
+            You have found{" "}
+            <span className="text-[#232323] font-bold">
+              {calendarListData1?.filteredCalendar?.length}{" "}
+            </span>
+            events according to your category{" "}
           </h1>
           <div className="flex flex-col gap-4 mt-4 overflow-y-auto pr-4 h-96">
+            {loadingCalendarListDat && (
+              <div className="flex flex-col gap-4">
+                <div
+                  className={`p-2 animate-pulse bg-[#D7D7D7] rounded h-20 w-full}`}
+                ></div>
+                <div
+                  className={`p-2 animate-pulse bg-[#D7D7D7] rounded h-20 w-full}`}
+                ></div>
+                <div
+                  className={`p-2 animate-pulse bg-[#D7D7D7] rounded h-20 w-full}`}
+                ></div>
+              </div>
+            )}
             {calendarListData1?.filteredCalendar?.map(
               (value: any, index: any) => (
-                <div key={index}>
-                  <SingleCalenderData
-                    data={value}
-                    setSelectedDate={setSelectedDate}
-                    selectedDate={selectedDate}
-                    setSelectedSpacialDay={setSelectedSpacialDay}
-                  />
-                  <div className="border border-1"></div>
-                </div>
+                <SingleCalenderData
+                  data={value}
+                  key={index}
+                  loading={loadingCalendarListDat}
+                  setSelectedDate={setSelectedDate}
+                  selectedDate={selectedDate}
+                  setSelectedSpacialDay={setSelectedSpacialDay}
+                />
               )
             )}
           </div>
         </div>
         <div className="w-full border border-1 rounded-xl p-8">
           <div className="flex justify-between">
-            <h1>your selection - {selectedSpacialDay}</h1>
+            <h1 className="text-[16px] font-semibold text-[#232323]  leading-[21.79px]">
+              Your Selection - {selectedSpacialDay}
+            </h1>
             <h1 className="text-blue-500">
               {selectedDate
                 ? moment(selectedDate).format("ll")
                 : "No date selected"}
             </h1>
           </div>
-          <h1 className="text-[#888888] text-[14px] py-2">
-            your final bill will include the cost of all the additional slots,{" "}
+          <h1 className="text-[14px] font-normal text-[#737373]  leading-[19.07px]">
+            Your final bill will include the cost of all the additional slots,{" "}
           </h1>
-          <div className="flex flex-col gap-4 mt-4 overflow-y-auto h-96">
+          <div className="flex flex-col gap-2 mt-4 overflow-y-auto max-h-[396px]">
             {Object.keys(tableDataForSelectTopicalDay1 || {})?.map(
               (key: string, index: any) => (
                 <div key={index} className="pr-4">
                   <div className="flex justify-between">
-                    <h1 className="pb-2">{key}</h1>
+                    <h1 className="text-[16px] font-normal text-[#232323]  leading-[21.79px] pb-2">
+                      {key}
+                    </h1>
                     <h1
-                      className={
+                      className={`${
                         key === "Total Budget"
-                          ? "text-[#1297E2] text-[20px]"
+                          ? "text-[#1297E2]"
                           : "text-[#CC1C1C]"
-                      }
+                      } text-[14px] leading-[21.79px] tracking-[-0.02em]`}
                     >
-                      {key === "per slot price" || key === "Total Budget" || key === "CPM" ? "\u20B9 " : ""} 
-                      {!isNaN(Number(tableDataForSelectTopicalDay1[key])) 
-                        ? formatNumber(Number(tableDataForSelectTopicalDay1[key]).toFixed(0)) 
+                      {key === "per slot price" ||
+                      key === "Total Budget" ||
+                      key === "CPM"
+                        ? "\u20B9 "
+                        : ""}
+                      {!isNaN(Number(tableDataForSelectTopicalDay1[key]))
+                        ? formatNumber(
+                            Number(tableDataForSelectTopicalDay1[key]).toFixed(
+                              0
+                            )
+                          )
                         : tableDataForSelectTopicalDay1[key]}
                       {key === "Campaign Duration" ? " Days" : ""}
                     </h1>
@@ -265,9 +294,9 @@ export const SpecialDay = ({
               )
             )}
           </div>
-          <h1 className="text-[#E90707] text-[14px] mt-4">
-            Note - these fields are subject to change when you <br /> proceed
-            for optimizing this plan
+          <h1 className="text-[#E90707] text-[14px] leading-[21.79px] mt-4">
+            Note - These Fields Are Subject To Change When You <br /> Proceed
+            For Optimizing This Plan
           </h1>
         </div>
       </div>
