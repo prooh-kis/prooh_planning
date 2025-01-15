@@ -1,26 +1,31 @@
-import { TabWithoutIcon } from '../../components/index';
-import { PrimaryButton } from '../../components/atoms/PrimaryButton';
-import { PrimaryInput } from '../../components/atoms/PrimaryInput';
-import React, { useState } from 'react';
-import { MyPlansListTable } from '../../components/tables';
+import { TabWithoutIcon } from "../../components/index";
+import { PrimaryButton } from "../../components/atoms/PrimaryButton";
+import { PrimaryInput } from "../../components/atoms/PrimaryInput";
+import React, { useState } from "react";
+import { MyPlansListTable } from "../../components/tables";
 
-const allTabs = [{
-  id: "1",
-  label: "Active"
-},{
-  id: "2",
-  label: "Upcoming"
-},{
-  id: "3",
-  label: "Deleted"
-},{
-  id: "4",
-  label: "History"
-}];
+const allTabs = [
+  {
+    id: "1",
+    label: "Active",
+  },
+  {
+    id: "2",
+    label: "Upcoming",
+  },
+  {
+    id: "3",
+    label: "Deleted",
+  },
+  {
+    id: "4",
+    label: "History",
+  },
+];
 
-
-export const MyPlansList = ({plansList}: any) => {
+export const MyPlansList = ({ plansList }: any) => {
   const [currentTab, setCurrentTab] = useState<any>("1");
+  const [query, setQuery] = useState<string>("");
   return (
     <div className="w-full">
       <div className="flex justify-between border-b py-2">
@@ -35,17 +40,11 @@ export const MyPlansList = ({plansList}: any) => {
             height="h-10"
             inputType="text"
             rounded="rounded-[12px]"
-            placeholder="Type to search"
-            value={""}
-            action={() => {}}
-          />
-          <PrimaryButton
-            reverse={true}
-            height="h-10"
-            width="w-[120px]"
-            rounded="rounded-full"
-            title="Search"
-            action={() => {}}
+            placeholder="Search By campaign Name"
+            value={query}
+            action={(value) => {
+              setQuery(value);
+            }}
           />
         </div>
       </div>
@@ -57,7 +56,7 @@ export const MyPlansList = ({plansList}: any) => {
         />
       </div> */}
       <div className="w-full bg-gray-50">
-        <MyPlansListTable plansList={plansList} />
+        <MyPlansListTable plansList={plansList} query={query} />
       </div>
     </div>
   );
