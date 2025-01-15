@@ -60,7 +60,7 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
   const [selectedSOV, setSelectedSOV] = useState<any>(1);
   const [selectedTimeOptions, setSelectedTimeOptions] = useState<any>(300);
 
-  const timeOptions = [
+  const timeOptionSportsTrigger = [
     {
       label: "5 Mins",
       value: "300",
@@ -90,6 +90,11 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
       value: "14400",
     },
   ];
+
+  const timeOptionsWeatherTrigger = [{
+    label : "Forever",
+    value : "0"
+  }]
 
   const weatherTabData = () => {
     return [
@@ -466,7 +471,7 @@ export const TriggerDetails = ({ setCurrentStep, step, campaignId }: TriggerProp
                 placeHolder={"Set Time"}
                 selectedOption={selectedTimeOptions}
                 setSelectedOption={setSelectedTimeOptions}
-                options={timeOptions?.map((m: any) => {
+                options={(currentStep1 === 1 ? timeOptionsWeatherTrigger : timeOptionSportsTrigger)?.map((m: any) => {
                   return {
                     label: m.label,
                     value: m.value,
