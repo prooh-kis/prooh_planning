@@ -31,7 +31,7 @@ import { SpecialDay } from "../../components/planner/SpecialDay";
 const pages = [
   {
     id: 1,
-    value: "Topical Day Page",
+    value: "Basic Details Page",
   },
   {
     id: 2,

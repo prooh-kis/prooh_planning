@@ -72,13 +72,9 @@ export const MonthRangeSlider = ({
             {/* Icon or Text for each step */}
             <div className="mb-2">
               <span
-                className={
-                  // month === 1 ?
-                  //   `text-[#129BFF] text-[14px] pr-0 pl-0 truncate` :
-                  // month === 9 ?
-                  //   `text-[#129BFF] text-[14px] text-right pr-0 pl-0 truncate` :
-                  `text-[#737373] text-[14px] truncate`
-                }
+                className={`${
+                  i === month ? "text-[#129BFF]" : "text-[#737373]"
+                } text-[14px] truncate`}
               >
                 {value}
               </span>

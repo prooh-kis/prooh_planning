@@ -113,7 +113,7 @@ export const SpecialDay = ({
     dispatch(
       getCalendarListData({
         startDate: `${year}-${month + 1}-01`,
-        endDate: `${year}-${month + 1}-${lastDays}`,
+        endDate: `${year}-${month + 1}-31`,
         category: [category],
       })
     );

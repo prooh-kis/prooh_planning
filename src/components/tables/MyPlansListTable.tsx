@@ -10,9 +10,13 @@ import {
 
 interface MyRequestsListTableProps {
   plansList?: any;
+  query?: any;
 }
 
-export const MyPlansListTable = ({ plansList }: MyRequestsListTableProps) => {
+export const MyPlansListTable = ({
+  plansList,
+  query,
+}: MyRequestsListTableProps) => {
   const navigate = useNavigate();
   return (
     <table className="w-full">
@@ -48,78 +52,82 @@ export const MyPlansListTable = ({ plansList }: MyRequestsListTableProps) => {
         </tr>
       </thead>
       <tbody>
-        {plansList?.map((campaign: any, i: any) => (
-          <tr key={i}>
-            <td className="p-2">
-              <h1 className="text-[14px] flex justify-center">{i + 1}</h1>
-            </td>
-            <td className="p-2">
-              <h1 className="text-[14px] flex justify-start">
-                {campaign.name}
-              </h1>
-            </td>
-            <td className="p-2">
-              <h1 className="text-[14px] flex justify-start">
-                {campaign.brandName}
-              </h1>
-            </td>
-            <td className="p-2">
-              <h1 className="text-[14px] flex justify-start">
-                {campaign.clientName}
-              </h1>
-            </td>
-            <td className="p-2">
-              <h1 className="text-[14px]">{campaign.status || "Pending"}</h1>
-            </td>
-            <td className="p-2 truncate">
-              <h1 className="text-[14px] truncate">
-                {new Date(campaign.startDate).toDateString()}
-              </h1>
-            </td>
-            <td className="p-2 truncate">
-              <h1 className="text-[14px] truncate">
-                {new Date(campaign.endDate).toDateString()}
-              </h1>
-            </td>
-            <td className="p-2 truncate">
-              <h1 className="text-[14px] truncate">
-                {campaign?.campaignType === CAMPAIGN_PLAN_TYPE_REGULAR
-                  ? "Regular Plan"
-                  : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_TRIGGER
-                  ? "Trigger Based Plan"
-                  : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_STORE
-                  ? "Stores Based Plan"
-                  : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_TOPICAL
-                  ? "Special Day Plan"
-                  : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW
-                  ? "I Know It All Plan"
-                  : "None"}
-              </h1>
-            </td>
-            <td
-              className="p-2"
-              onClick={() =>
-                navigate(
-                  `/${
-                    campaign?.campaignType === CAMPAIGN_PLAN_TYPE_REGULAR
-                      ? "regularplan"
-                      : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_TRIGGER
-                      ? "triggerbasedplan"
-                      : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_STORE
-                      ? "storebasedplan"
-                      : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_TOPICAL
-                      ? "specialdayplan"
-                      : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW
-                      ? "iknowitallplan"
-                      : ""
-                  }/${campaign._id}`
-                )
-              }
-            >
-              <i className="fi fi-bs-menu-dots text-[20px] flex justify-center"></i>
-            </td>
-          </tr>
-        ))}
+        {plansList
+          ?.filter((data: any) =>
+            data?.name?.toLowerCase().includes(query?.toLowerCase())
+          )
+          ?.map((campaign: any, i: any) => (
+            <tr key={i}>
+              <td className="p-2">
+                <h1 className="text-[14px] flex justify-center">{i + 1}</h1>
+              </td>
+              <td className="p-2">
+                <h1 className="text-[14px] flex justify-start">
+                  {campaign.name}
+                </h1>
+              </td>
+              <td className="p-2">
+                <h1 className="text-[14px] flex justify-start">
+                  {campaign.brandName}
+                </h1>
+              </td>
+              <td className="p-2">
+                <h1 className="text-[14px] flex justify-start">
+                  {campaign.clientName}
+                </h1>
+              </td>
+              <td className="p-2">
+                <h1 className="text-[14px]">{campaign.status || "Pending"}</h1>
+              </td>
+              <td className="p-2 truncate">
+                <h1 className="text-[14px] truncate">
+                  {new Date(campaign.startDate).toDateString()}
+                </h1>
+              </td>
+              <td className="p-2 truncate">
+                <h1 className="text-[14px] truncate">
+                  {new Date(campaign.endDate).toDateString()}
+                </h1>
+              </td>
+              <td className="p-2 truncate">
+                <h1 className="text-[14px] truncate">
+                  {campaign?.campaignType === CAMPAIGN_PLAN_TYPE_REGULAR
+                    ? "Regular Plan"
+                    : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_TRIGGER
+                    ? "Trigger Based Plan"
+                    : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_STORE
+                    ? "Stores Based Plan"
+                    : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_TOPICAL
+                    ? "Special Day Plan"
+                    : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW
+                    ? "I Know It All Plan"
+                    : "None"}
+                </h1>
+              </td>
+              <td
+                className="p-2"
+                onClick={() =>
+                  navigate(
+                    `/${
+                      campaign?.campaignType === CAMPAIGN_PLAN_TYPE_REGULAR
+                        ? "regularplan"
+                        : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_TRIGGER
+                        ? "triggerbasedplan"
+                        : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_STORE
+                        ? "storebasedplan"
+                        : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_TOPICAL
+                        ? "specialdayplan"
+                        : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW
+                        ? "iknowitallplan"
+                        : ""
+                    }/${campaign._id}`
+                  )
+                }
+              >
+                <i className="fi fi-bs-menu-dots text-[20px] flex justify-center"></i>
+              </td>
+            </tr>
+          ))}
       </tbody>
     </table>
   );
