@@ -2,10 +2,7 @@ import React from "react";
 
 export const PolygonShape: React.FC<{ data: any[] }> = ({ data }) => {
   // Ensure data is valid and contains at least one feature with coordinates
-  if (
-    !data.length ||
-    !data[0]?.geometry?.coordinates?.[0]?.length
-  ) {
+  if (!data.length || !data[0]?.geometry?.coordinates?.[0]?.length) {
     return (
       <div className="h-full w-full rounded-md bg-gray-100 flex items-center justify-center">
         <p className="text-gray-500">No polygon data available</p>
@@ -50,14 +47,11 @@ export const PolygonShape: React.FC<{ data: any[] }> = ({ data }) => {
 
   return (
     <div className="h-full w-full flex items-center justify-center">
-      <svg
-        viewBox={`0 0 500 500`}
-        className="w-full h-full"
-      >
+      <svg viewBox={`0 0 500 500`} className="w-full h-full">
         <polygon
           points={svgPoints}
-          fill="rgba(59, 130, 246, 0.5)" /* Tailwind's blue-500 with transparency */
-          stroke="#3b82f6" /* Tailwind's blue-500 */
+          fill="rgba(59, 130, 246, 0.5)" /* Tailwind's [#129BFF] with transparency */
+          stroke="#3b82f6" /* Tailwind's [#129BFF] */
           strokeWidth="2"
         />
       </svg>

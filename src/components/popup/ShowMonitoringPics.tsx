@@ -19,18 +19,23 @@ export const ShowMonitoringPicsPopup = (props: any) => {
   const [monitoringDate, setMonitoringDate] = useState<any>(dateToday);
   const [allDates, setAllDates] = useState<any>([]);
   const [monitoringTime, setMonitoringTime] = useState<any>("day");
- 
-  const campaignMonitoringPicsGet = useSelector((state: any) => state.campaignMonitoringPicsGet);
+
+  const campaignMonitoringPicsGet = useSelector(
+    (state: any) => state.campaignMonitoringPicsGet
+  );
   const {
     loading: loadingMonitoringPics,
     error: errorMonitoringPics,
-    data: monitoringPics
+    data: monitoringPics,
   } = campaignMonitoringPicsGet;
 
-  console.log(campaign)
+  console.log(campaign);
   const handleCampaignClick = () => {
     setAllDates(() => {
-      return getAllDatesBetween(campaignCreation.startDate, campaignCreation.endDate);
+      return getAllDatesBetween(
+        campaignCreation.startDate,
+        campaignCreation.endDate
+      );
     });
   };
 
@@ -53,7 +58,6 @@ export const ShowMonitoringPicsPopup = (props: any) => {
   };
 
   const handleCallGetScreenCampaignMonitoring = useCallback(() => {
-
     if (campaign?.campaignId && screenId) {
       dispatch(
         GetCampaignMonitoringPicsAction({
@@ -81,7 +85,7 @@ export const ShowMonitoringPicsPopup = (props: any) => {
 
   const handleDateChange = (date: Date) => {
     setMonitoringDate(date);
-    console.log(campaign)
+    console.log(campaign);
     dispatch(
       GetCampaignMonitoringPicsAction({
         screenId,
@@ -109,11 +113,10 @@ export const ShowMonitoringPicsPopup = (props: any) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 ">
-       <div
-        className="bg-white p-4 rounded-lg shadow-lg w-full max-w-full relative overflow-auto max-h-auto "
+      <div
+        className="bg-[#FFFFFF] p-4 rounded-lg shadow-lg w-full max-w-full relative overflow-auto max-h-auto "
         style={{ height: "80vh", width: "70vw" }}
       >
-
         {openCalendarPopup && (
           <div className="p-1 overflow-scroll no-scrollbar">
             <CalendarPopup
@@ -129,7 +132,10 @@ export const ShowMonitoringPicsPopup = (props: any) => {
           <div className="w-full flex items-center justify-between">
             <h1 className="text-[16px] font-semibold">Campaign Monitoring</h1>
 
-            <i className="fi fi-br-circle-xmark" onClick={() => props?.onClose()}></i>
+            <i
+              className="fi fi-br-circle-xmark"
+              onClick={() => props?.onClose()}
+            ></i>
           </div>
           {/* {isShow ? (
             <i
@@ -147,7 +153,7 @@ export const ShowMonitoringPicsPopup = (props: any) => {
           <div>
             <div className="flex justify-end ">
               <div
-                className="border border-1 py-2 px-4 text-blue-500 text-[14px] cursor-pointer flex gap-2 items-center rounded-md"
+                className="border border-1 py-2 px-4 text-[#129BFF] text-[14px] cursor-pointer flex gap-2 items-center rounded-md"
                 title="click to change date"
                 onClick={() => setOpenCalendarPopup(true)}
               >

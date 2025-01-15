@@ -86,7 +86,7 @@ export const FeedBack: React.FC<FeedBackProps> = (props) => {
             <img
               src={quotes}
               alt="Quotes"
-              className="h-8 w-8 mb-4 bg-blue-500 mask mask-image "
+              className="h-8 w-8 mb-4 bg-[#129BFF] mask mask-image "
             />
 
             {/* Quote Content */}

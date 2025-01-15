@@ -12,10 +12,10 @@ export const VendorMailTemplate: React.FC<VendorMailTemplateProps> = ({
   approvalUrl,
 }) => {
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white shadow-md rounded-md">
+    <div className="max-w-xl mx-auto p-6 bg-[#FFFFFF] shadow-md rounded-md">
       <table className="w-full table-auto border-collapse mb-6">
         <thead>
-          <tr className="bg-blue-500 text-white">
+          <tr className="bg-[#129BFF] text-[#FFFFFF]">
             <th className="py-2 px-4">Screen Name</th>
             <th className="py-2 px-4">Touchpoint</th>
             <th className="py-2 px-4">Start Date</th>
@@ -27,23 +27,13 @@ export const VendorMailTemplate: React.FC<VendorMailTemplateProps> = ({
           {tableData.map((row: any, index: any) => (
             <tr
               key={index}
-              className={`${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
+              className={`${index % 2 === 0 ? "bg-gray-100" : "bg-[#FFFFFF]"}`}
             >
-                <td className="py-2 px-4 border">
-                  {row?.screenName}
-                </td>
-                <td className="py-2 px-4 border">
-                  {row?.touchPoint}
-                </td>
-                <td className="py-2 px-4 border">
-                  {row?.startDate}
-                </td>
-                <td className="py-2 px-4 border">
-                  {row?.endDate}
-                </td>
-                <td className="py-2 px-4 border">
-                  {row?.cost}
-                </td>
+              <td className="py-2 px-4 border">{row?.screenName}</td>
+              <td className="py-2 px-4 border">{row?.touchPoint}</td>
+              <td className="py-2 px-4 border">{row?.startDate}</td>
+              <td className="py-2 px-4 border">{row?.endDate}</td>
+              <td className="py-2 px-4 border">{row?.cost}</td>
             </tr>
           ))}
         </tbody>
@@ -51,7 +41,7 @@ export const VendorMailTemplate: React.FC<VendorMailTemplateProps> = ({
       <div>
         <a
           href={approvalUrl}
-          className="w-full inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300 text-center"
+          className="w-full inline-block bg-[#129BFF] text-[#FFFFFF] py-2 px-4 rounded hover:bg-[#129BFF] transition duration-300 text-center"
         >
           {buttonText}
         </a>
@@ -60,15 +50,14 @@ export const VendorMailTemplate: React.FC<VendorMailTemplateProps> = ({
   );
 };
 
-
 export const CCMailTemplate: React.FC<VendorMailTemplateProps> = ({
   tableData,
 }) => {
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white shadow-md rounded-md">
+    <div className="max-w-xl mx-auto p-6 bg-[#FFFFFF] shadow-md rounded-md">
       <table className="w-full table-auto border-collapse mb-6">
         <thead>
-          <tr className="bg-blue-500 text-white">
+          <tr className="bg-[#129BFF] text-[#FFFFFF]">
             <th className="py-2 px-4">Screen Name</th>
             <th className="py-2 px-4">Touchpoint</th>
             <th className="py-2 px-4">Start Date</th>
@@ -80,23 +69,13 @@ export const CCMailTemplate: React.FC<VendorMailTemplateProps> = ({
           {tableData.map((row: any, index: any) => (
             <tr
               key={index}
-              className={`${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
+              className={`${index % 2 === 0 ? "bg-gray-100" : "bg-[#FFFFFF]"}`}
             >
-                <td className="py-2 px-4 border">
-                  {row?.screenName}
-                </td>
-                <td className="py-2 px-4 border">
-                  {row?.touchPoint}
-                </td>
-                <td className="py-2 px-4 border">
-                  {row?.startDate}
-                </td>
-                <td className="py-2 px-4 border">
-                  {row?.endDate}
-                </td>
-                <td className="py-2 px-4 border">
-                  {row?.cost}
-                </td>
+              <td className="py-2 px-4 border">{row?.screenName}</td>
+              <td className="py-2 px-4 border">{row?.touchPoint}</td>
+              <td className="py-2 px-4 border">{row?.startDate}</td>
+              <td className="py-2 px-4 border">{row?.endDate}</td>
+              <td className="py-2 px-4 border">{row?.cost}</td>
             </tr>
           ))}
         </tbody>

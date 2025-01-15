@@ -1,5 +1,13 @@
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
-import { advertisersSteps, dataHeroSteps, mediaOwnersSteps, advertisersStepsDetails, tabData, mediaOwnersStepsDetails, dataHeroStepsDetails } from "../../data/LandingPageData";
+import {
+  advertisersSteps,
+  dataHeroSteps,
+  mediaOwnersSteps,
+  advertisersStepsDetails,
+  tabData,
+  mediaOwnersStepsDetails,
+  dataHeroStepsDetails,
+} from "../../data/LandingPageData";
 import React, { useRef, useState } from "react";
 import { PlanYourCampaign } from "./PlanYourCampaign";
 
@@ -31,18 +39,21 @@ export const HowItsWork = () => {
     </div>
   );
 
-  const CampaignSteps = ({
-    currentSubTab,
-
-  }: {
-    currentSubTab: string;
-  }) => {
-    const step = 
-      tabData?.filter((tab: any) => tab.id === currentTab)[0]?.label === "Advertiser" ? advertisersStepsDetails.find((s) => s.id === currentSubTab) || advertisersStepsDetails[0] :
-      tabData?.filter((tab: any) => tab.id === currentTab)[0]?.label === "Media Owner" ? mediaOwnersStepsDetails.find((s) => s.id === currentSubTab) || mediaOwnersStepsDetails[0] : 
-      tabData?.filter((tab: any) => tab.id === currentTab)[0]?.label === "Data Hero" ? dataHeroStepsDetails.find((s) => s.id === currentSubTab) || dataHeroStepsDetails[0] : 
-      [] 
-    ;
+  const CampaignSteps = ({ currentSubTab }: { currentSubTab: string }) => {
+    const step =
+      tabData?.filter((tab: any) => tab.id === currentTab)[0]?.label ===
+      "Advertiser"
+        ? advertisersStepsDetails.find((s) => s.id === currentSubTab) ||
+          advertisersStepsDetails[0]
+        : tabData?.filter((tab: any) => tab.id === currentTab)[0]?.label ===
+          "Media Owner"
+        ? mediaOwnersStepsDetails.find((s) => s.id === currentSubTab) ||
+          mediaOwnersStepsDetails[0]
+        : tabData?.filter((tab: any) => tab.id === currentTab)[0]?.label ===
+          "Data Hero"
+        ? dataHeroStepsDetails.find((s) => s.id === currentSubTab) ||
+          dataHeroStepsDetails[0]
+        : [];
     return <CampaignStep {...step} />;
   };
 
@@ -78,7 +89,7 @@ export const HowItsWork = () => {
                   <h1
                     className={`lg:text-[14px] text-[12px] ${
                       step.id === currentAdvertiserTab
-                        ? "text-white font-semibold"
+                        ? "text-[#FFFFFF] font-semibold"
                         : "text-gray-600"
                     } truncate`}
                   >
@@ -109,7 +120,7 @@ export const HowItsWork = () => {
                   <h1
                     className={`lg:text-[14px] text-[12px] ${
                       step.id === currentMediaOwnerTab
-                        ? "text-white font-semibold"
+                        ? "text-[#FFFFFF] font-semibold"
                         : "text-gray-600"
                     } truncate`}
                   >
@@ -140,7 +151,7 @@ export const HowItsWork = () => {
                   <h1
                     className={`lg:text-[14px] text-[12px] ${
                       step.id === currentDataHeroTab
-                        ? "text-white font-semibold"
+                        ? "text-[#FFFFFF] font-semibold"
                         : "text-gray-600"
                     } truncate`}
                   >
@@ -154,8 +165,9 @@ export const HowItsWork = () => {
           </div>
         )}
       </div>
-      <PlanYourCampaign currentTabData={tabData?.filter((tab: any) => tab.id === currentTab)[0]} />
-
+      <PlanYourCampaign
+        currentTabData={tabData?.filter((tab: any) => tab.id === currentTab)[0]}
+      />
     </div>
   );
 };

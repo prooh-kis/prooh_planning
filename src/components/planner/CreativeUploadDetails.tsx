@@ -292,7 +292,7 @@ export const CreativeUploadDetails = ({
   };
 
   const validate = () => {
-    console.log(creativeUploadData)
+    console.log(creativeUploadData);
     for (let city in creativeUploadData) {
       for (let data of creativeUploadData[city]) {
         if (
@@ -476,17 +476,17 @@ export const CreativeUploadDetails = ({
           <div className="mr-48 w-full">
             <div className="flex bg-[#129BFF] py-2 mt-4 items-center">
               <div className="flex">
-                <h1 className="w-24 text-center text-white font-semibold ">
+                <h1 className="w-24 text-center text-[#FFFFFF] font-semibold ">
                   Screens
                 </h1>
-                <h1 className="w-24 text-center text-white font-semibold ">
+                <h1 className="w-24 text-center text-[#FFFFFF] font-semibold ">
                   Duration
                 </h1>
-                <h1 className="w-48 text-center text-white font-semibold ">
+                <h1 className="w-48 text-center text-[#FFFFFF] font-semibold ">
                   Screen Dimension
                 </h1>
               </div>
-              <h1 className="w-full text-center text-white font-semibold">
+              <h1 className="w-full text-center text-[#FFFFFF] font-semibold">
                 Upload creatives
               </h1>
             </div>
@@ -651,7 +651,7 @@ export const CreativeUploadDetails = ({
               </div>
             </div>
           </div>
-          <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
+          <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
             <Footer
               handleBack={() => {
                 setCurrentStep(step - 1);

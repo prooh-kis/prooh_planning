@@ -54,10 +54,9 @@ export const ScreenSummaryDetails = ({
   const [citiesCreative, setCitiesCreative] = useState<any>([]);
   const [cityTabData, setCityTabData] = useState<any>([]);
 
-
   const [priceFilter, setPriceFilter] = useState<any>({
     min: 1,
-    max: 300
+    max: 300,
   });
 
   const [regularVsCohort, setRegularVsCohort] = useState<any>(
@@ -113,8 +112,7 @@ export const ScreenSummaryDetails = ({
   const handleSelectCurrentTab = (id: string) => {
     setCurrentSummaryTab(id);
 
-    const city =
-      citiesCreative?.find((data: any) => data.id === id)?.label;
+    const city = citiesCreative?.find((data: any) => data.id === id)?.label;
     if (city) {
       setCurrentCity(city);
     } else {
@@ -130,7 +128,7 @@ export const ScreenSummaryDetails = ({
         }
         console.log(data, "2");
 
-        return {pre, ...data};
+        return { pre, ...data };
       });
     });
   };
@@ -139,23 +137,31 @@ export const ScreenSummaryDetails = ({
     if (
       dataScreenSummary &&
       getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] &&
-      Object.keys(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] || {})
-        ?.length !== 0
+      Object.keys(
+        getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] || {}
+      )?.length !== 0
     ) {
       return Object.keys(dataScreenSummary).map((s: any, index: any) => {
         return {
           id: `${index + 1}`,
           label: s,
           params:
-            getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !== null || getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !== undefined
+            getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !==
+              null ||
+            getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !==
+              undefined
               ? [
                   Object.values(
-                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]?.[s]
+                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
+                      campaignId
+                    ]?.[s]
                   )
                     ?.map((f: any) => f.status)
                     ?.filter((s: any) => s === true)?.length,
                   Object.values(
-                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]?.[s]
+                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
+                      campaignId
+                    ]?.[s]
                   )
                     ?.map((f: any) => f.status)
                     ?.filter((s: any) => s === false)?.length,
@@ -180,8 +186,9 @@ export const ScreenSummaryDetails = ({
     if (
       dataScreenSummary &&
       getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] &&
-      Object.keys(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] || {})
-        ?.length !== 0
+      Object.keys(
+        getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] || {}
+      )?.length !== 0
     ) {
       data = Object.keys(dataScreenSummary).map((s: any, index: any) => {
         return {
@@ -210,18 +217,18 @@ export const ScreenSummaryDetails = ({
             pageName: "Screen Summary Page",
             id: pathname.split("/").splice(-1)[0],
             totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-            totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.[
-              "total"
-            ].totalImpression,
-            totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.[
-              "total"
-            ].totalReach,
+            totalImpression: getDataFromLocalStorage(
+              SCREEN_SUMMARY_TABLE_DATA
+            )?.[campaignId]?.["total"].totalImpression,
+            totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+              campaignId
+            ]?.["total"].totalReach,
             totalCampaignBudget: getDataFromLocalStorage(
               SCREEN_SUMMARY_TABLE_DATA
             )?.[campaignId]?.["total"].totalCampaignBudget,
-            totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.[
-              "total"
-            ].totalCpm,
+            totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+              campaignId
+            ]?.["total"].totalCpm,
           })
         );
       }
@@ -231,17 +238,18 @@ export const ScreenSummaryDetails = ({
           pageName: "Screen Summary Page",
           id: pathname.split("/").splice(-1)[0],
           totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-          totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.[
-            "total"
-          ].totalImpression,
-          totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.[
-            "total"
-          ].totalReach,
+          totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+            campaignId
+          ]?.["total"].totalImpression,
+          totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+            campaignId
+          ]?.["total"].totalReach,
           totalCampaignBudget: getDataFromLocalStorage(
             SCREEN_SUMMARY_TABLE_DATA
           )?.[campaignId]?.["total"].totalCampaignBudget,
-          totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.["total"]
-            .totalCpm,
+          totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+            campaignId
+          ]?.["total"].totalCpm,
         })
       );
     }
@@ -277,21 +285,31 @@ export const ScreenSummaryDetails = ({
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType
     );
     if (screenSummaryPlanTableData) {
-      saveDataOnLocalStorage(
-        SCREEN_SUMMARY_TABLE_DATA,
-        {[campaignId]: screenSummaryPlanTableData}
-      );
+      saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, {
+        [campaignId]: screenSummaryPlanTableData,
+      });
     }
 
     if (screenSummaryData) {
       // console.log(screenSummaryData);
-      saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, {[campaignId]: screenSummaryData});
+      saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, {
+        [campaignId]: screenSummaryData,
+      });
 
-      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {[campaignId]: screensBuyingCount});
+      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
+        [campaignId]: screensBuyingCount,
+      });
       handleSetVisitedValue(screenSummaryData);
       setCityTabData(getTabValue(screenSummaryData));
     }
-  }, [campaignId, pathname, screenSummaryData, screenSummaryPlanTableData, screensBuyingCount, step]);
+  }, [
+    campaignId,
+    pathname,
+    screenSummaryData,
+    screenSummaryPlanTableData,
+    screensBuyingCount,
+    step,
+  ]);
 
   return (
     <div className="w-full py-3">
@@ -338,10 +356,13 @@ export const ScreenSummaryDetails = ({
                   )}
                 </div>
                 <div className="flex gap-2 truncate">
-                  <Tooltip
-                    title="Single click to select the filter and Double click to deselect the filter"
-                  >
-                    <div className={`truncate px-1 border ${priceFilter.min === 1 && priceFilter.max === 100 ? "border-blue-500" : ""} rounded flex items-center gap-1`}
+                  <Tooltip title="Single click to select the filter and Double click to deselect the filter">
+                    <div
+                      className={`truncate px-1 border ${
+                        priceFilter.min === 1 && priceFilter.max === 100
+                          ? "border-[#129BFF]"
+                          : ""
+                      } rounded flex items-center gap-1`}
                       onClick={() => {
                         setPriceFilter({
                           min: 1,
@@ -351,39 +372,44 @@ export const ScreenSummaryDetails = ({
                       onDoubleClick={() => {
                         setPriceFilter({
                           min: 1,
-                          max: 300
-                        })
+                          max: 300,
+                        });
                       }}
                     >
                       <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
-                      <p className="text-[12px] truncate">&#8377;1 - &#8377;100</p>
+                      <p className="text-[12px] truncate">
+                        &#8377;1 - &#8377;100
+                      </p>
                     </div>
                   </Tooltip>
-                  <Tooltip
-                    title="Single click to select the filter and Double click to deselect the filter"
-                  >
-                    <div className={`truncate px-1 border ${priceFilter.min === 100 && priceFilter.max === 300 ? "border-blue-500" : ""} rounded flex items-center gap-1`}
+                  <Tooltip title="Single click to select the filter and Double click to deselect the filter">
+                    <div
+                      className={`truncate px-1 border ${
+                        priceFilter.min === 100 && priceFilter.max === 300
+                          ? "border-[#129BFF]"
+                          : ""
+                      } rounded flex items-center gap-1`}
                       onClick={() => {
                         setPriceFilter({
                           min: 100,
-                          max: 300
-                        })
+                          max: 300,
+                        });
                       }}
                       onDoubleClick={() => {
                         setPriceFilter({
                           min: 1,
-                          max: 300
-                        })
+                          max: 300,
+                        });
                       }}
                     >
                       <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
                       <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
-                      <p className="text-[12px] truncate">&#8377;101 - &#8377;300</p>
+                      <p className="text-[12px] truncate">
+                        &#8377;101 - &#8377;300
+                      </p>
                     </div>
                   </Tooltip>
-                  <Tooltip
-                    title="Click to see the list view"
-                  >
+                  <Tooltip title="Click to see the list view">
                     <div
                       className={`truncate px-1 border rounded flex items-center gap-1 ${
                         listView && "border-primaryButton"
@@ -404,9 +430,7 @@ export const ScreenSummaryDetails = ({
                       </p>
                     </div>
                   </Tooltip>
-                  <Tooltip
-                    title="Click to see the grid view"
-                  >
+                  <Tooltip title="Click to see the grid view">
                     <div
                       className={`truncate px-1 border rounded flex items-center gap-1 ${
                         !listView && "border-primaryButton"
@@ -484,7 +508,7 @@ export const ScreenSummaryDetails = ({
           )}
         </div>
       )}
-      <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
+      <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
         <Footer
           handleBack={() => {
             setCurrentStep(step - 1);
@@ -496,12 +520,11 @@ export const ScreenSummaryDetails = ({
             // if (result) {
             //   message.warning("Please visit all city wise screens once");
             // } else {
-              handleSaveAndContinue();
+            handleSaveAndContinue();
             // }
           }}
           campaignId={campaignId}
           pageName="Screen Summary Page"
-
         />
       </div>
     </div>

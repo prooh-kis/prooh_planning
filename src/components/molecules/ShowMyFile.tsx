@@ -4,7 +4,7 @@ export const ImageContainer = ({
   height,
   width,
   removeFile,
-  showIcon = true
+  showIcon = true,
 }: any) => (
   <div className="relative inline-block">
     <img
@@ -20,12 +20,11 @@ export const ImageContainer = ({
         title="close"
         onClick={() => removeFile(url)}
         id="removeImage"
-        className="absolute top-0 right-0 bg-red-500 text-white px-2 rounded-full focus:outline-none hover:bg-red-700"
+        className="absolute top-0 right-0 bg-red-500 text-[#FFFFFF] px-2 rounded-full focus:outline-none hover:bg-red-700"
       >
         &times;
       </button>
     )}
-
   </div>
 );
 
@@ -35,7 +34,7 @@ export const VideoContainer = ({
   height,
   width,
   removeFile,
-  showIcon = true
+  showIcon = true,
 }: any) => (
   <div className="relative inline-block">
     <video className={className} controls height={height} width={width}>
@@ -47,11 +46,10 @@ export const VideoContainer = ({
         title="close"
         onClick={() => removeFile(url)}
         id="removeVideo"
-        className="absolute top-0 right-0 bg-red-500 text-white px-2 rounded-full focus:outline-none hover:bg-red-700"
+        className="absolute top-0 right-0 bg-red-500 text-[#FFFFFF] px-2 rounded-full focus:outline-none hover:bg-red-700"
       >
         &times;
       </button>
     )}
-
   </div>
 );

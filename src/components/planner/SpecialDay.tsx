@@ -250,7 +250,7 @@ export const SpecialDay = ({
             <h1 className="text-[16px] font-semibold text-[#232323]  leading-[21.79px]">
               Your Selection - {selectedSpacialDay}
             </h1>
-            <h1 className="text-blue-500">
+            <h1 className="text-[#129BFF]">
               {selectedDate
                 ? moment(selectedDate).format("ll")
                 : "No date selected"}
@@ -302,7 +302,7 @@ export const SpecialDay = ({
       </div>
       <div className="flex justify-end mt-4">
         <button
-          className="px-8 py-2 bg-[#1297E2] text-white rounded-md"
+          className="px-8 py-2 bg-[#1297E2] text-[#FFFFFF] rounded-md"
           onClick={handleOpenModel}
         >
           Proceed To Cost Optimization

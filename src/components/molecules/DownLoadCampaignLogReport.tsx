@@ -9,7 +9,7 @@ export const DownLoadCampaignLogReport = ({ campaignLog, campaign }: any) => {
     <div className="py-4">
       <button
         title="s"
-        className="border border-1 py-2 px-4 rounded-lg bg-blue text-white hover:bg-blue-500 w-full text-center"
+        className="border border-1 py-2 px-4 rounded-lg bg-blue text-[#FFFFFF] hover:bg-[#129BFF] w-full text-center"
         onClick={handleClick}
       >
         <i className="fi fi-sr-file-download pr-4"></i>

@@ -61,7 +61,7 @@ export const Header: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full h-16 bg-white flex items-center justify-between fixed z-50 sm:px-16 px-4 border-b">
+    <div className="w-full h-16 bg-[#FFFFFF] flex items-center justify-between fixed z-50 sm:px-16 px-4 border-b">
       {/* Logo Section */}
       <div className="flex items-center">
         <div
@@ -118,13 +118,13 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate(AUTH)}
-            className="bg-[#129BFF] text-white rounded-full px-4 py-2 text-sm sm:text-base font-bold hover:bg-white hover:text-[#129BFF] border hover:border-[#129BFF] hidden md:block "
+            className="bg-[#129BFF] text-[#FFFFFF] rounded-full px-4 py-2 text-sm sm:text-base font-bold hover:bg-[#FFFFFF] hover:text-[#129BFF] border hover:border-[#129BFF] hidden md:block "
           >
             Login
           </button>
           <button
             onClick={() => navigate(AUTH)}
-            className="bg-white text-[#888888] border border-[#DBDBDB] rounded-full px-4 py-2 text-sm sm:text-base font-bold hover:bg-[#888888] hover:text-white hidden md:block"
+            className="bg-[#FFFFFF] text-[#888888] border border-[#DBDBDB] rounded-full px-4 py-2 text-sm sm:text-base font-bold hover:bg-[#888888] hover:text-[#FFFFFF] hidden md:block"
           >
             Sign Up
           </button>
@@ -151,7 +151,7 @@ export const Header: React.FC = () => {
           {isMenuOpen && (
             <div
               ref={dropdownRef}
-              className="absolute top-16 right-4 bg-white shadow-md rounded-lg w-48 z-50"
+              className="absolute top-16 right-4 bg-[#FFFFFF] shadow-md rounded-lg w-48 z-50"
             >
               <ul className="flex flex-col p-2">
                 <li className="border-b">

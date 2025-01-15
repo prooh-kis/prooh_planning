@@ -8,30 +8,18 @@ interface StepSliderProps {
   setYear?: any;
 }
 
-export const YearRangeSlider = ({
-  setYear,
-  years,
-  year,
-}: StepSliderProps) => {
+export const YearRangeSlider = ({ setYear, years, year }: StepSliderProps) => {
   const dispatch = useDispatch<any>();
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-    // Example labels for each step
-    const stepLabels = [
-      2023,
-      2024,
-      2025,
-      2026,
-      2027
-    ];
+  // Example labels for each step
+  const stepLabels = [2023, 2024, 2025, 2026, 2027];
 
   // Function to handle step marker click
   const handleStepClick = (step: number) => {
     setYear(stepLabels[step]);
   };
-
-
 
   useEffect(() => {
     if (!userInfo) {
@@ -45,7 +33,7 @@ export const YearRangeSlider = ({
       <div className="relative w-full flex items-center">
         {/* Line behind the circles */}
         <div
-          className="absolute top-1/2 bg-blue-500 h-[2px]"
+          className="absolute top-1/2 bg-[#129BFF] h-[2px]"
           style={{
             // left: month === 1 ? `calc(50% / ${months})` : month === 9 ? `calc(50% / ${months})` : `calc(40% / ${months})`, // Starts the line at the center of the first step
             // right: month === 1 ? `calc(50% / ${months})` : month === 9 ? `calc(50% / ${months})` : `calc(40% / ${months})`, // Ends the line at the center of the last step
@@ -62,8 +50,7 @@ export const YearRangeSlider = ({
               className="relative flex flex-col items-center w-full"
               onClick={() => {
                 if (value <= new Date().getFullYear()) {
-                  handleStepClick(i)
-
+                  handleStepClick(i);
                 }
               }}
             >
@@ -72,10 +59,10 @@ export const YearRangeSlider = ({
                 <span
                   className={
                     // month === 1 ?
-                    //   `text-blue-500 text-[14px] pr-0 pl-0 truncate` :
+                    //   `text-[#129BFF] text-[14px] pr-0 pl-0 truncate` :
                     // month === 9 ?
-                    //   `text-blue-500 text-[14px] text-right pr-0 pl-0 truncate` :
-                    `text-blue-500 text-[14px] pr-0 pl-0 truncate`
+                    //   `text-[#129BFF] text-[14px] text-right pr-0 pl-0 truncate` :
+                    `text-[#129BFF] text-[14px] pr-0 pl-0 truncate`
                   }
                 >
                   {value}
@@ -85,11 +72,11 @@ export const YearRangeSlider = ({
               {/* The clickable circle for each step */}
               <div
                 className={`cursor-pointer transition-all duration-500 ${
-                  value < year 
-                  ? "h-2 w-2 rounded-full border border-blue-500 bg-blue-500"
-                  : value === year
-                    ? "h-3 w-3 rounded-full border-1 border bg-blue-500 border-white" // Larger circle with steps, same size as future
-                    : "h-2 w-2 rounded-full border border-blue-500 bg-white" // White for future steps
+                  value < year
+                    ? "h-2 w-2 rounded-full border border-[#129BFF] bg-[#129BFF]"
+                    : value === year
+                    ? "h-3 w-3 rounded-full border-1 border bg-[#129BFF] border-white" // Larger circle with steps, same size as future
+                    : "h-2 w-2 rounded-full border border-[#129BFF] bg-[#FFFFFF]" // White for future steps
                 }`}
               ></div>
             </div>

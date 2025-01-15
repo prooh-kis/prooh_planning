@@ -37,12 +37,12 @@ export function ForgetPassword(props: any) {
     <div className="flex justify-center pt-16">
       <div className="border border-solid p-8 gap-2 w-full max-w-96 ">
         <div className="flex flex-col gap-4">
-          <h1 className="text-xl py-2 text-blue-600 font-bold">
+          <h1 className="text-xl py-2 text-[#129BFF] font-bold">
             Forget Password
           </h1>
           {true && (
             <a
-              className="text-sm text-blue-500 cursor-pointer"
+              className="text-sm text-[#129BFF] cursor-pointer"
               onClick={() =>
                 window.open(
                   "https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox"
@@ -66,7 +66,7 @@ export function ForgetPassword(props: any) {
           </div>
           <div className="flex justify-center ">
             <button
-              className="border border-solid px-4 py-2 bg-red-500/75 rounded-md text-white w-96"
+              className="border border-solid px-4 py-2 bg-red-500/75 rounded-md text-[#FFFFFF] w-96"
               onClick={handleSendEmail}
             >
               Send Email
@@ -74,7 +74,7 @@ export function ForgetPassword(props: any) {
           </div>
           <div className="flex justify-center ">
             <button
-              className="border border-solid px-4 py-2 bg-sky-500/75 rounded-md text-white w-96"
+              className="border border-solid px-4 py-2 bg-[#129BFF]/75 rounded-md text-[#FFFFFF] w-96"
               onClick={() => navigate("/auth")}
             >
               Sign In

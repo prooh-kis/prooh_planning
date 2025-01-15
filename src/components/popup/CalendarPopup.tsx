@@ -32,7 +32,7 @@ export function CalendarPopup({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
-      <div className="border bg-white rounded-[10px] h-3/4 w-3/4 p-1">
+      <div className="border bg-[#FFFFFF] rounded-[10px] h-3/4 w-3/4 p-1">
         <div
           className="relative inset-0 flex items-center justify-end gap-4 p-3"
           onClick={() => onClose()}
@@ -45,7 +45,7 @@ export function CalendarPopup({
               <div
                 key={date}
                 className={`border ${
-                  monitoringDate === date ? "border-blue-500" : ""
+                  monitoringDate === date ? "border-[#129BFF]" : ""
                 } truncate rounded p-2 w-40 flex justify-center items-center`}
                 onClick={() => {
                   setMonitoringDate(date);

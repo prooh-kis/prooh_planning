@@ -1,4 +1,8 @@
-import { getAllLocalStorageData, getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
+import {
+  getAllLocalStorageData,
+  getDataFromLocalStorage,
+  saveDataOnLocalStorage,
+} from "../../utils/localStorageUtils";
 import { ScreenSummaryModel } from "../../components/popup/ScreenSummaryModel";
 import React, { useEffect, useState } from "react";
 import { formatNumber } from "../../utils/formatValue";
@@ -6,7 +10,11 @@ import { Loading } from "../../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { getPlanningPageFooterData } from "../../actions/screenAction";
 import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
-import { FULL_CAMPAIGN_PLAN, SELECTED_AUDIENCE_TOUCHPOINTS, TOTAL_SCREEN_COST_DATA } from "../../constants/localStorageConstants";
+import {
+  FULL_CAMPAIGN_PLAN,
+  SELECTED_AUDIENCE_TOUCHPOINTS,
+  TOTAL_SCREEN_COST_DATA,
+} from "../../constants/localStorageConstants";
 
 export const Footer = ({
   handleSave,
@@ -15,11 +23,11 @@ export const Footer = ({
   campaignId,
   loadingCost,
   screensCost,
-  pageName
+  pageName,
 }: any) => {
   const dispatch = useDispatch<any>();
 
-  console.log(pageName)
+  console.log(pageName);
   const [footerData, setFooterData] = useState({
     totalScreens: 0,
     totalTouchPoints: 0,
@@ -35,16 +43,24 @@ export const Footer = ({
 
   useEffect(() => {
     if (totalScreensData) {
-      setFooterData(totalScreensData?.finalSummaryStepWise?.filter((data: any) => data.step === pageName)[0])
+      setFooterData(
+        totalScreensData?.finalSummaryStepWise?.filter(
+          (data: any) => data.step === pageName
+        )[0]
+      );
     }
-  },[totalScreensData]);
+  }, [totalScreensData]);
   console.log(footerData);
   return (
     <div className="py-4 z-10 flex justify-between">
       <div className="flex w-full justify-start items-center gap-4">
         {totalScreensData && (
           <div className="flex">
-            <ScreenSummaryModel pageName={pageName} loadingCost={loadingCost} totalScreensData={totalScreensData?.finalSummaryStepWise}/>
+            <ScreenSummaryModel
+              pageName={pageName}
+              loadingCost={loadingCost}
+              totalScreensData={totalScreensData?.finalSummaryStepWise}
+            />
           </div>
         )}
 
@@ -106,7 +122,7 @@ export const Footer = ({
         <div className="flex w-full justify-end items-center gap-4">
           <button
             type="submit"
-            className="border border-1 bg-[#D7D7D7] py-2 px-4 text-[14px] rounded-md hover:bg-[#00A0FA] hover:text-white"
+            className="border border-1 bg-[#D7D7D7] py-2 px-4 text-[14px] rounded-md hover:bg-[#00A0FA] hover:text-[#FFFFFF]"
             title="Go back"
             onClick={handleBack}
           >
@@ -114,7 +130,7 @@ export const Footer = ({
           </button>
           <button
             type="submit"
-            className="border border-1 py-2 px-4 text-[14px] rounded-md bg-[#00A0FA] text-white hover:bg-[#D7D7D7] hover:text-black truncate"
+            className="border border-1 py-2 px-4 text-[14px] rounded-md bg-[#00A0FA] text-[#FFFFFF] hover:bg-[#D7D7D7] hover:text-black truncate"
             title="Save and go next"
             onClick={handleSave}
             disabled={isDisabled}

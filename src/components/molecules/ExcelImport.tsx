@@ -29,7 +29,7 @@ export function ExcelImport({
   circleRadius,
   setFilteredScreens,
   filteredScreens,
-  handleFinalSelectedScreens
+  handleFinalSelectedScreens,
 }: ExcelImportProps) {
   const hiddenFileInput = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<any>(null);
@@ -49,7 +49,7 @@ export function ExcelImport({
       });
     });
     let result = Array.from(uniqueScreens);
-   
+
     return result;
   };
 
@@ -58,26 +58,31 @@ export function ExcelImport({
     if (type.includes("brand")) {
       handleFinalSelectedScreens({
         type: "remove",
-        screens: brandScreens
+        screens: brandScreens,
       });
-      setFilteredScreens(filteredScreens.filter((s: any) => !brandScreens.map((sc: any) => sc._id).includes(s._id)));
+      setFilteredScreens(
+        filteredScreens.filter(
+          (s: any) => !brandScreens.map((sc: any) => sc._id).includes(s._id)
+        )
+      );
       setDataBrand([]);
-      setBrandScreens(null);        
-
+      setBrandScreens(null);
     } else if (type.includes("comp")) {
       handleFinalSelectedScreens({
         type: "remove",
-        screens: compScreens
+        screens: compScreens,
       });
-      setFilteredScreens(filteredScreens.filter((s: any) => compScreens.map((sc: any) => sc._id).includes(s._id)));
+      setFilteredScreens(
+        filteredScreens.filter((s: any) =>
+          compScreens.map((sc: any) => sc._id).includes(s._id)
+        )
+      );
       setDataComp([]);
-      setCompScreens(null);        
+      setCompScreens(null);
     }
     if (hiddenFileInput.current) {
       hiddenFileInput.current.value = ""; // Clear the file input value
     }
-
-
   };
 
   const withinRadius = (center: any, point: any, radius: any) => {
@@ -94,23 +99,22 @@ export function ExcelImport({
     return distance <= radius * 1000;
   };
 
- 
   const handleGetExcelData = (data: any) => {
     const brandCoordinates = data.brand
       .map((x: any) => x.filter((y: any) => /^[+-]?\d+(\.\d+)?$/.test(y)))
       .filter((d: any) => d.length === 2);
-    
+
     const compCoordinates = data.comp
       .map((x: any) => x.filter((y: any) => /^[+-]?\d+(\.\d+)?$/.test(y)))
       .filter((d: any) => d.length === 2);
-    
+
     // const coordinates = data
     //   .map((x: any) => x.filter((y: any) => /^[+-]?\d+(\.\d+)?$/.test(y)))
     //   .filter((d: any) => d.length === 2);
 
     if (validateGioData(data.brand) && validateGioData(data.comp)) {
       if (type.includes("brand")) {
-        setDataBrand(brandCoordinates);        
+        setDataBrand(brandCoordinates);
       }
       if (type.includes("comp")) {
         setDataComp(compCoordinates);
@@ -129,7 +133,14 @@ export function ExcelImport({
         const center = coordinate;
 
         let x = allScreens.filter((l: any) =>
-          withinRadius(center, [l.location.geographicalLocation.longitude, l.location.geographicalLocation.latitude], circleRadius)
+          withinRadius(
+            center,
+            [
+              l.location.geographicalLocation.longitude,
+              l.location.geographicalLocation.latitude,
+            ],
+            circleRadius
+          )
         );
         coordinatesWithScreensData.push({ screens: x, coordinate: coordinate });
       }
@@ -137,33 +148,38 @@ export function ExcelImport({
         const center = coordinate;
 
         let x = allScreens.filter((l: any) =>
-          withinRadius(center, [l.location.geographicalLocation.longitude, l.location.geographicalLocation.latitude], circleRadius)
+          withinRadius(
+            center,
+            [
+              l.location.geographicalLocation.longitude,
+              l.location.geographicalLocation.latitude,
+            ],
+            circleRadius
+          )
         );
         coordinatesWithScreensData.push({ screens: x, coordinate: coordinate });
       }
-      const filtered: any = getUniqueScreens(coordinatesWithScreensData)
+      const filtered: any = getUniqueScreens(coordinatesWithScreensData);
       const newFiltered: any = filteredScreens;
 
       if (type.includes("brand")) {
-        setBrandScreens(filtered);        
+        setBrandScreens(filtered);
       }
       if (type.includes("comp")) {
         setCompScreens(filtered);
-
       }
       filtered?.forEach((f: any) => {
         if (!newFiltered.map((nf: any) => nf._id).includes(f._id)) {
           newFiltered.push(f);
         }
-        return newFiltered
-      })
+        return newFiltered;
+      });
 
       setFilteredScreens(newFiltered);
       handleFinalSelectedScreens({
         type: "add",
         screens: newFiltered,
       });
-
     } else alert("Something went wrong, please send us correct data");
   };
 
@@ -184,14 +200,12 @@ export function ExcelImport({
     <div className="w-full border-b border-gray-100">
       <div className="py-2 flex justify-start gap-2 items-center">
         <h1 className="lg:text-[16px] md:text-[14px] text-gray-500">
-          1. Upload your target stores location data 
+          1. Upload your target stores location data
         </h1>
-        <Tooltip
-            title="Download the sample excel sheet to edit it with the details of your desired stores and select screens in proximity of your desired locations"
-            >
+        <Tooltip title="Download the sample excel sheet to edit it with the details of your desired stores and select screens in proximity of your desired locations">
           <i className="fi fi-rs-info pr-1 lg:text-[14px] md:text-[12px] text-gray-400 flex justify-center items-center"></i>
         </Tooltip>
-        <h1 className="text-blue-500">({filteredScreens.length})</h1>
+        <h1 className="text-[#129BFF]">({filteredScreens.length})</h1>
       </div>
       <div
         className="border border-dashed w-full h-[40px] rounded-md flex justify-between items-center p-1"
@@ -212,24 +226,26 @@ export function ExcelImport({
         />
         <p className="text-sm text-primaryButton pr-2">Upload</p>
       </div>
-        <div className="flex items-center justify-between py-2">
-          <div>
-            {file !== null && (
-              <div>
-                <div className="flex items-center gap-2 truncate">
-                  <p className="text-sm text-green-700 truncate">{file?.name}</p>
-                  <i className="fi fi-sr-cross-small text-green-700 flex items-center" onClick={() => handleResetFile()}></i>
-                </div>
-                <p className="text-sm text-blue-500 truncate">({filteredScreens.length} matching locations found)</p>
+      <div className="flex items-center justify-between py-2">
+        <div>
+          {file !== null && (
+            <div>
+              <div className="flex items-center gap-2 truncate">
+                <p className="text-sm text-green-700 truncate">{file?.name}</p>
+                <i
+                  className="fi fi-sr-cross-small text-green-700 flex items-center"
+                  onClick={() => handleResetFile()}
+                ></i>
               </div>
-     
-            )}
-          </div>
-         
-          <ExcelExport
-            fileName="store_location_coordinates"
-          />
+              <p className="text-sm text-[#129BFF] truncate">
+                ({filteredScreens.length} matching locations found)
+              </p>
+            </div>
+          )}
         </div>
+
+        <ExcelExport fileName="store_location_coordinates" />
+      </div>
     </div>
   );
 }

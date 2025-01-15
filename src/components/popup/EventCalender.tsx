@@ -29,7 +29,7 @@ export const EventCalender = ({ events }: any) => {
   return (
     <div>
       <div
-        className="border border-1 border-blue-500 text-blue-500 px-4 py-2 flex gap-4 rounded-md cursor-pointer"
+        className="border border-1 border-[#129BFF] text-[#129BFF] px-4 py-2 flex gap-4 rounded-md cursor-pointer"
         onClick={handleOpen}
       >
         <i className="fi fi-rs-calendar"></i>

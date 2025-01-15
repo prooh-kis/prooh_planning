@@ -28,7 +28,7 @@ export const ContactForm = () => {
 
           {/* Form */}
           <div className="w-full sm:w-[640px] mt-8">
-            <div className="w-full bg-white rounded-[12px] px-4 sm:px-[21px] py-6 sm:py-[34px] shadow-md">
+            <div className="w-full bg-[#FFFFFF] rounded-[12px] px-4 sm:px-[21px] py-6 sm:py-[34px] shadow-md">
               <form className="space-y-6">
                 {/* Name Field */}
                 <input
@@ -68,7 +68,7 @@ export const ContactForm = () => {
                 <button
                   type="submit"
                   onClick={sendEmail}
-                  className="w-full bg-primaryButton text-white font-semibold py-4 rounded-lg hover:bg-primaryButtonHover transition"
+                  className="w-full bg-primaryButton text-[#FFFFFF] font-semibold py-4 rounded-lg hover:bg-primaryButtonHover transition"
                 >
                   SEND
                 </button>

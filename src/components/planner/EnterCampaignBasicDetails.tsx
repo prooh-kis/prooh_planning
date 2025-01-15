@@ -7,9 +7,7 @@ import {
   getEndDateFromStartDateANdDuration,
   getNumberOfDaysBetweenTwoDates,
 } from "../../utils/dateAndTimeUtils";
-import {
-  getDataFromLocalStorage,
-} from "../../utils/localStorageUtils";
+import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { message, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
@@ -121,19 +119,22 @@ export const EnterCampaignBasicDetails = ({
     [startDate]
   );
 
-  const handleSetNewDuration = useCallback((dur: any) => {
-    // if (!enterDuration) {
-    //   setDuration(getNumberOfDaysBetweenTwoDates(startDate, endDate));
-    // } else {
+  const handleSetNewDuration = useCallback(
+    (dur: any) => {
+      // if (!enterDuration) {
+      //   setDuration(getNumberOfDaysBetweenTwoDates(startDate, endDate));
+      // } else {
       updateEndDateBasedOnDuration(dur);
-    // }
-    // else message.error("Please enter first start , end Date");
-  }, [
-    // endDate,
-    // enterDuration,
-    // startDate,
-    updateEndDateBasedOnDuration,
-  ]);
+      // }
+      // else message.error("Please enter first start , end Date");
+    },
+    [
+      // endDate,
+      // enterDuration,
+      // startDate,
+      updateEndDateBasedOnDuration,
+    ]
+  );
 
   const saveCampaignDetailsOnLocalStorage = useCallback(() => {
     handleSetNewDuration(duration);
@@ -215,9 +216,7 @@ export const EnterCampaignBasicDetails = ({
             <label className="text-secondaryText text-[14px] ">
               Campaign Name
             </label>
-            <Tooltip
-              title="Enter a unique name for your campaign"
-            >
+            <Tooltip title="Enter a unique name for your campaign">
               <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
@@ -234,9 +233,7 @@ export const EnterCampaignBasicDetails = ({
             <label className="block text-secondaryText text-[14px]">
               Brand Name
             </label>
-            <Tooltip
-              title="Enter campaign's brand name"
-            >
+            <Tooltip title="Enter campaign's brand name">
               <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
@@ -255,9 +252,7 @@ export const EnterCampaignBasicDetails = ({
             <label className="block text-secondaryText text-[14px]">
               Industry Type
             </label>
-            <Tooltip
-              title="Enter industry name your brand belongs to"
-            >
+            <Tooltip title="Enter industry name your brand belongs to">
               <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
@@ -273,9 +268,7 @@ export const EnterCampaignBasicDetails = ({
             <label className="block text-secondaryText text-[14px]">
               Agency / Client
             </label>
-            <Tooltip
-              title="Enter Agency's name or client's name who is managing the campaign"
-            >
+            <Tooltip title="Enter Agency's name or client's name who is managing the campaign">
               <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
@@ -286,7 +279,6 @@ export const EnterCampaignBasicDetails = ({
             action={setClientName}
           />
         </div>
-        
       </div>
       <div className="grid grid-cols-3 gap-8 pt-2">
         <div className="col-span-1 py-1">
@@ -294,9 +286,7 @@ export const EnterCampaignBasicDetails = ({
             <label className="block text-secondaryText text-[14px]">
               Start Date
             </label>
-            <Tooltip
-              title="Select Date from when the campaign is to be started"
-            >
+            <Tooltip title="Select Date from when the campaign is to be started">
               <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
@@ -313,28 +303,28 @@ export const EnterCampaignBasicDetails = ({
             <label className="block text-secondaryText text-[14px]">
               Duration (Days)
             </label>
-            <Tooltip
-              title="Enter total duration of campaigns in days"
-            >
+            <Tooltip title="Enter total duration of campaigns in days">
               <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
-            <PrimaryInput
-              inputType="number"
-              placeholder="30"
-              value={duration}
-              disabled={startDate === ""}
-              action={(e: any) => {
-                setDuration(e);
-                handleSetNewDuration(e);
-              }}
-            />
+          <PrimaryInput
+            inputType="number"
+            placeholder="30"
+            value={duration}
+            disabled={startDate === ""}
+            action={(e: any) => {
+              setDuration(e);
+              handleSetNewDuration(e);
+            }}
+          />
         </div>
       </div>
       {endDate !== "" && startDate !== "" && duration && (
-        <h1 className="text-[12px] pt-4 text-blue-500">
-          Note: The billing of your campaign will start from {new Date(startDate).toLocaleDateString()} to {new Date(endDate).toLocaleDateString()}...
-        </h1> 
+        <h1 className="text-[12px] pt-4 text-[#129BFF]">
+          Note: The billing of your campaign will start from{" "}
+          {new Date(startDate).toLocaleDateString()} to{" "}
+          {new Date(endDate).toLocaleDateString()}...
+        </h1>
       )}
 
       <div className="flex py-4">

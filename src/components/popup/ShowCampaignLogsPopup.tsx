@@ -4,7 +4,12 @@ import { convertDataTimeToLocale } from "../../utils/dateAndTimeUtils";
 import { DownLoadCampaignLogReport } from "../../components/molecules/DownLoadCampaignLogReport";
 import { NoDataView } from "../../components/molecules/NoDataView";
 
-export const ShowCampaignLogsPopup = ({ open, onClose, logs, loading }: any) => {
+export const ShowCampaignLogsPopup = ({
+  open,
+  onClose,
+  logs,
+  loading,
+}: any) => {
   useEffect(() => {
     if (open) {
       document.body.classList.add("overflow-hidden");
@@ -23,7 +28,7 @@ export const ShowCampaignLogsPopup = ({ open, onClose, logs, loading }: any) => 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 ">
       <div
-        className="bg-white p-4 rounded-lg shadow-lg w-full max-w-full relative overflow-auto max-h-auto "
+        className="bg-[#FFFFFF] p-4 rounded-lg shadow-lg w-full max-w-full relative overflow-auto max-h-auto "
         style={{ height: "80vh", width: "70vw" }}
       >
         <div className="flex justify-between">
@@ -65,9 +70,7 @@ export const ShowCampaignLogsPopup = ({ open, onClose, logs, loading }: any) => 
                     <td className="border p-2">
                       {convertDataTimeToLocale(c.deviceTime)}
                     </td>
-                    <td className="border p-2">
-                      {c.mediaId?.split("_")[1]}
-                    </td>
+                    <td className="border p-2">{c.mediaId?.split("_")[1]}</td>
                     <td className="border p-2">{logs?.campaign?.screenName}</td>
                     <td
                       className={

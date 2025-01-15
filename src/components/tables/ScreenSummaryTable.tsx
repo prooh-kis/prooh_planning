@@ -52,9 +52,9 @@ export const ScreenSummaryTable = ({
             tps[city][tp][st] = [];
             types[city][st] = [];
             stToggle[city][tp][st] =
-              getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[campaignId]?.[city]?.[
-                tp
-              ]?.[st] || true;
+              getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[
+                campaignId
+              ]?.[city]?.[tp]?.[st] || true;
             for (const zone in myData[city][tp][st]) {
               zones[city][zone] = [];
               for (const screen in myData[city][tp][st][zone]) {
@@ -83,8 +83,9 @@ export const ScreenSummaryTable = ({
       setScreenTypes(types);
       if (
         !getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] ||
-        Object.keys(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId])
-          ?.length === 0
+        Object.keys(
+          getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
+        )?.length === 0
       ) {
         setScreensBuyingCount(screens);
       } else {
@@ -93,7 +94,9 @@ export const ScreenSummaryTable = ({
         );
       }
       setScreenTypeToggle(stToggle);
-      saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, {[campaignId]: stToggle});
+      saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, {
+        [campaignId]: stToggle,
+      });
     },
     [
       currentSummaryTab,
@@ -112,34 +115,36 @@ export const ScreenSummaryTable = ({
     }
   }, [data, handleData]);
 
-  const handleScreenClick = useCallback(({ screen, city, statusRes }: any) => {
-    const screenId = screen._id;
+  const handleScreenClick = useCallback(
+    ({ screen, city, statusRes }: any) => {
+      const screenId = screen._id;
 
-    // Create a deep clone to avoid modifying the original state directly
-    const updatedScreensBuyingCount = { ...screensBuyingCount };
+      // Create a deep clone to avoid modifying the original state directly
+      const updatedScreensBuyingCount = { ...screensBuyingCount };
 
-    const currentCityScreens = updatedScreensBuyingCount[city] || {};
+      const currentCityScreens = updatedScreensBuyingCount[city] || {};
 
-    // Toggle the status of the selected screen
-    if (statusRes === undefined && currentCityScreens[screenId]) {
-      currentCityScreens[screenId].status =
-        !currentCityScreens[screenId].status;
-    } else {
-      currentCityScreens[screenId] = {
-        status: statusRes,
-        data: screen,
-      };
-    }
+      // Toggle the status of the selected screen
+      if (statusRes === undefined && currentCityScreens[screenId]) {
+        currentCityScreens[screenId].status =
+          !currentCityScreens[screenId].status;
+      } else {
+        currentCityScreens[screenId] = {
+          status: statusRes,
+          data: screen,
+        };
+      }
 
-    // Update the specific city's screens in screensBuyingCount while preserving other cities
-    updatedScreensBuyingCount[city] = currentCityScreens;
+      // Update the specific city's screens in screensBuyingCount while preserving other cities
+      updatedScreensBuyingCount[city] = currentCityScreens;
 
-    // Save the updated state
-    setScreensBuyingCount(updatedScreensBuyingCount);
+      // Save the updated state
+      setScreensBuyingCount(updatedScreensBuyingCount);
 
-    refreshScreenSummary();
-  },[refreshScreenSummary, screensBuyingCount]);
-
+      refreshScreenSummary();
+    },
+    [refreshScreenSummary, screensBuyingCount]
+  );
 
   const handleScreenTypeClick = ({
     screenType,
@@ -165,24 +170,31 @@ export const ScreenSummaryTable = ({
     );
 
     stToggle[city][touchpoint][screenType] = !allSelected;
-    console.log(stToggle[city][touchpoint][screenType])
+    console.log(stToggle[city][touchpoint][screenType]);
     // Toggle screen type status based on current status
     setScreenTypeToggle(stToggle);
-    saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, {[campaignId]: stToggle});
+    saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, {
+      [campaignId]: stToggle,
+    });
 
     screens.forEach((s: any) => {
-      handleScreenClick({ screen: s, city, touchpoint, statusRes: !allSelected }); // Update individual screen status
+      handleScreenClick({
+        screen: s,
+        city,
+        touchpoint,
+        statusRes: !allSelected,
+      }); // Update individual screen status
     });
 
     // Update the screens buying count and save
     setScreensBuyingCount({ ...screensBuyingCount });
   };
-  
+
   return (
     <div className="h-full">
       {currentCity && data && Object.keys(cityZones).length > 0 && (
         <div className="w-full h-full border-r border-b">
-          <div className="bg-blue-200 grid grid-cols-12 flex items-center">
+          <div className="bg-[#D0D0D0] grid grid-cols-12 flex items-center">
             <div className="py-2 col-span-2">
               <h1 className="text-[16px] font-bold flex justify-center">
                 Touchpoints
@@ -196,11 +208,13 @@ export const ScreenSummaryTable = ({
             <div className="py-2 col-span-8 overflow-x-auto no-scrollbar">
               <div
                 className="grid grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))] gap-0"
-                style={{ width: 'calc(8rem * 8)' }} // Ensures each column has a fixed width
-              
+                style={{ width: "calc(8rem * 8)" }} // Ensures each column has a fixed width
               >
                 {Object.keys(cityZones[currentCity])?.map((d: any, i: any) => (
-                  <div className="col-span-1 border-x min-w-[2rem] truncate" key={i}>
+                  <div
+                    className="col-span-1 border-x min-w-[2rem] truncate"
+                    key={i}
+                  >
                     <h1 className="md:text-[16px] sm:text-[14px] font-bold flex justify-center truncate">
                       {d}
                     </h1>
@@ -213,9 +227,7 @@ export const ScreenSummaryTable = ({
             {Object.keys(data?.[currentCity])?.map((tp: any, i: any) => (
               <div key={i} className="grid grid-cols-12">
                 <div className="border-b border-l col-span-2 py-2 px-4 truncate">
-                  <Tooltip
-                    title={tp}
-                  >
+                  <Tooltip title={tp}>
                     <h1 className="text-[14px] truncate">{tp}</h1>
                   </Tooltip>
                 </div>
@@ -225,9 +237,7 @@ export const ScreenSummaryTable = ({
                       <div key={j} className={`grid grid-cols-10 border-b`}>
                         <div className={`col-span-2 py-2 px-4 border-x`}>
                           <div className="flex justify-between items-center">
-                            <Tooltip
-                              title={`${st}`}
-                            >
+                            <Tooltip title={`${st}`}>
                               <h1 className="text-[14px] truncate">{st}</h1>
                             </Tooltip>
                             <div
@@ -237,11 +247,10 @@ export const ScreenSummaryTable = ({
                                   myData: data[currentCity][tp][st],
                                   city: currentCity,
                                   touchpoint: tp,
-                                  statusNow: screenTypeToggle?.[currentCity]?.[
-                                    tp
-                                  ]?.[st]
-                                    // ? true
-                                    // : false,
+                                  statusNow:
+                                    screenTypeToggle?.[currentCity]?.[tp]?.[st],
+                                  // ? true
+                                  // : false,
                                 });
                               }}
                             >
@@ -255,18 +264,27 @@ export const ScreenSummaryTable = ({
                             </div>
                           </div>
                         </div>
-                        <div className={`col-span-8 overflow-x-auto no-scrollbar`}>
+                        <div
+                          className={`col-span-8 overflow-x-auto no-scrollbar`}
+                        >
                           <div
                             className="grid grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))] gap-0"
-                            style={{ width: 'calc(8rem * 8)' }} // Ensures each column has a fixed width
+                            style={{ width: "calc(8rem * 8)" }} // Ensures each column has a fixed width
                           >
                             {Object.keys(cityZones?.[currentCity])?.map(
                               (zone: any, k: any) => (
-                                <div key={k} className={`col-span-1 border-x min-w-[2rem] truncate`}>
-                                  {data?.[currentCity]?.[tp]?.[st]?.[zone]?.filter((sc: any) => {
-                                      return sc.pricePerSlot >= priceFilter?.min && sc.pricePerSlot <= priceFilter?.max
-                                    })?.map(
-                                    (screen: any, m: any) => (
+                                <div
+                                  key={k}
+                                  className={`col-span-1 border-x min-w-[2rem] truncate`}
+                                >
+                                  {data?.[currentCity]?.[tp]?.[st]?.[zone]
+                                    ?.filter((sc: any) => {
+                                      return (
+                                        sc.pricePerSlot >= priceFilter?.min &&
+                                        sc.pricePerSlot <= priceFilter?.max
+                                      );
+                                    })
+                                    ?.map((screen: any, m: any) => (
                                       <div
                                         key={m}
                                         className={`flex gap-4 justify-between py-2 px-4 border-y truncate`}
@@ -319,13 +337,11 @@ export const ScreenSummaryTable = ({
                                           </div>
                                         </div>
                                       </div>
-                                    )
-                                  )}
+                                    ))}
                                 </div>
                               )
                             )}
                           </div>
-
                         </div>
                       </div>
                     )

@@ -74,9 +74,9 @@ export const MonthRangeSlider = ({
               <span
                 className={
                   // month === 1 ?
-                  //   `text-blue-500 text-[14px] pr-0 pl-0 truncate` :
+                  //   `text-[#129BFF] text-[14px] pr-0 pl-0 truncate` :
                   // month === 9 ?
-                  //   `text-blue-500 text-[14px] text-right pr-0 pl-0 truncate` :
+                  //   `text-[#129BFF] text-[14px] text-right pr-0 pl-0 truncate` :
                   `text-[#737373] text-[14px] truncate`
                 }
               >
