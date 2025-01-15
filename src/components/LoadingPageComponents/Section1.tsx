@@ -15,7 +15,7 @@ export const Section1 = () => {
           <h1 className="text-[28px] md:text-[40px] lg:text-[48px] font-bold text-[#20272C]  leading-[45px] tracking-[-0.02em]">
             End-to-end <br />
             campaign management platform for
-            <span className="bg-primaryButton text-white rounded-[10px] text-[20px] md:text-[32px] px-2 ml-2">
+            <span className="bg-primaryButton text-[#FFFFFF] rounded-[10px] text-[20px] md:text-[32px] px-2 ml-2">
               DOOH
             </span>
           </h1>

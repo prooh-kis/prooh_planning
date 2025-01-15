@@ -71,11 +71,12 @@ export const ChangeCampaignDuration = ({ campaignId }: any) => {
     [startDate]
   );
 
-  const handleSetNewDuration = useCallback((dur: any) => {
+  const handleSetNewDuration = useCallback(
+    (dur: any) => {
       updateEndDateBasedOnDuration(dur);
-  }, [
-    updateEndDateBasedOnDuration,
-  ]);
+    },
+    [updateEndDateBasedOnDuration]
+  );
 
   const saveCampaignDetailsOnLocalStorage = useCallback(() => {
     handleSetNewDuration(duration);
@@ -147,55 +148,53 @@ export const ChangeCampaignDuration = ({ campaignId }: any) => {
           </h1>
 
           <div className="grid grid-cols-3 gap-8 pt-2">
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">
-              Start Date
-            </label>
-            <Tooltip
-              title="Select Date from when the campaign is to be started"
-            >
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
+            <div className="col-span-1 py-1">
+              <div className="block flex justify-between gap-2 items-center mb-2">
+                <label className="block text-secondaryText text-[14px]">
+                  Start Date
+                </label>
+                <Tooltip title="Select Date from when the campaign is to be started">
+                  <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+                </Tooltip>
+              </div>
+              <CalendarInput
+                placeholder="Start Date"
+                value={startDate}
+                action={setStartDate}
+                disabled={false}
+                minDate={new Date()}
+              />
+            </div>
+            <div className="col-span-1 py-1">
+              <div className="block flex justify-between gap-2 items-center mb-2">
+                <label className="block text-secondaryText text-[14px]">
+                  Duration (Days)
+                </label>
+                <Tooltip title="Enter total duration of campaigns in days">
+                  <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+                </Tooltip>
+              </div>
+              <PrimaryInput
+                inputType="number"
+                placeholder="30"
+                value={duration}
+                disabled={startDate === ""}
+                action={(e: any) => {
+                  setDuration(e);
+                  handleSetNewDuration(e);
+                }}
+              />
+            </div>
           </div>
-          <CalendarInput
-            placeholder="Start Date"
-            value={startDate}
-            action={setStartDate}
-            disabled={false}
-            minDate={new Date()}
-          />
-        </div>
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">
-              Duration (Days)
-            </label>
-            <Tooltip
-              title="Enter total duration of campaigns in days"
-            >
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
-          </div>
-            <PrimaryInput
-              inputType="number"
-              placeholder="30"
-              value={duration}
-              disabled={startDate === ""}
-              action={(e: any) => {
-                setDuration(e);
-                handleSetNewDuration(e);
-              }}
-            />
-        </div>
-      </div>
-      {endDate !== "" && startDate !== "" && duration && (
-        <h1 className="text-[12px] pt-4 text-blue-500">
-          Note: The billing of your campaign will start from {new Date(startDate).toLocaleDateString()} to {new Date(endDate).toLocaleDateString()}...
-        </h1> 
-      )}
+          {endDate !== "" && startDate !== "" && duration && (
+            <h1 className="text-[12px] pt-4 text-[#129BFF]">
+              Note: The billing of your campaign will start from{" "}
+              {new Date(startDate).toLocaleDateString()} to{" "}
+              {new Date(endDate).toLocaleDateString()}...
+            </h1>
+          )}
           <button
-            className="px-8 py-2 mt-4 text-[16px] font-semibold bg-[#1297E2] text-white rounded-md w-full"
+            className="px-8 py-2 mt-4 text-[16px] font-semibold bg-[#1297E2] text-[#FFFFFF] rounded-md w-full"
             onClick={saveCampaignDetailsOnLocalStorage}
             disabled={loadingAddDetails}
           >

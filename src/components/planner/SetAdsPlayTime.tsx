@@ -192,7 +192,7 @@ export const SetAdsPlayTime = ({
         </div>
       )}
 
-      <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
+      <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
         <Footer
           handleBack={() => {
             setCurrentStep(step - 1);

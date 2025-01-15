@@ -52,7 +52,7 @@ const MyCarousel = ({ images, showThumbnails = true }: Props) => {
           {images.map((image, index) => (
             <div
               key={index}
-              className="cursor-pointer rounded-md overflow-hidden border border-gray-200 hover:border-blue-500"
+              className="cursor-pointer rounded-md overflow-hidden border border-gray-200 hover:border-[#129BFF]"
               onClick={() => handleThumbnailClick(index)}
             >
               {image.endsWith(".mp4") ? (

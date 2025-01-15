@@ -42,132 +42,133 @@ export function MapWithGeometry(props) {
       ? props?.data["brand"][0].concat(props?.data["comp"][0])
       : [];
 
-
-
-
-function MapDrawControl({
-  onCreate = () => {},
-  onUpdate = () => {},
-  onDelete = () => {},
-  position,
-}) {
-  useControl(
-    () => new MapboxDraw({
-      displayControlsDefault: false, // Hide default controls
-      controls: {
-        polygon: true, // Enable polygon drawing
-        trash: false, // Enable delete control
-        direct_select: false, // Allow direct selection of drawn features
+  function MapDrawControl({
+    onCreate = () => {},
+    onUpdate = () => {},
+    onDelete = () => {},
+    position,
+  }) {
+    useControl(
+      () =>
+        new MapboxDraw({
+          displayControlsDefault: false, // Hide default controls
+          controls: {
+            polygon: true, // Enable polygon drawing
+            trash: false, // Enable delete control
+            direct_select: false, // Allow direct selection of drawn features
+          },
+          // defaultMode: "draw_polygon", // Set default mode to polygon drawing
+        }),
+      ({ map }) => {
+        map.on("draw.create", onCreate);
+        map.on("draw.update", onUpdate);
+        map.on("draw.delete", onDelete);
       },
-      // defaultMode: "draw_polygon", // Set default mode to polygon drawing
-    }),
-    ({ map }) => {
-      map.on("draw.create", onCreate);
-      map.on("draw.update", onUpdate);
-      map.on("draw.delete", onDelete);
-    },
-    ({ map }) => {
-      map.off("draw.create", onCreate);
-      map.off("draw.update", onUpdate);
-      map.off("draw.delete", onDelete);
-    },
-    {
-      position,
-    }
-  );
+      ({ map }) => {
+        map.off("draw.create", onCreate);
+        map.off("draw.update", onUpdate);
+        map.off("draw.delete", onDelete);
+      },
+      {
+        position,
+      }
+    );
 
     return null;
   }
 
-const updateSelectedMarkers = (polygons) => {
-  const updatedPolygons = polygons.map((polygon) => {
-    const selectedScreens = props?.allScreens.filter((screen) => {
-      const point = [
-        screen?.location.geographicalLocation?.longitude,
-        screen?.location?.geographicalLocation?.latitude,
-      ];
-      // Check if the point is inside the current polygon
-      return booleanPointInPolygon(point, polygon);
+  const updateSelectedMarkers = (polygons) => {
+    const updatedPolygons = polygons.map((polygon) => {
+      const selectedScreens = props?.allScreens.filter((screen) => {
+        const point = [
+          screen?.location.geographicalLocation?.longitude,
+          screen?.location?.geographicalLocation?.latitude,
+        ];
+        // Check if the point is inside the current polygon
+        return booleanPointInPolygon(point, polygon);
+      });
+      return { ...polygon, screens: selectedScreens };
     });
-    return { ...polygon, screens: selectedScreens };
-  });
 
-  // Update polygons in state
-  props?.setPolygons(updatedPolygons);
+    // Update polygons in state
+    props?.setPolygons(updatedPolygons);
 
-  // Collect all selected markers from all polygons
-  const allSelectedScreens = updatedPolygons.flatMap((polygon) => polygon.screens || []);
+    // Collect all selected markers from all polygons
+    const allSelectedScreens = updatedPolygons.flatMap(
+      (polygon) => polygon.screens || []
+    );
 
-  props?.onPolygonComplete(allSelectedScreens);
+    props?.onPolygonComplete(allSelectedScreens);
 
-  setSelectedMarkers(
-    allSelectedScreens.map((screen) => [
-      screen.location.geographicalLocation.longitude,
-      screen.location.geographicalLocation.latitude,
-      screen._id,
-    ])
-  );
-
-  setUnselectedMarkers(
-    props.allScreens
-      ?.filter((screen) => !allSelectedScreens.map((s) => s._id).includes(screen._id))
-      ?.map((screen) => [
+    setSelectedMarkers(
+      allSelectedScreens.map((screen) => [
         screen.location.geographicalLocation.longitude,
         screen.location.geographicalLocation.latitude,
         screen._id,
       ])
-  );
-  return updatedPolygons;
-};
+    );
 
-const onCreatePolygon = useCallback(
-  (e) => {
-    if (props?.polygons?.length < 3) {
-      const newPolygon = e.features[0];
+    setUnselectedMarkers(
+      props.allScreens
+        ?.filter(
+          (screen) => !allSelectedScreens.map((s) => s._id).includes(screen._id)
+        )
+        ?.map((screen) => [
+          screen.location.geographicalLocation.longitude,
+          screen.location.geographicalLocation.latitude,
+          screen._id,
+        ])
+    );
+    return updatedPolygons;
+  };
+
+  const onCreatePolygon = useCallback(
+    (e) => {
+      if (props?.polygons?.length < 3) {
+        const newPolygon = e.features[0];
+
+        props?.setPolygons((prevPolygons) => {
+          const updatedPolygons = [...prevPolygons, newPolygon];
+          return updateSelectedMarkers(updatedPolygons); // Update markers with all polygons
+          // return updatedPolygons;
+        });
+      } else {
+        alert("You can only create 3 polygons for selection...");
+      }
+    },
+    [props]
+  );
+
+  const onUpdatePolygon = useCallback(
+    (e) => {
+      const updatedPolygon = e.features[0];
 
       props?.setPolygons((prevPolygons) => {
-        const updatedPolygons = [...prevPolygons, newPolygon];
-        return updateSelectedMarkers(updatedPolygons); // Update markers with all polygons
+        const updatedPolygons = prevPolygons.map((polygon) =>
+          polygon.id === updatedPolygon.id ? updatedPolygon : polygon
+        );
+        return updateSelectedMarkers(updatedPolygons);
         // return updatedPolygons;
       });
-    } else {
-      alert("You can only create 3 polygons for selection...")
-    }
-  
-  },
-  [props]
-);
+    },
+    [props]
+  );
 
-const onUpdatePolygon = useCallback(
-  (e) => {
-    const updatedPolygon = e.features[0];
+  const onDeletePolygon = useCallback(
+    (e) => {
+      const deletedPolygonIds = e.features.map((feature) => feature.id);
+      console.log(deletedPolygonIds);
 
-    props?.setPolygons((prevPolygons) => {
-      const updatedPolygons = prevPolygons.map((polygon) =>
-        polygon.id === updatedPolygon.id ? updatedPolygon : polygon
-      );
-      return updateSelectedMarkers(updatedPolygons);
-      // return updatedPolygons;
-    });
-  },
-  [props]
-);
-
-const onDeletePolygon = useCallback(
-  (e) => {
-    const deletedPolygonIds = e.features.map((feature) => feature.id);
-    console.log(deletedPolygonIds);
-
-    props?.setPolygons((prevPolygons) => {
-      const remainingPolygons = prevPolygons.filter(
-        (polygon) => !deletedPolygonIds.includes(polygon.id)
-      );
-      return updateSelectedMarkers(remainingPolygons);
-      // return remainingPolygons;
-    });
-  },
-  [props]
-);
+      props?.setPolygons((prevPolygons) => {
+        const remainingPolygons = prevPolygons.filter(
+          (polygon) => !deletedPolygonIds.includes(polygon.id)
+        );
+        return updateSelectedMarkers(remainingPolygons);
+        // return remainingPolygons;
+      });
+    },
+    [props]
+  );
 
   // Get user's current location
   useEffect(() => {
@@ -282,7 +283,7 @@ const onDeletePolygon = useCallback(
 
       const data = await response.json();
 
-      setRouteData((pre) => [ ...pre, data.routes[0].geometry]);
+      setRouteData((pre) => [...pre, data.routes[0].geometry]);
       props?.handleRouteData(data.routes[0].geometry, route?.id);
     } catch (error) {
       console.log("error in  finding routes : ", error);
@@ -359,34 +360,45 @@ const onDeletePolygon = useCallback(
       }
     }
     popupRef.current?.trackPointer();
-
   }, [selectedMarkers, popupRef.current]);
 
   return (
     <div className="relative h-full w-full items-top">
       <div className="flex flex-col items-end gap-2 right-2 pt-2 absolute z-10">
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-blue-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Selected Screens</h1>
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-[#F4F9FF] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
+            Selected Screens
+          </h1>
           <div className="h-4 w-4 bg-primaryButton rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-[#F9462310] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Unselected Screens</h1>
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-[#F9462310] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
+            Unselected Screens
+          </h1>
           <div className="h-4 w-4 bg-[#F94623] rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-green-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Near Brand Store</h1>
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-green-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
+            Near Brand Store
+          </h1>
           <div className="h-4 w-4 bg-green-700 rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-orange-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Near Competitor Store</h1>
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-orange-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
+            Near Competitor Store
+          </h1>
           <div className="h-4 w-4 bg-orange-300 rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-violet-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Route Starting Point</h1>
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-violet-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
+            Route Starting Point
+          </h1>
           <div className="h-4 w-4 bg-violet-500 rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-pink-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Route Ending Point</h1>
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-pink-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
+            Route Ending Point
+          </h1>
           <div className="h-4 w-4 bg-pink-500 rounded-full"></div>
         </div>
       </div>
@@ -394,7 +406,7 @@ const onDeletePolygon = useCallback(
         <ReactMapGL
           ref={mapRef}
           initialViewState={viewState}
-          style={{ borderRadius: "10px"}}
+          style={{ borderRadius: "10px" }}
           mapStyle="mapbox://styles/vviicckkyy55/cm4l7klx300fx01sf61uthrog"
           mapboxAccessToken={
             process.env.REACT_APP_MAPBOX ||
@@ -403,39 +415,42 @@ const onDeletePolygon = useCallback(
           onMove={(e) => setViewState(e.viewState)}
         >
           {/* {selectedMarkers && ( */}
-            <MapDrawControl
-              position="top-left"
-              onCreate={onCreatePolygon}
-              onUpdate={onUpdatePolygon}
-              onDelete={onDeletePolygon}
-            />
+          <MapDrawControl
+            position="top-left"
+            onCreate={onCreatePolygon}
+            onUpdate={onUpdatePolygon}
+            onDelete={onDeletePolygon}
+          />
           {/* )} */}
 
-          {selectedMarkers && selectedMarkers.length > 0 && selectedMarkers.map((marker, i) => (
-            <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
-              <div 
-                title={`Selected screens ${props?.filteredScreens?.length}`}
-                className="cursor-pointer"
-                onMouseEnter={(e) => {
-                  e.stopPropagation();
-                  setIsSelectedData(true);
-                  getSingleScreenData(marker[2]);
-                }}
-                onMouseLeave={(e) => {
-                  // e.stopPropagation();
-                  // setScreenData(null);
-                }}
-              >
-                <i className="fi fi-ss-circle text-primaryButton text-[14px]"
-                  onClick={(e) => {
+          {selectedMarkers &&
+            selectedMarkers.length > 0 &&
+            selectedMarkers.map((marker, i) => (
+              <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
+                <div
+                  title={`Selected screens ${props?.filteredScreens?.length}`}
+                  className="cursor-pointer"
+                  onMouseEnter={(e) => {
                     e.stopPropagation();
                     setIsSelectedData(true);
                     getSingleScreenData(marker[2]);
                   }}
-                ></i>
-              </div>
-            </Marker>
-          ))}
+                  onMouseLeave={(e) => {
+                    // e.stopPropagation();
+                    // setScreenData(null);
+                  }}
+                >
+                  <i
+                    className="fi fi-ss-circle text-primaryButton text-[14px]"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsSelectedData(true);
+                      getSingleScreenData(marker[2]);
+                    }}
+                  ></i>
+                </div>
+              </Marker>
+            ))}
           {unSelectedMarkers?.length !== selectedMarkers?.length &&
             unSelectedMarkers &&
             unSelectedMarkers.map((marker, i) => (
@@ -443,9 +458,7 @@ const onDeletePolygon = useCallback(
                 <div
                   title={`UnSeletced screens ${
                     props.allScreens?.filter((s) =>
-                      props?.filteredScreens
-                        ?.map((f) => f._id)
-                        .includes(s._id)
+                      props?.filteredScreens?.map((f) => f._id).includes(s._id)
                     )?.length
                   }`}
                   className="cursor-pointer"
@@ -492,75 +505,91 @@ const onDeletePolygon = useCallback(
             </Popup>
           )}
 
-          {routeData?.length > 0 && routeData?.map((route, index) => (
-            <Marker key={index} latitude={route?.coordinates[0]?.[1]} longitude={route?.coordinates[0]?.[0]}>
-              <div>
-              <i className="fi fi-sr-marker text-violet-500 text-[24px]"></i>
-              </div>
-            </Marker>
-          ))}
-          {routeData?.length > 0 && routeData?.map((route, index) => (
-            <Marker key={index} latitude={route?.coordinates[route?.coordinates?.length - 1]?.[1]} longitude={route?.coordinates[route?.coordinates?.length - 1]?.[0]}>
-              <div>
-              <i className="fi fi-sr-marker text-pink-500 text-[24px]"></i>
-              </div>
-            </Marker>
-          ))}
-           {routeData?.length > 0 &&
-              routeData.map((route, index) => {
-                // Create the route LineString
-                const lineString = {
-                  type: "Feature",
-                  properties: {},
-                  geometry: {
-                    type: "LineString",
-                    coordinates: route.coordinates,
-                  },
-                };
+          {routeData?.length > 0 &&
+            routeData?.map((route, index) => (
+              <Marker
+                key={index}
+                latitude={route?.coordinates[0]?.[1]}
+                longitude={route?.coordinates[0]?.[0]}
+              >
+                <div>
+                  <i className="fi fi-sr-marker text-violet-500 text-[24px]"></i>
+                </div>
+              </Marker>
+            ))}
+          {routeData?.length > 0 &&
+            routeData?.map((route, index) => (
+              <Marker
+                key={index}
+                latitude={
+                  route?.coordinates[route?.coordinates?.length - 1]?.[1]
+                }
+                longitude={
+                  route?.coordinates[route?.coordinates?.length - 1]?.[0]
+                }
+              >
+                <div>
+                  <i className="fi fi-sr-marker text-pink-500 text-[24px]"></i>
+                </div>
+              </Marker>
+            ))}
+          {routeData?.length > 0 &&
+            routeData.map((route, index) => {
+              // Create the route LineString
+              const lineString = {
+                type: "Feature",
+                properties: {},
+                geometry: {
+                  type: "LineString",
+                  coordinates: route.coordinates,
+                },
+              };
 
-                // Generate the buffer polygon using turf.buffer
-                const bufferPolygon = turf.buffer(lineString, 1, { units: "kilometers" }); // Buffer of 1km
+              // Generate the buffer polygon using turf.buffer
+              const bufferPolygon = turf.buffer(lineString, 1, {
+                units: "kilometers",
+              }); // Buffer of 1km
 
-                // Generate colors
-                const lineColor = randomColor(index);
-                const bufferColor = `${lineColor}`; // Lighter shade using 80% opacity
+              // Generate colors
+              const lineColor = randomColor(index);
+              const bufferColor = `${lineColor}`; // Lighter shade using 80% opacity
 
-                return (
-                  <React.Fragment key={index}>
-                    {/* Render the buffer */}
-                    <Source
-                      id={`buffer-${index}`}
-                      type="geojson"
-                      data={bufferPolygon}
-                    >
-                      <Layer
-                        id={`buffer-layer-${index}`}
-                        type="fill"
-                        paint={{
-                          "fill-color": bufferColor,
-                          "fill-opacity": 0.4, // Optional opacity adjustment
-                        }}
-                      />
-                    </Source>
+              return (
+                <React.Fragment key={index}>
+                  {/* Render the buffer */}
+                  <Source
+                    id={`buffer-${index}`}
+                    type="geojson"
+                    data={bufferPolygon}
+                  >
+                    <Layer
+                      id={`buffer-layer-${index}`}
+                      type="fill"
+                      paint={{
+                        "fill-color": bufferColor,
+                        "fill-opacity": 0.4, // Optional opacity adjustment
+                      }}
+                    />
+                  </Source>
 
-                    {/* Render the route */}
-                    <Source
-                      id={`route-${index}`}
-                      type="geojson"
-                      data={lineString}
-                    >
-                      <Layer
-                        id={`route-layer-${index}`}
-                        type="line"
-                        paint={{
-                          "line-color": lineColor,
-                          "line-width": 4,
-                        }}
-                      />
-                    </Source>
-                  </React.Fragment>
-                );
-              })}
+                  {/* Render the route */}
+                  <Source
+                    id={`route-${index}`}
+                    type="geojson"
+                    data={lineString}
+                  >
+                    <Layer
+                      id={`route-layer-${index}`}
+                      type="line"
+                      paint={{
+                        "line-color": lineColor,
+                        "line-width": 4,
+                      }}
+                    />
+                  </Source>
+                </React.Fragment>
+              );
+            })}
 
           <Source id="circle-data" type="geojson" data={circlesData}>
             <Layer
@@ -574,10 +603,14 @@ const onDeletePolygon = useCallback(
             />
           </Source>
 
-          <Source id="polygon-data" type="geojson" data={{
+          <Source
+            id="polygon-data"
+            type="geojson"
+            data={{
               type: "FeatureCollection",
-              features: props?.polygons
-          }}>
+              features: props?.polygons,
+            }}
+          >
             <Layer
               id="polygon-layer"
               type="fill"

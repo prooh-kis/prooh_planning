@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const PlanYourCampaign = ({ }: any) => {
+export const PlanYourCampaign = ({}: any) => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0); // Track the current item index
   const scrollRef = useRef<HTMLDivElement>(null); // Ref for the scrollable middle column
@@ -46,14 +46,13 @@ export const PlanYourCampaign = ({ }: any) => {
     }
   };
 
-
   return (
     <div className="lg:px-4 px-0 w-full">
       {/* so in mobile and hide in tablet and laptop */}
       <div className="block lg:hidden">
         <section className="relative px-4 w-full">
           {/* Header Section */}
-          <div className="relative z-10 mx-auto max-w-6xl bg-primaryButton text-white rounded-lg px-4 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+          <div className="relative z-10 mx-auto max-w-6xl bg-primaryButton text-[#FFFFFF] rounded-lg px-4 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between">
             <div className="flex items-start sm:items-center gap-4">
               <i
                 className="fi fi-sr-time-fast text-2xl sm:text-3xl"
@@ -70,7 +69,7 @@ export const PlanYourCampaign = ({ }: any) => {
               </div>
             </div>
             <button
-              className="mt-4 sm:mt-0 text-[#183246]  text-lg sm:text-xl font-bold w-full sm:w-auto bg-white rounded-full px-6 py-3 hover:bg-gray-100 transition-all"
+              className="mt-4 sm:mt-0 text-[#183246]  text-lg sm:text-xl font-bold w-full sm:w-auto bg-[#FFFFFF] rounded-full px-6 py-3 hover:bg-gray-100 transition-all"
               // onClick={() => alert("Request Demo clicked")}
               onClick={() => navigate("/auth")}
             >
@@ -79,7 +78,7 @@ export const PlanYourCampaign = ({ }: any) => {
           </div>
 
           {/* Main Content Section */}
-          <div className="mt-8 bg-gradient-to-b from-[#13202A] to-[#072E4A] rounded-lg py-8 px-4 sm:px-8 lg:px-16 text-white">
+          <div className="mt-8 bg-gradient-to-b from-[#13202A] to-[#072E4A] rounded-lg py-8 px-4 sm:px-8 lg:px-16 text-[#FFFFFF]">
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-6">
               {/* Left Column */}
               <div className="sm:col-span-6 flex flex-col">
@@ -100,7 +99,7 @@ export const PlanYourCampaign = ({ }: any) => {
                   some reasons why you should use our platform:
                 </p>
                 <button
-                  className="mt-8 bg-[#129BFF] text-white text-base font-bold py-3 px-6 rounded-md hover:bg-white hover:text-[#129BFF] transition-all"
+                  className="mt-8 bg-[#129BFF] text-[#FFFFFF] text-base font-bold py-3 px-6 rounded-md hover:bg-[#FFFFFF] hover:text-[#129BFF] transition-all"
                   onClick={() => navigate("/auth")}
                 >
                   Plan Now
@@ -135,7 +134,7 @@ export const PlanYourCampaign = ({ }: any) => {
       </div>
       <div className="hidden lg:block">
         <div className="relative ">
-          <div className="relative z-10 mx-28 text-white bg-primaryButton rounded-[16px] px-4 py-2 flex justify-between items-center">
+          <div className="relative z-10 mx-28 text-[#FFFFFF] bg-primaryButton rounded-[16px] px-4 py-2 flex justify-between items-center">
             <div className="flex items-center gap-4">
               <i className="fi fi-sr-time-fast text-[28px]"></i>
               <div>
@@ -151,7 +150,8 @@ export const PlanYourCampaign = ({ }: any) => {
               </div>
             </div>
             <div className="px-4">
-              <button className="text-[#183246] text-[20px] font-bold h-[60pz] w-[181px] bg-white rounded-[72px] px-[3px] py-[20px] hover:bg-white hover:text-[#183246]"
+              <button
+                className="text-[#183246] text-[20px] font-bold h-[60pz] w-[181px] bg-[#FFFFFF] rounded-[72px] px-[3px] py-[20px] hover:bg-[#FFFFFF] hover:text-[#183246]"
                 onClick={() => navigate("/auth")}
               >
                 Request Demo
@@ -159,7 +159,7 @@ export const PlanYourCampaign = ({ }: any) => {
             </div>
           </div>
           <div className="absolute top-1/2 left-0 w-full bg-gradient-to-b from-[#13202A] to-[#072E4A] rounded-[26px]">
-            <div className="grid grid-cols-12 text-white gap-2 mt-16">
+            <div className="grid grid-cols-12 text-[#FFFFFF] gap-2 mt-16">
               <div className="col-span-6 p-32">
                 <div className="flex items-center gap-2">
                   <i className="fi fi-ss-sparkles"></i>
@@ -174,7 +174,8 @@ export const PlanYourCampaign = ({ }: any) => {
                   Our platform helps your business in managing expenses. These
                   are some of the reasons why you should use our platform in
                 </p>
-                <button className="text-[#FFFFFF] text-[20px] font-bold h-[50pz] w-[153px] bg-[#129BFF] rounded-[12px] px-[31px] py-[7px] mt-8 hover:bg-white hover:text-[#129BFF]"
+                <button
+                  className="text-[#FFFFFF] text-[20px] font-bold h-[50pz] w-[153px] bg-[#129BFF] rounded-[12px] px-[31px] py-[7px] mt-8 hover:bg-[#FFFFFF] hover:text-[#129BFF]"
                   onClick={() => navigate("/auth")}
                 >
                   Plan Now

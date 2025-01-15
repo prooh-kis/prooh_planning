@@ -25,7 +25,7 @@ export function ConformationModel({ handleConfirm }: Props) {
   return (
     <div className="truncate">
       <button
-        className="border border-1 py-2 w-full rounded-md bg-gray-200 mt-4 hover:bg-gray-500 hover:text-white font-semibold"
+        className="border border-1 py-2 w-full rounded-md bg-gray-200 mt-4 hover:bg-gray-500 hover:text-[#FFFFFF] font-semibold"
         onClick={handleOpen}
       >
         Save creative
@@ -67,7 +67,7 @@ export function ConformationModel({ handleConfirm }: Props) {
               No
             </button>
             <button
-              className="border border-1 py-1 px-8 bg-blue-600 text-white rounded-md"
+              className="border border-1 py-1 px-8 bg-[#129BFF] text-[#FFFFFF] rounded-md"
               onClick={() => {
                 confirm(true);
               }}

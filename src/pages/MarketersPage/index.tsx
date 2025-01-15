@@ -23,10 +23,10 @@ export const MarketersPage: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          <h1 className="text-white text-4xl sm:text-5xl lg:text-[60px] font-bold">
+          <h1 className="text-[#FFFFFF] text-4xl sm:text-5xl lg:text-[60px] font-bold">
             MARKETERS
           </h1>
-          <h1 className="text-white text-xl sm:text-2xl lg:text-[30px] font-bold mt-2">
+          <h1 className="text-[#FFFFFF] text-xl sm:text-2xl lg:text-[30px] font-bold mt-2">
             Because Reach Matters
           </h1>
         </motion.div>

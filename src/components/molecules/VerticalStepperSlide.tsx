@@ -10,7 +10,13 @@ interface StepSliderProps {
   stepLabels?: any;
 }
 
-export const VerticalStepperSlider: React.FC<StepSliderProps> = ({ setStep, steps, step, setTrigger, trigger }) => {
+export const VerticalStepperSlider: React.FC<StepSliderProps> = ({
+  setStep,
+  steps,
+  step,
+  setTrigger,
+  trigger,
+}) => {
   // Example labels for each step
   const stepLabels = [
     {
@@ -32,12 +38,10 @@ export const VerticalStepperSlider: React.FC<StepSliderProps> = ({ setStep, step
     if (step !== 3) {
       setStep(step);
       const triggerType: any = {};
-      triggerType["triggerType"] = stepLabels[step-1].value
+      triggerType["triggerType"] = stepLabels[step - 1].value;
       setTrigger(triggerType);
     }
   };
-
-
 
   return (
     <div className="h-full py-0 px-5 flex flex-col w-full">
@@ -54,14 +58,18 @@ export const VerticalStepperSlider: React.FC<StepSliderProps> = ({ setStep, step
               <div
                 className={`transition-all duration-500 rounded-full flex items-center ${
                   i + 1 === step
-                    ? "h-4 w-4 bg-white border-2 border-[#166235] ml-[-2px]" // Active step circle
+                    ? "h-4 w-4 bg-[#FFFFFF] border-2 border-[#166235] ml-[-2px]" // Active step circle
                     : "h-3 w-3 bg-gray-100 border border-gray-100" // Inactive step circle
                 }`}
               ></div>
 
               {/* Step label */}
               <Tooltip
-                title={i+1 === 3 ? "Sporting events based triggers coming soon..." : `Click to select "${stepLabels[i]?.label}" trigger`}
+                title={
+                  i + 1 === 3
+                    ? "Sporting events based triggers coming soon..."
+                    : `Click to select "${stepLabels[i]?.label}" trigger`
+                }
               >
                 <span
                   className={`px-2 ${
@@ -71,7 +79,6 @@ export const VerticalStepperSlider: React.FC<StepSliderProps> = ({ setStep, step
                   {stepLabels[i]?.label}
                 </span>
               </Tooltip>
-
             </div>
           ))}
         </div>

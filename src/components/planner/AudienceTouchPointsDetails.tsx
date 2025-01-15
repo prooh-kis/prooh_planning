@@ -13,10 +13,26 @@ import {
 } from "../tables";
 import { useDispatch, useSelector } from "react-redux";
 import { Footer } from "../../components/footer";
-import { getPlanningPageFooterData, getScreenDataForAdvanceFilters, getScreensAudiencesData, getScreensCostData } from "../../actions/screenAction";
-import { AUDIENCE_DATA, CAMPAIGN, COST_SUMMARY, FULL_CAMPAIGN_PLAN, SELECTED_AUDIENCE_TOUCHPOINTS, TOTAL_SCREEN_COST_DATA } from "../../constants/localStorageConstants";
+import {
+  getPlanningPageFooterData,
+  getScreenDataForAdvanceFilters,
+  getScreensAudiencesData,
+  getScreensCostData,
+} from "../../actions/screenAction";
+import {
+  AUDIENCE_DATA,
+  CAMPAIGN,
+  COST_SUMMARY,
+  FULL_CAMPAIGN_PLAN,
+  SELECTED_AUDIENCE_TOUCHPOINTS,
+  TOTAL_SCREEN_COST_DATA,
+} from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { ALL_COHORTS, ALL_MARKETS, ALL_TOUCHPOINTS } from "../../constants/helperConstants";
+import {
+  ALL_COHORTS,
+  ALL_MARKETS,
+  ALL_TOUCHPOINTS,
+} from "../../constants/helperConstants";
 
 interface EnterAudienceTouchpointDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -51,13 +67,23 @@ export const AudienceTouchPointsDetails = ({
   const [totalScreensData, setTotalScreensData] = useState<any>({});
   const [selectedScreensData, setSelectedScreensData] = useState<any>({});
 
-  const [selectedMarket, setSelectedMarket] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.markets || []);
-  const [selectedGender, setSelectedGender] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender === "male" ? ["Male"] :
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender === "female" ? ["Female"] : ["Male", "Female"]
+  const [selectedMarket, setSelectedMarket] = useState<any>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.markets || []
   );
-  const [selectedAudiences, setSelectedAudiences] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts || []);
-  const [selectedTouchPoints, setSelectedTouchPoints] = useState<any>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints || []);
+  const [selectedGender, setSelectedGender] = useState<any>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender === "male"
+      ? ["Male"]
+      : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender ===
+        "female"
+      ? ["Female"]
+      : ["Male", "Female"]
+  );
+  const [selectedAudiences, setSelectedAudiences] = useState<any>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts || []
+  );
+  const [selectedTouchPoints, setSelectedTouchPoints] = useState<any>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints || []
+  );
 
   const [showIconHighlight, setShowIconHighlight] = useState<any>(false);
 
@@ -80,9 +106,9 @@ export const AudienceTouchPointsDetails = ({
   } = screensCostDataGet;
 
   const getMatchedData = (myData: any) => {
-    const {id, ...marketData} = myData;
+    const { id, ...marketData } = myData;
     setMarkets(marketData);
-    
+
     let audiencesData: any = {};
     for (const market in myData) {
       for (const audience in myData[market]["audience"]) {
@@ -92,8 +118,10 @@ export const AudienceTouchPointsDetails = ({
     }
     setAudiences(audiencesData);
     setSelectedAudiences(
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts.length !== 0 ?
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts : Object.keys(audiencesData)
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts
+        .length !== 0
+        ? getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts
+        : Object.keys(audiencesData)
     );
     let touchPointsData: any = {};
     for (const market in myData) {
@@ -110,15 +138,26 @@ export const AudienceTouchPointsDetails = ({
 
     setTouchPoints(touchPointsData);
     setSelectedTouchPoints(
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints.length !== 0 ?
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints : Object.keys(touchPointsData)
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints
+        .length !== 0
+        ? getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints
+        : Object.keys(touchPointsData)
     );
 
-    if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender === "male") {
+    if (
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender ===
+      "male"
+    ) {
       setSelectedGender(["Male"]);
-    } else if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender === "female") {
+    } else if (
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender ===
+      "female"
+    ) {
       setSelectedGender(["Female"]);
-    } else if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender === "both") {
+    } else if (
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender ===
+      "both"
+    ) {
       setSelectedGender(["Male", "Female"]);
     }
 
@@ -134,24 +173,41 @@ export const AudienceTouchPointsDetails = ({
     dispatch(
       getScreensAudiencesData({
         id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
-        markets: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.markets,
-      })
-    );
-    
-    dispatch(
-      getScreensCostData({
-        id: campaignId,
-        cohorts: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts.length !== 0 ? getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts : ALL_COHORTS,
-        touchPoints: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints.length !== 0 ? getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints : ALL_TOUCHPOINTS,
-        duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
-        gender: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender !== "" ? getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender : "both",
+        markets:
+          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.markets,
       })
     );
 
-    dispatch(getPlanningPageFooterData({
-      id: campaignId,
-      pageName: "step1"
-    }));
+    dispatch(
+      getScreensCostData({
+        id: campaignId,
+        cohorts:
+          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts
+            .length !== 0
+            ? getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts
+            : ALL_COHORTS,
+        touchPoints:
+          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints
+            .length !== 0
+            ? getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+                ?.touchPoints
+            : ALL_TOUCHPOINTS,
+        duration:
+          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
+        gender:
+          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender !==
+          ""
+            ? getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender
+            : "both",
+      })
+    );
+
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "step1",
+      })
+    );
 
     dispatch(
       getScreenDataForAdvanceFilters({
@@ -162,28 +218,31 @@ export const AudienceTouchPointsDetails = ({
   }, [dispatch]);
 
   useEffect(() => {
-
     if (screensCost) {
-      saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, {[campaignId]: screensCost});
+      saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, {
+        [campaignId]: screensCost,
+      });
       setCostData(screensCost);
-      saveDataOnLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS, {[campaignId]: {
-        cohorts: selectedAudiences,
-        touchPoints: selectedTouchPoints,
-        gender: selectedGender.length === 1 && selectedGender.includes("Male")
-          ? "male"
-          : selectedGender.length === 1 && selectedGender.includes("Female")
-          ? "female"
-          : "both",
-        duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30,
-      }});
+      saveDataOnLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS, {
+        [campaignId]: {
+          cohorts: selectedAudiences,
+          touchPoints: selectedTouchPoints,
+          gender:
+            selectedGender.length === 1 && selectedGender.includes("Male")
+              ? "male"
+              : selectedGender.length === 1 && selectedGender.includes("Female")
+              ? "female"
+              : "both",
+          duration:
+            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+              ?.duration || 30,
+        },
+      });
     }
-
   }, [screensCost]);
 
   useEffect(() => {
-    if (
-      screensAudiences 
-    ) {
+    if (screensAudiences) {
       getMatchedData(screensAudiences);
     } else {
       getMatchedData(
@@ -201,17 +260,21 @@ export const AudienceTouchPointsDetails = ({
       getScreensCostData({
         id: campaignId,
         cohorts: input.type === "cohorts" ? input.data : selectedAudiences,
-        touchPoints: input.type === "touchPoints" ? input.data : selectedTouchPoints,
-        duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
-        gender: input.type === "gender" ? input.data :
-          selectedGender.length === 1 && selectedGender.includes("Male")
+        touchPoints:
+          input.type === "touchPoints" ? input.data : selectedTouchPoints,
+        duration:
+          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
+        gender:
+          input.type === "gender"
+            ? input.data
+            : selectedGender.length === 1 && selectedGender.includes("Male")
             ? "male"
             : selectedGender.length === 1 && selectedGender.includes("Female")
             ? "female"
             : "both",
       })
     );
-  }
+  };
 
   return (
     <div className="w-full py-3">
@@ -233,7 +296,6 @@ export const AudienceTouchPointsDetails = ({
             selectedGender={selectedGender}
             setSelectedGender={setSelectedGender}
           />
-          
         </div>
         <div ref={audienceRef} className="col-span-3 flex justify-center">
           <AudienceCohortTable
@@ -246,7 +308,6 @@ export const AudienceTouchPointsDetails = ({
             selectedAudiences={selectedAudiences}
             setSelectedAudiences={setSelectedAudiences}
           />
-
         </div>
         <div ref={touchpointRef} className="col-span-3 flex justify-center">
           <TouchpointTable
@@ -267,36 +328,47 @@ export const AudienceTouchPointsDetails = ({
           and location target audience and location location
         </h1>
       </div>
-      <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
+      <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
         <Footer
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
           handleSave={() => {
-            if(locked?.cohorts === false || locked?.touchPoints === false) {
+            if (locked?.cohorts === false || locked?.touchPoints === false) {
               setShowIconHighlight(true);
-              alert("Please confirm target audience and touch points by clicking on the lock icons...");
+              alert(
+                "Please confirm target audience and touch points by clicking on the lock icons..."
+              );
               // setShowIconHighlight(false);
               return;
             } else {
-              dispatch(addDetailsToCreateCampaign({
-                pageName: "Audience And TouchPoint Page",
-                id: campaignId,
-                markets: Object.keys(getDataFromLocalStorage(AUDIENCE_DATA)?.[campaignId]),
-                cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.[campaignId]?.cohorts,
-                touchPoints: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.[campaignId]?.touchPoints,
-                gender: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.[campaignId]?.gender,
-                screensSelectedCount: screensCost?.screensSelectedCount, 
-                impressionSelectedCount: screensCost?.impressionSelectedCount,
-                budgetSelected: screensCost?.budgetSelected,
-                cpmSelected: screensCost?.cpmSelected, 
-              }));
-              
+              dispatch(
+                addDetailsToCreateCampaign({
+                  pageName: "Audience And TouchPoint Page",
+                  id: campaignId,
+                  markets: Object.keys(
+                    getDataFromLocalStorage(AUDIENCE_DATA)?.[campaignId]
+                  ),
+                  cohorts: getDataFromLocalStorage(
+                    SELECTED_AUDIENCE_TOUCHPOINTS
+                  )?.[campaignId]?.cohorts,
+                  touchPoints: getDataFromLocalStorage(
+                    SELECTED_AUDIENCE_TOUCHPOINTS
+                  )?.[campaignId]?.touchPoints,
+                  gender: getDataFromLocalStorage(
+                    SELECTED_AUDIENCE_TOUCHPOINTS
+                  )?.[campaignId]?.gender,
+                  screensSelectedCount: screensCost?.screensSelectedCount,
+                  impressionSelectedCount: screensCost?.impressionSelectedCount,
+                  budgetSelected: screensCost?.budgetSelected,
+                  cpmSelected: screensCost?.cpmSelected,
+                })
+              );
+
               setCurrentStep(step + 1);
-              saveDataOnLocalStorage(COST_SUMMARY, {[campaignId]:[
-                selectedScreensData,
-                totalScreensData,
-              ]});
+              saveDataOnLocalStorage(COST_SUMMARY, {
+                [campaignId]: [selectedScreensData, totalScreensData],
+              });
             }
           }}
           campaignId={campaignId}

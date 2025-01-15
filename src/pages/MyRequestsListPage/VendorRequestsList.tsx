@@ -1,121 +1,139 @@
-import { TabWithoutIcon } from '../../components/index';
-import { PrimaryButton } from '../../components/atoms/PrimaryButton';
-import { PrimaryInput } from '../../components/atoms/PrimaryInput';
-import React, { useEffect, useState } from 'react';
-import { MyRequestsListTable, VendorConfirmationBasicTable, VendorConfirmationStatusTable } from '../../components/tables';
-import { SecondaryButton } from '../../components/atoms/SecondaryButton';
-import { useDispatch } from 'react-redux';
-import { changeCampaignStatusAfterVendorApproval } from '../../actions/campaignAction';
+import { TabWithoutIcon } from "../../components/index";
+import { PrimaryButton } from "../../components/atoms/PrimaryButton";
+import { PrimaryInput } from "../../components/atoms/PrimaryInput";
+import React, { useEffect, useState } from "react";
+import {
+  MyRequestsListTable,
+  VendorConfirmationBasicTable,
+  VendorConfirmationStatusTable,
+} from "../../components/tables";
+import { SecondaryButton } from "../../components/atoms/SecondaryButton";
+import { useDispatch } from "react-redux";
+import { changeCampaignStatusAfterVendorApproval } from "../../actions/campaignAction";
 
-const allTabs = [{
-  id: "1",
-  label: "All"
-},{
-  id: "2",
-  label: "Approved"
-},{
-  id: "3",
-  label: "Pending"
-},{
-  id: "4",
-  label: "Rejected"
-}];
+const allTabs = [
+  {
+    id: "1",
+    label: "All",
+  },
+  {
+    id: "2",
+    label: "Approved",
+  },
+  {
+    id: "3",
+    label: "Pending",
+  },
+  {
+    id: "4",
+    label: "Rejected",
+  },
+];
 
-
-export const VendorsRequestsList = ({requestsList, userInfo}: any) => {
+export const VendorsRequestsList = ({ requestsList, userInfo }: any) => {
   const dispatch = useDispatch<any>();
   const [currentTab, setCurrentTab] = useState<any>("1");
   const [showDetails, setShowDetails] = useState<any>({
     show: false,
     data: {},
   });
-  const [planRequest, setPlanRequest] = useState<any>([{
-    campaignCreationId: "",
-    campaignName: "",
-    brandName: "",
-    clientName: "",
-    type: "",
-    totalCampaignBudget: 0,
-    startDate: "",
-    endDate: "",
-    duration: "",
-    campaigns: [],
-    screens: [],
-  }]);
+  const [planRequest, setPlanRequest] = useState<any>([
+    {
+      campaignCreationId: "",
+      campaignName: "",
+      brandName: "",
+      clientName: "",
+      type: "",
+      totalCampaignBudget: 0,
+      startDate: "",
+      endDate: "",
+      duration: "",
+      campaigns: [],
+      screens: [],
+    },
+  ]);
 
   const [selectedCampaignIds, setSelectedCampaignIds] = useState<any>([]);
 
   useEffect(() => {
     if (requestsList?.length > 0) {
-      setPlanRequest(requestsList?.reduce((acc: any, item: any) => {
-        if (!Array.isArray(acc)) {
-          acc = [];
-        }
-        const existingCampaign = acc.find((campaign: any) => campaign.campaignCreationId === item.campaignCreationId);
-      
-        const totalSlotBooked = Number(item.totalSlotBooked);
-        const pricePerSlot = Number(item.pricePerSlot);
-        const cost = totalSlotBooked * pricePerSlot;
-
-        if (!existingCampaign) {
-          acc.push({
-            campaignCreationId: item.campaignCreationId,
-            name: item.name,
-            brandName: item.brandName,
-            clientName: item.clientName,
-            campaignType: item.campaignType,
-            totalCampaignBudget: cost,
-            startDate: item.startDate,
-            endDate: item.endDate,
-            duration: item.campaignDuration,
-            campaigns: [item], // You can adjust this if you have multiple campaigns per ID
-            triggers: item.triggers
-          })
-        } else {
-        
-          existingCampaign.totalCampaignBudget += cost;
-          if (!existingCampaign.campaigns.includes(item)) {
-            existingCampaign.campaigns.push(item);
+      setPlanRequest(
+        requestsList?.reduce((acc: any, item: any) => {
+          if (!Array.isArray(acc)) {
+            acc = [];
           }
-        }
+          const existingCampaign = acc.find(
+            (campaign: any) =>
+              campaign.campaignCreationId === item.campaignCreationId
+          );
 
-        return acc;
+          const totalSlotBooked = Number(item.totalSlotBooked);
+          const pricePerSlot = Number(item.pricePerSlot);
+          const cost = totalSlotBooked * pricePerSlot;
 
-      },[]))
-      
+          if (!existingCampaign) {
+            acc.push({
+              campaignCreationId: item.campaignCreationId,
+              name: item.name,
+              brandName: item.brandName,
+              clientName: item.clientName,
+              campaignType: item.campaignType,
+              totalCampaignBudget: cost,
+              startDate: item.startDate,
+              endDate: item.endDate,
+              duration: item.campaignDuration,
+              campaigns: [item], // You can adjust this if you have multiple campaigns per ID
+              triggers: item.triggers,
+            });
+          } else {
+            existingCampaign.totalCampaignBudget += cost;
+            if (!existingCampaign.campaigns.includes(item)) {
+              existingCampaign.campaigns.push(item);
+            }
+          }
+
+          return acc;
+        }, [])
+      );
     }
-
-  },[requestsList]);
+  }, [requestsList]);
   return (
     <div className="w-full">
-
       <div className="flex justify-between py-2">
         <TabWithoutIcon
           currentTab={currentTab}
           setCurrentTab={setCurrentTab}
           tabData={allTabs}
         />
-        <div className="flex items-center"
-          onClick={() => setShowDetails({
-            show: !showDetails.show,
-            data: {}
-            }
-          )}
+        <div
+          className="flex items-center"
+          onClick={() =>
+            setShowDetails({
+              show: !showDetails.show,
+              data: {},
+            })
+          }
         >
-          <h1 className="text-[16px] text-blue-500">
-            Back
-          </h1>
+          <h1 className="text-[16px] text-[#129BFF]">Back</h1>
         </div>
       </div>
       <div className="w-full">
         {!showDetails.show ? (
-          <MyRequestsListTable requestsList={planRequest} setShowDetails={setShowDetails} showDetails={showDetails} />
+          <MyRequestsListTable
+            requestsList={planRequest}
+            setShowDetails={setShowDetails}
+            showDetails={showDetails}
+          />
         ) : (
           <div>
-            <VendorConfirmationBasicTable vendorConfirmationData={showDetails?.data} />
+            <VendorConfirmationBasicTable
+              vendorConfirmationData={showDetails?.data}
+            />
             <div className="">
               <div className="py-2 flex justify-between items-center">
-                <h1>Screens Selected ({ showDetails?.data?.campaigns?.length })</h1>
+                <h1>
+                  Screens Selected ({showDetails?.data?.campaigns?.length})
+                </h1>
                 <div className="flex gap-4">
                   <PrimaryButton
                     title="Approve"
@@ -123,7 +141,7 @@ export const VendorsRequestsList = ({requestsList, userInfo}: any) => {
                     action={() => {
                       dispatch(
                         changeCampaignStatusAfterVendorApproval({
-                          ids: selectedCampaignIds
+                          ids: selectedCampaignIds,
                         })
                       );
                     }}

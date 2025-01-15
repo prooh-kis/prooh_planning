@@ -6,7 +6,7 @@ export function LandingPageMapFooter({ data }: any) {
   const [year, setYear] = useState<any>("All");
 
   return (
-    <div className="w-full bg-white rounded-[12px]">
+    <div className="w-full bg-[#FFFFFF] rounded-[12px]">
       <div className="flex flex-col gap-4 py-2 w-full lg:w-[413px]">
         <h1 className="text-[40px] leading-[48px] font-bold tracking-[-0.03em] text-[#20272C] text-left font-inter">
           Our Advertising Journey
@@ -24,7 +24,7 @@ export function LandingPageMapFooter({ data }: any) {
             onClick={() => setYear(value)}
             className={`py-1 px-2 rounded-[6px] lg:text-[14px] text-[12px] ${
               year === value
-                ? "bg-[#129BFF] text-white"
+                ? "bg-[#129BFF] text-[#FFFFFF]"
                 : "bg-[#F6F6F6] text-[#414141]"
             }`}
           >

@@ -26,7 +26,7 @@ export const POIProximity = ({
   finalSelectedScreens,
   selectedScreensFromMap,
   handleConfirmScreensSelections,
-  handleSelectFromMap
+  handleSelectFromMap,
 }: POIProximityProps) => {
   // Split pois into two equal parts
   const middleIndex = Math.ceil(pois?.length / 2);
@@ -35,16 +35,19 @@ export const POIProximity = ({
 
   const [checked1, setChecked1] = useState<any>(false);
   const [checked2, setChecked2] = useState<any>(false);
-  const [screensForPOIFilters, setScreensForPOIFilters] = useState<any>(filterScreensByInterests(finalSelectedScreens, selectedPOIs).screensWithAnyInterest)
+  const [screensForPOIFilters, setScreensForPOIFilters] = useState<any>(
+    filterScreensByInterests(finalSelectedScreens, selectedPOIs)
+      .screensWithAnyInterest
+  );
 
   console.log(checked1, "1 checked", selectedPOIs?.length);
   console.log(checked2, "2 checked", selectedPOIs?.length);
-  console.log("selected", selectedPOIs)
+  console.log("selected", selectedPOIs);
   console.log("selected length", selectedPOIs.length);
 
   useEffect(() => {
     // setScreensForPOIFilters(filterScreensByInterests(screensForPOIFilters, selectedPOIs).screensWithAnyInterest);
-  },[]);
+  }, []);
   console.log(finalSelectedScreens, "ootioieieo");
   console.log(screensForPOIFilters, "assfklsfks");
 
@@ -54,12 +57,10 @@ export const POIProximity = ({
         <h1 className="text-[14px] text-gray-500 truncate">
           Select sites with most POI exposure
         </h1>
-        <Tooltip
-            title="Click to deselect and select your desired POIs and get screens located in the proximity of those POIs"
-            >
+        <Tooltip title="Click to deselect and select your desired POIs and get screens located in the proximity of those POIs">
           <i className="fi fi-rs-info text-[14px] text-gray-400 flex justify-center items-center"></i>
         </Tooltip>
-        <h1 className="text-[14px] text-blue-500">({selectedPOIs?.length})</h1>
+        <h1 className="text-[14px] text-[#129BFF]">({selectedPOIs?.length})</h1>
       </div>
 
       <div className="h-[48vh] overflow-scroll">
@@ -68,29 +69,31 @@ export const POIProximity = ({
           <div className="col-span-1">
             {firstColumnPois?.map((poi: any, index: any) => (
               <div key={index} className="py-1">
-                <div className={
-                  `
+                <div
+                  className={`
                   border rounded-[10px] relative p-4
-                   ${selectedPOIs.includes(poi) ? "border border-blue-500" : ""}
-                  `
-                }
-                onClick={() => {
-                  setChecked1(false);
-                  setChecked2(false);
-                  if (selectedPOIs.includes(poi)) {
-                    setSelectedPOIs(selectedPOIs.filter((p: any) => p !== poi));
-                  } else {
-                    setSelectedPOIs([...selectedPOIs, poi]);
-                  }
-                }}
+                   ${
+                     selectedPOIs.includes(poi) ? "border border-[#129BFF]" : ""
+                   }
+                  `}
+                  onClick={() => {
+                    setChecked1(false);
+                    setChecked2(false);
+                    if (selectedPOIs.includes(poi)) {
+                      setSelectedPOIs(
+                        selectedPOIs.filter((p: any) => p !== poi)
+                      );
+                    } else {
+                      setSelectedPOIs([...selectedPOIs, poi]);
+                    }
+                  }}
                 >
                   {selectedPOIs?.includes(poi) && (
-                    <i className={
-                      `
+                    <i
+                      className={`
                       text-red-400
                       absolute right-0 top-0 z-1 fi fi-br-cross-circle flex justify-end
-                      `
-                    }
+                      `}
                     ></i>
                   )}
                   <div className="flex justify-center items-center">
@@ -104,29 +107,31 @@ export const POIProximity = ({
           <div className="col-span-1">
             {secondColumnPois?.map((poi: any, index: any) => (
               <div key={index} className="py-1">
-                <div className={
-                  `
+                <div
+                  className={`
                   border rounded-[10px] relative p-4
-                   ${selectedPOIs.includes(poi) ? "border border-blue-500" : ""}
-                  `
-                }
+                   ${
+                     selectedPOIs.includes(poi) ? "border border-[#129BFF]" : ""
+                   }
+                  `}
                   onClick={() => {
                     setChecked1(false);
                     setChecked2(false);
                     if (selectedPOIs.includes(poi)) {
-                      setSelectedPOIs(selectedPOIs.filter((p: any) => p !== poi));
+                      setSelectedPOIs(
+                        selectedPOIs.filter((p: any) => p !== poi)
+                      );
                     } else {
                       setSelectedPOIs([...selectedPOIs, poi]);
                     }
                   }}
                 >
                   {selectedPOIs?.includes(poi) && (
-                    <i className={
-                      `
+                    <i
+                      className={`
                       text-red-400
                       absolute right-0 top-0 z-1 fi fi-br-cross-circle flex justify-end
-                      `
-                    }
+                      `}
                     ></i>
                   )}
                   <div className="flex justify-center items-center">
@@ -146,16 +151,19 @@ export const POIProximity = ({
           <div className="pt-2">
             <div className="flex justify-start items-center gap-2">
               <h2 className="text-[12px] font-semibold">Atleast One</h2>
-              <Tooltip
-                title="Check to select all the screens having any one POI in the proximity"
-                >
-                  <i className="fi fi-rs-info text-[12px] text-gray-400 flex justify-center items-center"></i>
+              <Tooltip title="Check to select all the screens having any one POI in the proximity">
+                <i className="fi fi-rs-info text-[12px] text-gray-400 flex justify-center items-center"></i>
               </Tooltip>
             </div>
 
             <p className="text-[12px] text-[#9f9f9f]">
-              These {filterScreensByInterests(screensForPOIFilters, selectedPOIs).screensWithAnyInterest.length} locations have been shortlisted even if anyone of the
-              filters above are matched
+              These{" "}
+              {
+                filterScreensByInterests(screensForPOIFilters, selectedPOIs)
+                  .screensWithAnyInterest.length
+              }{" "}
+              locations have been shortlisted even if anyone of the filters
+              above are matched
             </p>
             <div className="pt-1 grid grid-cols-12 gap-2 flex items-center">
               <div className="col-span-2">
@@ -178,10 +186,12 @@ export const POIProximity = ({
                     }
 
                     handleConfirmScreensSelections({
-                      checked, screens: filterScreensByInterests(
-                      finalSelectedScreens,
-                      selectedPOIs
-                    ).screensWithAnyInterest});
+                      checked,
+                      screens: filterScreensByInterests(
+                        finalSelectedScreens,
+                        selectedPOIs
+                      ).screensWithAnyInterest,
+                    });
                   }}
                   checked={checked1}
                 />
@@ -207,18 +217,26 @@ export const POIProximity = ({
           <div className="">
             <SelectManuallyScreensCheckBox
               manuallySelected={selectedScreensFromMap?.length}
-              unselectedScreen={allScreens?.length - finalSelectedScreens?.length}
+              unselectedScreen={
+                allScreens?.length - finalSelectedScreens?.length
+              }
               handleCheck={(checked: any) => {
                 setChecked2(checked);
-           
-                allScreens?.filter((s: any) => !finalSelectedScreens?.map((sc: any) => sc._id)?.includes(s._id))?.forEach((sd: any) => {
-                  handleSelectFromMap(checked, sd)
-                })
+
+                allScreens
+                  ?.filter(
+                    (s: any) =>
+                      !finalSelectedScreens
+                        ?.map((sc: any) => sc._id)
+                        ?.includes(s._id)
+                  )
+                  ?.forEach((sd: any) => {
+                    handleSelectFromMap(checked, sd);
+                  });
               }}
               checked={checked2}
             />
           </div>
-   
         </div>
       </div>
     </div>

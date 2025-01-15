@@ -57,7 +57,7 @@ export const CircleImageCarousel: React.FC<Users> = ({ heroData }) => {
         {/* Previous Button */}
         <button
           onClick={handlePrevious}
-          className="absolute left-0 h-8 w-8 z-10 border border-gray-100 text-gray-700 p-1 rounded-full shadow-md hover:bg-primaryButton hover:text-white focus:outline-none focus:ring"
+          className="absolute left-0 h-8 w-8 z-10 border border-gray-100 text-gray-700 p-1 rounded-full shadow-md hover:bg-primaryButton hover:text-[#FFFFFF] focus:outline-none focus:ring"
         >
           &#10094;
         </button>
@@ -97,7 +97,7 @@ export const CircleImageCarousel: React.FC<Users> = ({ heroData }) => {
         <button
           onClick={handleNext}
           aria-label="Next Slide"
-          className="absolute right-0 h-8 w-8 z-10 border border-gray-100 text-gray-700 p-1 rounded-full shadow-md hover:bg-primaryButton hover:text-white focus:outline-none focus:ring"
+          className="absolute right-0 h-8 w-8 z-10 border border-gray-100 text-gray-700 p-1 rounded-full shadow-md hover:bg-primaryButton hover:text-[#FFFFFF] focus:outline-none focus:ring"
         >
           &#10095;
         </button>
@@ -109,7 +109,7 @@ export const CircleImageCarousel: React.FC<Users> = ({ heroData }) => {
           <img
             src={quotes}
             alt="Quotes Icon"
-            className="h-8 w-8 mt-[-20px]bg-blue-500 mask mask-image"
+            className="h-8 w-8 mt-[-20px]bg-[#129BFF] mask mask-image"
           />
           <figcaption className="text-lg lg:text-xl font-bold">
             {heroData[currentIndex]?.name}

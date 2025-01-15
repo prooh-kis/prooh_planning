@@ -11,7 +11,7 @@ export const MeetOurDataHero = () => {
   // Event handler for the Participate button
   const handleParticipateClick = () => {
     alert("Participation action triggered!");
-    window.location.replace("https://prooh-dmp.vercel.app/")
+    window.location.replace("https://prooh-dmp.vercel.app/");
   };
 
   return (
@@ -38,7 +38,7 @@ export const MeetOurDataHero = () => {
           <div className="flex items-center justify-center py-4">
             {/* Participate Button */}
             <button
-              className="text-white text-[20px] font-bold h-[50px] w-[153px] bg-[#129BFF] rounded-full px-6 py-2 mt-8 hover:bg-white hover:text-[#129BFF] border-2 border-transparent hover:border-[#129BFF] transition-all"
+              className="text-[#FFFFFF] text-[20px] font-bold h-[50px] w-[153px] bg-[#129BFF] rounded-full px-6 py-2 mt-8 hover:bg-[#FFFFFF] hover:text-[#129BFF] border-2 border-transparent hover:border-[#129BFF] transition-all"
               onClick={handleParticipateClick}
             >
               Participate

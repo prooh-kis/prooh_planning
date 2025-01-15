@@ -84,8 +84,8 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
     "Basic Details", "Select Screens", "Select Time", "Plan Summary",
     "Vendor Approval", "Creative Upload", "Vendor Confirmation"
   ] : pathname.split("/").includes("specialdayplan") ? [
-    "Basic Details", "Audience Selection", "Advanced Filters", "Cohort Selection", "Screens Summary", 
-    "Vendor Approval", "Creative Upload", "Vendor Confirmation"
+    "Topical Day", "Audience Selection", "Advanced Filters", "Cohort Selection", "Screens Summary", 
+    "Final Budget", "Creative Upload", "Vendor Confirmation"
   ] : pathname.split("/").includes("storebasedplan") ? [
     "Basic Details", "Advanced Filters", "Select Screens", "Select Time",
     "Trigger Selection", "Vendor Approval", "Creative Upload", "Vendor Confirmation"

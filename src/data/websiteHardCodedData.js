@@ -23,7 +23,7 @@ export const marketPageData1 = [
     description: `Discover locations frequented most by your lookalike audiences
                 and Accurately forecast total traffic and target audience
                 impressions.`,
-    icon: <i className="fi fi-sr-users-alt text-white text-[30px]" />,
+    icon: <i className="fi fi-sr-users-alt text-[#FFFFFF] text-[30px]" />,
     isImage: false,
   },
   {
@@ -156,7 +156,7 @@ export const mediaOwnerPageData1 = [
     description: `Discover locations frequented most by your lookalike audiences
                 and Accurately forecast total traffic and target audience
                 impressions.`,
-    icon: <i className="fi fi-sr-users-alt text-white text-[30px]" />,
+    icon: <i className="fi fi-sr-users-alt text-[#FFFFFF] text-[30px]" />,
     isImage: false,
   },
   {

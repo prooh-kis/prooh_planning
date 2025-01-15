@@ -50,7 +50,7 @@ export const Menu = (props: any) => {
     {
       label: "Requests",
       path: MY_REQUESTS_LIST,
-    }
+    },
   ];
 
   return (
@@ -62,35 +62,37 @@ export const Menu = (props: any) => {
       {isOpen && (
         <div
           onMouseLeave={() => setIsOpen(false)} // Close dropdown on mouse leave
-          className="absolute z-10 mt-2 w-[200px] bg-white border border-gray-300 rounded-md shadow-lg right-0 font-bold text-lg text-black-1000"
+          className="absolute z-10 mt-2 w-[200px] bg-[#FFFFFF] border border-gray-300 rounded-md shadow-lg right-0 font-bold text-lg text-black-1000"
         >
-          {userInfo?.isBrand && arr.map((data: any, index: any) => (
-            <div
-              key={index}
-              onClick={() => {
-                toggleDropdown();
-                navigate(data.path);
-              }}
-              className="px-4 py-2  text-gray-700 hover:bg-[#129BFF] hover:text-white cursor-pointer"
-            >
-              {data?.label}
-            </div>
-          ))}
-          {userInfo?.isMaster && arr1.map((data: any, index: any) => (
-            <div
-              key={index}
-              onClick={() => {
-                toggleDropdown();
-                navigate(data.path);
-              }}
-              className="px-4 py-2  text-gray-700 hover:bg-[#129BFF] hover:text-white cursor-pointer"
-            >
-              {data?.label}
-            </div>
-          ))}
+          {userInfo?.isBrand &&
+            arr.map((data: any, index: any) => (
+              <div
+                key={index}
+                onClick={() => {
+                  toggleDropdown();
+                  navigate(data.path);
+                }}
+                className="px-4 py-2  text-gray-700 hover:bg-[#129BFF] hover:text-[#FFFFFF] cursor-pointer"
+              >
+                {data?.label}
+              </div>
+            ))}
+          {userInfo?.isMaster &&
+            arr1.map((data: any, index: any) => (
+              <div
+                key={index}
+                onClick={() => {
+                  toggleDropdown();
+                  navigate(data.path);
+                }}
+                className="px-4 py-2  text-gray-700 hover:bg-[#129BFF] hover:text-[#FFFFFF] cursor-pointer"
+              >
+                {data?.label}
+              </div>
+            ))}
           <div
             onClick={signOutHandler}
-            className="px-4 py-2 text-gray-700 hover:bg-[#129BFF] hover:text-white cursor-pointer"
+            className="px-4 py-2 text-gray-700 hover:bg-[#129BFF] hover:text-[#FFFFFF] cursor-pointer"
           >
             Log out
           </div>

@@ -18,7 +18,13 @@ import {
 import { formatNumber } from "../../utils/formatValue";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 
-import { getAWSUrlToUploadFile, getDocUrlToSaveOnAWS, sanitizeUrlForS3, saveDocsOnAws, saveFileOnAWS } from "../../utils/awsUtils";
+import {
+  getAWSUrlToUploadFile,
+  getDocUrlToSaveOnAWS,
+  sanitizeUrlForS3,
+  saveDocsOnAws,
+  saveFileOnAWS,
+} from "../../utils/awsUtils";
 import {
   generateCreativeRatioPdfFromJSON,
   generatePlanApproachPdfFromJSON,
@@ -28,7 +34,10 @@ import {
 import { sendEmailForConfirmation } from "../../actions/userAction";
 import { SEND_EMAIL_FOR_CONFIRMATION_RESET } from "../../constants/userConstants";
 import { generatePPT } from "../../utils/generatePPT";
-import { convertDataTimeToLocale, convertIntoDateAndTime } from "../../utils/dateAndTimeUtils";
+import {
+  convertDataTimeToLocale,
+  convertIntoDateAndTime,
+} from "../../utils/dateAndTimeUtils";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -124,11 +133,13 @@ export const ViewFinalPlanPODetails = ({
     const formData = new FormData();
     formData.append("toEmail", toEmail);
     formData.append("cc", cc);
-    formData.append("message", `Please find the files at the following links:\n${fileLinks}`)
+    formData.append(
+      "message",
+      `Please find the files at the following links:\n${fileLinks}`
+    );
 
     dispatch(sendEmailForConfirmation(formData));
   };
-
 
   const handleBlob = async (pdf: any) => {
     let newBlob: any = null;
@@ -163,13 +174,13 @@ export const ViewFinalPlanPODetails = ({
         heading: pdfDownload[pdf].heading,
       });
     }
-  
+
     if (newBlob instanceof Blob) {
       const uniqueFileName =
         pdf === "screen-pictures"
           ? pdfDownload[pdf].fileName + ".pptx"
           : pdfDownload[pdf].fileName + ".pdf";
-  
+
       return { fileName: uniqueFileName, newBlob };
     } else {
       console.error("Generated value is not a Blob:", newBlob);
@@ -181,54 +192,67 @@ export const ViewFinalPlanPODetails = ({
     setLoadingEmailReady(true);
     try {
       // Step 1: Collect all Blobs
-      const blobPromises = Object.keys(pdfDownload).map((pdf) => handleBlob(pdf));
-      const attachments: any = (await Promise.all(blobPromises)).filter(Boolean); // Wait for all blobs to resolve
+      const blobPromises = Object.keys(pdfDownload).map((pdf) =>
+        handleBlob(pdf)
+      );
+      const attachments: any = (await Promise.all(blobPromises)).filter(
+        Boolean
+      ); // Wait for all blobs to resolve
       // Step 2: Upload each file to S3
-      const uploadPromises = attachments.map(async ({ fileName, newBlob }: any) => {
-        try {
-          if (!(newBlob instanceof Blob)) {
-            throw new Error(`Invalid blob for file: ${fileName}`);
-          }
-  
-          // Step 2.1: Get S3 pre-signed URL for upload
-          const aws = await getDocUrlToSaveOnAWS(fileName, newBlob.type,); // Assume fileName is passed to include in S3 key
-          if (!aws?.url) {
-            throw new Error(`Failed to retrieve pre-signed URL for: ${fileName}`);
-          }
-  
-          // Step 2.2: Upload file to S3 using pre-signed URL
-          const response = await fetch(aws.url, {
-            method: "PUT",
-            headers: {
-              "Content-Type": newBlob.type,
-            },
-            body: newBlob,
-          })
+      const uploadPromises = attachments.map(
+        async ({ fileName, newBlob }: any) => {
+          try {
+            if (!(newBlob instanceof Blob)) {
+              throw new Error(`Invalid blob for file: ${fileName}`);
+            }
 
-          if (!response.ok) {
-            throw new Error(`Failed to upload file: ${fileName}`);
+            // Step 2.1: Get S3 pre-signed URL for upload
+            const aws = await getDocUrlToSaveOnAWS(fileName, newBlob.type); // Assume fileName is passed to include in S3 key
+            if (!aws?.url) {
+              throw new Error(
+                `Failed to retrieve pre-signed URL for: ${fileName}`
+              );
+            }
+
+            // Step 2.2: Upload file to S3 using pre-signed URL
+            const response = await fetch(aws.url, {
+              method: "PUT",
+              headers: {
+                "Content-Type": newBlob.type,
+              },
+              body: newBlob,
+            });
+
+            if (!response.ok) {
+              throw new Error(`Failed to upload file: ${fileName}`);
+            }
+            return { fileName, fileUrl: aws.awsURL };
+          } catch (err) {
+            console.error(`Error uploading file ${fileName}:`, err);
+            return null; // Skip invalid files
           }
-          return { fileName, fileUrl: aws.awsURL}
-        } catch (err) {
-          console.error(`Error uploading file ${fileName}:`, err);
-          return null; // Skip invalid files
         }
-      });
-  
+      );
+
       // Step 3: Wait for all uploads to complete
       const uploadedFiles = (await Promise.all(uploadPromises)).filter(Boolean);
-  
+
       if (uploadedFiles.length === 0) {
         console.error("No files were uploaded to S3.");
         return;
       }
-  
+
       // Step 4: Prepare email content with file URLs
       const fileLinks = uploadedFiles
-        .map(({fileName, fileUrl}: any) => `<br></br>${fileName?.replace(/_/g, " ")}:<br><br/> ${sanitizeUrlForS3(fileUrl)}<br></br>`)
+        .map(
+          ({ fileName, fileUrl }: any) =>
+            `<br></br>${fileName?.replace(
+              /_/g,
+              " "
+            )}:<br><br/> ${sanitizeUrlForS3(fileUrl)}<br></br>`
+        )
         .join("\n");
-  
-  
+
       // Step 5: Send email with file links
       sendEmail(fileLinks);
     } catch (error) {
@@ -236,7 +260,7 @@ export const ViewFinalPlanPODetails = ({
     }
     setLoadingEmailReady(true);
   };
-  
+
   const handleAddNewFile = async (file: File) => {
     if (file) {
       const fileURL = URL.createObjectURL(file);
@@ -255,7 +279,11 @@ export const ViewFinalPlanPODetails = ({
   };
 
   const removeImage = (file: any) => {
-    setConfirmationImageFiles(confirmationImageFiles.filter((singleFile: any) => singleFile.url !== file.url));
+    setConfirmationImageFiles(
+      confirmationImageFiles.filter(
+        (singleFile: any) => singleFile.url !== file.url
+      )
+    );
   };
 
   const getAWSUrl = async (data: any) => {
@@ -329,7 +357,7 @@ export const ViewFinalPlanPODetails = ({
 
     if (userInfo) {
       setCC(userInfo?.email);
-      setLoadingEmailReady(loadingSendEmail)
+      setLoadingEmailReady(loadingSendEmail);
     }
   }, [dispatch, poInput, campaignId, successSendEmail]);
 
@@ -403,9 +431,13 @@ export const ViewFinalPlanPODetails = ({
             <div className="basis-1/2 flex items-center justify-start gap-2">
               <h1 className="text-left">Total Cost</h1>
               <Tooltip
-                  title={`${poTableData?.trigger !== "None" ? "*Additional trigger cost also included in the total campaign budget" : "Total expected campaign budget."}`}
-                >
-                  <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+                title={`${
+                  poTableData?.trigger !== "None"
+                    ? "*Additional trigger cost also included in the total campaign budget"
+                    : "Total expected campaign budget."
+                }`}
+              >
+                <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
               </Tooltip>
             </div>
             <h1 className="text-left basis-1/2">
@@ -436,7 +468,7 @@ export const ViewFinalPlanPODetails = ({
                     fileName: `${poInput?.brandName}_Campaign_Approach`,
                   };
                   setPdfDownload(pdfToDownload);
-                  console.log(pdfToDownload["approach"])
+                  console.log(pdfToDownload["approach"]);
                 }}
               />
             </div>
@@ -450,7 +482,9 @@ export const ViewFinalPlanPODetails = ({
                   pdfToDownload["plan-summary"] = {
                     heading: "PLAN SUMMARY",
                     pdfData: [
-                      getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId],
+                      getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+                        campaignId
+                      ],
                     ],
                     fileName: `${poInput?.brandName}_Campaign_Plan_Summary`,
                   };
@@ -576,7 +610,7 @@ export const ViewFinalPlanPODetails = ({
           />
         </div>
       </div>
-      <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
+      <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
         <Footer
           handleBack={() => {
             setCurrentStep(step - 1);

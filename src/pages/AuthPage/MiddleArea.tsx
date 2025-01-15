@@ -12,7 +12,6 @@ import {
 import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 
 export function MiddleArea(props: any) {
-
   const [option, setOption] = useState<string>("signin");
   const navigate = useNavigate();
   const [signInText, setSignInText] = useState<string>("Sign In");
@@ -78,7 +77,7 @@ export function MiddleArea(props: any) {
           // static primary user data for new planner (secondary user)
           primaryUserId: "670fba3a115cf43aa2348849",
           primaryUserEmail: "vinciis2018@gmail.com",
-          userRole: "secondary"
+          userRole: "secondary",
         })
       );
     }
@@ -152,7 +151,7 @@ export function MiddleArea(props: any) {
           <button
             className={
               option === "signin"
-                ? "flex justify-center text-white text-center p-2 border border-solid rounded-l w-96 bg-primaryButton"
+                ? "flex justify-center text-[#FFFFFF] text-center p-2 border border-solid rounded-l w-96 bg-primaryButton"
                 : "flex justify-center text-center p-2 border border-solid w-96 rounded-l"
             }
             onClick={() => setOption("signin")}
@@ -162,7 +161,7 @@ export function MiddleArea(props: any) {
           <button
             className={
               option === "signup"
-                ? "flex justify-center text-white text-center p-2 border border-solid rounded-r w-96 bg-primaryButton"
+                ? "flex justify-center text-[#FFFFFF] text-center p-2 border border-solid rounded-r w-96 bg-primaryButton"
                 : "flex justify-center text-center p-2 border border-solid w-96 rounded-r"
             }
             onClick={() => setOption("signup")}
@@ -210,7 +209,7 @@ export function MiddleArea(props: any) {
                 </label>
               </div>
               <h1
-                className="text-sm text-blue-500 cursor-pointer"
+                className="text-sm text-[#129BFF] cursor-pointer"
                 onClick={() => navigate("/forget-password")}
               >
                 Forget Password
@@ -230,8 +229,9 @@ export function MiddleArea(props: any) {
         {option === "signup" && (
           <div>
             {success ? (
-              <h1 className="text-[12px] text-blue-500">
-                User Registration successfull, please check your email and verify for proceeding further...
+              <h1 className="text-[12px] text-[#129BFF]">
+                User Registration successfull, please check your email and
+                verify for proceeding further...
               </h1>
             ) : (
               <div className="flex flex-col gap-2">
@@ -300,10 +300,9 @@ export function MiddleArea(props: any) {
                 </div>
               </div>
             )}
-
           </div>
         )}
       </div>
     </div>
   );
-};
+}

@@ -95,7 +95,7 @@ export const AddCampaignDetails = ({
         campaignManagerEmail: userInfo?.primaryUserEmail,
       });
       handleCancel();
-      setCurrentStep(2)
+      setCurrentStep(2);
     }
   };
 
@@ -213,7 +213,7 @@ export const AddCampaignDetails = ({
           </div>
         </div>
         <button
-          className="px-8 py-2 mt-4 text-[16px] font-semibold bg-[#1297E2] text-white rounded-md w-full"
+          className="px-8 py-2 mt-4 text-[16px] font-semibold bg-[#1297E2] text-[#FFFFFF] rounded-md w-full"
           onClick={saveCampaignDetailsOnLocalStorage}
         >
           Save

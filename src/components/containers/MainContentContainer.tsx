@@ -1,5 +1,5 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import React from "react";
+import { useLocation } from "react-router-dom";
 
 interface IProps {
   children?: React.ReactNode;
@@ -8,11 +8,5 @@ interface IProps {
 export const MainContentContainer: React.FC<IProps> = (props) => {
   const { pathname } = useLocation();
   const { children } = props;
-  return (
-    <div
-      className={`p-10 h-full w-full bg-white`}
-    >
-      {children}
-    </div>
-  );
+  return <div className={`p-10 h-full w-full bg-[#FFFFFF]`}>{children}</div>;
 };

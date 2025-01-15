@@ -16,11 +16,17 @@ import {
 } from "../../components/tables";
 import { Footer } from "../../components/footer";
 import { message } from "antd";
-import { addDetailsToCreateCampaign, changeCampaignStatusAfterVendorApproval } from "../../actions/campaignAction";
+import {
+  addDetailsToCreateCampaign,
+  changeCampaignStatusAfterVendorApproval,
+} from "../../actions/campaignAction";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { CAMPAIGN_DETAILS_PAGE } from "../../routes/routes";
 import { CountdownTimer } from "../../components/molecules/CountdownTimer";
-import { sendEmailForConfirmation, sendEmailForVendorConfirmation } from "../../actions/userAction";
+import {
+  sendEmailForConfirmation,
+  sendEmailForVendorConfirmation,
+} from "../../actions/userAction";
 import {
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED,
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED,
@@ -120,12 +126,13 @@ export const VendorConfirmationDetails = ({
     data: campaignDetails,
   } = detailsToCreateCampaignAdd;
 
-
   const sendEmail = () => {
     const formData = new FormData();
     formData.append("toEmail", toEmail);
     formData.append("cc", cc);
-    formData.append("message", `
+    formData.append(
+      "message",
+      `
       <div style='max-width: 720px; margin: auto; padding: 16px; background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;'>
           <table style='width: 100%; border-collapse: collapse; margin-bottom: 16px;'>
             <thead>
@@ -138,27 +145,31 @@ export const VendorConfirmationDetails = ({
               </tr>
             </thead>
             <tbody>
-              ${statusTableData?.map((d: any) => {
-                return {
-                  screenName: d.screenName,
-                  touchPoint: d.touchPoint,
-                  startDate: new Date(d.startDate).toLocaleDateString(),
-                  endDate: new Date(d.endDate).toLocaleDateString(),
-                  cost: `${'\u20B9'}${d.cost.toFixed(0)}`
-                }
-              })?.map((c: any, i: any) => (
-                `<tr key=${i} style='background-color: #F8F9FA;'>
+              ${statusTableData
+                ?.map((d: any) => {
+                  return {
+                    screenName: d.screenName,
+                    touchPoint: d.touchPoint,
+                    startDate: new Date(d.startDate).toLocaleDateString(),
+                    endDate: new Date(d.endDate).toLocaleDateString(),
+                    cost: `${"\u20B9"}${d.cost.toFixed(0)}`,
+                  };
+                })
+                ?.map(
+                  (c: any, i: any) =>
+                    `<tr key=${i} style='background-color: #F8F9FA;'>
                   <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.screenName}</td>
                   <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.touchPoint}</td>
                   <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.startDate}</td>
                   <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.endDate}</td>
                   <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.cost}</td>
                 </tr>`
-              ))}
+                )}
             </tbody>
           </table>
         </div>
-      `)
+      `
+    );
 
     dispatch(sendEmailForConfirmation(formData));
   };
@@ -167,14 +178,16 @@ export const VendorConfirmationDetails = ({
     const screenOwnerEmails = Array.from(
       new Set(statusTableData?.map((s: any) => s.screenVendorEmail))
     );
-    
 
     screenOwnerEmails?.forEach((email: any) => {
-      const approvalIds = statusTableData?.filter((s: any) => s.screenVendorEmail === email)?.map((c: any) => c.campaignId).join(",");
+      const approvalIds = statusTableData
+        ?.filter((s: any) => s.screenVendorEmail === email)
+        ?.map((c: any) => c.campaignId)
+        .join(",");
       const approvalUrl = `https://prooh.vinciis.in/api/v2/campaigns/approveCampaignScreenVendor?ids=${encodeURIComponent(
         approvalIds
       )}`;
-      
+
       const emailContent = `
         <div style='max-width: 600px; margin: auto; padding: 16px; background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;'>
           <table style='width: 100%; border-collapse: collapse; margin-bottom: 16px;'>
@@ -188,23 +201,27 @@ export const VendorConfirmationDetails = ({
               </tr>
             </thead>
             <tbody>
-              ${statusTableData?.filter((s: any) => s.screenVendorEmail === email)?.map((d: any) => {
-                return {
-                  screenName: d.screenName,
-                  touchPoint: d.touchPoint,
-                  startDate: new Date(d.startDate).toLocaleDateString(),
-                  endDate: new Date(d.endDate).toLocaleDateString(),
-                  cost: `${'\u20B9'}${d.cost.toFixed(0)}`
-                }
-              })?.map((c: any, i: any) => (
-                `<tr key=${i} style='background-color: #F8F9FA;'>
+              ${statusTableData
+                ?.filter((s: any) => s.screenVendorEmail === email)
+                ?.map((d: any) => {
+                  return {
+                    screenName: d.screenName,
+                    touchPoint: d.touchPoint,
+                    startDate: new Date(d.startDate).toLocaleDateString(),
+                    endDate: new Date(d.endDate).toLocaleDateString(),
+                    cost: `${"\u20B9"}${d.cost.toFixed(0)}`,
+                  };
+                })
+                ?.map(
+                  (c: any, i: any) =>
+                    `<tr key=${i} style='background-color: #F8F9FA;'>
                   <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.screenName}</td>
                   <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.touchPoint}</td>
                   <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.startDate}</td>
                   <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.endDate}</td>
                   <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.cost}</td>
                 </tr>`
-              ))}
+                )}
             </tbody>
           </table>
           <div>
@@ -214,24 +231,21 @@ export const VendorConfirmationDetails = ({
             </a>
           </div>
         </div>
-      `
-      ;
-
-
+      `;
       if (!emailContent) {
         console.error("Failed to generate email content");
         return;
       }
-      
-      dispatch(sendEmailForVendorConfirmation({
-        toEmail: email,
-        cc: cc,
-        emailContent: JSON.stringify(emailContent),
-      }))
 
-    })
-    
-  }
+      dispatch(
+        sendEmailForVendorConfirmation({
+          toEmail: email,
+          cc: cc,
+          emailContent: JSON.stringify(emailContent),
+        })
+      );
+    });
+  };
 
   const handleAddNewFile = async (file: File) => {
     if (file) {
@@ -267,7 +281,9 @@ export const VendorConfirmationDetails = ({
 
   const handleSaveAndContinue = async () => {
     if (isDisabled) {
-      message.error("You will be redirected to campaign dashboard, once the campaign has started. Please wait...");
+      message.error(
+        "You will be redirected to campaign dashboard, once the campaign has started. Please wait..."
+      );
     } else {
       let imageArr: string[] = [];
       for (let data of files) {
@@ -326,8 +342,8 @@ export const VendorConfirmationDetails = ({
                   statusTableData?.filter(
                     (c: any) =>
                       c.status ===
-                        CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
-                      // c.status === "Pending"
+                      CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
+                    // c.status === "Pending"
                   ).length
                 }
                 )
@@ -337,17 +353,19 @@ export const VendorConfirmationDetails = ({
               <h1 className="text-[14px]">
                 Pending (
                 {
-                  statusTableData?.filter(
-                    (c: any) =>
-                      c.status !==
+                  statusTableData
+                    ?.filter(
+                      (c: any) =>
+                        c.status !==
                         CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
                       // c.status !== "Pending"
-                  )?.filter(
-                    (c: any) =>
-                      c.status !==
+                    )
+                    ?.filter(
+                      (c: any) =>
+                        c.status !==
                         CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
                       // c.status !== "Pending"
-                  ).length
+                    ).length
                 }
                 )
               </h1>
@@ -367,13 +385,9 @@ export const VendorConfirmationDetails = ({
             </div>
           </div>
           <div className="flex gap-4">
-            <h1 className="text-[14px]">
-              Total Screen 
-            </h1>
+            <h1 className="text-[14px]">Total Screen</h1>
             <h1 className="text-[14px] font-semibold">
-              {
-                statusTableData?.length
-              }
+              {statusTableData?.length}
             </h1>
           </div>
         </div>
@@ -384,19 +398,21 @@ export const VendorConfirmationDetails = ({
               statusTableData?.filter(
                 (c: any) =>
                   c.status ===
-                    CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
+                  CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
               ).length,
-              statusTableData?.filter(
-                (c: any) =>
-                  c.status !==
+              statusTableData
+                ?.filter(
+                  (c: any) =>
+                    c.status !==
                     CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
                   // c.status !== "Pending"
-              )?.filter(
-                (c: any) =>
-                  c.status !==
+                )
+                ?.filter(
+                  (c: any) =>
+                    c.status !==
                     CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
                   // c.status !== "Pending"
-              ).length,
+                ).length,
               statusTableData?.filter(
                 (c: any) =>
                   c.status ===
@@ -437,7 +453,8 @@ export const VendorConfirmationDetails = ({
         </div>
       )}
 
-      <div className="px-4 fixed bottom-0 left-0 w-full bg-white"
+      <div
+        className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]"
         onDoubleClick={() => setIsDisabled(!isDisabled)}
       >
         <Footer

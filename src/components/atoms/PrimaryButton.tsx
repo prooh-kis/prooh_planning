@@ -12,7 +12,17 @@ interface PrimaryButtonProps {
   icon?: any;
 }
 
-export const PrimaryButton = ({icon, reverse, textSize, disabled, width, height, title, action, rounded}: PrimaryButtonProps) => {
+export const PrimaryButton = ({
+  icon,
+  reverse,
+  textSize,
+  disabled,
+  width,
+  height,
+  title,
+  action,
+  rounded,
+}: PrimaryButtonProps) => {
   return (
     <div className="flex justify-center items-center">
       <button
@@ -25,16 +35,18 @@ export const PrimaryButton = ({icon, reverse, textSize, disabled, width, height,
           ${width ? width : "w-[180px]"} flex items-center justify-center
           ${height ? height : "h-[48px]"}
           ${rounded} ${textSize ? textSize : "text-[16px]"}
-          ${reverse ? 
-              "bg-white border border-primaryButton text-primaryButton hover:bg-transparent hover:border-primaryButton hover:border-2 hover:text-primaryButton" :
-            disabled ? 
-            "bg-gray text-primaryButton hover:bg-transparent hover:border-primaryButton hover:border-2 hover:text-primaryButton" :
-              "bg-primaryButton font-semibold text-white hover:bg-transparent hover:border-primaryButton hover:border-2 hover:text-primaryButton"}
+          ${
+            reverse
+              ? "bg-[#FFFFFF] border border-primaryButton text-primaryButton hover:bg-transparent hover:border-primaryButton hover:border-2 hover:text-primaryButton"
+              : disabled
+              ? "bg-gray text-primaryButton hover:bg-transparent hover:border-primaryButton hover:border-2 hover:text-primaryButton"
+              : "bg-primaryButton font-semibold text-[#FFFFFF] hover:bg-transparent hover:border-primaryButton hover:border-2 hover:text-primaryButton"
+          }
           transition-colors duration-300
         `}
       >
         {icon} {title}
       </button>
     </div>
-  )
-}
+  );
+};

@@ -41,8 +41,8 @@ export const FileUploadButton: React.FC<FileUploaderProps> = ({
         onClick={handleClick}
         className={
           width
-            ? "border border-dashed border-2 border-blue-400 text-blue-400 rounded-2xl  bg-blue-100 py-1 w-full"
-            : "border border-dashed border-2 border-blue-400 text-blue-400 rounded-2xl  bg-blue-100 py-1 w-32"
+            ? "border border-dashed border-2 border-[#129BFF] text-[#129BFF] rounded-2xl  bg-[#F4F9FF] py-1 w-full"
+            : "border border-dashed border-2 border-[#129BFF] text-[#129BFF] rounded-2xl  bg-[#F4F9FF] py-1 w-32"
         }
       >
         + Upload

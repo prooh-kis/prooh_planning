@@ -180,7 +180,7 @@ export const CreativeUploadDetails = ({
         return data;
       });
       setCitiesCreative(citiesCreativeData);
-      saveDataOnLocalStorage(CAMPAIGN_CREATIVES, {[campaignId]: myData});
+      saveDataOnLocalStorage(CAMPAIGN_CREATIVES, { [campaignId]: myData });
     } else {
       message.error("Please select file to save!");
     }
@@ -292,7 +292,7 @@ export const CreativeUploadDetails = ({
   };
 
   const validate = () => {
-    console.log(creativeUploadData)
+    console.log(creativeUploadData);
     for (let city in creativeUploadData) {
       for (let data of creativeUploadData[city]) {
         if (
@@ -309,11 +309,14 @@ export const CreativeUploadDetails = ({
 
   const isTriggerAvailable = () => {
     const result =
-      getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]?.weatherTriggers?.length > 0
+      getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]?.weatherTriggers
+        ?.length > 0
         ? true
-        : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]?.sportsTriggers?.length > 0
+        : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
+            ?.sportsTriggers?.length > 0
         ? true
-        : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]?.vacantSlots?.length > 0
+        : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]?.vacantSlots
+            ?.length > 0
         ? true
         : false;
 
@@ -361,7 +364,7 @@ export const CreativeUploadDetails = ({
         }
       }
       console.log("ssss : ", sss);
-      saveDataOnLocalStorage(CAMPAIGN_CREATIVES, {[campaignId]: sss});
+      saveDataOnLocalStorage(CAMPAIGN_CREATIVES, { [campaignId]: sss });
       dispatch(
         addDetailsToCreateCampaign({
           pageName: "Upload Creative Page",
@@ -411,11 +414,14 @@ export const CreativeUploadDetails = ({
     if (screenData) {
       // console.log("screenData : ", screenData);
       if (getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId]) {
-        handleSetInitialData(getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId] || {});
+        handleSetInitialData(
+          getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId] || {}
+        );
       } else {
         handleSetInitialData(screenData);
       }
-      const result: any = getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId] || {};
+      const result: any =
+        getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId] || {};
       for (let city in screenData) {
         if (result[city] === undefined) {
           result[city] = [];
@@ -442,7 +448,7 @@ export const CreativeUploadDetails = ({
 
     const result =
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.triggers;
-    saveDataOnLocalStorage(SELECTED_TRIGGER, {[campaignId]: result});
+    saveDataOnLocalStorage(SELECTED_TRIGGER, { [campaignId]: result });
   }, [errorScreeData, screenData]);
 
   return (
@@ -468,19 +474,19 @@ export const CreativeUploadDetails = ({
             />
           </div>
           <div className="mr-48 w-full">
-            <div className="flex bg-blue-400 py-2 mt-4 items-center">
+            <div className="flex bg-[#129BFF] py-2 mt-4 items-center">
               <div className="flex">
-                <h1 className="w-24 text-center text-white font-semibold ">
+                <h1 className="w-24 text-center text-[#FFFFFF] font-semibold ">
                   Screens
                 </h1>
-                <h1 className="w-24 text-center text-white font-semibold ">
+                <h1 className="w-24 text-center text-[#FFFFFF] font-semibold ">
                   Duration
                 </h1>
-                <h1 className="w-48 text-center text-white font-semibold ">
+                <h1 className="w-48 text-center text-[#FFFFFF] font-semibold ">
                   Screen Dimension
                 </h1>
               </div>
-              <h1 className="w-full text-center text-white font-semibold">
+              <h1 className="w-full text-center text-[#FFFFFF] font-semibold">
                 Upload creatives
               </h1>
             </div>
@@ -497,15 +503,15 @@ export const CreativeUploadDetails = ({
                         }
                         className={
                           index === currentScreen && isCreativeUploaded(index)
-                            ? "bg-blue-50"
+                            ? "bg-[#E8F3FF]"
                             : !(
                                 index === currentScreen ||
                                 isCreativeUploaded(index)
                               )
                             ? ""
                             : isCreativeUploaded(index)
-                            ? "bg-blue-50"
-                            : "bg-blue-50"
+                            ? "bg-[#E8F3FF]"
+                            : "bg-[#E8F3FF]"
                         }
                         key={index}
                         onClick={() => setCurrentScreen(index)}
@@ -572,27 +578,34 @@ export const CreativeUploadDetails = ({
                       triggerData={
                         getDataFromLocalStorage(SELECTED_TRIGGER)
                           ?.weatherTriggers?.[0]?.type !== ""
-                          ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                              ?.weatherTriggers
-                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                              ?.sportsTriggers?.[0]?.sport !== ""
-                          ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                              ?.sportsTriggers
-                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                              ?.vacantSlots?.[0]?.slotType !== ""
-                          ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                              ?.vacantSlots
+                          ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[
+                              campaignId
+                            ]?.weatherTriggers
+                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[
+                              campaignId
+                            ]?.sportsTriggers?.[0]?.sport !== ""
+                          ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[
+                              campaignId
+                            ]?.sportsTriggers
+                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[
+                              campaignId
+                            ]?.vacantSlots?.[0]?.slotType !== ""
+                          ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[
+                              campaignId
+                            ]?.vacantSlots
                           : {}
                       }
                       triggerType={
                         getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
                           ?.weatherTriggers?.[0]?.type !== ""
                           ? "Weather Trigger"
-                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                              ?.sportsTriggers?.[0]?.sport !== ""
+                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[
+                              campaignId
+                            ]?.sportsTriggers?.[0]?.sport !== ""
                           ? "Sports Trigger"
-                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                              ?.vacantSlots?.[0]?.slotType !== ""
+                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[
+                              campaignId
+                            ]?.vacantSlots?.[0]?.slotType !== ""
                           ? "Fill Vacancy Trigger"
                           : "No Trigger"
                       }
@@ -638,7 +651,7 @@ export const CreativeUploadDetails = ({
               </div>
             </div>
           </div>
-          <div className="px-4 fixed bottom-0 left-0 w-full bg-white">
+          <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
             <Footer
               handleBack={() => {
                 setCurrentStep(step - 1);

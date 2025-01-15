@@ -2,16 +2,30 @@ import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import * as turf from "@turf/turf";
-import { getAllLocalStorageData, getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
+import {
+  getAllLocalStorageData,
+  getDataFromLocalStorage,
+  saveDataOnLocalStorage,
+} from "../../utils/localStorageUtils";
 import { LocationProximity } from "../../components/segments/LocationProximity";
 import { POIProximity } from "../../components/segments/POIProximity";
 import { Footer } from "../../components/footer";
 import { SelectManuallyScreensCheckBox } from "../../components/segments/SelectManuallyScreensCheckBox";
 import { message, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { getRegularVsCohortPriceData, getScreenDataForAdvanceFilters } from "../../actions/screenAction";
+import {
+  getRegularVsCohortPriceData,
+  getScreenDataForAdvanceFilters,
+} from "../../actions/screenAction";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { ADVANCE_FILTER_SCREENS_MAP_DATA, COST_SUMMARY, FULL_CAMPAIGN_PLAN, REGULAR_VS_COHORT_PRICE_DATA, SELECTED_AUDIENCE_TOUCHPOINTS, SELECTED_SCREENS_ID } from "../../constants/localStorageConstants";
+import {
+  ADVANCE_FILTER_SCREENS_MAP_DATA,
+  COST_SUMMARY,
+  FULL_CAMPAIGN_PLAN,
+  REGULAR_VS_COHORT_PRICE_DATA,
+  SELECTED_AUDIENCE_TOUCHPOINTS,
+  SELECTED_SCREENS_ID,
+} from "../../constants/localStorageConstants";
 import { ALL_TOUCHPOINTS } from "../../constants/helperConstants";
 import { MapWithGeometry } from "../../components/map/MapWithGeometry";
 import { getUniqueScreens } from "../../utils/screenRanking";
@@ -25,7 +39,7 @@ interface AdvanceFiltersDetailsProps {
   mapData?: any;
   loading?: boolean;
   error?: any;
-  campaignId?: string
+  campaignId?: string;
 }
 
 export const AdvanceFiltersDetails = ({
@@ -34,12 +48,12 @@ export const AdvanceFiltersDetails = ({
   setCurrentStep,
   loading,
   error,
-  campaignId
+  campaignId,
 }: AdvanceFiltersDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
-  const campId = campaignId ? campaignId : pathname.split("/").splice(-1)[0]
+  const campId = campaignId ? campaignId : pathname.split("/").splice(-1)[0];
 
   const [storeFilter, setStoreFilter] = useState<any>(true);
 
@@ -66,16 +80,17 @@ export const AdvanceFiltersDetails = ({
   const [circleData, setCircleData] = useState<any>({});
   const [finalSelectedScreens, setFinalSelectedScreens] = useState<any>([]);
 
-  const screensDataAdvanceFilterGet = useSelector((state: any) => state.screensDataAdvanceFilterGet);
+  const screensDataAdvanceFilterGet = useSelector(
+    (state: any) => state.screensDataAdvanceFilterGet
+  );
   const {
     loading: loadingAdvanceFilterData,
     error: errorAdvanceFilterData,
-    data: advanceFilterData
+    data: advanceFilterData,
   } = screensDataAdvanceFilterGet;
 
   // Handle Final screen selection
-  const handleFinalSelectedScreens =({ type, screens }: any) => {
-
+  const handleFinalSelectedScreens = ({ type, screens }: any) => {
     if (type === "add") {
       screens = [
         ...excelFilteredScreens,
@@ -86,7 +101,7 @@ export const AdvanceFiltersDetails = ({
       ];
       const uniqueScreens = getUniqueScreens([{ screens }]);
       setFinalSelectedScreens(uniqueScreens);
-      saveDataOnLocalStorage(SELECTED_SCREENS_ID, {[campId]: uniqueScreens});
+      saveDataOnLocalStorage(SELECTED_SCREENS_ID, { [campId]: uniqueScreens });
     } else if (type === "remove") {
       const uniqueScreens = getUniqueScreens([{ screens }]);
 
@@ -95,9 +110,11 @@ export const AdvanceFiltersDetails = ({
           (fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)
         )
       );
-      saveDataOnLocalStorage(SELECTED_SCREENS_ID, {[campId]: finalSelectedScreens.filter(
+      saveDataOnLocalStorage(SELECTED_SCREENS_ID, {
+        [campId]: finalSelectedScreens.filter(
           (fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)
-        )});
+        ),
+      });
     }
   };
 
@@ -141,8 +158,10 @@ export const AdvanceFiltersDetails = ({
   const handleRouteData = (routeData: any, id: any) => {
     const radiusInMeters = 1000; // 1000 meters radius
     const line = turf.lineString(routeData.coordinates); // Create a LineString from route coordinates
-    const bufferedArea: any = turf.buffer(line, radiusInMeters / 1000, { units: "kilometers" }); // Buffer area around the route
-  
+    const bufferedArea: any = turf.buffer(line, radiusInMeters / 1000, {
+      units: "kilometers",
+    }); // Buffer area around the route
+
     const filteredRecords = allScreens?.filter((point: any) => {
       const screenPoint = turf.point([
         point.location.geographicalLocation.longitude,
@@ -150,10 +169,10 @@ export const AdvanceFiltersDetails = ({
       ]);
       return turf.booleanPointInPolygon(screenPoint, bufferedArea); // Check if screen is within the buffer
     });
-  
+
     let arr = routes;
     const screens: any = routeFilteredScreens;
-  
+
     for (let data of arr) {
       if (data?.id === id) {
         data.selectedScreens = filteredRecords;
@@ -164,10 +183,10 @@ export const AdvanceFiltersDetails = ({
         });
       }
     }
-  
+
     setRouteFilteredScreens(screens);
     setRoutes(arr);
-  
+
     handleFinalSelectedScreens({
       type: "add",
       screens: filteredRecords || [],
@@ -192,7 +211,10 @@ export const AdvanceFiltersDetails = ({
   };
 
   // Add screens mannually from the map
-  const handleAddManualSelectedScreenIntoFinalSelectedScreens = (checked: any, screen: any) => {
+  const handleAddManualSelectedScreenIntoFinalSelectedScreens = (
+    checked: any,
+    screen: any
+  ) => {
     if (checked) {
       handleFinalSelectedScreens({
         type: "add",
@@ -206,11 +228,11 @@ export const AdvanceFiltersDetails = ({
         screens: [screen],
       });
     }
-  }
+  };
 
   // Select all from map mannually
   const handleSelectFromMap = (checked: any, screenData: any) => {
-    console.log(screenData, "age")
+    console.log(screenData, "age");
     setSelectedScreensFromMap((pre: any) => {
       if (pre.find((screen: any) => screen?._id == screenData?._id)) {
         return pre;
@@ -226,7 +248,7 @@ export const AdvanceFiltersDetails = ({
         return [...pre, screenData];
       }
     });
-    
+
     handleFinalSelectedScreens({
       type: checked ? "add" : "remove",
       screens: [screenData],
@@ -234,7 +256,7 @@ export const AdvanceFiltersDetails = ({
   };
 
   // Confirm all screens selection
-  const handleConfirmScreensSelections = ({checked, screens}: any) => {
+  const handleConfirmScreensSelections = ({ checked, screens }: any) => {
     setIsDisabled(!checked);
     if (checked) {
       handleFinalSelectedScreens({
@@ -250,37 +272,42 @@ export const AdvanceFiltersDetails = ({
     // saveDataOnLocalStorage(SELECTED_SCREENS_ID, getUniqueScreens([{screens: selectedScreenIds}]));
   };
 
-
   useEffect(() => {
     if (advanceFilterData?.screens.length > 0) {
       getMapData(advanceFilterData || {});
       setPOIs(advanceFilterData.poiList || []);
       setSelectedPOIs(advanceFilterData.poiList || []);
-      
+
       if (
         excelFilteredScreens.length === 0 &&
         routeFilteredScreens.length === 0 &&
         selectedScreensFromMap.length === 0 &&
         poiFilteredScreens.length === 0
       ) {
-        setFinalSelectedScreens(advanceFilterData?.screens)
+        setFinalSelectedScreens(advanceFilterData?.screens);
         handleFinalSelectedScreens({
           type: "add",
           screens: advanceFilterData?.screens,
         });
       }
     }
-    
-  }, [advanceFilterData, getMapData, excelFilteredScreens, routeFilteredScreens]);
+  }, [
+    advanceFilterData,
+    getMapData,
+    excelFilteredScreens,
+    routeFilteredScreens,
+  ]);
 
   useEffect(() => {
     dispatch(
       getScreenDataForAdvanceFilters({
         id: campId,
-        touchPoints: pathname?.split("/").includes("storebasedplan") ? ALL_TOUCHPOINTS : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].touchPoints,
+        touchPoints: pathname?.split("/").includes("storebasedplan")
+          ? ALL_TOUCHPOINTS
+          : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].touchPoints,
       })
     );
-    saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, {[campId]: {}});
+    saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
   }, [dispatch, campId]);
 
   return (
@@ -297,35 +324,38 @@ export const AdvanceFiltersDetails = ({
                 </div>
 
                 <div className="flex mt-3 items-top justify-end gap-2">
-                  <Tooltip
-                    title="Click to refresh the map data"
-                  >
-                    <i className="fi fi-br-rotate-right text-[12px] flex items-center cursor-pointer" onClick={() => window.location.reload()}></i>
+                  <Tooltip title="Click to refresh the map data">
+                    <i
+                      className="fi fi-br-rotate-right text-[12px] flex items-center cursor-pointer"
+                      onClick={() => window.location.reload()}
+                    ></i>
                   </Tooltip>
-                  <Tooltip
-                    title="Click to skip the advance filters"
-                  >
+                  <Tooltip title="Click to skip the advance filters">
                     <i
                       className="fi fi-br-ban text-[12px] text-red-500 flex items-center cursor-pointer"
                       onClick={() => {
                         if (isDisabled) {
                           message.error("Please  confirm screen selection");
                         } else {
-                          dispatch(addDetailsToCreateCampaign({
-                            pageName: "Advance Filter Page",
-                            id: pathname.split("/").splice(-1)[0],
-                            screenIds: finalSelectedScreens.map((s: any) => s._id)
-                          }));
+                          dispatch(
+                            addDetailsToCreateCampaign({
+                              pageName: "Advance Filter Page",
+                              id: pathname.split("/").splice(-1)[0],
+                              screenIds: finalSelectedScreens.map(
+                                (s: any) => s._id
+                              ),
+                            })
+                          );
                           setCurrentStep(step + 1);
-                        };
+                        }
                       }}
-                    >
-                    </i>
+                    ></i>
                   </Tooltip>
-                  <Tooltip
-                    title="Click to filter using POIs proximity"
-                  >
-                    <i className="fi fi-br-angle-right text-[12px] text-green-500 cursor-pointer flex items-center" onClick={() => setStoreFilter(!storeFilter)}></i>
+                  <Tooltip title="Click to filter using POIs proximity">
+                    <i
+                      className="fi fi-br-angle-right text-[12px] text-green-500 cursor-pointer flex items-center"
+                      onClick={() => setStoreFilter(!storeFilter)}
+                    ></i>
                   </Tooltip>
                 </div>
               </div>
@@ -355,41 +385,43 @@ export const AdvanceFiltersDetails = ({
             <div className="h-auto">
               <div className="flex w-full justify-between">
                 <div className="truncate w-full flex items-center">
-
                   <h1 className="lg:text-[24px] md:text-[18px] text-primaryText font-semibold truncate">
                     POI Proximity
                   </h1>
                 </div>
                 <div className="flex mt-3 items-top justify-end gap-2">
-                  <Tooltip
-                    title="Click to filter using location proximity"
-                  >
-                    <i className="fi fi-br-angle-left text-[14px] text-green-500 cursor-pointer flex items-center" onClick={() => setStoreFilter(!storeFilter)}></i>
+                  <Tooltip title="Click to filter using location proximity">
+                    <i
+                      className="fi fi-br-angle-left text-[14px] text-green-500 cursor-pointer flex items-center"
+                      onClick={() => setStoreFilter(!storeFilter)}
+                    ></i>
                   </Tooltip>
-                  <Tooltip
-                    title="Click to refresh the map data"
-                  >
-                    <i className="fi fi-br-rotate-right text-[12px] flex items-center cursor-pointer" onClick={() => window.location.reload()}></i>
+                  <Tooltip title="Click to refresh the map data">
+                    <i
+                      className="fi fi-br-rotate-right text-[12px] flex items-center cursor-pointer"
+                      onClick={() => window.location.reload()}
+                    ></i>
                   </Tooltip>
-                  <Tooltip
-                    title="Click to filter using location proximity"
-                  >
+                  <Tooltip title="Click to filter using location proximity">
                     <i
                       className="fi fi-br-ban text-[12px] text-red-500 flex items-center cursor-pointer"
                       onClick={() => {
                         if (isDisabled) {
                           message.error("Please  confirm screen selection");
                         } else {
-                          dispatch(addDetailsToCreateCampaign({
-                            pageName: "Advance Filter Page",
-                            id: pathname.split("/").splice(-1)[0],
-                            screenIds: finalSelectedScreens.map((s: any) => s._id)
-                          }));
+                          dispatch(
+                            addDetailsToCreateCampaign({
+                              pageName: "Advance Filter Page",
+                              id: pathname.split("/").splice(-1)[0],
+                              screenIds: finalSelectedScreens.map(
+                                (s: any) => s._id
+                              ),
+                            })
+                          );
                           setCurrentStep(step + 1);
-                        };
+                        }
                       }}
-                    >
-                    </i>
+                    ></i>
                   </Tooltip>
                 </div>
               </div>
@@ -418,15 +450,25 @@ export const AdvanceFiltersDetails = ({
                 </>
               }
               onChange={(e) => {
-                handleConfirmScreensSelections({checked: e, screens: finalSelectedScreens});
+                handleConfirmScreensSelections({
+                  checked: e,
+                  screens: finalSelectedScreens,
+                });
                 if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)) {
                   dispatch(
                     getRegularVsCohortPriceData({
                       id: campId,
-                      screenIds: getDataFromLocalStorage(SELECTED_SCREENS_ID)?.[campId],
-                      cohorts: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].cohorts,
-                      gender: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].gender,
-                      duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].duration,
+                      screenIds:
+                        getDataFromLocalStorage(SELECTED_SCREENS_ID)?.[campId],
+                      cohorts:
+                        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
+                          .cohorts,
+                      gender:
+                        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
+                          .gender,
+                      duration:
+                        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
+                          .duration,
                     })
                   );
                 }
@@ -445,16 +487,19 @@ export const AdvanceFiltersDetails = ({
               routes={routes}
               data={circleData}
               handleSelectFromMap={handleSelectFromMap}
-              handleAddManualSelection={handleAddManualSelectedScreenIntoFinalSelectedScreens}
-              onPolygonComplete={(screens: any) => handleFinalSelectedScreens({ type: 'add', screens })}
+              handleAddManualSelection={
+                handleAddManualSelectedScreenIntoFinalSelectedScreens
+              }
+              onPolygonComplete={(screens: any) =>
+                handleFinalSelectedScreens({ type: "add", screens })
+              }
               setPolygons={setPolygons}
               polygons={polygons}
             />
           )}
-
         </div>
       </div>
-      <div className="px-4 fixed bottom-0 left-0 w-full bg-white z-10">
+      <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF] z-10">
         <Footer
           handleBack={() => {
             setCurrentStep(step - 1);
@@ -463,13 +508,15 @@ export const AdvanceFiltersDetails = ({
             if (isDisabled) {
               message.error("Please  confirm screen selection");
             } else {
-              dispatch(addDetailsToCreateCampaign({
-                pageName: "Advance Filter Page",
-                id: pathname.split("/").splice(-1)[0],
-                screenIds: finalSelectedScreens.map((s: any) => s._id)
-              }));
+              dispatch(
+                addDetailsToCreateCampaign({
+                  pageName: "Advance Filter Page",
+                  id: pathname.split("/").splice(-1)[0],
+                  screenIds: finalSelectedScreens.map((s: any) => s._id),
+                })
+              );
               setCurrentStep(step + 1);
-            };
+            }
           }}
           campaignId={campaignId}
           pageName="Advance Filter Page"

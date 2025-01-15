@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { PrimaryInput } from "../atoms/PrimaryInput";
-import { CheckboxInput } from "../atoms/CheckboxInput"
+import { CheckboxInput } from "../atoms/CheckboxInput";
 import { PrimaryButton } from "../atoms/PrimaryButton";
 import { LinearBar } from "../../components/molecules/linearbar";
 import { MapSearchInput } from "../../components/atoms/MapSearchInput";
 import { Tooltip } from "antd";
-
 
 interface RouteProximityProps {
   routes?: any;
@@ -28,7 +27,6 @@ export const RouteProximity = ({
   handleRemoveRoute,
   routeFilteredScreens,
 }: RouteProximityProps) => {
-
   const [showDetails, setShowDetails] = useState<any>(null);
 
   function randomColor(index: any) {
@@ -39,18 +37,18 @@ export const RouteProximity = ({
   return (
     <div className="py-4 border-b border-gray-100">
       <div className="flex justify-start gap-2 items-center pt-2">
-        <h1 className="lg:text-[16px] md:text-[14px] text-gray-500">2. Choose your desired routes </h1>
-        <Tooltip
-            title="Enter the origin and destination of your desired routes and select all the screens in proximity of your desired routes"
-            >
+        <h1 className="lg:text-[16px] md:text-[14px] text-gray-500">
+          2. Choose your desired routes{" "}
+        </h1>
+        <Tooltip title="Enter the origin and destination of your desired routes and select all the screens in proximity of your desired routes">
           <i className="fi fi-rs-info pr-1 lg:text-[14px] md:text-[12px] text-gray-400 flex justify-center items-center"></i>
         </Tooltip>
-        <h1 className="text-blue-500">({routeFilteredScreens?.length})</h1>
+        <h1 className="text-[#129BFF]">({routeFilteredScreens?.length})</h1>
       </div>
-      
+
       <div className="grid grid-cols-5 gap-2 flex items-center pt-2">
         <div className="col-span-2 flex items-center">
-          <MapSearchInput 
+          <MapSearchInput
             handleClick={(e: any) => setRouteOrigin(e)}
             value={routeOrigin}
             placeholder="Origin"
@@ -61,7 +59,7 @@ export const RouteProximity = ({
           />
         </div>
         <div className="col-span-2">
-        <MapSearchInput 
+          <MapSearchInput
             handleClick={(e: any) => setRouteDestination(e)}
             value={routeDestination}
             placeholder="Destination"
@@ -76,7 +74,7 @@ export const RouteProximity = ({
             title="Check"
             action={() => {
               if (routes?.length >= 5) {
-                alert("Oops! you can only choose upto 5 routes...")
+                alert("Oops! you can only choose upto 5 routes...");
               } else {
                 handleRouteSetup(routeOrigin, routeDestination);
                 setRouteOrigin([]);
@@ -89,20 +87,30 @@ export const RouteProximity = ({
         </div>
       </div>
       <div className="pt-2">
-        <div className="flex justify-between pr-2" onClick={() => setShowDetails(null)}>
+        <div
+          className="flex justify-between pr-2"
+          onClick={() => setShowDetails(null)}
+        >
           <p className="text-sm text-[#9f9f9f]">Added Route</p>
           <p className="text-sm text-[#9f9f9f]">{routes.length}</p>
         </div>
         <div className="overflow-scroll h-44 mb-1">
           {routes?.map((route: any, index: any) => (
-            <div key={index} className={`
+            <div
+              key={index}
+              className={`
                 ${
-                  index === 0 ? "bg-[#540b0e20]" : 
-                  index === 1 ? "bg-[#e09f3e20]" : 
-                  index === 2 ? "bg-[#073b4c20]" : 
-                  index === 3 ? "bg-[#0f4c5c20]" : 
-                  index === 4 ? "bg-[#ef476f20]" : 
-                  "bg-[#F6F6F6]"
+                  index === 0
+                    ? "bg-[#540b0e20]"
+                    : index === 1
+                    ? "bg-[#e09f3e20]"
+                    : index === 2
+                    ? "bg-[#073b4c20]"
+                    : index === 3
+                    ? "bg-[#0f4c5c20]"
+                    : index === 4
+                    ? "bg-[#ef476f20]"
+                    : "bg-[#F6F6F6]"
                 }
                 p-2 my-1 rounded
               `}
@@ -111,19 +119,29 @@ export const RouteProximity = ({
               }}
             >
               <div className="">
-                <div className="flex justify-between items-center" onClick={() => {
-                  setShowDetails(index);
-                }}>
+                <div
+                  className="flex justify-between items-center"
+                  onClick={() => {
+                    setShowDetails(index);
+                  }}
+                >
                   <p className="text-sm">
-                    {index + 1}. <span className="font-bold">{route.origin.place_name?.split(",")[0]}</span> to {" "}
+                    {index + 1}.{" "}
+                    <span className="font-bold">
+                      {route.origin.place_name?.split(",")[0]}
+                    </span>{" "}
+                    to{" "}
                     <span className="font-bold">
                       {route.destination.place_name?.split(",")[0]}
                     </span>
-                    <span className="text-blue-600">
-                    ({route?.selectedScreens?.length})
+                    <span className="text-[#129BFF]">
+                      ({route?.selectedScreens?.length})
                     </span>
                   </p>
-                  <i className="fi fi-sr-cross-small text-gray-700 flex items-center" onClick={() => handleRemoveRoute(route.id)}></i>
+                  <i
+                    className="fi fi-sr-cross-small text-gray-700 flex items-center"
+                    onClick={() => handleRemoveRoute(route.id)}
+                  ></i>
                 </div>
               </div>
 
@@ -133,9 +151,7 @@ export const RouteProximity = ({
                     {/* <i className="fi fi-br-arrow-from-left text-[12px] text-green-600"></i> */}
                     <i className="fi fi-sr-marker text-violet-500 text-[12px]"></i>
 
-                    <p className="text-[12px]">
-                      {route.origin.place_name}
-                    </p>
+                    <p className="text-[12px]">{route.origin.place_name}</p>
                   </div>
                   <div className="flex gap-2 items-center">
                     {/* <i className="fi fi-br-arrow-alt-to-left text-[12px] text-red-600"></i> */}
@@ -146,12 +162,10 @@ export const RouteProximity = ({
                   </div>
                 </div>
               )}
-              
             </div>
           ))}
         </div>
-
       </div>
     </div>
-  )
-}
+  );
+};
