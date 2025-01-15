@@ -292,11 +292,13 @@ export const CreativeUploadDetails = ({
   };
 
   const validate = () => {
+    console.log(creativeUploadData)
     for (let city in creativeUploadData) {
       for (let data of creativeUploadData[city]) {
         if (
           data?.standardDayTimeCreatives?.length === 0 &&
-          data?.standardNightTimeCreatives?.length === 0
+          data?.standardNightTimeCreatives?.length === 0 &&
+          data?.triggerCreatives?.length === 0
         ) {
           return false;
         }

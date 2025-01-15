@@ -423,7 +423,7 @@ export const AdvanceFiltersDetails = ({
                   dispatch(
                     getRegularVsCohortPriceData({
                       id: campId,
-                      screenIds: getDataFromLocalStorage(SELECTED_SCREENS_ID),
+                      screenIds: getDataFromLocalStorage(SELECTED_SCREENS_ID)?.[campId],
                       cohorts: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].cohorts,
                       gender: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].gender,
                       duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].duration,
