@@ -16,8 +16,8 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
             }}
           />
           <RadioInput
-            title="3/18"
-            value={"3"}
+            title="2/18"
+            value={"2"}
             isChecked={selectedSOV === 3 ? true : false}
             onChange={() => {
               setSelectedSOV(3);
@@ -25,8 +25,8 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
             }}
           />
           <RadioInput
-            title="6/18"
-            value={"6"}
+            title="3/18"
+            value={"3"}
             isChecked={selectedSOV === 6 ? true : false}
             onChange={() => {
               setSelectedSOV(6);
