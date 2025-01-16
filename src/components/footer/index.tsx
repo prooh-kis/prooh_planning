@@ -50,7 +50,7 @@ export const Footer = ({
         )[0]
       );
     }
-  },[totalScreensData]);
+  },[totalScreensData, pageName]);
   // console.log(footerData);
   return (
     <div className="py-4 z-10 flex justify-between">
