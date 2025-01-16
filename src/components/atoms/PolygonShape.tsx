@@ -1,6 +1,6 @@
 import React from "react";
 
-export const PolygonShape: React.FC<{ data: any[] }> = ({ data }) => {
+export const PolygonShape: React.FC<{ color: any, data: any[] }> = ({ data, color }) => {
   // Ensure data is valid and contains at least one feature with coordinates
   if (!data.length || !data[0]?.geometry?.coordinates?.[0]?.length) {
     return (
@@ -46,12 +46,18 @@ export const PolygonShape: React.FC<{ data: any[] }> = ({ data }) => {
     .join(" ");
 
   return (
-    <div className="h-full w-full flex items-center justify-center">
-      <svg viewBox={`0 0 500 500`} className="w-full h-full">
+    <div className="h-full w-full flex items-center justify-center p-2">
+      <svg
+        viewBox={`0 0 500 500`}
+        className="w-full h-full"
+      >
         <polygon
           points={svgPoints}
-          fill="rgba(59, 130, 246, 0.5)" /* Tailwind's [#129BFF] with transparency */
-          stroke="#3b82f6" /* Tailwind's [#129BFF] */
+          // fill={color}
+          // stroke={color}
+          // fill="rgba(59, 130, 246, 0.5)" /* Tailwind's blue-500 with transparency */
+          fill="#08888850"
+          stroke="#3b82f6" /* Tailwind's blue-500 */
           strokeWidth="2"
         />
       </svg>

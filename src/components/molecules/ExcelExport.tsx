@@ -52,8 +52,8 @@ export function ExcelExport({ fileName, wscols = [] }: any) {
 
   return (
     <div className="flex items-center gap-2 truncate" onClick={exportToExcel}>
-      <i className="fi fi-sr-file-excel flex items-center text-green-600"></i>
-      <p className="text-sm truncate">Download Sample</p>
+      <i className="fi fi-sr-file-excel flex items-center text-[#22C55E]"></i>
+      <p className="text-sm truncate text-[#22C55E]">Download Sample</p>
     </div>
   );
 }

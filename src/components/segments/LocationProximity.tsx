@@ -4,8 +4,12 @@ import { CheckboxInput } from "../atoms/CheckboxInput";
 import { ExcelImport } from "../molecules/ExcelImport"
 import { RouteProximity } from "../molecules/RouteProximity"
 import { LinearBar } from "../molecules/linearbar";
+import { POIProximity } from "./POIProximity";
+import { useState } from "react";
 
 interface LocationProximityProps {
+  userLocation?: any;
+  setUserLocation?: any;
   routes?: any;
   routeOrigin?: any;
   setRouteOrigin?: any;
@@ -24,8 +28,17 @@ interface LocationProximityProps {
   polygons?: any;
   setPolygons?: any;
   routeFilteredScreens?: any;
+  pois?: any;
+  selectedPOIs?: any;
+  setSelectedPOIs?: any;
+  setPOIFilteredScreens?: any;
+  selectedScreensFromMap?: any;
+  handleSelectFromMap?: any;
+  handleConfirmScreensSelections?: any;
 }
 export const LocationProximity = ({
+  userLocation,
+  setUserLocation,
   routes,
   routeOrigin,
   setRouteOrigin,
@@ -44,10 +57,28 @@ export const LocationProximity = ({
   polygons,
   setPolygons,
   routeFilteredScreens,
+  pois,
+  selectedPOIs,
+  setSelectedPOIs,
+  setPOIFilteredScreens,
+  selectedScreensFromMap,
+  handleSelectFromMap,
+  handleConfirmScreensSelections,
 }: LocationProximityProps) => {
+
+  const [open, setOpen] = useState<any>({
+    "excel": false,
+    "route": false,
+    "polygon": false,
+    "poi": false,
+  });
   return (
     <div className="pt-2 h-full">
+      <div className="h-[60vh] overflow-scroll no-scrollbar">
+
       <ExcelImport
+        open={open}
+        setOpen={setOpen}
         icon="fi fi-rr-shop pl-2 text text-primaryButton flex items-center"
         text="Stores"
         setDataBrand={setDataBrand}
@@ -60,22 +91,42 @@ export const LocationProximity = ({
         handleFinalSelectedScreens={handleFinalSelectedScreens}
 
       />
-    <RouteProximity
-      routeFilteredScreens={routeFilteredScreens}
-      routes={routes}
-      routeOrigin={routeOrigin}
-      setRouteOrigin={setRouteOrigin}
-      routeDestination={routeDestination}
-      setRouteDestination={setRouteDestination}
-      handleRouteSetup={handleRouteSetup}
-      handleRemoveRoute={handleRemoveRoute}
-    />
-    <DrawnMapPolygon
-      polygons={polygons}
-      setPolygons={setPolygons}
-    />
+      <RouteProximity
+        open={open}
+        setOpen={setOpen}
+        userLocation={userLocation}
+        setUserLocation={userLocation}
+        routeFilteredScreens={routeFilteredScreens}
+        routes={routes}
+        routeOrigin={routeOrigin}
+        setRouteOrigin={setRouteOrigin}
+        routeDestination={routeDestination}
+        setRouteDestination={setRouteDestination}
+        handleRouteSetup={handleRouteSetup}
+        handleRemoveRoute={handleRemoveRoute}
+      />
+      <DrawnMapPolygon
+        open={open}
+        setOpen={setOpen}
+        polygons={polygons}
+        setPolygons={setPolygons}
+      />
+      <POIProximity
+        open={open}
+        setOpen={setOpen}
+        pois={pois}
+        selectedPOIs={selectedPOIs}
+        setSelectedPOIs={setSelectedPOIs}
+        setPOIFilteredScreens={setPOIFilteredScreens}
+        allScreens={allScreens}
+        finalSelectedScreens={finalSelectedScreens}
+        selectedScreensFromMap={selectedScreensFromMap}
+        handleSelectFromMap={handleSelectFromMap}
+        handleConfirmScreensSelections={handleConfirmScreensSelections}
+      />
+    </div>
 
-    <div className="pt-16">
+    <div className="pt-2">
       <div className="flex justify-start gap-2">
         <p className="text-[14px]">Showing Result</p>
         <Tooltip

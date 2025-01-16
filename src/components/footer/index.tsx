@@ -27,7 +27,7 @@ export const Footer = ({
 }: any) => {
   const dispatch = useDispatch<any>();
 
-  console.log(pageName);
+  // console.log(pageName)
   const [footerData, setFooterData] = useState({
     totalScreens: 0,
     totalTouchPoints: 0,
@@ -35,6 +35,7 @@ export const Footer = ({
     totalCampaignBudget: 0,
     totalCpm: 0,
     pricePerSlot: 0,
+    totalCities: 0,
   });
   const planningPageFooterDataGet = useSelector(
     (state: any) => state.planningPageFooterDataGet
@@ -49,8 +50,8 @@ export const Footer = ({
         )[0]
       );
     }
-  }, [totalScreensData]);
-  console.log(footerData);
+  },[totalScreensData]);
+  // console.log(footerData);
   return (
     <div className="py-4 z-10 flex justify-between">
       <div className="flex w-full justify-start items-center gap-4">
@@ -71,12 +72,18 @@ export const Footer = ({
                 Please wait while we calculate the cost of your desired plan...
               </p>
             </div>
-            <div className="w-fulll">
+            <div className="w-full">
               <SkeletonLoader />
             </div>
           </div>
         ) : (
           <div className="flex justify-between items-center gap-4">
+            <div className="flex gap-2 truncate items-center">
+              <h1 className="text-[12px] truncate">Cities</h1>
+              <h1 className="text-[14px] font-semibold">
+                {footerData?.totalCities}
+              </h1>
+            </div>
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">Screens</h1>
               <h1 className="text-[14px] font-semibold">

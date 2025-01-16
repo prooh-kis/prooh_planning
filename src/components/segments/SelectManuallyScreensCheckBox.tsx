@@ -32,6 +32,7 @@ export const SelectManuallyScreensCheckBox = ({
             // checked={manuallySelected > 0 ? true : false}
             onChange={handleCheck}
             checked={checked}
+            disabled={false}
           />
         </div>
         <div className="col-span-8">

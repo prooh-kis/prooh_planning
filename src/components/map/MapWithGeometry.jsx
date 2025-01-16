@@ -28,8 +28,6 @@ export function MapWithGeometry(props) {
   const [screenData, setScreenData] = useState(null);
   const [isSelectedData, setIsSelectedData] = useState(false);
 
-  const [userLocation, setUserLocation] = useState(null);
-
   const [viewState, setViewState] = useState({
     longitude: props?.geometry?.coordinates[1] || 77.0891,
     latitude: props?.geometry?.coordinates[0] || 28.495,
@@ -42,37 +40,51 @@ export function MapWithGeometry(props) {
       ? props?.data["brand"][0].concat(props?.data["comp"][0])
       : [];
 
-  function MapDrawControl({
-    onCreate = () => {},
-    onUpdate = () => {},
-    onDelete = () => {},
-    position,
-  }) {
-    useControl(
-      () =>
-        new MapboxDraw({
-          displayControlsDefault: false, // Hide default controls
-          controls: {
-            polygon: true, // Enable polygon drawing
-            trash: false, // Enable delete control
-            direct_select: false, // Allow direct selection of drawn features
-          },
-          // defaultMode: "draw_polygon", // Set default mode to polygon drawing
-        }),
-      ({ map }) => {
-        map.on("draw.create", onCreate);
-        map.on("draw.update", onUpdate);
-        map.on("draw.delete", onDelete);
-      },
-      ({ map }) => {
-        map.off("draw.create", onCreate);
-        map.off("draw.update", onUpdate);
-        map.off("draw.delete", onDelete);
-      },
-      {
-        position,
+
+  useEffect(() => {
+    if (!mapRef.current) return; // Ensure the map is initialized before accessing it
+
+    mapRef.current.on('load', () => {
+      console.log('Map has been loaded');
+    });
+  
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove(); // Clean up the map on component unmount
       }
-    );
+    };
+  }, []);
+
+function MapDrawControl({
+  onCreate = () => {},
+  onUpdate = () => {},
+  onDelete = () => {},
+  position,
+}) {
+  useControl(
+    () => new MapboxDraw({
+      displayControlsDefault: false, // Hide default controls
+      controls: {
+        polygon: true, // Enable polygon drawing
+        trash: false, // Enable delete control
+        direct_select: false, // Allow direct selection of drawn features
+      },
+      // defaultMode: "draw_polygon", // Set default mode to polygon drawing
+    }),
+    ({ map }) => {
+      map.on("draw.create", onCreate);
+      map.on("draw.update", onUpdate);
+      map.on("draw.delete", onDelete);
+    },
+    ({ map }) => {
+      map.off("draw.create", onCreate);
+      map.off("draw.update", onUpdate);
+      map.off("draw.delete", onDelete);
+    },
+    {
+      position,
+    }
+  );
 
     return null;
   }
@@ -170,26 +182,7 @@ export function MapWithGeometry(props) {
     [props]
   );
 
-  // Get user's current location
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setUserLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
-        // setViewState({
-        //   ...viewState,
-        //   latitude: position.coords.latitude,
-        //   longitude: position.coords.longitude,
-        // });
-      },
-      (error) => {
-        console.error("Error getting user location:", error);
-      },
-      { enableHighAccuracy: true }
-    );
-  }, []);
+
 
   const findCoordinates = (arrays, target) => {
     for (let i = 0; i < arrays.length; i++) {
@@ -275,16 +268,28 @@ export function MapWithGeometry(props) {
 
       const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${
         start[0]
-      },${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${
+      },${start[1]};${end[0]},${end[1]}?geometries=geojson&alternatives=true&access_token=${
         // process.env.REACT_APP_MAPBOX ||
         "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A"
       }`;
       const response = await fetch(url);
 
       const data = await response.json();
+      // console.log(data);
+      // setRouteData((pre) => [ ...pre, data.routes[0].geometry]);
+      // props?.handleRouteData(data.routes[0].geometry, route?.id);
 
-      setRouteData((pre) => [...pre, data.routes[0].geometry]);
-      props?.handleRouteData(data.routes[0].geometry, route?.id);
+      setRouteData((prev) => [
+        ...prev,
+        ...data.routes.map((route) => route.geometry),
+      ]);
+
+      // Call props.handleRouteData for each route
+      data.routes.forEach((route, index) => {
+        console.log(index, route);
+        props?.handleRouteData(route.geometry, route.id || `route-${index}`);
+      });
+
     } catch (error) {
       console.log("error in  finding routes : ", error);
     }
@@ -352,6 +357,7 @@ export function MapWithGeometry(props) {
           mapRef?.current?.fitBounds(bounds, {
             padding: 120,
           });
+          console.log("Map reference loaded.")
         } else {
           console.error("Map reference is null.");
         }
@@ -366,10 +372,8 @@ export function MapWithGeometry(props) {
     <div className="relative h-full w-full items-top">
       <div className="flex flex-col items-end gap-2 right-2 pt-2 absolute z-10">
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-[#F4F9FF] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
-            Selected Screens
-          </h1>
-          <div className="h-4 w-4 bg-primaryButton rounded-full"></div>
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-[#00A0FA10] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Selected Screens</h1>
+          <div className="h-4 w-4 bg-[#00A0FA] rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
           <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-[#F9462310] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
@@ -378,28 +382,20 @@ export function MapWithGeometry(props) {
           <div className="h-4 w-4 bg-[#F94623] rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-green-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
-            Near Brand Store
-          </h1>
-          <div className="h-4 w-4 bg-green-700 rounded-full"></div>
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-[#22C55E10] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Near Brand Store</h1>
+          <div className="h-4 w-4 bg-[#22C55E] rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-orange-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
-            Near Competitor Store
-          </h1>
-          <div className="h-4 w-4 bg-orange-300 rounded-full"></div>
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-[#F59E0B10] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Near Competitor Store</h1>
+          <div className="h-4 w-4 bg-[#F59E0B] rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-violet-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
-            Route Starting Point
-          </h1>
-          <div className="h-4 w-4 bg-violet-500 rounded-full"></div>
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-[#8B5CF610] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Route Starting Point</h1>
+          <div className="h-4 w-4 bg-[#8B5CF6] rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-pink-100 group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
-            Route Ending Point
-          </h1>
-          <div className="h-4 w-4 bg-pink-500 rounded-full"></div>
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-[#FF77E910] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Route Ending Point</h1>
+          <div className="h-4 w-4 bg-[#FF77E9] rounded-full"></div>
         </div>
       </div>
       <div className="w-full h-full flex">
@@ -423,34 +419,31 @@ export function MapWithGeometry(props) {
           />
           {/* )} */}
 
-          {selectedMarkers &&
-            selectedMarkers.length > 0 &&
-            selectedMarkers.map((marker, i) => (
-              <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
-                <div
-                  title={`Selected screens ${props?.filteredScreens?.length}`}
-                  className="cursor-pointer"
-                  onMouseEnter={(e) => {
+          {selectedMarkers && selectedMarkers.length > 0 && selectedMarkers.map((marker, i) => (
+            <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
+              <div 
+                title={`Selected screens ${props?.filteredScreens?.length}`}
+                className="cursor-pointer"
+                // onMouseEnter={(e) => {
+                //   e.stopPropagation();
+                //   setIsSelectedData(true);
+                //   getSingleScreenData(marker[2]);
+                // }}
+                // onMouseLeave={(e) => {
+                //   // e.stopPropagation();
+                //   // setScreenData(null);
+                // }}
+              >
+                <i className="fi fi-ss-circle text-primaryButton text-[14px]"
+                  onClick={(e) => {
                     e.stopPropagation();
                     setIsSelectedData(true);
                     getSingleScreenData(marker[2]);
                   }}
-                  onMouseLeave={(e) => {
-                    // e.stopPropagation();
-                    // setScreenData(null);
-                  }}
-                >
-                  <i
-                    className="fi fi-ss-circle text-primaryButton text-[14px]"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsSelectedData(true);
-                      getSingleScreenData(marker[2]);
-                    }}
-                  ></i>
-                </div>
-              </Marker>
-            ))}
+                ></i>
+              </div>
+            </Marker>
+          ))}
           {unSelectedMarkers?.length !== selectedMarkers?.length &&
             unSelectedMarkers &&
             unSelectedMarkers.map((marker, i) => (
@@ -462,15 +455,15 @@ export function MapWithGeometry(props) {
                     )?.length
                   }`}
                   className="cursor-pointer"
-                  onMouseEnter={(e) => {
-                    e.stopPropagation();
-                    setIsSelectedData(false);
-                    getSingleScreenData(marker[2]);
-                  }}
-                  onMouseLeave={(e) => {
-                    // e.stopPropagation();
-                    // setScreenData(null);
-                  }}
+                  // onMouseEnter={(e) => {
+                  //   e.stopPropagation();
+                  //   setIsSelectedData(false);
+                  //   getSingleScreenData(marker[2]);
+                  // }}
+                  // onMouseLeave={(e) => {
+                  //   // e.stopPropagation();
+                  //   // setScreenData(null);
+                  // }}
                 >
                   <i
                     className="fi-ss-circle text-[#F94623] text-[12px]"

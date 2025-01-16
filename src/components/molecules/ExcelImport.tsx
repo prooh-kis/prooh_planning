@@ -5,6 +5,8 @@ import { ExcelExport } from "./ExcelExport";
 import { Tooltip } from "antd";
 
 interface ExcelImportProps {
+  open: any;
+  setOpen: any;
   selectedScreens?: any;
   icon?: any;
   text?: any;
@@ -20,6 +22,8 @@ interface ExcelImportProps {
 }
 
 export function ExcelImport({
+  open,
+  setOpen,
   icon,
   text,
   allScreens,
@@ -98,7 +102,7 @@ export function ExcelImport({
     ); // in meters
     return distance <= radius * 1000;
   };
-
+ 
   const handleGetExcelData = (data: any) => {
     const brandCoordinates = data.brand
       .map((x: any) => x.filter((y: any) => /^[+-]?\d+(\.\d+)?$/.test(y)))
@@ -196,56 +200,78 @@ export function ExcelImport({
       }
     }
   };
-  return (
-    <div className="w-full border-b border-gray-100">
-      <div className="py-2 flex justify-start gap-2 items-center">
-        <h1 className="lg:text-[16px] md:text-[14px] text-gray-500">
-          1. Upload your target stores location data
-        </h1>
-        <Tooltip title="Download the sample excel sheet to edit it with the details of your desired stores and select screens in proximity of your desired locations">
-          <i className="fi fi-rs-info pr-1 lg:text-[14px] md:text-[12px] text-gray-400 flex justify-center items-center"></i>
-        </Tooltip>
-        <h1 className="text-[#129BFF]">({filteredScreens.length})</h1>
-      </div>
-      <div
-        className="border border-dashed w-full h-[40px] rounded-md flex justify-between items-center p-1"
-        onClick={handleClick}
-      >
-        <div className="flex justify-start gap-2 items-center">
-          <i className={icon}></i>
-          <p className="text-sm">{text}</p>
-        </div>
-        <input
-          title="file"
-          type="file"
-          accept=".xlsx, .xls"
-          ref={hiddenFileInput}
-          style={{ display: "none" }} // Make the file input element invisible
-          multiple={false}
-          onChange={handleFileUpload}
-        />
-        <p className="text-sm text-primaryButton pr-2">Upload</p>
-      </div>
-      <div className="flex items-center justify-between py-2">
-        <div>
-          {file !== null && (
-            <div>
-              <div className="flex items-center gap-2 truncate">
-                <p className="text-sm text-green-700 truncate">{file?.name}</p>
-                <i
-                  className="fi fi-sr-cross-small text-green-700 flex items-center"
-                  onClick={() => handleResetFile()}
-                ></i>
-              </div>
-              <p className="text-sm text-[#129BFF] truncate">
-                ({filteredScreens.length} matching locations found)
-              </p>
-            </div>
-          )}
-        </div>
 
-        <ExcelExport fileName="store_location_coordinates" />
+  return (
+    <div className="py-4 w-full border-b border-gray-100">
+      <div className="flex items-center justify-between">
+        <div className="flex justify-start gap-2 items-center py-2">
+          <h1 className="lg:text-[16px] text-[14px] text-gray-500">
+            1. Upload your target stores location data 
+          </h1>
+          <Tooltip
+              title="Download the sample excel sheet to edit it with the details of your desired stores and select screens in proximity of your desired locations"
+              >
+            <i className="fi fi-rs-info pr-1 lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
+          </Tooltip>
+          <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({filteredScreens.length})</h1>
+        </div>
+        <button className="flex items-center justify-center"
+          onClick={() => {
+            setOpen((prev: any) => ({
+              ...prev,
+              excel: !prev.excel,
+            }))
+          }}
+        >
+          {open["excel"] ? (
+            <i className="fi fi-sr-caret-up text-[#EF4444] flex items-center"></i>
+          ) : (
+            <i className="fi fi-sr-caret-down text-[#22C55E] flex items-center"></i>
+          )}
+        </button>
       </div>
+      
+      {open["excel"] && (
+        <div className="w-full">
+          <div
+            className="border border-dashed w-full h-[40px] rounded-md flex justify-between items-center p-1"
+            onClick={handleClick}
+          >
+            <div className="flex justify-start gap-2 items-center">
+              <i className={icon}></i>
+              <p className="text-sm">{text}</p>
+            </div>
+            <input
+              title="file"
+              type="file"
+              accept=".xlsx, .xls"
+              ref={hiddenFileInput}
+              style={{ display: "none" }} // Make the file input element invisible
+              multiple={false}
+              onChange={handleFileUpload}
+            />
+            <p className="text-sm text-primaryButton pr-2">Upload</p>
+          </div>
+          <div className="flex items-center justify-between py-2">
+            <div>
+              {file !== null && (
+                <div>
+                  <div className="flex items-center gap-2 truncate">
+                    <p className="text-sm text-green-700 truncate">{file?.name}</p>
+                    <i className="fi fi-sr-cross-small text-green-700 flex items-center" onClick={() => handleResetFile()}></i>
+                  </div>
+                  <p className="text-sm text-blue-500 truncate">({filteredScreens.length} matching locations found)</p>
+                </div>
+        
+              )}
+            </div>
+            
+            <ExcelExport
+              fileName="store_location_coordinates"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

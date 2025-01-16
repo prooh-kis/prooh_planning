@@ -53,7 +53,9 @@ export const AdvanceFiltersDetails = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
-  const campId = campaignId ? campaignId : pathname.split("/").splice(-1)[0];
+  const campId = campaignId ? campaignId : pathname.split("/").splice(-1)[0]
+
+  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
 
   const [storeFilter, setStoreFilter] = useState<any>(true);
 
@@ -88,6 +90,27 @@ export const AdvanceFiltersDetails = ({
     error: errorAdvanceFilterData,
     data: advanceFilterData,
   } = screensDataAdvanceFilterGet;
+
+  // Get user's current location
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+        // setViewState({
+        //   ...viewState,
+        //   latitude: position.coords.latitude,
+        //   longitude: position.coords.longitude,
+        // });
+      },
+      (error) => {
+        console.error("Error getting user location:", error);
+      },
+      { enableHighAccuracy: true }
+    );
+  }, []);
 
   // Handle Final screen selection
   const handleFinalSelectedScreens = ({ type, screens }: any) => {
@@ -157,6 +180,7 @@ export const AdvanceFiltersDetails = ({
   // Add screens for selection after adding routes
   const handleRouteData = (routeData: any, id: any) => {
     const radiusInMeters = 1000; // 1000 meters radius
+
     const line = turf.lineString(routeData.coordinates); // Create a LineString from route coordinates
     const bufferedArea: any = turf.buffer(line, radiusInMeters / 1000, {
       units: "kilometers",
@@ -170,20 +194,26 @@ export const AdvanceFiltersDetails = ({
       return turf.booleanPointInPolygon(screenPoint, bufferedArea); // Check if screen is within the buffer
     });
 
+    console.log(filteredRecords);
+  
     let arr = routes;
+    console.log(arr);
     const screens: any = routeFilteredScreens;
-
+    console.log(screens)
     for (let data of arr) {
+      console.log(data);
       if (data?.id === id) {
         data.selectedScreens = filteredRecords;
         filteredRecords.map((f: any) => {
           if (!screens.map((s: any) => s._id).includes(f._id)) {
+            console.log("yes", f)
             screens.push(f);
           }
         });
       }
     }
-
+  
+    console.log(screens);
     setRouteFilteredScreens(screens);
     setRoutes(arr);
 
@@ -202,6 +232,7 @@ export const AdvanceFiltersDetails = ({
     route["selectedScreens"] = [];
     route["id"] = routes?.length + 1;
 
+    console.log(routes);
     if (routes.includes(route)) {
     } else {
       routes.push(route);
@@ -314,7 +345,7 @@ export const AdvanceFiltersDetails = ({
     <div className="w-full">
       <div className="h-full w-full py-3 grid grid-cols-2 gap-4">
         <div className="col-span-1 h-full py-2 pr-4">
-          {storeFilter ? (
+          {storeFilter && (
             <div className="h-auto">
               <div className="flex justify-between">
                 <div className="truncate w-full flex items-center">
@@ -351,12 +382,11 @@ export const AdvanceFiltersDetails = ({
                       }}
                     ></i>
                   </Tooltip>
-                  <Tooltip title="Click to filter using POIs proximity">
-                    <i
-                      className="fi fi-br-angle-right text-[12px] text-green-500 cursor-pointer flex items-center"
-                      onClick={() => setStoreFilter(!storeFilter)}
-                    ></i>
-                  </Tooltip>
+                  {/* <Tooltip
+                    title="Click to filter using POIs proximity"
+                  >
+                    <i className="fi fi-br-angle-right text-[12px] text-green-500 cursor-pointer flex items-center" onClick={() => setStoreFilter(!storeFilter)}></i>
+                  </Tooltip> */}
                 </div>
               </div>
 
@@ -379,59 +409,12 @@ export const AdvanceFiltersDetails = ({
                 handleFinalSelectedScreens={handleFinalSelectedScreens}
                 polygons={polygons}
                 setPolygons={setPolygons}
-              />
-            </div>
-          ) : (
-            <div className="h-auto">
-              <div className="flex w-full justify-between">
-                <div className="truncate w-full flex items-center">
-                  <h1 className="lg:text-[24px] md:text-[18px] text-primaryText font-semibold truncate">
-                    POI Proximity
-                  </h1>
-                </div>
-                <div className="flex mt-3 items-top justify-end gap-2">
-                  <Tooltip title="Click to filter using location proximity">
-                    <i
-                      className="fi fi-br-angle-left text-[14px] text-green-500 cursor-pointer flex items-center"
-                      onClick={() => setStoreFilter(!storeFilter)}
-                    ></i>
-                  </Tooltip>
-                  <Tooltip title="Click to refresh the map data">
-                    <i
-                      className="fi fi-br-rotate-right text-[12px] flex items-center cursor-pointer"
-                      onClick={() => window.location.reload()}
-                    ></i>
-                  </Tooltip>
-                  <Tooltip title="Click to filter using location proximity">
-                    <i
-                      className="fi fi-br-ban text-[12px] text-red-500 flex items-center cursor-pointer"
-                      onClick={() => {
-                        if (isDisabled) {
-                          message.error("Please  confirm screen selection");
-                        } else {
-                          dispatch(
-                            addDetailsToCreateCampaign({
-                              pageName: "Advance Filter Page",
-                              id: pathname.split("/").splice(-1)[0],
-                              screenIds: finalSelectedScreens.map(
-                                (s: any) => s._id
-                              ),
-                            })
-                          );
-                          setCurrentStep(step + 1);
-                        }
-                      }}
-                    ></i>
-                  </Tooltip>
-                </div>
-              </div>
-              <POIProximity
+                userLocation={userLocation}
+                setUserLocation={setUserLocation}
                 pois={pois}
                 selectedPOIs={selectedPOIs}
                 setSelectedPOIs={setSelectedPOIs}
                 setPOIFilteredScreens={setPOIFilteredScreens}
-                allScreens={allScreens}
-                finalSelectedScreens={finalSelectedScreens}
                 selectedScreensFromMap={selectedScreensFromMap}
                 handleSelectFromMap={handleSelectFromMap}
                 handleConfirmScreensSelections={handleConfirmScreensSelections}
@@ -480,6 +463,8 @@ export const AdvanceFiltersDetails = ({
         <div className="col-span-1 w-full h-full py-2">
           {allScreens?.length > 0 && (
             <MapWithGeometry
+              userLocation={userLocation}
+              setUserLocation={setUserLocation}
               handleRouteData={handleRouteData}
               circleRadius={circleRadius}
               filteredScreens={finalSelectedScreens}

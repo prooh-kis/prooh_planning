@@ -50,6 +50,9 @@ export const CostSummaryTable1 = ({
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">CPM</h1>
           </th>
+          <th className="flex w-full items-center justify-center gap-2">
+            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">Price/Slot</h1>
+          </th>
         </tr>
       </thead>
       <tbody className="border overflow-scroll">
@@ -109,6 +112,11 @@ export const CostSummaryTable1 = ({
             <th className="flex w-full items-center justify-center gap-2">
               <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F] font-normal">
                 &#8377;{data?.totalCpm?.toFixed(2) || 0}
+              </h1>
+            </th>
+            <th className="flex w-full items-center justify-center gap-2">
+              <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F] font-normal">
+                &#8377;{data?.pricePerSlot?.toFixed(2) || 0}
               </h1>
             </th>
           </tr>

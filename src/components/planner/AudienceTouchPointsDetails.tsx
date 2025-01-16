@@ -202,12 +202,11 @@ export const AudienceTouchPointsDetails = ({
       })
     );
 
-    dispatch(
-      getPlanningPageFooterData({
-        id: campaignId,
-        pageName: "step1",
-      })
-    );
+    dispatch(getPlanningPageFooterData({
+      id: campaignId,
+      pageName: "step1",
+
+    }));
 
     dispatch(
       getScreenDataForAdvanceFilters({
@@ -342,29 +341,21 @@ export const AudienceTouchPointsDetails = ({
               // setShowIconHighlight(false);
               return;
             } else {
-              dispatch(
-                addDetailsToCreateCampaign({
-                  pageName: "Audience And TouchPoint Page",
-                  id: campaignId,
-                  markets: Object.keys(
-                    getDataFromLocalStorage(AUDIENCE_DATA)?.[campaignId]
-                  ),
-                  cohorts: getDataFromLocalStorage(
-                    SELECTED_AUDIENCE_TOUCHPOINTS
-                  )?.[campaignId]?.cohorts,
-                  touchPoints: getDataFromLocalStorage(
-                    SELECTED_AUDIENCE_TOUCHPOINTS
-                  )?.[campaignId]?.touchPoints,
-                  gender: getDataFromLocalStorage(
-                    SELECTED_AUDIENCE_TOUCHPOINTS
-                  )?.[campaignId]?.gender,
-                  screensSelectedCount: screensCost?.screensSelectedCount,
-                  impressionSelectedCount: screensCost?.impressionSelectedCount,
-                  budgetSelected: screensCost?.budgetSelected,
-                  cpmSelected: screensCost?.cpmSelected,
-                })
-              );
-
+              dispatch(addDetailsToCreateCampaign({
+                pageName: "Audience And TouchPoint Page",
+                id: campaignId,
+                markets: Object.keys(getDataFromLocalStorage(AUDIENCE_DATA)?.[campaignId]),
+                cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.[campaignId]?.cohorts,
+                touchPoints: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.[campaignId]?.touchPoints,
+                gender: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.[campaignId]?.gender,
+                screensSelectedCount: screensCost?.screensSelectedCount, 
+                impressionSelectedCount: screensCost?.impressionSelectedCount,
+                budgetSelected: screensCost?.budgetSelected,
+                cpmSelected: screensCost?.cpmSelected,
+                pricePerSlotSelectedCount: screensCost?.pricePerSlotSelected,
+                citiesSelectedCount: screensCost?.citiesSelectedCount
+              }));
+              
               setCurrentStep(step + 1);
               saveDataOnLocalStorage(COST_SUMMARY, {
                 [campaignId]: [selectedScreensData, totalScreensData],
