@@ -21,7 +21,6 @@ import {
 export const Landing: React.FC = () => {
   const dispatch = useDispatch<any>();
 
-  const [landingPageData, setLandingPageData] = useState<any>({});
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
@@ -31,19 +30,13 @@ export const Landing: React.FC = () => {
   const { loading, error, data } = landingPageDataGet;
 
   useEffect(() => {
-    if (getDataFromLocalStorage(LANDING_PAGE_DATA)) {
-      setLandingPageData(getDataFromLocalStorage(LANDING_PAGE_DATA));
-    } else {
-      setLandingPageData(data);
-    }
     dispatch(getLandingPageData());
-  }, [dispatch]);
-
+  },[dispatch])
   return (
     <div className="w-screen h-full">
       <Section1 />
       <FloatingBrandIcon />
-      <OurAdvertisingJourney landingPageData={landingPageData} />
+      <OurAdvertisingJourney data={data} />
       <HowItsWork />
       <MeetOurDataHero />
       <FeedBack />

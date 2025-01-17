@@ -109,6 +109,9 @@ export const CampaignDashboard = ({
           <DashboardFilters campaignDetails={campaignDetails} />
           <div className="grid grid-cols-2 gap-2">
             <button
+              id="asd"
+              title="ids"
+              type="button"
               className="col-span-1 border border-gray-100 rounded-[8px] p-2"
               // onClick={() => setOpenEdit(true)}
               onClick={() => {

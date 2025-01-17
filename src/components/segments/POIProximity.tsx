@@ -164,88 +164,83 @@ export const POIProximity = ({
             </div>
           </div>
           <div className="pt-2">
-            <div className="flex justify-start items-center gap-2">
-              <h1 className="text-[14px] font-semibold">Showing Results Below</h1>
-            </div>
-            <div className="pt-1">
-              <div className="pt-2">
-                <div className="flex justify-start items-center gap-2">
-                  <h2 className="text-[12px] font-semibold">Atleast One</h2>
-                  <Tooltip
-                    title="Check to select all the screens having any one POI in the proximity"
-                    >
-                      <i className="fi fi-rs-info text-[12px] text-gray-400 flex justify-center items-center"></i>
-                  </Tooltip>
-                </div>
+            <div className="pt-2">
+              <div className="flex justify-start items-center gap-2">
+                <h2 className="text-[12px] font-semibold">Atleast One</h2>
+                <Tooltip
+                  title="Check to select all the screens having any one POI in the proximity"
+                  >
+                    <i className="fi fi-rs-info text-[12px] text-gray-400 flex justify-center items-center"></i>
+                </Tooltip>
+              </div>
 
-                <p className="text-[12px] text-[#9f9f9f]">
-                  These {filterScreensByInterests(screensForPOIFilters, selectedPOIs).screensWithAnyInterest.length} locations have been shortlisted even if anyone of the
-                  filters above are matched
+              <p className="text-[12px] text-[#9f9f9f]">
+                These {filterScreensByInterests(screensForPOIFilters, selectedPOIs).screensWithAnyInterest.length} locations have been shortlisted even if anyone of the
+                filters above are matched
+              </p>
+              <div className="pt-1 grid grid-cols-12 gap-2 flex items-center">
+                <div className="col-span-2">
+                  <CheckboxInput
+                    color="#52A2FF"
+                    label={
+                      filterScreensByInterests(screensForPOIFilters, selectedPOIs)
+                        .screensWithAnyInterest.length
+                    }
+                    onChange={(checked) => {
+                      setChecked1(checked);
+                      console.log(screensForPOIFilters);
+                      if (checked) {
+                        setPOIFilteredScreens(
+                          filterScreensByInterests(
+                            screensForPOIFilters,
+                            selectedPOIs
+                          ).screensWithAnyInterest
+                        );
+                      }
+
+                      handleConfirmScreensSelections({
+                        checked, screens: filterScreensByInterests(
+                        finalSelectedScreens,
+                        selectedPOIs
+                      ).screensWithAnyInterest});
+                    }}
+                    disabled={false}
+                    checked={checked1}
+                  />
+                </div>
+                <div className="col-span-8">
+                  <LinearBar
+                    value={
+                      (filterScreensByInterests(
+                        finalSelectedScreens,
+                        selectedPOIs
+                      ).screensWithAnyInterest.length *
+                        100) /
+                      allScreens.length
+                    }
+                    colors={["#F3F3F3", "#7AB3A2"]}
+                  />
+                </div>
+                <p className="col-span-2 text-[12px] text-semibold flex justify-end truncate">
+                  {allScreens?.length} Sites
                 </p>
-                <div className="pt-1 grid grid-cols-12 gap-2 flex items-center">
-                  <div className="col-span-2">
-                    <CheckboxInput
-                      color="#52A2FF"
-                      label={
-                        filterScreensByInterests(screensForPOIFilters, selectedPOIs)
-                          .screensWithAnyInterest.length
-                      }
-                      onChange={(checked) => {
-                        setChecked1(checked);
-                        console.log(screensForPOIFilters);
-                        if (checked) {
-                          setPOIFilteredScreens(
-                            filterScreensByInterests(
-                              screensForPOIFilters,
-                              selectedPOIs
-                            ).screensWithAnyInterest
-                          );
-                        }
-
-                        handleConfirmScreensSelections({
-                          checked, screens: filterScreensByInterests(
-                          finalSelectedScreens,
-                          selectedPOIs
-                        ).screensWithAnyInterest});
-                      }}
-                      disabled={false}
-                      checked={checked1}
-                    />
-                  </div>
-                  <div className="col-span-8">
-                    <LinearBar
-                      value={
-                        (filterScreensByInterests(
-                          finalSelectedScreens,
-                          selectedPOIs
-                        ).screensWithAnyInterest.length *
-                          100) /
-                        allScreens.length
-                      }
-                      colors={["#F3F3F3", "#7AB3A2"]}
-                    />
-                  </div>
-                  <p className="col-span-2 text-[12px] text-semibold flex justify-end truncate">
-                    {allScreens?.length} Sites
-                  </p>
-                </div>
               </div>
-              <div className="">
-                <SelectManuallyScreensCheckBox
-                  manuallySelected={selectedScreensFromMap?.length}
-                  unselectedScreen={allScreens?.length - finalSelectedScreens?.length}
-                  handleCheck={(checked: any) => {
-                    setChecked2(checked);
-              
-                    allScreens?.filter((s: any) => !finalSelectedScreens?.map((sc: any) => sc._id)?.includes(s._id))?.forEach((sd: any) => {
-                      handleSelectFromMap(checked, sd)
-                    })
-                  }}
-                  checked={checked2}
-                />
-              </div>
-      
             </div>
+            <div className="">
+              <SelectManuallyScreensCheckBox
+                manuallySelected={selectedScreensFromMap?.length}
+                unselectedScreen={allScreens?.length - finalSelectedScreens?.length}
+                handleCheck={(checked: any) => {
+                  setChecked2(checked);
+            
+                  allScreens?.filter((s: any) => !finalSelectedScreens?.map((sc: any) => sc._id)?.includes(s._id))?.forEach((sd: any) => {
+                    handleSelectFromMap(checked, sd)
+                  })
+                }}
+                checked={checked2}
+              />
+            </div>
+      
           </div>
         </div>
       )}

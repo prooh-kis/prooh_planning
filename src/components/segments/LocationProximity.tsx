@@ -128,11 +128,11 @@ export const LocationProximity = ({
 
     <div className="pt-2">
       <div className="flex justify-start gap-2">
-        <p className="text-[14px]">Showing Result</p>
+        <h1 className="lg:text-[16px] text-[14px] font-semibold">Showing Results Below</h1>
         <Tooltip
             title="Only showing unique screens from all the above filters selected"
             >
-          <i className="fi fi-rs-info pr-1 text-[14px] text-gray-400 flex justify-center items-center"></i>
+          <i className="fi fi-rs-info pr-1 lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
         </Tooltip>
       </div>
 

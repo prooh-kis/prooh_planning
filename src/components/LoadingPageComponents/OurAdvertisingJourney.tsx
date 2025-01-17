@@ -4,9 +4,14 @@ import { LandingPageMapFooter } from "../../components/molecules/LandingPageMapF
 import { LandingPageMapHeader } from "../../components/molecules/LandingPageMapHeader";
 import { LandingPageTableView } from "../../components/molecules/LandingPageTableView";
 import React, { useEffect, useRef, useState } from "react";
+import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { LANDING_PAGE_DATA } from "../../constants/localStorageConstants";
+import { getLandingPageData } from "../../actions/screenAction";
+import { useDispatch } from "react-redux";
 
-export const OurAdvertisingJourney = ({ landingPageData }: any) => {
+export const OurAdvertisingJourney = ({ data }: any) => {
   const targetDivRef = useRef<HTMLDivElement>(null);
+  
   const [view, setView] = useState<any>("map");
   const [screenData, setScreenData] = useState<any>([]);
   const [countryStates, setCountryStates] = useState<any>({});
@@ -16,6 +21,15 @@ export const OurAdvertisingJourney = ({ landingPageData }: any) => {
   const [defCnt, setDefCnt] = useState<any>([]);
   const [defSt, setDefSt] = useState<any>([]);
   const [defCt, setDefCt] = useState<any>("");
+  const [landingPageData, setLandingPageData] = useState<any>({});
+
+  useEffect(() => {
+    if (getDataFromLocalStorage(LANDING_PAGE_DATA)) {
+      setLandingPageData(getDataFromLocalStorage(LANDING_PAGE_DATA));
+    } else {
+      setLandingPageData(data);
+    }
+  }, [data]);
 
   const scrollToTarget = () => {
     if (targetDivRef.current) {

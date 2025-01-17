@@ -74,7 +74,7 @@ export function LandingPageMapFooter({ data }: any) {
             }`}
           >
             <h1 className="lg:text-[32px] text-[24px] font-bold">
-              {item.value}
+              {item.value ? item.value : 0}
             </h1>
             <p className="lg:text-[16px] text-[12px]truncate">{item.label}</p>
           </div>

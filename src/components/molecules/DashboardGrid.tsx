@@ -32,7 +32,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
           <div className="p-2">
           <h1 className="lg:text-[40px] text-[36px] text-gray-400">
             <span className="text-gray-900">
-              {`${getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date())}`}
+              {`${getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date().getTime() < new Date(campaignDetails?.endDate).getTime() ? campaignDetails?.endDate : new Date())}`}
             </span> / {campaignDetails?.duration}
           </h1>
           </div>

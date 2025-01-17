@@ -277,18 +277,13 @@ function MapDrawControl({
       const data = await response.json();
       // console.log(data);
       // setRouteData((pre) => [ ...pre, data.routes[0].geometry]);
-      // props?.handleRouteData(data.routes[0].geometry, route?.id);
 
       setRouteData((prev) => [
         ...prev,
         ...data.routes.map((route) => route.geometry),
       ]);
 
-      // Call props.handleRouteData for each route
-      data.routes.forEach((route, index) => {
-        console.log(index, route);
-        props?.handleRouteData(route.geometry, route.id || `route-${index}`);
-      });
+      props?.handleRouteData(data.routes, route.id);
 
     } catch (error) {
       console.log("error in  finding routes : ", error);
@@ -506,7 +501,7 @@ function MapDrawControl({
                 longitude={route?.coordinates[0]?.[0]}
               >
                 <div>
-                  <i className="fi fi-sr-marker text-violet-500 text-[24px]"></i>
+                  <i className="fi fi-sr-marker text-[#8B5CF6] text-[24px]"></i>
                 </div>
               </Marker>
             ))}
@@ -522,7 +517,7 @@ function MapDrawControl({
                 }
               >
                 <div>
-                  <i className="fi fi-sr-marker text-pink-500 text-[24px]"></i>
+                  <i className="fi fi-sr-marker text-[#FF77E9] text-[24px]"></i>
                 </div>
               </Marker>
             ))}

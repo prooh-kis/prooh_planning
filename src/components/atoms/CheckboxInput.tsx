@@ -49,7 +49,7 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({ showIcon, icon, small, 
           </Tooltip>
         </span>
       ) : (
-        <span className={`${disabled ? "pl-2": ""} col-span-11 flex justify-start text-[${color ? color : "#21394F"}] text-[${textSize ? textSize : "12px"}] truncate`}>
+        <span className={`pl-2 col-span-11 flex justify-start text-[${color ? color : "#21394F"}] text-[${textSize ? textSize : "12px"}] truncate whitespace-pre`}>
           {label}
         </span>
       )}

@@ -178,51 +178,59 @@ export const AdvanceFiltersDetails = ({
   };
 
   // Add screens for selection after adding routes
-  const handleRouteData = (routeData: any, id: any) => {
+  const handleRouteData = (routeDataArray: any[], id: any) => {
     const radiusInMeters = 1000; // 1000 meters radius
-
-    const line = turf.lineString(routeData.coordinates); // Create a LineString from route coordinates
-    const bufferedArea: any = turf.buffer(line, radiusInMeters / 1000, {
-      units: "kilometers",
-    }); // Buffer area around the route
-
-    const filteredRecords = allScreens?.filter((point: any) => {
-      const screenPoint = turf.point([
-        point.location.geographicalLocation.longitude,
-        point.location.geographicalLocation.latitude,
-      ]);
-      return turf.booleanPointInPolygon(screenPoint, bufferedArea); // Check if screen is within the buffer
-    });
-
-    console.log(filteredRecords);
+    let combinedFilteredRecords: any[] = []; // To store all filtered screens across routes
+  
+    // Iterate over each route in the routeData array
+    for (const routeData of routeDataArray) {
+      const line = turf.lineString(routeData.geometry.coordinates); // Create a LineString from route coordinates
+      const bufferedArea: any = turf.buffer(line, radiusInMeters / 1000, {
+        units: "kilometers",
+      }); // Buffer area around the route
+  
+      const filteredRecords = allScreens?.filter((point: any) => {
+        const screenPoint = turf.point([
+          point.location.geographicalLocation.longitude,
+          point.location.geographicalLocation.latitude,
+        ]);
+        return turf.booleanPointInPolygon(screenPoint, bufferedArea); // Check if screen is within the buffer
+      });
+  
+      combinedFilteredRecords = [
+        ...combinedFilteredRecords,
+        ...filteredRecords.filter(
+          (record: any) =>
+            !combinedFilteredRecords.some(
+              (existing: any) => existing._id === record._id
+            )
+        ),
+      ]; // Add unique records to combinedFilteredRecords
+    }
   
     let arr = routes;
-    console.log(arr);
     const screens: any = routeFilteredScreens;
-    console.log(screens)
+  
     for (let data of arr) {
-      console.log(data);
       if (data?.id === id) {
-        data.selectedScreens = filteredRecords;
-        filteredRecords.map((f: any) => {
+        data.selectedScreens = combinedFilteredRecords;
+        combinedFilteredRecords.forEach((f: any) => {
           if (!screens.map((s: any) => s._id).includes(f._id)) {
-            console.log("yes", f)
             screens.push(f);
           }
         });
       }
     }
   
-    console.log(screens);
     setRouteFilteredScreens(screens);
     setRoutes(arr);
-
+  
     handleFinalSelectedScreens({
       type: "add",
-      screens: filteredRecords || [],
+      screens: combinedFilteredRecords || [],
     });
   };
-
+  
   // Add/remove routes to select screens
   const handleRouteSetup = async (originData: any, destinationData: any) => {
     let route: any = {};
@@ -382,11 +390,6 @@ export const AdvanceFiltersDetails = ({
                       }}
                     ></i>
                   </Tooltip>
-                  {/* <Tooltip
-                    title="Click to filter using POIs proximity"
-                  >
-                    <i className="fi fi-br-angle-right text-[12px] text-green-500 cursor-pointer flex items-center" onClick={() => setStoreFilter(!storeFilter)}></i>
-                  </Tooltip> */}
                 </div>
               </div>
 
@@ -427,9 +430,9 @@ export const AdvanceFiltersDetails = ({
                 <>
                   Confirm and take{" "}
                   <span className=" font-bold">
-                    {`${finalSelectedScreens.length} Sites Out of ${allScreens.length} Sites `}
+                    {`${finalSelectedScreens.length} Sites Out of ${allScreens.length} Sites`}
                   </span>
-                  for my plan
+                  {" "} for my plan
                 </>
               }
               onChange={(e) => {
