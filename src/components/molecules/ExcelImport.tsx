@@ -203,10 +203,17 @@ export function ExcelImport({
 
   return (
     <div className="py-4 w-full border-b border-gray-100">
-      <div className="flex items-center justify-between">
+      <button title="" type="button" className="flex items-center justify-between"
+        onClick={() => {
+          setOpen((prev: any) => ({
+            ...prev,
+            excel: !prev.excel,
+          }))
+        }}
+      >
         <div className="flex justify-start gap-2 items-center py-2">
           <h1 className="lg:text-[16px] text-[14px] text-gray-500">
-            1. Upload your target stores location data 
+            1. Choose your target stores 
           </h1>
           <Tooltip
               title="Download the sample excel sheet to edit it with the details of your desired stores and select screens in proximity of your desired locations"
@@ -215,21 +222,14 @@ export function ExcelImport({
           </Tooltip>
           <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({filteredScreens.length})</h1>
         </div>
-        <button className="flex items-center justify-center"
-          onClick={() => {
-            setOpen((prev: any) => ({
-              ...prev,
-              excel: !prev.excel,
-            }))
-          }}
-        >
+        <div className="flex items-center justify-center">
           {open["excel"] ? (
             <i className="fi fi-sr-caret-up text-[#EF4444] flex items-center"></i>
           ) : (
             <i className="fi fi-sr-caret-down text-[#22C55E] flex items-center"></i>
           )}
-        </button>
-      </div>
+        </div>
+      </button>
       
       {open["excel"] && (
         <div className="w-full">

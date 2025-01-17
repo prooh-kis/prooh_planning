@@ -36,7 +36,14 @@ export const DrawnMapPolygon = ({
   }
   return (
     <div className="py-4 border-b">
-      <div className="flex items-center justify-between">
+      <button type="button" className="flex items-center justify-between"
+        onClick={() => {
+          setOpen((prev: any) => ({
+            ...prev,
+            polygon: !prev.polygon,
+          }))
+        }}
+      >
         <div className="flex justify-start gap-2 items-center py-2">
           <h1 className="lg:text-[16px] text-[14px] text-gray-500">3. Selected Location Areas </h1>
           <Tooltip
@@ -46,21 +53,14 @@ export const DrawnMapPolygon = ({
           </Tooltip>
           <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({getUniqueScreens(polygons)?.length})</h1>
         </div>
-        <button className="flex items-center justify-center"
-          onClick={() => {
-            setOpen((prev: any) => ({
-              ...prev,
-              polygon: !prev.polygon,
-            }))
-          }}
-        >
+        <div className="flex items-center justify-center">
           {open?.["polygon"] ? (
             <i className="fi fi-sr-caret-up text-[#EF4444] flex items-center"></i>
           ) : (
             <i className="fi fi-sr-caret-down text-[#22C55E] flex items-center"></i>
           )}
-        </button>
-      </div>
+        </div>
+      </button>
       {open["polygon"] && (
         <div className="h-full my-2 border rounded h-full grid grid-cols-3 gap-4">
           {polygons?.length === 0 && (

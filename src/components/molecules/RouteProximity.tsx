@@ -44,9 +44,16 @@ export const RouteProximity = ({
 
   return (
     <div className="py-4 border-b border-gray-100">
-      <div className="flex items-center justify-between">
+      <button type="button" className="flex items-center justify-between"
+        onClick={() => {
+          setOpen((prev: any) => ({
+            ...prev,
+            route: !prev.route,
+          }))
+        }}
+      >
         <div className="flex justify-start gap-2 items-center py-2">
-          <h1 className="lg:text-[16px] text-[14px] text-gray-500">2. Choose your desired routes </h1>
+          <h1 className="lg:text-[16px] text-[14px] text-gray-500 truncate">2. Choose your desired routes </h1>
           <Tooltip
               title="Enter the origin and destination of your desired routes and select all the screens in proximity of your desired routes"
               >
@@ -54,21 +61,14 @@ export const RouteProximity = ({
           </Tooltip>
           <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({routeFilteredScreens?.length})</h1>
         </div>
-        <button className="flex items-center justify-center"
-          onClick={() => {
-            setOpen((prev: any) => ({
-              ...prev,
-              route: !prev.route,
-            }))
-          }}
-        >
+        <div className="flex items-center justify-center">
           {open["route"] ? (
             <i className="fi fi-sr-caret-up text-[#EF4444] flex items-center"></i>
           ) : (
             <i className="fi fi-sr-caret-down text-[#22C55E] flex items-center"></i>
           )}
-        </button>
-      </div>
+        </div>
+      </button>
 
       {open["route"] && (
         <div className="w-full">

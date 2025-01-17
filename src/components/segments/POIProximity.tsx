@@ -57,10 +57,17 @@ export const POIProximity = ({
 
   return (
     <div className="py-4 w-full border-b">
-      <div className="flex items-center justify-between">
+      <button type="submit" className="flex items-center justify-between"
+        onClick={() => {
+          setOpen((prev: any) => ({
+            ...prev,
+            poi: !prev.poi,
+          }))
+        }}
+      >
         <div className="flex justify-start items-center gap-2 py-2">
           <h1 className="lg:text-[16px] text-[14px] text-gray-500 truncate">
-            4. Select sites with most POI exposure
+            4. Select sites using POIs
           </h1>
           <Tooltip
               title="Click to deselect and select your desired POIs and get screens located in the proximity of those POIs"
@@ -69,21 +76,14 @@ export const POIProximity = ({
           </Tooltip>
           <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({selectedPOIs?.length})</h1>
         </div>
-        <button className="flex items-center justify-center"
-          onClick={() => {
-            setOpen((prev: any) => ({
-              ...prev,
-              poi: !prev.poi,
-            }))
-          }}
-        >
+        <div className="flex items-center justify-center">
           {open["poi"] ? (
             <i className="fi fi-sr-caret-up text-[#EF4444] flex items-center"></i>
           ) : (
             <i className="fi fi-sr-caret-down text-[#22C55E] flex items-center"></i>
           )}
-        </button>
-      </div>
+        </div>
+      </button>
 
       {open["poi"] && (
         <div className="w-full">
