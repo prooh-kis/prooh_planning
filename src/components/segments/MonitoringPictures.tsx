@@ -46,9 +46,9 @@ export const MonitoringPictures = ({
                 }
               />
             ) : isUsedForShow ? (
-              <i className="fi flex items-center text-[20px] text-gray-300"></i>
+              <i className="fi flex items-center text-[20px] text-[#D6D2D2]"></i>
             ) : (
-              <i className="fi fi-sr-square-plus flex items-center text-[20px] text-gray-300"></i>
+              <i className="fi fi-sr-square-plus flex items-center text-[20px] text-[#D6D2D2]"></i>
             )}
           </div>
           <h1 className="text-[10px] text-gray-500 m-1">Video</h1>
@@ -73,9 +73,9 @@ export const MonitoringPictures = ({
                 className="w-full h-full"
               />
             ) : isUsedForShow ? (
-              <i className="fi flex items-center text-[20px] text-gray-300"></i>
+              <i className="fi flex items-center text-[20px] text-[#D6D2D2]"></i>
             ) : (
-              <i className="fi fi-sr-square-plus flex items-center text-[20px] text-gray-300"></i>
+              <i className="fi fi-sr-square-plus flex items-center text-[20px] text-[#D6D2D2]"></i>
             )}
           </div>
           <h1 className="text-[10px] text-gray-500 m-1">Image</h1>
@@ -100,9 +100,9 @@ export const MonitoringPictures = ({
                 className="w-full h-full"
               />
             ) : isUsedForShow ? (
-              <i className="fi flex items-center text-[20px] text-gray-300"></i>
+              <i className="fi flex items-center text-[20px] text-[#D6D2D2]"></i>
             ) : (
-              <i className="fi fi-sr-square-plus flex items-center text-[20px] text-gray-300"></i>
+              <i className="fi fi-sr-square-plus flex items-center text-[20px] text-[#D6D2D2]"></i>
             )}
           </div>
           <h1 className="text-[10px] text-gray-500 m-1">Geotag</h1>
@@ -130,9 +130,9 @@ export const MonitoringPictures = ({
                   className="w-full h-full"
                 />
               ) : isUsedForShow ? (
-                <i className="fi flex items-center text-[20px] text-gray-300"></i>
+                <i className="fi flex items-center text-[20px] text-[#D6D2D2]"></i>
               ) : (
-                <i className="fi fi-sr-square-plus flex items-center text-[20px] text-gray-300"></i>
+                <i className="fi fi-sr-square-plus flex items-center text-[20px] text-[#D6D2D2]"></i>
               )}
             </div>
             <h1 className="text-[10px] text-gray-500 m-1">Newpaper</h1>

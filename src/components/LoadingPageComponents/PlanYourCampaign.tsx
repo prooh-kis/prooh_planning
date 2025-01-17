@@ -94,7 +94,7 @@ export const PlanYourCampaign = ({}: any) => {
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mt-4">
                   Simplify & Optimize Your Advertising
                 </h1>
-                <p className="text-sm sm:text-base lg:text-lg text-gray-300 mt-4">
+                <p className="text-sm sm:text-base lg:text-lg text-[#D6D2D2] mt-4">
                   Our platform helps your business manage expenses. Here are
                   some reasons why you should use our platform:
                 </p>
@@ -124,7 +124,7 @@ export const PlanYourCampaign = ({}: any) => {
                 <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold mt-8">
                   {data[currentIndex]?.title}
                 </h1>
-                <p className="text-sm sm:text-base lg:text-lg text-gray-300 mt-4">
+                <p className="text-sm sm:text-base lg:text-lg text-[#D6D2D2] mt-4">
                   {data[currentIndex]?.description}
                 </p>
               </div>

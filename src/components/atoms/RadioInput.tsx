@@ -1,14 +1,16 @@
-
-
 interface RadioInputProps {
   value?: string;
   title?: string;
   isChecked?: boolean;
-  onChange: (checked: boolean) => void;  // Updated action type to be more specific
+  onChange: (checked: boolean) => void; // Updated action type to be more specific
 }
 
-
-export const RadioInput = ({ isChecked, title, value, onChange }: RadioInputProps) => {
+export const RadioInput = ({
+  isChecked,
+  title,
+  value,
+  onChange,
+}: RadioInputProps) => {
   // console.log(option);
   // console.log(value);
   return (
@@ -19,9 +21,15 @@ export const RadioInput = ({ isChecked, title, value, onChange }: RadioInputProp
         // defaultChecked={option === value}
         checked={isChecked}
         onChange={(e: any) => onChange(e)}
-        className="h-4 w-4 border border-gray-300 rounded-full checked:bg-green-600 checked:border-gray-600 transition duration-200"
+        className="h-4 w-4 border border-[#D6D2D2] rounded-full checked:bg-green-600 checked:border-gray-600 transition duration-200"
       />
-      <span className={`ml-2 hover:text-primaryButton ${isChecked ? "text-primaryButton" : "text-primaryText"} md:text-[16px] sm:text-[14px]`}>{title}</span>
+      <span
+        className={`ml-2 hover:text-primaryButton ${
+          isChecked ? "text-primaryButton" : "text-primaryText"
+        } md:text-[16px] sm:text-[14px]`}
+      >
+        {title}
+      </span>
     </label>
-  )
-}
+  );
+};

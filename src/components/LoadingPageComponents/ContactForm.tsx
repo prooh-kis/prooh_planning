@@ -37,7 +37,7 @@ export const ContactForm = () => {
                   placeholder="Name *"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full border-b border-gray-300 bg-transparent px-2 py-2 text-gray-800 focus:outline-none focus:border-primaryButton"
+                  className="w-full border-b border-[#D6D2D2] bg-transparent px-2 py-2 text-gray-800 focus:outline-none focus:border-primaryButton"
                 />
                 <input
                   type="text"
@@ -45,7 +45,7 @@ export const ContactForm = () => {
                   placeholder="Email *"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full border-b border-gray-300 bg-transparent px-2 py-2 text-gray-800 focus:outline-none focus:border-primaryButton"
+                  className="w-full border-b border-[#D6D2D2] bg-transparent px-2 py-2 text-gray-800 focus:outline-none focus:border-primaryButton"
                 />
                 <input
                   type="text"
@@ -53,7 +53,7 @@ export const ContactForm = () => {
                   placeholder="Phone Number *"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full border-b border-gray-300 bg-transparent px-2 py-2 text-gray-800 focus:outline-none focus:border-primaryButton"
+                  className="w-full border-b border-[#D6D2D2] bg-transparent px-2 py-2 text-gray-800 focus:outline-none focus:border-primaryButton"
                 />
                 <input
                   type="text"
@@ -61,7 +61,7 @@ export const ContactForm = () => {
                   value={text}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="How Did You Find Us? *"
-                  className="w-full border-b border-gray-300 bg-transparent px-2 py-2 text-gray-800 focus:outline-none focus:border-primaryButton"
+                  className="w-full border-b border-[#D6D2D2] bg-transparent px-2 py-2 text-gray-800 focus:outline-none focus:border-primaryButton"
                 />
 
                 {/* Submit Button */}

@@ -63,7 +63,7 @@ export const MarketersPage: React.FC = () => {
             {marketPageData1.map((feature, index) => (
               <motion.div
                 key={index}
-                className="flex flex-col justify-center items-center border border-gray-300 rounded-lg p-6 sm:p-8 lg:p-[41px] h-auto transform transition-transform duration-300 hover:scale-105 hover:border-[#129BFF] hover:border-2"
+                className="flex flex-col justify-center items-center border border-[#D6D2D2] rounded-lg p-6 sm:p-8 lg:p-[41px] h-auto transform transition-transform duration-300 hover:scale-105 hover:border-[#129BFF] hover:border-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.2 }}

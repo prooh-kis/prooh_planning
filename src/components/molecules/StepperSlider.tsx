@@ -141,7 +141,7 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
                     className={`fi ${
                       i + 1 <= step
                         ? "text-primaryButton" // Blue for selected steps
-                        : "text-gray-300" // Gray for unselected steps
+                        : "text-[#D6D2D2]" // Gray for unselected steps
                     }`}
                   >
                     {icons[i]}
