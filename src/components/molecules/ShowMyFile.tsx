@@ -20,7 +20,7 @@ export const ImageContainer = ({
         title="close"
         onClick={() => removeFile(url)}
         id="removeImage"
-        className="absolute top-0 right-0 bg-red-500 text-[#FFFFFF] px-2 rounded-full focus:outline-none hover:bg-red-700"
+        className="absolute top-0 right-0 bg-[#FF0808] text-[#FFFFFF] px-2 rounded-full focus:outline-none hover:bg-red-700"
       >
         &times;
       </button>
@@ -46,7 +46,7 @@ export const VideoContainer = ({
         title="close"
         onClick={() => removeFile(url)}
         id="removeVideo"
-        className="absolute top-0 right-0 bg-red-500 text-[#FFFFFF] px-2 rounded-full focus:outline-none hover:bg-red-700"
+        className="absolute top-0 right-0 bg-[#FF0808] text-[#FFFFFF] px-2 rounded-full focus:outline-none hover:bg-red-700"
       >
         &times;
       </button>

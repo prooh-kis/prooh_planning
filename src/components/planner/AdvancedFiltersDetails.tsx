@@ -53,9 +53,12 @@ export const AdvanceFiltersDetails = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
-  const campId = campaignId ? campaignId : pathname.split("/").splice(-1)[0]
+  const campId = campaignId ? campaignId : pathname.split("/").splice(-1)[0];
 
-  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [userLocation, setUserLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
   const [storeFilter, setStoreFilter] = useState<any>(true);
 
@@ -371,7 +374,7 @@ export const AdvanceFiltersDetails = ({
                   </Tooltip>
                   <Tooltip title="Click to skip the advance filters">
                     <i
-                      className="fi fi-br-ban text-[12px] text-red-500 flex items-center cursor-pointer"
+                      className="fi fi-br-ban text-[12px] text-[#FF0808] flex items-center cursor-pointer"
                       onClick={() => {
                         if (isDisabled) {
                           message.error("Please  confirm screen selection");

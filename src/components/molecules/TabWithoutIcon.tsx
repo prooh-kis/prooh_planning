@@ -45,7 +45,7 @@ export function TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
                   <p
                     className={
                       currentTab === tab.id
-                        ? "text-green-500 text-[12px]"
+                        ? "text-[#358E0B] text-[12px]"
                         : "text-gray-500 text-[12px]"
                     }
                   >
@@ -53,7 +53,7 @@ export function TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
                   </p>
                   <i
                     className={`fi fi-br-check flex items-center ${
-                      currentTab === tab.id ? "text-green-500" : "text-gray-500"
+                      currentTab === tab.id ? "text-[#358E0B]" : "text-gray-500"
                     } text-[12px]`}
                   ></i>
                 </div>
@@ -63,7 +63,7 @@ export function TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
                   <p
                     className={
                       currentTab === tab.id
-                        ? "text-red-500 text-[12px]"
+                        ? "text-[#FF0808] text-[12px]"
                         : "text-gray-500 text-[12px]"
                     }
                   >
@@ -71,7 +71,7 @@ export function TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
                   </p>
                   <i
                     className={`fi fi-br-cross flex items-center ${
-                      currentTab === tab.id ? "text-red-500" : "text-gray-500"
+                      currentTab === tab.id ? "text-[#FF0808]" : "text-gray-500"
                     } text-[10px]`}
                   ></i>
                 </div>

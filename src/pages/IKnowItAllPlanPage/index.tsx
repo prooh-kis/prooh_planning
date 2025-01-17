@@ -88,7 +88,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
           )[0]?.id || 0
         ) + 1
       );
-      
+
       const curr =
         Number(
           pages.filter(
@@ -109,17 +109,14 @@ export const IKnowItAllPlanPage: React.FC = () => {
   }, [dispatch, campaignId]);
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full px-8">
       <div className="w-full pt-[60px]">
         <StepperSlider
           campaignId={campaignId}
           step={currentStep}
           setStep={setCurrentStep}
-          steps={
-            pathname?.split("/").includes("iknowitallplan") ? 7 :
-             9
-          }
-          />
+          steps={pathname?.split("/").includes("iknowitallplan") ? 7 : 9}
+        />
       </div>
       <div className="w-full h-full flex justify-center items-top">
         {currentStep === 1 ? (
@@ -144,7 +141,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
             step={currentStep}
             campaignId={campaignId}
           />
-        )  : currentStep === 4 ? (
+        ) : currentStep === 4 ? (
           <ScreenSummaryDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
@@ -169,8 +166,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
             campaignId={campaignId}
             userInfo={userInfo}
           />
-        ):
-        null}
+        ) : null}
       </div>
     </div>
   );

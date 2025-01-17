@@ -285,7 +285,7 @@ export function MiddleArea(props: any) {
                   />
                 </div>
                 <div className="gap-2">
-                  <h4 className="text-sm text-red-500 pt-4">
+                  <h4 className="text-sm text-[#FF0808] pt-4">
                     {`Note: Once your profile is created, you can't modify it without proper approval`}
                   </h4>
                 </div>

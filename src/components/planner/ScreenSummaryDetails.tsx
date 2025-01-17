@@ -267,14 +267,14 @@ export const ScreenSummaryDetails = ({
     );
   }, [campaignId, dispatch]);
 
-  useEffect(() => {
-    dispatch(
-      getScreenSummaryPlanTableData({
-        id: campaignId,
-        screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-      })
-    );
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(
+  //     getScreenSummaryPlanTableData({
+  //       id: campaignId,
+  //       screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+  //     })
+  //   );
+  // }, [dispatch]);
 
   useEffect(() => {
     if (pathname.split("/").includes("iknowitallplan") && step === 4) {
@@ -292,6 +292,10 @@ export const ScreenSummaryDetails = ({
 
     if (screenSummaryData) {
       // console.log(screenSummaryData);
+      getScreenSummaryPlanTableData({
+        id: campaignId,
+        screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+      });
       saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, {
         [campaignId]: screenSummaryData,
       });
@@ -376,7 +380,7 @@ export const ScreenSummaryDetails = ({
                         });
                       }}
                     >
-                      <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+                      <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
                       <p className="text-[12px] truncate">
                         &#8377;1 - &#8377;100
                       </p>
@@ -402,8 +406,8 @@ export const ScreenSummaryDetails = ({
                         });
                       }}
                     >
-                      <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
-                      <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+                      <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
+                      <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
                       <p className="text-[12px] truncate">
                         &#8377;101 - &#8377;300
                       </p>

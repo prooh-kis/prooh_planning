@@ -129,7 +129,7 @@ export const ChangeCampaignDuration = ({ campaignId }: any) => {
   return (
     <div>
       <h1
-        className="col-span-1 text-[12px] text-right text-red-500 font-normal"
+        className="col-span-1 text-[12px] text-right text-[#FF0808] font-normal"
         onClick={handleOpen}
       >
         Edit

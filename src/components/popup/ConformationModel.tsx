@@ -40,7 +40,7 @@ export function ConformationModel({ handleConfirm }: Props) {
       >
         <div>
           <div className="flex flex-col justify-center items-center  p-2">
-            <i className="fi fi-sr-disk text-green-500 text-[24px]"></i>
+            <i className="fi fi-sr-disk text-[#358E0B] text-[24px]"></i>
             <h1 className="text-center font-semibold text-lg">
               Do you want save this
             </h1>

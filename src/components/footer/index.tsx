@@ -42,6 +42,8 @@ export const Footer = ({
   );
   const { loading, error, data: totalScreensData } = planningPageFooterDataGet;
 
+  console.log("totalScreensData : ", totalScreensData);
+
   useEffect(() => {
     if (totalScreensData) {
       setFooterData(
@@ -50,7 +52,7 @@ export const Footer = ({
         )[0]
       );
     }
-  },[totalScreensData, pageName]);
+  }, [totalScreensData, pageName]);
   // console.log(footerData);
   return (
     <div className="py-4 z-10 flex justify-between">

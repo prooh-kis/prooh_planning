@@ -205,25 +205,38 @@ export const ScreenSummaryTable = ({
                 Screen Type
               </h1>
             </div>
-            <div className="py-2 col-span-8 overflow-x-auto no-scrollbar">
+            <div className="py-2 col-span-8">
               <div
-                className="grid grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))] gap-0"
-                style={{ width: "calc(8rem * 8)" }} // Ensures each column has a fixed width
+                id="scroll-container"
+                className="overflow-x-auto no-scrollbar"
+                onScroll={(e) => {
+                  const scrollLeft = e.currentTarget.scrollLeft;
+                  document
+                    .querySelectorAll(".sync-scroll")
+                    .forEach((el) => (el.scrollLeft = scrollLeft));
+                }}
               >
-                {Object.keys(cityZones[currentCity])?.map((d: any, i: any) => (
-                  <div
-                    className="col-span-1 border-x min-w-[2rem] truncate"
-                    key={i}
-                  >
-                    <h1 className="md:text-[16px] sm:text-[14px] font-bold flex justify-center truncate">
-                      {d}
-                    </h1>
-                  </div>
-                ))}
+                <div
+                  className="grid grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))] gap-0"
+                  style={{ width: "calc(8rem * 8)" }}
+                >
+                  {Object.keys(cityZones[currentCity])?.map(
+                    (d: any, i: any) => (
+                      <div
+                        className="col-span-1 border-x min-w-[2rem] truncate"
+                        key={i}
+                      >
+                        <h1 className="md:text-[16px] sm:text-[14px] font-bold flex justify-center truncate">
+                          {d}
+                        </h1>
+                      </div>
+                    )
+                  )}
+                </div>
               </div>
             </div>
           </div>
-          <div className="overflow-y-auto h-[60vh]">
+          <div className="overflow-y-auto scrollbar-minimal h-[60vh]">
             {Object.keys(data?.[currentCity])?.map((tp: any, i: any) => (
               <div key={i} className="grid grid-cols-12">
                 <div className="border-b border-l col-span-2 py-2 px-4 truncate">
@@ -231,11 +244,11 @@ export const ScreenSummaryTable = ({
                     <h1 className="text-[14px] truncate">{tp}</h1>
                   </Tooltip>
                 </div>
-                <div className="col-span-10 ">
+                <div className="col-span-10">
                   {Object.keys(cityTP?.[currentCity]?.[tp])?.map(
                     (st: any, j: any) => (
-                      <div key={j} className={`grid grid-cols-10 border-b`}>
-                        <div className={`col-span-2 py-2 px-4 border-x`}>
+                      <div key={j} className="grid grid-cols-10 border-b">
+                        <div className="col-span-2 py-2 px-4 border-x">
                           <div className="flex justify-between items-center">
                             <Tooltip title={`${st}`}>
                               <h1 className="text-[14px] truncate">{st}</h1>
@@ -249,33 +262,29 @@ export const ScreenSummaryTable = ({
                                   touchpoint: tp,
                                   statusNow:
                                     screenTypeToggle?.[currentCity]?.[tp]?.[st],
-                                  // ? true
-                                  // : false,
                                 });
                               }}
                             >
                               <i
                                 className={`fi ${
                                   screenTypeToggle?.[currentCity]?.[tp]?.[st]
-                                    ? "fi-br-check text-green-500"
-                                    : "fi-br-cross text-red-500"
+                                    ? "fi-br-check text-[#358E0B]"
+                                    : "fi-br-cross text-[#FF0808]"
                                 } flex items-center text-[12px]`}
                               ></i>
                             </div>
                           </div>
                         </div>
-                        <div
-                          className={`col-span-8 overflow-x-auto no-scrollbar`}
-                        >
+                        <div className="col-span-8 overflow-x-auto no-scrollbar sync-scroll">
                           <div
                             className="grid grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))] gap-0"
-                            style={{ width: "calc(8rem * 8)" }} // Ensures each column has a fixed width
+                            style={{ width: "calc(8rem * 8)" }}
                           >
                             {Object.keys(cityZones?.[currentCity])?.map(
                               (zone: any, k: any) => (
                                 <div
                                   key={k}
-                                  className={`col-span-1 border-x min-w-[2rem] truncate`}
+                                  className="col-span-1 border-x min-w-[2rem] truncate"
                                 >
                                   {data?.[currentCity]?.[tp]?.[st]?.[zone]
                                     ?.filter((sc: any) => {
@@ -287,7 +296,7 @@ export const ScreenSummaryTable = ({
                                     ?.map((screen: any, m: any) => (
                                       <div
                                         key={m}
-                                        className={`flex gap-4 justify-between py-2 px-4 border-y truncate`}
+                                        className="flex gap-4 justify-between py-2 px-4 border-y truncate"
                                       >
                                         <ScreenDataModel
                                           listView={listView}
@@ -308,9 +317,9 @@ export const ScreenSummaryTable = ({
                                         />
                                         <div className="flex gap-4 justify-between items-center">
                                           <div className="flex gap-1 items-center">
-                                            <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+                                            <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
                                             {screen.pricePerSlot > 100 && (
-                                              <i className="fi fi-sr-star flex items-center text-[12px] text-yellow-500"></i>
+                                              <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
                                             )}
                                           </div>
                                           <div
@@ -319,20 +328,15 @@ export const ScreenSummaryTable = ({
                                                 screen,
                                                 city: currentCity,
                                                 touchpoint: tp,
-                                                // status: screensBuyingCount[currentCity]?.[screen._id]?.status
                                               });
                                             }}
                                           >
                                             {screensBuyingCount[currentCity]?.[
                                               screen._id
                                             ]?.status === false ? (
-                                              <i
-                                                className={`fi fi-br-cross flex items-center text-red-500 text-[12px]`}
-                                              ></i>
+                                              <i className="fi fi-br-cross flex items-center text-[#FF0808] text-[12px]"></i>
                                             ) : (
-                                              <i
-                                                className={`fi fi-br-check flex items-center text-green-500 text-[12px]`}
-                                              ></i>
+                                              <i className="fi fi-br-check flex items-center text-[#358E0B] text-[12px]"></i>
                                             )}
                                           </div>
                                         </div>

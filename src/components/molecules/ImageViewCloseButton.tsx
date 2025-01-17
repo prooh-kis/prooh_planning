@@ -14,7 +14,7 @@ export const ImageViewCloseButton = ({ file, removeImage }: any) => {
         type="submit"
         onClick={() => removeImage(file)}
         id="removeImage"
-        className="flex items-center justify-center absolute top-0 right-0 bg-red-500 text-[#FFFFFF] h-4 w-4 rounded-full focus:outline-none hover:bg-red-700"
+        className="flex items-center justify-center absolute top-0 right-0 bg-[#FF0808] text-[#FFFFFF] h-4 w-4 rounded-full focus:outline-none hover:bg-red-700"
       >
         &times;
       </button>

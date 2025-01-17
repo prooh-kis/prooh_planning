@@ -199,6 +199,7 @@ export const SetAdsPlayTime = ({
           }}
           handleSave={handleSaveAndContinue}
           campaignId={campaignId}
+          pageName="Set Ad Play time Page"
         />
       </div>
     </div>

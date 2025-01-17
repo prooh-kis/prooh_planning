@@ -4,7 +4,9 @@ interface CountdownTimerProps {
   createdAt: string; // Date string from the pin
 }
 
-export const CountdownTimer: React.FC<CountdownTimerProps> = ({ createdAt }) => {
+export const CountdownTimer: React.FC<CountdownTimerProps> = ({
+  createdAt,
+}) => {
   const [timeRemaining, setTimeRemaining] = useState<number>(0); // Time in milliseconds
 
   // Function to add 24 hours to the createdAt date
@@ -54,14 +56,16 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({ createdAt }) => 
     <div>
       {timeRemaining > 0 ? (
         <div>
-          <div className="flex gap-2 items-center justify-end text-red-500">
+          <div className="flex gap-2 items-center justify-end text-[#FF0808]">
             <i className="fi fi-br-clock-three flex items-center"></i>
-            <h1 className="text-[14px] font-semibold">{formatTimeRemaining(timeRemaining)}</h1>
+            <h1 className="text-[14px] font-semibold">
+              {formatTimeRemaining(timeRemaining)}
+            </h1>
           </div>
           <p className="text-[12px] text-gray-400">Time Remaining</p>
         </div>
       ) : (
-        <h1 className="text-red-500 text-[12px]">Countdown has ended!</h1>
+        <h1 className="text-[#FF0808] text-[12px]">Countdown has ended!</h1>
       )}
     </div>
   );

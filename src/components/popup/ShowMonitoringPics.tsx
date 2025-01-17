@@ -163,7 +163,7 @@ export const ShowMonitoringPicsPopup = (props: any) => {
             </div>
 
             {loadingMonitoringPics ? (
-              <h1 className="w-full py-1 px-4 border border-1 border-yellow-500 bg-yellow-100 text-[#000000] rounded-md mt-2">
+              <h1 className="w-full py-1 px-4 border border-1 border-[#F1BC00] bg-yellow-100 text-[#000000] rounded-md mt-2">
                 Loading Data...., please wait
               </h1>
             ) : !monitoringPics ? (

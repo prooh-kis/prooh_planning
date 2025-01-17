@@ -81,7 +81,7 @@ export const UpdatePassword = (props: any) => {
           </div>
           <div className="flex justify-center pt-4">
             <button
-              className="border border-solid px-4 py-2 bg-red-500/75 rounded-md text-[#FFFFFF] w-96"
+              className="border border-solid px-4 py-2 bg-[#FF0808]/75 rounded-md text-[#FFFFFF] w-96"
               onClick={handleSavePassword}
             >
               Save New Password

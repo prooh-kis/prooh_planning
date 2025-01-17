@@ -6,7 +6,7 @@ import { Tooltip } from "antd";
 import clsx from "clsx";
 
 interface CostSummartTabelProps {
-  loading?: any,
+  loading?: any;
   totalData?: any;
   pageName?: any;
 }
@@ -14,7 +14,7 @@ interface CostSummartTabelProps {
 export const CostSummaryTable1 = ({
   totalData,
   pageName,
-  loading
+  loading,
 }: CostSummartTabelProps) => {
   const getCurrentStep = getDataFromLocalStorage("currentStep");
   return (
@@ -27,31 +27,47 @@ export const CostSummaryTable1 = ({
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">Cities</h1>
+            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">
+              Cities
+            </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">Touchpoints</h1>
+            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">
+              Touchpoints
+            </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">Screens</h1>
+            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">
+              Screens
+            </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">Duration</h1>
+            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">
+              Duration
+            </h1>
             <ChangeCampaignDuration
               campaignId={Object.keys(getCurrentStep || {})?.[0]}
             />
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">Impressions</h1>
+            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">
+              Impressions
+            </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">Budget</h1>
+            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">
+              Budget
+            </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">CPM</h1>
+            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">
+              CPM
+            </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2">
-            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">Price/Slot</h1>
+            <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">
+              Price/Slot
+            </h1>
           </th>
         </tr>
       </thead>
@@ -62,19 +78,23 @@ export const CostSummaryTable1 = ({
               <SkeletonLoader />
             </th>
           </tr>
-        )} 
-        
+        )}
+
         {totalData?.map((data: any, i: any) => (
-          <tr key={i} className={clsx(
-            `${pageName === data.step ? "bg-[#F0F9FF]" : ""} flex justify-between border-b w-full h-[45px]`
-          )}>
+          <tr
+            key={i}
+            className={clsx(
+              `${
+                pageName === data.step ? "bg-[#F0F9FF]" : ""
+              } flex justify-between border-b w-full h-[45px]`
+            )}
+          >
             <th className="flex w-full items-center justify-center gap-2 truncate px-2">
               <Tooltip>
                 <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F] truncate">
                   {data.step}
                 </h1>
               </Tooltip>
-
             </th>
             <th className="flex w-full items-center justify-center gap-2">
               <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F] font-normal">
@@ -105,7 +125,7 @@ export const CostSummaryTable1 = ({
               </h1>
             </th>
             <th className="flex w-full items-center justify-center gap-2">
-              <h1 className="lg:text-[14px] md:text-[12px] text-red-500">
+              <h1 className="lg:text-[14px] md:text-[12px] text-[#FF0808]">
                 &#8377;{formatNumber(data?.totalCampaignBudget || 0)}
               </h1>
             </th>
@@ -121,7 +141,6 @@ export const CostSummaryTable1 = ({
             </th>
           </tr>
         ))}
-
       </tbody>
     </table>
   );

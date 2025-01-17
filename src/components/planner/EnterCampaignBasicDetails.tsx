@@ -138,7 +138,6 @@ export const EnterCampaignBasicDetails = ({
 
   const saveCampaignDetailsOnLocalStorage = useCallback(() => {
     handleSetNewDuration(duration);
-
     dispatch(
       addDetailsToCreateCampaign({
         pageName: "Basic Details Page",

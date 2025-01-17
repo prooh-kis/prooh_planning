@@ -7,11 +7,14 @@ interface RegularCohortSummaryTableProps {
   type?: any;
 }
 
-export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohortSummaryTableProps) => {
+export const RegularCohortSummaryTable = ({
+  type,
+  touchPointData,
+}: RegularCohortSummaryTableProps) => {
   const days: any = {
-    "weekdays" : "Weekdays",
-    "saturdays": "Saturdays",
-    "sundays": "Sundays"
+    weekdays: "Weekdays",
+    saturdays: "Saturdays",
+    sundays: "Sundays",
   };
 
   const [day, setDay] = useState<any>("weekdays");
@@ -22,9 +25,9 @@ export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohor
       afternoon: { included: 0, total: 0 },
       evening: { included: 0, total: 0 },
       night: { included: 0, total: 0 },
-      overall: { included: 0, total: 0 }
+      overall: { included: 0, total: 0 },
     };
-  
+
     data.forEach((entry: any) => {
       const dayWiseData = entry.dayWiseData;
       Object.values(dayWiseData).forEach((dayData: any) => {
@@ -45,48 +48,54 @@ export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohor
       });
     });
 
-    const saved: any = (result["overall"]["included"] * 100/
-    result["overall"]["total"]).toFixed(0);
+    const saved: any = (
+      (result["overall"]["included"] * 100) /
+      result["overall"]["total"]
+    ).toFixed(0);
     const wastagePercentage = 100 - Number(saved);
     return wastagePercentage;
   };
-  
+
   return (
     <div className="py-4">
       <div className="flex gap-2 pt-2">
-        <h1 className="md:text-[14px] sm:text-[12px]">{type === "cohort" ? "Cohort" : "Regular"} Time & Day Summary</h1>
-        <Tooltip
-          title="See time wise distribution of your selected audience cohorts at your selected touchpoints"
-        >
+        <h1 className="md:text-[14px] sm:text-[12px]">
+          {type === "cohort" ? "Cohort" : "Regular"} Time & Day Summary
+        </h1>
+        <Tooltip title="See time wise distribution of your selected audience cohorts at your selected touchpoints">
           <i className="fi fi-rs-info flex items-center text-[#9A9A9A] lg:text-[12px] md:text-[10px]"></i>
         </Tooltip>
       </div>
       <div className="flex justify-between border-b my-2">
         <div className="flex gap-10">
           {Object.keys(days)?.map((d: any, i: any) => (
-            <div key={i}
+            <div
+              key={i}
               onClick={() => {
                 setDay(d);
               }}
-              className={`py-1 px-1 ${day === d && "border-b border-primaryButton"}`}
+              className={`py-1 px-1 ${
+                day === d && "border-b border-primaryButton"
+              }`}
             >
               <h1 className="text-[14px]">{days[d]}</h1>
             </div>
           ))}
         </div>
         <div className="flex gap-2 items-center">
-          <h1 className="lg:text-[14px] md:text-[12px]">
-            Wastage Controlled
-          </h1>
+          <h1 className="lg:text-[14px] md:text-[12px]">Wastage Controlled</h1>
           <Tooltip
             title={
-              calculateIncludedVsTotal(touchPointData) > 0 ? `We have ommitted ${calculateIncludedVsTotal(touchPointData)}% of overall slots, which have lower exposure to your target audience and reduced your wastage` : 
-              `All the slots are relevantly exposed to your target audience`
+              calculateIncludedVsTotal(touchPointData) > 0
+                ? `We have ommitted ${calculateIncludedVsTotal(
+                    touchPointData
+                  )}% of overall slots, which have lower exposure to your target audience and reduced your wastage`
+                : `All the slots are relevantly exposed to your target audience`
             }
           >
             <i className="fi fi-rs-info pr-1 lg:text-[12px] md:text-[10px] text-gray-400 flex justify-center items-center"></i>
           </Tooltip>
-          <h1 className="text-[14px] text-green-500">
+          <h1 className="text-[14px] text-[#358E0B]">
             {calculateIncludedVsTotal(touchPointData)}%
           </h1>
         </div>
@@ -94,29 +103,30 @@ export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohor
       <table className="w-full border">
         <thead className={`w-full`}>
           <tr className="bg-[#C9E9FF] w-full h-[40px]">
-            <th className="text-[14px] font-semibold px-2">
-              Touchpoint
-            </th>
-            <th className="text-[14px] border-l font-semibold px-2">
-              Morning
-            </th>
+            <th className="text-[14px] font-semibold px-2">Touchpoint</th>
+            <th className="text-[14px] border-l font-semibold px-2">Morning</th>
             <th className="text-[14px] border-l font-semibold  px-2">
               Afternoon
             </th>
             <th className="text-[14px] border-l font-semibold  px-2">
               Evening
             </th>
-            <th className="text-[14px] border-l font-semibold px-2">
-              Night
-            </th>
+            <th className="text-[14px] border-l font-semibold px-2">Night</th>
           </tr>
           <tr className="bg-[#FAFAFA] h-[40px]">
-            <th>{" "}</th>
-            <th className="text-[12px] border-l font-semibold px-2">08 AM - 12 Noon</th>
-            <th className="text-[12px] border-l font-semibold px-2">12 Noon - 05 PM</th>
-            <th className="text-[12px] border-l font-semibold px-2">05 PM - 09 PM</th>
-            <th className="text-[12px] border-l font-semibold px-2">09 PM - 01 AM</th>
-
+            <th> </th>
+            <th className="text-[12px] border-l font-semibold px-2">
+              08 AM - 12 Noon
+            </th>
+            <th className="text-[12px] border-l font-semibold px-2">
+              12 Noon - 05 PM
+            </th>
+            <th className="text-[12px] border-l font-semibold px-2">
+              05 PM - 09 PM
+            </th>
+            <th className="text-[12px] border-l font-semibold px-2">
+              09 PM - 01 AM
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -129,48 +139,69 @@ export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohor
               </td>
               <td className="p-2 border-l">
                 <div className="grid grid-cols-3 flex justify-center items-center">
-                  {tp?.dayWiseData[day]["morning"]["included"] ? 
-                    <i className="fi fi-br-check flex items-center text-green-500 text-[12px]"></i>
-                  :
-                    <i className="fi fi-br-cross flex items-center text-red-500 text-[12px]"></i>
-                  }
-                  <p className={`${!tp?.dayWiseData[day]["morning"]["included"] && "text-red-500"} col-span-1 text-[12px] flex justify-center`}>
+                  {tp?.dayWiseData[day]["morning"]["included"] ? (
+                    <i className="fi fi-br-check flex items-center text-[#358E0B] text-[12px]"></i>
+                  ) : (
+                    <i className="fi fi-br-cross flex items-center text-[#FF0808] text-[12px]"></i>
+                  )}
+                  <p
+                    className={`${
+                      !tp?.dayWiseData[day]["morning"]["included"] &&
+                      "text-[#FF0808]"
+                    } col-span-1 text-[12px] flex justify-center`}
+                  >
                     {tp?.dayWiseData[day]["morning"]["percentage"].toFixed(1)}%
                   </p>
                 </div>
               </td>
               <td className="p-2 border-l">
                 <div className="grid grid-cols-3 flex justify-center items-center">
-                  {tp?.dayWiseData[day]["afternoon"]["included"] ? 
-                    <i className="fi fi-br-check flex items-center text-green-500 text-[12px]"></i>
-                  :
-                    <i className="fi fi-br-cross flex items-center text-red-500 text-[10px]"></i>
-                  }
-                  <p className={`${!tp?.dayWiseData[day]["afternoon"]["included"] && "text-red-500"} col-span-1 text-[12px] flex justify-center`}>
-                    {tp?.dayWiseData[day]["afternoon"]["percentage"].toFixed(1)}%
+                  {tp?.dayWiseData[day]["afternoon"]["included"] ? (
+                    <i className="fi fi-br-check flex items-center text-[#358E0B] text-[12px]"></i>
+                  ) : (
+                    <i className="fi fi-br-cross flex items-center text-[#FF0808] text-[10px]"></i>
+                  )}
+                  <p
+                    className={`${
+                      !tp?.dayWiseData[day]["afternoon"]["included"] &&
+                      "text-[#FF0808]"
+                    } col-span-1 text-[12px] flex justify-center`}
+                  >
+                    {tp?.dayWiseData[day]["afternoon"]["percentage"].toFixed(1)}
+                    %
                   </p>
                 </div>
               </td>
               <td className="p-2 border-l">
                 <div className="grid grid-cols-3 flex justify-center items-center">
-                  {tp?.dayWiseData[day]["evening"]["included"] ? 
-                    <i className="fi fi-br-check flex items-center text-green-500 text-[12px]"></i>
-                  :
-                    <i className="fi fi-br-cross flex items-center text-red-500 text-[10px]"></i>
-                  }
-                  <p className={`${!tp?.dayWiseData[day]["evening"]["included"] && "text-red-500"} col-span-1 text-[12px] flex justify-center`}>
+                  {tp?.dayWiseData[day]["evening"]["included"] ? (
+                    <i className="fi fi-br-check flex items-center text-[#358E0B] text-[12px]"></i>
+                  ) : (
+                    <i className="fi fi-br-cross flex items-center text-[#FF0808] text-[10px]"></i>
+                  )}
+                  <p
+                    className={`${
+                      !tp?.dayWiseData[day]["evening"]["included"] &&
+                      "text-[#FF0808]"
+                    } col-span-1 text-[12px] flex justify-center`}
+                  >
                     {tp?.dayWiseData[day]["evening"]["percentage"].toFixed(1)}%
                   </p>
                 </div>
               </td>
               <td className="p-2 border-l">
                 <div className="grid grid-cols-3 flex justify-center items-center">
-                  {tp?.dayWiseData[day]["night"]["included"] ? 
-                    <i className="fi fi-br-check flex items-center text-green-500 text-[12px]"></i>
-                  :
-                    <i className="fi fi-br-cross flex items-center text-red-500 text-[10px]"></i>
-                  }
-                  <p className={`${!tp?.dayWiseData[day]["night"]["included"] && "text-red-500"} col-span-1 text-[12px] flex justify-center`}>
+                  {tp?.dayWiseData[day]["night"]["included"] ? (
+                    <i className="fi fi-br-check flex items-center text-[#358E0B] text-[12px]"></i>
+                  ) : (
+                    <i className="fi fi-br-cross flex items-center text-[#FF0808] text-[10px]"></i>
+                  )}
+                  <p
+                    className={`${
+                      !tp?.dayWiseData[day]["night"]["included"] &&
+                      "text-[#FF0808]"
+                    } col-span-1 text-[12px] flex justify-center`}
+                  >
                     {tp?.dayWiseData[day]["night"]["percentage"].toFixed(1)}%
                   </p>
                 </div>
@@ -180,5 +211,5 @@ export const RegularCohortSummaryTable = ({ type, touchPointData }: RegularCohor
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};

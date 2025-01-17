@@ -200,7 +200,7 @@ export const getRegularVsCohortPriceData =
   };
 
 export const getScreenSummaryData =
-  ({ id, type }) =>
+  ({ id, type = "regular" }) =>
   async (dispatch, getState) => {
     dispatch({
       type: GET_SCREEN_SUMMARY_DATA_REQUEST,
@@ -423,7 +423,10 @@ export const getPlanningPageFooterData =
       payload: { id, pageName },
     });
     try {
-      const { data } = await axios.post(`${url}/planningPageFooter`, { id, pageName });
+      const { data } = await axios.post(`${url}/planningPageFooter`, {
+        id,
+        pageName,
+      });
       dispatch({
         type: PLANNING_PAGE_FOOTER_DATA_SUCCESS,
         payload: data,

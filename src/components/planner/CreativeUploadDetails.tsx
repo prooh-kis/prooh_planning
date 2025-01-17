@@ -491,7 +491,7 @@ export const CreativeUploadDetails = ({
               </h1>
             </div>
             <div className="flex">
-              <div className="border border-1 h-100%">
+              <div className="border border-1 h-[60vh] w-[560px] overflow-y-auto ">
                 {creativeUploadData[currentCity]?.map(
                   (singleData: any, index: number) => {
                     return (
@@ -663,6 +663,7 @@ export const CreativeUploadDetails = ({
               totalScreensData={
                 getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
               }
+              pageName="Upload Creative Page"
             />
           </div>
         </div>

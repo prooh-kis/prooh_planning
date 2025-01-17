@@ -112,8 +112,8 @@ export const AdsPlayTimeTable = ({
                         <i
                           className={`fi ${
                             d1?.dayWiseData[currentTab]?.morning?.included
-                              ? "fi-br-check text-green-500"
-                              : "fi-br-cross text-red-500"
+                              ? "fi-br-check text-[#358E0B]"
+                              : "fi-br-cross text-[#FF0808]"
                           } flex items-center text-[12px]`}
                         ></i>
                       </div>
@@ -140,8 +140,8 @@ export const AdsPlayTimeTable = ({
                         <i
                           className={`fi ${
                             d1?.dayWiseData[currentTab]?.afternoon?.included
-                              ? "fi-br-check text-green-500"
-                              : "fi-br-cross text-red-500"
+                              ? "fi-br-check text-[#358E0B]"
+                              : "fi-br-cross text-[#FF0808]"
                           } flex items-center text-[12px]`}
                         ></i>
                       </div>
@@ -168,8 +168,8 @@ export const AdsPlayTimeTable = ({
                         <i
                           className={`fi ${
                             d1?.dayWiseData[currentTab]?.evening?.included
-                              ? "fi-br-check text-green-500"
-                              : "fi-br-cross text-red-500"
+                              ? "fi-br-check text-[#358E0B]"
+                              : "fi-br-cross text-[#FF0808]"
                           } flex items-center text-[12px]`}
                         ></i>
                       </div>
@@ -197,8 +197,8 @@ export const AdsPlayTimeTable = ({
                         <i
                           className={`fi ${
                             d1?.dayWiseData[currentTab]?.night?.included
-                              ? "fi-br-check text-green-500"
-                              : "fi-br-cross text-red-500"
+                              ? "fi-br-check text-[#358E0B]"
+                              : "fi-br-cross text-[#FF0808]"
                           } flex items-center text-[12px]`}
                         ></i>
                       </div>
