@@ -13,7 +13,7 @@ export const LinearBar = ({
 }: LinearBarProps) => {
   return (
     <div
-      className="rounded flex items-center w-full h-1 mt-1 relative group"
+      className="rounded flex items-center w-full h-1 relative group"
       style={{ backgroundColor: colors[0] || "#F3F3F3" }}
     >
       <div

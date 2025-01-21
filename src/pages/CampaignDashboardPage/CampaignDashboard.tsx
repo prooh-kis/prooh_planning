@@ -2,6 +2,7 @@ import { CampaignDashboardTable } from "../../components/tables/CampaignDashboar
 import React, { useEffect, useState } from "react";
 import { DashboardFilters } from "../../components/segments/DashboardFilters";
 import {
+  calculateDaysPlayed,
   convertDataTimeToLocale,
   getNumberOfDaysBetweenTwoDates,
 } from "../../utils/dateAndTimeUtils";
@@ -94,8 +95,10 @@ export const CampaignDashboard = ({
       <div className="bg-[#FFFFFF] p-2 rounded-[12px] flex justify-between">
         <div className="px-2 w-1/2 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <div className="h-12 w-12 flex items-center justify-center rounded-full bg-indigo">
-              <h1 className="text-[24px] font-bold text-[#FFFFFF]">G</h1>
+            <div className="h-12 w-36 flex items-center justify-center rounded-md bg-gray-300">
+              <h1 className="text-[24px] font-bold text-[#FFFFFF]">
+                {campaignDetails?.name[0]}
+              </h1>
             </div>
             <div className="w-full">
               <h1 className="text-[14px] font-semibold">
@@ -201,9 +204,9 @@ export const CampaignDashboard = ({
                 campaignDetails?.startDate,
                 campaignDetails?.endDate
               )}
-              daysPlayed={getNumberOfDaysBetweenTwoDates(
+              daysPlayed={calculateDaysPlayed(
                 campaignDetails?.startDate,
-                new Date()
+                campaignDetails?.endDate
               )}
             />
           </div>

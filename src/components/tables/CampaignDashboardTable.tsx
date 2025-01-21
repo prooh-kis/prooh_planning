@@ -1,24 +1,31 @@
-import { useEffect, useState } from "react"
-import { formatNumber } from "../../utils/formatValue"
+import { useEffect, useState } from "react";
+import { formatNumber } from "../../utils/formatValue";
 import { useDispatch, useSelector } from "react-redux";
-import { GetCampaignLogsAction, GetCampaignMonitoringPicsAction } from "../../actions/campaignAction";
+import {
+  GetCampaignLogsAction,
+  GetCampaignMonitoringPicsAction,
+} from "../../actions/campaignAction";
 import { ShowCampaignLogsPopup } from "../../components/popup/ShowCampaignLogsPopup";
 import { ShowMonitoringPicsPopup } from "../../components/popup/ShowMonitoringPics";
-import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
+import {
+  calculateDaysPlayed,
+  getNumberOfDaysBetweenTwoDates,
+} from "../../utils/dateAndTimeUtils";
 
 interface CostSummartTabelProps {
-  screenLevelData?: any,
-  campaignDetails?: any
+  screenLevelData?: any;
+  campaignDetails?: any;
 }
 
 export const CampaignDashboardTable = ({
   screenLevelData,
-  campaignDetails
+  campaignDetails,
 }: CostSummartTabelProps) => {
   const dispatch = useDispatch<any>();
 
   const [openLogsPopup, setOpenLogsPopup] = useState<any>(false);
-  const [openMonitoringPicsPopup, setOpenMonitoringPicsPopup] = useState<any>(false);
+  const [openMonitoringPicsPopup, setOpenMonitoringPicsPopup] =
+    useState<any>(false);
   const [screenId, setScreenId] = useState<any>(null);
 
   const [screenName, setscreenName] = useState<any>(null);
@@ -26,19 +33,62 @@ export const CampaignDashboardTable = ({
   const {
     loading: loadingLogs,
     error: errorLogs,
-    data: logs
+    data: logs,
   } = campaignLogsGet;
 
-
-  useEffect(() => {
-    
-  },[dispatch]);
+  useEffect(() => {}, [dispatch]);
 
   const onClose = () => {
     setOpenLogsPopup(false);
-    setOpenMonitoringPicsPopup(false)
+    setOpenMonitoringPicsPopup(false);
     setScreenId(null);
-  }
+  };
+
+  const isSlotDeliveryPositive = (data: string) => {
+    return Number(
+      (screenLevelData[data]?.slotsPromised *
+        calculateDaysPlayed(
+          campaignDetails?.startDate,
+          campaignDetails?.endDate
+        )) /
+        campaignDetails?.duration -
+        screenLevelData[data]?.slotsDelivered.toFixed(0)
+    ) > 0
+      ? true
+      : false;
+  };
+
+  const isCostConsumedPositive = (data: string) => {
+    return Number(
+      (
+        (screenLevelData[data]?.costTaken?.toFixed(0) *
+          calculateDaysPlayed(
+            campaignDetails?.startDate,
+            campaignDetails?.endDate
+          )) /
+          campaignDetails?.duration -
+        screenLevelData?.[data]?.costConsumed?.toFixed(0)
+      )?.toFixed(0)
+    ) > 0
+      ? true
+      : false;
+  };
+  const impressionsDeliveredPositive = (data: string) => {
+    return Number(
+      (
+        (screenLevelData[data]?.impressionsPromised?.toFixed(0) *
+          calculateDaysPlayed(
+            campaignDetails?.startDate,
+            campaignDetails?.endDate
+          )) /
+          campaignDetails?.duration -
+        screenLevelData?.[data]?.impressionsDelivered?.toFixed(0)
+      )?.toFixed(0)
+    ) > 0
+      ? true
+      : false;
+  };
+
   return (
     <div>
       <ShowMonitoringPicsPopup
@@ -61,7 +111,9 @@ export const CampaignDashboardTable = ({
               <h1 className="text-[14px] text-[#21394F]">Sr.</h1>
             </th>
             <th className="w-full flex items-center justify-center truncate">
-              <h1 className="text-[14px] text-[#21394F] truncate">Screen Name</h1>
+              <h1 className="text-[14px] text-[#21394F] truncate">
+                Screen Name
+              </h1>
             </th>
             <th className="w-full flex items-center justify-center">
               <h1 className="text-[14px] text-[#21394F]">Location</h1>
@@ -93,97 +145,164 @@ export const CampaignDashboardTable = ({
           </tr>
         </thead>
         <tbody className="overflow-scroll">
-          {screenLevelData && Object.keys(screenLevelData)?.length && Object.keys(screenLevelData)?.filter((d: any) => d !== "totalData")?.map((data: any, index: any) => (
-            <tr key={data} className="flex w-full h-[40px]">
-              <td className="w-full flex items-center justify-center">
-                <p className="text-[12px]">{index + 1}</p>
-              </td>
-              <td className="w-full flex items-center justify-center truncate">
-                <p className="text-[12px] truncate px-1">{screenLevelData[data]?.screenName}</p>
-              </td>
-              <td className="w-full flex items-center justify-center truncate">
-                <p className="text-[12px] truncate">{screenLevelData[data]?.location}</p>
-              </td>
-              <td className="w-full flex items-center justify-center truncate">
-                <p className="text-[12px] truncate">{screenLevelData[data]?.touchPoint}</p>
-              </td>
-              <td className="w-full flex items-center justify-center">
-                <p className="text-[12px]">{screenLevelData[data]?.durationPromised}</p>
-              </td>
-              <td className="w-full flex items-center justify-center">
-                <div className="flex flex-row justify-center items-center gap-1">
-                  <p className="text-[12px]">
-                    {screenLevelData[data]?.slotsDelivered}
-                  </p>
-                  <p className="text-[10px] text-red">
-                    {`(${Number((screenLevelData[data]?.slotsPromised * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData[data]?.slotsDelivered.toFixed(0))) ? "" : ""} ${
-                      (screenLevelData[data]?.slotsPromised * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData[data]?.slotsDelivered).toFixed(0)
-                    })`}
-                  </p>
-                </div>
-                
-              </td>
-              <td className="w-full flex items-center justify-center">
-                <div className="flex flex-row justify-center items-center gap-1">
-                  <p className="text-[12px]">
-                    {formatNumber(screenLevelData[data]?.impressionsDelivered?.toFixed(0))}
-                  </p>
-                  <p className="text-[10px] text-red">
-                    {`(${Number((screenLevelData[data]?.impressionsPromised?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData?.[data]?.impressionsDelivered?.toFixed(0))?.toFixed(0)) > 0 ? "-" : ""} ${
-                      (screenLevelData[data]?.impressionsPromised?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData?.[data]?.impressionsDelivered?.toFixed(0))?.toFixed(0)
-                    })`}
-                  </p>
-                </div>
-              </td>
-              <td className="w-full flex items-center justify-center">
-                <div className="flex flex-row justify-center items-center gap-1">
-                  <p className="text-[12px]">
-                    {formatNumber(screenLevelData[data]?.costConsumed?.toFixed(0))}
-                  </p>
-                  <p className="text-[10px] text-red">
-                    {`(${Number((screenLevelData[data]?.costTaken?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData?.[data]?.costConsumed?.toFixed(0))?.toFixed(0)) > 0 ? "-" : ""} ${
-                      (screenLevelData[data]?.costTaken?.toFixed(0) * getNumberOfDaysBetweenTwoDates(campaignDetails?.startDate, new Date()) / campaignDetails?.duration - screenLevelData?.[data]?.costConsumed?.toFixed(0))?.toFixed(0)
-                    })`}
-                  </p>
-                </div>
-              </td>
-              <td className="w-full flex items-center justify-center">
-                <div className="flex flex-col justify-center items-center gap-1">
-                  <p className="text-[12px]">
-                    {(screenLevelData?.[data]?.slotsDelivered * 100 / screenLevelData?.[data]?.slotsPromised)?.toFixed(2)} %
-                  </p>
-                </div>
-              </td>
-              <td className="w-full flex items-center justify-center"
-                onClick={() => {
-                  // console.log("Logs clicked...")
+          {screenLevelData &&
+            Object.keys(screenLevelData)?.length &&
+            Object.keys(screenLevelData)
+              ?.filter((d: any) => d !== "totalData")
+              ?.map((data: any, index: any) => (
+                <tr key={data} className="flex w-full h-[40px]">
+                  <td className="w-full flex items-center justify-center">
+                    <p className="text-[12px]">{index + 1}</p>
+                  </td>
+                  <td className="w-full flex items-center justify-center truncate">
+                    <p className="text-[12px] truncate px-1">
+                      {screenLevelData[data]?.screenName}
+                    </p>
+                  </td>
+                  <td className="w-full flex items-center justify-center truncate">
+                    <p className="text-[12px] truncate">
+                      {screenLevelData[data]?.location}
+                    </p>
+                  </td>
+                  <td className="w-full flex items-center justify-center truncate">
+                    <p className="text-[12px] truncate">
+                      {screenLevelData[data]?.touchPoint}
+                    </p>
+                  </td>
+                  <td className="w-full flex items-center justify-center">
+                    <p className="text-[12px]">
+                      {screenLevelData[data]?.durationPromised}
+                    </p>
+                  </td>
+                  <td className="w-full flex items-center justify-center">
+                    <div className="flex flex-row justify-center items-center gap-1">
+                      <p className="text-[12px]">
+                        {screenLevelData[data]?.slotsDelivered}
+                      </p>
+                      <p
+                        className={`text-[10px] ${
+                          isSlotDeliveryPositive(data)
+                            ? "text-[#2A892D]"
+                            : "text-[#CC0000]"
+                        }`}
+                      >
+                        {" "}
+                        {`( ${(
+                          (screenLevelData[data]?.slotsPromised *
+                            calculateDaysPlayed(
+                              campaignDetails?.startDate,
+                              campaignDetails?.endDate
+                            )) /
+                            campaignDetails?.duration -
+                          screenLevelData[data]?.slotsDelivered
+                        ).toFixed(0)})`}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="w-full flex items-center justify-center">
+                    <div className="flex flex-row justify-center items-center gap-1">
+                      <p className="text-[12px]">
+                        {formatNumber(
+                          screenLevelData[data]?.impressionsDelivered?.toFixed(
+                            0
+                          )
+                        )}
+                      </p>
+                      <p
+                        className={`text-[10px] ${
+                          impressionsDeliveredPositive(data)
+                            ? "text-[#2A892D]"
+                            : "text-[#CC0000]"
+                        }`}
+                      >
+                        {" "}
+                        {`( ${(
+                          (screenLevelData[data]?.impressionsPromised?.toFixed(
+                            0
+                          ) *
+                            calculateDaysPlayed(
+                              campaignDetails?.startDate,
+                              campaignDetails?.endDate
+                            )) /
+                            campaignDetails?.duration -
+                          screenLevelData?.[
+                            data
+                          ]?.impressionsDelivered?.toFixed(0)
+                        )?.toFixed(0)})`}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="w-full flex items-center justify-center">
+                    <div className="flex flex-row justify-center items-center gap-1">
+                      <p className="text-[12px]">
+                        {formatNumber(
+                          screenLevelData[data]?.costConsumed?.toFixed(0)
+                        )}
+                      </p>
+                      <p
+                        className={`text-[10px] ${
+                          isCostConsumedPositive(data)
+                            ? "text-[#2A892D]"
+                            : "text-[#CC0000]"
+                        }`}
+                      >
+                        {`(${(
+                          (screenLevelData[data]?.costTaken?.toFixed(0) *
+                            calculateDaysPlayed(
+                              campaignDetails?.startDate,
+                              campaignDetails?.endDate
+                            )) /
+                            campaignDetails?.duration -
+                          screenLevelData?.[data]?.costConsumed?.toFixed(0)
+                        )?.toFixed(0)})`}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="w-full flex items-center justify-center">
+                    <div className="flex flex-col justify-center items-center gap-1">
+                      <p className="text-[12px]">
+                        {(
+                          (screenLevelData?.[data]?.slotsDelivered * 100) /
+                          screenLevelData?.[data]?.slotsPromised
+                        )?.toFixed(2)}{" "}
+                        %
+                      </p>
+                    </div>
+                  </td>
+                  <td
+                    className="w-full flex items-center justify-center"
+                    onClick={() => {
+                      // console.log("Logs clicked...")
 
-                  dispatch(GetCampaignMonitoringPicsAction({
-                    campaignId: screenLevelData[data]?.campaignId,
-                    screenId: data,
-                    date: campaignDetails.startDate,
-                  }));
-                  setScreenId(data);
-                  setOpenMonitoringPicsPopup(true);
-
-                }}
-              >
-                <i className="fi fi-sr-picture text-[12px] text-[#129BFF]"></i>
-              </td>
-              <td className="w-full flex items-center justify-center"
-                onClick={() => {
-                  dispatch(GetCampaignLogsAction(screenLevelData[data]?.campaignId));
-                  setscreenName(screenLevelData[data]?.screenName);
-                  setOpenLogsPopup(true);
-                }}
-              >
-                <i className="fi fi-sr-eye text-[12px] text-[#129BFF]"></i>
-              </td>
-            </tr>
-          ))}
+                      dispatch(
+                        GetCampaignMonitoringPicsAction({
+                          campaignId: screenLevelData[data]?.campaignId,
+                          screenId: data,
+                          date: campaignDetails.startDate,
+                        })
+                      );
+                      setScreenId(data);
+                      setOpenMonitoringPicsPopup(true);
+                    }}
+                  >
+                    <i className="fi fi-sr-picture text-[12px] text-[#129BFF]"></i>
+                  </td>
+                  <td
+                    className="w-full flex items-center justify-center"
+                    onClick={() => {
+                      dispatch(
+                        GetCampaignLogsAction(screenLevelData[data]?.campaignId)
+                      );
+                      setscreenName(screenLevelData[data]?.screenName);
+                      setOpenLogsPopup(true);
+                    }}
+                  >
+                    <i className="fi fi-sr-eye text-[12px] text-[#129BFF]"></i>
+                  </td>
+                </tr>
+              ))}
         </tbody>
       </table>
     </div>
-
-  )
-}
+  );
+};
