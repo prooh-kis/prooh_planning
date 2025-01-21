@@ -35,26 +35,28 @@ interface CreativeUploadDetailsProps {
   step: number;
   campaignId?: any;
 }
-interface SingleFile {
-  file: File;
+
+interface Creative {
+  file: {};
   url: string;
   fileType: string;
   fileSize: number;
   duration: number;
   awsURL: string;
 }
-interface Data1 {
+
+interface Screen {
   screenResolution: string;
   count: number;
   screenIds: string[];
   creativeDuration: number;
-  standardDayTimeCreatives: SingleFile[];
-  standardNightTimeCreatives: SingleFile[];
-  triggerCreatives: SingleFile[];
+  standardDayTimeCreatives: Creative[];
+  standardNightTimeCreatives: Creative[];
+  triggerCreatives: Creative[];
 }
 
-interface Data {
-  [key: string]: Data1[];
+interface TransformedData {
+  [city: string]: Screen[];
 }
 
 export const CreativeUploadDetails = ({
@@ -74,7 +76,9 @@ export const CreativeUploadDetails = ({
   const [selectFileType, setSelectFileType] = useState("video");
   const [creativeType, setCreativeType] = useState("Standard"); // Standard/ Trigger
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
-  const [creativeUploadData, setCreativeUploadData] = useState<Data>({});
+  const [creativeUploadData, setCreativeUploadData] = useState<TransformedData>(
+    {}
+  );
   const [citiesCreative, setCitiesCreative] = useState<any>([]);
   const [callToSendChangeStatus, setCallToSendChangeStatus] =
     useState<boolean>(false);
@@ -97,6 +101,55 @@ export const CreativeUploadDetails = ({
     success,
     data: campaignDetails,
   } = detailsToCreateCampaignAdd;
+
+  const transformData = (data: any[]): TransformedData => {
+    const result: TransformedData = {};
+    data.forEach((item) => {
+      const city = item.city;
+      const transformedItem = {
+        screenResolution: item.screenResolution,
+        count: item.count,
+        screenIds: item.screenIds,
+        creativeDuration: item.creativeDuration,
+        standardDayTimeCreatives: item.standardDayTimeCreatives.map(
+          (creative: any) => ({
+            file: {},
+            url: creative?.url,
+            fileType: creative?.type,
+            fileSize: creative?.size,
+            duration: item.creativeDuration,
+            awsURL: creative?.url,
+          })
+        ),
+        standardNightTimeCreatives: item.standardNightTimeCreatives.map(
+          (creative: any) => ({
+            file: {},
+            url: creative?.url,
+            fileType: creative?.type,
+            fileSize: creative?.size,
+            duration: item.creativeDuration,
+            awsURL: creative?.url,
+          })
+        ),
+        triggerCreatives: item.triggerCreatives.map((creative: any) => ({
+          file: {},
+          url: creative?.url,
+          fileType: creative?.type,
+          fileSize: creative?.size,
+          duration: item.creativeDuration,
+          awsURL: creative?.url,
+        })),
+      };
+
+      if (!result[city]) {
+        result[city] = [];
+      }
+
+      result[city].push(transformedItem);
+    });
+
+    return result;
+  };
 
   const filterUniqueResolutions = (data: any) => {
     const filteredData: any = {};
@@ -248,14 +301,17 @@ export const CreativeUploadDetails = ({
     }, 0);
   };
 
-  const handleSetInitialData = (data: any) => {
-    let arr = Object.keys(data);
+  const handleSetInitialData = (data: any, isEdit: boolean) => {
+    let arr = Object.keys(data || {});
 
     let result = arr?.map((value: string, index: number) => {
       return {
         id: `${index + 1}`,
         label: value,
-        params: [0, getScreenCountCityWise(data, value)],
+        params: [
+          isEdit ? getScreenCountCityWise(data, value) : 0,
+          getScreenCountCityWise(data, value),
+        ],
       };
     });
     setCitiesCreative(result);
@@ -292,7 +348,6 @@ export const CreativeUploadDetails = ({
   };
 
   const validate = () => {
-    console.log(creativeUploadData);
     for (let city in creativeUploadData) {
       for (let data of creativeUploadData[city]) {
         if (
@@ -328,6 +383,7 @@ export const CreativeUploadDetails = ({
       setIsLoading(true);
       let requestBody: any = [];
       let sss = creativeUploadData;
+      // console.log("creativeUploadData : ", JSON.stringify(creativeUploadData));
       for (let city in sss) {
         for (let data of creativeUploadData[city]) {
           let standardDayTimeCreatives: any = [];
@@ -353,6 +409,7 @@ export const CreativeUploadDetails = ({
             triggerCreatives.push(myData);
           }
           requestBody.push({
+            city: city,
             screenResolution: data?.screenResolution,
             count: data?.count,
             screenIds: data?.screenIds,
@@ -363,7 +420,6 @@ export const CreativeUploadDetails = ({
           });
         }
       }
-      console.log("ssss : ", sss);
       saveDataOnLocalStorage(CAMPAIGN_CREATIVES, { [campaignId]: sss });
       dispatch(
         addDetailsToCreateCampaign({
@@ -410,16 +466,31 @@ export const CreativeUploadDetails = ({
     );
   }, [dispatch, pathname]);
 
+  // this use effect runs only one when page reload
   useEffect(() => {
-    if (screenData) {
-      // console.log("screenData : ", screenData);
-      if (getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId]) {
-        handleSetInitialData(
-          getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId] || {}
-        );
+    // Get campaign creatives from local storage
+    const creatives =
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.creatives;
+    // console.log("creatives: ", JSON.stringify(creatives));
+
+    if (Array.isArray(creatives) && creatives?.length > 0) {
+      console.log("1 ok");
+      const transformedResult = transformData(creatives);
+      // console.log("Transformed result: ", transformedResult);
+      handleSetInitialData(screenData, true);
+      setCreativeUploadData(filterUniqueResolutions(transformedResult));
+    } else if (screenData) {
+      console.log("2 ok");
+      // console.log("screenData: ", screenData);
+      const campaignCreatives =
+        getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId];
+
+      if (campaignCreatives) {
+        handleSetInitialData(campaignCreatives, true);
       } else {
-        handleSetInitialData(screenData);
+        handleSetInitialData(screenData, false);
       }
+
       const result: any =
         getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId] || {};
       for (let city in screenData) {
@@ -435,21 +506,35 @@ export const CreativeUploadDetails = ({
             standardDayTimeCreatives:
               screenData[city][data].standardDayTimeCreatives || [],
             standardNightTimeCreatives:
-              screenData[city][data].standardDayTimeCreatives || [],
+              screenData[city][data].standardNightTimeCreatives || [],
             triggerCreatives: screenData[city][data].triggerCreatives || [],
           });
         }
       }
       setCreativeUploadData(filterUniqueResolutions(result));
     }
+
+    const triggers =
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.triggers;
+    saveDataOnLocalStorage(SELECTED_TRIGGER, { [campaignId]: triggers });
     if (errorScreeData) {
       message.error(errorScreeData);
     }
+  }, [campaignId, errorScreeData, screenData]);
 
-    const result =
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.triggers;
-    saveDataOnLocalStorage(SELECTED_TRIGGER, { [campaignId]: result });
-  }, [errorScreeData, screenData]);
+  useEffect(() => {
+    console.log("Current screen updated:", currentScreen);
+  }, [currentScreen]);
+
+  console.log(
+    "creativeUploadData : ",
+    currentScreen,
+    "             ",
+    creativeUploadData,
+    creativeUploadData?.[currentCity],
+    creativeUploadData?.[currentCity]?.[currentScreen],
+    creativeUploadData?.[currentCity]?.[currentScreen]?.standardDayTimeCreatives
+  );
 
   return (
     <div className="w-full py-3">
@@ -501,7 +586,7 @@ export const CreativeUploadDetails = ({
                             ? "click to select row"
                             : "this row has no creative"
                         }
-                        className={
+                        className={`${
                           index === currentScreen && isCreativeUploaded(index)
                             ? "bg-[#E8F3FF]"
                             : !(
@@ -512,7 +597,7 @@ export const CreativeUploadDetails = ({
                             : isCreativeUploaded(index)
                             ? "bg-[#E8F3FF]"
                             : "bg-[#E8F3FF]"
-                        }
+                        } hover:bg-[#e5e7eb]`}
                         key={index}
                         onClick={() => setCurrentScreen(index)}
                       >
@@ -624,7 +709,7 @@ export const CreativeUploadDetails = ({
                     currentPlayTimeCreative === "1" ? (
                       <ViewMediaForUploadCreatives
                         files={
-                          creativeUploadData[currentCity][currentScreen]
+                          creativeUploadData?.[currentCity]?.[currentScreen]
                             ?.standardDayTimeCreatives
                         }
                         removeFile={removeFile}
@@ -632,7 +717,7 @@ export const CreativeUploadDetails = ({
                     ) : (
                       <ViewMediaForUploadCreatives
                         files={
-                          creativeUploadData[currentCity][currentScreen]
+                          creativeUploadData?.[currentCity]?.[currentScreen]
                             ?.standardNightTimeCreatives
                         }
                         removeFile={removeFile}
@@ -641,7 +726,7 @@ export const CreativeUploadDetails = ({
                   ) : (
                     <ViewMediaForUploadCreatives
                       files={
-                        creativeUploadData[currentCity][currentScreen]
+                        creativeUploadData?.[currentCity]?.[currentScreen]
                           ?.triggerCreatives
                       }
                       removeFile={removeFile}
