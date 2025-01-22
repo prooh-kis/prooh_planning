@@ -486,7 +486,9 @@ export const ViewFinalPlanPODetails = ({
                       heading: "SCREEN PICTURES",
                       pdfData: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
                         campaignId
-                      ]?.screenWiseSlotDetails?.map((screen: any) => {
+                      ]?.screenWiseSlotDetails?.filter((s: any) => 
+                        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds.includes(s.screenId)
+                      )?.map((screen: any) => {
                         return {
                           title: screen.screenName,
                           imageUrl: screen.images,

@@ -88,7 +88,7 @@ const addCostSummaryData = (costData, doc, yOffset) => {
           // If the first cell of the row is exceeding the page, add a new page
           doc.addPage();
           yOffset = HEADER_MARGIN + 10; // Reset yOffset for the new page
-          doc.text(key.toUpperCase(), 15, yOffset - 10); // Redraw the section title
+          // doc.text(key.toUpperCase(), 15, yOffset - 10); // Redraw the section title
           data.cursor.y = HEADER_MARGIN + 10; // Reset the cursor position for the new page
         }
       },
@@ -143,7 +143,7 @@ const addCreativeSummaryData = (creativeData, doc, yOffset) => {
           // If the first cell of the row is exceeding the page, add a new page
           doc.addPage();
           yOffset = HEADER_MARGIN + 10; // Reset yOffset for the new page
-          doc.text(key.toUpperCase(), 15, yOffset - 10); // Redraw the section title
+          // doc.text(key.toUpperCase(), 15, yOffset - 10); // Redraw the section title
           data.cursor.y = HEADER_MARGIN + 10; // Reset the cursor position for the new page
         }
       },
@@ -214,7 +214,7 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
         // If the first cell of the row is exceeding the page, add a new page
         doc.addPage();
         yOffset = HEADER_MARGIN + 10; // Reset yOffset for the new page
-        doc.text(key.toUpperCase(), 15, yOffset - 10); // Redraw the section title
+        // doc.text(key.toUpperCase(), 15, yOffset - 10); // Redraw the section title
         data.cursor.y = HEADER_MARGIN + 10; // Reset the cursor position for the new page
       }
     },
