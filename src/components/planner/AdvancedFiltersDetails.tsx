@@ -363,12 +363,21 @@ export const AdvanceFiltersDetails = ({
         id: campId,
         touchPoints: pathname?.split("/").includes("storebasedplan")
           ? ALL_TOUCHPOINTS
-          : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId].touchPoints,
+          : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.touchPoints,
       })
     );
     saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
   }, [dispatch, campId]);
 
+  console.log(
+    routes?.map((route: any) => {
+    return {
+      origin: route.origin,
+      destination: route.destination,
+      radius: routeRadius,
+    }
+  }));
+  console.log(dataBrand, dataComp);
   return (
     <div className="w-full">
       <div className="h-full w-full py-3 grid grid-cols-2 gap-4">

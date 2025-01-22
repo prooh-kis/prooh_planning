@@ -17,7 +17,7 @@ html {
   display: none !important; /* Hides Mapbox logo */
 }
 
-iframe {
+/* iframe {
   position: fixed;
   top: 0;
   left: 0;
@@ -25,4 +25,4 @@ iframe {
   height: 100%;
   border: none;
   z-index: 1000;
-}
+} */
