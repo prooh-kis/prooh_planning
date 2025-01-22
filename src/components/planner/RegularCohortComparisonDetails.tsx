@@ -29,6 +29,7 @@ export const RegularCohortComparisonDetails = ({
   campaignId,
   setCurrentStep,
   step,
+  successAddCampaignDetails,
 }: any) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -284,6 +285,7 @@ export const RegularCohortComparisonDetails = ({
           }}
           campaignId={campaignId}
           pageName="Compare Plan Page"
+          successAddCampaignDetails={successAddCampaignDetails}
         />
       </div>
     </div>

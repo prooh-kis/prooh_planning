@@ -194,7 +194,7 @@ export const ScreenSummaryTable = ({
   return (
     <div className="h-full">
       {currentCity && data && Object.keys(cityZones).length > 0 && (
-        <div className="w-full h-full border-r border-b">
+        <div className="w-full h-full border-b">
           <div className="bg-[#D0D0D0] grid grid-cols-12 flex items-center">
             <div className="py-2 col-span-2">
               <h1 className="text-[16px] font-bold flex justify-center">
@@ -237,10 +237,10 @@ export const ScreenSummaryTable = ({
               </div>
             </div>
           </div>
-          <div className="overflow-y-auto scrollbar-minimal h-[60vh]">
+          <div className="overflow-y-auto scrollbar-minimal h-[60vh] pb-10">
             {Object.keys(data?.[currentCity])?.map((tp: any, i: any) => (
               <div key={i} className="grid grid-cols-12">
-                <div className="border-b border-l col-span-2 py-2 px-4 truncate">
+                <div className="border-b border-l col-span-2 py-2 px-4 border-r truncate">
                   <Tooltip title={tp}>
                     <h1 className="text-[14px] truncate">{tp}</h1>
                   </Tooltip>
@@ -248,8 +248,8 @@ export const ScreenSummaryTable = ({
                 <div className="col-span-10">
                   {Object.keys(cityTP?.[currentCity]?.[tp])?.map(
                     (st: any, j: any) => (
-                      <div key={j} className="grid grid-cols-10 border-b">
-                        <div className="col-span-2 py-2 px-4 border-x">
+                      <div key={j} className="grid grid-cols-10 border-b border-r">
+                        <div className="col-span-2 py-2 px-4 border-r">
                           <div className="flex justify-between items-center">
                             <Tooltip title={`${st}`}>
                               <h1 className="text-[14px] truncate">{st}</h1>
@@ -293,7 +293,7 @@ export const ScreenSummaryTable = ({
                               (zone: any, k: any) => (
                                 <div
                                   key={k}
-                                  className="col-span-1 border-x min-w-[2rem] truncate"
+                                  className="col-span-1 border-r min-w-[2rem] truncate"
                                 >
                                   {data?.[currentCity]?.[tp]?.[st]?.[zone]
                                     ?.filter((sc: any) => {
@@ -305,7 +305,7 @@ export const ScreenSummaryTable = ({
                                     ?.map((screen: any, m: any) => (
                                       <div
                                         key={m}
-                                        className="flex gap-4 justify-between py-2 px-4 border-y truncate"
+                                        className="flex gap-4 justify-between py-2 px-4 border-b truncate"
                                       >
                                         <ScreenDataModel
                                           listView={listView}

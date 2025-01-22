@@ -39,6 +39,7 @@ interface VendorConfirmationDetailsProps {
   step: any;
   campaignId?: any;
   userInfo?: any;
+  successAddCampaignDetails?: any;
 }
 
 export const VendorConfirmationDetails = ({
@@ -46,6 +47,7 @@ export const VendorConfirmationDetails = ({
   step,
   campaignId,
   userInfo,
+  successAddCampaignDetails
 }: VendorConfirmationDetailsProps) => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
@@ -469,6 +471,7 @@ export const VendorConfirmationDetails = ({
           handleSave={handleSaveAndContinue}
           campaignId={campaignId}
           pageName="Vendor Confirmation Page"
+          successAddCampaignDetails={successAddCampaignDetails}
         />
       </div>
     </div>

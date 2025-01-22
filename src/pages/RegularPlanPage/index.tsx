@@ -149,6 +149,7 @@ export const RegularPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
           />
         ) : currentStep === 3 ? (
           <AdvanceFiltersDetails
@@ -157,12 +158,16 @@ export const RegularPlanPage: React.FC = () => {
             // loading={loadingAdvanceFilterScreens}
             // error={errorAdvanceFilterScreens}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
+
           />
         ) : currentStep === 4 ? (
           <RegularCohortComparisonDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
+
           />
         ) : currentStep === 5 ? (
           <ScreenSummaryDetails
@@ -170,24 +175,32 @@ export const RegularPlanPage: React.FC = () => {
             step={currentStep}
             campaignId={campaignId}
             regularVsCohortSuccessStatus={success}
+            successAddCampaignDetails={success}
+
           />
         ) : currentStep === 6 ? (
           <TriggerDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
+
           />
         ) : currentStep === 7 ? (
           <ViewFinalPlanPODetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
+
           />
         ) : currentStep === 8 ? (
           <CreativeUploadDetails
             step={currentStep}
             setCurrentStep={setCurrentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
+
           />
         ) : currentStep === 9 ? (
           <VendorConfirmationDetails
@@ -195,6 +208,8 @@ export const RegularPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             campaignId={campaignId}
             userInfo={userInfo}
+            successAddCampaignDetails={success}
+
           />
         ) : null}
       </div>

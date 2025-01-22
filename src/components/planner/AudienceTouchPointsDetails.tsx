@@ -42,6 +42,7 @@ interface EnterAudienceTouchpointDetailsProps {
   audienceRef?: any;
   touchpointRef?: any;
   campaignId?: any;
+  successAddCampaignDetails?: any;
 }
 
 export const AudienceTouchPointsDetails = ({
@@ -51,6 +52,7 @@ export const AudienceTouchPointsDetails = ({
   audienceRef,
   touchpointRef,
   campaignId,
+  successAddCampaignDetails
 }: EnterAudienceTouchpointDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -363,6 +365,7 @@ export const AudienceTouchPointsDetails = ({
           }}
           campaignId={campaignId}
           pageName="Audience And TouchPoint Page"
+          successAddCampaignDetails={successAddCampaignDetails}
           // isDisabled={locked?.cohorts === false || locked?.touchPoints === false || loadingCost ? true : false}
         />
       </div>

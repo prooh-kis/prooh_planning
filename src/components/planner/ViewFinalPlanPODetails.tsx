@@ -42,6 +42,7 @@ interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
   campaignId?: any;
+  successAddCampaignDetails?: any;
 }
 
 function MyDiv({ left, right }: any) {
@@ -57,6 +58,7 @@ export const ViewFinalPlanPODetails = ({
   setCurrentStep,
   step,
   campaignId,
+  successAddCampaignDetails,
 }: ViewFinalPlanPODetailsProps) => {
   const pageRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<any>();
@@ -354,7 +356,7 @@ export const ViewFinalPlanPODetails = ({
           Any specific route you want to cover in this campaign
         </h1>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 pb-20">
         <div
           ref={pageRef}
           className="col-span-1 mt-4 px-8 py-4 border border-1 border-#C3C3C3 rounded-2xl w-full"
@@ -443,29 +445,29 @@ export const ViewFinalPlanPODetails = ({
               <input
                 title="summary"
                 type="checkbox"
-                onChange={() => {
+                onChange={(e) => {
                   const pdfToDownload = pdfDownload;
-                  console.log(countScreensByResolutionAndCity(
-                    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-                      ?.screenWiseSlotDetails
-                  ));
-                  pdfToDownload["summary"] = {
-                    heading: "CAMPAIGN SUMMARY",
-                    pdfData: {
-                      approach: [
-                        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId],
-                      ],
-                      costSummary: [
-                        getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-                          campaignId
+                  if (e.target.checked) {
+                    pdfToDownload["summary"] = {
+                      heading: "CAMPAIGN SUMMARY",
+                      pdfData: {
+                        approach: [
+                          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId],
                         ],
-                      ],
-                      creativeRatio: countScreensByResolutionAndCity(
-                      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-                        ?.screenWiseSlotDetails
-                    )},
-                    fileName: `${poInput?.brandName} Campaign Summary`,
-                  };
+                        costSummary: [
+                          getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+                            campaignId
+                          ],
+                        ],
+                        creativeRatio: countScreensByResolutionAndCity(
+                        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+                          ?.screenWiseSlotDetails
+                      )},
+                      fileName: `${poInput?.brandName} Campaign Summary`,
+                    };
+                  } else {
+                    delete pdfToDownload["summary"];
+                  }
                   setPdfDownload(pdfToDownload);
                 }}
               />
@@ -476,22 +478,28 @@ export const ViewFinalPlanPODetails = ({
                 title="screen-pictures"
                 type="checkbox"
                 // disabled={true}
-                onChange={() => {
+                onChange={(e) => {
                   const pdfToDownload = pdfDownload;
-                  pdfToDownload["screen-pictures"] = {
-                    heading: "SCREEN PICTURES",
-                    pdfData: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
-                      campaignId
-                    ]?.screenWiseSlotDetails?.map((screen: any) => {
-                      return {
-                        title: screen.screenName,
-                        imageUrl: screen.images,
-                        content: screen.location,
-                        resolution: screen.screenResolution,
-                      };
-                    }),
-                    fileName: `${poInput?.brandName} Campaign Screen Pictures`,
-                  };
+
+                  if (e.target.checked) {
+                    pdfToDownload["screen-pictures"] = {
+                      heading: "SCREEN PICTURES",
+                      pdfData: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
+                        campaignId
+                      ]?.screenWiseSlotDetails?.map((screen: any) => {
+                        return {
+                          title: screen.screenName,
+                          imageUrl: screen.images,
+                          content: screen.location,
+                          resolution: screen.screenResolution,
+                        };
+                      }),
+                      fileName: `${poInput?.brandName} Campaign Screen Pictures`,
+                    };
+                  } else {
+                    delete pdfToDownload["screen-pictures"];
+                  }
+                  
                   setPdfDownload(pdfToDownload);
                 }}
               />
@@ -560,6 +568,7 @@ export const ViewFinalPlanPODetails = ({
           handleSave={handleSaveAndContinue}
           campaignId={campaignId}
           pageName="View Final Plan Page"
+          successAddCampaignDetails={successAddCampaignDetails}
         />
       </div>
     </div>

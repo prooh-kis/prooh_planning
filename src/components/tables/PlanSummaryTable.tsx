@@ -68,20 +68,17 @@ export function PlanSummaryTable({
             </Tooltip>
           </div>
 
-          {loadingPriceData ? (
-            <SkeletonLoader />
-          ) : (
-            <RegularCohortSlotsCampaignTable
-              type={regularVsCohort}
-              priceData={
-                getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[campaignId]?.[
-                  `${regularVsCohort}`
-                ]
-              }
-              setShowSummary={setShowSummary}
-              showSummary={showSummary}
-            />
-          )}
+
+          <RegularCohortSlotsCampaignTable
+            type={regularVsCohort}
+            priceData={
+              getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[campaignId]?.[
+                `${regularVsCohort}`
+              ]
+            }
+            setShowSummary={setShowSummary}
+            showSummary={showSummary}
+          />
 
           {showSummary === regularVsCohort && (
             <RegularCohortSummaryTable

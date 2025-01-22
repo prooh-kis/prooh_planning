@@ -34,6 +34,7 @@ interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
   campaignId?: any;
+  successAddCampaignDetails?: any;
 }
 
 interface Creative {
@@ -63,6 +64,7 @@ export const CreativeUploadDetails = ({
   setCurrentStep,
   step,
   campaignId,
+  successAddCampaignDetails
 }: CreativeUploadDetailsProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { pathname } = useLocation();
@@ -754,6 +756,7 @@ export const CreativeUploadDetails = ({
                 getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
               }
               pageName="Upload Creative Page"
+              successAddCampaignDetails={successAddCampaignDetails}
             />
           </div>
         </div>

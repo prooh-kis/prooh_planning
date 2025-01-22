@@ -31,11 +31,13 @@ interface TriggerProps {
   setCurrentStep: (step: number) => void;
   step: number;
   campaignId?: any;
+  successAddCampaignDetails?: any;
 }
 export const TriggerDetails = ({
   setCurrentStep,
   step,
   campaignId,
+  successAddCampaignDetails
 }: TriggerProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -562,6 +564,7 @@ export const TriggerDetails = ({
           handleSave={handleSaveAndContinue}
           campaignId={campaignId}
           pageName="Add Triggers Page"
+          successAddCampaignDetails={successAddCampaignDetails}
         />
       </div>
     </div>

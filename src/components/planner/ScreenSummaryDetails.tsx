@@ -38,6 +38,7 @@ interface ScreenSummaryDetailsProps {
   step: number;
   campaignId?: any;
   regularVsCohortSuccessStatus?: any;
+  successAddCampaignDetails?: any;
 }
 
 export const ScreenSummaryDetails = ({
@@ -45,6 +46,7 @@ export const ScreenSummaryDetails = ({
   step,
   campaignId,
   regularVsCohortSuccessStatus,
+  successAddCampaignDetails
 }: ScreenSummaryDetailsProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -347,7 +349,7 @@ export const ScreenSummaryDetails = ({
           Something went wrong! please refresh the page...
         </div>
       ) : (
-        <div className="">
+        <div className="pb-10">
           {currentTab === "1" ? (
             <div>
               <div className="py-2 grid grid-cols-12 flex justify-between">
@@ -530,6 +532,7 @@ export const ScreenSummaryDetails = ({
           }}
           campaignId={campaignId}
           pageName="Screen Summary Page"
+          successAddCampaignDetails={successAddCampaignDetails}
         />
       </div>
     </div>

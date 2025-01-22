@@ -41,6 +41,7 @@ interface AdvanceFiltersDetailsProps {
   loading?: boolean;
   error?: any;
   campaignId?: string;
+  successAddCampaignDetails?: any;
 }
 
 export const AdvanceFiltersDetails = ({
@@ -50,6 +51,7 @@ export const AdvanceFiltersDetails = ({
   loading,
   error,
   campaignId,
+  successAddCampaignDetails,
 }: AdvanceFiltersDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -559,6 +561,7 @@ export const AdvanceFiltersDetails = ({
           }}
           campaignId={campaignId}
           pageName="Advance Filter Page"
+          successAddCampaignDetails={successAddCampaignDetails}
         />
       </div>
     </div>

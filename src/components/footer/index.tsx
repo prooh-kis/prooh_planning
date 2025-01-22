@@ -25,6 +25,7 @@ export const Footer = ({
   loadingCost,
   screensCost,
   pageName,
+  successAddCampaignDetails,
 }: any) => {
   const dispatch = useDispatch<any>();
 
@@ -63,11 +64,13 @@ export const Footer = ({
   // ));
 
   useEffect(() => {
-    dispatch(getPlanningPageFooterData({
-      id: campaignId,
-      pageName: pageName,
-    }));
-  },[dispatch, campaignId, pageName]);
+    if (successAddCampaignDetails) {
+      dispatch(getPlanningPageFooterData({
+        id: campaignId,
+        pageName: pageName,
+      }));
+    }
+  },[dispatch, campaignId, pageName, successAddCampaignDetails]);
   // console.log(footerData);
   return (
     <div className="py-4 z-10 flex justify-between">
