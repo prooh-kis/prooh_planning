@@ -25,7 +25,7 @@ import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { useLocation } from "react-router-dom";
 import { RadioInput } from "../../components/atoms/RadioInput";
 import { QuickSummaryReciept } from "../../components/segments/QuickSummaryReciept";
-import { getTableDataForSelectTriggerPage } from "../../actions/screenAction";
+import { getPlanningPageFooterData, getTableDataForSelectTriggerPage } from "../../actions/screenAction";
 import { useSelector } from "react-redux";
 interface TriggerProps {
   setCurrentStep: (step: number) => void;
@@ -228,9 +228,11 @@ export const TriggerDetails = ({
   const handleSkipTriggerSelection = () => {
     if (confirm("Do you really want to skip this steps?")) {
       saveDataOnLocalStorage(SELECTED_TRIGGER, {
-        weatherTriggers: [],
-        sportsTriggers: [],
-        vacantSlots: [],
+        [campaignId]: {
+          weatherTriggers: [],
+          sportsTriggers: [],
+          vacantSlots: [],
+        }
       });
       setIsDisabled(false);
       dispatch(
@@ -291,6 +293,10 @@ export const TriggerDetails = ({
     dispatch(
       getTableDataForSelectTriggerPage({ duration: 30, impactFactor: 0.1 })
     );
+    dispatch(getPlanningPageFooterData({
+      id: campaignId,
+      pageName: "Add Triggers Page",
+    }));
   }, [dispatch]);
   return (
     <div className="w-full py-3">

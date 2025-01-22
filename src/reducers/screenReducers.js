@@ -60,6 +60,7 @@ import {
   ADVANCE_FILTER_SCREENS_MAP_DATA,
   AUDIENCE_DATA,
   COST_SUMMARY,
+  FOOTER_DATA,
   LANDING_PAGE_DATA,
   REGULAR_VS_COHORT_PRICE_DATA,
   SCREEN_SUMMARY_DATA,
@@ -356,6 +357,10 @@ export function planningPageFooterDataGetReducer(state = {}, action) {
     case PLANNING_PAGE_FOOTER_DATA_REQUEST:
       return { loading: true };
     case PLANNING_PAGE_FOOTER_DATA_SUCCESS:
+      const {id, ...finalSummaryStepWise} = action.payload;
+      const saveData = {};
+      saveData[id] = finalSummaryStepWise;
+      saveDataOnLocalStorage(FOOTER_DATA, finalSummaryStepWise);
       return {
         loading: false,
         data: action.payload,

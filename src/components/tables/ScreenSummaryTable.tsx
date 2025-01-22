@@ -99,6 +99,7 @@ export const ScreenSummaryTable = ({
       });
     },
     [
+      campaignId,
       currentSummaryTab,
       data,
       setCityTP,
@@ -143,7 +144,7 @@ export const ScreenSummaryTable = ({
 
       refreshScreenSummary();
     },
-    [refreshScreenSummary, screensBuyingCount]
+    [refreshScreenSummary, screensBuyingCount, setScreensBuyingCount]
   );
 
   const handleScreenTypeClick = ({
@@ -170,7 +171,7 @@ export const ScreenSummaryTable = ({
     );
 
     stToggle[city][touchpoint][screenType] = !allSelected;
-    console.log(stToggle[city][touchpoint][screenType]);
+    // console.log(stToggle[city][touchpoint][screenType]);
     // Toggle screen type status based on current status
     setScreenTypeToggle(stToggle);
     saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, {
@@ -208,7 +209,7 @@ export const ScreenSummaryTable = ({
             <div className="py-2 col-span-8">
               <div
                 id="scroll-container"
-                className="overflow-x-auto no-scrollbar"
+                className="overflow-x-auto no-scrollbar sync-scroll-row"
                 onScroll={(e) => {
                   const scrollLeft = e.currentTarget.scrollLeft;
                   document
@@ -218,7 +219,7 @@ export const ScreenSummaryTable = ({
               >
                 <div
                   className="grid grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))] gap-0"
-                  style={{ width: "calc(8rem * 8)" }}
+                  style={{ width: "calc(6rem * 6)" }}
                 >
                   {Object.keys(cityZones[currentCity])?.map(
                     (d: any, i: any) => (
@@ -275,10 +276,18 @@ export const ScreenSummaryTable = ({
                             </div>
                           </div>
                         </div>
-                        <div className="col-span-8 overflow-x-auto no-scrollbar sync-scroll">
+                        <div className="col-span-8 overflow-x-auto no-scrollbar sync-scroll"
+                          id="scroll-container-row"
+                          onScroll={(e) => {
+                            const scrollLeft = e.currentTarget.scrollLeft;
+                            document
+                              .querySelectorAll(".sync-scroll-row")
+                              .forEach((el) => (el.scrollLeft = scrollLeft));
+                          }}
+                        >
                           <div
                             className="grid grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))] gap-0"
-                            style={{ width: "calc(8rem * 8)" }}
+                            style={{ width: "calc(6rem * 6)" }}
                           >
                             {Object.keys(cityZones?.[currentCity])?.map(
                               (zone: any, k: any) => (

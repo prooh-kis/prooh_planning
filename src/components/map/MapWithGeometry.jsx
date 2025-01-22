@@ -21,13 +21,11 @@ mapboxgl.accessToken =
 export function MapWithGeometry(props) {
   const mapRef = useRef(null);
   const popupRef = useRef(null);
-
   const [routeData, setRouteData] = useState([]);
   const [selectedMarkers, setSelectedMarkers] = useState(null);
   const [unSelectedMarkers, setUnselectedMarkers] = useState(null);
   const [screenData, setScreenData] = useState(null);
   const [isSelectedData, setIsSelectedData] = useState(false);
-
   const [viewState, setViewState] = useState({
     longitude: props?.geometry?.coordinates[1] || 77.0891,
     latitude: props?.geometry?.coordinates[0] || 28.495,
@@ -89,7 +87,7 @@ function MapDrawControl({
     return null;
   }
 
-  const updateSelectedMarkers = (polygons) => {
+  const updateSelectedMarkers = useCallback((polygons) => {
     const updatedPolygons = polygons.map((polygon) => {
       const selectedScreens = props?.allScreens.filter((screen) => {
         const point = [
@@ -132,7 +130,7 @@ function MapDrawControl({
         ])
     );
     return updatedPolygons;
-  };
+  },[props]);
 
   const onCreatePolygon = useCallback(
     (e) => {
@@ -148,7 +146,7 @@ function MapDrawControl({
         alert("You can only create 3 polygons for selection...");
       }
     },
-    [props]
+    [props, updateSelectedMarkers]
   );
 
   const onUpdatePolygon = useCallback(
@@ -163,14 +161,12 @@ function MapDrawControl({
         // return updatedPolygons;
       });
     },
-    [props]
+    [props, updateSelectedMarkers]
   );
 
   const onDeletePolygon = useCallback(
     (e) => {
       const deletedPolygonIds = e.features.map((feature) => feature.id);
-      console.log(deletedPolygonIds);
-
       props?.setPolygons((prevPolygons) => {
         const remainingPolygons = prevPolygons.filter(
           (polygon) => !deletedPolygonIds.includes(polygon.id)
@@ -179,7 +175,7 @@ function MapDrawControl({
         // return remainingPolygons;
       });
     },
-    [props]
+    [props, updateSelectedMarkers]
   );
 
 
@@ -361,7 +357,7 @@ function MapDrawControl({
       }
     }
     popupRef.current?.trackPointer();
-  }, [selectedMarkers, popupRef.current]);
+  }, [selectedMarkers]);
 
   return (
     <div className="relative h-full w-full items-top">

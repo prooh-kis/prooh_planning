@@ -39,21 +39,21 @@ export const POIProximity = ({
 
   const [checked1, setChecked1] = useState<any>(false);
   const [checked2, setChecked2] = useState<any>(false);
-  const [screensForPOIFilters, setScreensForPOIFilters] = useState<any>(
-    filterScreensByInterests(finalSelectedScreens, selectedPOIs)
-      .screensWithAnyInterest
-  );
+  const [screensForPOIFilters, setScreensForPOIFilters] = useState<any>([]);
 
-  // console.log(checked1, "1 checked", selectedPOIs?.length);
-  // console.log(checked2, "2 checked", selectedPOIs?.length);
-  // console.log("selected", selectedPOIs)
-  // console.log("selected length", selectedPOIs.length);
-
+  // Initial setup and dependency-based updates
   useEffect(() => {
-    // setScreensForPOIFilters(filterScreensByInterests(screensForPOIFilters, selectedPOIs).screensWithAnyInterest);
-  },[]);
-  // console.log(finalSelectedScreens, "ootioieieo");
-  // console.log(screensForPOIFilters, "assfklsfks");
+    const filteredScreens = filterScreensByInterests(finalSelectedScreens, selectedPOIs).screensWithAnyInterest;
+    setScreensForPOIFilters(filteredScreens);
+  }, [finalSelectedScreens, selectedPOIs]); // Dependencies ensure this runs when these values change
+  
+  // console.log("selected", screensForPOIFilters)
+
+  // console.log(filterScreensByInterests(
+  //   finalSelectedScreens,
+  //   selectedPOIs
+  // ).screensWithAnyInterest.length, "ootioieieo");
+  // console.log(finalSelectedScreens, "assfklsfks");
 
   return (
     <div className="py-4 w-full border-b">
@@ -74,7 +74,7 @@ export const POIProximity = ({
               >
             <i className="fi fi-rs-info lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
           </Tooltip>
-          <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({selectedPOIs?.length})</h1>
+          <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({filterScreensByInterests(screensForPOIFilters, selectedPOIs).screensWithAnyInterest.length} sites)</h1>
         </div>
         <div className="flex items-center justify-center">
           {open["poi"] ? (
@@ -87,6 +87,10 @@ export const POIProximity = ({
 
       {open["poi"] && (
         <div className="w-full">
+          <div className="flex justify-between p-2">
+            <p className="text-sm text-[#9f9f9f]">Selected POIs</p>
+            <p className="text-sm text-[#9f9f9f]">{selectedPOIs.length}</p>
+          </div>
           <div className="h-full overflow-scroll border rounded p-2">
             <div className="grid grid-cols-2 gap-4">
               {/* First column */}

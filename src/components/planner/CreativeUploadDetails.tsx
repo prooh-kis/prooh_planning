@@ -10,7 +10,7 @@ import {
   UploadCreativeForTriggerCampaign,
 } from "../../components/molecules/UploadCreativeForCreateCampaign";
 import { useSelector, useDispatch } from "react-redux";
-import { getScreenDataUploadCreativeData } from "../../actions/screenAction";
+import { getPlanningPageFooterData, getScreenDataUploadCreativeData } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
 import { Footer } from "../../components/footer";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
@@ -464,6 +464,11 @@ export const CreativeUploadDetails = ({
         id: pathname?.split("/").splice(-1)[0],
       })
     );
+    dispatch(getPlanningPageFooterData({
+      id: campaignId,
+      pageName: "Upload Creative Page",
+    }));
+
   }, [dispatch, pathname]);
 
   // this use effect runs only one when page reload

@@ -14,6 +14,7 @@ import { SelectManuallyScreensCheckBox } from "../../components/segments/SelectM
 import { message, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getPlanningPageFooterData,
   getRegularVsCohortPriceData,
   getScreenDataForAdvanceFilters,
 } from "../../actions/screenAction";
@@ -62,15 +63,22 @@ export const AdvanceFiltersDetails = ({
 
   const [storeFilter, setStoreFilter] = useState<any>(true);
 
-  const [circleRadius, setCircleRadius] = useState<any>(1);
-  const [routes, setRoutes] = useState<any[]>([]);
+  const [circleRadius, setCircleRadius] = useState<any>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.stores?.[0]?.radius ||
+    1);
+  const [routes, setRoutes] = useState<any[]>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.routes || []);
   const [isDisabled, setIsDisabled] = useState<any>(true);
 
-  const [dataBrand, setDataBrand] = useState<any[]>([]);
-  const [dataComp, setDataComp] = useState<any[]>([]);
+  const [dataBrand, setDataBrand] = useState<any[]>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.stores?.[0]?.brands ||
+    []);
+  const [dataComp, setDataComp] = useState<any[]>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.stores?.[0]?.comp ||
+    []);
   const [routeOrigin, setRouteOrigin] = useState<any>([]);
   const [routeDestination, setRouteDestination] = useState<any>([]);
-  const [pois, setPOIs] = useState<any[]>([]);
+  const [routeRadius, setRouteRadius] = useState<any>(1000); // in meteres
+  const [pois, setPOIs] = useState<any[]>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.pois || []);
   const [selectedPOIs, setSelectedPOIs] = useState<any[]>([]);
 
   const [allScreens, setAllScreens] = useState<any>([]);
@@ -78,8 +86,11 @@ export const AdvanceFiltersDetails = ({
   const [routeFilteredScreens, setRouteFilteredScreens] = useState<any>([]);
   const [poiFilteredScreens, setPOIFilteredScreens] = useState<any>([]);
 
-  const [polygons, setPolygons] = useState([]);
-
+  const [polygons, setPolygons] = useState<any>(
+  //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.polygons?.map((poly: any) => {
+  //   return {...poly, properties: {}};
+  // }) || 
+  []);
   const [selectedScreensFromMap, setSelectedScreensFromMap] = useState<any>([]);
 
   const [circleData, setCircleData] = useState<any>({});
@@ -182,7 +193,8 @@ export const AdvanceFiltersDetails = ({
 
   // Add screens for selection after adding routes
   const handleRouteData = (routeDataArray: any[], id: any) => {
-    const radiusInMeters = 1000; // 1000 meters radius
+    const radiusInMeters = routeRadius; // 1000 meters radius
+
     let combinedFilteredRecords: any[] = []; // To store all filtered screens across routes
   
     // Iterate over each route in the routeData array
@@ -341,6 +353,11 @@ export const AdvanceFiltersDetails = ({
   ]);
 
   useEffect(() => {
+    dispatch(getPlanningPageFooterData({
+      id: campaignId,
+      pageName: "Advance Filter Page",
+    }));
+
     dispatch(
       getScreenDataForAdvanceFilters({
         id: campId,
@@ -405,6 +422,8 @@ export const AdvanceFiltersDetails = ({
                 setRouteDestination={setRouteDestination}
                 setDataBrand={setDataBrand}
                 setDataComp={setDataComp}
+                dataBrand={dataBrand}
+                dataComp={dataComp}
                 allScreens={allScreens}
                 finalSelectedScreens={finalSelectedScreens}
                 setExcelFilteredScreens={setExcelFilteredScreens}
@@ -504,6 +523,26 @@ export const AdvanceFiltersDetails = ({
                   pageName: "Advance Filter Page",
                   id: pathname.split("/").splice(-1)[0],
                   screenIds: finalSelectedScreens.map((s: any) => s._id),
+                  advanceFilterData: {
+                    stores: [{brands: dataBrand, comp: dataComp, radius: circleRadius}],
+                    routes: routes?.map((route: any) => {
+                      return {
+                        origin: route.origin,
+                        destination: route.destination,
+                        radius: routeRadius,
+                      }
+                    }),
+                    poiLists: pois,
+                    polygons: polygons?.map((poly: any) => {
+                      return {
+                        id: poly.id,
+                        type: poly.type,
+                        properties: poly.properties,
+                        geometry: poly.geometry,
+                        screens: poly.screens
+                      }
+                    }),
+                  }
                 })
               );
               setCurrentStep(step + 1);

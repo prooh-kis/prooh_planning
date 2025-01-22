@@ -23,8 +23,8 @@ export const DrawnMapPolygon = ({
   function getUniqueScreens(poly: any) {
     const screenMap = new Map();
 
-    poly.forEach((feature: any) => {
-      feature.screens.forEach((screen: any) => {
+    poly?.forEach((feature: any) => {
+      feature?.screens?.forEach((screen: any) => {
         if (!screenMap.has(screen._id)) {
           screenMap.set(screen._id, screen);
         }
@@ -34,6 +34,7 @@ export const DrawnMapPolygon = ({
     // Convert the Map values to an array
     return Array.from(screenMap.values());
   }
+
   return (
     <div className="py-4 border-b">
       <button type="button" className="flex items-center justify-between"
@@ -51,7 +52,7 @@ export const DrawnMapPolygon = ({
           >
             <i className="fi fi-rs-info pr-1 lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
           </Tooltip>
-          <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({getUniqueScreens(polygons)?.length})</h1>
+          <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({getUniqueScreens(polygons)?.length} sites)</h1>
         </div>
         <div className="flex items-center justify-center">
           {open?.["polygon"] ? (
@@ -89,7 +90,7 @@ export const DrawnMapPolygon = ({
                   <PolygonShape data={[polygon]} color={randomColor(i)}/>
                 </div>
                 <div className="flex justify-center items-center row-span-1">
-                  <h1 className="text-[12px]">Area {i+1} ({polygon.screens.length})</h1>
+                  <h1 className="text-[12px]">Area {i+1} ({polygon?.screens?.length})</h1>
                 </div>
               </div>
               

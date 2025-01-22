@@ -17,6 +17,8 @@ interface LocationProximityProps {
   setRouteDestination?: any;
   setDataBrand?: any;
   setDataComp?: any;
+  dataBrand?: any;
+  dataComp?: any;
   allScreens?: any;
   finalSelectedScreens?: any;
   setExcelFilteredScreens?: any;
@@ -46,6 +48,8 @@ export const LocationProximity = ({
   setRouteDestination,
   setDataBrand,
   setDataComp,
+  dataBrand,
+  dataComp,
   allScreens,
   finalSelectedScreens,
   setExcelFilteredScreens,
@@ -83,6 +87,8 @@ export const LocationProximity = ({
         text="Stores"
         setDataBrand={setDataBrand}
         setDataComp={setDataComp}
+        dataBrand={dataBrand}
+        dataComp={dataComp}
         allScreens={allScreens}
         setFilteredScreens={setExcelFilteredScreens}
         filteredScreens={excelFilteredScreens}

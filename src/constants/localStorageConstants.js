@@ -36,4 +36,6 @@ export const SCREEN_TYPE_TOGGLE_SELECTION = "screenTypeToggleSelection"
 export const SELECTED_TRIGGER = "selectedTrigger";
 
 // 7
-export const CAMPAIGN_CREATIVES = "campaignCreatives"
+export const CAMPAIGN_CREATIVES = "campaignCreatives";
+
+export const FOOTER_DATA = "footerData";

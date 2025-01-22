@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPlanningPageFooterData } from "../../actions/screenAction";
 import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
 import {
+  FOOTER_DATA,
   FULL_CAMPAIGN_PLAN,
   SELECTED_AUDIENCE_TOUCHPOINTS,
   TOTAL_SCREEN_COST_DATA,
@@ -28,31 +29,45 @@ export const Footer = ({
   const dispatch = useDispatch<any>();
 
   // console.log(pageName)
-  const [footerData, setFooterData] = useState({
-    totalScreens: 0,
-    totalTouchPoints: 0,
-    totalImpression: 0,
-    totalCampaignBudget: 0,
-    totalCpm: 0,
-    pricePerSlot: 0,
-    totalCities: 0,
+  const [footerData, setFooterData] = useState(() => {
+    const localStorageData = getDataFromLocalStorage(FOOTER_DATA)?.finalSummaryStepWise || [];
+    const filteredData = localStorageData.filter((data: any) => data.step === pageName);
+  
+    if (filteredData.length > 0) {
+      return filteredData[filteredData?.length - 1];
+    }
+  
+    if (localStorageData.length > 0) {
+      return localStorageData[localStorageData?.length - 1];
+    }
+  
+    // Default fallback object
+    return {
+      totalScreens: 0,
+      totalTouchPoints: 0,
+      totalImpression: 0,
+      totalCampaignBudget: 0,
+      totalCpm: 0,
+      pricePerSlot: 0,
+      totalCities: 0,
+    };
   });
+  
   const planningPageFooterDataGet = useSelector(
     (state: any) => state.planningPageFooterDataGet
   );
   const { loading, error, data: totalScreensData } = planningPageFooterDataGet;
 
-  console.log("totalScreensData : ", totalScreensData);
+  // console.log("totalScreensData : ", getDataFromLocalStorage(FOOTER_DATA)?.finalSummaryStepWise?.filter(
+  //   (data: any) => data.step === pageName
+  // ));
 
   useEffect(() => {
-    if (totalScreensData) {
-      setFooterData(
-        totalScreensData?.finalSummaryStepWise?.filter(
-          (data: any) => data.step === pageName
-        )[0]
-      );
-    }
-  }, [totalScreensData, pageName]);
+    dispatch(getPlanningPageFooterData({
+      id: campaignId,
+      pageName: pageName,
+    }));
+  },[dispatch, campaignId, pageName]);
   // console.log(footerData);
   return (
     <div className="py-4 z-10 flex justify-between">

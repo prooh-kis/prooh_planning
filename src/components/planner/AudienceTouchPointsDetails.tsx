@@ -204,8 +204,7 @@ export const AudienceTouchPointsDetails = ({
 
     dispatch(getPlanningPageFooterData({
       id: campaignId,
-      pageName: "step1",
-
+      pageName: "Audience And TouchPoint Page",
     }));
 
     dispatch(
@@ -344,7 +343,7 @@ export const AudienceTouchPointsDetails = ({
               dispatch(addDetailsToCreateCampaign({
                 pageName: "Audience And TouchPoint Page",
                 id: campaignId,
-                markets: Object.keys(getDataFromLocalStorage(AUDIENCE_DATA)?.[campaignId]),
+                markets: Object.keys(getDataFromLocalStorage(AUDIENCE_DATA)?.[campaignId]?.filter((market: any) => market !== "id")),
                 cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.[campaignId]?.cohorts,
                 touchPoints: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.[campaignId]?.touchPoints,
                 gender: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.[campaignId]?.gender,

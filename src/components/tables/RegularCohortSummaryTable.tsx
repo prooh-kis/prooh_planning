@@ -78,12 +78,12 @@ export const RegularCohortSummaryTable = ({
                 day === d && "border-b border-primaryButton"
               }`}
             >
-              <h1 className="text-[14px]">{days[d]}</h1>
+              <h1 className="lg:text-[14px] text-[12px]">{days[d]}</h1>
             </div>
           ))}
         </div>
         <div className="flex gap-2 items-center">
-          <h1 className="lg:text-[14px] md:text-[12px]">Wastage Controlled</h1>
+          <h1 className="lg:text-[14px] text-[12px]">Wastage Controlled</h1>
           <Tooltip
             title={
               calculateIncludedVsTotal(touchPointData) > 0

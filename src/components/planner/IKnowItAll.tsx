@@ -10,7 +10,7 @@ import {
   SCREEN_SUMMARY_SELECTION,
 } from "../../constants/localStorageConstants";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
-import { getScreenSummaryData } from "../../actions/screenAction";
+import { getPlanningPageFooterData, getScreenSummaryData } from "../../actions/screenAction";
 
 interface IKnowItAllProps {
   setCurrentStep: (step: number) => void;
@@ -110,6 +110,11 @@ export const IKnowItAll = ({
       })
     );
 
+    // dispatch(getPlanningPageFooterData({
+    //   id: campaignId,
+    //   pageName: "Vendor Confirmation Page",
+    // }));
+    
     // if (screenSummaryData) {
     //   dispatch(
     //     getScreenSummaryPlanTableData({

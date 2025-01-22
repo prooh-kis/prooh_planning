@@ -87,9 +87,9 @@ export const TouchpointTable = ({
                 }}
               >
                 {clicked ? (
-                  <i className="fi fi-sr-lock flex items-center text-green-600 md:text-[12px]"></i>
+                  <i className="fi fi-sr-lock flex items-center text-[#22C55E] lg:text-[14px] text-[12px]"></i>
                 ) : (
-                  <i className="fi fi-sr-lock-open-alt flex items-center text-[#9A9A9A] md:text-[12px]"></i>
+                  <i className="fi fi-sr-lock-open-alt flex items-center text-[#EF4444] lg:text-[14px] text-[12px]"></i>
                 )}
               </div>
             </Tooltip>

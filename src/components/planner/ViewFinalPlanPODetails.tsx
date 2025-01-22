@@ -6,6 +6,7 @@ import { EmailSendBox } from "../../components/segments/EmailSendBox";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getFinalPlanPOTableData,
+  getPlanningPageFooterData,
   getScreenSummaryPlanTableData,
 } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
@@ -26,9 +27,7 @@ import {
   saveFileOnAWS,
 } from "../../utils/awsUtils";
 import {
-  generateCreativeRatioPdfFromJSON,
-  generatePlanApproachPdfFromJSON,
-  generatePlanSummaryPdfFromJSON,
+  generateCampaignSummaryPdfFromJSON,
   generateScreenPicturesPptFromJSON,
 } from "../../utils/generatePdf";
 import { sendEmailForConfirmation } from "../../actions/userAction";
@@ -143,35 +142,20 @@ export const ViewFinalPlanPODetails = ({
 
   const handleBlob = async (pdf: any) => {
     let newBlob: any = null;
-    if (pdf === "approach") {
-      newBlob = generatePlanApproachPdfFromJSON({
+    if (pdf === "summary") {
+      newBlob = generateCampaignSummaryPdfFromJSON({
         download: false,
         jsonData: pdfDownload[pdf].pdfData,
         fileName: pdfDownload[pdf].fileName,
         heading: pdfDownload[pdf].heading,
       });
     }
-    if (pdf === "plan-summary") {
-      newBlob = generatePlanSummaryPdfFromJSON({
-        download: false,
-        jsonData: pdfDownload[pdf].pdfData,
-        fileName: pdfDownload[pdf].fileName,
-        heading: pdfDownload[pdf].heading,
-      });
-    }
+
     if (pdf === "screen-pictures") {
       newBlob = await generatePPT({
         download: false,
         data: pdfDownload[pdf].pdfData,
         fileName: pdfDownload[pdf].fileName,
-      });
-    }
-    if (pdf === "creative-ratio") {
-      newBlob = generateCreativeRatioPdfFromJSON({
-        download: false,
-        jsonData: pdfDownload[pdf].pdfData,
-        fileName: pdfDownload[pdf].fileName,
-        heading: pdfDownload[pdf].heading,
       });
     }
 
@@ -246,10 +230,7 @@ export const ViewFinalPlanPODetails = ({
       const fileLinks = uploadedFiles
         .map(
           ({ fileName, fileUrl }: any) =>
-            `<br></br>${fileName?.replace(
-              /_/g,
-              " "
-            )}:<br><br/> ${sanitizeUrlForS3(fileUrl)}<br></br>`
+            `Campaign Summary :<br><br/><a href="${sanitizeUrlForS3(fileUrl)}" target="_blank">${fileName?.replace(/_/g, " ")}</a><br></br>`
         )
         .join("\n");
 
@@ -354,6 +335,10 @@ export const ViewFinalPlanPODetails = ({
           getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
       })
     );
+    dispatch(getPlanningPageFooterData({
+      id: campaignId,
+      pageName: "View Final Plan Page",
+    }));
 
     if (userInfo) {
       setCC(userInfo?.email);
@@ -454,39 +439,32 @@ export const ViewFinalPlanPODetails = ({
           </h1>
           <div className="flex flex-wrap gap-6 py-4">
             <div className="flex items-center gap-2">
-              <h1 className="text-[14px] truncate">Approach</h1>
+              <h1 className="text-[14px] truncate">Campaign Summary</h1>
               <input
-                title="approach"
+                title="summary"
                 type="checkbox"
                 onChange={() => {
                   const pdfToDownload = pdfDownload;
-                  pdfToDownload["approach"] = {
-                    heading: "PLAN APPROACH",
-                    pdfData: [
-                      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId],
-                    ],
-                    fileName: `${poInput?.brandName}_Campaign_Approach`,
-                  };
-                  setPdfDownload(pdfToDownload);
-                  console.log(pdfToDownload["approach"]);
-                }}
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-[14px] truncate">Plan summary</h1>
-              <input
-                title="plan-summary"
-                type="checkbox"
-                onChange={() => {
-                  const pdfToDownload = pdfDownload;
-                  pdfToDownload["plan-summary"] = {
-                    heading: "PLAN SUMMARY",
-                    pdfData: [
-                      getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-                        campaignId
+                  console.log(countScreensByResolutionAndCity(
+                    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+                      ?.screenWiseSlotDetails
+                  ));
+                  pdfToDownload["summary"] = {
+                    heading: "CAMPAIGN SUMMARY",
+                    pdfData: {
+                      approach: [
+                        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId],
                       ],
-                    ],
-                    fileName: `${poInput?.brandName}_Campaign_Plan_Summary`,
+                      costSummary: [
+                        getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+                          campaignId
+                        ],
+                      ],
+                      creativeRatio: countScreensByResolutionAndCity(
+                      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+                        ?.screenWiseSlotDetails
+                    )},
+                    fileName: `${poInput?.brandName} Campaign Summary`,
                   };
                   setPdfDownload(pdfToDownload);
                 }}
@@ -512,26 +490,7 @@ export const ViewFinalPlanPODetails = ({
                         resolution: screen.screenResolution,
                       };
                     }),
-                    fileName: `${poInput?.brandName}_Campaign_Screen_Pictures`,
-                  };
-                  setPdfDownload(pdfToDownload);
-                }}
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-[14px] truncate">Creative ratio</h1>
-              <input
-                title="creative-ratio"
-                type="checkbox"
-                onChange={() => {
-                  const pdfToDownload = pdfDownload;
-                  pdfToDownload["creative-ratio"] = {
-                    heading: "CREATIVE RATIO",
-                    pdfData: countScreensByResolutionAndCity(
-                      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-                        ?.screenWiseSlotDetails
-                    ),
-                    fileName: `${poInput?.brandName}_Campaign_Creative_Ratio`,
+                    fileName: `${poInput?.brandName} Campaign Screen Pictures`,
                   };
                   setPdfDownload(pdfToDownload);
                 }}
@@ -540,26 +499,18 @@ export const ViewFinalPlanPODetails = ({
           </div>
           <button
             type="submit"
-            className="px-8 py-2 border border-1 border-[#52ACFF] text-[#0094FF] rounded-full text-gray-500 text-sm"
+            className="px-8 py-2 bg-[#3B82F6] text-white rounded-full text-gray-500 text-sm"
             onClick={() => {
               Object.keys(pdfDownload)?.map(async (pdf: any) => {
-                if (pdf === "approach") {
-                  generatePlanApproachPdfFromJSON({
+                if (pdf === "summary") {
+                  generateCampaignSummaryPdfFromJSON({
+                    preview: false,
                     download: true,
                     jsonData: pdfDownload[pdf].pdfData,
                     fileName: pdfDownload[pdf].fileName,
                     heading: pdfDownload[pdf].heading,
-                  });
+                  })
                 }
-                if (pdf === "plan-summary") {
-                  generatePlanSummaryPdfFromJSON({
-                    download: true,
-                    jsonData: pdfDownload[pdf].pdfData,
-                    fileName: pdfDownload[pdf].fileName,
-                    heading: pdfDownload[pdf].heading,
-                  });
-                }
-
                 if (pdf === "screen-pictures") {
                   if (pdfDownload[pdf].pdfData?.length > 0) {
                     console.log("start");
@@ -572,15 +523,6 @@ export const ViewFinalPlanPODetails = ({
                   } else {
                     message.error("No data found, to download!");
                   }
-                }
-
-                if (pdf === "creative-ratio") {
-                  generateCreativeRatioPdfFromJSON({
-                    download: true,
-                    jsonData: pdfDownload[pdf].pdfData,
-                    fileName: pdfDownload[pdf].fileName,
-                    heading: pdfDownload[pdf].heading,
-                  });
                 }
               });
             }}

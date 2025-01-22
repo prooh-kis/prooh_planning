@@ -7,6 +7,7 @@ import { ViewPlanPic } from "../segments/ViewPlanPic";
 import { PlanSummaryTable } from "../tables/PlanSummaryTable";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getPlanningPageFooterData,
   getScreenSummaryData,
   getScreenSummaryPlanTableData,
 } from "../../actions/screenAction";
@@ -124,16 +125,16 @@ export const ScreenSummaryDetails = ({
         console.log(id);
         if (data?.id == id) {
           data.visited = true;
-          console.log(data);
+          // console.log(data);
         }
-        console.log(data, "2");
+        // console.log(data, "2");
 
         return { pre, ...data };
       });
     });
   };
 
-  const getTabValue = (dataScreenSummary: any) => {
+  const getTabValue = useCallback((dataScreenSummary: any) => {
     if (
       dataScreenSummary &&
       getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] &&
@@ -170,7 +171,7 @@ export const ScreenSummaryDetails = ({
         };
       });
     } else return [];
-  };
+  },[campaignId]);
 
   const refreshScreenSummary = () => {
     dispatch(
@@ -199,7 +200,6 @@ export const ScreenSummaryDetails = ({
     }
     setVisitedTab([...data]);
   };
-  console.log(visitedTab);
 
   const handleSaveAndContinue = async () => {
     if (pathname.split("/").splice(-2)[0] === "iknowitallplan") {
@@ -265,29 +265,32 @@ export const ScreenSummaryDetails = ({
           ?.selectedType,
       })
     );
+    dispatch(getPlanningPageFooterData({
+      id: campaignId,
+      pageName: "Screen Summary Page",
+    }));
   }, [campaignId, dispatch]);
 
-  // useEffect(() => {
-  //   dispatch(
-  //     getScreenSummaryPlanTableData({
-  //       id: campaignId,
-  //       screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-  //     })
-  //   );
-  // }, [dispatch]);
 
   useEffect(() => {
+    const type = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType;
+    setRegularVsCohort(type);
     if (pathname.split("/").includes("iknowitallplan") && step === 4) {
       setCurrentTab("2");
     }
 
-    setRegularVsCohort(
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType
-    );
+ 
     if (screenSummaryPlanTableData) {
       saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, {
         [campaignId]: screenSummaryPlanTableData,
       });
+    }
+
+  }, [campaignId, pathname, screenSummaryPlanTableData, step]);
+
+  useEffect(() => {
+    if (errorScreenSummary) {
+      window.location.reload();
     }
 
     if (screenSummaryData) {
@@ -303,16 +306,14 @@ export const ScreenSummaryDetails = ({
       saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
         [campaignId]: screensBuyingCount,
       });
-      handleSetVisitedValue(screenSummaryData);
       setCityTabData(getTabValue(screenSummaryData));
     }
   }, [
     campaignId,
-    pathname,
     screenSummaryData,
-    screenSummaryPlanTableData,
     screensBuyingCount,
-    step,
+    getTabValue,
+    errorScreenSummary
   ]);
 
   return (
@@ -349,8 +350,8 @@ export const ScreenSummaryDetails = ({
         <div className="">
           {currentTab === "1" ? (
             <div>
-              <div className="py-2 flex justify-between">
-                <div className="truncate">
+              <div className="py-2 grid grid-cols-12 flex justify-between">
+                <div className="col-span-8 overflow-x-scroll no-scrollbar">
                   {screenSummaryData && cityTabData?.length !== 0 && (
                     <TabWithoutIcon
                       currentTab={currentSummaryTab}
@@ -359,7 +360,7 @@ export const ScreenSummaryDetails = ({
                     />
                   )}
                 </div>
-                <div className="flex gap-2 truncate">
+                <div className="col-span-4 flex gap-2 truncate">
                   <Tooltip title="Single click to select the filter and Double click to deselect the filter">
                     <div
                       className={`truncate px-1 border ${

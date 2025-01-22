@@ -59,7 +59,7 @@ export const RouteProximity = ({
               >
             <i className="fi fi-rs-info pr-1 lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
           </Tooltip>
-          <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({routeFilteredScreens?.length})</h1>
+          <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({routeFilteredScreens?.length} sites)</h1>
         </div>
         <div className="flex items-center justify-center">
           {open["route"] ? (

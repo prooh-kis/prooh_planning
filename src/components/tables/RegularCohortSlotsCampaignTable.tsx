@@ -112,8 +112,8 @@ export const RegularCohortSlotsCampaignTable = ({
             <th
               className="flex w-full items-center justify-center gap-2"
               onClick={() => {
-                console.log(showSummary);
-                console.log(type, "type");
+                // console.log(showSummary);
+                // console.log(type, "type");
 
                 if (showSummary === type) {
                   setShowSummary(null);
@@ -122,8 +122,8 @@ export const RegularCohortSlotsCampaignTable = ({
                 }
               }}
             >
-              <h1 className="text-[14px] text-[#21394F] font-normal">
-                <i className="fi fi-sr-eye"></i>
+              <h1 className="font-normal">
+                <i className="fi fi-sr-eye text-[14px] text-blue "></i>
               </h1>
             </th>
           </tr>

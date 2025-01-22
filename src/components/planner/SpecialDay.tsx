@@ -10,7 +10,7 @@ import {
   getIndustryCategory,
 } from "../../actions/calenderAction";
 import { useSelector, useDispatch } from "react-redux";
-import { getTableDataForSelectTopicalDayPage } from "../../actions/screenAction";
+import { getPlanningPageFooterData, getTableDataForSelectTopicalDayPage } from "../../actions/screenAction";
 import { SingleCalenderData } from "../../components/molecules/SingleCalenderData";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { endOfDay, startOfDay } from "date-fns";
@@ -121,7 +121,11 @@ export const SpecialDay = ({
 
   useEffect(() => {
     dispatch(getIndustryCategory({ category: [], industry: [] }));
-  }, []);
+    // dispatch(getPlanningPageFooterData({
+    //   id: campaignId,
+    //   pageName: "Set Ad Play time Page",
+    // }));
+  }, [dispatch]);
 
   useEffect(() => {
     if (errorAddDetails) {

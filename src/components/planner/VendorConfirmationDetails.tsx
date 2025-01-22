@@ -5,6 +5,7 @@ import { EmailConfirmationImage } from "../../components/segments/EmailConfirmat
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
+  getPlanningPageFooterData,
   getVendorConfirmationDetails,
   getVendorConfirmationStatusTableDetails,
 } from "../../actions/screenAction";
@@ -312,6 +313,10 @@ export const VendorConfirmationDetails = ({
           id: campaignId,
         })
       );
+      dispatch(getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "Vendor Confirmation Page",
+      }));
     }
   }, [dispatch, vendorInput, campaignDetails]);
 

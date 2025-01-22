@@ -1,4 +1,4 @@
-import { useRef, ChangeEvent, useState } from "react";
+import { useRef, ChangeEvent, useState, useEffect, useCallback } from "react";
 import { readExcelFile, validateGioData } from "../../utils/excelUtils";
 import { getDistance } from "geolib";
 import { ExcelExport } from "./ExcelExport";
@@ -13,6 +13,8 @@ interface ExcelImportProps {
   type?: any;
   setDataBrand?: any;
   setDataComp?: any;
+  dataBrand?: any;
+  dataComp?: any;
   allScreens?: any;
   circleRadius?: any;
   setFilteredScreens?: any;
@@ -29,6 +31,8 @@ export function ExcelImport({
   allScreens,
   setDataBrand,
   setDataComp,
+  dataBrand,
+  dataComp,
   type,
   circleRadius,
   setFilteredScreens,
@@ -71,7 +75,8 @@ export function ExcelImport({
       );
       setDataBrand([]);
       setBrandScreens(null);
-    } else if (type.includes("comp")) {
+    }
+    if (type.includes("comp")) {
       handleFinalSelectedScreens({
         type: "remove",
         screens: compScreens,
@@ -100,10 +105,10 @@ export function ExcelImport({
         longitude: point[0],
       }
     ); // in meters
-    return distance <= radius * 1000;
+    return distance <= radius;
   };
  
-  const handleGetExcelData = (data: any) => {
+  const handleGetExcelData = useCallback((data: any) => {
     const brandCoordinates = data.brand
       .map((x: any) => x.filter((y: any) => /^[+-]?\d+(\.\d+)?$/.test(y)))
       .filter((d: any) => d.length === 2);
@@ -185,7 +190,7 @@ export function ExcelImport({
         screens: newFiltered,
       });
     } else alert("Something went wrong, please send us correct data");
-  };
+  },[]);
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -193,13 +198,14 @@ export function ExcelImport({
     if (file) {
       try {
         const data = await readExcelFile(file);
-        console.log(data);
+        // console.log(data);
         handleGetExcelData(data);
       } catch (error) {
         console.error("Error reading Excel file:", error);
       }
     }
   };
+
 
   return (
     <div className="py-4 w-full border-b border-gray-100">
@@ -220,7 +226,7 @@ export function ExcelImport({
               >
             <i className="fi fi-rs-info pr-1 lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
           </Tooltip>
-          <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({filteredScreens.length})</h1>
+          <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({filteredScreens.length} sites)</h1>
         </div>
         <div className="flex items-center justify-center">
           {open["excel"] ? (
@@ -257,10 +263,10 @@ export function ExcelImport({
               {file !== null && (
                 <div>
                   <div className="flex items-center gap-2 truncate">
-                    <p className="text-sm text-green-700 truncate">{file?.name}</p>
-                    <i className="fi fi-sr-cross-small text-green-700 flex items-center" onClick={() => handleResetFile()}></i>
+                    <p className="lg:text-[14px] text-[12px] text-green truncate">{file?.name}</p>
+                    <i className="fi fi-sr-cross-small text-green flex items-center" onClick={() => handleResetFile()}></i>
                   </div>
-                  <p className="text-sm text-blue-500 truncate">({filteredScreens.length} matching locations found)</p>
+                  <p className="lg:text-[14ps] text-[12px] text-blue truncate">({filteredScreens.length} matching locations found)</p>
                 </div>
         
               )}

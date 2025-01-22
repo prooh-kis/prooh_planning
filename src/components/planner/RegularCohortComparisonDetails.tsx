@@ -6,7 +6,7 @@ import {
   RegularCohortSummaryTable,
 } from "../tables";
 import { useDispatch, useSelector } from "react-redux";
-import { getRegularVsCohortPriceData } from "../../actions/screenAction";
+import { getPlanningPageFooterData, getRegularVsCohortPriceData } from "../../actions/screenAction";
 import {
   getAllLocalStorageData,
   getDataFromLocalStorage,
@@ -83,6 +83,10 @@ export const RegularCohortComparisonDetails = ({
       });
     }
     saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: {} });
+    dispatch(getPlanningPageFooterData({
+      id: campaignId,
+      pageName: "Compare Plan Page",
+    }));
   }, [priceData, cohorts, dispatch, duration, gender, screenIds, campaignId]);
 
   const handleRegularVsCohortSelection = (type: any) => {
@@ -135,6 +139,8 @@ export const RegularCohortComparisonDetails = ({
                 </Tooltip>
               </div>
               <div
+                // title="regular"
+                // type="button"
                 className={`w-full ${
                   selecting === "regular"
                     ? "border border-[#C9E9FF] rounded"
@@ -142,6 +148,7 @@ export const RegularCohortComparisonDetails = ({
                 }`}
                 onMouseEnter={() => {
                   setSelecting("regular");
+                  handleRegularVsCohortSelection("regular");
                 }}
                 onMouseLeave={() => {
                   setSelecting(null);
@@ -179,6 +186,7 @@ export const RegularCohortComparisonDetails = ({
                 }`}
                 onMouseEnter={() => {
                   setSelecting("cohort");
+                  handleRegularVsCohortSelection("cohort");
                 }}
                 onMouseLeave={() => {
                   setSelecting(null);

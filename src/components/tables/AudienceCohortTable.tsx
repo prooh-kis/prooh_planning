@@ -81,7 +81,8 @@ export const AudienceCohortTable = ({
                 className={`${
                   showIconHighlight
                     ? ""
-                    : "animate-pulse duration-200 ease-in-out forwards bg-[#358E0B] rounded-full p-1"
+                    // : "animate-pulse duration-200 ease-in-out forwards bg-[#358E0B50] rounded-full p-1"
+                    : ""
                 }`}
                 onClick={() => {
                   if (!loading) {
@@ -93,9 +94,9 @@ export const AudienceCohortTable = ({
                 }}
               >
                 {clicked ? (
-                  <i className="fi fi-sr-lock flex items-center text-green-600 lg:text-[14px] text-[12px]"></i>
+                  <i className="fi fi-sr-lock flex items-center text-[#22C55E] lg:text-[14px] text-[12px]"></i>
                 ) : (
-                  <i className="fi fi-sr-lock-open-alt flex items-center text-[#9A9A9A] lg:text-[14px] text-[12px]"></i>
+                  <i className="fi fi-sr-lock-open-alt flex items-center text-[#EF4444] lg:text-[14px] text-[12px]"></i>
                 )}
               </div>
             </Tooltip>
