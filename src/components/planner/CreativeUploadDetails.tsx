@@ -10,7 +10,10 @@ import {
   UploadCreativeForTriggerCampaign,
 } from "../../components/molecules/UploadCreativeForCreateCampaign";
 import { useSelector, useDispatch } from "react-redux";
-import { getPlanningPageFooterData, getScreenDataUploadCreativeData } from "../../actions/screenAction";
+import {
+  getPlanningPageFooterData,
+  getScreenDataUploadCreativeData,
+} from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
 import { Footer } from "../../components/footer";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
@@ -64,7 +67,7 @@ export const CreativeUploadDetails = ({
   setCurrentStep,
   step,
   campaignId,
-  successAddCampaignDetails
+  successAddCampaignDetails,
 }: CreativeUploadDetailsProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { pathname } = useLocation();
@@ -103,6 +106,32 @@ export const CreativeUploadDetails = ({
     success,
     data: campaignDetails,
   } = detailsToCreateCampaignAdd;
+
+  const mergeCreativeWithScreenData = (creatives: any, screenData: any) => {
+    const combinedData: any = {};
+
+    for (const city in screenData) {
+      if (!combinedData[city]) {
+        combinedData[city] = [];
+      }
+      screenData[city].forEach((screen: any) => {
+        const creativeData = creatives[city]?.find(
+          (creative: any) =>
+            creative.screenResolution === screen.screenResolution
+        );
+
+        if (creativeData) {
+          combinedData[city].push({
+            ...screen,
+            ...creativeData,
+          });
+        } else {
+          combinedData[city].push(screen);
+        }
+      });
+    }
+    return combinedData;
+  };
 
   const transformData = (data: any[]): TransformedData => {
     const result: TransformedData = {};
@@ -466,11 +495,12 @@ export const CreativeUploadDetails = ({
         id: pathname?.split("/").splice(-1)[0],
       })
     );
-    dispatch(getPlanningPageFooterData({
-      id: campaignId,
-      pageName: "Upload Creative Page",
-    }));
-
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "Upload Creative Page",
+      })
+    );
   }, [dispatch, pathname]);
 
   // this use effect runs only one when page reload
@@ -478,52 +508,41 @@ export const CreativeUploadDetails = ({
     // Get campaign creatives from local storage
     const creatives =
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.creatives;
-    // console.log("creatives: ", JSON.stringify(creatives));
 
-    if (Array.isArray(creatives) && creatives?.length > 0) {
+    // If creatives exist in local storage, use them
+    if (Array.isArray(creatives) && creatives.length > 0) {
       console.log("1 ok");
       const transformedResult = transformData(creatives);
-      // console.log("Transformed result: ", transformedResult);
-      handleSetInitialData(screenData, true);
-      setCreativeUploadData(filterUniqueResolutions(transformedResult));
+
+      // Merge transformed creatives data with screen data
+      const combinedData = mergeCreativeWithScreenData(
+        transformedResult,
+        screenData
+      );
+
+      // Set the initial data and the transformed creative data
+      handleSetInitialData(combinedData, true);
+      setCreativeUploadData(filterUniqueResolutions(combinedData));
     } else if (screenData) {
       console.log("2 ok");
-      // console.log("screenData: ", screenData);
+      // If no creatives are found, use screen data for setup
       const campaignCreatives =
         getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId];
 
       if (campaignCreatives) {
         handleSetInitialData(campaignCreatives, true);
+        setCreativeUploadData(filterUniqueResolutions(campaignCreatives));
       } else {
         handleSetInitialData(screenData, false);
+        setCreativeUploadData(filterUniqueResolutions(screenData));
       }
-
-      const result: any =
-        getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId] || {};
-      for (let city in screenData) {
-        if (result[city] === undefined) {
-          result[city] = [];
-        }
-        for (let data in screenData[city]) {
-          result[city].push({
-            screenResolution: screenData[city][data].screenResolution,
-            count: screenData[city][data].count,
-            screenIds: screenData[city][data].screenIds,
-            creativeDuration: screenData[city][data].duration,
-            standardDayTimeCreatives:
-              screenData[city][data].standardDayTimeCreatives || [],
-            standardNightTimeCreatives:
-              screenData[city][data].standardNightTimeCreatives || [],
-            triggerCreatives: screenData[city][data].triggerCreatives || [],
-          });
-        }
-      }
-      setCreativeUploadData(filterUniqueResolutions(result));
     }
 
+    // Handle triggers if any
     const triggers =
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.triggers;
     saveDataOnLocalStorage(SELECTED_TRIGGER, { [campaignId]: triggers });
+
     if (errorScreeData) {
       message.error(errorScreeData);
     }
