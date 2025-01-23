@@ -7,6 +7,7 @@ import {
   CAMPAIGN_PLAN_TYPE_TOPICAL,
   CAMPAIGN_PLAN_TYPE_TRIGGER,
 } from "../../constants/campaignConstants";
+import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
 
 interface MyRequestsListTableProps {
   plansList?: any;
@@ -108,19 +109,9 @@ export const MyPlansListTable = ({
                 className="p-2"
                 onClick={() =>
                   navigate(
-                    `/${
-                      campaign?.campaignType === CAMPAIGN_PLAN_TYPE_REGULAR
-                        ? "regularplan"
-                        : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_TRIGGER
-                        ? "triggerbasedplan"
-                        : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_STORE
-                        ? "storebasedplan"
-                        : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_TOPICAL
-                        ? "specialdayplan"
-                        : campaign?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW
-                        ? "iknowitallplan"
-                        : ""
-                    }/${campaign._id}`
+                    `/${getCampaignPageNameFromCampaignType(
+                      campaign?.campaignType
+                    )}/${campaign._id}`
                   )
                 }
               >

@@ -1,24 +1,25 @@
 import { CampaignDashboardTable } from "../../components/tables/CampaignDashboardTable";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { DashboardFilters } from "../../components/segments/DashboardFilters";
 import {
   calculateDaysPlayed,
-  convertDataTimeToLocale,
   getNumberOfDaysBetweenTwoDates,
 } from "../../utils/dateAndTimeUtils";
 import { CalendarScaleSlider } from "../../components/molecules/CalenderScaleSlider";
 import { DashboardImpressionDetailsTable } from "../../components/tables/DashboardImpressionDetailsTable";
 import { DashboardBarChart } from "../../components/segments/DashboardBarGraph";
 import { DashboardPieChart } from "../../components/segments/DashboardPieChart";
-import { formatNumber } from "../../utils/formatValue";
 import { DashboardGrid } from "../../components/molecules/DashboardGrid";
-import { EditCreativesForCampaigns } from "./EditCreativesForCampaigns";
+import { useNavigate } from "react-router-dom";
+import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
+import { DashBoardSlotGraph } from "../../components/segments/DashBoardSlotGraph";
 
 export const CampaignDashboard = ({
   campaignDetails,
   screenLevelData,
 }: any) => {
   const [clicked, setClicked] = useState<any>("1");
+  const navigate = useNavigate();
 
   // const [openEdit, setOpenEdit] = useState<any>(false);
 
@@ -85,6 +86,31 @@ export const CampaignDashboard = ({
     return { datesArray, countsArray };
   };
 
+  const gridItems = [
+    {
+      id: "1",
+      type: "duration",
+      data: campaignDetails,
+      label: "campaignDetails",
+    },
+    {
+      id: "2",
+      type: "audience",
+      data: screenLevelData,
+      label: "screenLevelData",
+    },
+    {
+      id: "3",
+      type: "screen",
+      data: screenLevelData,
+      label: "screenLevelData",
+    },
+    { id: "4", type: "spot", data: screenLevelData, label: "screenLevelData" },
+    { id: "5", type: "cost", data: screenLevelData, label: "screenLevelData" },
+  ];
+
+  const commonClasses = "col-span-1 bg-white p-4 border rounded-[12px]";
+
   return (
     <div className="w-full h-full pt-10 flex flex-col gap-2">
       {/* <EditCreativesForCampaigns
@@ -97,7 +123,7 @@ export const CampaignDashboard = ({
           <div className="flex items-center gap-4">
             <div className="h-12 w-36 flex items-center justify-center rounded-md bg-gray-300">
               <h1 className="text-[24px] font-bold text-[#FFFFFF]">
-                {campaignDetails?.name[0]}
+                {campaignDetails?.name?.[0]}
               </h1>
             </div>
             <div className="w-full">
@@ -113,78 +139,36 @@ export const CampaignDashboard = ({
           <div className="grid grid-cols-2 gap-2">
             <button
               id="asd"
-              title="ids"
+              title="edit campaign"
               type="button"
               className="col-span-1 border border-gray-100 rounded-[8px] p-2"
               // onClick={() => setOpenEdit(true)}
-              onClick={() => {
-                // if (campaignDetails?.campaignType === )
-              }}
+              onClick={() =>
+                navigate(
+                  `/${getCampaignPageNameFromCampaignType(
+                    campaignDetails?.campaignType
+                  )}/${campaignDetails._id}`
+                )
+              }
             >
               <i className="fi fi-br-pencil tex-[12px] flex items-center justify-center"></i>
             </button>
-            <div className="col-span-1 border border-gray-100 rounded-[8px] p-2">
-              <i className="fi fi-rr-newspaper text-[16px] flex items-center justify-center"></i>
-            </div>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-5 gap-2">
-        <div
-          className={`col-span-1 bg-[#FFFFFF] p-4 border ${
-            clicked === "1" ? "border-blue" : "border-gray-100"
-          } rounded-[12px]`}
-          onClick={() => {
-            setClicked("1");
-          }}
-        >
-          <DashboardGrid type={"duration"} campaignDetails={campaignDetails} />
-        </div>
-
-        <div
-          className={`col-span-1 bg-[#FFFFFF] p-4 border ${
-            clicked === "2" ? "border-blue" : "border-gray-100"
-          } rounded-[12px]`}
-          onClick={() => {
-            setClicked("2");
-          }}
-        >
-          <DashboardGrid type={"audience"} screenLevelData={screenLevelData} />
-        </div>
-
-        <div
-          className={`col-span-1 bg-[#FFFFFF] p-4 border ${
-            clicked === "3" ? "border-blue" : "border-gray-100"
-          } rounded-[12px]`}
-          onClick={() => {
-            setClicked("3");
-          }}
-        >
-          <DashboardGrid type={"screen"} screenLevelData={screenLevelData} />
-        </div>
-
-        <div
-          className={`col-span-1 bg-[#FFFFFF] p-4 border ${
-            clicked === "4" ? "border-blue" : "border-gray-100"
-          } rounded-[12px]`}
-          onClick={() => {
-            setClicked("4");
-          }}
-        >
-          <DashboardGrid type={"spot"} screenLevelData={screenLevelData} />
-        </div>
-
-        <div
-          className={`col-span-1 bg-[#FFFFFF] p-4 border ${
-            clicked === "5" ? "border-blue" : "border-gray-100"
-          } rounded-[12px]`}
-          onClick={() => {
-            setClicked("5");
-          }}
-        >
-          <DashboardGrid type={"cost"} screenLevelData={screenLevelData} />
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
+        {gridItems.map((item) => (
+          <div
+            key={item.id}
+            className={`${commonClasses} ${
+              clicked === item.id ? "border-blue" : "border-gray-100"
+            }`}
+            onClick={() => setClicked(item.id)}
+          >
+            <DashboardGrid type={item.type} {...{ [item.label]: item.data }} />
+          </div>
+        ))}
       </div>
 
       {clicked === "1" ? (
@@ -334,7 +318,7 @@ export const CampaignDashboard = ({
               <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
             </div>
             <div className="p-2">
-              <DashboardBarChart
+              <DashBoardSlotGraph
                 total={`${screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(
                   0
                 )}/${screenLevelData?.result?.totalData?.slotsPromised?.toFixed(

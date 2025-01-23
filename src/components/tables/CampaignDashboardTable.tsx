@@ -7,11 +7,11 @@ import {
 } from "../../actions/campaignAction";
 import { ShowCampaignLogsPopup } from "../../components/popup/ShowCampaignLogsPopup";
 import { ShowMonitoringPicsPopup } from "../../components/popup/ShowMonitoringPics";
-import {
-  calculateDaysPlayed,
-  getNumberOfDaysBetweenTwoDates,
-} from "../../utils/dateAndTimeUtils";
-
+import { calculateDaysPlayed } from "../../utils/dateAndTimeUtils";
+import { message } from "antd";
+import { downloadExcel } from "../../utils/excelUtils";
+import axios from "axios";
+const analyticsV1 = `${process.env.REACT_APP_PROOH_SERVER}/api/v1/analytics`;
 interface CostSummartTabelProps {
   screenLevelData?: any;
   campaignDetails?: any;
@@ -22,6 +22,7 @@ export const CampaignDashboardTable = ({
   campaignDetails,
 }: CostSummartTabelProps) => {
   const dispatch = useDispatch<any>();
+  const [isDownLoad, setIsDownload] = useState<string>("");
 
   const [openLogsPopup, setOpenLogsPopup] = useState<any>(false);
   const [openMonitoringPicsPopup, setOpenMonitoringPicsPopup] =
@@ -42,6 +43,25 @@ export const CampaignDashboardTable = ({
     setOpenLogsPopup(false);
     setOpenMonitoringPicsPopup(false);
     setScreenId(null);
+  };
+
+  const downloadLogs = async (campaignId: string) => {
+    try {
+      message.info("Start fetching data, it will take some time");
+      setIsDownload(campaignId);
+      const { data } = await axios.get(
+        `${analyticsV1}/getAllCampaignLogs?campaignId=${campaignId}`
+      );
+      await downloadExcel({
+        campaign: data?.campaign,
+        campaignLog: data?.logs,
+      });
+      message.success("Downloaded success full!");
+      setIsDownload("");
+    } catch (error: any) {
+      message.error(error.message);
+      setIsDownload("");
+    }
   };
 
   const isSlotDeliveryPositive = (data: string) => {
@@ -177,7 +197,7 @@ export const CampaignDashboardTable = ({
                   <td className="w-full flex items-center justify-center">
                     <div className="flex flex-row justify-center items-center gap-1">
                       <p className="text-[12px]">
-                        {screenLevelData[data]?.slotsDelivered}
+                        {formatNumber(screenLevelData[data]?.slotsDelivered)}
                       </p>
                       <p
                         className={`text-[10px] ${
@@ -187,15 +207,17 @@ export const CampaignDashboardTable = ({
                         }`}
                       >
                         {" "}
-                        {`( ${(
-                          (screenLevelData[data]?.slotsPromised *
-                            calculateDaysPlayed(
-                              campaignDetails?.startDate,
-                              campaignDetails?.endDate
-                            )) /
-                            campaignDetails?.duration -
-                          screenLevelData[data]?.slotsDelivered
-                        ).toFixed(0)})`}
+                        {`(${formatNumber(
+                          (
+                            (screenLevelData[data]?.slotsPromised *
+                              calculateDaysPlayed(
+                                campaignDetails?.startDate,
+                                campaignDetails?.endDate
+                              )) /
+                              campaignDetails?.duration -
+                            screenLevelData[data]?.slotsDelivered
+                          ).toFixed(0)
+                        )})`}
                       </p>
                     </div>
                   </td>
@@ -216,19 +238,21 @@ export const CampaignDashboardTable = ({
                         }`}
                       >
                         {" "}
-                        {`( ${(
-                          (screenLevelData[data]?.impressionsPromised?.toFixed(
-                            0
-                          ) *
-                            calculateDaysPlayed(
-                              campaignDetails?.startDate,
-                              campaignDetails?.endDate
-                            )) /
-                            campaignDetails?.duration -
-                          screenLevelData?.[
-                            data
-                          ]?.impressionsDelivered?.toFixed(0)
-                        )?.toFixed(0)})`}
+                        {`(${formatNumber(
+                          (
+                            (screenLevelData[
+                              data
+                            ]?.impressionsPromised?.toFixed(0) *
+                              calculateDaysPlayed(
+                                campaignDetails?.startDate,
+                                campaignDetails?.endDate
+                              )) /
+                              campaignDetails?.duration -
+                            screenLevelData?.[
+                              data
+                            ]?.impressionsDelivered?.toFixed(0)
+                          )?.toFixed(0)
+                        )})`}
                       </p>
                     </div>
                   </td>
@@ -246,15 +270,17 @@ export const CampaignDashboardTable = ({
                             : "text-[#CC0000]"
                         }`}
                       >
-                        {`(${(
-                          (screenLevelData[data]?.costTaken?.toFixed(0) *
-                            calculateDaysPlayed(
-                              campaignDetails?.startDate,
-                              campaignDetails?.endDate
-                            )) /
-                            campaignDetails?.duration -
-                          screenLevelData?.[data]?.costConsumed?.toFixed(0)
-                        )?.toFixed(0)})`}
+                        {`(${formatNumber(
+                          (
+                            (screenLevelData[data]?.costTaken?.toFixed(0) *
+                              calculateDaysPlayed(
+                                campaignDetails?.startDate,
+                                campaignDetails?.endDate
+                              )) /
+                              campaignDetails?.duration -
+                            screenLevelData?.[data]?.costConsumed?.toFixed(0)
+                          )?.toFixed(0)
+                        )})`}
                       </p>
                     </div>
                   </td>
@@ -287,17 +313,36 @@ export const CampaignDashboardTable = ({
                   >
                     <i className="fi fi-sr-picture text-[12px] text-[#129BFF]"></i>
                   </td>
-                  <td
-                    className="w-full flex items-center justify-center"
-                    onClick={() => {
-                      dispatch(
-                        GetCampaignLogsAction(screenLevelData[data]?.campaignId)
-                      );
-                      setscreenName(screenLevelData[data]?.screenName);
-                      setOpenLogsPopup(true);
-                    }}
-                  >
-                    <i className="fi fi-sr-eye text-[12px] text-[#129BFF]"></i>
+                  <td className="w-full flex items-center justify-center">
+                    <div className="flex gap-8">
+                      <i
+                        className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}
+                        onClick={() => {
+                          dispatch(
+                            GetCampaignLogsAction(
+                              screenLevelData[data]?.campaignId
+                            )
+                          );
+                          setscreenName(screenLevelData[data]?.screenName);
+                          setOpenLogsPopup(true);
+                        }}
+                      ></i>
+                      <i
+                        className={`fi fi-sr-download text-[12px] text-[#129BFF] ${
+                          isDownLoad == screenLevelData[data]?.campaignId
+                            ? "text-gray-400"
+                            : "text-[#129BFF]"
+                        }`}
+                        onClick={() => {
+                          if (isDownLoad != screenLevelData[data]?.campaignId)
+                            downloadLogs(screenLevelData[data]?.campaignId);
+                          else
+                            message.warning(
+                              "Please wait..., data has start fetching"
+                            );
+                        }}
+                      ></i>
+                    </div>
                   </td>
                 </tr>
               ))}
