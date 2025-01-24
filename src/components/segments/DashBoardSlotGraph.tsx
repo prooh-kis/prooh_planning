@@ -7,15 +7,16 @@ import {
   LinearScale,
   BarElement,
   LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend,
   Filler,
-  PointElement,
+  LineController, // Add this
+  BarController, // Also include BarController
 } from "chart.js";
 import { formatNumber } from "../../utils/formatValue";
 
-// Register necessary chart components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -25,8 +26,11 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
+  LineController, // Register LineController
+  BarController // Register BarController
 );
+
 ChartJS.register(ChartDataLabels);
 
 interface BarChartProps {

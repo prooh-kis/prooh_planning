@@ -33,7 +33,6 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
   type,
   screenLevelData,
 }) => {
-  console.log("campaignDetails : ", campaignDetails);
   return (
     <div className="w-full">
       {type === "duration" ? (

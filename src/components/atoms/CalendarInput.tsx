@@ -12,7 +12,6 @@ export const CalendarInput = ({
   action,
   disabled = false,
 }: CalenderInputProps) => {
-  console.log(value);
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate());
   const formattedYesterday = yesterday.toISOString().split("T")[0];

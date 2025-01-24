@@ -29,7 +29,6 @@ export const ShowMonitoringPicsPopup = (props: any) => {
     data: monitoringPics,
   } = campaignMonitoringPicsGet;
 
-  console.log(campaign);
   const handleCampaignClick = () => {
     setAllDates(() => {
       return getAllDatesBetween(
@@ -85,7 +84,6 @@ export const ShowMonitoringPicsPopup = (props: any) => {
 
   const handleDateChange = (date: Date) => {
     setMonitoringDate(date);
-    console.log(campaign);
     dispatch(
       GetCampaignMonitoringPicsAction({
         screenId,
