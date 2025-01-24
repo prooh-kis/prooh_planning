@@ -182,6 +182,26 @@ export const CreativeUploadDetails = ({
     return result;
   };
 
+  const mewTransformData = (input: any): TransformedData => {
+    const transformed: TransformedData = {};
+
+    for (const city in input) {
+      if (input.hasOwnProperty(city)) {
+        transformed[city] = input[city].map((screen: any) => ({
+          screenResolution: screen.screenResolution,
+          count: screen.count,
+          screenIds: screen.screenIds,
+          creativeDuration: screen.duration,
+          standardDayTimeCreatives: [],
+          standardNightTimeCreatives: [],
+          triggerCreatives: [],
+        }));
+      }
+    }
+
+    return transformed;
+  };
+
   const filterUniqueResolutions = (data: any) => {
     const filteredData: any = {};
 
@@ -322,26 +342,33 @@ export const CreativeUploadDetails = ({
   };
 
   const getScreenCountCityWise = (data: any, city: string) => {
-    // const param1 = data[city]?.filter(
-    //   (d: any) =>
-    //     d?.standardDayTimeCreatives?.length > 0 ||
-    //     d?.triggerCreatives?.length > 0
-    // );
     return data[city]?.reduce((accum: number, current: any) => {
       return accum + current.count;
     }, 0);
   };
 
-  const handleSetInitialData = (data: any, isEdit: boolean) => {
+  const getCreativeCountCityWise = (data: any, city: string) => {
+    return data[city]?.reduce((accum: number, current: any) => {
+      if (
+        current?.standardDayTimeCreatives?.length === 0 &&
+        current?.triggerCreatives?.length === 0
+      ) {
+        return accum;
+      }
+      return accum + current.count;
+    }, 0);
+  };
+
+  const handleSetInitialData = (data: any) => {
     let arr = Object.keys(data || {});
 
-    let result = arr?.map((value: string, index: number) => {
+    let result = arr?.map((city: string, index: number) => {
       return {
         id: `${index + 1}`,
-        label: value,
+        label: city,
         params: [
-          isEdit ? getScreenCountCityWise(data, value) : 0,
-          getScreenCountCityWise(data, value),
+          getCreativeCountCityWise(data, city),
+          getScreenCountCityWise(data, city),
         ],
       };
     });
@@ -513,15 +540,21 @@ export const CreativeUploadDetails = ({
     if (Array.isArray(creatives) && creatives.length > 0) {
       console.log("1 ok");
       const transformedResult = transformData(creatives);
+      const transformedResult2 = mewTransformData(screenData || {});
+      console.log("screenData : ", JSON.stringify(screenData));
+
+      console.log("tra 1, tra 2 ", transformedResult, transformedResult2);
 
       // Merge transformed creatives data with screen data
       const combinedData = mergeCreativeWithScreenData(
         transformedResult,
-        screenData
+        transformedResult2
       );
 
+      console.log("combinedData : ", combinedData);
+
       // Set the initial data and the transformed creative data
-      handleSetInitialData(combinedData, true);
+      handleSetInitialData(combinedData);
       setCreativeUploadData(filterUniqueResolutions(combinedData));
     } else if (screenData) {
       console.log("2 ok");
@@ -530,10 +563,10 @@ export const CreativeUploadDetails = ({
         getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId];
 
       if (campaignCreatives) {
-        handleSetInitialData(campaignCreatives, true);
+        handleSetInitialData(campaignCreatives);
         setCreativeUploadData(filterUniqueResolutions(campaignCreatives));
       } else {
-        handleSetInitialData(screenData, false);
+        handleSetInitialData(screenData);
         setCreativeUploadData(filterUniqueResolutions(screenData));
       }
     }
