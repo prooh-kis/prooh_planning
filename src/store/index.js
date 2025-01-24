@@ -48,6 +48,10 @@ import {
   getCalendarListDataReducer,
   getIndustryCategoryReducer,
 } from "../reducers/calenderReducers";
+import {
+  applyCouponForCampaignReducer,
+  getCouponListReducer,
+} from "../reducers/couponReducers";
 
 const initialState = {
   userSignin: {
@@ -116,6 +120,10 @@ const store = configureStore({
     //
     industryCategory: getIndustryCategoryReducer,
     calendarListData: getCalendarListDataReducer,
+
+    // COUPONS
+    couponList: getCouponListReducer,
+    couponApplyForCampaign: applyCouponForCampaignReducer,
   },
   // middleware: thunk
   // devTools: process.env.NODE_ENV !== 'production'

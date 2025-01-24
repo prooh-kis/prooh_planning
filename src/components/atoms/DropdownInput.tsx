@@ -26,7 +26,7 @@ export const DropdownInput = ({
           rounded ? "rounded-full" : "rounded-lg"
         } ${
           height ? "pr-4 pl-2" : "px-3"
-        } py-1 focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-gray-100 active:bg-[#F4F9FF] transition-colors appearance-none`}
+        } py-1 focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-gray-100 active:bg-[#F4F9FF] transition-colors appearance-none truncate`}
         value={selectedOption}
         onChange={handleSelectChange}
       >
@@ -37,9 +37,9 @@ export const DropdownInput = ({
           </option>
         ))}
       </select>
-      <div className="absolute inset-y-0 right-1 flex items-center pointer-events-none">
+      <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
         <svg
-          className={height ? "w-3 h-3" : "w-5 h-5 text-gray-500"}
+          className={height ? "w-4 h-4" : "w-5 h-5 text-gray-500"}
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"

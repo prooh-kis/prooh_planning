@@ -12,7 +12,6 @@ import {
 import { useLocation } from "react-router-dom";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import {
-  COST_SUMMARY,
   FULL_CAMPAIGN_PLAN,
   SCREEN_SUMMARY_TABLE_DATA,
 } from "../../constants/localStorageConstants";
@@ -23,20 +22,19 @@ import {
   getAWSUrlToUploadFile,
   getDocUrlToSaveOnAWS,
   sanitizeUrlForS3,
-  saveDocsOnAws,
   saveFileOnAWS,
 } from "../../utils/awsUtils";
-import {
-  generateCampaignSummaryPdfFromJSON,
-  generateScreenPicturesPptFromJSON,
-} from "../../utils/generatePdf";
+import { generateCampaignSummaryPdfFromJSON } from "../../utils/generatePdf";
 import { sendEmailForConfirmation } from "../../actions/userAction";
 import { SEND_EMAIL_FOR_CONFIRMATION_RESET } from "../../constants/userConstants";
 import { generatePPT } from "../../utils/generatePPT";
+import { convertIntoDateAndTime } from "../../utils/dateAndTimeUtils";
+import { DropdownInput } from "../../components/atoms/DropdownInput";
 import {
-  convertDataTimeToLocale,
-  convertIntoDateAndTime,
-} from "../../utils/dateAndTimeUtils";
+  applyCouponForCampaign,
+  getCouponList,
+} from "../../actions/couponAction";
+import { APPLY_COUPON_RESET } from "../../constants/couponConstants";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -111,6 +109,14 @@ export const ViewFinalPlanPODetails = ({
     cohorts: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts,
   });
 
+  const couponList = useSelector((state: any) => state.couponList);
+  const { data: coupons } = couponList;
+
+  const couponApplyForCampaign = useSelector(
+    (state: any) => state.couponApplyForCampaign
+  );
+  const { data: couponApply, error: errorApply } = couponApplyForCampaign;
+
   const finalPlanPOTableDataGet = useSelector(
     (state: any) => state.finalPlanPOTableDataGet
   );
@@ -119,6 +125,20 @@ export const ViewFinalPlanPODetails = ({
     error: errorPOData,
     data: poTableData,
   } = finalPlanPOTableDataGet;
+
+  const [currentCoupon, setCurrentCoupon] = useState<string>(
+    poTableData?.couponId || ""
+  );
+
+  useEffect(() => {
+    if (errorApply) {
+      message.error(
+        "Something went wrong applying this coupon. Please try again."
+      );
+    } else if (couponApply) {
+      dispatch(getFinalPlanPOTableData(poInput));
+    }
+  }, [couponApply, errorApply, dispatch, poInput]);
 
   const emailSendForConfirmation = useSelector(
     (state: any) => state.emailSendForConfirmation
@@ -232,7 +252,9 @@ export const ViewFinalPlanPODetails = ({
       const fileLinks = uploadedFiles
         .map(
           ({ fileName, fileUrl }: any) =>
-            `Campaign Summary :<br><br/><a href="${sanitizeUrlForS3(fileUrl)}" target="_blank">${fileName?.replace(/_/g, " ")}</a><br></br>`
+            `Campaign Summary :<br><br/><a href="${sanitizeUrlForS3(
+              fileUrl
+            )}" target="_blank">${fileName?.replace(/_/g, " ")}</a><br></br>`
         )
         .join("\n");
 
@@ -319,6 +341,19 @@ export const ViewFinalPlanPODetails = ({
     return result;
   };
 
+  const handleApplyCoupon = useCallback(() => {
+    console.log("handleApplyCoupon : ", campaignId, currentCoupon);
+    if (poTableData?.couponId)
+      message.warning("You have already applied coupon!");
+    else
+      dispatch(
+        applyCouponForCampaign({
+          campaignCreationId: campaignId,
+          couponId: currentCoupon,
+        })
+      );
+  }, [campaignId, currentCoupon, poTableData, dispatch]);
+
   useEffect(() => {
     if (successSendEmail) {
       message.success("Email sent successfully!");
@@ -330,6 +365,7 @@ export const ViewFinalPlanPODetails = ({
       });
     }
     dispatch(getFinalPlanPOTableData(poInput));
+    dispatch(getCouponList());
     dispatch(
       getScreenSummaryPlanTableData({
         id: campaignId,
@@ -337,10 +373,12 @@ export const ViewFinalPlanPODetails = ({
           getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
       })
     );
-    dispatch(getPlanningPageFooterData({
-      id: campaignId,
-      pageName: "View Final Plan Page",
-    }));
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "View Final Plan Page",
+      })
+    );
 
     if (userInfo) {
       setCC(userInfo?.email);
@@ -413,6 +451,33 @@ export const ViewFinalPlanPODetails = ({
                 : "None"
             }
           />
+          <div className="flex font-normal text-[#2B2B2B] mt-4">
+            <h1 className="text-left text-[14px] basis-1/2">Apply Discount%</h1>
+            <div className="flex gap-4">
+              <DropdownInput
+                border="border-gray-100"
+                height="h-8"
+                width="w-[286px]"
+                placeHolder="-----Select coupon-----"
+                selectedOption={currentCoupon}
+                setSelectedOption={setCurrentCoupon}
+                options={coupons?.map((coupon: any) => {
+                  return {
+                    label: `${coupon?.couponCode} ${coupon?.discountPercent}% discount`,
+                    value: coupon?._id,
+                  };
+                })}
+              />
+              {currentCoupon && (
+                <button
+                  className="text-[#129bff]  px-4 py-1 rounded-md font-semibold"
+                  onClick={handleApplyCoupon}
+                >
+                  Apply
+                </button>
+              )}
+            </div>
+          </div>
           <Divider />
           <div className="flex font-semibold ">
             <div className="basis-1/2 flex items-center justify-start gap-2">
@@ -427,10 +492,54 @@ export const ViewFinalPlanPODetails = ({
                 <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
               </Tooltip>
             </div>
-            <h1 className="text-left basis-1/2">
-              &#8377; {formatNumber(Number(poTableData?.totalCampaignBudget))}*
-            </h1>
+            <div className="flex  basis-1/2 gap-8">
+              {poTableData?.couponId && (
+                <h1 className="text-left ">
+                  &#8377;{" "}
+                  {formatNumber(Number(poTableData?.finalCampaignBudget))}*
+                </h1>
+              )}
+              <h1
+                className={`text-left  ${
+                  poTableData?.couponId ? "line-through text-gray-400 " : ""
+                }`}
+              >
+                &#8377; {formatNumber(Number(poTableData?.totalCampaignBudget))}
+                *
+              </h1>
+
+              {poTableData?.couponId && (
+                <h1 className="text-left text-[#388e3c]">
+                  {
+                    coupons?.find((c: any) => c._id == poTableData?.couponId)
+                      ?.discountPercent
+                  }
+                  % off
+                </h1>
+              )}
+            </div>
           </div>
+          {poTableData?.couponId && (
+            <>
+              <div className="flex font-semibold ">
+                <h1 className="text-left text-[#388e3c] text-sm">
+                  You saved &#8377;{" "}
+                  {formatNumber(Number(poTableData?.totalDiscount))}*
+                </h1>
+              </div>
+              <div className="flex font-semibold ">
+                <h1 className="text-left text-sm">
+                  Coupon Applied:{" "}
+                  <span className="text-[#129BFF]">
+                    {
+                      coupons?.find((c: any) => c._id == poTableData?.couponId)
+                        ?.couponCode
+                    }
+                  </span>
+                </h1>
+              </div>
+            </>
+          )}
         </div>
         <div
           ref={pageRef}
@@ -452,7 +561,9 @@ export const ViewFinalPlanPODetails = ({
                       heading: "CAMPAIGN SUMMARY",
                       pdfData: {
                         approach: [
-                          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId],
+                          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
+                            campaignId
+                          ],
                         ],
                         costSummary: [
                           getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
@@ -460,9 +571,11 @@ export const ViewFinalPlanPODetails = ({
                           ],
                         ],
                         creativeRatio: countScreensByResolutionAndCity(
-                        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-                          ?.screenWiseSlotDetails
-                      )},
+                          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
+                            campaignId
+                          ]?.screenWiseSlotDetails
+                        ),
+                      },
                       fileName: `${poInput?.brandName} Campaign Summary`,
                     };
                   } else {
@@ -484,24 +597,27 @@ export const ViewFinalPlanPODetails = ({
                   if (e.target.checked) {
                     pdfToDownload["screen-pictures"] = {
                       heading: "SCREEN PICTURES",
-                      pdfData: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
-                        campaignId
-                      ]?.screenWiseSlotDetails?.filter((s: any) => 
-                        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds.includes(s.screenId)
-                      )?.map((screen: any) => {
-                        return {
-                          title: screen.screenName,
-                          imageUrl: screen.images,
-                          content: screen.location,
-                          resolution: screen.screenResolution,
-                        };
-                      }),
+                      pdfData: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)
+                        ?.[campaignId]?.screenWiseSlotDetails?.filter(
+                          (s: any) =>
+                            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
+                              campaignId
+                            ]?.screenIds.includes(s.screenId)
+                        )
+                        ?.map((screen: any) => {
+                          return {
+                            title: screen.screenName,
+                            imageUrl: screen.images,
+                            content: screen.location,
+                            resolution: screen.screenResolution,
+                          };
+                        }),
                       fileName: `${poInput?.brandName} Campaign Screen Pictures`,
                     };
                   } else {
                     delete pdfToDownload["screen-pictures"];
                   }
-                  
+
                   setPdfDownload(pdfToDownload);
                 }}
               />
@@ -519,7 +635,7 @@ export const ViewFinalPlanPODetails = ({
                     jsonData: pdfDownload[pdf].pdfData,
                     fileName: pdfDownload[pdf].fileName,
                     heading: pdfDownload[pdf].heading,
-                  })
+                  });
                 }
                 if (pdf === "screen-pictures") {
                   if (pdfDownload[pdf].pdfData?.length > 0) {
