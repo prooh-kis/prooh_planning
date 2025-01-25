@@ -88,7 +88,6 @@ export const UploadCreativeForTriggerCampaign = ({
   triggerData,
   triggerType,
 }: any) => {
-  console.log(triggerData);
   return (
     <div className="p-2">
       <h1 className="font-semibold">{triggerType}</h1>

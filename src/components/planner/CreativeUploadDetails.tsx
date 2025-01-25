@@ -204,7 +204,7 @@ export const CreativeUploadDetails = ({
 
   const filterUniqueResolutions = (data: any) => {
     const filteredData: any = {};
-
+console.log(data);
     Object.keys(data).forEach((city) => {
       // Use a Set to track unique screen resolutions
       const uniqueResolutions = new Set();
@@ -217,6 +217,7 @@ export const CreativeUploadDetails = ({
           uniqueCreatives.push(creative); // Add the creative to the unique list
         }
       });
+      console.log(uniqueCreatives)
 
       filteredData[city] = uniqueCreatives; // Assign unique creatives back to the city
     });
@@ -255,12 +256,22 @@ export const CreativeUploadDetails = ({
   const handleSaveFile = () => {
     if (file) {
       const myData = creativeUploadData;
+      console.log(creativeUploadData);
       if (creativeType === "Standard") {
-        if (currentPlayTimeCreative === "1")
-          myData[currentCity][currentScreen].standardDayTimeCreatives.push(
-            file
-          );
-        else {
+        
+        if (currentPlayTimeCreative === "1") {
+          if (myData[currentCity][currentScreen].standardDayTimeCreatives) {
+            myData[currentCity][currentScreen].standardDayTimeCreatives.push(
+              file
+            );
+          } else {
+            myData[currentCity][currentScreen].standardDayTimeCreatives=[];
+            myData[currentCity][currentScreen].standardDayTimeCreatives.push(
+              file
+            );
+          }
+  
+        } else {
           myData[currentCity][currentScreen].standardNightTimeCreatives.push(
             file
           );
@@ -273,9 +284,9 @@ export const CreativeUploadDetails = ({
       let citiesCreativeData = citiesCreative.map((data: any) => {
         if (
           data.label === currentCity &&
-          (myData[currentCity][currentScreen].standardDayTimeCreatives
-            .length === 0 ||
-            myData[currentCity][currentScreen].triggerCreatives.length === 0)
+          (myData[currentCity][currentScreen]?.standardDayTimeCreatives
+            ?.length === 0 ||
+            myData[currentCity][currentScreen]?.triggerCreatives?.length === 0)
         ) {
           data.params[0] += myData[currentCity][currentScreen]?.count;
           data.params[1] =
@@ -285,6 +296,7 @@ export const CreativeUploadDetails = ({
       });
       setCitiesCreative(citiesCreativeData);
       saveDataOnLocalStorage(CAMPAIGN_CREATIVES, { [campaignId]: myData });
+      console.log("asdadsdasad", )
     } else {
       message.error("Please select file to save!");
     }
@@ -581,20 +593,6 @@ export const CreativeUploadDetails = ({
     }
   }, [campaignId, errorScreeData, screenData]);
 
-  useEffect(() => {
-    console.log("Current screen updated:", currentScreen);
-  }, [currentScreen]);
-
-  console.log(
-    "creativeUploadData : ",
-    currentScreen,
-    "             ",
-    creativeUploadData,
-    creativeUploadData?.[currentCity],
-    creativeUploadData?.[currentCity]?.[currentScreen],
-    creativeUploadData?.[currentCity]?.[currentScreen]?.standardDayTimeCreatives
-  );
-
   return (
     <div className="w-full py-3">
       <div>
@@ -665,7 +663,7 @@ export const CreativeUploadDetails = ({
                             {singleData?.count}
                           </h1>
                           <h1 className="border-b border-x border-1 p-2 w-24 text-center ">
-                            {singleData?.creativeDuration}
+                            {singleData?.duration}
                           </h1>
                           <h1 className="border-b border-1 p-2 w-48 text-center ">
                             {singleData?.screenResolution}
