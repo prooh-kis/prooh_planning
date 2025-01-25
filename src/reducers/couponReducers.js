@@ -7,6 +7,10 @@ import {
   GET_COUPON_LIST_REQUEST,
   GET_COUPON_LIST_RESET,
   GET_COUPON_LIST_SUCCESS,
+  REMOVE_COUPON_FAIL,
+  REMOVE_COUPON_REQUEST,
+  REMOVE_COUPON_RESET,
+  REMOVE_COUPON_SUCCESS,
 } from "../constants/couponConstants";
 
 export function getCouponListReducer(state = [], action) {
@@ -53,6 +57,34 @@ export function applyCouponForCampaignReducer(state = [], action) {
         error: action.payload,
       };
     case APPLY_COUPON_RESET:
+      return {
+        loading: false,
+        success: false,
+        data: state,
+      };
+    default:
+      return state;
+  }
+}
+
+
+export function removeCouponForCampaignReducer(state = [], action) {
+  switch (action.type) {
+    case REMOVE_COUPON_REQUEST:
+      return { loading: true };
+    case REMOVE_COUPON_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        data: action.payload,
+      };
+    case REMOVE_COUPON_FAIL:
+      return {
+        loading: false,
+        success: false,
+        error: action.payload,
+      };
+    case REMOVE_COUPON_RESET:
       return {
         loading: false,
         success: false,

@@ -51,6 +51,7 @@ import {
 import {
   applyCouponForCampaignReducer,
   getCouponListReducer,
+  removeCouponForCampaignReducer,
 } from "../reducers/couponReducers";
 
 const initialState = {
@@ -124,6 +125,8 @@ const store = configureStore({
     // COUPONS
     couponList: getCouponListReducer,
     couponApplyForCampaign: applyCouponForCampaignReducer,
+    couponRemoveForCampaign: removeCouponForCampaignReducer,
+
   },
   // middleware: thunk
   // devTools: process.env.NODE_ENV !== 'production'

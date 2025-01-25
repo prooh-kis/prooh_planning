@@ -11,6 +11,7 @@ export const DropdownInput = ({
   rounded = false,
 }: any) => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    // console.log(event.target.value);
     setSelectedOption(event.target.value);
   };
 

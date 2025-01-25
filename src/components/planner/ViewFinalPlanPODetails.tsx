@@ -33,6 +33,7 @@ import { DropdownInput } from "../../components/atoms/DropdownInput";
 import {
   applyCouponForCampaign,
   getCouponList,
+  removeCouponForCampaign,
 } from "../../actions/couponAction";
 import { APPLY_COUPON_RESET } from "../../constants/couponConstants";
 
@@ -117,6 +118,11 @@ export const ViewFinalPlanPODetails = ({
   );
   const { data: couponApply, error: errorApply } = couponApplyForCampaign;
 
+  const couponRemoveForCampaign = useSelector(
+    (state: any) => state.couponRemoveForCampaign
+  );
+  const { data: couponRemove, error: errorRemove } = couponRemoveForCampaign;
+
   const finalPlanPOTableDataGet = useSelector(
     (state: any) => state.finalPlanPOTableDataGet
   );
@@ -133,12 +139,20 @@ export const ViewFinalPlanPODetails = ({
   useEffect(() => {
     if (errorApply) {
       message.error(
-        "Something went wrong applying this coupon. Please try again."
+        "Something went wrong applying this discount. Please try again."
       );
     } else if (couponApply) {
       dispatch(getFinalPlanPOTableData(poInput));
     }
-  }, [couponApply, errorApply, dispatch, poInput]);
+
+    if (errorRemove) {
+      message.error(
+        "Something went wrong applying this discount. Please try again."
+      );
+    } else if (couponRemove) {
+      dispatch(getFinalPlanPOTableData(poInput));
+    }
+  }, [couponApply, errorApply, dispatch, poInput, errorRemove, couponRemove]);
 
   const emailSendForConfirmation = useSelector(
     (state: any) => state.emailSendForConfirmation
@@ -341,15 +355,16 @@ export const ViewFinalPlanPODetails = ({
     return result;
   };
 
-  const handleApplyCoupon = useCallback(() => {
+  const handleApplyCoupon = useCallback((couponId: any) => {
     console.log("handleApplyCoupon : ", campaignId, currentCoupon);
-    if (poTableData?.couponId)
-      message.warning("You have already applied coupon!");
-    else
+    if (poTableData?.couponId) {
+      message.warning("You have already applied discount! Replacing the applied discount");
+
+    }
       dispatch(
         applyCouponForCampaign({
           campaignCreationId: campaignId,
-          couponId: currentCoupon,
+          couponId: couponId || currentCoupon,
         })
       );
   }, [campaignId, currentCoupon, poTableData, dispatch]);
@@ -366,13 +381,13 @@ export const ViewFinalPlanPODetails = ({
     }
     dispatch(getFinalPlanPOTableData(poInput));
     dispatch(getCouponList());
-    dispatch(
-      getScreenSummaryPlanTableData({
-        id: campaignId,
-        screenIds:
-          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
-      })
-    );
+    // dispatch(
+    //   getScreenSummaryPlanTableData({
+    //     id: campaignId,
+    //     screenIds:
+    //       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
+    //   })
+    // );
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
@@ -457,10 +472,13 @@ export const ViewFinalPlanPODetails = ({
               <DropdownInput
                 border="border-gray-100"
                 height="h-8"
-                width="w-[286px]"
+                width="w-auto"
                 placeHolder="-----Select coupon-----"
                 selectedOption={currentCoupon}
-                setSelectedOption={setCurrentCoupon}
+                setSelectedOption={(e: any) => {
+                  setCurrentCoupon(e)
+                  handleApplyCoupon(e);
+                }}
                 options={coupons?.map((coupon: any) => {
                   return {
                     label: `${coupon?.couponCode} ${coupon?.discountPercent}% discount`,
@@ -468,14 +486,6 @@ export const ViewFinalPlanPODetails = ({
                   };
                 })}
               />
-              {currentCoupon && (
-                <button
-                  className="text-[#129bff]  px-4 py-1 rounded-md font-semibold"
-                  onClick={handleApplyCoupon}
-                >
-                  Apply
-                </button>
-              )}
             </div>
           </div>
           <Divider />
@@ -493,7 +503,7 @@ export const ViewFinalPlanPODetails = ({
               </Tooltip>
             </div>
             <div className="flex  basis-1/2 gap-8">
-              {poTableData?.couponId && (
+              {poTableData?.couponId && poTableData?.couponId !== "NA" && (
                 <h1 className="text-left ">
                   &#8377;{" "}
                   {formatNumber(Number(poTableData?.finalCampaignBudget))}*
@@ -501,14 +511,14 @@ export const ViewFinalPlanPODetails = ({
               )}
               <h1
                 className={`text-left  ${
-                  poTableData?.couponId ? "line-through text-gray-400 " : ""
+                  poTableData?.couponId && poTableData?.couponId !== "NA" ? "line-through text-gray-400 " : ""
                 }`}
               >
                 &#8377; {formatNumber(Number(poTableData?.totalCampaignBudget))}
                 *
               </h1>
 
-              {poTableData?.couponId && (
+              {poTableData?.couponId && poTableData?.couponId !== "NA" && (
                 <h1 className="text-left text-[#388e3c]">
                   {
                     coupons?.find((c: any) => c._id == poTableData?.couponId)
@@ -519,7 +529,7 @@ export const ViewFinalPlanPODetails = ({
               )}
             </div>
           </div>
-          {poTableData?.couponId && (
+          {poTableData?.couponId && poTableData?.couponId !== "NA" && (
             <>
               <div className="flex font-semibold ">
                 <h1 className="text-left text-[#388e3c] text-sm">
@@ -527,9 +537,9 @@ export const ViewFinalPlanPODetails = ({
                   {formatNumber(Number(poTableData?.totalDiscount))}*
                 </h1>
               </div>
-              <div className="flex font-semibold ">
+              <div className="flex font-semibold items-center gap-4">
                 <h1 className="text-left text-sm">
-                  Coupon Applied:{" "}
+                  Discount Applied:{" "}
                   <span className="text-[#129BFF]">
                     {
                       coupons?.find((c: any) => c._id == poTableData?.couponId)
@@ -537,6 +547,12 @@ export const ViewFinalPlanPODetails = ({
                     }
                   </span>
                 </h1>
+                <i
+                  className="fi fi-sr-trash flex items-center lg:text-[14px] text-[12px] text-[#EF4444]"
+                  onClick={() => {
+                    dispatch(removeCouponForCampaign({campaignCreationId: campaignId}))
+                  }}
+                ></i>
               </div>
             </>
           )}
@@ -605,12 +621,7 @@ export const ViewFinalPlanPODetails = ({
                             ]?.screenIds.includes(s.screenId)
                         )
                         ?.map((screen: any) => {
-                          return {
-                            title: screen.screenName,
-                            imageUrl: screen.images,
-                            content: screen.location,
-                            resolution: screen.screenResolution,
-                          };
+                          return screen;
                         }),
                       fileName: `${poInput?.brandName} Campaign Screen Pictures`,
                     };

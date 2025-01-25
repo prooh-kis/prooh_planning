@@ -10,6 +10,7 @@ export const generatePPT = async ({ data, fileName, download }) => {
         data.forEach((item) => {
             const slide = ppt.addSlide();
             // console.log(item.imageUrl?.[0]?.replace(/\+/g, ' '));
+
             const imageUrl = item.imageUrl?.[0]?.replace(/\+/g, ' ') || "https://via.placeholder.com/1280x720";
             slide.addImage({
                 path: imageUrl,
@@ -21,14 +22,14 @@ export const generatePPT = async ({ data, fileName, download }) => {
             });
 
             slide.addText(`
-                Location:
-                \n${item?.content?.address}
-                \nCoordinates: ${item?.content?.geographicalLocation?.latitude}, ${item?.content?.geographicalLocation?.longitude}
+                Name: ${item.screenName}
+                Location: ${item?.location?.address}, ${item?.location?.city}
+                Coordinates: ${item?.location?.geographicalLocation?.latitude}, ${item?.location?.geographicalLocation?.longitude}
             `, {
                 x: 0,
                 y: 4.6,
                 w: "100%",
-                // h: 1,
+                h: 1,
                 fontSize: 10,
                 color: "000000",
                 fill: { color: "FFFF00" },
@@ -36,12 +37,11 @@ export const generatePPT = async ({ data, fileName, download }) => {
             });
 
             slide.addText(`
-                Size:
-                \n${item?.resolution} sqpx
-                \n ${item?.resolution} sqft
-                \n ${item?.resolution}
+                Resolution: ${item?.screenResolution} pixels
+                Size: ${item?.screenLength} ft x ${item?.screenWidth} ft
+                Ratio: ${item?.screenDimensions}
             `, {
-                x: 2.5,
+                x: 2.3,
                 y: 4.6,
                 w: "100%",
                 h: 1,
@@ -50,8 +50,12 @@ export const generatePPT = async ({ data, fileName, download }) => {
                 align: "left",
                 fill: { color: "FFFF00" },
             });
-            slide.addText(`Size:\n ${item?.resolution}`, {
-                x: 5,
+            slide.addText(`
+                Slot Length: ${item?.slotLengthSeconds} seconds
+                Loop Length: ${item?.loopLengthSeconds} seconds
+                Deliverable: ${item?.totalSlotForOneBrand} Slots/Day
+            `, {
+                x: 4.6,
                 y: 4.6,
                 w: "100%",
                 h: 1,
@@ -60,8 +64,12 @@ export const generatePPT = async ({ data, fileName, download }) => {
                 align: "left",
                 fill: { color: "FFFF00" },
             });
-            slide.addText(`Size:\n ${item?.resolution} sqft`, {
-                x: 7.5,
+            slide.addText(`
+                Operational Hours: ${item?.operationalDuration?.totalDuration} Hrs
+                On Time: ${item?.operationalDuration?.onTime}
+                Off Time: ${item?.operationalDuration?.offTime}
+            `, {
+                x: 6.9,
                 y: 4.6,
                 w: "100%",
                 h: 1,

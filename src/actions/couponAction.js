@@ -6,6 +6,9 @@ import {
   GET_COUPON_LIST_FAIL,
   GET_COUPON_LIST_REQUEST,
   GET_COUPON_LIST_SUCCESS,
+  REMOVE_COUPON_FAIL,
+  REMOVE_COUPON_REQUEST,
+  REMOVE_COUPON_SUCCESS,
 } from "../constants/couponConstants";
 
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/coupon`;
@@ -48,6 +51,30 @@ export const applyCouponForCampaign = (input) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: APPLY_COUPON_FAIL,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    });
+  }
+};
+
+
+export const removeCouponForCampaign = ({campaignCreationId}) => async (dispatch, getState) => {
+  dispatch({
+    type: REMOVE_COUPON_REQUEST,
+    payload: {campaignCreationId},
+  });
+  try {
+    const { data } = await axios.post(`${url}/remove`, {campaignCreationId});
+    dispatch({
+      type: REMOVE_COUPON_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: REMOVE_COUPON_FAIL,
       payload: {
         message: error.message,
         status: error.response?.status,
