@@ -119,28 +119,50 @@ export const ScreenSummaryTable = ({
   const handleScreenClick = useCallback(
     ({ screen, city, statusRes }: any) => {
       const screenId = screen._id;
+      const networkType = screen.networkType;
 
       // Create a deep clone to avoid modifying the original state directly
       const updatedScreensBuyingCount = { ...screensBuyingCount };
 
       const currentCityScreens = updatedScreensBuyingCount[city] || {};
 
-      // Toggle the status of the selected screen
-      if (statusRes === undefined && currentCityScreens[screenId]) {
-        currentCityScreens[screenId].status =
-          !currentCityScreens[screenId].status;
+      if (networkType === "") {
+        // Toggle the status of the selected screen
+        if (statusRes === undefined && currentCityScreens[screenId]) {
+          currentCityScreens[screenId].status =
+            !currentCityScreens[screenId].status;
+        } else {
+          currentCityScreens[screenId] = {
+            status: statusRes,
+            data: screen,
+          };
+        }
       } else {
-        currentCityScreens[screenId] = {
-          status: statusRes,
-          data: screen,
-        };
+        // change network type in db then implement
+        let newStatus;
+        if (statusRes !== undefined) {
+          newStatus = statusRes;
+        } else if (currentCityScreens[screenId]) {
+          newStatus = !currentCityScreens[screenId].status;
+        }
+
+        for (const id in currentCityScreens) {
+          if (currentCityScreens[id].data.networkType === networkType) {
+            currentCityScreens[id] = {
+              ...currentCityScreens[id],
+              status: newStatus,
+            }
+          }
+        }
       }
 
       // Update the specific city's screens in screensBuyingCount while preserving other cities
       updatedScreensBuyingCount[city] = currentCityScreens;
 
+      console.log(updatedScreensBuyingCount[city]);
       // Save the updated state
       setScreensBuyingCount(updatedScreensBuyingCount);
+      // alert(`You are ${newStatus ? "selecting" : "deselecting"} screen in ${networkType} network, all the screens`)
 
       refreshScreenSummary();
     },

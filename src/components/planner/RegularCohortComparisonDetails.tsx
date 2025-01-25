@@ -68,27 +68,29 @@ export const RegularCohortComparisonDetails = ({
   } = regularVsCohortPriceDataGet;
 
   useEffect(() => {
-    if (!priceData) {
-      dispatch(
-        getRegularVsCohortPriceData({
-          id: campaignId,
-          screenIds: screenIds,
-          cohorts: cohorts,
-          gender: gender,
-          duration: duration,
-        })
-      );
-    } else {
+    if (priceData) {
       saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, {
         [campaignId]: priceData,
       });
+      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: {} });
+
     }
-    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: {} });
+  },[priceData, campaignId]);
+  useEffect(() => {
+    dispatch(
+      getRegularVsCohortPriceData({
+        id: campaignId,
+        screenIds: screenIds,
+        cohorts: cohorts,
+        gender: gender,
+        duration: duration,
+      })
+    );
     dispatch(getPlanningPageFooterData({
       id: campaignId,
       pageName: "Compare Plan Page",
     }));
-  }, [priceData, cohorts, dispatch, duration, gender, screenIds, campaignId]);
+  }, [cohorts, dispatch, duration, gender, screenIds, campaignId]);
 
   const handleRegularVsCohortSelection = (type: any) => {
     setSelectedBuyingOption(type);

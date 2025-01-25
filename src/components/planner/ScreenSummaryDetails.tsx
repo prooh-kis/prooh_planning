@@ -291,9 +291,6 @@ export const ScreenSummaryDetails = ({
   }, [campaignId, pathname, screenSummaryPlanTableData, step]);
 
   useEffect(() => {
-    if (errorScreenSummary) {
-      window.location.reload();
-    }
 
     if (screenSummaryData) {
       // console.log(screenSummaryData);
@@ -314,9 +311,14 @@ export const ScreenSummaryDetails = ({
     campaignId,
     screenSummaryData,
     screensBuyingCount,
-    getTabValue,
-    errorScreenSummary
+    getTabValue
   ]);
+
+  useEffect(() => {
+    // if (errorScreenSummary) {
+    //   window.location.reload();
+    // }
+  }, [errorScreenSummary]);
 
   return (
     <div className="w-full py-3">
@@ -332,7 +334,7 @@ export const ScreenSummaryDetails = ({
         <></>
       ) : (
         <div className="mt-2">
-          {screenSummaryData && (
+          {!loadingScreenSummary && screenSummaryData && (
             <TabWithIcon
               currentTab={currentTab}
               setCurrentTab={setCurrentTab}
@@ -354,7 +356,7 @@ export const ScreenSummaryDetails = ({
             <div>
               <div className="py-2 grid grid-cols-12 flex justify-between">
                 <div className="col-span-8 overflow-x-scroll no-scrollbar">
-                  {screenSummaryData && cityTabData?.length !== 0 && (
+                  {!loadingScreenSummary && screenSummaryData && cityTabData?.length !== 0 && (
                     <TabWithoutIcon
                       currentTab={currentSummaryTab}
                       setCurrentTab={handleSelectCurrentTab}

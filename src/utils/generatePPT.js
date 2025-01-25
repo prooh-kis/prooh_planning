@@ -9,8 +9,7 @@ export const generatePPT = async ({ data, fileName, download }) => {
         // Create slides with data
         data.forEach((item) => {
             const slide = ppt.addSlide();
-
-            console.log(item.imageUrl?.[0]?.replace(/\+/g, ' '));
+            // console.log(item.imageUrl?.[0]?.replace(/\+/g, ' '));
             const imageUrl = item.imageUrl?.[0]?.replace(/\+/g, ' ') || "https://via.placeholder.com/1280x720";
             slide.addImage({
                 path: imageUrl,
@@ -21,35 +20,53 @@ export const generatePPT = async ({ data, fileName, download }) => {
                 crossOrigin: "anonymous"
             });
 
-            slide.addText(`Location:\n${item?.content?.address}`, {
+            slide.addText(`
+                Location:
+                \n${item?.content?.address}
+                \nCoordinates: ${item?.content?.geographicalLocation?.latitude}, ${item?.content?.geographicalLocation?.longitude}
+            `, {
                 x: 0,
                 y: 4.6,
                 w: "100%",
-                h: 1,
-                fontSize: 12,
-                color: "black",
+                // h: 1,
+                fontSize: 10,
+                color: "000000",
                 fill: { color: "FFFF00" },
                 align: "left",
             });
 
-            slide.addText(`Lat-Long:\n${item?.content?.geographicalLocation?.latitude}, ${item?.content?.geographicalLocation?.longitude}`, {
-                x: 5.5,
+            slide.addText(`
+                Size:
+                \n${item?.resolution} sqpx
+                \n ${item?.resolution} sqft
+                \n ${item?.resolution}
+            `, {
+                x: 2.5,
                 y: 4.6,
                 w: "100%",
                 h: 1,
-                fontSize: 12,
-                color: "black",
+                fontSize: 10,
+                color: "000000",
                 align: "left",
                 fill: { color: "FFFF00" },
             });
-
             slide.addText(`Size:\n ${item?.resolution}`, {
+                x: 5,
+                y: 4.6,
+                w: "100%",
+                h: 1,
+                fontSize: 10,
+                color: "000000",
+                align: "left",
+                fill: { color: "FFFF00" },
+            });
+            slide.addText(`Size:\n ${item?.resolution} sqft`, {
                 x: 7.5,
                 y: 4.6,
                 w: "100%",
                 h: 1,
-                fontSize: 12,
-                color: "black",
+                fontSize: 10,
+                color: "000000",
                 align: "left",
                 fill: { color: "FFFF00" },
             });
