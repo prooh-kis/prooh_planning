@@ -10,6 +10,7 @@ import {
   Legend,
   Filler,
 } from "chart.js";
+import { formatNumber } from "../../utils/formatValue";
 
 // Register required chart components
 ChartJS.register(
@@ -39,9 +40,9 @@ export const DashboardBarChart: React.FC<BarChartProps> = ({
   labels,
   label,
   total,
-  color="rgba(138, 43, 226, 1)",
-  bgColor="rgba(138, 43, 226, 0.5)",
-  percent=true
+  color = "rgba(138, 43, 226, 1)",
+  bgColor = "rgba(138, 43, 226, 0.5)",
+  percent = true,
 }) => {
   // Dynamically calculate the total value
 
@@ -56,20 +57,34 @@ export const DashboardBarChart: React.FC<BarChartProps> = ({
         borderWidth: 1,
         borderRadius: 5,
         barThickness: "flex" as const,
+        datalabels: {
+          color: "#fff",
+          anchor: "center" as const,
+          align: "center" as const,
+          font: { weight: "bold" as const },
+          formatter: (value: number) => formatNumber(value.toFixed(0)), // Hide zero values
+        },
       },
       // Only include the target data if it's passed
       ...(targetData
         ? [
             {
               label: "Target Value",
-              data: targetData.map(
-                (target, index) => Math.max(0, target - currentData[index])
+              data: targetData.map((target, index) =>
+                Math.max(0, target - currentData[index])
               ),
               backgroundColor: "rgba(255, 99, 132, 0.5)",
               borderColor: "rgba(255, 99, 132, 1)",
               borderWidth: 1,
               borderRadius: 5,
               barThickness: "flex" as const,
+              datalabels: {
+                color: "#fff",
+                anchor: "center" as const,
+                align: "center" as const,
+                font: { weight: "bold" as const },
+                formatter: (value: number) => formatNumber(value.toFixed(0)), // Hide zero values
+              },
             },
           ]
         : []),
@@ -96,7 +111,9 @@ export const DashboardBarChart: React.FC<BarChartProps> = ({
           label: function (context: any) {
             const label = context.dataset.label || "";
             const value = context.raw;
-            return `${label}: ${percent ? "" : "\u20B9"} ${value.toFixed(0)}`;
+            return `${label}: ${percent ? "" : "\u20B9"} ${formatNumber(
+              value
+            )}`;
           },
         },
       },
@@ -117,27 +134,33 @@ export const DashboardBarChart: React.FC<BarChartProps> = ({
     const dynamicTotalPlugin = {
       id: "totalValue",
       afterDraw(chart: any) {
-        // Check if the chart is a bar chart
         if (chart.config.type === "bar") {
           const ctx = chart.ctx;
           const { width, height } = chart;
-    
-          // Draw the dynamic total value in the bottom-right corner
           ctx.save();
-          ctx.font = "12px Arial";
-          ctx.fillStyle = "#666";
+          ctx.font = "bold 14px Arial"; // Make the font bold and larger
+          ctx.fillStyle = "#333"; // Darker text color for better visibility
           ctx.textAlign = "right";
-          ctx.clearRect(width - 100, height - 30, 100, 30); // Clear previous total
+
           const total = chart.data.datasets[0].data.reduce(
             (sum: number, value: number) => sum + value,
             0
           );
-          ctx.fillText(`Total: ${percent ? "" : "\u20B9"} ${total}`, width - 10, height - 10);
+          const average = total / currentData?.length;
+
+          // Combine both total and average in one line
+          const text = `Total: ${percent ? "" : "\u20B9"} ${formatNumber(
+            total
+          )}, Average: ${percent ? "" : "\u20B9"} ${formatNumber(average)}`;
+
+          // Clear previous text and draw the new one
+          ctx.clearRect(0, height - 30, width, 30);
+          ctx.fillText(text, width - 20, height - 10);
           ctx.restore();
         }
       },
     };
-    
+
     ChartJS.register(dynamicTotalPlugin);
     return () => {
       ChartJS.unregister(dynamicTotalPlugin);

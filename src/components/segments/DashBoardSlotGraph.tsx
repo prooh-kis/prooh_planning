@@ -6,14 +6,9 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
-  LineElement,
-  PointElement,
   Title,
   Tooltip,
   Legend,
-  Filler,
-  LineController, // Add this
-  BarController, // Also include BarController
 } from "chart.js";
 import { formatNumber } from "../../utils/formatValue";
 
@@ -21,21 +16,17 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  LineElement,
-  PointElement,
   Title,
   Tooltip,
   Legend,
-  Filler,
-  LineController, // Register LineController
-  BarController // Register BarController
+  ChartDataLabels
 );
 
 ChartJS.register(ChartDataLabels);
 
 interface BarChartProps {
   currentData: number[];
-  targetData?: number[]; // Optional target data
+  targetData: number[]; // Optional target data
   labels: string[];
   label?: string;
   total?: string;
@@ -54,82 +45,86 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
   bgColor = "rgba(138, 43, 226, 0.5)",
   percent = true,
 }) => {
-  // Calculate percentages if targetData is provided
-  const percentageData = targetData
-    ? currentData.map((value, index) =>
-        targetData[index] ? (value / targetData[index]) * 100 : 0
-      )
-    : [];
+  // Calculate Extra Slots and Remaining Slots dynamically
 
-  // Prepare chart data
+  const requiredToPlayed: number[] = currentData?.map(
+    (played: number, index: number) =>
+      played >= targetData[index] ? targetData[index] : played
+  );
+  const extraSlots: number[] = currentData?.map(
+    (played: number, index: number) =>
+      played > targetData[index] ? played - targetData[index] : 0
+  );
+
+  const remainingSlots: number[] = currentData?.map(
+    (played: number, index: number) =>
+      played < targetData[index] ? targetData[index] - played : 0
+  );
+
   const chartData = {
     labels,
     datasets: [
       {
-        type: "bar" as const,
-        label: `${label || "Current Value"}`,
-        data: currentData,
-        borderColor: color,
-        borderWidth: 2,
-        backgroundColor: "rgba(138, 43, 226, 0.5)",
-        fill: false,
-        // Only show data labels for the bar graph and in percentage
+        label: "Delivered",
+        data: requiredToPlayed,
+        backgroundColor: "#06B6D480",
+        borderColor: "#06B6D4",
+        borderWidth: 1,
         datalabels: {
-          color: color,
-          anchor: "end" as const,
-          align: "top" as const,
-          formatter: (value: number, context: any) => {
-            const percentage = percentageData[context.dataIndex] ?? 0;
-            return `${percentage.toFixed(1)}%`; // Show percentage
-          },
-          font: {
-            weight: "bold" as const, // Corrected here
-          },
+          color: "#fff",
+          anchor: "center" as const,
+          align: "center" as const,
+          font: { weight: "bold" as const },
+          formatter: (value: number) =>
+            value !== 0 ? formatNumber(value.toFixed(0)) : "", // Hide
         },
       },
       {
-        type: "line" as const,
-        label: "Target Value",
-        data: targetData,
-        borderColor: "rgba(255, 99, 132, 1)",
-        borderWidth: 2,
-        pointBackgroundColor: "rgba(255, 99, 132, 1)",
-        fill: false,
+        label: "Remaining",
+        data: remainingSlots,
+        backgroundColor: "#EF444480",
+        borderColor: "#EF4444",
+        borderWidth: 1,
         datalabels: {
-          color: "rgb(242, 8, 8)", // Line color
-          anchor: "start" as const,
-          align: "top" as const,
-          formatter: (value: number) => formatNumber(value.toFixed(0)),
-          font: {
-            weight: "bold" as const,
-          },
+          color: "#fff",
+          anchor: "center" as const,
+          align: "center" as const,
+          font: { weight: "bold" as const },
+          formatter: (value: number) =>
+            value !== 0 ? formatNumber(value.toFixed(0)) : "", // Hide
+        },
+      },
+      {
+        label: "Extra Played",
+        data: extraSlots,
+        backgroundColor: "#6366F180",
+        borderColor: "#6366F1",
+        borderWidth: 1,
+        datalabels: {
+          color: "#fff",
+          anchor: "center" as const,
+          align: "center" as const,
+          font: { weight: "bold" as const },
+          formatter: (value: number) =>
+            value !== 0 ? formatNumber(value.toFixed(0)) : "", // Hide zero values
         },
       },
     ],
   };
 
-  // Chart options for customization
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "bottom" as const,
-        align: "start" as const,
-        labels: {
-          boxWidth: 10,
-          boxHeight: 10,
-          font: {
-            size: 10,
-          },
-        },
       },
       tooltip: {
         callbacks: {
-          label: function (context: any) {
-            const label = context.dataset.label || "";
-            const value = context.raw ?? 0;
-            return `${label}: ${percent ? "" : "\u20B9"} ${value.toFixed(0)}`;
+          label: (context: any) => {
+            let label = context.dataset.label || "";
+            let value = context.raw;
+            return `${label}: ${value}`;
           },
         },
       },
@@ -140,13 +135,13 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
       },
       y: {
         beginAtZero: true,
-        stacked: false,
+        stacked: true,
       },
     },
   };
 
   return (
-    <div className="w-full h-[260px]">
+    <div className="w-full h-[300px]">
       <Chart type="bar" data={chartData} options={options} />
     </div>
   );

@@ -16,7 +16,7 @@ export const MultiColorLinearBar2: React.FC<MultiColorLinearBar2Props> = ({
 
   return (
     <div className="mt-1 relative">
-      <div className="relative h-1 bg-gray-200 rounded-full overflow-hidden ">
+      <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden ">
         {/* Expected Bar */}
         <div
           className="group absolute top-0 left-0 h-full bg-red"

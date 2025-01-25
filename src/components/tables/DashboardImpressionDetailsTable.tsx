@@ -73,13 +73,13 @@ export const DashboardImpressionDetailsTable = ({
                         ]?.impressionPromisedMale?.toFixed(0)
                     }
                   />
-                  <p className="text-[10px]">
+                  {/* <p className="text-[10px]">
                     {formatNumber(
                       screenLevelData?.["totalData"]?.impressionsCohortWise[
                         imp
                       ]?.impressionDeliveredMale?.toFixed(0)
                     ) || 0}
-                  </p>
+                  </p> */}
                 </div>
               </td>
               <td className="col-span-2">
@@ -99,13 +99,13 @@ export const DashboardImpressionDetailsTable = ({
                         ]?.impressionPromisedFemale?.toFixed(0)
                     }
                   />
-                  <p className="text-[10px]">
+                  {/* <p className="text-[10px]">
                     {formatNumber(
                       screenLevelData?.["totalData"]?.impressionsCohortWise[
                         imp
                       ]?.impressionDeliveredFemale?.toFixed(0)
                     ) || 0}
-                  </p>
+                  </p> */}
                 </div>
               </td>
               <td className="col-span-2 text-[12px]">

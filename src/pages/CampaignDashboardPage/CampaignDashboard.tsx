@@ -369,7 +369,7 @@ export const CampaignDashboard = ({
             <div className="p-2">
               <DashboardBarChart
                 percent={false}
-                bgColor="rgba(75, 192, 192, 0.5)"
+                bgColor="rgba(75, 192, 192, 0.7)"
                 color="rgba(75, 192, 192, 1)"
                 total={`${screenLevelData?.result?.totalData?.costConsumed?.toFixed(
                   0

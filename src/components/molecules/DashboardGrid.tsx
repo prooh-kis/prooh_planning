@@ -60,7 +60,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
                 campaignDetails?.startDate,
                 campaignDetails?.endDate
               )}
-              colors={["#F3F3F3", "#7AB3A2"]}
+              colors={["#00000020", "#7AB3A2"]}
               highest={campaignDetails?.duration}
               percent={false}
             />
@@ -113,7 +113,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
       ) : type === "screen" ? (
         <div>
           <SectionHeader
-            iconClass="fi-rs-dashboard text-purple-500"
+            iconClass="fi-rs-dashboard text-[#3f33bb]"
             title="Screen Performance"
           />
           <div className="p-2 sm:p-4">
@@ -134,7 +134,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
               value={screenLevelData?.result?.totalData?.screenPerformance?.toFixed(
                 0
               )}
-              colors={["#F3F3F3", "#7AB3A2"]}
+              colors={["#00000020", "#7AB3A2"]}
               highest={100}
             />
           </div>
@@ -203,7 +203,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
               value={screenLevelData?.result?.totalData?.costConsumed?.toFixed(
                 0
               )}
-              colors={["#F3F3F3", "#7AB3A2"]}
+              colors={["#00000020", "#7AB3A2"]}
               highest={screenLevelData?.result?.totalData?.costTaken?.toFixed(
                 0
               )}

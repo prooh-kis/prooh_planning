@@ -1,11 +1,14 @@
-import React from 'react';
+import React from "react";
 
 interface CalendarScaleSliderProps {
   days: number;
   daysPlayed: number;
 }
 
-export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({ days, daysPlayed }) => {
+export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({
+  days,
+  daysPlayed,
+}) => {
   // Generate an array of days from 1 to the provided total number of days
   const dayArray = Array.from({ length: days }, (_, i) => i + 1);
 
@@ -24,7 +27,8 @@ export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({ days, 
   const isLastWeek = playedWeekIndex === Math.ceil(days / 7) - 1;
 
   // Determine line color based on played days
-  const lineColor = Number(playedDays) > 0 ? 'border-[#129BFF20]' : 'border-[#129BFF30]'; // Change color if days are played
+  const lineColor =
+    Number(playedDays) > 0 ? "border-[#129BFF20]" : "border-[#129BFF30]"; // Change color if days are played
 
   return (
     <div className="calendar-scale relative flex flex-col items-start w-full">
@@ -32,10 +36,9 @@ export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({ days, 
       <div
         className={`absolute bottom-1/4 left-0 right-0 transform -translate-y-1/2 border-t border-2
           ${lineColor}`}
-          
         style={{
-          marginLeft: isFirstWeek ? '20px' : '25px', // Change margin if daysPlayed is in the first week
-          marginRight: isLastWeek ? '20px' : '35px', // Change margin if daysPlayed is in the last week
+          marginLeft: isFirstWeek ? "20px" : "25px", // Change margin if daysPlayed is in the first week
+          marginRight: isLastWeek ? "20px" : "35px", // Change margin if daysPlayed is in the last week
         }}
       ></div>
 
@@ -65,27 +68,39 @@ export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({ days, 
               {/* If it's the played week, show all days of the week */}
               {isPlayedWeek ? (
                 <div className="flex items-center justify-between w-full">
-                  {Array.from({ length: weekEndDay - weekStartDay + 1 }, (_, i) => {
-                    const day = weekStartDay + i;
-                    return (
-                      <div key={day} className="flex flex-col px-4 items-center">
-                        <div className="text-[12px] text-gray-400">{day}</div>
+                  {Array.from(
+                    { length: weekEndDay - weekStartDay + 1 },
+                    (_, i) => {
+                      const day = weekStartDay + i;
+                      return (
                         <div
-                          className={`w-2 h-2 rounded-full relative z-10 ${
-                            isDayPlayed(day) ? 'bg-[#129BFF]' : 'bg-[#D7D7D7]'
-                          }`}
-                        ></div>
-                      </div>
-                    );
-                  })}
+                          key={day}
+                          className="flex flex-col px-4 items-center"
+                        >
+                          <div className="text-[12px] text-gray-400">{day}</div>
+                          <div
+                            className={`w-4 h-4 rounded-full relative z-10 ${
+                              lastPlayedDay === day
+                                ? "bg-[#22C55E]"
+                                : isDayPlayed(day)
+                                ? "bg-[#129BFF]"
+                                : "bg-[#D7D7D7]"
+                            }`}
+                          ></div>
+                        </div>
+                      );
+                    }
+                  )}
                 </div>
               ) : (
                 // If it's not the played week, collapse it into a single circle
                 <div className="flex flex-col items-center w-20">
-                  <div className="text-[12px] text-gray-400">Week {weekIndex + 1}</div>
+                  <div className="text-[12px] text-gray-400">
+                    Week {weekIndex + 1}
+                  </div>
                   <div
                     className={`w-3 h-3 rounded-full relative z-10 ${
-                      isFutureWeek ? 'bg-[#D7D7D7]' : 'bg-[#129BFF]'
+                      isFutureWeek ? "bg-[#D7D7D7]" : "bg-[#129BFF]"
                     }`}
                   ></div>
                 </div>

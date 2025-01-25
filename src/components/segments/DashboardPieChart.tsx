@@ -1,11 +1,6 @@
 import React from "react";
 import { Doughnut } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { formatNumber } from "../../utils/formatValue";
 
 // Register required components with Chart.js
@@ -17,15 +12,27 @@ interface DoughnutChartProps {
   total?: number;
 }
 
-export const DashboardPieChart: React.FC<DoughnutChartProps> = ({ total, type, data }) => {
+export const DashboardPieChart: React.FC<DoughnutChartProps> = ({
+  total,
+  type,
+  data,
+}) => {
   // Extract labels (cities) and values (audience numbers) from the object
   const labels = Object.keys(data);
   const values = Object.values(data);
 
+  console.log("data : ", data);
+
   // Define colors for each segment
   const backgroundColors = [
-    "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0",
-    "#FF99A4", "#6CB9F4", "#FFD87E", "#76D2D2",
+    "#FF6384",
+    "#36A2EB",
+    "#FFCE56",
+    "#4BC0C0",
+    "#FF99A4",
+    "#6CB9F4",
+    "#FFD87E",
+    "#76D2D2",
   ];
 
   const chartData = {
@@ -39,6 +46,13 @@ export const DashboardPieChart: React.FC<DoughnutChartProps> = ({ total, type, d
           .map((color) => color + "70"), // Transparent hover effect
         borderWidth: 1,
         spacing: 2, // Adds spacing between each segment
+        datalabels: {
+          color: "#fff",
+          anchor: "center" as const,
+          align: "center" as const,
+          font: { weight: "bold" as const },
+          formatter: (value: number) => formatNumber(value.toFixed(0)), // Hide zero values
+        },
       },
     ],
   };
@@ -88,7 +102,9 @@ export const DashboardPieChart: React.FC<DoughnutChartProps> = ({ total, type, d
         <Doughnut data={chartData} options={options} />
       </div>
       <div className="w-full flex items-center justify-center">
-        <h1 className="text-[14px]">{type === "city" ? "City wise" : "Touchpoints wise" }</h1>
+        <h1 className="text-[14px]">
+          {type === "city" ? "City wise" : "Touchpoints wise"}
+        </h1>
         <h1 className="text-[14px]">{total}</h1>
       </div>
     </div>
