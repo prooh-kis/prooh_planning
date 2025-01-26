@@ -21,6 +21,7 @@ export const DashboardPieChart: React.FC<DoughnutChartProps> = ({
   const labels = Object.keys(data);
   const values = Object.values(data);
 
+  const totalValue = values.reduce((sum, value) => sum + value, 0);
   console.log("data : ", data);
 
   // Define colors for each segment
@@ -51,7 +52,11 @@ export const DashboardPieChart: React.FC<DoughnutChartProps> = ({
           anchor: "center" as const,
           align: "center" as const,
           font: { weight: "bold" as const },
-          formatter: (value: number) => formatNumber(value.toFixed(0)), // Hide zero values
+          // formatter: (value: number) => formatNumber(value.toFixed(0)), // Hide zero values
+          formatter: (value: number) => {
+            const percentage = ((value / totalValue) * 100).toFixed(1);
+            return `${percentage}%`;
+          },
         },
       },
     ],

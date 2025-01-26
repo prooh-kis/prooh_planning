@@ -70,6 +70,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
         backgroundColor: "#06B6D480",
         borderColor: "#06B6D4",
         borderWidth: 1,
+        borderRadius: 5,
         datalabels: {
           color: "#fff",
           anchor: "center" as const,
@@ -85,6 +86,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
         backgroundColor: "#EF444480",
         borderColor: "#EF4444",
         borderWidth: 1,
+        borderRadius: 5,
         datalabels: {
           color: "#fff",
           anchor: "center" as const,
@@ -100,6 +102,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
         backgroundColor: "#6366F180",
         borderColor: "#6366F1",
         borderWidth: 1,
+        borderRadius: 5,
         datalabels: {
           color: "#fff",
           anchor: "center" as const,
