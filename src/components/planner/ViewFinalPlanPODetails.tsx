@@ -381,13 +381,13 @@ export const ViewFinalPlanPODetails = ({
     }
     dispatch(getFinalPlanPOTableData(poInput));
     dispatch(getCouponList());
-    // dispatch(
-    //   getScreenSummaryPlanTableData({
-    //     id: campaignId,
-    //     screenIds:
-    //       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
-    //   })
-    // );
+    dispatch(
+      getScreenSummaryPlanTableData({
+        id: campaignId,
+        screenIds:
+          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
+      })
+    );
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
