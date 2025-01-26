@@ -141,7 +141,7 @@ export const CampaignDashboardTable = ({
         onClose={onClose}
       />
       <table className="table-auto w-full">
-        <thead className="bg-[#F7F7F7] w-full flex justify-between items-center">
+        <thead className="bg-[#F7F7F7] rounded-[6px] w-full flex justify-between items-center">
           <tr className="flex w-full items-center h-[40px]">
             <th className="w-full flex items-center justify-center">
               <h1 className="text-[14px] text-[#21394F]">Sr.</h1>
@@ -187,7 +187,7 @@ export const CampaignDashboardTable = ({
               ?.filter((d: any) => d !== "totalData")
               ?.map((data: any, index: any) => (
                 <React.Fragment key={index}>
-                  <tr key={data} className="flex w-full h-[40px] hover:bg-[#D7D7D7]">
+                  <tr key={data} className="flex w-full h-[40px] hover:bg-[#D7D7D7] hover:rounded-[6px]">
                     <td className="w-full flex items-center justify-center">
                       <p className="text-[12px]">{index + 1}</p>
                     </td>
