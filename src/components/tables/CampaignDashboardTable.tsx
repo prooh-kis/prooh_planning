@@ -187,7 +187,7 @@ export const CampaignDashboardTable = ({
               ?.filter((d: any) => d !== "totalData")
               ?.map((data: any, index: any) => (
                 <React.Fragment key={index}>
-                  <tr key={data} className="flex w-full h-[40px]">
+                  <tr key={data} className="flex w-full h-[40px] hover:bg-[#D7D7D7]">
                     <td className="w-full flex items-center justify-center">
                       <p className="text-[12px]">{index + 1}</p>
                     </td>
