@@ -11,7 +11,7 @@ export const generatePPT = async ({ data, fileName, download }) => {
             const slide = ppt.addSlide();
             // console.log(item.imageUrl?.[0]?.replace(/\+/g, ' '));
 
-            const imageUrl = item.imageUrl?.[0]?.replace(/\+/g, ' ') || "https://via.placeholder.com/1280x720";
+            const imageUrl = item.images?.[0]?.replace(/\+/g, ' ') || "https://via.placeholder.com/1280x720";
             slide.addImage({
                 path: imageUrl,
                 x: 0,

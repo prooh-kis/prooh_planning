@@ -270,14 +270,29 @@ console.log(data);
               file
             );
           }
-  
         } else {
-          myData[currentCity][currentScreen].standardNightTimeCreatives.push(
+          if (myData[currentCity][currentScreen].standardNightTimeCreatives) {
+            myData[currentCity][currentScreen].standardNightTimeCreatives.push(
+              file
+            );
+          } else {
+            myData[currentCity][currentScreen].standardNightTimeCreatives=[];
+            myData[currentCity][currentScreen].standardNightTimeCreatives.push(
+              file
+            );
+          }
+
+        }
+      } else {
+        if (myData[currentCity][currentScreen].triggerCreatives) {
+          myData[currentCity][currentScreen].triggerCreatives.push(file);
+        } else {
+          myData[currentCity][currentScreen].triggerCreatives=[];
+          myData[currentCity][currentScreen].triggerCreatives.push(
             file
           );
         }
-      } else {
-        myData[currentCity][currentScreen].triggerCreatives.push(file);
+
       }
       setFIle(null);
       setCreativeUploadData(filterUniqueResolutions(myData));
@@ -288,10 +303,11 @@ console.log(data);
             ?.length === 0 ||
             myData[currentCity][currentScreen]?.triggerCreatives?.length === 0)
         ) {
-          data.params[0] += myData[currentCity][currentScreen]?.count;
+          data.params[0] = myData[currentCity][currentScreen]?.standardDayTimeCreatives?.length;
           data.params[1] =
-            data.params[1] - myData[currentCity][currentScreen]?.count;
+            data.params[1] - myData[currentCity][currentScreen]?.standardDayTimeCreatives?.length;
         }
+        console.log(data, myData[currentCity][currentScreen]?.standardDayTimeCreatives)
         return data;
       });
       setCitiesCreative(citiesCreativeData);
@@ -361,6 +377,7 @@ console.log(data);
 
   const getCreativeCountCityWise = (data: any, city: string) => {
     return data[city]?.reduce((accum: number, current: any) => {
+      console.log(current);
       if (
         current?.standardDayTimeCreatives?.length === 0 &&
         current?.triggerCreatives?.length === 0
@@ -369,12 +386,24 @@ console.log(data);
       }
       return accum + current.count;
     }, 0);
+    // const creativeCity = data[city]?.reduce((accum: number, current: any) => {
+    //   if (
+    //     current?.standardDayTimeCreatives?.length !== 0 ||
+    //     current?.triggerCreatives?.length !== 0
+    //   ) {
+    //     return accum;
+    //   }
+    //   return accum + current.count;
+    // }, 0);
+    // return {noCreativeCity, creativeCity};
   };
 
   const handleSetInitialData = (data: any) => {
     let arr = Object.keys(data || {});
 
     let result = arr?.map((city: string, index: number) => {
+      // console.log(getCreativeCountCityWise(data, city));
+      // console.log(getScreenCountCityWise(data, city));
       return {
         id: `${index + 1}`,
         label: city,
@@ -384,6 +413,7 @@ console.log(data);
         ],
       };
     });
+    // console.log(result);
     setCitiesCreative(result);
     let city = result?.find((data: any) => data.id == "1")?.label || "";
     setCurrentCity(city);
@@ -460,24 +490,35 @@ console.log(data);
           let standardNightTimeCreatives: any = [];
           let triggerCreatives: any = [];
 
-          for (let file of data?.standardDayTimeCreatives) {
-            let myData = await returnRequiredValue(file);
-            file.awsURL = myData?.url;
-            file.url = myData?.url;
-            standardDayTimeCreatives.push(myData);
+          console.log(data);
+          if (data?.standardDayTimeCreatives) {
+            for (let file of data?.standardDayTimeCreatives) {
+              let myData = await returnRequiredValue(file);
+              file.awsURL = myData?.url;
+              file.url = myData?.url;
+              standardDayTimeCreatives.push(myData);
+            }
           }
-          for (let file of data?.standardNightTimeCreatives) {
-            let myData = await returnRequiredValue(file);
-            file.awsURL = myData?.url;
-            file.url = myData?.url;
-            standardNightTimeCreatives.push(myData);
+
+          
+          console.log(standardDayTimeCreatives)
+          if (data?.standardNightTimeCreatives) {
+            for (let file of data?.standardNightTimeCreatives) {
+              let myData = await returnRequiredValue(file);
+              file.awsURL = myData?.url;
+              file.url = myData?.url;
+              standardNightTimeCreatives.push(myData);
+            }
           }
-          for (let file of data?.triggerCreatives) {
-            let myData = await returnRequiredValue(file);
-            file.awsURL = myData?.url;
-            file.url = myData?.url;
-            triggerCreatives.push(myData);
+          if (data?.triggerCreatives) {
+            for (let file of data?.triggerCreatives) {
+              let myData = await returnRequiredValue(file);
+              file.awsURL = myData?.url;
+              file.url = myData?.url;
+              triggerCreatives.push(myData);
+            }
           }
+
           requestBody.push({
             city: city,
             screenResolution: data?.screenResolution,
@@ -488,6 +529,7 @@ console.log(data);
             standardNightTimeCreatives: standardNightTimeCreatives,
             triggerCreatives: triggerCreatives,
           });
+          console.log(requestBody);
         }
       }
       saveDataOnLocalStorage(CAMPAIGN_CREATIVES, { [campaignId]: sss });

@@ -41,7 +41,7 @@ const addHeaderAndFooter = (doc, totalPages) => {
 
 const addCostSummaryData = (costData, doc, yOffset) => {
   const PAGE_HEIGHT = doc.internal.pageSize.height; // Total page height
-  const FOOTER_MARGIN = 20; // Margin for the footer
+  const FOOTER_MARGIN = 30; // Margin for the footer
   const HEADER_MARGIN = 30; // Margin for the header
 
   // Function to ensure content fits on the page
@@ -107,7 +107,7 @@ const addCostSummaryData = (costData, doc, yOffset) => {
 
 const addCreativeSummaryData = (creativeData, doc, yOffset) => {
   const PAGE_HEIGHT = doc.internal.pageSize.height; // Get the height of the page
-  const FOOTER_MARGIN = 20; // Space reserved for the footer
+  const FOOTER_MARGIN = 30; // Space reserved for the footer
   const HEADER_MARGIN = 30; // Space reserved for the footer
 
 
@@ -137,13 +137,14 @@ const addCreativeSummaryData = (creativeData, doc, yOffset) => {
       head: [["Resolution", "Count"]],
       body: tableRows,
       startY: yOffset,
+      margin: { top: 30 },
       theme: 'grid',
       didDrawCell: (data) => {
         if (data.row.index === 0 && data.cursor.y + 10 > PAGE_HEIGHT - FOOTER_MARGIN) {
           // If the first cell of the row is exceeding the page, add a new page
           doc.addPage();
           yOffset = HEADER_MARGIN + 10; // Reset yOffset for the new page
-          // doc.text(key.toUpperCase(), 15, yOffset - 10); // Redraw the section title
+          doc.text(screen.screenName, 15, yOffset - 10); // Redraw the section title
           data.cursor.y = HEADER_MARGIN + 10; // Reset the cursor position for the new page
         }
       },
@@ -165,7 +166,7 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
   const campaignApproach = jsonData.approach[0];
   const costSummary = jsonData.costSummary[0];
   const creativeSummary = jsonData.creativeRatio;
-  const FOOTER_MARGIN = 20; // Space reserved for the footer
+  const FOOTER_MARGIN = 30; // Space reserved for the footer
   const HEADER_MARGIN = 30; // Space reserved for the header
   const PAGE_HEIGHT = doc.internal.pageSize.height;
 
@@ -232,7 +233,7 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
   campaignApproach.touchPoints.forEach((point, idx) => {
     doc.setFontSize(10);
     doc.text(`${idx + 1}. ${point}`, 15, yOffset);
-    yOffset += 10;
+    yOffset += 5;
     checkPageBreak();
   });
 
@@ -248,12 +249,29 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
   campaignApproach.cohorts.forEach((cohort, idx) => {
     doc.setFontSize(10);
     doc.text(`${idx + 1}. ${cohort}`, 15, yOffset);
-    yOffset += 10;
+    yOffset += 5;
     checkPageBreak();
   });
 
   yOffset += 5;
   checkPageBreak();
+
+
+  // Cost Summary
+  doc.setFontSize(14);
+  doc.text("Cost Summary", 10, yOffset);
+  yOffset += 10;
+  checkPageBreak();
+
+  yOffset = addCostSummaryData(costSummary, doc, yOffset);
+
+  // Creative Ratio
+  doc.setFontSize(14);
+  doc.text("Creative Ratio", 10, yOffset);
+  yOffset += 10;
+  checkPageBreak();
+
+  yOffset = addCreativeSummaryData(creativeSummary, doc, yOffset);
 
   // Screen-wise Slot Details
   doc.setFontSize(12);
@@ -278,7 +296,7 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
         if (data.row.index === 0 && data.cursor.y + 10 > PAGE_HEIGHT - FOOTER_MARGIN) {
           // If the first cell of the row is exceeding the page, add a new page
           doc.addPage();
-          yOffset = HEADER_MARGIN + 10; // Reset yOffset for the new page
+          yOffset = HEADER_MARGIN + 20; // Reset yOffset for the new page
           doc.text(screen.screenName, 15, yOffset - 10); // Redraw the section title
           data.cursor.y = HEADER_MARGIN + 10; // Reset the cursor position for the new page
         }
@@ -291,22 +309,6 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
 
   yOffset += 5;
   checkPageBreak();
-
-  // Cost Summary
-  doc.setFontSize(14);
-  doc.text("Cost Summary", 10, yOffset);
-  yOffset += 10;
-  checkPageBreak();
-
-  yOffset = addCostSummaryData(costSummary, doc, yOffset);
-
-  // Creative Ratio
-  doc.setFontSize(14);
-  doc.text("Creative Ratio", 10, yOffset);
-  yOffset += 10;
-  checkPageBreak();
-
-  yOffset = addCreativeSummaryData(creativeSummary, doc, yOffset);
 
   // Header and Footer
   const totalPages = doc.getNumberOfPages();

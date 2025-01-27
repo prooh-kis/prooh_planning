@@ -35,7 +35,8 @@ export const VideoContainer = ({
   width,
   removeFile,
   showIcon = true,
-}: any) => (
+}: any) => {
+  return (
   <div className="relative inline-block">
     <video className={className} controls height={height} width={width}>
       <source src={url}></source>
@@ -52,4 +53,4 @@ export const VideoContainer = ({
       </button>
     )}
   </div>
-);
+)};
