@@ -10,7 +10,7 @@ export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
               url={files[0]?.url}
               className=" rounded-lg"
               height="207px"
-              width="full"
+              width="500px"
               removeFile={() => removeFile(files[0]?.url)}
             />
           ) : (
@@ -18,13 +18,13 @@ export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
               url={files[0]?.url}
               className=" rounded-lg"
               height="207px"
-              width="full"
+              width="500px"
               removeFile={() => removeFile(files[0]?.url)}
             />
           )}
         </div>
       )}
-      <div className="flex  gap-4 pt-4">
+      <div className="flex flex-wrap gap-4 pt-4">
         {files?.map((file: any, index: any) => {
           if (index === 0) return null;
           if (file.fileType.split("/")[0] === "image")
@@ -33,8 +33,8 @@ export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
                 key={index}
                 url={file?.url}
                 className="rounded-lg "
-                height="500px"
-                width="full"
+                height="102px"
+                width="150px"
                 removeFile={removeFile}
               />
             );
@@ -44,8 +44,8 @@ export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
                 key={index}
                 url={file?.url}
                 className="rounded-lg "
-                height="500px"
-                width="full"
+                height="102px"
+                width="150px"
                 removeFile={removeFile}
               />
             );

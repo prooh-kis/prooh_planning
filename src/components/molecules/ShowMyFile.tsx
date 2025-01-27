@@ -1,56 +1,59 @@
 export const ImageContainer = ({
   url,
-  className,
-  height,
-  width,
+  className = "rounded-lg",
+  height = "207px",
+  width = "383px",
   removeFile,
   showIcon = true,
 }: any) => (
-  <div className="relative inline-block">
+  <div className="relative inline-block max-h-[30vh] overflow-hidden">
     <img
       src={url}
       alt="Campaign Image"
-      className={className}
-      height={height}
-      width={width}
+      className={`${className} object-cover`}
+      style={{ height, width }}
     />
     {showIcon && (
       <button
-        type="submit"
-        title="close"
+        type="button"
+        title="Remove image"
         onClick={() => removeFile(url)}
         id="removeImage"
         className="absolute top-0 right-0 bg-[#FF0808] text-[#FFFFFF] px-2 rounded-full focus:outline-none hover:bg-red-700"
       >
         &times;
       </button>
-    )}
+    )}{" "}
   </div>
 );
 
 export const VideoContainer = ({
   url,
-  className,
-  height,
-  width,
+  className = "rounded-lg",
+  height = "207px",
+  width = "383px",
   removeFile,
   showIcon = true,
-}: any) => {
-  return (
-  <div className="relative inline-block">
-    <video className={className} controls height={height} width={width}>
-      <source src={url}></source>
+}: any) => (
+  <div className="relative inline-block max-h-[30vh] overflow-hidden">
+    <video
+      className={`${className} object-cover`}
+      controls
+      style={{ height, width }}
+    >
+      <source src={url} />
+      Your browser does not support the video tag.
     </video>
     {showIcon && (
       <button
-        type="submit"
-        title="close"
+        type="button"
+        title="Remove video"
         onClick={() => removeFile(url)}
         id="removeVideo"
-        className="absolute top-0 right-0 bg-[#FF0808] text-[#FFFFFF] px-2 rounded-full focus:outline-none hover:bg-red-700"
+        className="absolute top-0 right-0 bg-[#FF0808] text-white px-2 rounded-full focus:outline-none hover:bg-red-700"
       >
         &times;
       </button>
     )}
   </div>
-)};
+);

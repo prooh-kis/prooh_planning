@@ -45,7 +45,7 @@ interface Creative {
   url: string;
   fileType: string;
   fileSize: number;
-  duration: number;
+  creativeDuration: number;
   awsURL: string;
 }
 
@@ -134,40 +134,48 @@ export const CreativeUploadDetails = ({
   };
 
   const transformData = (data: any[]): TransformedData => {
+    // console.log("transformData :", data);
     const result: TransformedData = {};
+    if (data.map((s: any) => s?.city)[0] === "") {
+      message.error(
+        "You  can can't update creative for this campaign, direct jump the next flow "
+      );
+      return {};
+    }
     data.forEach((item) => {
       const city = item.city;
+
       const transformedItem = {
         screenResolution: item.screenResolution,
         count: item.count,
         screenIds: item.screenIds,
         creativeDuration: item.creativeDuration,
-        standardDayTimeCreatives: item.standardDayTimeCreatives.map(
+        standardDayTimeCreatives: item?.standardDayTimeCreatives.map(
           (creative: any) => ({
             file: {},
             url: creative?.url,
             fileType: creative?.type,
             fileSize: creative?.size,
-            duration: item.creativeDuration,
+            creativeDuration: item.creativeDuration,
             awsURL: creative?.url,
           })
         ),
-        standardNightTimeCreatives: item.standardNightTimeCreatives.map(
+        standardNightTimeCreatives: item?.standardNightTimeCreatives.map(
           (creative: any) => ({
             file: {},
             url: creative?.url,
             fileType: creative?.type,
             fileSize: creative?.size,
-            duration: item.creativeDuration,
+            creativeDuration: item.creativeDuration,
             awsURL: creative?.url,
           })
         ),
-        triggerCreatives: item.triggerCreatives.map((creative: any) => ({
+        triggerCreatives: item?.triggerCreatives.map((creative: any) => ({
           file: {},
           url: creative?.url,
           fileType: creative?.type,
           fileSize: creative?.size,
-          duration: item.creativeDuration,
+          creativeDuration: item.creativeDuration,
           awsURL: creative?.url,
         })),
       };
@@ -178,6 +186,7 @@ export const CreativeUploadDetails = ({
 
       result[city].push(transformedItem);
     });
+    console.log("transformData  result:", result);
 
     return result;
   };
@@ -204,7 +213,6 @@ export const CreativeUploadDetails = ({
 
   const filterUniqueResolutions = (data: any) => {
     const filteredData: any = {};
-console.log(data);
     Object.keys(data).forEach((city) => {
       // Use a Set to track unique screen resolutions
       const uniqueResolutions = new Set();
@@ -217,7 +225,6 @@ console.log(data);
           uniqueCreatives.push(creative); // Add the creative to the unique list
         }
       });
-      console.log(uniqueCreatives)
 
       filteredData[city] = uniqueCreatives; // Assign unique creatives back to the city
     });
@@ -236,9 +243,9 @@ console.log(data);
   const handleAddNewFile = async (file: File) => {
     if (file) {
       const fileURL = URL.createObjectURL(file);
-      let duration: any = 15;
+      let creativeDuration: any = 10;
       if (file.type?.split("/")[0] === "video") {
-        duration = await getVideoDurationFromVideoURL(fileURL);
+        creativeDuration = await getVideoDurationFromVideoURL(fileURL);
       }
 
       const ff = {
@@ -246,7 +253,7 @@ console.log(data);
         url: fileURL,
         fileType: file.type,
         fileSize: file.size,
-        duration: Number(duration),
+        creativeDuration: Number(creativeDuration),
         awsURL: "",
       };
       setFIle(ff);
@@ -256,16 +263,14 @@ console.log(data);
   const handleSaveFile = () => {
     if (file) {
       const myData = creativeUploadData;
-      console.log(creativeUploadData);
       if (creativeType === "Standard") {
-        
         if (currentPlayTimeCreative === "1") {
           if (myData[currentCity][currentScreen].standardDayTimeCreatives) {
             myData[currentCity][currentScreen].standardDayTimeCreatives.push(
               file
             );
           } else {
-            myData[currentCity][currentScreen].standardDayTimeCreatives=[];
+            myData[currentCity][currentScreen].standardDayTimeCreatives = [];
             myData[currentCity][currentScreen].standardDayTimeCreatives.push(
               file
             );
@@ -276,23 +281,19 @@ console.log(data);
               file
             );
           } else {
-            myData[currentCity][currentScreen].standardNightTimeCreatives=[];
+            myData[currentCity][currentScreen].standardNightTimeCreatives = [];
             myData[currentCity][currentScreen].standardNightTimeCreatives.push(
               file
             );
           }
-
         }
       } else {
         if (myData[currentCity][currentScreen].triggerCreatives) {
           myData[currentCity][currentScreen].triggerCreatives.push(file);
         } else {
-          myData[currentCity][currentScreen].triggerCreatives=[];
-          myData[currentCity][currentScreen].triggerCreatives.push(
-            file
-          );
+          myData[currentCity][currentScreen].triggerCreatives = [];
+          myData[currentCity][currentScreen].triggerCreatives.push(file);
         }
-
       }
       setFIle(null);
       setCreativeUploadData(filterUniqueResolutions(myData));
@@ -303,16 +304,18 @@ console.log(data);
             ?.length === 0 ||
             myData[currentCity][currentScreen]?.triggerCreatives?.length === 0)
         ) {
-          data.params[0] = myData[currentCity][currentScreen]?.standardDayTimeCreatives?.length;
+          data.params[0] =
+            myData[currentCity][
+              currentScreen
+            ]?.standardDayTimeCreatives?.length;
           data.params[1] =
-            data.params[1] - myData[currentCity][currentScreen]?.standardDayTimeCreatives?.length;
+            data.params[1] - myData[currentCity][currentScreen]?.count;
         }
-        console.log(data, myData[currentCity][currentScreen]?.standardDayTimeCreatives)
+
         return data;
       });
       setCitiesCreative(citiesCreativeData);
       saveDataOnLocalStorage(CAMPAIGN_CREATIVES, { [campaignId]: myData });
-      console.log("asdadsdasad", )
     } else {
       message.error("Please select file to save!");
     }
@@ -375,27 +378,23 @@ console.log(data);
     }, 0);
   };
 
-  const getCreativeCountCityWise = (data: any, city: string) => {
+  const getCreativeCountCityWise = (
+    data: Record<string, any[]>,
+    city: string
+  ): number => {
+    if (!data || !data[city] || !Array.isArray(data[city])) {
+      return 0;
+    }
     return data[city]?.reduce((accum: number, current: any) => {
-      console.log(current);
       if (
-        current?.standardDayTimeCreatives?.length === 0 &&
-        current?.triggerCreatives?.length === 0
+        (!current?.standardDayTimeCreatives ||
+          current.standardDayTimeCreatives.length === 0) &&
+        (!current?.triggerCreatives || current.triggerCreatives.length === 0)
       ) {
         return accum;
       }
-      return accum + current.count;
+      return accum + (current.count || 0);
     }, 0);
-    // const creativeCity = data[city]?.reduce((accum: number, current: any) => {
-    //   if (
-    //     current?.standardDayTimeCreatives?.length !== 0 ||
-    //     current?.triggerCreatives?.length !== 0
-    //   ) {
-    //     return accum;
-    //   }
-    //   return accum + current.count;
-    // }, 0);
-    // return {noCreativeCity, creativeCity};
   };
 
   const handleSetInitialData = (data: any) => {
@@ -478,12 +477,15 @@ console.log(data);
     return result;
   };
 
+  // const findMax = (data: Creative[]) => {
+  //   return Math.max(...data?.map((s: Creative) => s.creativeDuration), 0);
+  // };
+
   const handleSaveAndContinue = async () => {
     if (validate()) {
       setIsLoading(true);
       let requestBody: any = [];
       let sss = creativeUploadData;
-      // console.log("creativeUploadData : ", JSON.stringify(creativeUploadData));
       for (let city in sss) {
         for (let data of creativeUploadData[city]) {
           let standardDayTimeCreatives: any = [];
@@ -500,8 +502,7 @@ console.log(data);
             }
           }
 
-          
-          console.log(standardDayTimeCreatives)
+          console.log(standardDayTimeCreatives);
           if (data?.standardNightTimeCreatives) {
             for (let file of data?.standardNightTimeCreatives) {
               let myData = await returnRequiredValue(file);
@@ -625,7 +626,6 @@ console.log(data);
       }
     }
 
-    // Handle triggers if any
     const triggers =
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.triggers;
     saveDataOnLocalStorage(SELECTED_TRIGGER, { [campaignId]: triggers });
@@ -636,7 +636,7 @@ console.log(data);
   }, [campaignId, errorScreeData, screenData]);
 
   return (
-    <div className="w-full py-3">
+    <div className="w-full h-[80vh] overflow-y-auto ">
       <div>
         <h1 className="text-2xl font-semibold">Upload Creative</h1>
         <h1 className="text-sm text-gray-500 ">
@@ -675,7 +675,7 @@ console.log(data);
               </h1>
             </div>
             <div className="flex">
-              <div className="border border-1 h-[60vh] w-[560px] overflow-y-auto ">
+              <div className="border border-1 h-[60vh] w-[560px] overflow-scroll ">
                 {creativeUploadData[currentCity]?.map(
                   (singleData: any, index: number) => {
                     return (
@@ -705,7 +705,7 @@ console.log(data);
                             {singleData?.count}
                           </h1>
                           <h1 className="border-b border-x border-1 p-2 w-24 text-center ">
-                            {singleData?.duration}
+                            {singleData?.creativeDuration}
                           </h1>
                           <h1 className="border-b border-1 p-2 w-48 text-center ">
                             {singleData?.screenResolution}
@@ -716,7 +716,7 @@ console.log(data);
                   }
                 )}
               </div>
-              <div className="border-b border-1 h-100% px-2 py-1 w-72">
+              <div className="border-b border-1  px-2 py-1 w-72">
                 <Radio.Group
                   onChange={handleSetCreativeType}
                   value={creativeType}
@@ -732,8 +732,8 @@ console.log(data);
                   </Space>
                 </Radio.Group>
               </div>
-              <div className="flex border-1 h-100% w-full">
-                <div className="border border-1 h-100% p-2  w-1/2">
+              <div className="flex border-1 w-full">
+                <div className="border border-1  p-2  w-1/2  h-[60vh]">
                   {creativeType === "Standard" ? (
                     <div>
                       <TabWithIcon
@@ -796,7 +796,7 @@ console.log(data);
                     />
                   )}
                 </div>
-                <div className="border-b border-r border-1 h-100% px-4 py-2 w-1/2">
+                <div className="border-b border-r border-1  h-[60vh] px-4 py-2 w-1/2">
                   <h1 className="font-semibold">
                     {creativeType === "Standard"
                       ? currentPlayTimeCreative === "1"

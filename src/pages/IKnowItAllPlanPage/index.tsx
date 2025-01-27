@@ -109,7 +109,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
   }, [dispatch, campaignId]);
 
   return (
-    <div className="w-full h-full px-8">
+    <div className="w-full h-full px-8 py-2">
       <div className="w-full pt-[60px]">
         <StepperSlider
           campaignId={campaignId}
