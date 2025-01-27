@@ -1,4 +1,4 @@
-import { Chart } from "react-chartjs-2";
+import { Chart, Line } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
 import {
@@ -47,10 +47,12 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
 }) => {
   // Calculate Extra Slots and Remaining Slots dynamically
 
-  const requiredToPlayed: number[] = currentData?.map(
-    (played: number, index: number) =>
-      played >= targetData[index] ? targetData[index] : played
-  );
+  // const requiredToPlayed: number[] = currentData?.map(
+  //   (played: number, index: number) =>
+  //     played >= targetData[index] ? targetData[index] : played
+  // );
+
+  const requiredToPlayed: number[] = currentData;
   const extraSlots: number[] = currentData?.map(
     (played: number, index: number) =>
       played > targetData[index] ? played - targetData[index] : 0
@@ -92,8 +94,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           anchor: "center" as const,
           align: "center" as const,
           font: { weight: "bold" as const },
-          formatter: (value: number) =>
-            value !== 0 ? formatNumber(value.toFixed(0)) : "", // Hide
+          formatter: (value: number) => "", // Hide zero values
         },
       },
       {
@@ -108,8 +109,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           anchor: "center" as const,
           align: "center" as const,
           font: { weight: "bold" as const },
-          formatter: (value: number) =>
-            value !== 0 ? formatNumber(value.toFixed(0)) : "", // Hide zero values
+          formatter: (value: number) => "", // Hide zero values
         },
       },
     ],

@@ -311,11 +311,33 @@ export const CampaignDashboard = ({
             </div>
           </div>
           <div className="col-span-3 bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100">
-            <div className="flex items-center gap-2 px-4 py-1">
-              <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                Day Wise Spot Delivered
-              </h1>
-              <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+            <div className="flex justify-between">
+              <div className="flex items-center gap-2 px-4 py-1">
+                <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
+                  Day Wise Spot Delivered
+                </h1>
+                <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-1">
+                <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
+                  Expected :{" "}
+                  {(
+                    getPromisedSpotDeliveryData().countsArray?.reduce(
+                      (a: number, c: number) => a + c,
+                      0
+                    ) / getPromisedSpotDeliveryData().countsArray?.length
+                  ).toFixed(0)}
+                </h1>
+                <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
+                  Actual :{" "}
+                  {(
+                    getSpotDeliveryData().countsArray?.reduce(
+                      (a: number, c: number) => a + c,
+                      0
+                    ) / getSpotDeliveryData().countsArray?.length
+                  ).toFixed(0)}
+                </h1>
+              </div>
             </div>
             <div className="p-2">
               <DashBoardSlotGraph
