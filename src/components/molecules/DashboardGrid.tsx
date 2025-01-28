@@ -47,6 +47,9 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
                 {calculateDaysPlayed(
                   campaignDetails?.startDate,
                   campaignDetails?.endDate
+                ) === 0 ? 1 : calculateDaysPlayed(
+                  campaignDetails?.startDate,
+                  campaignDetails?.endDate
                 )}
                 <span className="text-[18px]"> {"  "}Days</span>
               </span>{" "}
@@ -57,6 +60,9 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
           <div className="p-2 sm:p-4">
             <LinearBar
               value={calculateDaysPlayed(
+                campaignDetails?.startDate,
+                campaignDetails?.endDate
+              ) === 0 ? 1 : calculateDaysPlayed(
                 campaignDetails?.startDate,
                 campaignDetails?.endDate
               )}

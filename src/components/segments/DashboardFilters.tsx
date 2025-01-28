@@ -28,7 +28,7 @@ export const DashboardFilters = ({campaignDetails}: DashboardFiltersProps) => {
       <DropdownInput
         border="border-gray-100"
         height="h-8"
-        width="w-20"
+        width="w-full"
         placeHolder="Gurgaon"
         selectedOption={""}
         setSelectedOption={""}
@@ -40,7 +40,7 @@ export const DashboardFilters = ({campaignDetails}: DashboardFiltersProps) => {
       <DropdownInput
         border="border-gray-100"
         height="h-8"
-        width="w-20"
+        width="w-full"
         placeHolder="QSR"
         selectedOption={""}
         setSelectedOption={""}

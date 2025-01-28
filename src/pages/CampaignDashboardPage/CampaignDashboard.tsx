@@ -13,6 +13,7 @@ import { DashboardGrid } from "../../components/molecules/DashboardGrid";
 import { useNavigate } from "react-router-dom";
 import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
 import { DashBoardSlotGraph } from "../../components/segments/DashBoardSlotGraph";
+import { BillingAndInvoice } from "./BillingAndInvoice";
 
 export const CampaignDashboard = ({
   campaignDetails,
@@ -21,7 +22,24 @@ export const CampaignDashboard = ({
   const [clicked, setClicked] = useState<any>("1");
   const navigate = useNavigate();
 
-  // const [openEdit, setOpenEdit] = useState<any>(false);
+  const [openInvoice, setOpenInvoice] = useState<any>(false);
+  const [poNumber, setPoNumber] = useState<any>("");
+  const [clientAgencyName, setClientAgencyName] = useState<any>("");
+  const [address, setAddress] = useState<any>("");
+  const [city, setCity] = useState<any>("");
+  const [stateName, setStateName] = useState<any>("");
+  const [country, setCountry] = useState<any>("");
+  const [zipCode, setZipCode] = useState<any>("");
+  const [phone, setPhone] = useState<any>("");
+  const [email, setEmail] = useState<any>("");
+  const [website, setWebsite] = useState<any>("");
+  const [gst, setGst] = useState<any>("");
+  const [pan, setPan] = useState<any>("");
+  const [pocName, setPocName] = useState<any>("");
+  const [pocContact, setPocContact] = useState<any>("");
+  const [pocEmail, setPocEmail] = useState<any>("");
+  const [pocDesignation, setPocDesignation] = useState<any>("");
+
 
   const getScreenPerformanceData = () => {
     const datesArray = screenLevelData?.result[
@@ -113,11 +131,44 @@ export const CampaignDashboard = ({
 
   return (
     <div className="w-full h-full pt-10 flex flex-col gap-2">
-      {/* <EditCreativesForCampaigns
-        open={openEdit}
-        onClose={() => setOpenEdit(false)}
-        campaignCreation={campaignDetails}  
-      /> */}
+      <BillingAndInvoice
+        open={openInvoice}
+        onClose={() => setOpenInvoice(false)}
+        invoiceBill={campaignDetails}  
+        // loading={loadingBillInvoice}
+        poNumber={poNumber}
+        setPoNumber={setPoNumber}
+        clientAgencyName={clientAgencyName}
+        setClientAgencyName={setClientAgencyName}
+        setAddress={setAddress}
+        address={address}
+        city={city}
+        setCity={setCity}
+        setStateName={setStateName}
+        stateName={stateName}
+        setCountry={setCountry}
+        country={country}
+        phone={phone}
+        setPhone={setPhone}
+        email={email}
+        setEmail={setEmail}
+        website={website}
+        setWebsite={setWebsite}
+        zipCode={zipCode}
+        setZipCode={setZipCode}
+        gst={gst}
+        setGst={setGst}
+        pan={pan}
+        setPan={setPan}
+        pocName={pocName}
+        setPocName={setPocName}
+        pocEmail={pocEmail}
+        setPocEmail={setPocEmail}
+        pocContact={pocContact}
+        setPocContact={setPocContact}
+        setPocDesignation={setPocDesignation}
+        pocDesignation={pocDesignation}
+      />
       <div className="bg-[#FFFFFF] p-2 rounded-[12px] flex justify-between">
         <div className="px-2 w-1/2 flex justify-between items-center">
           <div className="flex items-center gap-4">
@@ -151,7 +202,16 @@ export const CampaignDashboard = ({
                 )
               }
             >
-              <i className="fi fi-br-pencil tex-[12px] flex items-center justify-center"></i>
+              <i className="fi fi-tr-file-edit text-[12px] flex items-center justify-center"></i>
+            </button>
+            <button
+              id="asd"
+              title="edit campaign"
+              type="button"
+              className="col-span-1 border border-gray-100 rounded-[8px] p-2"
+              onClick={() => setOpenInvoice(true)}
+            >
+              <i className="fi fi-tr-point-of-sale-bill text-[12px] flex items-center justify-center"></i>
             </button>
           </div>
         </div>
@@ -189,6 +249,9 @@ export const CampaignDashboard = ({
                 campaignDetails?.endDate
               )}
               daysPlayed={calculateDaysPlayed(
+                campaignDetails?.startDate,
+                campaignDetails?.endDate
+              ) === 0 ? 1 : calculateDaysPlayed(
                 campaignDetails?.startDate,
                 campaignDetails?.endDate
               )}

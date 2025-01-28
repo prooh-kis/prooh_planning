@@ -55,6 +55,7 @@ import {
   getCouponListReducer,
   removeCouponForCampaignReducer,
 } from "../reducers/couponReducers";
+import { allClientAgencyNamesListGetReducer, clientAgencyDetailsGetReducer } from "../reducers/clientAgencyReducers";
 
 const initialState = {
   userSignin: {
@@ -128,6 +129,11 @@ const store = configureStore({
     couponList: getCouponListReducer,
     couponApplyForCampaign: applyCouponForCampaignReducer,
     couponRemoveForCampaign: removeCouponForCampaignReducer,
+
+    // Client/Agency
+    allClientAgencyNamesListGet: allClientAgencyNamesListGetReducer,
+    clientAgencyDetailsGet: clientAgencyDetailsGetReducer,
+
     //USER
     userList: userListReducer,
     userDelete: userDeleteReducer,
