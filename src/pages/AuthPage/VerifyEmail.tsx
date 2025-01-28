@@ -31,15 +31,22 @@ export const VerifyEmail = (props: any) => {
   }, [error, success, data, navigate, dispatch]);
   console.log("token : ", searchParams.get("token"));
 
-  const verifyUser = useCallback( async(token: string) => {
-    dispatch(userEmailVerification(token));
-  }, [dispatch]);
+  const verifyUser = useCallback(
+    async (token: string) => {
+      dispatch(userEmailVerification(token));
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     verifyUser(searchParams.get("token") || "");
   }, [searchParams, verifyUser]);
 
-  return (<div className="flex justify-center">
-    <h1 onClick={() => navigate(HOME)}>Your are a verified user now. Click here to proceed...</h1>
-  </div>);
+  return (
+    <div className="flex justify-center">
+      <h1 onClick={() => navigate(HOME)}>
+        Your are a verified user now. Click here to proceed...
+      </h1>
+    </div>
+  );
 };

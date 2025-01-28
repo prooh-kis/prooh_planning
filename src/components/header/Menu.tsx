@@ -3,6 +3,7 @@ import {
   MY_CAMPAIGNS_LIST,
   MY_PLANS_LIST,
   MY_REQUESTS_LIST,
+  USERS,
 } from "../../routes/routes";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -40,10 +41,10 @@ export const Menu = (props: any) => {
       label: "Plans",
       path: MY_PLANS_LIST,
     },
-    // {
-    //   label: "Creatives",
-    //   path: MY_CREATIVES,
-    // },
+    {
+      label: "Users",
+      path: USERS,
+    },
   ];
 
   const arr1 = [

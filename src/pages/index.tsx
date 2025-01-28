@@ -1,13 +1,19 @@
 export { PageNotFound } from "./PageNotFound";
 
-export { AuthPage, VerifyEmail, UpdatePassword, ForgetPassword } from "./AuthPage";
+export {
+  SignIn,
+  SignUp,
+  VerifyEmail,
+  UpdatePassword,
+  ForgetPassword,
+} from "./AuthPage/index";
+
 export { LandingPage } from "./LandingPage";
 export { MyCampaignsListPage } from "./MyCampaignsListPage";
 export { MyRequestsListPage } from "./MyRequestsListPage";
 export { MyPlansListPage } from "./MyPlansListPage";
 
 export { CampaignDashboardPage } from "./CampaignDashboardPage";
-
 
 export { RegularPlanPage } from "./RegularPlanPage";
 export { SpecialDayPlanPage } from "./SpecialDayPlanPage";
@@ -17,3 +23,5 @@ export { IKnowItAllPlanPage } from "./IKnowItAllPlanPage";
 
 export { MediaOwnerPage } from "./MediaOwnerPage";
 export { MarketersPage } from "./MarketersPage";
+
+export { MyUsers } from "./MyUsers";

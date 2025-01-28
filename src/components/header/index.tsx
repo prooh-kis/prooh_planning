@@ -9,7 +9,12 @@ import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 // import { ADD_SCREEN_CODE_RESET } from "../../../constants/screenDataConstant";
 import userImage from "../../assets/userImage.png";
 import { PrimaryButton } from "../../components/atoms/PrimaryButton";
-import { AUTH, MARKETS_PAGE, MEDIA_OWNER_PAGE } from "../../routes/routes";
+import {
+  AUTH,
+  MARKETS_PAGE,
+  MEDIA_OWNER_PAGE,
+  SIGN_UP,
+} from "../../routes/routes";
 
 // import { getCreatives } from "../../../actions/creativeAction";
 // import { USER_ROLE_PRIMARY } from "../../../constants/userConstants";
@@ -123,7 +128,7 @@ export const Header: React.FC = () => {
             Login
           </button>
           <button
-            onClick={() => navigate(AUTH)}
+            onClick={() => navigate(SIGN_UP)}
             className="bg-[#FFFFFF] text-[#888888] border border-[#DBDBDB] rounded-full px-4 py-2 text-sm sm:text-base font-bold hover:bg-[#888888] hover:text-[#FFFFFF] hidden md:block"
           >
             Sign Up

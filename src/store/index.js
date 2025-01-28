@@ -23,7 +23,9 @@ import {
 import {
   emailSendForConfirmationReducer,
   emailSendForVendorConfirmationReducer,
+  userDeleteReducer,
   userEmailVerificationReducer,
+  userListReducer,
   userSendEmailToResetPasswordReducer,
   userSigninReducer,
   userSignupReducer,
@@ -126,7 +128,9 @@ const store = configureStore({
     couponList: getCouponListReducer,
     couponApplyForCampaign: applyCouponForCampaignReducer,
     couponRemoveForCampaign: removeCouponForCampaignReducer,
-
+    //USER
+    userList: userListReducer,
+    userDelete: userDeleteReducer,
   },
   // middleware: thunk
   // devTools: process.env.NODE_ENV !== 'production'

@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { HomePageLayout } from "../components";
 
 import {
-  AuthPage,
   ForgetPassword,
   LandingPage,
   PageNotFound,
@@ -20,6 +19,9 @@ import {
   StoreBasedPlanPage,
   MediaOwnerPage,
   MarketersPage,
+  SignIn,
+  SignUp,
+  MyUsers,
 } from "../pages";
 
 import { PrivateRoute } from "./PrivateRoute";
@@ -34,11 +36,13 @@ import {
   MY_PLANS_LIST,
   MY_REQUESTS_LIST,
   REGULARPLAN,
+  SIGN_UP,
   UPDATE_PASSWORD,
+  USERS,
   VERIFY_EMAIL,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
-import { PublicRoute } from "./PublicRoute";
+import { PublicRoute } from "../layout/PublicRoute";
 
 const Routers: React.FC = () => {
   return (
@@ -47,11 +51,62 @@ const Routers: React.FC = () => {
         <Route
           path={AUTH}
           element={
+            <PublicRoute>
+              <SignIn />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path={SIGN_UP}
+          element={
+            <PublicRoute>
+              <SignUp />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path={VERIFY_EMAIL}
+          element={
+            <PublicRoute>
+              <VerifyEmail />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path={FORGET_PASSWORD}
+          element={
+            <PublicRoute>
+              <ForgetPassword />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path={UPDATE_PASSWORD}
+          element={
+            <PublicRoute>
+              <UpdatePassword />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path={USERS}
+          element={
             <PrivateRoute layout={HomePageLayout}>
-              <AuthPage />
+              <MyUsers />
             </PrivateRoute>
           }
         />
+        {/* <Route
+          path={USERS}
+          element={
+            <AppDashBoardLayout value="Users">
+              <MyUsers />
+            </AppDashBoardLayout>
+          }
+        /> */}
+
         <Route
           path={VERIFY_EMAIL}
           element={

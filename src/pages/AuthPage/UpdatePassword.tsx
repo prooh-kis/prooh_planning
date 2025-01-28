@@ -8,7 +8,7 @@ export const UpdatePassword = (props: any) => {
   const [password, setPassword] = useState<any>("");
   const [confirmPassword, setConfirmPassword] = useState<any>("");
   const dispatch = useDispatch<any>();
-  const naviaget = useNavigate();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const userUpdatePassword = useSelector(
     (state: any) => state.userUpdatePassword
@@ -23,7 +23,7 @@ export const UpdatePassword = (props: any) => {
     if (success) {
       alert(data);
       dispatch({ type: USER_UPDATE_PASSWORD_RESET });
-      naviaget("/signin");
+      navigate("/signin");
     }
   }, [error, success]);
 
@@ -49,13 +49,13 @@ export const UpdatePassword = (props: any) => {
     }
   };
   return (
-    <div className="flex justify-center pt-16">
-      <div className="border border-solid p-8 gap-2 w-full max-w-96 ">
-        <div className="flex flex-col gap-2">
+    <div className="flex flex-col justify-center items-center bg-gray-100 h-full">
+      <div className="w-[90%] lg:w-[400px] rounded-[15px] bg-white px-5 lg:px-8 py-6 lg:py-10 shadow-lg">
+        <div className="flex flex-col gap-1">
           <h1 className="text-xl py-2 text-[#129BFF] font-bold">
             Set New Password
           </h1>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <label>New Password*</label>
             <input
               type="password"
@@ -67,7 +67,7 @@ export const UpdatePassword = (props: any) => {
               className="border border-solid rounded p-2"
             />
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <label>Confirm New Password*</label>
             <input
               type="password"
@@ -81,7 +81,7 @@ export const UpdatePassword = (props: any) => {
           </div>
           <div className="flex justify-center pt-4">
             <button
-              className="border border-solid px-4 py-2 bg-[#FF0808]/75 rounded-md text-[#FFFFFF] w-96"
+              className="border border-solid px-4 py-2 bg-red-500/75  text-white w-96"
               onClick={handleSavePassword}
             >
               Save New Password
