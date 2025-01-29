@@ -112,7 +112,7 @@ export const DashboardBarChart: React.FC<BarChartProps> = ({
             const label = context.dataset.label || "";
             const value = context.raw;
             return `${label}: ${percent ? "" : "\u20B9"} ${formatNumber(
-              value
+              Number(value?.toFixed(0))
             )}`;
           },
         },
@@ -128,44 +128,6 @@ export const DashboardBarChart: React.FC<BarChartProps> = ({
       },
     },
   };
-
-  // Register a dynamic custom plugin
-  useEffect(() => {
-    const dynamicTotalPlugin = {
-      id: "totalValue",
-      afterDraw(chart: any) {
-        if (chart.config.type === "bar") {
-          const ctx = chart.ctx;
-          const { width, height } = chart;
-          ctx.save();
-          ctx.font = "bold 14px Arial"; // Make the font bold and larger
-          ctx.fillStyle = "#333"; // Darker text color for better visibility
-          ctx.textAlign = "right";
-
-          const total = chart.data.datasets[0].data.reduce(
-            (sum: number, value: number) => sum + value,
-            0
-          );
-          const average = total / currentData?.length;
-
-          // Combine both total and average in one line
-          const text = `Total: ${percent ? "" : "\u20B9"} ${formatNumber(
-            total
-          )}, Average: ${percent ? "" : "\u20B9"} ${formatNumber(average)}`;
-
-          // Clear previous text and draw the new one
-          ctx.clearRect(0, height - 30, width, 30);
-          ctx.fillText(text, width - 20, height - 10);
-          ctx.restore();
-        }
-      },
-    };
-
-    ChartJS.register(dynamicTotalPlugin);
-    return () => {
-      ChartJS.unregister(dynamicTotalPlugin);
-    };
-  }, [total]);
 
   return (
     <div className="w-full h-[260px]">

@@ -22,7 +22,6 @@ export const DashboardPieChart: React.FC<DoughnutChartProps> = ({
   const values = Object.values(data);
 
   const totalValue = values.reduce((sum, value) => sum + value, 0);
-  console.log("data : ", data);
 
   // Define colors for each segment
   const backgroundColors = [

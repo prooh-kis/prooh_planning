@@ -40,7 +40,6 @@ export const CampaignDashboard = ({
   const [pocEmail, setPocEmail] = useState<any>("");
   const [pocDesignation, setPocDesignation] = useState<any>("");
 
-
   const getScreenPerformanceData = () => {
     const datesArray = screenLevelData?.result[
       "totalData"
@@ -108,23 +107,23 @@ export const CampaignDashboard = ({
     {
       id: "1",
       type: "duration",
-      data: campaignDetails,
-      label: "campaignDetails",
+      campaignDetails,
+      screenLevelData,
     },
     {
       id: "2",
       type: "audience",
-      data: screenLevelData,
-      label: "screenLevelData",
+      campaignDetails,
+      screenLevelData,
     },
     {
       id: "3",
       type: "screen",
-      data: screenLevelData,
-      label: "screenLevelData",
+      campaignDetails,
+      screenLevelData,
     },
-    { id: "4", type: "spot", data: screenLevelData, label: "screenLevelData" },
-    { id: "5", type: "cost", data: screenLevelData, label: "screenLevelData" },
+    { id: "4", type: "spot", campaignDetails, screenLevelData },
+    { id: "5", type: "cost", campaignDetails, screenLevelData },
   ];
 
   const commonClasses = "col-span-1 bg-white p-4 border rounded-[12px]";
@@ -134,7 +133,7 @@ export const CampaignDashboard = ({
       <BillingAndInvoice
         open={openInvoice}
         onClose={() => setOpenInvoice(false)}
-        invoiceBill={campaignDetails}  
+        invoiceBill={campaignDetails}
         // loading={loadingBillInvoice}
         poNumber={poNumber}
         setPoNumber={setPoNumber}
@@ -226,7 +225,11 @@ export const CampaignDashboard = ({
             }`}
             onClick={() => setClicked(item.id)}
           >
-            <DashboardGrid type={item.type} {...{ [item.label]: item.data }} />
+            <DashboardGrid
+              type={item.type}
+              campaignDetails={item.campaignDetails}
+              screenLevelData={item.screenLevelData}
+            />
           </div>
         ))}
       </div>
@@ -248,13 +251,17 @@ export const CampaignDashboard = ({
                 campaignDetails?.startDate,
                 campaignDetails?.endDate
               )}
-              daysPlayed={calculateDaysPlayed(
-                campaignDetails?.startDate,
-                campaignDetails?.endDate
-              ) === 0 ? 1 : calculateDaysPlayed(
-                campaignDetails?.startDate,
-                campaignDetails?.endDate
-              )}
+              daysPlayed={
+                calculateDaysPlayed(
+                  campaignDetails?.startDate,
+                  campaignDetails?.endDate
+                ) === 0
+                  ? 1
+                  : calculateDaysPlayed(
+                      campaignDetails?.startDate,
+                      campaignDetails?.endDate
+                    )
+              }
             />
           </div>
         </div>
@@ -329,11 +336,35 @@ export const CampaignDashboard = ({
             </div>
           </div>
           <div className="col-span-3 bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100">
-            <div className="flex items-center gap-2 px-4 py-1">
-              <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                Day Wise Screen Performance
-              </h1>
-              <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+            <div className="flex justify-between">
+              <div className="flex items-center gap-2 px-4 py-1">
+                <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
+                  Day Wise Screen Performance
+                </h1>
+                <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-1">
+                <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
+                  Expected :{" "}
+                  {(
+                    getPromisedScreenPerformanceData().countsArray?.reduce(
+                      (a: number, c: number) => a + c,
+                      0
+                    ) / getPromisedScreenPerformanceData().countsArray?.length
+                  ).toFixed(0)}
+                  %
+                </h1>
+                <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
+                  Actual :{" "}
+                  {(
+                    getScreenPerformanceData().countsArray?.reduce(
+                      (a: number, c: number) => a + c,
+                      0
+                    ) / getScreenPerformanceData().countsArray?.length
+                  ).toFixed(0)}
+                  %
+                </h1>
+              </div>
             </div>
             <div className="p-2">
               <DashboardBarChart
@@ -389,7 +420,7 @@ export const CampaignDashboard = ({
                       (a: number, c: number) => a + c,
                       0
                     ) / getPromisedSpotDeliveryData().countsArray?.length
-                  ).toFixed(0)}
+                  ).toFixed(0)}{" "}
                 </h1>
                 <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
                   Actual :{" "}
@@ -398,7 +429,7 @@ export const CampaignDashboard = ({
                       (a: number, c: number) => a + c,
                       0
                     ) / getSpotDeliveryData().countsArray?.length
-                  ).toFixed(0)}
+                  ).toFixed(0)}{" "}
                 </h1>
               </div>
             </div>

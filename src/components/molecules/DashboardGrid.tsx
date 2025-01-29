@@ -33,6 +33,43 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
   type,
   screenLevelData,
 }) => {
+  const calculateSpot = () => {
+    const days = calculateDaysPlayed(
+      campaignDetails?.startDate,
+      campaignDetails?.endDate
+    );
+    const totalDays = campaignDetails?.duration;
+    const delivered =
+      screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(0);
+
+    const promised =
+      screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0);
+
+    const result =
+      Number((promised / totalDays).toFixed(2)) -
+      Number((delivered / days).toFixed(2));
+
+    return Number(result?.toFixed(0));
+  };
+
+  const calculateAudience = () => {
+    const days = calculateDaysPlayed(
+      campaignDetails?.startDate,
+      campaignDetails?.endDate
+    );
+    const totalDays = campaignDetails?.duration;
+    const delivered =
+      screenLevelData?.result?.totalData?.impressionsDelivered?.toFixed(0);
+
+    const promised =
+      screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(0);
+
+    const result =
+      Number((promised / totalDays).toFixed(2)) -
+      Number((delivered / days).toFixed(2));
+
+    return Number(result?.toFixed(0));
+  };
   return (
     <div className="w-full">
       {type === "duration" ? (
@@ -47,10 +84,12 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
                 {calculateDaysPlayed(
                   campaignDetails?.startDate,
                   campaignDetails?.endDate
-                ) === 0 ? 1 : calculateDaysPlayed(
-                  campaignDetails?.startDate,
-                  campaignDetails?.endDate
-                )}
+                ) === 0
+                  ? 1
+                  : calculateDaysPlayed(
+                      campaignDetails?.startDate,
+                      campaignDetails?.endDate
+                    )}
                 <span className="text-[18px]"> {"  "}Days</span>
               </span>{" "}
               / {campaignDetails?.duration}{" "}
@@ -59,13 +98,17 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
           </div>
           <div className="p-2 sm:p-4">
             <LinearBar
-              value={calculateDaysPlayed(
-                campaignDetails?.startDate,
-                campaignDetails?.endDate
-              ) === 0 ? 1 : calculateDaysPlayed(
-                campaignDetails?.startDate,
-                campaignDetails?.endDate
-              )}
+              value={
+                calculateDaysPlayed(
+                  campaignDetails?.startDate,
+                  campaignDetails?.endDate
+                ) === 0
+                  ? 1
+                  : calculateDaysPlayed(
+                      campaignDetails?.startDate,
+                      campaignDetails?.endDate
+                    )
+              }
               colors={["#00000020", "#7AB3A2"]}
               highest={campaignDetails?.duration}
               percent={false}
@@ -93,6 +136,19 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
                   0
                 )
               )}
+              <span
+                className={`text-[18px] ${
+                  calculateAudience() > 0 ? "text-[#2A892D]" : "text-[#CC0000]"
+                }`}
+              >
+                {" "}
+                {`(${formatNumber(calculateAudience() * 0.01)}%)`}
+                {calculateAudience() > 0 ? (
+                  <i className="fi fi-rr-arrow-up "></i>
+                ) : (
+                  <i className="fi fi-rr-arrow-down "></i>
+                )}
+              </span>
             </h1>
           </div>
           <div className="p-2 sm:p-4">
@@ -162,6 +218,19 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
               {formatNumber(
                 screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0)
               )}
+              <span
+                className={`text-[18px] ${
+                  calculateSpot() > 0 ? "text-[#2A892D]" : "text-[#CC0000]"
+                }`}
+              >
+                {" "}
+                {`(${formatNumber(calculateSpot() * 0.01)}%)`}
+                {calculateSpot() > 0 ? (
+                  <i className="fi fi-rr-arrow-up "></i>
+                ) : (
+                  <i className="fi fi-rr-arrow-down "></i>
+                )}
+              </span>
             </h1>
           </div>
           <div className="p-2 sm:p-4">
