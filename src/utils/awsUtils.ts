@@ -1,17 +1,15 @@
 import Axios from "axios";
 import { Buffer } from 'buffer';
 
-export const getAWSUrlToUploadFile = async (contentType: String) => {
+export const getAWSUrlToUploadFile = async (contentType: String, fileName: string) => {
   try {
+    // console.log("getAWSUrlToUploadFile", { contentType, name: fileName });
     const { data } = await Axios.post(
       `${process.env.REACT_APP_PROOH_SERVER}/api/v1/aws/getURLForFileUplaod`,
-      { contentType }
-      // {
-      //   headers: {
-      //     Authorization: `Bearer ${userInfo?.token}`,
-      //   },
-      // }
+      { contentType, name: fileName }
+
     );
+    // console.log("response : ", data);
     return data;
   } catch (error) {
     console.log("Not able to get aws file url");
@@ -67,9 +65,9 @@ export const saveDocsOnAws = async (url: string, file: Blob) => {
     console.log("Not able to save file on aws");
     throw new Error("Error saving on aws");
   }
-}
+};
 
 export const sanitizeUrlForS3 = (url: any) => {
   // Use encodeURI to encode the entire URL
   return encodeURI(url);
-}
+};

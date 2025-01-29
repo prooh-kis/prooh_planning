@@ -1,10 +1,23 @@
 import { PrimaryInput } from "../atoms/PrimaryInput";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
-import { message, Modal } from "antd";
-import React, { useState } from "react";
+import { message, Modal, Tooltip } from "antd";
+import React, { useEffect, useState } from "react";
 import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
 import { CalendarInput } from "../atoms/CalendarInput";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import {
+  addClientAgencyDetails,
+  getAllClientAgencyNames,
+} from "../../actions/clientAgencyAction";
+import { DropdownInput } from "../../components/atoms/DropdownInput";
+import { SuggestionInput } from "../../components/atoms/SuggestionInput";
+
+const allIndex = Array.from({ length: 3 }, (_, i) => ({
+  label: (i + 1).toString(),
+  value: i + 1,
+}));
 
 export const AddCampaignDetails = ({
   handleCancel,
@@ -21,6 +34,7 @@ export const AddCampaignDetails = ({
   endDate,
   duration,
 }: any) => {
+  const dispatch = useDispatch<any>();
   const [campaignName, setCampaignName] = useState<any>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || ""
   );
@@ -33,31 +47,31 @@ export const AddCampaignDetails = ({
   const [industry, setIndustry] = useState<any>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.industry || ""
   );
-  // const [startDate, setStartDate] = useState<any>(
-  //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-  //     ? new Date(
-  //         getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startDate
-  //       )
-  //         ?.toISOString()
-  //         ?.slice(0, 16)
-  //     : startDate1
-  //     ? new Date(startDate1)?.toISOString()?.slice(0, 16)
-  //     : new Date()?.toISOString()?.slice(0, 16)
-  // );
-  // const [endDate, setEndDate] = useState<any>(
-  //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-  //     ? new Date(
-  //         getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate
-  //       )
-  //         ?.toISOString()
-  //         ?.slice(0, 16)
-  //     : new Date()?.toISOString()?.slice(0, 16)
-  // );
 
-  // const [duration, setDuration] = useState<any>(
-  //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration ||
-  //     campaignDuration
-  // );
+  const [sov, setSov] = useState<number>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.sov || 1
+  );
+  const allClientAgencyNamesListGet = useSelector(
+    (state: any) => state.allClientAgencyNamesListGet
+  );
+  const {
+    loading: loadingClientAgencyNames,
+    error: errorClientAgencyNames,
+    data: clientAgencyNamesList,
+  } = allClientAgencyNamesListGet;
+
+  const handleAddNewClient = (value: string) => {
+    if (
+      !clientAgencyNamesList?.find(
+        (data: any) => data.clientAgencyName === value
+      )
+    ) {
+      dispatch(
+        addClientAgencyDetails({ clientAgencyName: value?.toUpperCase() })
+      );
+      console.log("calling to save new client name");
+    }
+  };
 
   const [enterDuration, setEnterDuration] = useState<any>(false);
 
@@ -78,6 +92,7 @@ export const AddCampaignDetails = ({
 
   const saveCampaignDetailsOnLocalStorage = () => {
     if (validateForm()) {
+      handleAddNewClient(clientName);
       handleSaveData({
         pageName: "Basic Details Page",
         name: campaignName,
@@ -93,17 +108,14 @@ export const AddCampaignDetails = ({
         campaignPlannerEmail: userInfo?.email,
         campaignManagerId: userInfo?.primaryUserId,
         campaignManagerEmail: userInfo?.primaryUserEmail,
+        // sov: sov,
       });
-      handleCancel();
-      setCurrentStep(2);
     }
   };
 
-  // const handleSetNewDuration = () => {
-  //   if (startDate && endDate)
-  //     setDuration(getNumberOfDaysBetweenTwoDates(startDate, endDate));
-  //   else message.error("Please enter first start , end Date");
-  // };
+  useEffect(() => {
+    dispatch(getAllClientAgencyNames());
+  }, []);
 
   return (
     <Modal
@@ -148,11 +160,13 @@ export const AddCampaignDetails = ({
             <label className="block text-secondaryText text-[14px] mb-2">
               Client Name
             </label>
-            <PrimaryInput
-              inputType="text"
-              placeholder="Client Name"
-              value={clientName}
-              action={setClientName}
+            <SuggestionInput
+              suggestions={clientAgencyNamesList?.map(
+                (value: any) => value.clientAgencyName
+              )}
+              placeholder="Client/Agency Name"
+              onChange={setClientName}
+              value={clientName || ""}
             />
           </div>
           <div className="col-span-1 py-1">
@@ -212,6 +226,29 @@ export const AddCampaignDetails = ({
             )}
           </div>
         </div>
+        {/* <div className="grid grid-cols-2 gap-8 pt-2">
+          <div className="col-span-1 py-1">
+            <div className="block flex justify-between gap-2 items-center mb-2">
+              <label className="block text-secondaryText text-[14px]">
+                SOV
+              </label>
+              <Tooltip title="How many times you want to play creatives in one loop">
+                <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+              </Tooltip>
+            </div>
+            <DropdownInput
+              options={allIndex?.map((data: any) => {
+                return {
+                  label: data.label,
+                  value: data.value,
+                };
+              })}
+              selectedOptions={sov}
+              placeHolder="Select SOV"
+              setSelectedOption={setSov}
+            />
+          </div>
+        </div> */}
         <button
           className="px-8 py-2 mt-4 text-[16px] font-semibold bg-[#1297E2] text-[#FFFFFF] rounded-md w-full"
           onClick={saveCampaignDetailsOnLocalStorage}

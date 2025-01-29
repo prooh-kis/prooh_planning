@@ -420,7 +420,10 @@ export const CreativeUploadDetails = ({
 
   const getAWSUrl = async (data: any) => {
     try {
-      const aws = await getAWSUrlToUploadFile(data.fileType);
+      const aws = await getAWSUrlToUploadFile(
+        data.fileType,
+        data?.file?.name?.split(".")[0]
+      );
       const successAWSUploadFile = await saveFileOnAWS(aws?.url, data.file);
       data.awsURL = aws?.awsURL;
       return aws?.awsURL;
@@ -619,10 +622,14 @@ export const CreativeUploadDetails = ({
 
       if (campaignCreatives) {
         handleSetInitialData(campaignCreatives);
-        setCreativeUploadData(filterUniqueResolutions(campaignCreatives));
+        setCreativeUploadData(
+          filterUniqueResolutions(mewTransformData(campaignCreatives))
+        );
       } else {
         handleSetInitialData(screenData);
-        setCreativeUploadData(filterUniqueResolutions(screenData));
+        setCreativeUploadData(
+          filterUniqueResolutions(mewTransformData(screenData))
+        );
       }
     }
 

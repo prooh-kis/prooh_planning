@@ -47,7 +47,7 @@ export const VendorConfirmationDetails = ({
   step,
   campaignId,
   userInfo,
-  successAddCampaignDetails
+  successAddCampaignDetails,
 }: VendorConfirmationDetailsProps) => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
@@ -273,7 +273,10 @@ export const VendorConfirmationDetails = ({
 
   const getAWSUrl = async (data: any) => {
     try {
-      const aws = await getAWSUrlToUploadFile(data.fileType);
+      const aws = await getAWSUrlToUploadFile(
+        data.fileType,
+        data?.file?.name?.split(".")[0]
+      );
       const successAWSUploadFile = await saveFileOnAWS(aws?.url, data.file);
       data.awsURL = aws?.awsURL;
       return aws?.awsURL;
@@ -315,10 +318,12 @@ export const VendorConfirmationDetails = ({
           id: campaignId,
         })
       );
-      dispatch(getPlanningPageFooterData({
-        id: campaignId,
-        pageName: "Vendor Confirmation Page",
-      }));
+      dispatch(
+        getPlanningPageFooterData({
+          id: campaignId,
+          pageName: "Vendor Confirmation Page",
+        })
+      );
     }
   }, [dispatch, vendorInput, campaignDetails]);
 

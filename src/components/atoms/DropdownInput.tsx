@@ -1,17 +1,14 @@
 import React from "react";
 
 export const DropdownInput = ({
-  height = "10",
+  height = "h-[40px]",
   width = "full",
   placeHolder,
   selectedOption,
   setSelectedOption,
   options,
-  border = "border-gray-200",
-  rounded = false,
 }: any) => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    // console.log(event.target.value);
     setSelectedOption(event.target.value);
   };
 
@@ -23,15 +20,13 @@ export const DropdownInput = ({
     <div className={height ? "relative" : "relative w-full"}>
       <select
         title="dropdown"
-        className={`truncate w-full ${dropdownHeight} ${dropdownWidth} text-[14px] border ${border} ${
-          rounded ? "rounded-full" : "rounded-lg"
-        } ${
-          height ? "pr-4 pl-2" : "px-3"
-        } py-1 focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-gray-100 active:bg-[#F4F9FF] transition-colors appearance-none truncate`}
+        className={`truncate w-full ${dropdownHeight} ${dropdownWidth} text-[14px] border  ${
+          height ? "px-1" : "px-3"
+        } py-1 focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-gray-100 active:bg-blue-100 transition-colors appearance-none rounded-sm`}
         value={selectedOption}
         onChange={handleSelectChange}
       >
-        <option className="truncate" value="">{placeHolder}</option>
+        {/* <option value="">------{placeHolder}-----</option> Default option */}
         {options?.map((opt: any, index: any) => (
           <option key={index} value={opt.value}>
             {opt.label}

@@ -15,6 +15,12 @@ import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import { format } from "date-fns";
 import { getScreensAudiencesData } from "../../actions/screenAction";
 import { ALL_MARKETS } from "../../constants/helperConstants";
+import {
+  addClientAgencyDetails,
+  getAllClientAgencyNames,
+} from "../../actions/clientAgencyAction";
+import { SuggestionInput } from "../../components/atoms/SuggestionInput";
+import { DropdownInput } from "../../components/atoms/DropdownInput";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -25,7 +31,10 @@ interface EnterCampaignBasicDetailsProps {
   campaignType: string;
   path: string;
 }
-
+const allIndex = Array.from({ length: 3 }, (_, i) => ({
+  label: (i + 1).toString(),
+  value: i + 1,
+}));
 export const EnterCampaignBasicDetails = ({
   setCurrentStep,
   step,
@@ -73,6 +82,10 @@ export const EnterCampaignBasicDetails = ({
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || ""
   );
 
+  const [sov, setSov] = useState<number>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.sov || 1
+  );
+
   const [enterDuration, setEnterDuration] = useState<any>(false);
 
   const detailsToCreateCampaignAdd = useSelector(
@@ -84,6 +97,28 @@ export const EnterCampaignBasicDetails = ({
     success: successAddDetails,
     data: addDetails,
   } = detailsToCreateCampaignAdd;
+
+  const allClientAgencyNamesListGet = useSelector(
+    (state: any) => state.allClientAgencyNamesListGet
+  );
+  const {
+    loading: loadingClientAgencyNames,
+    error: errorClientAgencyNames,
+    data: clientAgencyNamesList,
+  } = allClientAgencyNamesListGet;
+
+  const handleAddNewClient = (value: string) => {
+    if (
+      !clientAgencyNamesList?.find(
+        (data: any) => data.clientAgencyName === value
+      )
+    ) {
+      dispatch(
+        addClientAgencyDetails({ clientAgencyName: value?.toUpperCase() })
+      );
+      console.log("calling to save new client name");
+    }
+  };
 
   const validateForm = () => {
     if (campaignName.length === 0) {
@@ -138,6 +173,7 @@ export const EnterCampaignBasicDetails = ({
 
   const saveCampaignDetailsOnLocalStorage = useCallback(() => {
     handleSetNewDuration(duration);
+    handleAddNewClient(clientName);
     dispatch(
       addDetailsToCreateCampaign({
         pageName: "Basic Details Page",
@@ -154,6 +190,7 @@ export const EnterCampaignBasicDetails = ({
         campaignPlannerEmail: userInfo?.email,
         campaignManagerId: userInfo?.primaryUserId,
         campaignManagerEmail: userInfo?.primaryUserEmail,
+        // sov: sov,
       })
     );
   }, [
@@ -172,6 +209,7 @@ export const EnterCampaignBasicDetails = ({
     userInfo?.email,
     userInfo?.primaryUserId,
     userInfo?.primaryUserEmail,
+    // sov,
   ]);
 
   useEffect(() => {
@@ -198,6 +236,10 @@ export const EnterCampaignBasicDetails = ({
     dispatch,
     campaignId,
   ]);
+
+  useEffect(() => {
+    dispatch(getAllClientAgencyNames());
+  }, []);
 
   return (
     <div className="w-full py-3">
@@ -247,6 +289,24 @@ export const EnterCampaignBasicDetails = ({
       </div>
       <div className="grid grid-cols-3 gap-8 pt-2">
         <div className="col-span-1 py-1">
+          <div className="block flex justify-between gap-2 items-center mb-2">
+            <label className="block text-secondaryText text-[14px]">
+              Agency / Client
+            </label>
+            <Tooltip title="Enter Agency's name or client's name who is managing the campaign">
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+            </Tooltip>
+          </div>
+          <SuggestionInput
+            suggestions={clientAgencyNamesList?.map(
+              (value: any) => value.clientAgencyName
+            )}
+            placeholder="Client/Agency Name"
+            onChange={setClientName}
+            value={clientName || ""}
+          />
+        </div>
+        <div className="col-span-1 py-1">
           <div className="block flex justify-between justify-betweengap-2 items-center mb-2">
             <label className="block text-secondaryText text-[14px]">
               Industry Type
@@ -260,22 +320,6 @@ export const EnterCampaignBasicDetails = ({
             placeholder="Industry Type"
             value={industry}
             action={setIndustry}
-          />
-        </div>
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">
-              Agency / Client
-            </label>
-            <Tooltip title="Enter Agency's name or client's name who is managing the campaign">
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
-          </div>
-          <PrimaryInput
-            inputType="text"
-            placeholder="Agency / Client Name"
-            value={clientName}
-            action={setClientName}
           />
         </div>
       </div>
@@ -318,6 +362,27 @@ export const EnterCampaignBasicDetails = ({
           />
         </div>
       </div>
+      {/* <div className="grid grid-cols-3 gap-8 pt-2">
+        <div className="col-span-1 py-1">
+          <div className="block flex justify-between gap-2 items-center mb-2">
+            <label className="block text-secondaryText text-[14px]">SOV</label>
+            <Tooltip title="How many times you want to play creatives in one loop">
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+            </Tooltip>
+          </div>
+          <DropdownInput
+            options={allIndex?.map((data: any) => {
+              return {
+                label: data.label,
+                value: data.value,
+              };
+            })}
+            selectedOptions={sov}
+            placeHolder="Select SOV"
+            setSelectedOption={setSov}
+          />
+        </div>
+      </div> */}
       {endDate !== "" && startDate !== "" && duration && (
         <h1 className="text-[12px] pt-4 text-[#129BFF]">
           Note: The billing of your campaign will start from{" "}

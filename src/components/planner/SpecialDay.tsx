@@ -10,7 +10,10 @@ import {
   getIndustryCategory,
 } from "../../actions/calenderAction";
 import { useSelector, useDispatch } from "react-redux";
-import { getPlanningPageFooterData, getTableDataForSelectTopicalDayPage } from "../../actions/screenAction";
+import {
+  getPlanningPageFooterData,
+  getTableDataForSelectTopicalDayPage,
+} from "../../actions/screenAction";
 import { SingleCalenderData } from "../../components/molecules/SingleCalenderData";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { endOfDay, startOfDay } from "date-fns";
@@ -134,6 +137,7 @@ export const SpecialDay = ({
 
     if (successAddDetails) {
       setCampaignId(addDetails._id);
+      handleCancel();
       setCurrentStep(step + 1);
       navigate(`/specialdayplan/${addDetails?._id}`);
     }

@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+  ADD_CLIENT_AGENCY_DETAILS_FAIL,
+  ADD_CLIENT_AGENCY_DETAILS_REQUEST,
+  ADD_CLIENT_AGENCY_DETAILS_SUCCESS,
   GET_CLIENT_AGENCY_DETAILS_FAIL,
   GET_CLIENT_AGENCY_DETAILS_REQUEST,
   GET_CLIENT_AGENCY_DETAILS_SUCCESS,
@@ -83,3 +86,28 @@ export const removeCouponForCampaign = ({campaignCreationId}) => async (dispatch
     });
   }
 };
+
+export const addClientAgencyDetails =
+  ({ clientAgencyName }) =>
+  async (dispatch, getState) => {
+    dispatch({
+      type: ADD_CLIENT_AGENCY_DETAILS_REQUEST,
+      payload: { clientAgencyName },
+    });
+    try {
+      const { data } = await axios.post(`${url}/add`, { clientAgencyName });
+      dispatch({
+        type: ADD_CLIENT_AGENCY_DETAILS_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: ADD_CLIENT_AGENCY_DETAILS_FAIL,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };

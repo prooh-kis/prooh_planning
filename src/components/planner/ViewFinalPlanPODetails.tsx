@@ -307,7 +307,10 @@ export const ViewFinalPlanPODetails = ({
 
   const getAWSUrl = async (data: any) => {
     try {
-      const aws = await getAWSUrlToUploadFile(data.fileType);
+      const aws = await getAWSUrlToUploadFile(
+        data.fileType,
+        data?.file?.name?.split(".")[0]
+      );
       const successAWSUploadFile = await saveFileOnAWS(aws?.url, data.file);
       data.awsURL = aws?.awsURL;
       return aws?.awsURL;
@@ -355,19 +358,23 @@ export const ViewFinalPlanPODetails = ({
     return result;
   };
 
-  const handleApplyCoupon = useCallback((couponId: any) => {
-    console.log("handleApplyCoupon : ", campaignId, currentCoupon);
-    if (poTableData?.couponId) {
-      message.warning("You have already applied discount! Replacing the applied discount");
-
-    }
+  const handleApplyCoupon = useCallback(
+    (couponId: any) => {
+      console.log("handleApplyCoupon : ", campaignId, currentCoupon);
+      if (poTableData?.couponId) {
+        message.warning(
+          "You have already applied discount! Replacing the applied discount"
+        );
+      }
       dispatch(
         applyCouponForCampaign({
           campaignCreationId: campaignId,
           couponId: couponId || currentCoupon,
         })
       );
-  }, [campaignId, currentCoupon, poTableData, dispatch]);
+    },
+    [campaignId, currentCoupon, poTableData, dispatch]
+  );
 
   useEffect(() => {
     if (successSendEmail) {
@@ -476,7 +483,7 @@ export const ViewFinalPlanPODetails = ({
                 placeHolder="-----Select coupon-----"
                 selectedOption={currentCoupon}
                 setSelectedOption={(e: any) => {
-                  setCurrentCoupon(e)
+                  setCurrentCoupon(e);
                   handleApplyCoupon(e);
                 }}
                 options={coupons?.map((coupon: any) => {
@@ -511,7 +518,9 @@ export const ViewFinalPlanPODetails = ({
               )}
               <h1
                 className={`text-left  ${
-                  poTableData?.couponId && poTableData?.couponId !== "NA" ? "line-through text-gray-400 " : ""
+                  poTableData?.couponId && poTableData?.couponId !== "NA"
+                    ? "line-through text-gray-400 "
+                    : ""
                 }`}
               >
                 &#8377; {formatNumber(Number(poTableData?.totalCampaignBudget))}
@@ -550,7 +559,11 @@ export const ViewFinalPlanPODetails = ({
                 <i
                   className="fi fi-sr-trash flex items-center lg:text-[14px] text-[12px] text-[#EF4444]"
                   onClick={() => {
-                    dispatch(removeCouponForCampaign({campaignCreationId: campaignId}))
+                    dispatch(
+                      removeCouponForCampaign({
+                        campaignCreationId: campaignId,
+                      })
+                    );
                   }}
                 ></i>
               </div>
