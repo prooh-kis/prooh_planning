@@ -11,6 +11,7 @@ export const CalendarInput = ({
   value,
   action,
   disabled = false,
+  minDate
 }: CalenderInputProps) => {
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate());
@@ -25,7 +26,7 @@ export const CalendarInput = ({
         value={value}
         onChange={(e) => action(e.target.value)}
         className="h-[48px] w-full border rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-gray-100 active:bg-[#F4F9FF] transition-colors"
-        min={formattedYesterday}
+        min={minDate ? new Date(minDate).toISOString().split("T")[0] : formattedYesterday}
       />
     </div>
   );

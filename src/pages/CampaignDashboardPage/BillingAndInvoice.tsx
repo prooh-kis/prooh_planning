@@ -10,7 +10,10 @@ import { DropdownInput } from "../../components/atoms/DropdownInput";
 import { PrimaryInput } from "../../components/atoms/PrimaryInput";
 import { Tooltip } from "antd";
 import { SearchableSelect } from "../../components/atoms/SearchableSelect";
-import { getAllClientAgencyNames, getClientAgencyDetails } from "../../actions/clientAgencyAction";
+import { addClientAgencyDetails, getAllClientAgencyNames, getClientAgencyDetails } from "../../actions/clientAgencyAction";
+import { generateBillAndInvoicePdf } from "../../utils/generatePdf";
+import { createBillInvoice, getBillInvoiceDetails } from "../../actions/billInvoiceAction";
+import { CalendarInput } from "../../components/atoms/CalendarInput";
 
 
 export const BillingAndInvoice = (props: any) => {
@@ -48,12 +51,24 @@ export const BillingAndInvoice = (props: any) => {
     setPocDesignation,
     poNumber,
     setPoNumber,
+    poDate,
+    setPoDate,
     loading,
     onClose,
-    bill 
-
+    jsonDataForInvoice, 
+    setJsonDataForInvoice,
+    campaignDetails,
+    invoiceDescription,
+    setInvoiceDescription,
+    invoiceQuantity,
+    setInvoiceQuantity,
+    invoiceCurrency,
+    setInvoiceCurrency,
+    setInvoiceAmount,
+    invoiceAmount
   } = props;
 
+  const todayDate = moment(new Date())?.format("YYYY-MM-DD hh:mm:ss");
   const allClientAgencyNamesListGet = useSelector((state: any) => state.allClientAgencyNamesListGet);
   const {
     loading: loadingClientAgencyNames,
@@ -68,18 +83,149 @@ export const BillingAndInvoice = (props: any) => {
     data: clientAgencyDetailsData,
   } = clientAgencyDetailsGet;
 
+  const billInvoiceDetailsGet = useSelector((state: any) => state.billInvoiceDetailsGet);
+  const {
+    loading: loadingBillInvoiceDetails,
+    error: errorBillInvoiceDetails,
+    data: billInvoiceDetailsData,
+  } = billInvoiceDetailsGet;
+
+  const saveClientAgencyDetails = () => {
+    
+    // dispatch(addClientAgencyDetails({
+    //   clientAgencyName: clientAgencyName,
+    //   pocName: pocName,
+    //   pocEmail: pocEmail,
+    //   pocContact: pocContact,
+    //   pocDesignation: pocDesignation,
+    //   officeAddress: {
+    //     address: address,
+    //     city: city,
+    //     state: stateName,
+    //     country: country,
+    //     phone: phone,
+    //     email: email,
+    //     website: website,
+    //     zipCode: zipCode,
+    //     gst: gst,
+    //     pan: pan,
+    //   },
+    //   poRecieved: poNumber && !clientAgencyDetailsData?.poRecieved?.map((po: any) => po.poNumber)?.includes(poNumber) ? clientAgencyDetailsData?.poRecieved.push({
+    //     poNumber: poNumber,
+    //     poDoc: ""
+    //   }) : clientAgencyDetailsData?.poRecieved
+    // }));
+
+    dispatch(createBillInvoice({
+      campaignCreationId: campaignDetails?._id,
+      invoiceNumber: `PROOH/${campaignDetails?._id}`,
+      invoiceDate: todayDate,
+      internalSoNumber: `PROOH/${campaignDetails?._id}/SO`,
+      clientConfirmation: campaignDetails?.clientApprovalImgs?.length > 0 ? "Mail Confirmation" : "mail confirmation",
+      clientOrderDate: poDate,
+      poRecieved: {
+        poNumber: poNumber,
+        poDoc: "",
+        poDate: poDate
+      },
+      tableContent: {
+        description: invoiceDescription,
+        quantity: invoiceQuantity,
+        amount: invoiceAmount,
+        rate: invoiceAmount,
+        hsnsac: ""
+      },
+      subTotalAmount: invoiceAmount,
+      outPutGstPercent: 18,
+      outPutGstAmount: invoiceAmount * 0.18,
+      totalAmount: invoiceAmount * 1.18,
+      currency: "INR",
+    }));
+  }
+
+
+  const generateBillInvoice = useCallback(() => {
+    console.log(jsonDataForInvoice)
+    generateBillAndInvoicePdf({download: true, fileName: `INVOICE_${campaignDetails?.brandName}_${campaignDetails?.name}`, jsonData: jsonDataForInvoice });
+  },[jsonDataForInvoice])
+
   useEffect(() => {
+    if (poNumber) {
+      dispatch(getBillInvoiceDetails({campaignCreationId: campaignDetails?._id}))
+    }
     dispatch(getAllClientAgencyNames());
-  }, [dispatch])
+  }, [dispatch]);
 
   useEffect(() => {
     if (clientAgencyNamesList) {
       setClientAgencyName(clientAgencyNamesList.clientAgencyName);
     }
     if (clientAgencyDetailsData) {
+      setClientAgencyName(clientAgencyDetailsData?.clientAgencyName);
+      setAddress(clientAgencyDetailsData?.officeAddress?.address);
+      setCity(clientAgencyDetailsData?.officeAddress?.city);
+      setStateName(clientAgencyDetailsData?.officeAddress?.state);
+      setCountry(clientAgencyDetailsData?.officeAddress?.country);
+      setPhone(clientAgencyDetailsData?.officeAddress?.phone);
+      setEmail(clientAgencyDetailsData?.officeAddress?.email);
+      setWebsite(clientAgencyDetailsData?.officeAddress?.website);
+      setZipCode(clientAgencyDetailsData?.officeAddress?.zipCode);
+      setGst(clientAgencyDetailsData?.officeAddress?.gst);
+      setPan(clientAgencyDetailsData?.officeAddress?.pan);
+      setPocName(clientAgencyDetailsData?.pocName);
+      setPocEmail(clientAgencyDetailsData?.pocEmail);
+      setPocContact(clientAgencyDetailsData?.pocContact);
+      setPocDesignation(clientAgencyDetailsData?.pocDesignation);
+      setJsonDataForInvoice({
+        planner: campaignDetails?.campaignPlannerName,
+        plannerEmail: campaignDetails?.campaignPlannerEmail,
+        clientAgencyName: clientAgencyName,
+        pan: pan,
+        gst: gst,
+        pocName: pocName,
+        pocEmail: pocEmail,
+        pocContact: pocContact,
+        pocDesignation: pocDesignation,
+        officeAddress: {
+          address: address,
+          city: city,
+          state: stateName,
+          country: country,
+          phone: phone,
+          email: email,
+          website: website,
+          zipCode: zipCode,
+          gst: gst,
+          pan: pan,
+        },
+        invoiceNumber: `PROOH/${campaignDetails?._id}`,
+        invoiceDate: todayDate,
+        internalSoNumber: `PROOH/${campaignDetails?._id}/SO`,
+        clientConfirmation: campaignDetails?.clientApprovalImgs?.length > 0? "Mail Confirmation" : "mail confirmation",
+        clientOrderDate: poDate,
+        poNumber: poNumber,
+        invoiceDescription: invoiceDescription,
+        invoiceQuantity: invoiceQuantity,
+        invoiceCurrency: invoiceCurrency,
+        invoiceAmount: invoiceAmount,
+        subTotalAmount: invoiceAmount * 1.18,
+        outPutGstPercent: 18,
+        outPutGstAmount: invoiceAmount * 0.18,
 
+        campaignName: campaignDetails?.brandName,
+        startDate: moment(campaignDetails?.startDate).format("YYYY-MM-DD"),
+        endDate: moment(campaignDetails?.endDate).format("YYYY-MM-DD"),
+
+      });
     }
-  },[clientAgencyNamesList, setClientAgencyName, clientAgencyDetailsData])
+  },[clientAgencyNamesList, setClientAgencyName, clientAgencyDetailsData, setAddress, setCity, setStateName, setCountry, setPhone, setEmail, setWebsite, setZipCode, setGst, setPan, setPocName, setPocEmail, setPocContact, setPocDesignation, setJsonDataForInvoice, clientAgencyName, pocName, pocEmail, pocContact, pocDesignation, address, city, stateName, country, phone, email, website, zipCode, gst, pan, poNumber, campaignDetails, invoiceQuantity, invoiceDescription]);
+
+  useEffect(() => {
+    if (billInvoiceDetailsData) {
+      generateBillInvoice();
+    }
+  },[billInvoiceDetailsData, generateBillInvoice]);
+  
   useEffect(() => {
     if (props?.open) {
       document.body.classList.add("overflow-hidden");
@@ -114,7 +260,7 @@ export const BillingAndInvoice = (props: any) => {
               <div className="flex items-center gap-4">
                 <PrimaryButton
                   title="Save"
-                  action={() => {}}
+                  action={saveClientAgencyDetails}
                   height="h-8"
                   width="w-20"
                   textSize="text-[12px]"
@@ -122,7 +268,7 @@ export const BillingAndInvoice = (props: any) => {
                 />
                 <PrimaryButton
                   title="Generate"
-                  action={() => {}}
+                  action={generateBillInvoice}
                   height="h-8"
                   width="w-20"
                   textSize="text-[12px]"
@@ -135,27 +281,130 @@ export const BillingAndInvoice = (props: any) => {
               </div>
             </div>
             <div className="p-2 overflow-scroll-y no-scrollbar">
+              <div className="grid grid-cols-12 gap-4 py-2">
+                <div className="col-span-8 py-2">
+                  <div className="block flex justify-between gap-2 items-center mb-2">
+                    <label className="block text-secondaryText text-[14px]">
+                      Purchase Order Number
+                    </label>
+                    <Tooltip title="Enter Purchase Order number for the campaign that you received from your client/agency">
+                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+                    </Tooltip>
+                  </div>
+                  <PrimaryInput
+                    inputType="text"
+                    placeholder="Enter PO Number"
+                    value={poNumber}
+                    action={setPoNumber}
+                  />
+                </div>
+                <div className="col-span-4 py-2">
+                  <div className="block flex justify-between gap-2 items-center mb-2">
+                    <label className="block text-secondaryText text-[14px]">
+                      Purchase Order Date
+                    </label>
+                    <Tooltip title="Enter Purchase Order date for the campaign that you received from your client/agency">
+                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+                    </Tooltip>
+                  </div>
+                  <CalendarInput
+                    placeholder="PO Date"
+                    value={poDate}
+                    action={setPoDate}
+                    disabled={false}
+                    minDate={campaignDetails?.startDate}
+                  />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-12 gap-4 py-2">
+                <div className="col-span-8">
+                  <div className="block flex justify-between gap-2 items-center mb-2">
+                    <label className="block text-secondaryText text-[14px]">
+                      Description
+                    </label>
+                    <Tooltip title="Enter description for the campaign">
+                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+                    </Tooltip>
+                  </div>
+                  <PrimaryInput
+                    inputType="text"
+                    placeholder="Enter Description"
+                    value={invoiceDescription}
+                    action={setInvoiceDescription}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <div className="block flex justify-between gap-2 items-center mb-2">
+                    <label className="block text-secondaryText text-[14px]">
+                      Quantity
+                    </label>
+                    <Tooltip title="Enter quantity of items for the campaign">
+                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+                    </Tooltip>
+                  </div>
+                  <PrimaryInput
+                    inputType="text"
+                    placeholder="Enter Quantity"
+                    value={invoiceQuantity}
+                    action={setInvoiceQuantity}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <div className="block flex justify-between gap-2 items-center mb-2">
+                    <label className="block text-secondaryText text-[14px]">
+                      Currency
+                    </label>
+                    <Tooltip title="Enter currency of payment for the campaign">
+                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+                    </Tooltip>
+                  </div>
+                  <DropdownInput
+                    placeHolder="Enter Currency"
+                    selectedOption={invoiceCurrency}
+                    setSelectedOption={setInvoiceCurrency}
+                    options={[{
+                      label: "INR",
+                      value: "INR"
+                    },{
+                      label: "USD",
+                      value: "USD"
+                    }]}
+                    height="h-[48px]"
+                  />
+                </div>
+              </div> 
+              
+              <div className="py-2 border-b"/>
+              <h1 className="text-[14px] font-semibold pt-4">Enter Client/Agency Details</h1>
               <div className="py-2">
                 <div className="block flex justify-between gap-2 items-center mb-2">
                   <label className="block text-secondaryText text-[14px]">
-                    Enter PO Number
+                    Client/Agency Name
                   </label>
-                  <Tooltip title="Enter Purchase Order number for the campaign that you received from your client/agency">
+                  <Tooltip title="Enter Client/Agency name for the campaign">
                     <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
                   </Tooltip>
                 </div>
-                <PrimaryInput
-                  inputType="text"
-                  placeholder="Enter PO Number"
-                  value={poNumber}
-                  action={setPoNumber}
+                <SearchableSelect
+                  onChange={(value: any) => {
+                    setClientAgencyName(value?.toUpperCase());
+                    dispatch(getClientAgencyDetails({clientAgencyName: value?.toUpperCase()}));
+                  }}
+                  options={clientAgencyNamesList?.map(
+                    (value: any) => {
+                      return { label: value.clientAgencyName, value: value.clientAgencyName };
+                    }
+                  )}
+                  placeholder="Search by Client/Agency Name"
+                  value={clientAgencyName}
                 />
               </div>
               <div className="grid grid-cols-12 gap-4 py-2">
                 <div className="col-span-6 py-2">
                   <div className="block flex justify-between gap-2 items-center mb-2">
                     <label className="block text-secondaryText text-[14px]">
-                      Enter GST No.
+                      GST No.
                     </label>
                     <Tooltip title="Enter GST number of client/agency you recieved on purchase Order number for the campaign">
                       <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
@@ -171,7 +420,7 @@ export const BillingAndInvoice = (props: any) => {
                 <div className="col-span-6 py-2">
                   <div className="block flex justify-between gap-2 items-center mb-2">
                     <label className="block text-secondaryText text-[14px]">
-                      Enter PAN No.
+                      PAN No.
                     </label>
                     <Tooltip title="Enter PAN number of client/agency you recieved on purchase Order number for the campaign">
                       <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
@@ -185,36 +434,10 @@ export const BillingAndInvoice = (props: any) => {
                   />
                 </div>
               </div> 
-              
-              <div className="py-2 border-b"/>
-
               <div className="py-2">
                 <div className="block flex justify-between gap-2 items-center mb-2">
                   <label className="block text-secondaryText text-[14px]">
-                    Enter Client/Agency Name
-                  </label>
-                  <Tooltip title="Enter Client/Agency name for the campaign">
-                    <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                  </Tooltip>
-                </div>
-                <SearchableSelect
-                  onChange={(value: any) => {
-                    setClientAgencyName(value?.toUpperCase())
-                    dispatch(getClientAgencyDetails({clientAgencyName: value?.toUpperCase()}));
-                  }}
-                  options={clientAgencyNamesList?.map(
-                    (value: any) => {
-                      return { label: value.clientAgencyName, value: value.clientAgencyName };
-                    }
-                  )}
-                  placeholder="Search by Client/Agency Name"
-                  value={clientAgencyName}
-                />
-              </div>
-              <div className="py-2">
-                <div className="block flex justify-between gap-2 items-center mb-2">
-                  <label className="block text-secondaryText text-[14px]">
-                    Enter Address
+                    Full Address
                   </label>
                   <Tooltip title="Enter office address for your client/agency">
                     <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
@@ -231,7 +454,7 @@ export const BillingAndInvoice = (props: any) => {
                 <div className="col-span-6 py-2">
                   <div className="block flex justify-between gap-2 items-center mb-2">
                     <label className="block text-secondaryText text-[14px]">
-                      Enter City
+                      City
                     </label>
                     <Tooltip title="Enter city of the office of your client/agency">
                       <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
@@ -247,7 +470,7 @@ export const BillingAndInvoice = (props: any) => {
                 <div className="col-span-6 py-2">
                   <div className="block flex justify-between gap-2 items-center mb-2">
                     <label className="block text-secondaryText text-[14px]">
-                      Enter State
+                      State
                     </label>
                     <Tooltip title="Enter Purchase Order number for the campaign that you received from your client">
                       <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
@@ -265,7 +488,7 @@ export const BillingAndInvoice = (props: any) => {
                 <div className="col-span-6 py-2">
                   <div className="block flex justify-between gap-2 items-center mb-2">
                     <label className="block text-secondaryText text-[14px]">
-                      Enter Country
+                      Country
                     </label>
                     <Tooltip title="Enter country name of the office address of your client/agency">
                       <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
@@ -281,7 +504,7 @@ export const BillingAndInvoice = (props: any) => {
                 <div className="col-span-6 py-2">
                   <div className="block flex justify-between gap-2 items-center mb-2">
                     <label className="block text-secondaryText text-[14px]">
-                      Enter Zip Code
+                      Postal/Zip Code
                     </label>
                     <Tooltip title="Enter postal/zip code for the office address of your client/agency">
                       <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
@@ -299,7 +522,7 @@ export const BillingAndInvoice = (props: any) => {
                 <div className="col-span-4 py-2">
                   <div className="block flex justify-between gap-2 items-center mb-2">
                     <label className="block text-secondaryText text-[14px]">
-                      Enter Phone
+                      Phone
                     </label>
                     <Tooltip title="Enter phone number of your client/agency">
                       <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
@@ -315,7 +538,7 @@ export const BillingAndInvoice = (props: any) => {
                 <div className="col-span-4 py-2">
                   <div className="block flex justify-between gap-2 items-center mb-2">
                     <label className="block text-secondaryText text-[14px]">
-                      Enter Email
+                      Email
                     </label>
                     <Tooltip title="Enter email address of your client/agency">
                       <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
@@ -331,7 +554,7 @@ export const BillingAndInvoice = (props: any) => {
                 <div className="col-span-4 py-2">
                   <div className="block flex justify-between gap-2 items-center mb-2">
                     <label className="block text-secondaryText text-[14px]">
-                      Enter Website
+                      Website
                     </label>
                     <Tooltip title="Enter Purchase Order number for the campaign that you received from your client/agency">
                       <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
@@ -347,12 +570,12 @@ export const BillingAndInvoice = (props: any) => {
               </div> 
 
               <div className="py-2 border-b" />
-
+              <h1 className="text-[14px] font-semibold pt-4">Enter Client/Agency POC Details</h1>
               <div className="grid grid-cols-12 py-2 gap-4">
                 <div className="col-span-6 py-2">
                   <div className="block flex justify-between gap-2 items-center mb-2">
                     <label className="block text-secondaryText text-[14px]">
-                      Enter POC Name
+                      Name
                     </label>
                     <Tooltip title="Enter point of contact name of your client/agency">
                       <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
@@ -368,7 +591,7 @@ export const BillingAndInvoice = (props: any) => {
                 <div className="col-span-6 py-2">
                   <div className="block flex justify-between gap-2 items-center mb-2">
                     <label className="block text-secondaryText text-[14px]">
-                      Enter POC Designation
+                      Designation
                     </label>
                     <Tooltip title="Enter Purchase Order number for the campaign that you received from your client">
                       <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
@@ -386,7 +609,7 @@ export const BillingAndInvoice = (props: any) => {
                 <div className="col-span-6 py-2">
                   <div className="block flex justify-between gap-2 items-center mb-2">
                     <label className="block text-secondaryText text-[14px]">
-                      Enter POC Phone
+                      Phone
                     </label>
                     <Tooltip title="Enter point of contact's contact details of your client/agency">
                       <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
@@ -402,7 +625,7 @@ export const BillingAndInvoice = (props: any) => {
                 <div className="col-span-6 py-2">
                   <div className="block flex justify-between gap-2 items-center mb-2">
                     <label className="block text-secondaryText text-[14px]">
-                      Enter POC Email
+                      Email
                     </label>
                     <Tooltip title="Enter point of contact's email address of your client/agency">
                       <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>

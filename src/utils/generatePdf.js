@@ -2,6 +2,7 @@ import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import PptxGenJS from "pptxgenjs";
+import { numberToWords } from "./formatValue";
 
 const getBase64ImageFromUrl = async (imageUrl) => {
   const response = await fetch(imageUrl);
@@ -169,6 +170,8 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
   const FOOTER_MARGIN = 30; // Space reserved for the footer
   const HEADER_MARGIN = 30; // Space reserved for the header
   const PAGE_HEIGHT = doc.internal.pageSize.height;
+  const PAGE_WIDTH = doc.internal.pageSize.width;
+
 
   let yOffset = 40;
 
@@ -179,6 +182,7 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
     }
   };
 
+  console.log(campaignApproach);
   const campaignDetails = [
     ["Name", campaignApproach.name],
     ["Brand Name", campaignApproach.brandName],
@@ -191,7 +195,11 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
     ["Markets", campaignApproach.markets.join(", ")],
     ["SOV", `${campaignApproach.sov}/18`],
     ["Total Impressions", campaignApproach.totalImpression.toFixed(0)],
+    ["Discount Availed", `INR ${campaignApproach.couponId !== "" ? campaignApproach.totalDiscount.toFixed(0) : "None"}`],
     ["Total Campaign Budget", `INR ${campaignApproach.totalCampaignBudget.toFixed(0)}`],
+    campaignApproach?.couponId !== "" ? [
+      "Final Campaign Budget", `INR ${campaignApproach.finalCampaignBudget.toFixed(0)}`
+    ] : null,
     ["Total CPM", `INR ${campaignApproach.totalCpm.toFixed(2)}`],
     ["Total Reach", campaignApproach.totalReach.toFixed(0)],
   ];
@@ -288,7 +296,7 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
     doc.autoTable({
       head: [["Day", "Slot"]],
       body: Object.entries(
-        screen.slotsInfo.reduce((acc, { day, slot }) => ((acc[day] ??= []).push(slot), acc), {})
+        screen.slotsInfo.reduce((acc, { day, slot }) => ((acc[day.toUpperCase()] ??= []).push(slot.toUpperCase()), acc), {})
       ),
       startY: yOffset,
       margin: { top: 30 },
@@ -301,8 +309,12 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
           data.cursor.y = HEADER_MARGIN + 10; // Reset the cursor position for the new page
         }
       },
+      columnStyles: {
+        0: { halign: "let", cellWidth: PAGE_WIDTH/4 },
+        1: { halign: "left", cellWidth: 3 * PAGE_WIDTH / 4 },
+      },
     });
-
+    
     yOffset = doc.lastAutoTable.finalY + 20;
     checkPageBreak();
   });
@@ -462,6 +474,210 @@ export const generateScreenPicturesPptFromJSON = async ({ download, jsonData, fi
     return pdfBlob;
   }
 };
+
+
+export const generateBillAndInvoicePdf = ({ preview= true, download= false, fileName, jsonData }) => {
+
+  console.log(jsonData);
+  const doc = new jsPDF("portrait", "pt", "a4");
+
+   // Add border around the page
+   const pageWidth = doc.internal.pageSize.width;
+   const pageHeight = doc.internal.pageSize.height;
+
+   let yOffset = 40;
+
+   doc.setDrawColor(0); // Black border
+   doc.setLineWidth(1); // Border thickness
+   doc.rect(20, 20, pageWidth - 40, pageHeight - 40, "S");
+
+  // Header Section
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.text("TAX INVOICE", pageWidth/2, yOffset, { align: "center"})
+  yOffset += 20;
+  doc.setFontSize(10);
+  doc.text("PROOH TECHNOLOGIES PRIVATE LIMITED", 30, yOffset);
+  doc.setFont("helvetica", "normal");
+  doc.text(`Invoice No: ${jsonData.invoiceNumber}`, 300, yOffset);
+  yOffset += 15;
+  doc.text(`Contact Person: ${jsonData.planner}`, 30, yOffset);
+  doc.text(`Invoice Date: ${jsonData.invoiceDate}`, 300, yOffset);
+  yOffset += 15;
+  doc.text(`Email Id: ${jsonData.plannerEmail}`, 30, yOffset);
+  doc.text(`Internal SO No: ${jsonData.internalSoNumber}`, 300, yOffset);
+  yOffset += 15;
+  doc.text(`PAN No: AAMCP9602J`, 30, yOffset);
+  doc.text(`Client Confirmation: ${jsonData.clientConfirmation}`, 300, yOffset);
+  yOffset += 15;
+  doc.text(`GST No: 06AAMCP9602J1Z2`, 30, yOffset);
+  doc.text(`Client Order Date: ${jsonData.clientOrderDate}`, 300, yOffset);
+  yOffset += 15;
+  doc.text(``, 30, yOffset);
+  doc.text(`Purchase Order No.: ${jsonData.poNumber}`, 300, yOffset);
+  yOffset += 15;
+  doc.setFont("helvetica", "bold");
+  doc.text("Client Details:-", 30, yOffset);
+  doc.setFont("helvetica", "normal");
+  doc.text(`Campaign Name: ${jsonData.campaignName}`, 300, yOffset);
+  yOffset += 15;
+  doc.setFont("helvetica", "bold");
+  doc.text(`${jsonData.clientAgencyName}`, 30, yOffset);
+
+  doc.setFont("helvetica", "normal");
+  doc.text(`Campaign Duration: ${jsonData.startDate} - ${jsonData.endDate}`, 300, yOffset);
+  yOffset += 15;
+
+  const wrappedAddress = doc.splitTextToSize(`${jsonData.officeAddress.address}`, 250);
+  doc.text(wrappedAddress, 30, yOffset);
+  yOffset += wrappedAddress.length * 8 + 12;
+  // yOffset += 15;
+  doc.text(`${jsonData.officeAddress.city}, ${jsonData.officeAddress.state}, ${jsonData.officeAddress.country}, ${jsonData.officeAddress.zipCode}`, 30, yOffset);
+  yOffset += 15;
+  doc.text(`Contact Person: ${jsonData?.pocName}`, 30, yOffset);
+  yOffset += 15;
+  doc.text(`Contact No.: ${jsonData?.pocContact}`, 30, yOffset);
+  yOffset += 15;
+  doc.text(`Email Id: ${jsonData?.pocEmail}`, 30, yOffset);
+  yOffset += 15;
+  doc.text(`GSTIN No.: ${jsonData?.gst}`, 30, yOffset);
+  yOffset += 15;
+  doc.text(`PAN No.: ${jsonData?.pan}`, 30, yOffset);
+  yOffset += 15;
+
+  // // Table for Items
+  // const tableBody = jsonData.items.map((item, index) => [
+  //   index + 1,
+  //   item.description,
+  //   item.hsn,
+  //   item.quantity,
+  //   item.rate.toLocaleString(),
+  //   item.amount.toLocaleString(),
+  // ]);
+
+
+  doc.autoTable({
+    head: [["Sr.No", "Description", "HSN/SAC", "Quantity", "Rate", "Amount"]],
+    body: [["1", jsonData.invoiceDescription, "998361", jsonData.invoiceQuantity, Number(jsonData.invoiceAmount).toFixed(0), Number(jsonData.subTotalAmount).toFixed(0)]],
+    styles: { fontSize: 10, halign: "center" },
+    startY: yOffset,
+    margin: { top: 30 },
+    columnStyles: {
+      0: { halign: "center", cellWidth: 50 },
+      1: { halign: "left", cellWidth: 250 },
+      2: { halign: "center", cellWidth: 70 },
+      3: { halign: "center", cellWidth: 50 },
+      4: { halign: "center", cellWidth: 50 },
+      5: { halign: "center", cellWidth: 50 },
+    },
+  });
+  yOffset = doc.lastAutoTable.finalY + 15;
+  doc.setFont("helvetica", "bold");
+  doc.text(`Sub Total`, 320, yOffset);
+  doc.text(`INR ${Number(jsonData.invoiceAmount).toFixed(0)}`, 500, yOffset);
+  yOffset += 15;
+  doc.line(30, yOffset, pageWidth - 30, yOffset);
+  yOffset += 15;
+  doc.text(`Amount in words`, 30, yOffset);
+  doc.line(pageWidth/2, yOffset - 15, pageWidth/2, yOffset + 35);
+  doc.text(`Output IGST @${jsonData.outPutGstPercent}%`, 320, yOffset);
+  doc.text(`INR ${Number(jsonData.outPutGstAmount).toFixed(2)}`, 500, yOffset);
+  yOffset += 15;
+  doc.setFont("helvetica", "normal");
+  const wrappedText = doc.splitTextToSize(`${numberToWords(Number(jsonData.subTotalAmount).toFixed(0))}`, 250);
+  doc.text(wrappedText, 30, yOffset);
+  yOffset += wrappedText.length * 10;
+  doc.line(30, yOffset, pageWidth - 30, yOffset);
+  yOffset += 15;
+  doc.setFont("helvetica", "bold");
+  doc.text(`Total: `, 320, yOffset);
+  doc.text(`INR ${Number(jsonData.subTotalAmount).toFixed(0)} /-`, 500, yOffset);
+  yOffset += 12;
+  doc.line(30, yOffset, pageWidth - 30, yOffset);
+  yOffset += 12;
+  
+  doc.text(`NOTE: `, 30, yOffset);
+  yOffset += 15;
+  doc.setFont("helvetica", "normal");
+
+  const wrappedNote1 = doc.splitTextToSize(`1. The invoice shall be deemed to be accepted, in case no query is raised within 7 days of reciept.`, pageWidth - 60);
+  doc.text(wrappedNote1, 30, yOffset);
+  // yOffset += wrappedNote1.length * 10 + 15;
+  yOffset += 12;
+
+  const wrappedNote2 = doc.splitTextToSize(`2. The invoice is due for payment within 15 days from the end date of campaign, unless specified separately, else interest @ 2% per month will be charged from the client.`, pageWidth - 60);
+  doc.text(wrappedNote2, 30, yOffset);
+  yOffset += wrappedNote2.length * 8 + 12;
+
+  const wrappedNote3 = doc.splitTextToSize(`3. All Cheques/Drafts to be made in favour of "PROOH TECHNOLOGY PRIVATE LIMITED.`, pageWidth - 60);
+  doc.text(wrappedNote3, 30, yOffset);
+  yOffset += 12;
+
+  const wrappedNote4 = doc.splitTextToSize(`4. GSTN/Billing address: 322, 323, 324 & 325, 3rd Floor, Paras Trade Center, Gurgaon, Faridabad Road, Gwal Pahari, Gurgaon, Haryana, 122002.`, pageWidth - 60);
+  doc.text(wrappedNote4, 30, yOffset);
+  yOffset += wrappedNote4.length * 8 + 12;
+  // yOffset += 15;
+
+  const wrappedNote5 = doc.splitTextToSize(`5. Bank details for remittance:- A/C Holder Name:- PROOH TECHNOLOGY PRIVATE LIMITED, A/C No.:- 921020001354511, IFSC Code:- UTIB0004373, Bank Name:- Axis Bank, Branch:- Gwal Pahari, Gurgaon, Haryana-122003.`, pageWidth - 60);
+  doc.text(wrappedNote5, 30, yOffset);
+  yOffset += wrappedNote5.length * 8 + 12;
+  // yOffset += 15;
+
+  const wrappedNote6 = doc.splitTextToSize(`6. Registered address: 322, 323, 324 & 325, 3rd Floor, Paras Trade Center, Gurgaon, Faridabad Road, Gwal Pahari, Gurgaon, Haryana, 122002.`, pageWidth - 60);
+  doc.text(wrappedNote6, 30, yOffset);
+  yOffset += wrappedNote6.length * 8 + 12;
+  // yOffset += 15;
+
+  const wrappedNote7 = doc.splitTextToSize(`7. All disputes are subject to Gurgaon Jurisdiction.`, pageWidth - 60);
+  doc.text(wrappedNote7, 30, yOffset);
+  yOffset += 12;
+
+  const wrappedNote8 = doc.splitTextToSize(`8. Whether the tax is payable on reverse charge basis - NO.`, pageWidth - 60);
+  doc.text(wrappedNote8, 30, yOffset);
+  yOffset += 15;
+
+  doc.setFont("helvetica", "bold");
+  doc.text(`Please return this copy on Invoice Duty Signed & Stamped as Token of Acceptance.`, pageWidth/2, yOffset, { align: "center"})
+  yOffset += 12;
+  doc.line(30, yOffset, pageWidth - 30, yOffset);
+  yOffset += 12;
+  doc.text(`Accepted`, 30, yOffset);
+  doc.line(pageWidth/2 - 20, yOffset - 10, pageWidth/2 - 20, yOffset + 70);
+  doc.text(`For: PROOH TECHNOLOGY PRIVATE LIMITED`, 320, yOffset);
+  yOffset += 70;
+  doc.line(30, yOffset, pageWidth - 30, yOffset);
+  yOffset += 12;
+  doc.text(`Stamp`, 30, yOffset);
+  doc.line(pageWidth/2 - 20, yOffset - 12, pageWidth/2 - 20, yOffset + 12);
+  doc.text(`Authorised Signatory`, 320, yOffset);
+  yOffset += 12;
+  doc.line(30, yOffset, pageWidth - 30, yOffset);
+  yOffset += 15;
+
+  doc.text(`PROOH TECHNOLOGY PRIVATE LIMITED`, 30, yOffset);
+  doc.setFont("helvetica", "normal");
+  yOffset += 12;
+  doc.text(`3rd Floor, Unit No. 322, 323, 324 & 325`, 30, yOffset);
+  yOffset += 12;
+  doc.text(`Paras Trade Center, Gwal Pahari, Sector 2, Gurugram`, 30, yOffset);
+  doc.text(`GSTIN:- 06AAMCP9602J1Z2, Haryana Code:- 06`, 340, yOffset);
+  
+  doc.text(`Generated by PROOH.AI`, 450, pageHeight-8);
+
+  // Save the PDF
+  if (preview) {
+    const pdfBlob = doc.output('blob');
+    const url = URL.createObjectURL(pdfBlob);
+    window.open(url, '_blank');
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  if (download) {
+    doc.save(`${fileName}.pdf`);
+  } else {
+    const pdfBlob = doc.output('blob');
+    return pdfBlob;
+  }
+}
 
 // webpage to pdf
 export const generatePdfFromWebPage = async ({pageRefs, fileName, heading}) => {

@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
 import { DashBoardSlotGraph } from "../../components/segments/DashBoardSlotGraph";
 import { BillingAndInvoice } from "./BillingAndInvoice";
+import { GET_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyConstants";
+import { useDispatch } from "react-redux";
 
 export const CampaignDashboard = ({
   campaignDetails,
@@ -21,9 +23,10 @@ export const CampaignDashboard = ({
 }: any) => {
   const [clicked, setClicked] = useState<any>("1");
   const navigate = useNavigate();
-
+  const dispatch = useDispatch<any>();
   const [openInvoice, setOpenInvoice] = useState<any>(false);
   const [poNumber, setPoNumber] = useState<any>("");
+  const [poDate, setPoDate] = useState<any>("");
   const [clientAgencyName, setClientAgencyName] = useState<any>("");
   const [address, setAddress] = useState<any>("");
   const [city, setCity] = useState<any>("");
@@ -39,6 +42,13 @@ export const CampaignDashboard = ({
   const [pocContact, setPocContact] = useState<any>("");
   const [pocEmail, setPocEmail] = useState<any>("");
   const [pocDesignation, setPocDesignation] = useState<any>("");
+  const [invoiceDescription, setInvoiceDescription] = useState<any>("");
+  const [invoiceQuantity, setInvoiceQuantity] = useState<any>("");
+  const [invoiceCurrency, setInvoiceCurrency] = useState<any>("INR");
+  const [invoiceAmount, setInvoiceAmount] = useState<any>(campaignDetails?.discount === 0 || campaignDetails?.discount === undefined ? Number(campaignDetails?.totalCampaignBudget) : Number(campaignDetails?.finalCampaignBudget));
+
+  const [jsonDataForInvoice, setJsonDataForInvoice] = useState<any>({});
+
 
   const getScreenPerformanceData = () => {
     const datesArray = screenLevelData?.result[
@@ -132,8 +142,13 @@ export const CampaignDashboard = ({
     <div className="w-full h-full pt-10 flex flex-col gap-2">
       <BillingAndInvoice
         open={openInvoice}
-        onClose={() => setOpenInvoice(false)}
-        invoiceBill={campaignDetails}
+        onClose={() => {
+          setOpenInvoice(false);
+          dispatch({
+            type: GET_CLIENT_AGENCY_DETAILS_RESET
+          });
+        }}
+        invoiceBill={campaignDetails}  
         // loading={loadingBillInvoice}
         poNumber={poNumber}
         setPoNumber={setPoNumber}
@@ -167,6 +182,19 @@ export const CampaignDashboard = ({
         setPocContact={setPocContact}
         setPocDesignation={setPocDesignation}
         pocDesignation={pocDesignation}
+        jsonDataForInvoice={jsonDataForInvoice}
+        setJsonDataForInvoice={setJsonDataForInvoice}
+        campaignDetails={campaignDetails}
+        invoiceDescription={invoiceDescription}
+        setInvoiceDescription={setInvoiceDescription}
+        invoiceQuantity={invoiceQuantity}
+        setInvoiceQuantity={setInvoiceQuantity}
+        poDate={poDate}
+        setPoDate={setPoDate}
+        invoiceCurrency={invoiceCurrency}
+        setInvoiceCurrency={setInvoiceCurrency}
+        invoiceAmount={invoiceAmount}
+        setInvoiceAmount={setInvoiceAmount}
       />
       <div className="bg-[#FFFFFF] p-2 rounded-[12px] flex justify-between">
         <div className="px-2 w-1/2 flex justify-between items-center">

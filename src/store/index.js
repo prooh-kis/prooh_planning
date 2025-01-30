@@ -55,6 +55,7 @@ import {
   getCouponListReducer,
   removeCouponForCampaignReducer,
 } from "../reducers/couponReducers";
+import { billInvoiceCreationReducer, billInvoiceDetailsGetReducer } from "../reducers/billInvoiceReducers";
 import { allClientAgencyNamesListGetReducer, clientAgencyDetailsAddGetReducer, clientAgencyDetailsGetReducer } from "../reducers/clientAgencyReducers";
 
 const initialState = {
@@ -135,6 +136,9 @@ const store = configureStore({
     clientAgencyDetailsGet: clientAgencyDetailsGetReducer,
     clientAgencyDetailsAdd: clientAgencyDetailsAddGetReducer,
 
+    // Bill Invoice
+    billInvoiceCreation: billInvoiceCreationReducer,
+    billInvoiceDetailsGet: billInvoiceDetailsGetReducer,
     //USER
     userList: userListReducer,
     userDelete: userDeleteReducer,
