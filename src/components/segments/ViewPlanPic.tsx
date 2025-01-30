@@ -147,6 +147,7 @@ export function ViewPlanPic({
   ]);
 
   const handleFilterSelection = ({ type, value, checked }: any) => {
+
     if (type === "zone") {
       if (checked) {
         setZoneFilters((prev: any) => {
@@ -265,9 +266,9 @@ export function ViewPlanPic({
               <CheckboxInput
                 label={zone}
                 checked={zoneFilters?.includes(zone)}
-                onChange={(checked) =>
-                  handleFilterSelection({ type: "zone", value: zone, checked })
-                }
+                onChange={(checked) => {
+                  handleFilterSelection({ type: "zone", value: zone, checked });
+                }}
               />
               <p className="text-[14px]">
                 (

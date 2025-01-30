@@ -37,7 +37,7 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({ showIcon, icon, small, 
         className={`col-span-1 form-checkbox h-4 w-4 text-[#52A2FF]`}
         checked={checked}
         disabled={disabled}
-        onChange={(checked: any) => onChange?.(checked)}
+        onChange={(event: any) => onChange?.(event.target.checked)}
       />
 
       {showIcon ? (
