@@ -11,6 +11,7 @@ import {
   Legend,
 } from "chart.js";
 import { formatNumber } from "../../utils/formatValue";
+import { formatDate } from "../../utils/dateAndTimeUtils";
 
 ChartJS.register(
   CategoryScale,
@@ -32,6 +33,8 @@ interface BarChartProps {
   total?: string;
   color?: string;
   bgColor?: string;
+  color2?: string;
+  bgColor2?: string;
   percent?: boolean;
 }
 
@@ -43,16 +46,16 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
   total,
   color = "rgba(138, 43, 226, 1)",
   bgColor = "rgba(138, 43, 226, 0.5)",
+  color2,
+  bgColor2,
   percent = true,
 }) => {
-  // Calculate Extra Slots and Remaining Slots dynamically
+  const requiredToPlayed: number[] = currentData?.map(
+    (played: number, index: number) =>
+      played >= targetData[index] ? targetData[index] : played
+  );
 
-  // const requiredToPlayed: number[] = currentData?.map(
-  //   (played: number, index: number) =>
-  //     played >= targetData[index] ? targetData[index] : played
-  // );
-
-  const requiredToPlayed: number[] = currentData;
+  // const requiredToPlayed: number[] = currentData;
   const extraSlots: number[] = currentData?.map(
     (played: number, index: number) =>
       played > targetData[index] ? played - targetData[index] : 0
@@ -63,14 +66,16 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
       played < targetData[index] ? targetData[index] - played : 0
   );
 
+  const newLabel = labels?.map((date: string) => formatDate(date));
+
   const chartData = {
-    labels,
+    labels: newLabel,
     datasets: [
       {
-        label: "Delivered",
+        label: "Required",
         data: requiredToPlayed,
-        backgroundColor: "#06B6D480",
-        borderColor: "#06B6D4",
+        backgroundColor: color,
+        borderColor: bgColor,
         borderWidth: 1,
         borderRadius: 5,
         datalabels: {
@@ -85,8 +90,8 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
       {
         label: "Remaining",
         data: remainingSlots,
-        backgroundColor: "#EF444480",
-        borderColor: "#EF4444",
+        backgroundColor: color2,
+        borderColor: bgColor2,
         borderWidth: 1,
         borderRadius: 5,
         datalabels: {
@@ -144,7 +149,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
   };
 
   return (
-    <div className="w-full h-[300px]">
+    <div className="w-full h-[260px]">
       <Chart type="bar" data={chartData} options={options} />
     </div>
   );

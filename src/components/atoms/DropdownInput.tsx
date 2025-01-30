@@ -2,7 +2,7 @@ import React from "react";
 
 export const DropdownInput = ({
   height = "h-[40px]",
-  width = "full",
+  width = "w-full",
   placeHolder,
   selectedOption,
   setSelectedOption,
@@ -12,21 +12,14 @@ export const DropdownInput = ({
     setSelectedOption(event.target.value);
   };
 
-  // Create dynamic classes for height and width
-  const dropdownHeight = height ? height : "h-[40px]";
-  const dropdownWidth = width ? width : "w-full";
-
   return (
-    <div className={height ? "relative" : "relative w-full"}>
+    <div className={`relative ${width}`}>
       <select
         title="dropdown"
-        className={`truncate w-full ${dropdownHeight} ${dropdownWidth} text-[14px] border  ${
-          height ? "px-1" : "px-3"
-        } py-1 focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-gray-100 active:bg-blue-100 transition-colors appearance-none rounded-sm`}
+        className={`truncate ${height} ${width} text-[14px] border px-3 pr-8 py-1 focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-gray-100 active:bg-blue-100 transition-colors appearance-none rounded-md`}
         value={selectedOption}
         onChange={handleSelectChange}
       >
-        {/* <option value="">------{placeHolder}-----</option> Default option */}
         {options?.map((opt: any, index: any) => (
           <option key={index} value={opt.value}>
             {opt.label}
@@ -35,7 +28,7 @@ export const DropdownInput = ({
       </select>
       <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
         <svg
-          className={height ? "w-4 h-4" : "w-5 h-5 text-gray-500"}
+          className="w-4 h-4 text-gray-500"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"

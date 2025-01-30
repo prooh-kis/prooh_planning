@@ -20,11 +20,13 @@ const SectionHeader: React.FC<{ iconClass: string; title: string }> = ({
   <div className="flex items-center gap-2">
     <div className="rounded-full bg-gray-100 p-2">
       <i
-        className={`fi ${iconClass} text-lg flex items-center justify-center`}
+        className={`fi ${iconClass} text-[14px] flex items-center justify-center`}
       ></i>
     </div>
-    <h1 className="text-lg font-bold truncate">{title}</h1>
-    <i className="fi fi-br-info text-gray-400 text-lg flex items-center justify-center"></i>
+    <h1 className="text-[14px] text-[#0E212E] leading-[16.94px] truncate">
+      {title}
+    </h1>
+    <i className="fi fi-br-info text-[#BCBCBC] text-[14px] flex items-center justify-center"></i>
   </div>
 );
 
@@ -44,12 +46,10 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
 
     const promised =
       screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0);
+    const result = Number((delivered / days).toFixed(2));
+    -Number((promised / totalDays).toFixed(2));
 
-    const result =
-      Number((promised / totalDays).toFixed(2)) -
-      Number((delivered / days).toFixed(2));
-
-    return Number(result?.toFixed(0));
+    return Number((result * 0.01)?.toFixed(2));
   };
 
   const calculateAudience = () => {
@@ -65,22 +65,22 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
       screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(0);
 
     const result =
-      Number((promised / totalDays).toFixed(2)) -
-      Number((delivered / days).toFixed(2));
+      Number((delivered / days).toFixed(2)) -
+      Number((promised / totalDays).toFixed(2));
 
-    return Number(result?.toFixed(0));
+    return Number((result * 0.01)?.toFixed(2));
   };
   return (
     <div className="w-full">
       {type === "duration" ? (
         <div>
           <SectionHeader
-            iconClass="fi-rr-calendar text-violet"
+            iconClass="fi-rr-calendar text-[#8079F9]"
             title="Campaign Duration"
           />
-          <div className="p-2 sm:p-4">
-            <h1 className="text-2xl md:text-3xl text-gray-400">
-              <span className="text-gray-900">
+          <div className="mt-4">
+            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
+              <span className="text-[#0E212E]">
                 {calculateDaysPlayed(
                   campaignDetails?.startDate,
                   campaignDetails?.endDate
@@ -90,13 +90,11 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
                       campaignDetails?.startDate,
                       campaignDetails?.endDate
                     )}
-                <span className="text-[18px]"> {"  "}Days</span>
-              </span>{" "}
-              / {campaignDetails?.duration}{" "}
-              <span className="text-[18px]">Days</span>
+              </span>
+              /{campaignDetails?.duration} <span> Days</span>
             </h1>
           </div>
-          <div className="p-2 sm:p-4">
+          <div className="mt-4">
             <LinearBar
               value={
                 calculateDaysPlayed(
@@ -121,9 +119,9 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
             iconClass="fi-rr-target-audience text-blue"
             title="Audience Impressions"
           />
-          <div className="p-2 sm:p-4">
-            <h1 className="text-2xl md:text-3xl text-gray-400">
-              <span className="text-gray-900">
+          <div className="mt-4">
+            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
+              <span className="text-[#0E212E]">
                 {formatNumber(
                   screenLevelData?.result?.totalData?.impressionsDelivered?.toFixed(
                     0
@@ -137,12 +135,12 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
                 )
               )}
               <span
-                className={`text-[18px] ${
+                className={`text-[14px] ${
                   calculateAudience() > 0 ? "text-[#2A892D]" : "text-[#CC0000]"
                 }`}
               >
                 {" "}
-                {`(${formatNumber(calculateAudience() * 0.01)}%)`}
+                {`(${formatNumber(calculateAudience())}%)`}
                 {calculateAudience() > 0 ? (
                   <i className="fi fi-rr-arrow-up "></i>
                 ) : (
@@ -151,7 +149,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
               </span>
             </h1>
           </div>
-          <div className="p-2 sm:p-4">
+          <div className="mt-4">
             <MultiColorLinearBar2
               delivered={screenLevelData?.result?.totalData?.impressionsDelivered?.toFixed(
                 0
@@ -175,12 +173,12 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
       ) : type === "screen" ? (
         <div>
           <SectionHeader
-            iconClass="fi-rs-dashboard text-[#3f33bb]"
+            iconClass="fi-rs-dashboard text-[#B077FF]"
             title="Screen Performance"
           />
-          <div className="p-2 sm:p-4">
-            <h1 className="text-2xl md:text-3xl text-gray-400">
-              <span className="text-gray-900">
+          <div className="mt-4">
+            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
+              <span className="text-[#0E212E]">
                 {formatNumber(
                   screenLevelData?.result?.totalData?.screenPerformance?.toFixed(
                     0
@@ -191,7 +189,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
               / 100%
             </h1>
           </div>
-          <div className="p-2 sm:p-4">
+          <div className="mt-4">
             <LinearBar
               value={screenLevelData?.result?.totalData?.screenPerformance?.toFixed(
                 0
@@ -207,9 +205,9 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
             iconClass="fi-rs-selling text-indigo"
             title="Spot Delivery"
           />
-          <div className="p-2 sm:p-4">
-            <h1 className="text-2xl md:text-3xl text-gray-400">
-              <span className="text-gray-900">
+          <div className="mt-4">
+            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
+              <span className="text-[#0E212E]">
                 {formatNumber(
                   screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(0)
                 )}
@@ -219,12 +217,12 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
                 screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0)
               )}
               <span
-                className={`text-[18px] ${
+                className={`text-[14px] ${
                   calculateSpot() > 0 ? "text-[#2A892D]" : "text-[#CC0000]"
                 }`}
               >
                 {" "}
-                {`(${formatNumber(calculateSpot() * 0.01)}%)`}
+                {`(${formatNumber(calculateSpot())}%)`}
                 {calculateSpot() > 0 ? (
                   <i className="fi fi-rr-arrow-up "></i>
                 ) : (
@@ -233,7 +231,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
               </span>
             </h1>
           </div>
-          <div className="p-2 sm:p-4">
+          <div className="mt-4">
             <MultiColorLinearBar2
               delivered={screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(
                 0
@@ -258,9 +256,9 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
             iconClass="fi-br-sack text-green"
             title="Cost Consumed"
           />
-          <div className="p-2 sm:p-4">
-            <h1 className="text-2xl md:text-3xl text-gray-400">
-              <span className="text-gray-900">
+          <div className="mt-4">
+            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
+              <span className="text-[#0E212E]">
                 &#8377;
                 {formatNumber(
                   screenLevelData?.result?.totalData?.costConsumed?.toFixed(0)
@@ -272,7 +270,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
               )}
             </h1>
           </div>
-          <div className="p-2 sm:p-4">
+          <div className="mt-4">
             <LinearBar
               percent={false}
               value={screenLevelData?.result?.totalData?.costConsumed?.toFixed(

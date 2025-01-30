@@ -11,6 +11,7 @@ import {
   Filler,
 } from "chart.js";
 import { formatNumber } from "../../utils/formatValue";
+import { formatDate } from "../../utils/dateAndTimeUtils";
 
 // Register required chart components
 ChartJS.register(
@@ -32,6 +33,8 @@ interface BarChartProps {
   color?: any;
   bgColor?: any;
   percent?: any;
+  color2?: any;
+  bgColor2?: any;
 }
 
 export const DashboardBarChart: React.FC<BarChartProps> = ({
@@ -43,11 +46,15 @@ export const DashboardBarChart: React.FC<BarChartProps> = ({
   color = "rgba(138, 43, 226, 1)",
   bgColor = "rgba(138, 43, 226, 0.5)",
   percent = true,
+  color2,
+  bgColor2,
 }) => {
   // Dynamically calculate the total value
 
+  const newLabel = labels?.map((date: string) => formatDate(date));
+
   const chartData = {
-    labels,
+    labels: newLabel,
     datasets: [
       {
         label: `${label || "Current Value"}`,
@@ -73,8 +80,8 @@ export const DashboardBarChart: React.FC<BarChartProps> = ({
               data: targetData.map((target, index) =>
                 Math.max(0, target - currentData[index])
               ),
-              backgroundColor: "rgba(255, 99, 132, 0.5)",
-              borderColor: "rgba(255, 99, 132, 1)",
+              backgroundColor: color2,
+              borderColor: bgColor2,
               borderWidth: 1,
               borderRadius: 5,
               barThickness: "flex" as const,

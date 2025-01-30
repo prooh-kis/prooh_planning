@@ -98,39 +98,7 @@ const Routers: React.FC = () => {
             </PrivateRoute>
           }
         />
-        {/* <Route
-          path={USERS}
-          element={
-            <AppDashBoardLayout value="Users">
-              <MyUsers />
-            </AppDashBoardLayout>
-          }
-        /> */}
 
-        <Route
-          path={VERIFY_EMAIL}
-          element={
-            <PrivateRoute layout={HomePageLayout}>
-              <VerifyEmail />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={FORGET_PASSWORD}
-          element={
-            <PrivateRoute layout={HomePageLayout}>
-              <ForgetPassword />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={UPDATE_PASSWORD}
-          element={
-            <PrivateRoute layout={HomePageLayout}>
-              <UpdatePassword />
-            </PrivateRoute>
-          }
-        />
         <Route
           path={HOME}
           element={
@@ -183,9 +151,9 @@ const Routers: React.FC = () => {
         <Route
           path={"/campaignDetails/:id?"}
           element={
-            <PrivateRoute layout={HomePageLayout}>
+            <PublicRoute layout={HomePageLayout}>
               <CampaignDashboardPage />
-            </PrivateRoute>
+            </PublicRoute>
           }
         />
         <Route
