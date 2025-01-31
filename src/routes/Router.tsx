@@ -44,6 +44,7 @@ import {
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 import { PublicRoute } from "../layout/PublicRoute";
+import { PlayLiveUrl } from "../pages/PageNotFound/PlayLiveUrl";
 
 const Routers: React.FC = () => {
   return (
@@ -205,7 +206,7 @@ const Routers: React.FC = () => {
             </PrivateRoute>
           }
         />
-        <Route path={PLAY_LIVE_URL} element={<PageNotFound />} />
+        <Route path={PLAY_LIVE_URL} element={<PlayLiveUrl />} />
 
         <Route path="*" element={<PageNotFound />} />
       </Routes>
