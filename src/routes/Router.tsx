@@ -35,6 +35,7 @@ import {
   MY_CAMPAIGNS_LIST,
   MY_PLANS_LIST,
   MY_REQUESTS_LIST,
+  PLAY_LIVE_URL,
   REGULARPLAN,
   SIGN_UP,
   UPDATE_PASSWORD,
@@ -204,6 +205,8 @@ const Routers: React.FC = () => {
             </PrivateRoute>
           }
         />
+        <Route path={PLAY_LIVE_URL} element={<PageNotFound />} />
+
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

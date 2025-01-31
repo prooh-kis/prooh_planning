@@ -23,3 +23,4 @@ export const SPECIALDAYPLAN = "/specialdayplan/:id?";
 export const TRIGGERBASEDPLAN = "/triggerbasedplan/:id?";
 export const IKNOWITALLPLAN = "/iknowitallplan/:id?";
 
+export const PLAY_LIVE_URL = "/play-live-url";
