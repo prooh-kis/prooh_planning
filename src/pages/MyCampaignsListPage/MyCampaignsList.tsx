@@ -1,20 +1,23 @@
 import { TabWithoutIcon } from '../../components/index';
-import { PrimaryButton } from '../../components/atoms/PrimaryButton';
-import { PrimaryInput } from '../../components/atoms/PrimaryInput';
 import React, { useState } from 'react';
-import { MyCampaignsListTable } from '../../components/tables';
 import { SkeletonLoader } from '../../components/molecules/SkeletonLoader';
+import { CampaignsListModel } from '../../components/molecules/CampaignsListModel';
+import SearchInputField from '../../components/molecules/SearchInputField';
+import { DropdownInput } from '../../components/atoms/DropdownInput';
+import { useNavigate } from 'react-router-dom';
 
 const allTabs = [{
   id: "1",
   label: "Active"
 },{
   id: "2",
-  label: "Completed"
+  label: "Archived"
 }];
 
 
 export const MyCampaignsList = ({ loading, campaignsList, currentTab, setCurrentTab }: any) => {
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState<any>("");
   return (
     <div className="w-full">
       <div className="flex justify-between border-b py-2">
@@ -24,35 +27,58 @@ export const MyCampaignsList = ({ loading, campaignsList, currentTab, setCurrent
             My Campaign Plans
           </h1>
         </div>
-        <div className="flex gap-2 items-center">
-          <PrimaryInput
-            height="h-10"
-            inputType="text"
-            rounded="rounded-[12px]"
-            placeholder="Type to search"
-            value={""}
-            action={() => {}}
-          />
-          <PrimaryButton
-            reverse={true}
-            height="h-10"
-            width="w-[120px]"
-            rounded="rounded-full"
-            title="Search"
-            action={() => {}}
-          />
-        </div>
       </div>
-      <div className="py-2">
+      <div className="px-2">
         <TabWithoutIcon
           currentTab={currentTab}
           setCurrentTab={setCurrentTab}
           tabData={allTabs}
         />
       </div>
-      <div className="w-full bg-gray-50">
-  
-        <MyCampaignsListTable loading={loading} campaignsList={campaignsList} />
+
+      <div className="w-full p-2 bg-[#D7D7D750]">
+        <div className="grid grid-cols-8 gap-2">
+          <div className="col-span-5">
+            <SearchInputField
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search Campaign by campaign name or brand"
+            />
+          </div>
+          <div className="col-span-1">
+            <DropdownInput />
+          </div>
+          <div className="col-span-1">
+            <DropdownInput />
+          </div>
+          <div className="col-span-1">
+            <DropdownInput />
+          </div>
+        </div>
+        {loading ? (
+          <div className="">
+            <SkeletonLoader />
+          </div>
+        ) : (
+          <div className="overflow-y-scroll no-scrollbar h-[80vh] my-1 rounded-[12px]">
+            {campaignsList
+              ?.filter(
+              (campaign: any) =>
+                campaign?.campaignName?.toLowerCase().includes(searchQuery) ||
+                campaign?.brandName?.toLowerCase().includes(searchQuery) ||
+                campaign?.campaignName?.toUpperCase().includes(searchQuery) ||
+                campaign?.brandName?.toUpperCase().includes(searchQuery)
+              )
+              ?.map((data: any, i: any) => (
+                <div key={i}
+                  className="pointer-cursor"
+                  onClick={() => navigate(`/campaignDetails/${data._id}`)}
+                >
+                  <CampaignsListModel data={data} />
+                </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
