@@ -40,7 +40,7 @@ export function PlanSummaryTable({
       })
     );
 
-    if (getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[campaignId]?.[
+    if (!priceData && getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[campaignId]?.[
       `${regularVsCohort}`] === undefined) {
         dispatch(getRegularVsCohortPriceData({
           id: campaignId,
@@ -52,6 +52,7 @@ export function PlanSummaryTable({
       }
   }, [dispatch]);
 
+  console.log(data);
   return (
     <div>
       {pathname.split("/").splice(-2)[0] !== "iknowitallplan" && (
@@ -67,7 +68,6 @@ export function PlanSummaryTable({
               <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
-
 
           <RegularCohortSlotsCampaignTable
             type={regularVsCohort}

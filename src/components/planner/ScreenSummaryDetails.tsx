@@ -280,7 +280,6 @@ export const ScreenSummaryDetails = ({
     if (pathname.split("/").includes("iknowitallplan") && step === 4) {
       setCurrentTab("2");
     }
-
  
     if (screenSummaryPlanTableData) {
       saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, {
