@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signout } from "../../actions/userAction";
 import { useState } from "react";
-import { CAMPAIGN_MANAGER, CAMPAIGN_PLANNER } from "../../constants/userConstants";
+import { CAMPAIGN_PLANNER, SCREEN_OWNER } from "../../constants/userConstants";
 
 export const Menu = (props: any) => {
   const { userInfo } = props;
@@ -79,7 +79,7 @@ export const Menu = (props: any) => {
                 {data?.label}
               </div>
             ))}
-          {userInfo?.userRole === CAMPAIGN_MANAGER &&
+          {userInfo?.userRole === SCREEN_OWNER &&
             arr1.map((data: any, index: any) => (
               <div
                 key={index}

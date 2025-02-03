@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { MyCampaignsList } from "./MyCampaignsList";
 import { getMyCreateCampaignsList, getMyCreateCampaignsManagerRequestsList, getMyCreateCampaignsVendorRequestsList } from "../../actions/campaignAction";
-import { CAMPAIGN_MANAGER, CAMPAIGN_PLANNER } from "../../constants/userConstants";
+import { CAMPAIGN_PLANNER, SCREEN_OWNER } from "../../constants/userConstants";
 
 
 export const MiddleArea: React.FC = () => {
@@ -52,7 +52,7 @@ export const MiddleArea: React.FC = () => {
     if (userInfo?.isMaster) {
       dispatch(getMyCreateCampaignsVendorRequestsList({ id: userInfo?._id, status: "Active" }))
     }
-    if (userInfo?.userRole === CAMPAIGN_MANAGER) {
+    if (userInfo?.userRole === SCREEN_OWNER) {
       dispatch(getMyCreateCampaignsManagerRequestsList({ id: userInfo?._id, type: "complete" }))
     }
   }, [dispatch, navigate, currentTab, userInfo]);
@@ -65,7 +65,7 @@ export const MiddleArea: React.FC = () => {
           setCurrentTab={setCurrentTab}
           campaignsList={
             userInfo?.isBrand && userInfo?.userRole === CAMPAIGN_PLANNER ? campaignsList :
-              userInfo?.isBrand && userInfo?.userRole === CAMPAIGN_MANAGER ? clientRequestsList :
+              userInfo?.isBrand && userInfo?.userRole === SCREEN_OWNER ? clientRequestsList :
                 userInfo?.isMaster ? vendorCampaignsList?.campaigns : []
           }
         />

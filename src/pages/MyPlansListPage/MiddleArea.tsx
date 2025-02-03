@@ -7,7 +7,7 @@ import { getMyCreateCampaignsList } from "../../actions/campaignAction";
 import { Loading } from "../../components/Loading";
 import { message } from "antd";
 import { NoDataView } from "../../components/molecules/NoDataView";
-import { CAMPAIGN_MANAGER, CAMPAIGN_PLANNER } from "../../constants/userConstants";
+import { CAMPAIGN_PLANNER, SCREEN_OWNER } from "../../constants/userConstants";
 
 export const MiddleArea: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -30,7 +30,7 @@ export const MiddleArea: React.FC = () => {
     if (!userInfo) {
       navigate("/auth");
     }
-    if (userInfo?.userRole != CAMPAIGN_PLANNER && userInfo?.userRole != CAMPAIGN_MANAGER) {
+    if (userInfo?.userRole != CAMPAIGN_PLANNER && userInfo?.userRole != SCREEN_OWNER) {
       message.error("You have no access to this page");
       navigate("/auth");
     }

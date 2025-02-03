@@ -48,6 +48,7 @@ export const USER_ROLE_SECONDARY = "secondary";
 
 export const CAMPAIGN_PLANNER = "campaignPlanner"
 export const CAMPAIGN_MANAGER = "campaignManager"
+export const SCREEN_OWNER = "screenOwner"
 
 export const SEND_EMAIL_FOR_CONFIRMATION_REQUEST =
   "SEND_EMAIL_FOR_CONFIRMATION_REQUEST";
