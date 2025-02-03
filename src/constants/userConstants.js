@@ -46,6 +46,9 @@ export const MASTER_USER_ROLE = "master";
 export const USER_ROLE_PRIMARY = "primary";
 export const USER_ROLE_SECONDARY = "secondary";
 
+export const CAMPAIGN_PLANNER = "campaignPlanner"
+export const CAMPAIGN_MANAGER = "campaignManager"
+
 export const SEND_EMAIL_FOR_CONFIRMATION_REQUEST =
   "SEND_EMAIL_FOR_CONFIRMATION_REQUEST";
 export const SEND_EMAIL_FOR_CONFIRMATION_SUCCESS =

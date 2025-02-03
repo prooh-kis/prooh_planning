@@ -111,11 +111,9 @@ export const Header: React.FC = () => {
             <h3 className="text-md sm:text-lg font-semibold">
               {userInfo.name}
             </h3>
-            {userInfo.isBrand && (
               <p className="text-xs font-semibold text-gray-700">
-                Campaign Planner
+              {userInfo.userRole}
               </p>
-            )}
           </div>
           <Menu userInfo={userInfo} />
         </div>

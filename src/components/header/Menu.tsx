@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signout } from "../../actions/userAction";
 import { useState } from "react";
+import { CAMPAIGN_MANAGER, CAMPAIGN_PLANNER } from "../../constants/userConstants";
 
 export const Menu = (props: any) => {
   const { userInfo } = props;
@@ -41,10 +42,10 @@ export const Menu = (props: any) => {
       label: "Plans",
       path: MY_PLANS_LIST,
     },
-    {
-      label: "Users",
-      path: USERS,
-    },
+    // {
+    //   label: "Users",
+    //   path: USERS,
+    // },
   ];
 
   const arr1 = [
@@ -65,7 +66,7 @@ export const Menu = (props: any) => {
           onMouseLeave={() => setIsOpen(false)} // Close dropdown on mouse leave
           className="absolute z-10 mt-2 w-[200px] bg-[#FFFFFF] border border-[#D6D2D2] rounded-md shadow-lg right-0 font-bold text-lg text-black-1000"
         >
-          {userInfo?.isBrand &&
+          {userInfo?.userRole === CAMPAIGN_PLANNER &&
             arr.map((data: any, index: any) => (
               <div
                 key={index}
@@ -78,7 +79,7 @@ export const Menu = (props: any) => {
                 {data?.label}
               </div>
             ))}
-          {userInfo?.isMaster &&
+          {userInfo?.userRole === CAMPAIGN_MANAGER &&
             arr1.map((data: any, index: any) => (
               <div
                 key={index}

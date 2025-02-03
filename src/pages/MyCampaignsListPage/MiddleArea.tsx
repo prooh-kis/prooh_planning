@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { MyCampaignsList } from "./MyCampaignsList";
 import { getMyCreateCampaignsList, getMyCreateCampaignsManagerRequestsList, getMyCreateCampaignsVendorRequestsList } from "../../actions/campaignAction";
+import { CAMPAIGN_MANAGER, CAMPAIGN_PLANNER } from "../../constants/userConstants";
 
 
 export const MiddleArea: React.FC = () => {
@@ -40,21 +41,21 @@ export const MiddleArea: React.FC = () => {
     if (!userInfo) {
       navigate("/login");
     }
-    if (userInfo?.isBrand && userInfo?.userRole === "secondary") {
+    if (userInfo?.userRole === CAMPAIGN_PLANNER) {
       if (currentTab === "1") {
-        dispatch(getMyCreateCampaignsList({id: userInfo?._id, type: "complete"}));
+        dispatch(getMyCreateCampaignsList({ id: userInfo?._id, type: "complete" }));
       }
       if (currentTab === "2") {
-        dispatch(getMyCreateCampaignsList({id: userInfo?._id, type: "incomplete"}));
+        dispatch(getMyCreateCampaignsList({ id: userInfo?._id, type: "incomplete" }));
       }
     }
     if (userInfo?.isMaster) {
-      dispatch(getMyCreateCampaignsVendorRequestsList({id: userInfo?._id, status: "Active"}))
+      dispatch(getMyCreateCampaignsVendorRequestsList({ id: userInfo?._id, status: "Active" }))
     }
-    if (userInfo?.isBrand && userInfo?.userRole === "primary") {
-      dispatch(getMyCreateCampaignsManagerRequestsList({id: userInfo?._id, type: "complete"}))
+    if (userInfo?.userRole === CAMPAIGN_MANAGER) {
+      dispatch(getMyCreateCampaignsManagerRequestsList({ id: userInfo?._id, type: "complete" }))
     }
-  },[dispatch, navigate, currentTab, userInfo]);
+  }, [dispatch, navigate, currentTab, userInfo]);
   return (
     <div className="mt-6 w-full h-full pb-5 flex justify-center">
       {userInfo ? (
@@ -63,9 +64,9 @@ export const MiddleArea: React.FC = () => {
           currentTab={currentTab}
           setCurrentTab={setCurrentTab}
           campaignsList={
-            userInfo?.isBrand && userInfo?.userRole === "secondary" ? campaignsList :
-            userInfo?.isBrand && userInfo?.userRole === "primary" ? clientRequestsList :
-            userInfo?.isMaster ? vendorCampaignsList?.campaigns : []
+            userInfo?.isBrand && userInfo?.userRole === CAMPAIGN_PLANNER ? campaignsList :
+              userInfo?.isBrand && userInfo?.userRole === CAMPAIGN_MANAGER ? clientRequestsList :
+                userInfo?.isMaster ? vendorCampaignsList?.campaigns : []
           }
         />
       ) : (
