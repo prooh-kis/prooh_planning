@@ -39,7 +39,10 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
     const days = calculateDaysPlayed(
       campaignDetails?.startDate,
       campaignDetails?.endDate
-    );
+    ) === 0 ? 1 : calculateDaysPlayed(
+      campaignDetails?.startDate,
+      campaignDetails?.endDate
+    ); 
     const totalDays = campaignDetails?.duration;
     const delivered =
       screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(0);
@@ -56,7 +59,11 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
     const days = calculateDaysPlayed(
       campaignDetails?.startDate,
       campaignDetails?.endDate
+    ) === 0 ? 1 : calculateDaysPlayed(
+      campaignDetails?.startDate,
+      campaignDetails?.endDate
     );
+
     const totalDays = campaignDetails?.duration;
     const delivered =
       screenLevelData?.result?.totalData?.impressionsDelivered?.toFixed(0);

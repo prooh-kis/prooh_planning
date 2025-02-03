@@ -73,6 +73,9 @@ export const CampaignDashboardTable = ({
     const days = calculateDaysPlayed(
       campaignDetails?.startDate,
       campaignDetails?.endDate
+    ) === 0 ? 1 : calculateDaysPlayed(
+      campaignDetails?.startDate,
+      campaignDetails?.endDate
     );
     const totalDays = campaignDetails?.duration;
     const delivered = screenLevelData[data]?.slotsDelivered?.toFixed(0);
@@ -90,6 +93,9 @@ export const CampaignDashboardTable = ({
     const days = calculateDaysPlayed(
       campaignDetails?.startDate,
       campaignDetails?.endDate
+    ) === 0 ? 1 : calculateDaysPlayed(
+      campaignDetails?.startDate,
+      campaignDetails?.endDate
     );
     const totalDays = campaignDetails?.duration;
     const delivered = screenLevelData?.[data]?.costConsumed?.toFixed(0);
@@ -104,6 +110,9 @@ export const CampaignDashboardTable = ({
   };
   const impressionsDeliveredPositive = (data: string) => {
     const days = calculateDaysPlayed(
+      campaignDetails?.startDate,
+      campaignDetails?.endDate
+    ) === 0 ? 1 : calculateDaysPlayed(
       campaignDetails?.startDate,
       campaignDetails?.endDate
     );
