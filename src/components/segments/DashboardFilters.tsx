@@ -7,6 +7,7 @@ export const DashboardFilters = ({
   campaignDetails,
 }: DashboardFiltersProps) => {
   const getCityList = () => {
+    console.log(campaignDetails?.creatives);
     return campaignDetails?.creatives?.reduce(
       (creative: string[], currentCreative: any) => {
         if (creative.includes(currentCreative?.city)) {

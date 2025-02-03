@@ -256,7 +256,6 @@ export const ViewFinalPlanPODetails = ({
 
       // Step 3: Wait for all uploads to complete
       const uploadedFiles = (await Promise.all(uploadPromises)).filter(Boolean);
-
       if (uploadedFiles.length === 0) {
         console.error("No files were uploaded to S3.");
         return;
@@ -271,7 +270,6 @@ export const ViewFinalPlanPODetails = ({
             )}" target="_blank">${fileName?.replace(/_/g, " ")}</a><br></br>`
         )
         .join("\n");
-
       // Step 5: Send email with file links
       sendEmail(fileLinks);
     } catch (error) {
