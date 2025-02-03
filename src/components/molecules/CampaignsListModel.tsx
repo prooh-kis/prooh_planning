@@ -52,7 +52,7 @@ export const CampaignsListModel = ({data}: any) => {
         <div className="flex gap-1 items-center justify-start">
           <i className="fi fi-sr-pending text-[#06B6D4] text-[12px] flex items-center"></i>
           <h1 className="text-[12px] text-[#06B6D4]">
-            : {getNumberOfDaysBetweenTwoDates(new Date(), data?.endDate) > 0 ? `` : ``}
+            : {getNumberOfDaysBetweenTwoDates(new Date(), data?.endDate) > 0 ? `Ends in ${getNumberOfDaysBetweenTwoDates(new Date(), data?.endDate)}` : `Ended ${getNumberOfDaysBetweenTwoDates(data?.startDate, new Date())} ago`}
           </h1>
         </div>
       </div>
