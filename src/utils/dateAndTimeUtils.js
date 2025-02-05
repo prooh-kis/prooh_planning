@@ -78,7 +78,7 @@ export function getAllDatesBetween(startDate, endDate) {
 
 export function formatDate(dateString) {
   const [month, day, year] = dateString.split("/"); // Split input string
-  const date = new Date(`${year}-${month}-${day}`); // Convert to Date object
+  const date = new Date(year, month - 1, day); // Create Date object with correct format
 
   return `${day} ${date.toLocaleString("en-US", { month: "short" })}`;
 }
