@@ -207,10 +207,10 @@ export const BillingAndInvoice = (props: any) => {
         invoiceDescription: invoiceDescription,
         invoiceQuantity: invoiceQuantity,
         invoiceCurrency: invoiceCurrency,
-        invoiceAmount: invoiceAmount,
-        subTotalAmount: invoiceAmount * 1.18,
+        invoiceAmount: Number(invoiceAmount.toFixed(0)),
+        subTotalAmount: Number(invoiceAmount.toFixed(0)) * 1.18,
         outPutGstPercent: 18,
-        outPutGstAmount: invoiceAmount * 0.18,
+        outPutGstAmount: Number(invoiceAmount.toFixed(0)) * 0.18,
 
         campaignName: campaignDetails?.brandName,
         startDate: moment(campaignDetails?.startDate).format("YYYY-MM-DD"),

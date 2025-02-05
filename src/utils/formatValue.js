@@ -24,7 +24,6 @@ export function formatNumber(num) {
   return num.toString();
 }
 
-
 export function numberToWords(num) {
   if (num === 0) return "zero";
 
@@ -34,7 +33,7 @@ export function numberToWords(num) {
 
   const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
 
-  const thousands = ["", "thousand", "million", "billion", "trillion"];
+  const units = ["", "thousand", "lakh", "crore", "arab", "kharab"];
 
   function helper(n) {
       if (n === 0) return "";
@@ -45,12 +44,14 @@ export function numberToWords(num) {
 
   let result = "";
   let i = 0;
+  let divisor = [1000, 100, 100, 100, 100]; // Indian system grouping
 
   while (num > 0) {
-      if (num % 1000 !== 0) {
-          result = helper(num % 1000) + thousands[i] + " " + result;
+      let part = num % divisor[i];
+      if (part !== 0) {
+          result = helper(part) + units[i] + " " + result;
       }
-      num = Math.floor(num / 1000);
+      num = Math.floor(num / divisor[i]);
       i++;
   }
 

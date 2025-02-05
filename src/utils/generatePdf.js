@@ -197,7 +197,7 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
     ["Total CPM", `INR ${campaignApproach.totalCpm.toFixed(2)}`],
     ["Total Reach", campaignApproach.totalReach.toFixed(0)],
     ["Total Campaign Budget", `INR ${campaignApproach.totalCampaignBudget.toFixed(0)}`],
-    ["Discount Availed", `INR ${campaignApproach.couponId !== "" ? campaignApproach.totalDiscount.toFixed(0) : "None"}`],
+    ["Discount Availed", `${campaignApproach.couponId !== "" ? `INR ${campaignApproach.totalDiscount.toFixed(0)}` : "None"}`],
     campaignApproach?.couponId !== "" ? [
       "Final Campaign Budget", `INR ${campaignApproach.finalCampaignBudget.toFixed(0)}`
     ] : ["Final Campaign Budget", `INR ${campaignApproach.totalCampaignBudget.toFixed(0)}`],
@@ -482,12 +482,12 @@ export const generateBillAndInvoicePdf = ({ preview= true, download= false, file
    // Add border around the page
    const pageWidth = doc.internal.pageSize.width;
    const pageHeight = doc.internal.pageSize.height;
-
+   const usableWidth = pageWidth - 15 * 2;
    let yOffset = 40;
 
    doc.setDrawColor(0); // Black border
    doc.setLineWidth(1); // Border thickness
-   doc.rect(20, 20, pageWidth - 40, pageHeight - 40, "S");
+   doc.rect(20, 20, pageWidth - 24, pageHeight - 40, "S");
 
   // Header Section
   doc.setFont("helvetica", "bold");
@@ -497,33 +497,40 @@ export const generateBillAndInvoicePdf = ({ preview= true, download= false, file
   doc.setFontSize(10);
   doc.text("PROOH TECHNOLOGIES PRIVATE LIMITED", 30, yOffset);
   doc.setFont("helvetica", "normal");
-  doc.text(`Invoice No: ${jsonData.invoiceNumber}`, 300, yOffset);
+  doc.setFontSize(8);
+
+  doc.text(`Invoice No: ${jsonData.invoiceNumber}`, 350, yOffset);
   yOffset += 15;
   doc.text(`Contact Person: ${jsonData.planner}`, 30, yOffset);
-  doc.text(`Invoice Date: ${jsonData.invoiceDate}`, 300, yOffset);
+  doc.text(`Invoice Date: ${jsonData.invoiceDate}`, 350, yOffset);
   yOffset += 15;
   doc.text(`Email Id: ${jsonData.plannerEmail}`, 30, yOffset);
-  doc.text(`Internal SO No: ${jsonData.internalSoNumber}`, 300, yOffset);
+  doc.text(`Internal SO No: ${jsonData.internalSoNumber}`, 350, yOffset);
   yOffset += 15;
   doc.text(`PAN No: AAMCP9602J`, 30, yOffset);
-  doc.text(`Client Confirmation: ${jsonData.clientConfirmation}`, 300, yOffset);
+  doc.text(`Client Confirmation: ${jsonData.clientConfirmation}`, 350, yOffset);
   yOffset += 15;
   doc.text(`GST No: 06AAMCP9602J1Z2`, 30, yOffset);
-  doc.text(`Client Order Date: ${jsonData.clientOrderDate}`, 300, yOffset);
+  doc.text(`Client Order Date: ${jsonData.clientOrderDate}`, 350, yOffset);
   yOffset += 15;
   doc.text(``, 30, yOffset);
-  doc.text(`Purchase Order No.: ${jsonData.poNumber}`, 300, yOffset);
+  doc.text(`Purchase Order No.: ${jsonData.poNumber}`, 350, yOffset);
   yOffset += 15;
   doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+
   doc.text("Client Details:-", 30, yOffset);
   doc.setFont("helvetica", "normal");
-  doc.text(`Campaign Name: ${jsonData.campaignName}`, 300, yOffset);
+  doc.setFontSize(8);
+  doc.text(`Campaign Name: ${jsonData.campaignName}`, 350, yOffset);
   yOffset += 15;
   doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
   doc.text(`${jsonData.clientAgencyName}`, 30, yOffset);
 
   doc.setFont("helvetica", "normal");
-  doc.text(`Campaign Duration: ${jsonData.startDate} - ${jsonData.endDate}`, 300, yOffset);
+  doc.setFontSize(8);
+  doc.text(`Campaign Duration: ${jsonData.startDate} - ${jsonData.endDate}`, 350, yOffset);
   yOffset += 15;
 
   const wrappedAddress = doc.splitTextToSize(`${jsonData.officeAddress.address}`, 250);
@@ -554,19 +561,21 @@ export const generateBillAndInvoicePdf = ({ preview= true, download= false, file
   // ]);
 
 
+  doc.setFontSize(10);
   doc.autoTable({
     head: [["Sr.No", "Description", "HSN/SAC", "Quantity", "Rate", "Amount"]],
-    body: [["1", jsonData.invoiceDescription, "998361", jsonData.invoiceQuantity, Number(jsonData.invoiceAmount).toFixed(0), Number(jsonData.subTotalAmount).toFixed(0)]],
+    body: [["1", jsonData.invoiceDescription, "998361", jsonData.invoiceQuantity, Number(jsonData.invoiceAmount).toFixed(0), Number(jsonData.invoiceAmount).toFixed(0)]],
     styles: { fontSize: 10, halign: "center" },
     startY: yOffset,
-    margin: { top: 30 },
+    margin: { top: 30, left: 30, right: 30 },
+    tableWidth: usableWidth,
     columnStyles: {
-      0: { halign: "center", cellWidth: 50 },
-      1: { halign: "left", cellWidth: 250 },
-      2: { halign: "center", cellWidth: 70 },
-      3: { halign: "center", cellWidth: 50 },
-      4: { halign: "center", cellWidth: 50 },
-      5: { halign: "center", cellWidth: 50 },
+      0: { halign: "center", cellWidth: usableWidth/15 },
+      1: { halign: "left", cellWidth: 5*usableWidth/12 },
+      2: { halign: "center", cellWidth: usableWidth/6 },
+      3: { halign: "center", cellWidth: usableWidth/8 },
+      4: { halign: "center", cellWidth: usableWidth/10 },
+      5: { halign: "center", cellWidth: usableWidth/10 },
     },
   });
   yOffset = doc.lastAutoTable.finalY + 15;
@@ -574,30 +583,32 @@ export const generateBillAndInvoicePdf = ({ preview= true, download= false, file
   doc.text(`Sub Total`, 320, yOffset);
   doc.text(`INR ${Number(jsonData.invoiceAmount).toFixed(0)}`, 500, yOffset);
   yOffset += 15;
-  doc.line(30, yOffset, pageWidth - 30, yOffset);
+  doc.line(30, yOffset, pageWidth - 15, yOffset);
   yOffset += 15;
   doc.text(`Amount in words`, 30, yOffset);
   doc.line(pageWidth/2, yOffset - 15, pageWidth/2, yOffset + 35);
   doc.text(`Output IGST @${jsonData.outPutGstPercent}%`, 320, yOffset);
   doc.text(`INR ${Number(jsonData.outPutGstAmount).toFixed(2)}`, 500, yOffset);
   yOffset += 15;
+  doc.text(`Round Off Amount`, 320, yOffset);
+  doc.text(`INR ${Number(jsonData.subTotalAmount % 1).toFixed(2)}`, 500, yOffset);
   doc.setFont("helvetica", "normal");
-  const wrappedText = doc.splitTextToSize(`${numberToWords(Number(jsonData.subTotalAmount).toFixed(0))}`, 250);
+  const wrappedText = doc.splitTextToSize(`${numberToWords(Number(jsonData.subTotalAmount).toFixed(0)).toUpperCase()} ONLY`, 250);
   doc.text(wrappedText, 30, yOffset);
   yOffset += wrappedText.length * 10;
-  doc.line(30, yOffset, pageWidth - 30, yOffset);
+  doc.line(30, yOffset, pageWidth - 15, yOffset);
   yOffset += 15;
   doc.setFont("helvetica", "bold");
   doc.text(`Total: `, 320, yOffset);
   doc.text(`INR ${Number(jsonData.subTotalAmount).toFixed(0)} /-`, 500, yOffset);
   yOffset += 12;
-  doc.line(30, yOffset, pageWidth - 30, yOffset);
+  doc.line(30, yOffset, pageWidth - 15, yOffset);
   yOffset += 12;
   
   doc.text(`NOTE: `, 30, yOffset);
   yOffset += 15;
   doc.setFont("helvetica", "normal");
-
+  doc.setFontSize(8);
   const wrappedNote1 = doc.splitTextToSize(`1. The invoice shall be deemed to be accepted, in case no query is raised within 7 days of reciept.`, pageWidth - 60);
   doc.text(wrappedNote1, 30, yOffset);
   // yOffset += wrappedNote1.length * 10 + 15;
@@ -637,19 +648,19 @@ export const generateBillAndInvoicePdf = ({ preview= true, download= false, file
   doc.setFont("helvetica", "bold");
   doc.text(`Please return this copy on Invoice Duty Signed & Stamped as Token of Acceptance.`, pageWidth/2, yOffset, { align: "center"})
   yOffset += 12;
-  doc.line(30, yOffset, pageWidth - 30, yOffset);
+  doc.line(30, yOffset, pageWidth - 15, yOffset);
   yOffset += 12;
   doc.text(`Accepted`, 30, yOffset);
-  doc.line(pageWidth/2 - 20, yOffset - 10, pageWidth/2 - 20, yOffset + 70);
+  doc.line(pageWidth/2, yOffset - 12, pageWidth/2, yOffset + 70);
   doc.text(`For: PROOH TECHNOLOGY PRIVATE LIMITED`, 320, yOffset);
   yOffset += 70;
-  doc.line(30, yOffset, pageWidth - 30, yOffset);
+  doc.line(30, yOffset, pageWidth - 15, yOffset);
   yOffset += 12;
   doc.text(`Stamp`, 30, yOffset);
-  doc.line(pageWidth/2 - 20, yOffset - 12, pageWidth/2 - 20, yOffset + 12);
+  doc.line(pageWidth/2, yOffset - 12, pageWidth/2, yOffset + 12);
   doc.text(`Authorised Signatory`, 320, yOffset);
   yOffset += 12;
-  doc.line(30, yOffset, pageWidth - 30, yOffset);
+  doc.line(30, yOffset, pageWidth - 15, yOffset);
   yOffset += 15;
 
   doc.text(`PROOH TECHNOLOGY PRIVATE LIMITED`, 30, yOffset);
@@ -658,9 +669,9 @@ export const generateBillAndInvoicePdf = ({ preview= true, download= false, file
   doc.text(`3rd Floor, Unit No. 322, 323, 324 & 325`, 30, yOffset);
   yOffset += 12;
   doc.text(`Paras Trade Center, Gwal Pahari, Sector 2, Gurugram`, 30, yOffset);
-  doc.text(`GSTIN:- 06AAMCP9602J1Z2, Haryana Code:- 06`, 340, yOffset);
+  doc.text(`GSTIN:- 06AAMCP9602J1Z2, Haryana Code:- 06`, 400, yOffset);
   
-  doc.text(`Generated by PROOH.AI`, 450, pageHeight-8);
+  doc.text(`Generated by PROOH.AI`, 490, pageHeight-8);
 
   // Save the PDF
   if (preview) {
