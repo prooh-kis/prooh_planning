@@ -66,7 +66,7 @@ export const Header: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full h-16 bg-[#FFFFFF] flex items-center justify-between fixed z-50 sm:px-16 px-4 border-b">
+    <div className="w-full h-16 bg-[#FFFFFF] flex items-center justify-between fixed z-50 sm:px-10 px-4 border-b">
       {/* Logo Section */}
       <div className="flex items-center">
         <div
@@ -133,7 +133,7 @@ export const Header: React.FC = () => {
           </button>
           {/* Mobile Menu Icon */}
           <div className="md:hidden flex items-center">
-            <button onClick={handleMenuToggle} className="focus:outline-none">
+            <button title="dropdown" type="button" onClick={handleMenuToggle} className="focus:outline-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

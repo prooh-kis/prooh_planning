@@ -198,7 +198,7 @@ export const CampaignDashboard = ({
         invoiceAmount={invoiceAmount}
         setInvoiceAmount={setInvoiceAmount}
       />
-      <div className="bg-[#FFFFFF] p-2 px-16 flex justify-between mt-6">
+      <div className="bg-[#FFFFFF] p-2 px-10 flex justify-between mt-6">
         <div className="px-2 w-1/2 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <i className="fi fi-br-arrow-left" onClick={() => navigate(-1)}></i>
@@ -255,7 +255,7 @@ export const CampaignDashboard = ({
           </div>
         </div>
       </div>
-      <div className="px-16 max-h-[340px] ">
+      <div className="px-10 max-h-[340px] ">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
           {gridItems.map((item) => (
             <div
