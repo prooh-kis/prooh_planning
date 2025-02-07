@@ -56,7 +56,6 @@ export function PlanSummaryTable({
       }
   }, [dispatch, success]);
 
-  console.log(data);
   return (
     <div>
       {pathname.split("/").splice(-2)[0] !== "iknowitallplan" && (
@@ -163,7 +162,7 @@ export function PlanSummaryTable({
                       &#8377;{formatNumber(data[d]?.pricePerSlot?.toFixed(0))}
                     </td>
                     <td className="py-2 text-center">
-                      &#8377;{formatNumber(data[d]?.totalCampaignBudget)}
+                      &#8377;{formatNumber(data[d]?.totalCampaignBudget?.toFixed(0))}
                     </td>
                     <td className="py-2 text-center">
                       {data[d]?.sov}
@@ -243,7 +242,7 @@ export function PlanSummaryTable({
                       {formatNumber(data[d]?.pricePerSlot?.toFixed(0))}
                     </td>
                     <td className="py-2 text-center">
-                      &#8377;{formatNumber(data[d]?.totalCampaignBudget)}
+                      &#8377;{formatNumber(data[d]?.totalCampaignBudget?.toFixed(0))}
                     </td>
                     <td className="py-2 text-center">
                       {data[d]?.sov}

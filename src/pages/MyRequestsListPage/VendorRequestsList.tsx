@@ -10,6 +10,8 @@ import {
 import { SecondaryButton } from "../../components/atoms/SecondaryButton";
 import { useDispatch } from "react-redux";
 import { changeCampaignStatusAfterVendorApproval } from "../../actions/campaignAction";
+import { useSelector } from "react-redux";
+import { message } from "antd";
 
 const allTabs = [
   {
@@ -55,7 +57,22 @@ export const VendorsRequestsList = ({ requestsList, userInfo }: any) => {
 
   const [selectedCampaignIds, setSelectedCampaignIds] = useState<any>([]);
 
+  const campaignStatusChangeAfterVendorApproval = useSelector((state: any) => state.campaignStatusChangeAfterVendorApproval);
+  const {
+    loading: loadingVendorApprovalStatus,
+    error: errorVendorApprovalStatus,
+    data: vendorApprovalStatus
+  } = campaignStatusChangeAfterVendorApproval;
+
   useEffect(() => {
+    if (vendorApprovalStatus) {
+      message.success("Campaign Approved Successfully...");
+    }
+
+    if (errorVendorApprovalStatus) {
+      message.error("Campaign Approval Failed");
+    }
+
     if (requestsList?.length > 0) {
       setPlanRequest(
         requestsList?.reduce((acc: any, item: any) => {

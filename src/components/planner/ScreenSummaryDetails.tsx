@@ -13,16 +13,12 @@ import {
 } from "../../actions/screenAction";
 import {
   getDataFromLocalStorage,
-  saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
 import { Footer } from "../../components/footer";
 import {
-  COST_SUMMARY,
   FULL_CAMPAIGN_PLAN,
-  SCREEN_SUMMARY_DATA,
   SCREEN_SUMMARY_SELECTION,
-  SCREEN_SUMMARY_TABLE_DATA,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { Loading } from "../../components/Loading";
@@ -221,16 +217,16 @@ export const ScreenSummaryDetails = ({
             totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
             totalImpression: getDataFromLocalStorage(
               FULL_CAMPAIGN_PLAN
-            )?.[campaignId]?.["total"].totalImpression,
+            )?.[campaignId]?.totalImpression,
             totalReach: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
               campaignId
-            ]?.["total"].totalReach,
+            ]?.totalReach,
             totalCampaignBudget: getDataFromLocalStorage(
               FULL_CAMPAIGN_PLAN
-            )?.[campaignId]?.["total"].totalCampaignBudget,
+            )?.[campaignId]?.totalCampaignBudget,
             totalCpm: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
               campaignId
-            ]?.["total"].totalCpm,
+            ]?.totalCpm,
           })
         );
       }
@@ -242,16 +238,16 @@ export const ScreenSummaryDetails = ({
           totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
           totalImpression: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
             campaignId
-          ]?.["total"].totalImpression,
+          ]?.totalImpression,
           totalReach: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
             campaignId
-          ]?.["total"].totalReach,
+          ]?.totalReach,
           totalCampaignBudget: getDataFromLocalStorage(
             FULL_CAMPAIGN_PLAN
-          )?.[campaignId]?.["total"].totalCampaignBudget,
+          )?.[campaignId]?.totalCampaignBudget,
           totalCpm: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
             campaignId
-          ]?.["total"].totalCpm,
+          ]?.totalCpm,
         })
       );
     }
@@ -260,18 +256,21 @@ export const ScreenSummaryDetails = ({
   };
 
   useEffect(() => {
-    dispatch(
-      getScreenSummaryData({
-        id: campaignId,
-        type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-          ?.selectedType,
-      })
-    );
+    if (pathname.split("/").splice(-2)[0] !== "iknowitallplan" || currentTab === "1") {
+      dispatch(
+        getScreenSummaryData({
+          id: campaignId,
+          type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+            ?.selectedType,
+        })
+      );
+    }
+
     dispatch(getPlanningPageFooterData({
       id: campaignId,
       pageName: "Screen Summary Page",
     }));
-  }, [campaignId, dispatch]);
+  }, [campaignId, dispatch, pathname, currentTab]);
 
 
   useEffect(() => {
@@ -282,12 +281,6 @@ export const ScreenSummaryDetails = ({
     } else {
       setCurrentTab("1");
     }
- 
-    if (screenSummaryPlanTableData) {
-      saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, {
-        [campaignId]: screenSummaryPlanTableData,
-      });
-    }
 
   }, [campaignId, pathname, screenSummaryPlanTableData, step]);
 
@@ -295,20 +288,15 @@ export const ScreenSummaryDetails = ({
 
     if (screenSummaryData) {
       // console.log(screenSummaryData);
-      getScreenSummaryPlanTableData({
+      dispatch(getScreenSummaryPlanTableData({
         id: campaignId,
         screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-      });
-      saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, {
-        [campaignId]: screenSummaryData,
-      });
+      }));
 
-      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
-        [campaignId]: screensBuyingCount,
-      });
       setCityTabData(getTabValue(screenSummaryData));
     }
   }, [
+    dispatch,
     campaignId,
     screenSummaryData,
     screensBuyingCount,
