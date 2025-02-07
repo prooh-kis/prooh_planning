@@ -51,24 +51,34 @@ export const AdsPlayTimeTable = ({
     included: boolean,
     index1: number
   ) => {
-    // console.log("handleSelectTime : ", index, dayData, included, index1);
-
-    const ddd = data?.map((d: ResultData, i: number) => {
-      if (i === index) {
-        return {
-          touchPoint: d.touchPoint,
-          screenData: d.screenData?.map((d1: ScreenData, i1: number) => {
-            if (i1 === index1) {
-              d1.dayWiseData[currentTab][dayData].included = !included;
+    setData((prevData: any) =>
+      prevData.map((d: ResultData, i: number) =>
+        i === index
+          ? {
+              ...d,
+              screenData: d.screenData.map((d1: ScreenData, j: number) =>
+                j === index1
+                  ? {
+                      ...d1,
+                      dayWiseData: {
+                        ...d1.dayWiseData,
+                        [currentTab]: {
+                          ...d1.dayWiseData[currentTab],
+                          [dayData]: {
+                            ...d1.dayWiseData[currentTab][dayData],
+                            included: !included,
+                          },
+                        },
+                      },
+                    }
+                  : d1
+              ),
             }
-            return d1;
-          }),
-        };
-      } else return d;
-    });
-    setData(ddd);
+          : d
+      )
+    );
   };
-
+  
   return (
     <div className="w-full border-r border-b text[#2B2B2B]">
       {/* header of the table */}

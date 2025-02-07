@@ -39,6 +39,7 @@ interface ScreenSummaryDetailsProps {
   campaignId?: any;
   regularVsCohortSuccessStatus?: any;
   successAddCampaignDetails?: any;
+  success?: any;
 }
 
 export const ScreenSummaryDetails = ({
@@ -46,6 +47,7 @@ export const ScreenSummaryDetails = ({
   step,
   campaignId,
   regularVsCohortSuccessStatus,
+  success,
   successAddCampaignDetails
 }: ScreenSummaryDetailsProps) => {
   const dispatch = useDispatch<any>();
@@ -123,8 +125,6 @@ export const ScreenSummaryDetails = ({
     }
     setVisitedTab((pre: any) => {
       return pre.map((data: any) => {
-        console.log(data);
-        console.log(id);
         if (data?.id == id) {
           data.visited = true;
           // console.log(data);
@@ -220,15 +220,15 @@ export const ScreenSummaryDetails = ({
             id: pathname.split("/").splice(-1)[0],
             totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
             totalImpression: getDataFromLocalStorage(
-              SCREEN_SUMMARY_TABLE_DATA
+              FULL_CAMPAIGN_PLAN
             )?.[campaignId]?.["total"].totalImpression,
-            totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+            totalReach: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
               campaignId
             ]?.["total"].totalReach,
             totalCampaignBudget: getDataFromLocalStorage(
-              SCREEN_SUMMARY_TABLE_DATA
+              FULL_CAMPAIGN_PLAN
             )?.[campaignId]?.["total"].totalCampaignBudget,
-            totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+            totalCpm: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
               campaignId
             ]?.["total"].totalCpm,
           })
@@ -240,16 +240,16 @@ export const ScreenSummaryDetails = ({
           pageName: "Screen Summary Page",
           id: pathname.split("/").splice(-1)[0],
           totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-          totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+          totalImpression: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
             campaignId
           ]?.["total"].totalImpression,
-          totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+          totalReach: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
             campaignId
           ]?.["total"].totalReach,
           totalCampaignBudget: getDataFromLocalStorage(
-            SCREEN_SUMMARY_TABLE_DATA
+            FULL_CAMPAIGN_PLAN
           )?.[campaignId]?.["total"].totalCampaignBudget,
-          totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+          totalCpm: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
             campaignId
           ]?.["total"].totalCpm,
         })
@@ -279,6 +279,8 @@ export const ScreenSummaryDetails = ({
     setRegularVsCohort(type);
     if (pathname.split("/").includes("iknowitallplan") && step === 4) {
       setCurrentTab("2");
+    } else {
+      setCurrentTab("1");
     }
  
     if (screenSummaryPlanTableData) {
@@ -498,6 +500,7 @@ export const ScreenSummaryDetails = ({
             currentTab === "2" && (
               <div className="w-full">
                 <PlanSummaryTable
+                  success={success}
                   showSummary={showSummary}
                   setShowSummary={setShowSummary}
                   regularVsCohort={regularVsCohort}

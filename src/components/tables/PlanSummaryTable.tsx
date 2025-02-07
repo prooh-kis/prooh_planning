@@ -20,6 +20,7 @@ export function PlanSummaryTable({
   error,
   screensBuyingCount,
   pathname,
+  success
 }: any) {
   const dispatch = useDispatch<any>();
 
@@ -33,12 +34,15 @@ export function PlanSummaryTable({
   } = regularVsCohortPriceDataGet;
 
   useEffect(() => {
-    dispatch(
-      getScreenSummaryPlanTableData({
-        id: campaignId,
-        screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-      })
-    );
+    if (success) {
+      dispatch(
+        getScreenSummaryPlanTableData({
+          id: campaignId,
+          screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+        })
+      );
+    }
+
 
     if (!priceData && getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[campaignId]?.[
       `${regularVsCohort}`] === undefined) {
@@ -50,7 +54,7 @@ export function PlanSummaryTable({
           duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
         }));
       }
-  }, [dispatch]);
+  }, [dispatch, success]);
 
   console.log(data);
   return (

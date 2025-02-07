@@ -134,6 +134,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            success={success}
           />
         ) : currentStep === 3 ? (
           <SetAdsPlayTime
@@ -146,6 +147,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            success={success}
           />
         ) : currentStep === 5 ? (
           <ViewFinalPlanPODetails
