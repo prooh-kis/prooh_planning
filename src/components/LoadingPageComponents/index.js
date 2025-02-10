@@ -1,5 +1,6 @@
 export { Section1 } from "./Section1";
 export { FloatingBrandIcon } from "./FloatingBrandIcon";
+export { IllustrationWork } from "./IllustrationWork";
 export { OurAdvertisingJourney } from "./OurAdvertisingJourney";
 export { HowItsWork } from "./HowItsWork";
 export { PlanYourCampaign } from "./PlanYourCampaign";

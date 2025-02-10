@@ -6,9 +6,11 @@ import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { LANDING_PAGE_DATA } from "../../constants/localStorageConstants";
 import { CreateCampaignOption } from "../../components";
 import { PageFooter } from "../../components/PageFooter";
+
 import {
   FloatingBrandIcon,
   HowItsWork,
+  IllustrationWork,
   OurAdvertisingJourney,
   Section1,
   MeetOurDataHero,
@@ -35,6 +37,7 @@ export const Landing: React.FC = () => {
   return (
     <div className="w-screen h-full">
       <Section1 />
+      <IllustrationWork/>
       <FloatingBrandIcon />
       <OurAdvertisingJourney data={data} />
       <HowItsWork />

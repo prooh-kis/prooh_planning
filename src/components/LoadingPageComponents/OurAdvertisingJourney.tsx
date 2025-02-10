@@ -216,7 +216,7 @@ export const OurAdvertisingJourney = ({ data }: any) => {
               view={view}
             />
           </div>
-          <div className="lg:h-[680px] md:h-[540px] sm:h-[480px] w-full z-0">
+          <div className="lg:h-[500px] md:h-[400px] sm:h-[350px] w-full z-0">
             <LandingPageMap data={landingPageData} />
           </div>
         </div>
