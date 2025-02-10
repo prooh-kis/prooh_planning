@@ -14,10 +14,12 @@ import {
 import { DropdownInput } from "../../components/atoms/DropdownInput";
 import { SuggestionInput } from "../../components/atoms/SuggestionInput";
 
-const allIndex = Array.from({ length: 3 }, (_, i) => ({
-  label: (i + 1).toString(),
-  value: i + 1,
-}));
+const allIndex = [1, 2, 3, 6].map((data: any) => {
+  return {
+    label: data,
+    value: data,
+  };
+});
 
 export const AddCampaignDetails = ({
   handleCancel,
@@ -108,7 +110,7 @@ export const AddCampaignDetails = ({
         campaignPlannerEmail: userInfo?.email,
         campaignManagerId: userInfo?.primaryUserId,
         campaignManagerEmail: userInfo?.primaryUserEmail,
-        // sov: sov,
+        sov: sov,
       });
     }
   };
@@ -226,7 +228,7 @@ export const AddCampaignDetails = ({
             )}
           </div>
         </div>
-        {/* <div className="grid grid-cols-2 gap-8 pt-2">
+        <div className="grid grid-cols-2 gap-8 pt-2">
           <div className="col-span-1 py-1">
             <div className="block flex justify-between gap-2 items-center mb-2">
               <label className="block text-secondaryText text-[14px]">
@@ -237,18 +239,13 @@ export const AddCampaignDetails = ({
               </Tooltip>
             </div>
             <DropdownInput
-              options={allIndex?.map((data: any) => {
-                return {
-                  label: data.label,
-                  value: data.value,
-                };
-              })}
+              options={allIndex}
               selectedOptions={sov}
               placeHolder="Select SOV"
               setSelectedOption={setSov}
             />
           </div>
-        </div> */}
+        </div>
         <button
           className="px-8 py-2 mt-4 text-[16px] font-semibold bg-[#1297E2] text-[#FFFFFF] rounded-md w-full"
           onClick={saveCampaignDetailsOnLocalStorage}

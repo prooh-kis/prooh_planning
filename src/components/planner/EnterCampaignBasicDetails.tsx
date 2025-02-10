@@ -31,10 +31,12 @@ interface EnterCampaignBasicDetailsProps {
   campaignType: string;
   path: string;
 }
-const allIndex = Array.from({ length: 3 }, (_, i) => ({
-  label: (i + 1).toString(),
-  value: i + 1,
-}));
+const allIndex = [1, 2, 3, 6].map((data: any) => {
+  return {
+    label: data,
+    value: data,
+  };
+});
 export const EnterCampaignBasicDetails = ({
   setCurrentStep,
   step,
@@ -190,7 +192,7 @@ export const EnterCampaignBasicDetails = ({
         campaignPlannerEmail: userInfo?.email,
         campaignManagerId: userInfo?.primaryUserId,
         campaignManagerEmail: userInfo?.primaryUserEmail,
-        // sov: sov,
+        sov: sov,
       })
     );
   }, [
@@ -209,7 +211,7 @@ export const EnterCampaignBasicDetails = ({
     userInfo?.email,
     userInfo?.primaryUserId,
     userInfo?.primaryUserEmail,
-    // sov,
+    sov,
   ]);
 
   useEffect(() => {
@@ -362,7 +364,7 @@ export const EnterCampaignBasicDetails = ({
           />
         </div>
       </div>
-      {/* <div className="grid grid-cols-3 gap-8 pt-2">
+      <div className="grid grid-cols-3 gap-8 pt-2">
         <div className="col-span-1 py-1">
           <div className="block flex justify-between gap-2 items-center mb-2">
             <label className="block text-secondaryText text-[14px]">SOV</label>
@@ -371,18 +373,13 @@ export const EnterCampaignBasicDetails = ({
             </Tooltip>
           </div>
           <DropdownInput
-            options={allIndex?.map((data: any) => {
-              return {
-                label: data.label,
-                value: data.value,
-              };
-            })}
+            options={allIndex}
             selectedOptions={sov}
             placeHolder="Select SOV"
             setSelectedOption={setSov}
           />
         </div>
-      </div> */}
+      </div>
       {endDate !== "" && startDate !== "" && duration && (
         <h1 className="text-[12px] pt-4 text-[#129BFF]">
           Note: The billing of your campaign will start from{" "}
