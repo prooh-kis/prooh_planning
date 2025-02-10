@@ -188,9 +188,10 @@ export const SetAdsPlayTime = ({
       ) : error ? (
         <p></p>
       ) : (
-        <div className="mt-2">
+        <div className="mt-2 pb-20">
           <AdsPlaySelectedSummaryTable
             currentTab={currentTab}
+            resultData={tableData?.result}
             bottomTableData={tableData?.bottomTableData}
           />
         </div>

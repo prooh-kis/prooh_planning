@@ -5,6 +5,7 @@ import {
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import {
+  FULL_CAMPAIGN_PLAN,
   SCREEN_SUMMARY_SELECTION,
   SCREEN_TYPE_TOGGLE_SELECTION,
 } from "../../constants/localStorageConstants";
@@ -68,7 +69,7 @@ export const ScreenSummaryTable = ({
                   myData[city][tp][st][zone][screen]?.screenName
                 );
                 screens[city][`${myData[city][tp][st][zone][screen]?._id}`] = {
-                  status: true, // Set all screens as selected by default
+                  status: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds?.length > 0 && !getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds.includes(myData[city][tp][st][zone][screen]?._id) ? false : true, // Set all screens as selected by default
                   data: myData[city][tp][st][zone][screen],
                 };
               }
@@ -81,6 +82,10 @@ export const ScreenSummaryTable = ({
       setCityZones(zones);
       setCityTP(tps);
       setScreenTypes(types);
+
+      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
+        [campaignId]: screens,
+      });
       if (
         !getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] ||
         Object.keys(
@@ -109,12 +114,6 @@ export const ScreenSummaryTable = ({
       setScreensBuyingCount,
     ]
   );
-
-  useEffect(() => {
-    if (data !== undefined) {
-      handleData(data);
-    }
-  }, [data, handleData]);
 
   const handleScreenClick = useCallback(
     ({ screen, city, statusRes }: any) => {
@@ -159,14 +158,15 @@ export const ScreenSummaryTable = ({
       // Update the specific city's screens in screensBuyingCount while preserving other cities
       updatedScreensBuyingCount[city] = currentCityScreens;
 
-      console.log(updatedScreensBuyingCount[city]);
       // Save the updated state
       setScreensBuyingCount(updatedScreensBuyingCount);
       // alert(`You are ${newStatus ? "selecting" : "deselecting"} screen in ${networkType} network, all the screens`)
-
+      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
+        [campaignId]: updatedScreensBuyingCount,
+      });
       refreshScreenSummary();
     },
-    [refreshScreenSummary, screensBuyingCount, setScreensBuyingCount]
+    [refreshScreenSummary, screensBuyingCount, setScreensBuyingCount, campaignId]
   );
 
   const handleScreenTypeClick = ({
@@ -211,7 +211,17 @@ export const ScreenSummaryTable = ({
 
     // Update the screens buying count and save
     setScreensBuyingCount({ ...screensBuyingCount });
+    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
+      [campaignId]: { ...screensBuyingCount },
+    });
   };
+
+  useEffect(() => {
+    if (data !== undefined) {
+      handleData(data);
+    }
+  }, [data, handleData]);
+
 
   return (
     <div className="h-full">

@@ -1,8 +1,10 @@
 import { Skeleton } from "antd";
 import React, { useEffect } from "react";
-import { convertDataTimeToLocale } from "../../utils/dateAndTimeUtils";
+import { calculateDaysPlayed, convertDataTimeToLocale, getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
 import { DownLoadCampaignLogReport } from "../../components/molecules/DownLoadCampaignLogReport";
 import { NoDataView } from "../../components/molecules/NoDataView";
+import { PrimaryButton } from "../../components/atoms/PrimaryButton";
+import { CalendarScaleSlider } from "../../components/molecules/CalenderScaleSlider";
 
 export const ShowCampaignLogsPopup = ({
   open,
@@ -25,11 +27,56 @@ export const ShowCampaignLogsPopup = ({
   if (!open) {
     return null;
   }
+  
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 ">
+      {/* <div className="">
+        <div className="bg-white rounded">
+          <div className="flex justify-between w-[95vw] p-4 border-b">
+            <div className="px-2">
+              <h1 className="lg:text-[16px] text-[14px] font-semibold">Log Report</h1>
+              <h1 className="text-[12px] text-gray-500">{logs?.campaign?.name}</h1>
+            </div>
+            <div className="flex items-center gap-4">
+              <PrimaryButton
+                title="Export"
+                rounded="rounded"
+                height="h-8"
+                width="w-16"
+                textSize="text-[12px]"
+              />
+              <i className="fi fi-br-circle-xmark" onClick={() => onClose()}></i>
+            </div>
+          </div>
+          <div className="flex items-center justify-center pt-12 pb-8">
+            <CalendarScaleSlider
+              days={getNumberOfDaysBetweenTwoDates(
+                logs?.campaign?.startDate,
+                logs?.campaign?.endDate
+              )}
+              daysPlayed={
+                calculateDaysPlayed(
+                  logs?.campaign?.startDate,
+                  logs?.campaign?.endDate
+                ) === 0
+                  ? 1
+                  : calculateDaysPlayed(
+                    logs?.campaign?.startDate,
+                    logs?.campaign?.endDate
+                  )
+              }
+            />
+          </div>
+        </div>
+        <div className="bg-white rounded mt-2 p-4">
+          <h1 className="">Hourly Logs</h1>
+        </div>
+
+      </div> */}
+      
       <div
         className="bg-[#FFFFFF] p-4 rounded-lg shadow-lg w-full max-w-full relative overflow-auto max-h-auto "
-        style={{ height: "80vh", width: "70vw" }}
+        style={{ height: "80vh", width: "95vw" }}
       >
         <div className="flex justify-between">
           <h1 className="text-[16px] font-bold">

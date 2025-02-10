@@ -13,6 +13,7 @@ import {
 } from "../../actions/screenAction";
 import {
   getDataFromLocalStorage,
+  saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
 import { Footer } from "../../components/footer";
@@ -132,15 +133,15 @@ export const ScreenSummaryDetails = ({
     });
   };
 
-  const getTabValue = useCallback((dataScreenSummary: any) => {
+  const getTabValue = (dataScreenSummary: any) => {
     if (
       dataScreenSummary &&
       getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] &&
       Object.keys(
-        getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] || {}
+        getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
       )?.length !== 0
     ) {
-      return Object.keys(dataScreenSummary).map((s: any, index: any) => {
+      return Object.keys(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId])?.map((s: any, index: any) => {
         return {
           id: `${index + 1}`,
           label: s,
@@ -169,7 +170,7 @@ export const ScreenSummaryDetails = ({
         };
       });
     } else return [];
-  },[campaignId]);
+  };
 
   const refreshScreenSummary = () => {
     dispatch(
@@ -201,6 +202,7 @@ export const ScreenSummaryDetails = ({
 
   const handleSaveAndContinue = async () => {
     if (pathname.split("/").splice(-2)[0] === "iknowitallplan") {
+      console.log(getSelectedScreenIdsFromAllCities(screensBuyingCount));
       if (currentTab === "1") {
         dispatch(
           addDetailsToCreateCampaign({
@@ -281,6 +283,11 @@ export const ScreenSummaryDetails = ({
     } else {
       setCurrentTab("1");
     }
+    // if (screenSummaryPlanTableData) {
+    //   saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, {
+    //     [campaignId]: screenSummaryPlanTableData,
+    //   });
+    // }
 
   }, [campaignId, pathname, screenSummaryPlanTableData, step]);
 
@@ -293,6 +300,9 @@ export const ScreenSummaryDetails = ({
         screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
       }));
 
+      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
+        [campaignId]: screensBuyingCount,
+      });
       setCityTabData(getTabValue(screenSummaryData));
     }
   }, [
@@ -300,7 +310,6 @@ export const ScreenSummaryDetails = ({
     campaignId,
     screenSummaryData,
     screensBuyingCount,
-    getTabValue
   ]);
 
   useEffect(() => {

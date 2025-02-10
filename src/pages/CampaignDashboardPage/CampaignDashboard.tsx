@@ -304,6 +304,8 @@ export const CampaignDashboard = ({
                           campaignDetails?.endDate
                         )
                   }
+                  // day={day}
+                  // setDay={setDay}
                 />
               </div>
             </div>

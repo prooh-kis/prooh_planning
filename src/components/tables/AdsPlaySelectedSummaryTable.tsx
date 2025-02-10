@@ -52,6 +52,7 @@ interface BottomTableData {
 
 export const AdsPlaySelectedSummaryTable = ({
   currentTab,
+  resultData,
   bottomTableData,
 }: any) => {
   const getUpto2Decimal = (value: any) => {
@@ -71,8 +72,8 @@ export const AdsPlaySelectedSummaryTable = ({
       </div>
       <div className="flex w-full align-center py-2 text-[14px]">
         <h1 className="w-full text-center ">Selected</h1>
-        <h1 className="w-full text-center "> 8</h1>
-        <h1 className="w-full text-center "> 74</h1>
+        <h1 className="w-full text-center ">{Object.keys(resultData)?.length}</h1>
+        <h1 className="w-full text-center ">{resultData.reduce((total: any, touchPoint: any) => total + touchPoint.screenData.length, 0)}</h1>
         <h1 className="w-full text-center ">
           {getUpto2Decimal(bottomTableData?.selected?.morning)}
         </h1>
@@ -91,8 +92,8 @@ export const AdsPlaySelectedSummaryTable = ({
       </div>
       <div className="flex w-full align-center bg-[#E8F6FF] text-[#1297E2] py-2 text-[14px] ">
         <h1 className="w-full text-center ">Total</h1>
-        <h1 className="w-full text-center "> 8</h1>
-        <h1 className="w-full text-center "> 74</h1>
+        <h1 className="w-full text-center ">{Object.keys(resultData)?.length}</h1>
+        <h1 className="w-full text-center ">{resultData.reduce((total: any, touchPoint: any) => total + touchPoint.screenData.length, 0)}</h1>
         <h1 className="w-full text-center ">
           {getUpto2Decimal(bottomTableData?.selected?.morning)}
         </h1>

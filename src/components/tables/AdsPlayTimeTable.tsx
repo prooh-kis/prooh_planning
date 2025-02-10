@@ -78,9 +78,9 @@ export const AdsPlayTimeTable = ({
       )
     );
   };
-  
+
   return (
-    <div className="w-full border-r border-b text[#2B2B2B]">
+    <div className="w-full border-b text[#2B2B2B]">
       {/* header of the table */}
       <div className="flex w-full align-center grid grid-cols-12 bg-[#C9E9FF] py-2">
         <h1 className="w-full text-center col-span-2 "> TouchPoint</h1>
@@ -90,7 +90,7 @@ export const AdsPlayTimeTable = ({
         <h1 className="w-full text-center col-span-2 "> T3 Evening</h1>
         <h1 className="w-full text-center col-span-2 "> T4 Night</h1>
       </div>
-      <div className="overflow-y-auto h-96">
+      <div className="overflow-y-auto h-auto">
         {/* d= {screenData : [], touchPoint }*/}
         {data?.map((d: ResultData, i: number) => (
           <div key={i} className="grid grid-cols-12">
@@ -191,7 +191,7 @@ export const AdsPlayTimeTable = ({
                     </div>
                   </div>
                   {/* d1?.dayWiseData[currentTab]?.night?.included */}
-                  <div className={`col-span-2 py-2 px-4 border-b border-l`}>
+                  <div className={`col-span-2 py-2 px-4 border-b border-x`}>
                     <div className="flex justify-around items-center ">
                       <div
                         className="cursor-pointer"
@@ -246,7 +246,7 @@ export const AdsPlayTimeTable = ({
         <h1 className="w-full text-center text-[#1297E2] border-b border-l py-2 col-span-2">
           {getUpto2Decimal(bottomTableData?.totalTable?.[currentTab]?.evening)}
         </h1>
-        <h1 className="w-full text-center text-[#1297E2] border-b border-l py-2 col-span-2">
+        <h1 className="w-full text-center text-[#1297E2] border-b border-x py-2 col-span-2">
           {getUpto2Decimal(bottomTableData?.totalTable?.[currentTab]?.night)}
         </h1>
       </div>
