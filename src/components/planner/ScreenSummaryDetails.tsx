@@ -149,24 +149,24 @@ export const ScreenSummaryDetails = ({
           params:
             getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !==
               null ||
-            getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !==
+              getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !==
               undefined
               ? [
-                  Object.values(
-                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
-                      campaignId
-                    ]?.[s]
-                  )
-                    ?.map((f: any) => f.status)
-                    ?.filter((s: any) => s === true)?.length,
-                  Object.values(
-                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
-                      campaignId
-                    ]?.[s]
-                  )
-                    ?.map((f: any) => f.status)
-                    ?.filter((s: any) => s === false)?.length,
-                ]
+                Object.values(
+                  getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
+                  campaignId
+                  ]?.[s]
+                )
+                  ?.map((f: any) => f.status)
+                  ?.filter((s: any) => s === true)?.length,
+                Object.values(
+                  getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
+                  campaignId
+                  ]?.[s]
+                )
+                  ?.map((f: any) => f.status)
+                  ?.filter((s: any) => s === false)?.length,
+              ]
               : [0, 0],
         };
       });
@@ -204,6 +204,7 @@ export const ScreenSummaryDetails = ({
   const handleSaveAndContinue = async () => {
     if (pathname.split("/").splice(-2)[0] === "iknowitallplan") {
       console.log(getSelectedScreenIdsFromAllCities(screensBuyingCount));
+      console.log(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId])
       if (currentTab === "1") {
         dispatch(
           addDetailsToCreateCampaign({
@@ -249,7 +250,8 @@ export const ScreenSummaryDetails = ({
             getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
               ?.totalCampaignBudget,
           totalCpm:
-            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.totalCpm,
+            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+              ?.totalCpm,
         })
       );
     }
@@ -260,7 +262,7 @@ export const ScreenSummaryDetails = ({
   useEffect(() => {
     if (
       pathname.split("/").splice(-2)[0] !== "iknowitallplan" ||
-      currentTab === "1"
+      step === 2
     ) {
       dispatch(
         getScreenSummaryData({
@@ -375,11 +377,10 @@ export const ScreenSummaryDetails = ({
                 <div className="col-span-4 flex gap-2 truncate">
                   <Tooltip title="Single click to select the filter and Double click to deselect the filter">
                     <div
-                      className={`truncate px-1 border ${
-                        priceFilter.min === 1 && priceFilter.max === 100
-                          ? "border-[#129BFF]"
-                          : ""
-                      } rounded flex items-center gap-1`}
+                      className={`truncate px-1 border ${priceFilter.min === 1 && priceFilter.max === 100
+                        ? "border-[#129BFF]"
+                        : ""
+                        } rounded flex items-center gap-1`}
                       onClick={() => {
                         setPriceFilter({
                           min: 1,
@@ -401,11 +402,10 @@ export const ScreenSummaryDetails = ({
                   </Tooltip>
                   <Tooltip title="Single click to select the filter and Double click to deselect the filter">
                     <div
-                      className={`truncate px-1 border ${
-                        priceFilter.min === 100 && priceFilter.max === 300
-                          ? "border-[#129BFF]"
-                          : ""
-                      } rounded flex items-center gap-1`}
+                      className={`truncate px-1 border ${priceFilter.min === 100 && priceFilter.max === 300
+                        ? "border-[#129BFF]"
+                        : ""
+                        } rounded flex items-center gap-1`}
                       onClick={() => {
                         setPriceFilter({
                           min: 100,
@@ -428,9 +428,8 @@ export const ScreenSummaryDetails = ({
                   </Tooltip>
                   <Tooltip title="Click to see the list view">
                     <div
-                      className={`truncate px-1 border rounded flex items-center gap-1 ${
-                        listView && "border-primaryButton"
-                      }`}
+                      className={`truncate px-1 border rounded flex items-center gap-1 ${listView && "border-primaryButton"
+                        }`}
                       onClick={() => setListView(true)}
                     >
                       <i
@@ -439,9 +438,8 @@ export const ScreenSummaryDetails = ({
                           ${listView && "text-primaryButton"}`}
                       ></i>
                       <p
-                        className={`${
-                          listView && "text-primaryButton"
-                        } text-[12px] truncate`}
+                        className={`${listView && "text-primaryButton"
+                          } text-[12px] truncate`}
                       >
                         List View
                       </p>
@@ -449,9 +447,8 @@ export const ScreenSummaryDetails = ({
                   </Tooltip>
                   <Tooltip title="Click to see the grid view">
                     <div
-                      className={`truncate px-1 border rounded flex items-center gap-1 ${
-                        !listView && "border-primaryButton"
-                      }`}
+                      className={`truncate px-1 border rounded flex items-center gap-1 ${!listView && "border-primaryButton"
+                        }`}
                       onClick={() => setListView(false)}
                     >
                       <i
@@ -460,9 +457,8 @@ export const ScreenSummaryDetails = ({
                           ${!listView && "text-primaryButton"}`}
                       ></i>
                       <p
-                        className={`${
-                          !listView && "text-primaryButton"
-                        } text-[12px] truncate`}
+                        className={`${!listView && "text-primaryButton"
+                          } text-[12px] truncate`}
                       >
                         Grid View
                       </p>
