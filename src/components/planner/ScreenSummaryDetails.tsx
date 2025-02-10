@@ -20,6 +20,7 @@ import { Footer } from "../../components/footer";
 import {
   FULL_CAMPAIGN_PLAN,
   SCREEN_SUMMARY_SELECTION,
+  SCREEN_SUMMARY_TABLE_DATA,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { Loading } from "../../components/Loading";
@@ -220,17 +221,17 @@ export const ScreenSummaryDetails = ({
             id: pathname.split("/").splice(-1)[0],
             totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
             totalImpression:
-              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-                ?.totalImpression,
-            totalReach:
-              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-                ?.totalReach,
-            totalCampaignBudget:
-              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-                ?.totalCampaignBudget,
-            totalCpm:
-              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-                ?.totalCpm,
+            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
+              ?.totalImpression,
+          totalReach:
+            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
+              ?.totalReach,
+          totalCampaignBudget:
+            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
+              ?.totalCampaignBudget,
+          totalCpm:
+            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
+              ?.totalCpm,
           })
         );
       }
