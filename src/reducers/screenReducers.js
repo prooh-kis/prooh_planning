@@ -20,6 +20,9 @@ import {
   GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_RESET,
   GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_SUCCESS,
   GET_SCREEN_SUMMARY_DATA_ERROR,
+  GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_ERROR,
+  GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_REQUEST,
+  GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_SUCCESS,
   GET_SCREEN_SUMMARY_DATA_REQUEST,
   GET_SCREEN_SUMMARY_DATA_SUCCESS,
   GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_ERROR,
@@ -197,6 +200,29 @@ export function screenSummaryDataGetReducer(state = {}, action) {
         data: campaign,
       };
     case GET_SCREEN_SUMMARY_DATA_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function screenSummaryDataIKnowItAllGetReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_REQUEST:
+      return { loading: true };
+    case GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_SUCCESS:
+      const {id, ...campaign} = action.payload;
+      const saveData = {};
+      saveData[id] = campaign;
+      saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, saveData);
+      return {
+        loading: false,
+        data: campaign,
+      };
+    case GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_ERROR:
       return {
         loading: false,
         error: action.payload,

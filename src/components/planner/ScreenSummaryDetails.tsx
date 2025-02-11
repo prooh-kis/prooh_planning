@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getPlanningPageFooterData,
   getScreenSummaryData,
+  getScreenSummaryDataIKnowItAll,
   getScreenSummaryPlanTableData,
 } from "../../actions/screenAction";
 import {
@@ -84,11 +85,21 @@ export const ScreenSummaryDetails = ({
   const screenSummaryDataGet = useSelector(
     (state: any) => state.screenSummaryDataGet
   );
+
+  const screenSummaryDataIKnowItAllGet = useSelector(
+    (state: any) => state.screenSummaryDataIKnowItAllGet
+  )
   const {
     loading: loadingScreenSummary,
     error: errorScreenSummary,
     data: screenSummaryData,
   } = screenSummaryDataGet;
+
+  const {
+    loading: loadingScreenSummaryIKnowItAll,
+    error: errorScreenSummaryIKnowItAll,
+    data: screenSummaryDataIKnowItAll
+  } = screenSummaryDataIKnowItAllGet
 
   const screenSummaryPlanTableDataGet = useSelector(
     (state: any) => state.screenSummaryPlanTableDataGet
@@ -136,6 +147,7 @@ export const ScreenSummaryDetails = ({
   };
 
   const getTabValue = (dataScreenSummary: any) => {
+    console.log(dataScreenSummary)
     if (
       dataScreenSummary &&
       getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] &&
@@ -221,17 +233,17 @@ export const ScreenSummaryDetails = ({
             id: pathname.split("/").splice(-1)[0],
             totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
             totalImpression:
-            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
-              ?.totalImpression,
-          totalReach:
-            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
-              ?.totalReach,
-          totalCampaignBudget:
-            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
-              ?.totalCampaignBudget,
-          totalCpm:
-            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
-              ?.totalCpm,
+              getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
+                ?.totalImpression,
+            totalReach:
+              getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
+                ?.totalReach,
+            totalCampaignBudget:
+              getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
+                ?.totalCampaignBudget,
+            totalCpm:
+              getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
+                ?.totalCpm,
           })
         );
       }
@@ -261,15 +273,19 @@ export const ScreenSummaryDetails = ({
   };
 
   useEffect(() => {
-    if (
-      pathname.split("/").splice(-2)[0] !== "iknowitallplan" ||
-      step === 2
-    ) {
+    if (pathname.split("/").splice(-2)[0] !== "iknowitallplan") {
       dispatch(
         getScreenSummaryData({
           id: campaignId,
           type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
             ?.selectedType,
+        })
+      );
+    }
+    else if (step === 2) {
+      dispatch(
+        getScreenSummaryDataIKnowItAll({
+          id: campaignId
         })
       );
     }
@@ -300,7 +316,7 @@ export const ScreenSummaryDetails = ({
   }, [campaignId, pathname, screenSummaryPlanTableData, step]);
 
   useEffect(() => {
-    if (screenSummaryData) {
+    if (screenSummaryData || screenSummaryDataIKnowItAll) {
       // console.log(screenSummaryData);
       dispatch(
         getScreenSummaryPlanTableData({
@@ -312,12 +328,13 @@ export const ScreenSummaryDetails = ({
       saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
         [campaignId]: screensBuyingCount,
       });
-      setCityTabData(getTabValue(screenSummaryData));
+      setCityTabData(getTabValue(screenSummaryData || screenSummaryDataIKnowItAll));
     }
   }, [
     dispatch,
     campaignId,
     screenSummaryData,
+    screenSummaryDataIKnowItAll,
     screensBuyingCount,
   ]);
 
@@ -353,9 +370,9 @@ export const ScreenSummaryDetails = ({
         </div>
       )}
 
-      {loadingScreenSummary ? (
+      {loadingScreenSummary || loadingScreenSummaryIKnowItAll ? (
         <Loading />
-      ) : errorScreenSummary ? (
+      ) : (errorScreenSummary || errorScreenSummaryIKnowItAll) ? (
         <div className="p-4 bg-red-300 text-[#FFFFFF] ">
           Something went wrong! please refresh the page...
         </div>
@@ -365,9 +382,8 @@ export const ScreenSummaryDetails = ({
             <div>
               <div className="py-2 grid grid-cols-12 flex justify-between">
                 <div className="col-span-8 overflow-x-scroll no-scrollbar">
-                  {!loadingScreenSummary &&
-                    screenSummaryData &&
-                    cityTabData?.length !== 0 && (
+                  {((!loadingScreenSummary && screenSummaryData) || (!loadingScreenSummaryIKnowItAll && screenSummaryDataIKnowItAll))
+                    && cityTabData?.length !== 0 && (
                       <TabWithoutIcon
                         currentTab={currentSummaryTab}
                         setCurrentTab={handleSelectCurrentTab}
@@ -469,7 +485,7 @@ export const ScreenSummaryDetails = ({
               </div>
               {listView ? (
                 <ScreenSummaryTable
-                  data={screenSummaryData}
+                  data={screenSummaryData || screenSummaryDataIKnowItAll}
                   currentCity={currentCity}
                   currentSummaryTab={currentSummaryTab}
                   setCurrentCity={setCurrentCity}

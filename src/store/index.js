@@ -19,6 +19,7 @@ import {
   vendorConfirmationDetailsGetReducer,
   vendorConfirmationStatusTableDetailsGetReducer,
   tableDataSetAdPlayTimeReducer,
+  screenSummaryDataIKnowItAllGetReducer,
 } from "../reducers/screenReducers";
 import {
   emailSendForConfirmationReducer,
@@ -76,6 +77,7 @@ const store = configureStore({
     screensDataAdvanceFilterGet: screensDataAdvanceFilterGetReducer,
     regularVsCohortPriceDataGet: regularVsCohortPriceDataGetReducer,
     screenSummaryDataGet: screenSummaryDataGetReducer,
+    screenSummaryDataIKnowItAllGet : screenSummaryDataIKnowItAllGetReducer,
     screenSummaryPlanTableDataGet: screenSummaryPlanTableDataGetReducer,
     finalPlanPOTableDataGet: finalPlanPOTableDataGetReducer,
     screenDataUploadCreative: screenDataUploadCreativeReducer,
