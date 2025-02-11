@@ -6,7 +6,7 @@ export const FloatingBrandIcon = () => {
   const [selectOption, setSelectOption] = useState<string>("Demand");
 
   return (
-    <div className="lg:px-16 px-4 w-full">
+    <div className="lg:px-16 px-4 w-full pt-12">
       <div className="flex justify-center gap-2">
         {["Demand", "Supply"].map((option) => (
           <button

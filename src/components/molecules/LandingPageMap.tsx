@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import ReactMapGL, { Marker } from "react-map-gl";
+import ReactMapGL, { FullscreenControl, GeolocateControl, Marker, NavigationControl, ScaleControl } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import mapboxgl from "mapbox-gl";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
@@ -62,7 +62,7 @@ export function LandingPageMap(props: any) {
           ...prevState,
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          zoom: 5,
+          zoom: 1,
         }));
       },
       (error) => {
@@ -83,29 +83,36 @@ export function LandingPageMap(props: any) {
       ];
 
       const map = landingMapRef.current?.getMap();
-      map.fitBounds(bounds, { padding: 20, maxZoom: 15 });
+      map.fitBounds(bounds, { padding: 20, maxZoom: 10 });
     }
   }, [memoizedMarkers]);
 
   return (
     <div className="relative h-full w-full flex flex-col items-start">
-      <div className="flex flex-col items-end gap-2 right-4 pt-20 absolute z-10">
+      {/* <div className="flex flex-col items-end gap-2 right-4 pt-20 absolute z-10">
         {memoizedTouchPoints?.map((tp: any, i: any) => (
           <div key={i} className="cursor-pointer flex items-center gap-2 group">
             <h1 className={clsx(`text-[10px] group-hover:opacity-100 ${colorsbg[i]} group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300`)}>{tp?.tp}</h1>
             <div className={clsx(`h-4 w-4 ${colors[i]} rounded-full`)}></div>
           </div>
         ))}
-      </div>
-      <div className="h-[480px] w-full lg:h-full">
+      </div> */}
+      <div className="h-full w-full lg:h-full">
         <ReactMapGL
           ref={landingMapRef}
           initialViewState={viewState}
           style={{ borderRadius: "10px", zIndex: 0 }}
           mapStyle="mapbox://styles/vviicckkyy55/cm4l7klx300fx01sf61uthrog"
           mapboxAccessToken={process.env.REACT_APP_MAPBOX || "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A"}
-          onMove={(e: any) => setViewState(e.viewState)}
+          onMove={(e: any) => {
+            setViewState(e.viewState);
+          }}
+          scrollZoom={false}
         >
+          <GeolocateControl position="top-left" />
+          <FullscreenControl position="top-left" />
+          <NavigationControl position="top-left" />
+          <ScaleControl />
           {memoizedMarkers?.map((marker: any, i: any) => (
             <Marker key={i} latitude={marker[0]} longitude={marker[1]}>
               <div title={`${marker[2]}`} className="cursor-pointer">
@@ -122,6 +129,25 @@ export function LandingPageMap(props: any) {
             </Marker>
           ))}
         </ReactMapGL>
+      </div>
+      <div className="flex justify-between items-center">
+        <div
+          className="absolute flex justify-around bottom-1 right-1 transform translate-x-0 w-[10%] z-20 px-2 border bg-[#FFFFFF] rounded-[12px] shadow-lg cursor-pointer"
+          style={{ marginBottom: "0px" }}
+        >
+          <div
+            onClick={() => {
+              // setView("map");
+            }}
+            className={`truncate flex justify-between px-1 py-2`}
+          >
+            <h1
+              className={`truncate text-[12px]`}
+            >
+              Reset
+            </h1>
+          </div>
+        </div>
       </div>
     </div>
   );

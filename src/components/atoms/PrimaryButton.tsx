@@ -40,7 +40,7 @@ export const PrimaryButton = ({
               ? "bg-[#FFFFFF] border border-primaryButton text-primaryButton hover:bg-transparent hover:border-primaryButton hover:border-2 hover:text-primaryButton"
               : disabled
               ? "bg-gray text-primaryButton hover:bg-transparent hover:border-primaryButton hover:border-2 hover:text-primaryButton"
-              : "bg-primaryButton font-semibold text-[#FFFFFF] hover:bg-transparent hover:border-primaryButton hover:border-2 hover:text-primaryButton"
+              : "bg-primaryButton font-semibold text-[#FFFFFF] hover:bg-[#D7D7D7] hover:border-primaryButton hover:border-2 hover:text-black"
           }
           transition-colors duration-300
         `}

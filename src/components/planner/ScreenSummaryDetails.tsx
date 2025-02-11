@@ -76,8 +76,7 @@ export const ScreenSummaryDetails = ({
   const [screensBuyingCount, setScreensBuyingCount] = useState(() => {
     // Check localStorage on the first load
     return getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
-      ? getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
-      : {};
+      ?? {};
   });
   const [visitedTab, setVisitedTab] = useState<any>([]);
 
@@ -114,6 +113,7 @@ export const ScreenSummaryDetails = ({
   };
 
   const handleSelectCurrentTab = (id: string) => {
+  
     setCurrentSummaryTab(id);
 
     const city = citiesCreative?.find((data: any) => data.id === id)?.label;
@@ -122,6 +122,7 @@ export const ScreenSummaryDetails = ({
     } else {
       setCurrentCity(currentCity);
     }
+    
     setVisitedTab((pre: any) => {
       return pre.map((data: any) => {
         if (data?.id == id) {
@@ -204,8 +205,6 @@ export const ScreenSummaryDetails = ({
 
   const handleSaveAndContinue = async () => {
     if (pathname.split("/").splice(-2)[0] === "iknowitallplan") {
-      console.log(getSelectedScreenIdsFromAllCities(screensBuyingCount));
-      console.log(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId])
       if (currentTab === "1") {
         dispatch(
           addDetailsToCreateCampaign({
@@ -300,14 +299,20 @@ export const ScreenSummaryDetails = ({
   }, [campaignId, pathname, screenSummaryPlanTableData, step]);
 
   useEffect(() => {
+    if (screensBuyingCount) {
+      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
+        [campaignId]: screensBuyingCount,
+      });
+    }
+  }, [screensBuyingCount, campaignId]);
+
+  useEffect(() => {
+
     if (screenSummaryData) {
-      // console.log(screenSummaryData);
-      dispatch(
-        getScreenSummaryPlanTableData({
-          id: campaignId,
-          screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-        })
-      );
+      dispatch(getScreenSummaryPlanTableData({
+        id: campaignId,
+        screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+      }));
 
       saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
         [campaignId]: screensBuyingCount,
@@ -320,14 +325,6 @@ export const ScreenSummaryDetails = ({
     screenSummaryData,
     screensBuyingCount,
   ]);
-
-  useEffect(() => {
-    // if (errorScreenSummary) {
-    //   window.location.reload();
-    // }
-  }, [errorScreenSummary]);
-
-  console.log("cityTabData : ", cityTabData);
 
   return (
     <div className="w-full py-3">

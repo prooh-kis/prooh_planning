@@ -11,11 +11,11 @@ import {
   HowItsWork,
   OurAdvertisingJourney,
   Section1,
-  MeetOurDataHero,
   FeedBack,
   ProohCreator,
   ContactForm,
   FindUsOnGoogle,
+  FlowDiagram,
 } from "../../components/LoadingPageComponents";
 
 export const Landing: React.FC = () => {
@@ -33,12 +33,12 @@ export const Landing: React.FC = () => {
     dispatch(getLandingPageData());
   },[dispatch])
   return (
-    <div className="w-screen h-full">
+    <div className="w-screen h-full bg-white">
       <Section1 />
       <FloatingBrandIcon />
+      <FlowDiagram />
       <OurAdvertisingJourney data={data} />
       <HowItsWork />
-      <MeetOurDataHero />
       <FeedBack />
       <ProohCreator />
       <ContactForm />

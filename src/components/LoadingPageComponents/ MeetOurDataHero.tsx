@@ -15,8 +15,8 @@ export const MeetOurDataHero = () => {
   };
 
   return (
-    <section className="flex justify-center lg:pt-[720px] pt-4 pb-20 w-full">
-      <div className="relative flex flex-col items-center w-full max-w-screen-lg">
+    <section className="flex justify-center pt-4 pb-20 w-full">
+      <div className="flex flex-col items-center w-full max-w-screen-lg">
         {/* Title */}
         <h1 className="text-[32px] lg:text-[48px] font-semibold text-center mb-4">
           Meet Our Data Hero

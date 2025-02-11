@@ -11,11 +11,6 @@ import applyDataHero from "../assets/images/applyDataHero.png";
 import audienceDataInput from "../assets/images/audienceDataInput.png";
 import dmpDashboard from "../assets/images/dmpDashboard.png";
 
-import imageA from "../assets/images/imageA.png";
-import imageB from "../assets/images/imageB.png";
-import imageC from "../assets/images/imageC.png";
-import imageD from "../assets/images/imageD.png";
-import imageE from "../assets/images/imageE.png";
 import asus from "../assets/images/asus.png";
 import samsung from "../assets/images/samsung.png";
 import blinkit from "../assets/images/blinkit-a.png";
@@ -172,22 +167,20 @@ export const images = [
   timesprime,
 ];
 
-export const carouselImages = [imageA, imageB, imageC, imageD, imageE];
-
 export const tabData = [
   {
     id: "1",
-    label: "Advertiser",
+    label: "Are You An Advertiser?",
     params: "",
   },
   {
     id: "2",
-    label: "Media Owner",
+    label: "Are You A Media Owner?",
     params: "",
   },
   {
     id: "3",
-    label: "Data Hero",
+    label: "Become A Data Hero",
     params: "",
   },
 ];
@@ -195,26 +188,30 @@ export const tabData = [
 export const advertisersSteps = [
   {
     id: "1",
-    label: "Basic Details",
+    label: "Do You Know?",
   },
   {
     id: "2",
-    label: "Target Audience And Touchpoints",
+    label: "Basic Details",
   },
   {
     id: "3",
-    label: "Advance Filters",
+    label: "Target Audience And Touchpoints",
   },
   {
     id: "4",
-    label: "Compare Plan",
+    label: "Advance Filters",
   },
   {
     id: "5",
-    label: "Billing",
+    label: "Compare Plan",
   },
   {
     id: "6",
+    label: "Billing",
+  },
+  {
+    id: "7",
     label: "Campaign Report",
   },
 ];
@@ -222,18 +219,22 @@ export const advertisersSteps = [
 export const mediaOwnersSteps = [
   {
     id: "1",
-    label: "Inventory Listing",
+    label: "Do You Know?",
   },
   {
     id: "2",
-    label: "Audience Data Mapping",
+    label: "Inventory Listing",
   },
   {
     id: "3",
-    label: "Screen Management",
+    label: "Audience Data Mapping",
   },
   {
     id: "4",
+    label: "Screen Management",
+  },
+  {
+    id: "5",
     label: "Creative Confirmation",
   }
 ];
@@ -241,14 +242,18 @@ export const mediaOwnersSteps = [
 export const dataHeroSteps = [
   {
     id: "1",
-    label: "Application Process",
+    label: "Do You Know?",
   },
   {
     id: "2",
-    label: "Audience Segregation",
+    label: "Application Process",
   },
   {
     id: "3",
+    label: "Audience Segregation",
+  },
+  {
+    id: "4",
     label: "Data Dashboard",
   }
 ];

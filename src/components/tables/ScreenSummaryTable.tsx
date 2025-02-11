@@ -40,6 +40,9 @@ export const ScreenSummaryTable = ({
       const types: any = {};
       const stToggle: any = {};
 
+      if (!getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]) {
+
+      }
       for (const city in myData) {
         zones[city] = {};
         tps[city] = {};
@@ -54,7 +57,7 @@ export const ScreenSummaryTable = ({
             types[city][st] = [];
             stToggle[city][tp][st] =
               getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[
-                campaignId
+              campaignId
               ]?.[city]?.[tp]?.[st] || true;
             for (const zone in myData[city][tp][st]) {
               zones[city][zone] = [];
@@ -68,8 +71,13 @@ export const ScreenSummaryTable = ({
                 types[city][st].push(
                   myData[city][tp][st][zone][screen]?.screenName
                 );
+                let screenId = myData[city][tp][st][zone][screen]?._id
                 screens[city][`${myData[city][tp][st][zone][screen]?._id}`] = {
-                  status: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds?.length > 0 && !getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds.includes(myData[city][tp][st][zone][screen]?._id) ? false : true, // Set all screens as selected by default
+                  status: getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]?.[city]?.[screenId] ? 
+                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]?.[city]?.[screenId].status : 
+                    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds?.length > 0 &&
+                    !getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds.includes(myData[city][tp][st][zone][screen]?._id) ?
+                    false : true, // Set all screens as selected by default
                   data: myData[city][tp][st][zone][screen],
                 };
               }
@@ -82,7 +90,6 @@ export const ScreenSummaryTable = ({
       setCityZones(zones);
       setCityTP(tps);
       setScreenTypes(types);
-
       saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
         [campaignId]: screens,
       });
@@ -299,11 +306,10 @@ export const ScreenSummaryTable = ({
                               }}
                             >
                               <i
-                                className={`fi ${
-                                  screenTypeToggle?.[currentCity]?.[tp]?.[st]
+                                className={`fi ${screenTypeToggle?.[currentCity]?.[tp]?.[st]
                                     ? "fi-br-check text-[#358E0B]"
                                     : "fi-br-cross text-[#FF0808]"
-                                } flex items-center text-[12px]`}
+                                  } flex items-center text-[12px]`}
                               ></i>
                             </div>
                           </div>
