@@ -29,25 +29,29 @@ export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
           if (index === 0) return null;
           if (file.fileType.split("/")[0] === "image")
             return (
-              <ImageContainer
-                key={index}
-                url={file?.url}
-                className="rounded-lg "
-                height="102px"
-                width="150px"
-                removeFile={removeFile}
-              />
+              <div className="w-[150px]" key={index}>
+                <ImageContainer
+                  key={index}
+                  url={file?.url}
+                  className="rounded-lg "
+                  height="102px"
+                  width="150px"
+                  removeFile={removeFile}
+                />
+              </div>
             );
           else
             return (
-              <VideoContainer
-                key={index}
-                url={file?.url}
-                className="rounded-lg "
-                height="102px"
-                width="150px"
-                removeFile={removeFile}
-              />
+              <div className="w-[150px]" key={index}>
+                <VideoContainer
+                  key={index}
+                  url={file?.url}
+                  className="rounded-lg "
+                  height="102px"
+                  width="150px"
+                  removeFile={removeFile}
+                />
+              </div>
             );
         })}
       </div>
