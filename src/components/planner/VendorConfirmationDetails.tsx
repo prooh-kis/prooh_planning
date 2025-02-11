@@ -33,6 +33,7 @@ import {
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED,
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT,
 } from "../../constants/campaignConstants";
+import { convertDateIntoDateMonthYear } from "../../utils/dateAndTimeUtils";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -153,19 +154,29 @@ export const VendorConfirmationDetails = ({
                   return {
                     screenName: d.screenName,
                     touchPoint: d.touchPoint,
-                    startDate: new Date(d.startDate).toLocaleDateString(),
-                    endDate: new Date(d.endDate).toLocaleDateString(),
+                    startDate: convertDateIntoDateMonthYear(d.startDate),
+                    endDate: convertDateIntoDateMonthYear(d.endDate),
                     cost: `${"\u20B9"}${d.cost.toFixed(0)}`,
                   };
                 })
                 ?.map(
                   (c: any, i: any) =>
                     `<tr key=${i} style='background-color: #F8F9FA;'>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.screenName}</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.touchPoint}</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.startDate}</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.endDate}</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.cost}</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${
+                    c.screenName
+                  }</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${
+                    c.touchPoint
+                  }</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${convertDateIntoDateMonthYear(
+                    c.startDate
+                  )}</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${convertDateIntoDateMonthYear(
+                    c.endDate
+                  )}</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${
+                    c.cost
+                  }</td>
                 </tr>`
                 )}
             </tbody>
@@ -210,19 +221,29 @@ export const VendorConfirmationDetails = ({
                   return {
                     screenName: d.screenName,
                     touchPoint: d.touchPoint,
-                    startDate: new Date(d.startDate).toLocaleDateString(),
-                    endDate: new Date(d.endDate).toLocaleDateString(),
+                    startDate: convertDateIntoDateMonthYear(d.startDate),
+                    endDate: convertDateIntoDateMonthYear(d.endDate),
                     cost: `${"\u20B9"}${d.cost.toFixed(0)}`,
                   };
                 })
                 ?.map(
                   (c: any, i: any) =>
                     `<tr key=${i} style='background-color: #F8F9FA;'>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.screenName}</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.touchPoint}</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.startDate}</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.endDate}</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${c.cost}</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${
+                    c.screenName
+                  }</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${
+                    c.touchPoint
+                  }</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${convertDateIntoDateMonthYear(
+                    c.startDate
+                  )}</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${convertDateIntoDateMonthYear(
+                    c.endDate
+                  )}</td>
+                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${
+                    c.cost
+                  }</td>
                 </tr>`
                 )}
             </tbody>

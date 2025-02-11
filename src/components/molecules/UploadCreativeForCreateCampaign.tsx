@@ -12,7 +12,7 @@ export const UploadCreativeForStandardCampaign = ({
   removeFile,
 }: any) => {
   return (
-    <div className="p-4">
+    <div className="p-4 max-h-[60vh] overflow-scroll no-scrollbar">
       <h1 className="py-2">Upload creative</h1>
       <Radio.Group
         onChange={handleSelectFileType}
@@ -34,7 +34,7 @@ export const UploadCreativeForStandardCampaign = ({
               url={file?.url}
               className=" rounded-lg"
               height="250px"
-              width="483px"
+              width="full"
               removeFile={removeFile}
             />
           ) : (
@@ -42,7 +42,7 @@ export const UploadCreativeForStandardCampaign = ({
               url={file?.url}
               className="rounded-lg"
               height="250px"
-              width="483px"
+              width="full"
               removeFile={removeFile}
             />
           )
@@ -89,7 +89,7 @@ export const UploadCreativeForTriggerCampaign = ({
   triggerType,
 }: any) => {
   return (
-    <div className="p-2">
+    <div className="p-4 max-h-[50vh] overflow-scroll no-scrollbar">
       <h1 className="font-semibold">{triggerType}</h1>
       {triggerType === "Weather Trigger" && (
         <div>

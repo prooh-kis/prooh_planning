@@ -30,8 +30,36 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, 'Courier New';
+    /* monospace; */
+}
+
+.font-custom {
+  font-family: "Cal Sans";
+  letter-spacing: 0.01em;
+  font-weight: 1000;
+}
+
+.rotated-text {
+  transform: rotate(180deg);
+  writing-mode: vertical-lr;
+  /* text-orientation: upright; */
+}
+
+.border-left-dotted {
+  position: relative;
+}
+
+.border-left-dotted::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -10px;
+  width: 2px;
+  height: 100%;
+  background-color: #ccc;
+  border-style: dotted;
 }
 
 .no-scrollbar::-webkit-scrollbar {

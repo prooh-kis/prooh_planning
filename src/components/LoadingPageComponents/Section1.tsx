@@ -3,41 +3,29 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { AUTH } from "../../routes/routes";
 import { CarouselImageView } from "../../components/molecules/CarouselImageView";
-import { carouselImages } from "../../data/LandingPageData";
 
 export const Section1 = () => {
   const navigate = useNavigate();
   return (
-    <div className="w-full grid grid-cols-2 md:grid-cols-12 gap-8 md:gap-16 px-6 md:px-16 py-16 md:py-32">
+    <div className="w-full gap-8 md:gap-16 px-6 md:px-16 pt-16 md:pt-32">
       {/* Text Content */}
-      <div className="col-span-2 md:col-span-5 flex justify-center md:justify-start">
-        <div className="w-full md:w-[516px]">
-          <h1 className="text-[28px] md:text-[40px] lg:text-[48px] font-bold text-[#20272C]  leading-[45px] tracking-[-0.02em]">
-            End-to-end <br />
-            campaign management platform for
-            <span className="bg-primaryButton text-[#FFFFFF] rounded-[10px] text-[20px] md:text-[32px] px-2 ml-2">
-              DOOH
-            </span>
-          </h1>
-          <p className="text-[12px] md:text-[14px] text-[#4C6590] text-start mt-4 md:mt-8">
-            {`Prooh: India’s 1st 'Audience Guarantee' OOH Media Company,
-            delivering data-driven planning, audience measurement, performance
-            proof, and 100% cost transparency.`}
-          </p>
-          <div className="mt-6 md:mt-8 flex justify-start">
-            <PrimaryButton
-              title="Start Planning"
-              rounded="rounded-[5px]"
-              action={() => navigate(AUTH)} // Scroll to the target on click
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Carousel Section */}
-      <div className="col-span-2 md:col-span-7 flex justify-center md:justify-start">
-        <div className="w-full max-w-[738px]">
-          <CarouselImageView showThumbnails={false} images={carouselImages} />
+      <div className="w-full flex flex-col justify-center items-center">
+        <code className="text-[10px] md:text-[12px] lg:text-[16px] mb-[-14px] font-semibold">End-To-End</code>
+        <h1 className="font-custom text-[24px] md:text-[60px] lg:text-[80px] text-[#20272C] text-center w-[90vw]">
+          Campaign Management Platform For DOOH
+        </h1>
+        <p className="text-[12px] md:text-[14px] text-[#4C6590] text-center mt-4 md:mt-8 w-[80vw]">
+          {`Prooh: India’s 1st 'Audience Guarantee' DOOH Media Company,
+          delivering data-driven planning, audience measurement, performance
+          proof, and 100% cost transparency.`}
+        </p>
+        <div className="mt-6 md:mt-8 flex justify-start">
+          <PrimaryButton
+            title="Start Planning"
+            rounded="rounded-full"
+            action={() => navigate(AUTH)} // Scroll to the target on click
+            icon={<i className="fi fi-sr-megaphone mx-2 flex items-center jusify-center"></i>}
+          />
         </div>
       </div>
     </div>

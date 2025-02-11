@@ -30,7 +30,7 @@ import {
   CAMPAIGN_DETAILS_PAGE,
   FORGET_PASSWORD,
   HOME,
-  MARKETS_PAGE,
+  ADVERTISERS_PAGE,
   MEDIA_OWNER_PAGE,
   MY_CAMPAIGNS_LIST,
   MY_PLANS_LIST,
@@ -135,7 +135,7 @@ const Routers: React.FC = () => {
         />
 
         <Route
-          path={MARKETS_PAGE}
+          path={ADVERTISERS_PAGE}
           element={
             <PublicRoute>
               <MarketersPage />

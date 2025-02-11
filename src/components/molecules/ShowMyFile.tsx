@@ -37,9 +37,8 @@ export const VideoContainer = ({
 }: any) => (
   <div className="relative inline-block max-h-[30vh] overflow-hidden">
     <video
-      className={`${className} object-cover`}
+      className={`${className} object-cover h-[${height}] w-full`}
       controls
-      style={{ height, width }}
     >
       <source src={url} />
       Your browser does not support the video tag.

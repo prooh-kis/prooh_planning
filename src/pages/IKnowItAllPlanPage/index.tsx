@@ -79,28 +79,19 @@ export const IKnowItAllPlanPage: React.FC = () => {
   useEffect(() => {
     if (success) {
       // const campDetails = location.state.campaign
-      const campDetails = campaignDetails;
-
-      setCurrentStep(
-        Number(
-          pages.filter(
-            (page: any) => page.value === campDetails?.currentPage
-          )[0]?.id || 0
-        ) + 1
-      );
-
       const curr =
         Number(
           pages.filter(
-            (page: any) => page.value === campDetails?.currentPage
+            (page: any) => page.value === campaignDetails?.currentPage
           )[0]?.id || 0
         ) + 1;
+      setCurrentStep(curr);
       const currStep = {
         [campaignId]: curr,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
-  }, [dispatch, campaignDetails]);
+  }, [success]);
 
   useEffect(() => {
     if (campaignId !== null || undefined) {

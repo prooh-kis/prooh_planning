@@ -28,7 +28,7 @@ import { generateCampaignSummaryPdfFromJSON } from "../../utils/generatePdf";
 import { sendEmailForConfirmation } from "../../actions/userAction";
 import { SEND_EMAIL_FOR_CONFIRMATION_RESET } from "../../constants/userConstants";
 import { generatePPT } from "../../utils/generatePPT";
-import { convertIntoDateAndTime } from "../../utils/dateAndTimeUtils";
+import { convertDateIntoDateMonthYear, convertIntoDateAndTime } from "../../utils/dateAndTimeUtils";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
 import {
   applyCouponForCampaign,
@@ -431,11 +431,11 @@ export const ViewFinalPlanPODetails = ({
           />
           <MyDiv
             left={"Start Date"}
-            right={convertIntoDateAndTime(poTableData?.startDate)}
+            right={convertDateIntoDateMonthYear(poTableData?.startDate)}
           />
           <MyDiv
             left={"End Date"}
-            right={convertIntoDateAndTime(poTableData?.endDate)}
+            right={convertDateIntoDateMonthYear(poTableData?.endDate)}
           />
           <MyDiv left={"Duration"} right={`${poTableData?.duration} Days`} />
           <Divider />

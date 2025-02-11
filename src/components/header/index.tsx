@@ -11,7 +11,7 @@ import userImage from "../../assets/userImage.png";
 import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import {
   AUTH,
-  MARKETS_PAGE,
+  ADVERTISERS_PAGE,
   MEDIA_OWNER_PAGE,
   SIGN_UP,
 } from "../../routes/routes";
@@ -35,15 +35,19 @@ export const Header: React.FC = () => {
   const data = [
     {
       title: "Home",
-      path: "/",
+      path: `https://plan.prooh.ai/`,
     },
     {
-      title: "Markets",
-      path: MARKETS_PAGE,
+      title: "Advertisers",
+      path: `https://plan.prooh.ai/${ADVERTISERS_PAGE}`,
     },
     {
       title: "Media Owner",
-      path: MEDIA_OWNER_PAGE,
+      path: `https://plan.prooh.ai/${MEDIA_OWNER_PAGE}`,
+    },
+    {
+      title: "Research",
+      path: "https://prooh-dmp.vercel.app",
     },
   ];
 
@@ -86,7 +90,7 @@ export const Header: React.FC = () => {
             <button
               key={d1.title}
               type="button"
-              onClick={() => navigate(d1.path)}
+              onClick={() => window.open(d1.path)}
               className={`${
                 location.pathname === d1.path
                   ? "text-sm lg:text-base font-semibold text-[#0094FF] border-b-2 border-[#129BFF] py-5"
@@ -171,12 +175,12 @@ export const Header: React.FC = () => {
                 <li className="border-b">
                   <button
                     onClick={() => {
-                      navigate(MARKETS_PAGE);
+                      navigate(ADVERTISERS_PAGE);
                       setIsMenuOpen(false);
                     }}
                     className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100"
                   >
-                    Marketers
+                    Advertisers
                   </button>
                 </li>
                 <li className="border-b">
@@ -187,7 +191,18 @@ export const Header: React.FC = () => {
                     }}
                     className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100"
                   >
-                    Media Owner
+                    Media Owners
+                  </button>
+                </li>
+                <li className="border-b">
+                  <button
+                    onClick={() => {
+                      navigate(MEDIA_OWNER_PAGE);
+                      setIsMenuOpen(false);
+                    }}
+                    className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100"
+                  >
+                    Research
                   </button>
                 </li>
 

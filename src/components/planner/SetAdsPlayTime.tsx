@@ -9,7 +9,7 @@ import {
   AdsPlayTimeTable,
 } from "../../components/tables";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { getPlanningPageFooterData, getTableDataScreenWiseAdPlayTime } from "../../actions/screenAction";
+import { getPlanningPageFooterData, getTableDataScreenWiseAdPlayTime, tableDataSetAdPlayTime } from "../../actions/screenAction";
 import { Loading } from "../../components/Loading";
 
 interface BottomTableData {
@@ -141,7 +141,7 @@ export const SetAdsPlayTime = ({
   }, [dispatch, campaignId]);
 
   // useEffect(() => {
-  //   if (data) {
+  //   if (tableData) {
   //     dispatch(
   //       tableDataSetAdPlayTime({
   //         touchPointScreenWiseData: tableData?.result,

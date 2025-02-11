@@ -15,7 +15,7 @@ export const USERS = "/users";
 export const CAMPAIGN_DETAILS_PAGE = "/campaignDetails";
 
 export const MEDIA_OWNER_PAGE = "/media-owner";
-export const MARKETS_PAGE = "/marketers";
+export const ADVERTISERS_PAGE = "/advertisers";
 
 
 export const REGULARPLAN = "/regularplan/:id?";
