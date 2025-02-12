@@ -6,56 +6,35 @@ import {
 } from "../../data/websiteHardCodedData";
 import { CreateCampaignOption } from "../../components/index";
 import { motion } from "framer-motion";
+import { MarketGetStarted } from "../../components/molecules/MarketGetStarted";
 
 export const MarketersPage: React.FC = () => {
   return (
     <div className="w-screen h-full pb-0">
       {/* Hero Section */}
-      <div
-        className="flex justify-center items-center bg-[#129BFF] h-[270px] sm:h-[400px] lg:h-[500px] w-full bg-cover bg-center"
-        style={{
-          backgroundImage: `url(https://media.istockphoto.com/id/1394347337/photo/black-woman-typing-and-browsing-on-a-laptop-in-an-office-alone.jpg?s=612x612&w=0&k=20&c=U_LbboyyeBx3ghy06DNyVWqFpCNujczdfIgYWdz7haI=)`,
-        }}
-      >
-        <motion.div
-          className="flex flex-col justify-center text-center px-4"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
-          <h1 className="text-[#FFFFFF] text-4xl sm:text-5xl lg:text-[60px] font-bold">
-            MARKETERS
-          </h1>
-          <h1 className="text-[#FFFFFF] text-xl sm:text-2xl lg:text-[30px] font-bold mt-2">
-            Because Reach Matters
-          </h1>
-        </motion.div>
+      <div className="px-20 ">
+        <MarketGetStarted />
       </div>
-
       {/* Main Content */}
       <div className="flex justify-center mt-8 sm:mt-16 px-4">
-        <div className="flex flex-col w-full lg:w-[70%] w-[90%]">
+        <div className="flex flex-col w-full justify-between lg:w-[70%] w-[90%]">
           <motion.h1
-            className="text-[#254354] text-2xl sm:text-3xl lg:text-[40px] font-bold mt-4 self-start"
+            className="text-[#254354] text-[24px] sm:text-3xl lg:text-[48px] font-semibold mt-4  text-center leading-[59.04px] "
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1 }}
           >
-            Buy Billboards on Audience Impressions. No Fixed Rental.
+            Buy Billboards on Audience Impressions.
+            <br /> No Fixed Rental.{" "}
           </motion.h1>
           <motion.p
-            className="text-[#254354] text-sm sm:text-base lg:text-[20px] mt-4"
+            className="text-[#667D8C] text-sm sm:text-base lg:text-[20px] mt-4 text-center  leading-[30px] tracking-[-0.02em]"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1 }}
           >
-            Prooh aggregates anonymized, opt-in, high quality app-sourced sdk
-            location data, and combines it with road traffic circulation data to
-            determine in real-time, which locations attribute to highest target
-            audience penetration and help select media units on visibility index
-            parameters and applies the % of impressions delivered vs total
-            impressions on the market operating price resulting into 100%
-            accountability and assured savings.
+            PROOH OOH AD-NETWORK CONVERTS CONVENTIONAL MEDIA BUYS INTO AUDIENCE
+            BUYS MAKING OOH MEDIA <br /> MORE ACCOUNTABLE & AFFORDABLE.
           </motion.p>
 
           {/* Features Section */}
@@ -63,7 +42,7 @@ export const MarketersPage: React.FC = () => {
             {marketPageData1.map((feature, index) => (
               <motion.div
                 key={index}
-                className="flex flex-col justify-center items-center border border-[#D6D2D2] rounded-lg p-6 sm:p-8 lg:p-[41px] h-auto transform transition-transform duration-300 hover:scale-105 hover:border-[#129BFF] hover:border-2"
+                className="flex flex-col justify-center items-center shadow-xl rounded-lg p-6 sm:p-8 lg:p-[41px] h-auto transform transition-transform duration-300 hover:scale-105 hover:border-[#129BFF] hover:border-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.2 }}
@@ -77,10 +56,10 @@ export const MarketersPage: React.FC = () => {
                 >
                   {feature.icon}
                 </div>
-                <h1 className="text-[#254354] text-lg sm:text-xl lg:text-2xl font-bold text-center mt-4">
+                <h1 className="text-[#254354] text-lg sm:text-xl lg:text-[24px] font-semibold text-center mt-4 leading-[29px] tracking-tight">
                   {feature.title}
                 </h1>
-                <p className="text-[#0E212E] text-sm sm:text-base text-center mt-2">
+                <p className="text-[#667D8C] text-sm sm:text-base text-center leading-[26px] tracking-tight mt-2">
                   {feature.description}
                 </p>
               </motion.div>
@@ -89,7 +68,7 @@ export const MarketersPage: React.FC = () => {
 
           {/* How It Works Section */}
           <motion.h1
-            className="text-[#254354] text-2xl sm:text-3xl lg:text-[40px] font-bold mt-8"
+            className="text-[#254354] text-[24px] sm:text-3xl lg:text-[40px] font-bold mt-8  text-center leading-[49.2px] tracking-[-0.04em]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
@@ -97,16 +76,14 @@ export const MarketersPage: React.FC = () => {
             How IT Works?
           </motion.h1>
           <motion.p
-            className="text-[#0E212E] text-sm sm:text-base lg:text-[16px] mt-2"
+            className="text-[#667D8C] text-sm sm:text-base lg:text-[16px] mt-2 text-center leading-[24.2px] tracking-[-0.02em]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
           >
-            Complete Accountability from a single view dashboard backed by Data
-            Driven Audience Planning and complete transparency in
-            supplier-direct pricing adjusted with Audience Allocation , super
-            fast Ad-placement in OOH and DOOH and final payment as per
-            validation of actual impressions.
+            A single-view dashboard for full accountability, data-driven
+            audience planning, transparent supplier-direct pricing, rapid
+            OOH/DOOH ad placement, and payment based on validated impressions.
           </motion.p>
 
           {/* Sections with Images */}
@@ -115,7 +92,7 @@ export const MarketersPage: React.FC = () => {
               <motion.div
                 key={index}
                 className={`flex flex-col lg:flex-row justify-between items-center gap-8 ${
-                  index % 2 === 0 ? "lg:flex-row-reverse" : ""
+                  index % 2 != 0 ? "lg:flex-row-reverse" : ""
                 }`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -128,10 +105,10 @@ export const MarketersPage: React.FC = () => {
                   whileHover={{ scale: 1.1 }}
                 />
                 <div className="flex flex-col w-full lg:w-[50%]">
-                  <h1 className="text-[#254354] text-lg sm:text-xl lg:text-2xl font-bold">
+                  <h1 className="text-[#254354] text-lg sm:text-xl lg:text-[24px] font-bold lg:w-[60%]  leading-[39.36px] tracking-tight">
                     {section.title}
                   </h1>
-                  <p className="text-[#0E212E] text-sm sm:text-base lg:text-[16px] mt-4">
+                  <p className="text-[#667D8C] text-sm sm:text-base lg:text-[16px] mt-4 leading-[24px] tracking-[-0.02em]">
                     {section.content}
                   </p>
                 </div>

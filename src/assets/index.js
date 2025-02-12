@@ -19,6 +19,9 @@ export { default as testO11 } from "./images/testiO11.svg";
 export { default as testO12 } from "./images/testiO12.svg";
 export { default as testO13 } from "./images/testiO13.svg";
 export { default as testO14 } from "./images/testiO14.svg";
+export { default as mediaImage } from "./images/Mask group.png";
+export { default as marketImage } from "./images/two.png";
+export { default as PaymentInfo } from "./images/Payment Information-bro 1.png";
 
 //icons
 
