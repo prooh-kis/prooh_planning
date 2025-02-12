@@ -306,11 +306,12 @@ export const ScreenSummaryDetails = ({
     } else {
       setCurrentTab("1");
     }
-    // if (screenSummaryPlanTableData) {
-    //   saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, {
-    //     [campaignId]: screenSummaryPlanTableData,
-    //   });
-    // }
+    if (!loadingScreenSummaryPlanTable && screenSummaryPlanTableData && Object.keys(screenSummaryPlanTableData)?.length <= 1) {
+      // saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, {
+      //   [campaignId]: screenSummaryPlanTableData,
+      // });
+      setCurrentStep(2);
+    }
 
   }, [campaignId, pathname, screenSummaryPlanTableData, step]);
 
@@ -325,12 +326,12 @@ export const ScreenSummaryDetails = ({
   useEffect(() => {
     if (screenSummaryData || screenSummaryDataIKnowItAll) {
       // console.log(screenSummaryData);
-      dispatch(
-        getScreenSummaryPlanTableData({
-          id: campaignId,
-          screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-        })
-      );
+      // dispatch(
+      //   getScreenSummaryPlanTableData({
+      //     id: campaignId,
+      //     screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+      //   })
+      // );
 
       saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
         [campaignId]: screensBuyingCount,

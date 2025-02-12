@@ -14,7 +14,7 @@ import {
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
-import { CURRENT_STEP } from "../../constants/localStorageConstants";
+import { CURRENT_STEP, FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { CAMPAIGN_PLAN_TYPE_KNOW } from "../../constants/campaignConstants";
 
@@ -94,7 +94,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
   }, [success]);
 
   useEffect(() => {
-    if (campaignId !== null || undefined) {
+    if (campaignId !== null || undefined || pages?.filter((page: any) => page.label === getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.currentPage)[0]?.id !== currentStep) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
   }, [dispatch, campaignId]);

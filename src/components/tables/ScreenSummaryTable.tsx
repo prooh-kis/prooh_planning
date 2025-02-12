@@ -171,9 +171,9 @@ export const ScreenSummaryTable = ({
       saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
         [campaignId]: updatedScreensBuyingCount,
       });
-      refreshScreenSummary();
+      // refreshScreenSummary();
     },
-    [refreshScreenSummary, screensBuyingCount, setScreensBuyingCount, campaignId]
+    [screensBuyingCount, setScreensBuyingCount, campaignId]
   );
 
   const handleScreenTypeClick = ({

@@ -209,9 +209,9 @@ export function ViewPlanPic({
       // Save the updated state
       setScreensBuyingCount(updatedScreensBuyingCount);
 
-      refreshScreenSummary();
+      // refreshScreenSummary();
     },
-    [refreshScreenSummary, screensBuyingCount]
+    [screensBuyingCount, setScreensBuyingCount]
   );
 
   // console.log(zoneFilters, tpFilters, stFilters);

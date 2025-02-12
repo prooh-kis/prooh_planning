@@ -155,12 +155,12 @@ export const SetAdsPlayTime = ({
 
   return (
     <div className="w-full py-3">
-      <h1 className="text-3xl ">Set Ads Play time</h1>
+      <h1 className="text-[24px] font-semibold ">Set Ads Play time</h1>
       <h1 className="text-sm text-gray-500 ">
         your final bill will include the cost of all the additional slots, at
         the same cost that your slots were booked.
       </h1>
-      <div className="mt-2">
+      <div className="">
         <TabWithIcon
           currentTab={currentTab}
           setCurrentTab={setCurrentTab}

@@ -35,6 +35,8 @@ export function PlanSummaryTable({
 
   useEffect(() => {
     if (success) {
+
+      // if ()
       dispatch(
         getScreenSummaryPlanTableData({
           id: campaignId,

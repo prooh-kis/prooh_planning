@@ -20,7 +20,7 @@ export function TabWithIcon({ trigger, tabData, currentTab, setCurrentTab }: Pro
           onClick={() => setCurrentTab(tab.id)}
           className={
             currentTab === tab.id
-              ? `px-1 w-48 flex ${trigger ? "gap-2" : "gap-4"} text-primaryButton items-center text-[14px] border-b-2 border-primaryButton py-4`
+              ? `px-1 w-48 flex ${trigger ? "gap-2" : "gap-4"} text-primaryButton items-center text-[14px] border-b-2 border-primaryButton py-2`
               : `px-1 w-48 flex gap-2 text-gray-500 items-center text-[14px] py-2`
           }
         >
