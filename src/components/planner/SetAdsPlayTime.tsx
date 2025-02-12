@@ -78,12 +78,16 @@ interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
   campaignId?: any;
+  success?: any;
+  loading?: any;
 }
 
 export const SetAdsPlayTime = ({
   setCurrentStep,
   step,
   campaignId,
+  success,
+  loading,
 }: EnterCampaignBasicDetailsProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -94,12 +98,10 @@ export const SetAdsPlayTime = ({
   const tableDataScreenWiseAdPlayTimeGet = useSelector(
     (state: any) => state.tableDataScreenWiseAdPlayTimeGet
   );
-  const { loading, error, data: tableData } = tableDataScreenWiseAdPlayTimeGet;
+  const { loading: loadingTableData, error, data: tableData } = tableDataScreenWiseAdPlayTimeGet;
 
-  const [data, setData] = useState<ResultData[]>(tableData?.result);
-  const [bottomTableData, setBottomTableData] = useState<BottomTableData>(
-    tableData?.bottomTableData
-  );
+  const [data, setData] = useState<ResultData[]>([]);
+  const [bottomTableData, setBottomTableData] = useState<any>({});
 
   // const tableDataSetAdPlayTimeStore = useSelector(
   //   (state: any) => state.tableDataSetAdPlayTimeStore
@@ -133,12 +135,15 @@ export const SetAdsPlayTime = ({
   }, [tableData]);
 
   useEffect(() => {
-    dispatch(getTableDataScreenWiseAdPlayTime({ id: campaignId }));
-    dispatch(getPlanningPageFooterData({
-      id: campaignId,
-      pageName: "Set Ad Play time Page",
-    }));
-  }, [dispatch, campaignId]);
+    if (!loading && success) {
+      dispatch(getTableDataScreenWiseAdPlayTime({ id: campaignId }));
+      dispatch(getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "Set Ad Play time Page",
+      }));
+    }
+
+  }, [dispatch, campaignId, success, loading]);
 
   // useEffect(() => {
   //   if (tableData) {
@@ -167,7 +172,7 @@ export const SetAdsPlayTime = ({
           tabData={AdsPlayTimeTabData}
         />
       </div>
-      {loading ? (
+      {loading || loadingTableData ? (
         <Loading />
       ) : error ? (
         <p></p>
@@ -183,7 +188,7 @@ export const SetAdsPlayTime = ({
       )}
 
       <h1 className="text-xl py-4">Selected summary</h1>
-      {loading ? (
+      {loading || loadingTableData ? (
         <Loading />
       ) : error ? (
         <p></p>

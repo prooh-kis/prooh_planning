@@ -132,6 +132,8 @@ export const IKnowItAllPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            success={success}
+            loading={loading}
           />
         ) : currentStep === 4 ? (
           <ScreenSummaryDetails
