@@ -3,29 +3,19 @@ import React from "react";
 
 export const MediaOwnerGetStarted = () => {
   return (
-    <div className="bg-[#4281F6] h-auto sm:h-[400px] lg:h-[500px] w-full px-4 sm:px-10 lg:px-20 py-10 mt-10 rounded-[19px]">
-      <div className="flex flex-col-reverse sm:flex-row items-center sm:items-start justify-between">
-        <div className="flex flex-col max-w-full sm:max-w-md lg:max-w-lg text-center sm:text-left">
-          <h1
-            className="text-[#FFFFFF] text-sm sm:text-base lg:text-[16px] mt-4 sm:mt-8 font-medium 
-            leading-[20px] sm:leading-[22px] lg:leading-[24px] 
-            tracking-[0.15em] sm:tracking-[0.18em] lg:tracking-[0.21em]"
-          >
-            <i className="fi fi-sr-sparkles text-[#FFFFFF] text-[20px]"></i>{" "}
+    <div className="bg-[#3A6ED0] h-[270px] sm:h-[400px] lg:h-[500px] w-full px-20 py-10 mt-10 rounded-[19px]">
+      <div className="flex justify-between">
+        <div className="flex flex-col w-[40%]">
+          <h1 className="text-[#FFFFFF] text-sm sm:text-base lg:text-[16px] mt-8 font-medium  leading-[24px] tracking-[0.21em]">
+            <span>
+              <i className="fi fi-sr-sparkles text-[#FFFFFF] text-[20px]"></i>
+            </span>{" "}
             Offer for <span className="font-bold">media owner</span>
           </h1>
-          <h1
-            className="text-[#FFFFFF] text-lg sm:text-2xl lg:text-[48px] mt-4 sm:mt-8 font-semibold 
-            leading-[36px] sm:leading-[40px] lg:leading-[51.84px] 
-            tracking-[-0.01em] sm:tracking-[-0.015em] lg:tracking-[-0.02em]"
-          >
-            Monetize Your Screens Onboard Your DOOH Inventory Today!
-          </h1>
-          <h1
-            className="text-[#FFFFFF] text-sm sm:text-base lg:text-[16px] my-4 sm:my-8 font-normal 
-            leading-[20px] sm:leading-[22px] lg:leading-[24px] 
-            tracking-[-0.01em] sm:tracking-[-0.015em] lg:tracking-[-0.02em]"
-          >
+          <h1 className="text-[#FFFFFF] text-sm sm:text-base lg:text-[48px] mt-8 font-semibold  leading-[51.84px] tracking-[-0.02em]">
+            Monetize Your unsold DOOH Inventory Today!
+          </h1>{" "}
+          <h1 className="text-[#FFFFFF] text-sm sm:text-base lg:text-[16px] my-8 font-normal  leading-[24px] tracking-[-0.02em]">
             Unlock new revenue streams by listing your DOOH inventory with us.
             Seamless onboarding, real-time insights, and maximized earnings!
           </h1>

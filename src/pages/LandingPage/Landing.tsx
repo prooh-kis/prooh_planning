@@ -39,8 +39,8 @@ export const Landing: React.FC = () => {
       <FlowDiagram />
       <OurAdvertisingJourney data={data} />
       <HowItsWork />
-      <FeedBack />
       <ProohCreator />
+      <FeedBack />
       <ContactForm />
       <FindUsOnGoogle />
       <CreateCampaignOption />

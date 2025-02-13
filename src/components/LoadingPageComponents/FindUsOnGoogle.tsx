@@ -8,7 +8,7 @@ export const FindUsOnGoogle = ({
   return (
     <div className="flex flex-col items-center justify-center mt-16 px-4 w-full">
       <div className="text-center max-w-[90%] md:max-w-[80%] lg:max-w-[677px]">
-        <h1 className="text-[24px] sm:text-[32px] lg:text-[40px] font-semibold text-[#0E212E] leading-tight lg:leading-[64px] tracking-tight">
+        <h1 className="font-custom text-[24px] sm:text-[32px] lg:text-[40px] font-semibold text-[#0E212E] leading-tight lg:leading-[64px] tracking-tight">
           {title}
         </h1>
         <p className="mt-4 text-[14px] sm:text-[16px] lg:text-[16px] text-[#254354] leading-relaxed lg:leading-[24px] tracking-[-0.02em]">

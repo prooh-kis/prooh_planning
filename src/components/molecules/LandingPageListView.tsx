@@ -134,7 +134,7 @@ export function LandingPageListView({ screens }: any) {
         </div>
       </div> */}
 
-      <div className="col-span-12 lg:col-span-12 rounded-[12px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-x-auto h-[60vh]">
+      <div className="col-span-12 lg:col-span-12 rounded-[12px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-x-auto lg:h-[360px] h-[300px]">
         {screens?.map((screen: any, index: any) => (
           <div key={index} className="w-full">
             <Screen screen={screen} />
