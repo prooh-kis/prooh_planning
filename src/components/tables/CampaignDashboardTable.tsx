@@ -70,13 +70,16 @@ export const CampaignDashboardTable = ({
   };
 
   const slotDeliveryData = (data: string) => {
-    const days = calculateDaysPlayed(
-      campaignDetails?.startDate,
-      campaignDetails?.endDate
-    ) === 0 ? 1 : calculateDaysPlayed(
-      campaignDetails?.startDate,
-      campaignDetails?.endDate
-    );
+    const days =
+      calculateDaysPlayed(
+        campaignDetails?.startDate,
+        campaignDetails?.endDate
+      ) === 0
+        ? 1
+        : calculateDaysPlayed(
+            campaignDetails?.startDate,
+            campaignDetails?.endDate
+          );
     const totalDays = campaignDetails?.duration;
     const delivered = screenLevelData[data]?.slotsDelivered?.toFixed(0);
 
@@ -90,13 +93,16 @@ export const CampaignDashboardTable = ({
   };
 
   const costConsumedData = (data: string) => {
-    const days = calculateDaysPlayed(
-      campaignDetails?.startDate,
-      campaignDetails?.endDate
-    ) === 0 ? 1 : calculateDaysPlayed(
-      campaignDetails?.startDate,
-      campaignDetails?.endDate
-    );
+    const days =
+      calculateDaysPlayed(
+        campaignDetails?.startDate,
+        campaignDetails?.endDate
+      ) === 0
+        ? 1
+        : calculateDaysPlayed(
+            campaignDetails?.startDate,
+            campaignDetails?.endDate
+          );
     const totalDays = campaignDetails?.duration;
     const delivered = screenLevelData?.[data]?.costConsumed?.toFixed(0);
 
@@ -109,13 +115,16 @@ export const CampaignDashboardTable = ({
     return Number((result * 0.01)?.toFixed(2));
   };
   const impressionsDeliveredPositive = (data: string) => {
-    const days = calculateDaysPlayed(
-      campaignDetails?.startDate,
-      campaignDetails?.endDate
-    ) === 0 ? 1 : calculateDaysPlayed(
-      campaignDetails?.startDate,
-      campaignDetails?.endDate
-    );
+    const days =
+      calculateDaysPlayed(
+        campaignDetails?.startDate,
+        campaignDetails?.endDate
+      ) === 0
+        ? 1
+        : calculateDaysPlayed(
+            campaignDetails?.startDate,
+            campaignDetails?.endDate
+          );
     const totalDays = campaignDetails?.duration;
     const delivered = screenLevelData?.[data]?.impressionsDelivered?.toFixed(0);
 
@@ -397,7 +406,7 @@ export const CampaignDashboardTable = ({
                               </div>
                               <div className="flex items-center gap-2 px-4 py-1">
                                 <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                                  Expected :{" "}
+                                  Promised :{" "}
                                   {(
                                     getPromisedSpotDeliveryData(
                                       screenLevelData[data]
@@ -411,7 +420,7 @@ export const CampaignDashboardTable = ({
                                   ).toFixed(0)}{" "}
                                 </h1>
                                 <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                                  Actual :{" "}
+                                  Delivered :{" "}
                                   {(
                                     getSpotDeliveryData(
                                       screenLevelData[data]

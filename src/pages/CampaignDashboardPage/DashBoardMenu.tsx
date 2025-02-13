@@ -17,6 +17,7 @@ export const DashBoardMenu = ({ campaignDetails }: any) => {
             "Agency Name",
             "Planner Name",
             "Total Screens",
+            "Campaign Type",
             "Start Date",
             "End Date",
           ].map((label, index) => (
@@ -37,6 +38,7 @@ export const DashBoardMenu = ({ campaignDetails }: any) => {
             campaignDetails?.clientName,
             campaignDetails?.campaignPlannerName,
             campaignDetails?.screenIds?.length,
+            campaignDetails?.campaignType?.split(/(?=[A-Z])/).join(" "),
             convertIntoDateAndTime(campaignDetails?.startDate),
             convertIntoDateAndTime(campaignDetails?.endDate),
           ].map((value, index) => (

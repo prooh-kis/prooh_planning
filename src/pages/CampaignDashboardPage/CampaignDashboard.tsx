@@ -47,10 +47,13 @@ export const CampaignDashboard = ({
   const [invoiceDescription, setInvoiceDescription] = useState<any>("");
   const [invoiceQuantity, setInvoiceQuantity] = useState<any>("");
   const [invoiceCurrency, setInvoiceCurrency] = useState<any>("INR");
-  const [invoiceAmount, setInvoiceAmount] = useState<any>(campaignDetails?.discount === 0 || campaignDetails?.discount === undefined ? Number(campaignDetails?.totalCampaignBudget) : Number(campaignDetails?.finalCampaignBudget));
+  const [invoiceAmount, setInvoiceAmount] = useState<any>(
+    campaignDetails?.discount === 0 || campaignDetails?.discount === undefined
+      ? Number(campaignDetails?.totalCampaignBudget)
+      : Number(campaignDetails?.finalCampaignBudget)
+  );
 
   const [jsonDataForInvoice, setJsonDataForInvoice] = useState<any>({});
-
 
   const getScreenPerformanceData = () => {
     const datesArray = screenLevelData?.result[
@@ -147,10 +150,10 @@ export const CampaignDashboard = ({
         onClose={() => {
           setOpenInvoice(false);
           dispatch({
-            type: GET_CLIENT_AGENCY_DETAILS_RESET
+            type: GET_CLIENT_AGENCY_DETAILS_RESET,
           });
         }}
-        invoiceBill={campaignDetails}  
+        invoiceBill={campaignDetails}
         // loading={loadingBillInvoice}
         poNumber={poNumber}
         setPoNumber={setPoNumber}
@@ -391,7 +394,7 @@ export const CampaignDashboard = ({
                   </div>
                   <div className="flex items-center gap-2 px-4 py-1">
                     <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                      Expected :{" "}
+                      Promised :{" "}
                       {(
                         getPromisedScreenPerformanceData().countsArray?.reduce(
                           (a: number, c: number) => a + c,
@@ -402,7 +405,7 @@ export const CampaignDashboard = ({
                       %
                     </h1>
                     <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                      Actual :{" "}
+                      Delivered :{" "}
                       {(
                         getScreenPerformanceData().countsArray?.reduce(
                           (a: number, c: number) => a + c,
@@ -465,7 +468,7 @@ export const CampaignDashboard = ({
                   </div>
                   <div className="flex items-center gap-2 px-4 py-1">
                     <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                      Expected :{" "}
+                      Promised :{" "}
                       {(
                         getPromisedSpotDeliveryData().countsArray?.reduce(
                           (a: number, c: number) => a + c,
@@ -474,7 +477,7 @@ export const CampaignDashboard = ({
                       ).toFixed(0)}{" "}
                     </h1>
                     <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                      Actual :{" "}
+                      Delivered :{" "}
                       {(
                         getSpotDeliveryData().countsArray?.reduce(
                           (a: number, c: number) => a + c,

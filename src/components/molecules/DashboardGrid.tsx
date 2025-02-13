@@ -36,33 +36,40 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
   screenLevelData,
 }) => {
   const calculateSpot = () => {
-    const days = calculateDaysPlayed(
-      campaignDetails?.startDate,
-      campaignDetails?.endDate
-    ) === 0 ? 1 : calculateDaysPlayed(
-      campaignDetails?.startDate,
-      campaignDetails?.endDate
-    ); 
+    const days =
+      calculateDaysPlayed(
+        campaignDetails?.startDate,
+        campaignDetails?.endDate
+      ) === 0
+        ? 1
+        : calculateDaysPlayed(
+            campaignDetails?.startDate,
+            campaignDetails?.endDate
+          );
     const totalDays = campaignDetails?.duration;
     const delivered =
       screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(0);
 
     const promised =
       screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0);
-    const result = Number((delivered / days).toFixed(2));
-    -Number((promised / totalDays).toFixed(2));
+    const result =
+      Number((delivered / days).toFixed(2)) -
+      Number((promised / totalDays).toFixed(2));
 
     return Number((result * 0.01)?.toFixed(2));
   };
 
   const calculateAudience = () => {
-    const days = calculateDaysPlayed(
-      campaignDetails?.startDate,
-      campaignDetails?.endDate
-    ) === 0 ? 1 : calculateDaysPlayed(
-      campaignDetails?.startDate,
-      campaignDetails?.endDate
-    );
+    const days =
+      calculateDaysPlayed(
+        campaignDetails?.startDate,
+        campaignDetails?.endDate
+      ) === 0
+        ? 1
+        : calculateDaysPlayed(
+            campaignDetails?.startDate,
+            campaignDetails?.endDate
+          );
 
     const totalDays = campaignDetails?.duration;
     const delivered =
@@ -96,8 +103,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
                       campaignDetails?.startDate,
                       campaignDetails?.endDate
                     )
-                    : 1
-                  }
+                  : 1}
               </span>
               /{campaignDetails?.duration} <span> Days</span>
             </h1>
@@ -166,9 +172,9 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
                 (screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(
                   0
                 ) *
-                  getNumberOfDaysBetweenTwoDates(
+                  calculateDaysPlayed(
                     campaignDetails?.startDate,
-                    new Date()
+                    campaignDetails?.endDate
                   )) /
                 campaignDetails?.duration
               }
@@ -217,12 +223,15 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
             <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
               <span className="text-[#0E212E]">
                 {formatNumber(
-                  screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(0) || 0
+                  screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(
+                    0
+                  ) || 0
                 )}
               </span>{" "}
               /{" "}
               {formatNumber(
-                screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0) || 0
+                screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0) ||
+                  0
               )}
               <span
                 className={`text-[14px] ${
@@ -246,9 +255,9 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
               )}
               expected={
                 (screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0) *
-                  getNumberOfDaysBetweenTwoDates(
+                  calculateDaysPlayed(
                     campaignDetails?.startDate,
-                    new Date()
+                    campaignDetails?.endDate
                   )) /
                 campaignDetails?.duration
               }
@@ -269,7 +278,9 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
               <span className="text-[#0E212E]">
                 &#8377;
                 {formatNumber(
-                  screenLevelData?.result?.totalData?.costConsumed?.toFixed(0) || 0
+                  screenLevelData?.result?.totalData?.costConsumed?.toFixed(
+                    0
+                  ) || 0
                 )}
               </span>{" "}
               / &#8377;

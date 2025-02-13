@@ -19,7 +19,7 @@ export const MultiColorLinearBar2: React.FC<MultiColorLinearBar2Props> = ({
   return (
     <div className="mt-1 relative w-full">
       <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
-        {/* Expected Bar (Red) */}
+        {/* Promised Bar (Red) */}
         <div
           className="group absolute top-0 left-0 h-full bg-[#FF0000]"
           style={{ width: `${Math.min(expectedPercentage, 100)}%` }}
@@ -29,7 +29,7 @@ export const MultiColorLinearBar2: React.FC<MultiColorLinearBar2Props> = ({
           </span>
         </div>
 
-        {/* Delivered Bar (Blue) - Stacks over Expected */}
+        {/* Delivered Bar (Blue) - Stacks over Promised */}
 
         <div
           className="group absolute top-0 left-0 h-full bg-[#00B7FF]"

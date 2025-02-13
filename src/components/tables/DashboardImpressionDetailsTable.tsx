@@ -60,9 +60,7 @@ export const DashboardImpressionDetailsTable = ({
                       ]?.impressionDeliveredMale?.toFixed(0) || 0
                     }
                     colors={["", "#84CBFF"]}
-                    highest={screenLevelData[
-                      "totalData"
-                    ]?.impressionsCohortWise[
+                    highest={screenLevelData?.impressionsCohortWise[
                       imp
                     ]?.impressionPromisedMale?.toFixed(0)}
                   />
@@ -85,9 +83,7 @@ export const DashboardImpressionDetailsTable = ({
                       ]?.impressionDeliveredFemale?.toFixed(0) || 0
                     }
                     colors={["", "#D0B3FF"]}
-                    highest={screenLevelData[
-                      "totalData"
-                    ]?.impressionsCohortWise[
+                    highest={screenLevelData?.impressionsCohortWise[
                       imp
                     ]?.impressionPromisedFemale?.toFixed(0)}
                   />
