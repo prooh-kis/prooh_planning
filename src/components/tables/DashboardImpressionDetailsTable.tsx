@@ -41,7 +41,7 @@ export const DashboardImpressionDetailsTable = ({
           </th> */}
         </tr>
       </thead>
-      <tbody className="block h-[220px] overflow-y-scroll">
+      <tbody className="block h-[220px] overflow-y-scroll scrollbar-minimal">
         {Object.keys(screenLevelData?.impressionsCohortWise)?.map(
           (imp: any, index: any) => (
             <tr key={index} className="p-2 grid grid-cols-12 gap-2 border-b">

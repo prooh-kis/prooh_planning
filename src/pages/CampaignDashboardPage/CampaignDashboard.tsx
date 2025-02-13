@@ -1,5 +1,5 @@
 import { CampaignDashboardTable } from "../../components/tables/CampaignDashboardTable";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { DashboardFilters } from "../../components/segments/DashboardFilters";
 import {
   calculateDaysPlayed,
@@ -143,6 +143,23 @@ export const CampaignDashboard = ({
 
   const commonClasses = "col-span-1 bg-white p-4 rounded-[12px] h-[156px] ";
 
+  const dropdownRef = useRef<any>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="w-full h-full pt-10 flex flex-col gap-2 bg-gray-100">
       <BillingAndInvoice
@@ -201,8 +218,8 @@ export const CampaignDashboard = ({
         invoiceAmount={invoiceAmount}
         setInvoiceAmount={setInvoiceAmount}
       />
-      <div className="bg-[#FFFFFF] p-2 px-10 flex justify-between mt-6">
-        <div className="px-2 w-1/2 flex justify-between items-center">
+      <div className="bg-[#FFFFFF] p-2 px-10 flex justify-between mt-6 fixed z-10 shadow-sm w-full">
+        <div className="px-2 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <i className="fi fi-br-arrow-left" onClick={() => navigate(-1)}></i>
             <div className="h-[39px] w-[39px] p-4 flex items-center justify-center rounded-full bg-[#4E952D]">
@@ -223,11 +240,15 @@ export const CampaignDashboard = ({
               <p className="text-[14px] text-[#B0B0B0] leading-[16.94px]">
                 {campaignDetails?.brandName}
               </p>
-              {showMenu && <DashBoardMenu campaignDetails={campaignDetails} />}
+              <div className="relative w-full" ref={dropdownRef}>
+                {showMenu && (
+                  <DashBoardMenu campaignDetails={campaignDetails} />
+                )}
+              </div>
             </div>
           </div>
         </div>
-        <div className="flex items-center w-1/2 justify-end  gap-2">
+        <div className="flex items-center justify-end  gap-2 ">
           <DashboardFilters campaignDetails={campaignDetails} />
           <div className="grid grid-cols-2 gap-2">
             <button
@@ -258,7 +279,7 @@ export const CampaignDashboard = ({
           </div>
         </div>
       </div>
-      <div className="px-10 max-h-[340px] ">
+      <div className="px-10 max-h-[340px] pt-24">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
           {gridItems.map((item) => (
             <div
