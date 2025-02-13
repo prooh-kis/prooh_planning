@@ -12,7 +12,7 @@ export const MarketersPage: React.FC = () => {
   return (
     <div className="w-screen h-full pb-0">
       {/* Hero Section */}
-      <div className="px-20 ">
+      <div className="px-4 sm:px-10 md:px-16 lg:px-20">
         <MarketGetStarted />
       </div>
       {/* Main Content */}

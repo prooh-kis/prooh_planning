@@ -115,9 +115,9 @@ export const Header: React.FC = () => {
             <h3 className="text-md sm:text-lg font-semibold">
               {userInfo.name}
             </h3>
-              <p className="text-xs font-semibold text-gray-700">
+            <p className="text-xs font-semibold text-gray-700">
               {userInfo.userRole}
-              </p>
+            </p>
           </div>
           <Menu userInfo={userInfo} />
         </div>
@@ -137,7 +137,12 @@ export const Header: React.FC = () => {
           </button>
           {/* Mobile Menu Icon */}
           <div className="md:hidden flex items-center">
-            <button title="dropdown" type="button" onClick={handleMenuToggle} className="focus:outline-none">
+            <button
+              title="dropdown"
+              type="button"
+              onClick={handleMenuToggle}
+              className="focus:outline-none"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -195,15 +200,18 @@ export const Header: React.FC = () => {
                   </button>
                 </li>
                 <li className="border-b">
-                  <button
-                    onClick={() => {
-                      navigate(MEDIA_OWNER_PAGE);
-                      setIsMenuOpen(false);
-                    }}
-                    className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100"
-                  >
-                    Research
-                  </button>
+                  <a href="https://prooh-dmp.vercel.app/">
+                    <button
+                      onClick={() => {
+                        // navigate(MEDIA_OWNER_PAGE);
+
+                        setIsMenuOpen(false);
+                      }}
+                      className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100"
+                    >
+                      Research
+                    </button>
+                  </a>
                 </li>
 
                 <li className="">

@@ -14,7 +14,7 @@ export const MediaOwnerPage: React.FC = () => {
   return (
     <div className="w-screen h-full pb-0">
       {/* Hero Section */}
-      <div className="px-20 ">
+      <div className="px-4 sm:px-10 md:px-16 lg:px-20">
         <MediaOwnerGetStarted />
       </div>
 
@@ -124,7 +124,7 @@ export const MediaOwnerPage: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="mt-16 px-20">
+      <div className="mt-16 px-4 sm:px-10 md:px-16 lg:px-20">
         <SellLoss />
       </div>
       <GetOnboardOption />
