@@ -35,9 +35,11 @@ code {
 }
 
 .font-custom {
-  font-family: "Cal Sans";
-  letter-spacing: 0.01em;
-  font-weight: 1000;
+  font-family: "Plus Jakarta Sans", serif;
+  font-optical-sizing: auto;
+  /* font-weight: <weight>; */
+  font-style: normal;
+  letter-spacing: -0.01em;
 }
 
 .rotated-text {

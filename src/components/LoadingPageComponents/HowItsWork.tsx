@@ -20,7 +20,6 @@ export const HowItsWork = () => {
   const [currentDataHeroTab, setCurrentDataHeroTab] = useState<any>("1");
 
   const CampaignStep = ({ step, image, title, description }: any) => {
-    console.log(step);
     return (
       <div className="relative">
         {currentTab === "1" && Number(currentAdvertiserTab) > 1 || currentTab === "2" && Number(currentMediaOwnerTab) > 1 || currentTab === "3" && Number(currentDataHeroTab) > 1 ? (
@@ -182,7 +181,7 @@ export const HowItsWork = () => {
           {`ENGAGE WITH US`}
         </code>
       </div>
-      <h1 className="text-center font-custom text-[48px]">
+      <h1 className="text-center font-custom font-bold text-[48px]">
         Where Collaboration Meets Innovation
       </h1>
       <div className="my-4 flex justify-center items-center gap-4 w-full">
