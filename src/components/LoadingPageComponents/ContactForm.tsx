@@ -32,7 +32,7 @@ export const ContactForm = () => {
           </p>
 
           {/* Form */}
-          <div className="grid grid-cols-12 bg-white rounded-r shadow-sm p-2">
+          <div className="grid grid-cols-12 bg-white rounded-r shadow-sm p-2 mt-8">
             <div className="col-span-4 rounded bg-[#129BFF] p-8 grid grid-rows-12">
               <div className="row-span-4">
                 <h1 className="font-custom text-white text-xl">Contact Information</h1>
@@ -146,7 +146,7 @@ export const ContactForm = () => {
                 </div>
                 <div className="">
                   <h1 className="text-sm font-semibold">Select Subject</h1>
-                  <div className="flex items-center gap-4 py-2">
+                  <div className="flex items-center gap-4 py-2 flex-wrap">
                     <RadioInput
                       title="DOOH inventory related enquiry"
                       isChecked={true}
