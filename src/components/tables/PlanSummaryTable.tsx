@@ -60,7 +60,7 @@ export function PlanSummaryTable({
 
   return (
     <div>
-      {pathname.split("/").splice(-2)[0] !== "iknowitallplan" && (
+      {(pathname.split("/").splice(-2)[0] !== "iknowitallplan" && pathname.split("/").splice(-2)[0] !== "storebasedplan") && (
         <div className="py-4">
           <div className="flex justify-start gap-2">
             <h1 className="py-2">

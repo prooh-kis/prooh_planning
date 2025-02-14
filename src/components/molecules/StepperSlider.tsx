@@ -53,7 +53,7 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
     <i key={2} className="fi fi-br-settings-sliders text-[14px]"></i>, // Example icon for step 3
     <i key={3} className="fi fi-sr-document-signed text-[14px]"></i>, // Example icon for step 4
     <i key={4} className="fi fi-br-clock-three text-[14px]"></i>, // Example icon for step 4
-    <i key={5} className="fi fi-sr-tap text-[14px]"></i>, // Example icon for step 5
+    <i key={5} className="fi fi-sr-document-signed text-[14px]"></i>,
     <i key={6} className="fi fi-ss-sack text-[14px]"></i>, // Example icon for step 7
     <i key={7} className="fi fi-sr-cloud-upload-alt text-[14px]"></i>, // Example icon for step 8
     <i key={8} className="fi fi-sr-dashboard-monitor text-[14px]"></i>, // Example icon for step 9
@@ -87,8 +87,8 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
     "Topical Day", "Audience Selection", "Advanced Filters", "Cohort Selection", "Screens Summary", 
     "Final Budget", "Creative Upload", "Vendor Confirmation"
   ] : pathname.split("/").includes("storebasedplan") ? [
-    "Basic Details", "Advanced Filters", "Select Screens", "Select Time",
-    "Trigger Selection", "Vendor Approval", "Creative Upload", "Vendor Confirmation"
+    "Basic Details", "Advanced Filters", "Select Screens", "Select Time", "Plan Summary",
+    "Vendor Approval", "Creative Upload", "Vendor Confirmation"
   ] : pathname.split("/").includes("triggerbasedplan") ? [
     "Basic Details", "Trigger Selection", "Audience Selection", "Advanced Filters", "Cohort Selection", "Screens Summary", 
     "Vendor Approval", "Creative Upload", "Vendor Confirmation"

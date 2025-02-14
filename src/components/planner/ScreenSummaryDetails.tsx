@@ -124,7 +124,7 @@ export const ScreenSummaryDetails = ({
   };
 
   const handleSelectCurrentTab = (id: string) => {
-  
+
     setCurrentSummaryTab(id);
 
     const city = citiesCreative?.find((data: any) => data.id === id)?.label;
@@ -133,7 +133,7 @@ export const ScreenSummaryDetails = ({
     } else {
       setCurrentCity(currentCity);
     }
-    
+
     setVisitedTab((pre: any) => {
       return pre.map((data: any) => {
         if (data?.id == id) {
@@ -216,7 +216,7 @@ export const ScreenSummaryDetails = ({
   };
 
   const handleSaveAndContinue = async () => {
-    if (pathname.split("/").splice(-2)[0] === "iknowitallplan") {
+    if ((pathname.split("/").splice(-2)[0] === "iknowitallplan") || (pathname.split("/").splice(-2)[0] === "storebasedplan")) {
       if (currentTab === "1") {
         dispatch(
           addDetailsToCreateCampaign({
@@ -272,19 +272,19 @@ export const ScreenSummaryDetails = ({
   };
 
   useEffect(() => {
-    if (pathname.split("/").splice(-2)[0] !== "iknowitallplan") {
+    if ((pathname.split("/").includes("iknowitallplan") && step === 2) || (pathname.split("/").includes("storebasedplan") && step === 3)) {
+      dispatch(
+        getScreenSummaryDataIKnowItAll({
+          id: campaignId
+        })
+      );
+    }
+    else {
       dispatch(
         getScreenSummaryData({
           id: campaignId,
           type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
             ?.selectedType,
-        })
-      );
-    }
-    else if (step === 2) {
-      dispatch(
-        getScreenSummaryDataIKnowItAll({
-          id: campaignId
         })
       );
     }
@@ -301,17 +301,17 @@ export const ScreenSummaryDetails = ({
     const type =
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType;
     setRegularVsCohort(type);
-    if (pathname.split("/").includes("iknowitallplan") && step === 4) {
+    if ((pathname.split("/").includes("iknowitallplan") && step === 4) || (pathname.split("/").includes("storebasedplan") && step === 5)) {
       setCurrentTab("2");
     } else {
       setCurrentTab("1");
     }
-    if (!loadingScreenSummaryPlanTable && screenSummaryPlanTableData && Object.keys(screenSummaryPlanTableData)?.length <= 1) {
-      // saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, {
-      //   [campaignId]: screenSummaryPlanTableData,
-      // });
-      setCurrentStep(2);
-    }
+    // if (!loadingScreenSummaryPlanTable && screenSummaryPlanTableData && Object.keys(screenSummaryPlanTableData)?.length <= 1) {
+    //   // saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, {
+    //   //   [campaignId]: screenSummaryPlanTableData,
+    //   // });
+    //   setCurrentStep(2);
+    // }
 
   }, [campaignId, pathname, screenSummaryPlanTableData, step]);
 
@@ -356,7 +356,7 @@ export const ScreenSummaryDetails = ({
         You can further optimized your plan by deselecting locations in the
         screen summary
       </h1>
-      {pathname.split("/").splice(-2)[0] === "iknowitallplan" ? (
+      {(pathname.split("/").splice(-2)[0] === "iknowitallplan" || pathname.split("/").includes("storebasedplan")) ? (
         <></>
       ) : (
         <div className="mt-2">
@@ -555,7 +555,8 @@ export const ScreenSummaryDetails = ({
             // }
           }}
           campaignId={campaignId}
-          pageName={pathname?.split("/").splice(-2)[0] === "iknowitallplan" && currentTab === "1" ? "Select Screens Page" : "Screen Summary Page"}
+          pageName={(pathname?.split("/").splice(-2)[0] === "iknowitallplan" || pathname.split("/").splice(-2)[0] === "storebasedplan") 
+            && currentTab === "1" ? "Select Screens Page" : "Screen Summary Page"}
           successAddCampaignDetails={success}
         />
       </div>

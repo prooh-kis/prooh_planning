@@ -22,7 +22,7 @@ import {
 import { useLocation } from "react-router-dom";
 import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { CAMPAIGN_PLAN_TYPE_KNOW, CAMPAIGN_PLAN_TYPE_STORE } from "../../constants/campaignConstants";
+import { CAMPAIGN_PLAN_TYPE_STORE } from "../../constants/campaignConstants";
 
 const pages = [
   {
@@ -35,7 +35,7 @@ const pages = [
   },
   {
     id: 3,
-    value: "Screen Summary Page",
+    value: "Select Screens Page",
   },
   {
     id: 4,
@@ -43,7 +43,7 @@ const pages = [
   },
   {
     id: 5,
-    value: "Add Triggers Page",
+    value: "Screen Summary Page",
   },
   {
     id: 6,
@@ -91,7 +91,7 @@ export const StoreBasedPlanPage: React.FC = () => {
       // const campDetails = location.state.campaign
       const campDetails = campaignDetails;
 
-      
+
       setCurrentStep(
         Number(
           pages.filter(
@@ -99,7 +99,7 @@ export const StoreBasedPlanPage: React.FC = () => {
           )[0]?.id || 0
         ) + 1
       );
-      
+
       const curr =
         Number(
           pages.filter(
@@ -127,10 +127,9 @@ export const StoreBasedPlanPage: React.FC = () => {
           step={currentStep}
           setStep={setCurrentStep}
           steps={
-            pathname?.split("/").includes("storebasedplan") ? 8 :
-             9
+            pathname?.split("/").includes("storebasedplan") ? 8 : 9
           }
-          />
+        />
       </div>
       <div className="w-full h-full flex justify-center items-top">
         {currentStep === 1 ? (
@@ -156,18 +155,22 @@ export const StoreBasedPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            success={success}
           />
         ) : currentStep === 4 ? (
           <SetAdsPlayTime
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            success={success}
+            loading={loading}
           />
         ) : currentStep === 5 ? (
-          <TriggerDetails
+          <ScreenSummaryDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            success={success}
           />
         ) : currentStep === 6 ? (
           <ViewFinalPlanPODetails
@@ -188,8 +191,8 @@ export const StoreBasedPlanPage: React.FC = () => {
             campaignId={campaignId}
             userInfo={userInfo}
           />
-        ):
-        null}
+        ) :
+          null}
       </div>
     </div>
   );

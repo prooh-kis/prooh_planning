@@ -9,7 +9,7 @@ export const ALL_TOUCHPOINTS = [
   "Neighborhood Hi-Street",
   "Feeder Route",
   "Arterial Route",
-  "CBD- SOHO",
+  "CBD-SOHO",
   "Luxury Residential"
 ]
 
