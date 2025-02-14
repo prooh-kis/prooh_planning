@@ -18,9 +18,9 @@ const SubPart = ({
   >
     <div className="flex justify-between items-center">
       <div className="flex gap-4 items-center">
-        <div className="h-[40px] w-[40px] rounded-full bg-gray-200"></div>
+        <div className="h-[30px] w-[30px] rounded-full bg-gray-200"></div>
         <motion.h1
-          className="text-[#254354] text-sm sm:text-[20px] lg:text-[24px] font-semibold 
+          className="text-[#254354] text-sm sm:text-[16px] lg:text-[20px] font-semibold 
             leading-[24px] sm:leading-[30px] lg:leading-[36px] 
             tracking-tight"
           initial={{ opacity: 0, x: -20 }}
@@ -31,7 +31,7 @@ const SubPart = ({
         </motion.h1>
       </div>
       <div
-        className={`h-[40px] w-[40px] rounded-full flex items-center justify-center 
+        className={`h-[30px] w-[30px] rounded-full flex items-center justify-center 
           ${
             currentIndex === index
               ? `bg-[#4281F6] text-[#FFFFFF]`
@@ -40,9 +40,9 @@ const SubPart = ({
         onClick={() => setCurrentIndex(index)}
       >
         {currentIndex === index ? (
-          <i className="fi fi-br-angle-up text-[20px]"></i>
+          <i className="fi fi-br-angle-up text-[16px]"></i>
         ) : (
-          <i className="fi fi-br-angle-down text-[20px]"></i>
+          <i className="fi fi-br-angle-down text-[16px]"></i>
         )}
       </div>
     </div>
