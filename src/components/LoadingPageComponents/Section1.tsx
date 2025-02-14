@@ -11,7 +11,7 @@ export const Section1 = () => {
       {/* Text Content */}
       <div className="w-full flex flex-col justify-center items-center">
         <code className="text-[10px] md:text-[12px] lg:text-[16px] mb-[-14px] font-semibold">End-To-End</code>
-        <h1 className="font-custom text-[24px] md:text-[60px] lg:text-[80px] text-[#20272C] text-center w-[90vw]">
+        <h1 className="font-custom font-bold text-[24px] md:text-[60px] lg:text-[80px] text-[#20272C] text-center w-[90vw]">
           Campaign Management Platform For DOOH
         </h1>
         <p className="text-[12px] md:text-[14px] text-[#4C6590] text-center mt-4 md:mt-8 w-[80vw]">

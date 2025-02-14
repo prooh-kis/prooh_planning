@@ -35,6 +35,8 @@ export const OurAdvertisingJourney = ({ data }: any) => {
   const [defCt, setDefCt] = useState<any>("");
   const [landingPageData, setLandingPageData] = useState<any>({});
 
+  const [currentOfferIndex, setCurrentOfferIndex] = useState(0);
+
   useEffect(() => {
     if (getDataFromLocalStorage(LANDING_PAGE_DATA)) {
       setLandingPageData(getDataFromLocalStorage(LANDING_PAGE_DATA));
@@ -266,16 +268,17 @@ export const OurAdvertisingJourney = ({ data }: any) => {
         <div className="flex-1 h-1 bg-gray-200 relative">
           <div 
             className="absolute h-1 bg-blue-500 transition-all duration-500"
-            // style={{ width: `${((currentOfferIndex + 1) / offers.length) * 100}%` }}
+            style={{ width: `${((currentOfferIndex) / [2022, 2023, 2024, 2025].length) * 100}%` }}
           />
           <div className="absolute inset-x-0 flex justify-between">
-            {[...Array(6)].map((_, i) => (
+            {[...Array(4)].map((_, i) => (
               <div 
                 key={i}
-                className="w-4 h-4 rounded-full -mt-1.5"
-                // className={`w-4 h-4 rounded-full -mt-1.5 
-                //   ${i <= currentOfferIndex ? 'bg-blue-500' : 'bg-gray-200'}
-                // `}
+                onClick={() => setCurrentOfferIndex(i)}
+                // className="w-4 h-4 rounded-full -mt-1.5"
+                className={`w-4 h-4 rounded-full -mt-1.5 
+                  ${i <= currentOfferIndex ? 'bg-primaryButton' : 'bg-gray-200'}
+                `}
               />
             ))}
           </div>

@@ -12,7 +12,7 @@ import { ImageWithContent } from "../../components/molecules/ImageWithContent";
 
 export const MarketersPage: React.FC = () => {
   return (
-    <div className="w-screen h-full pb-0">
+    <div className="w-screen h-full pt-8">
       {/* Hero Section */}
       <div className="px-4 sm:px-10 md:px-16 lg:px-20">
         <MarketGetStarted />

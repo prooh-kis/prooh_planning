@@ -23,7 +23,7 @@ export const ContactForm = () => {
       <div className="py-20 px-4 sm:px-8 flex justify-center">
         <div className="flex flex-col items-center max-w-[90%]">
           {/* Title */}
-          <h1 className="text-[24px] sm:text-[32px] lg:text-[40px] font-custom font-semibold text-[#0E212E] leading-tight sm:leading-[44px] lg:leading-[51px] tracking-[-0.04em] text-center">
+          <h1 className="text-[24px] sm:text-[32px] lg:text-[40px] font-custom font-bold text-[#0E212E] leading-tight sm:leading-[44px] lg:leading-[51px] tracking-[-0.04em] text-center">
             {"Let's connect and grow together"} 
           </h1>
           {/* Description */}
@@ -32,7 +32,7 @@ export const ContactForm = () => {
           </p>
 
           {/* Form */}
-          <div className="grid grid-cols-12 bg-white rounded-r shadow-sm p-2">
+          <div className="grid grid-cols-12 bg-white rounded-r shadow-sm p-2 mt-8">
             <div className="col-span-4 rounded bg-[#129BFF] p-8 grid grid-rows-12">
               <div className="row-span-4">
                 <h1 className="font-custom text-white text-xl">Contact Information</h1>
@@ -146,7 +146,7 @@ export const ContactForm = () => {
                 </div>
                 <div className="">
                   <h1 className="text-sm font-semibold">Select Subject</h1>
-                  <div className="flex items-center gap-4 py-2">
+                  <div className="flex items-center gap-4 py-2 flex-wrap">
                     <RadioInput
                       title="DOOH inventory related enquiry"
                       isChecked={true}

@@ -4,7 +4,6 @@ import targetAudienceTP from "../assets/images/targetAudienceTP.png";
 import comparePlan from "../assets/images/comparePlan.png";
 import campaignDashboard from "../assets/images/campaignDashboard.png";
 import inventoryExcel from "../assets/images/inventoryExcel.png";
-import audienceDataMap from "../assets/images/audienceDataMap.png";
 import screenDetails from "../assets/images/screenDetails.png";
 import VendorConfirmation from "../assets/images/vendorConfirmation.png";
 import applyDataHero from "../assets/images/applyDataHero.png";
@@ -44,40 +43,48 @@ export const advertisersStepsDetails = [
   },
   {
     id: "2",
-    image: targetAudienceTP,
+    image: basicDetails,
     step: "Step 2",
+    title: "Add Your Campaign Basic Details",
+    description:
+      "Add basic details for your campaign to begin with and get recommendations based on your industry, start date, and duration of your campaign.",
+  },
+  {
+    id: "3",
+    image: targetAudienceTP,
+    step: "Step 3",
     title: "Select Your Target Audience And Touchpoint",
     description:
       "Select your target audience group and touchpoints where they are available to get an approximate budget for your campaign.",
   },
   {
-    id: "3",
+    id: "4",
     image: advanceFilters,
-    step: "Step 3",
+    step: "Step 4",
     title: "Apply Advance Filters For Location Proximity",
     description:
       "Filter your selected screens based on their proximity to your brand or competitor stores, target routes, geographical location, and selected POIs.",
   },
   {
-    id: "4",
+    id: "5",
     image: comparePlan,
-    step: "Step 4",
+    step: "Step 5",
     title: "Compare Plan Based On Your Selections",
     description:
       "Compare your plan budget as per regular spots and spots based on your selected audience penetration and further optimize your campaign plan.",
   },
   {
-    id: "5",
+    id: "6",
     image: VendorConfirmation,
-    step: "Step 5",
+    step: "Step 6",
     title: "Vendor Confirmation Status",
     description:
       "Get real time vendor confirmation status through a dedicated panel on the planning page as well as on your email.",
   },
   {
-    id: "6",
+    id: "7",
     image: campaignDashboard,
-    step: "Step 6",
+    step: "Step 7",
     title: "Campaing Monitoring Report",
     description:
       "Monitor your campaign in real time with your campaign dedicated dashboard and optmize your campaign by analysing data in real-time.",
@@ -95,24 +102,32 @@ export const mediaOwnersStepsDetails = [
   },
   {
     id: "2",
-    image: audienceDataMap,
+    image: inventoryExcel,
     step: "Step 2",
+    title: "Add Screen To Inventory List",
+    description:
+      "Add your screen details in the Prooh Screen Inventory list with all the necessary fields required for your screens.",
+  },
+  {
+    id: "3",
+    image: dmpDashboard,
+    step: "Step 3",
     title: "Map Audience Data With Screens",
     description:
       "Our CMS will map your screens with the touchpoint wise audience data and make it more discoverable and sellable for the campaign planner.",
   },
   {
-    id: "3",
+    id: "4",
     image: screenDetails,
-    step: "Step 3",
+    step: "Step 4",
     title: "Manage Your Screen Playlist",
     description:
       "Watch real time playlist of your screens with log reports and manage your screen playlists and campaing deliverables mannually.",
   },
   {
-    id: "4",
+    id: "5",
     image: VendorConfirmation,
-    step: "Step 4",
+    step: "Step 5",
     title: "Approve Campaigns And Creatives",
     description:
       "Get campaigns and Creative approval requests for your screens in real time and earn more by selling your screens' unsold slots.",
@@ -131,16 +146,24 @@ export const dataHeroStepsDetails = [
   },
   {
     id: "2",
-    image: audienceDataInput,
+    image: applyDataHero,
     step: "Step 2",
+    title: "Apply By Adding Few Basic Details",
+    description:
+      "Add your basic details and information to proceed with your application, after which you will get a link on your email for completion of your application.",
+  },
+  {
+    id: "3",
+    image: audienceDataInput,
+    step: "Step 3",
     title: "Enter Data For The Selected Locations",
     description:
       "Enter audience data for each of your selected location, based on audience type and time zone of their availabilty at the location.",
   },
   {
-    id: "3",
+    id: "4",
     image: dmpDashboard,
-    step: "Step 3",
+    step: "Step 4",
     title: "View Your Response On A Dedicated Dashboard",
     description:
       "Analyze your input by viewing the results on a dedicated dashboard for your input.",
