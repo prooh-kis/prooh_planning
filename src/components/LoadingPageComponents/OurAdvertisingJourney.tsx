@@ -260,41 +260,24 @@ export const OurAdvertisingJourney = ({ data }: any) => {
           of the reasons why you
         </p>
       </div>
-      <div className="text-center mb-12">
-        <p className="text-gray-600 uppercase mb-4">ENGAGE WITH US</p>
-        <h2 className="text-4xl font-bold text-gray-900 mb-8">
-          Where Collaboration Meets Innovation
-        </h2>
-        <div className="flex justify-center gap-4 mb-12">
-          <button className="px-6 py-2 bg-blue-500 text-white rounded-full">
-            Are You An Advertiser?
-          </button>
-          <button className="px-6 py-2 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200">
-            Are You A Media Owner
-          </button>
-          <button className="px-6 py-2 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200">
-            Become A Data Hero
-          </button>
-        </div>
 
-        {/* Progress Bar */}
-        <div className="flex items-center justify-between max-w-3xl mx-auto mb-12">
-          <div className="flex-1 h-1 bg-gray-200 relative">
-            <div 
-              className="absolute h-1 bg-blue-500 transition-all duration-500"
-              // style={{ width: `${((currentOfferIndex + 1) / offers.length) * 100}%` }}
-            />
-            <div className="absolute inset-x-0 flex justify-between">
-              {[...Array(6)].map((_, i) => (
-                <div 
-                  key={i}
-                  className="w-4 h-4 rounded-full -mt-1.5"
-                  // className={`w-4 h-4 rounded-full -mt-1.5 
-                  //   ${i <= currentOfferIndex ? 'bg-blue-500' : 'bg-gray-200'}
-                  // `}
-                />
-              ))}
-            </div>
+      {/* Progress Bar */}
+      <div className="flex items-center justify-between max-w-3xl mx-auto my-6">
+        <div className="flex-1 h-1 bg-gray-200 relative">
+          <div 
+            className="absolute h-1 bg-blue-500 transition-all duration-500"
+            // style={{ width: `${((currentOfferIndex + 1) / offers.length) * 100}%` }}
+          />
+          <div className="absolute inset-x-0 flex justify-between">
+            {[...Array(6)].map((_, i) => (
+              <div 
+                key={i}
+                className="w-4 h-4 rounded-full -mt-1.5"
+                // className={`w-4 h-4 rounded-full -mt-1.5 
+                //   ${i <= currentOfferIndex ? 'bg-blue-500' : 'bg-gray-200'}
+                // `}
+              />
+            ))}
           </div>
         </div>
       </div>
