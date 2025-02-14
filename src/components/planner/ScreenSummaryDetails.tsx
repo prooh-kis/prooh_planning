@@ -555,8 +555,8 @@ export const ScreenSummaryDetails = ({
             // }
           }}
           campaignId={campaignId}
-          pageName="Screen Summary Page"
-          successAddCampaignDetails={successAddCampaignDetails}
+          pageName={pathname?.split("/").splice(-2)[0] === "iknowitallplan" && currentTab === "1" ? "Select Screens Page" : "Screen Summary Page"}
+          successAddCampaignDetails={success}
         />
       </div>
     </div>

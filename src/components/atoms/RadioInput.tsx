@@ -3,6 +3,7 @@ interface RadioInputProps {
   title?: string;
   isChecked?: boolean;
   onChange: (checked: boolean) => void; // Updated action type to be more specific
+  textSize?: any;
 }
 
 export const RadioInput = ({
@@ -10,6 +11,7 @@ export const RadioInput = ({
   title,
   value,
   onChange,
+  textSize,
 }: RadioInputProps) => {
   // console.log(option);
   // console.log(value);
@@ -26,7 +28,7 @@ export const RadioInput = ({
       <span
         className={`ml-2 hover:text-primaryButton ${
           isChecked ? "text-primaryButton" : "text-primaryText"
-        } md:text-[16px] sm:text-[14px]`}
+        } ${textSize ? textSize : "md:text-[16px] sm:text-[14px]"}`}
       >
         {title}
       </span>

@@ -1,102 +1,68 @@
 import React from "react";
 import { PageFooter } from "../../components/PageFooter";
-import { CreateCampaignOption } from "../../components/index";
 import {
   mediaOwnerPageData1,
   mediaOwnerPageData2,
 } from "../../data/websiteHardCodedData";
 import { motion } from "framer-motion";
+import { GetOnboardOption } from "../../components/molecules/GetOnboardOption";
+import { MediaOwnerGetStarted } from "../../components/molecules/MediaOwnerGetStarted";
+import { SellLoss } from "../../components/molecules/SellLoss";
+import { SmallChips } from "../../components/molecules/SmallChips";
+import { ImageWithContent } from "../../components/molecules/ImageWithContent";
 
 export const MediaOwnerPage: React.FC = () => {
   return (
     <div className="w-screen h-full pb-0">
       {/* Hero Section */}
-      <div
-        className="flex justify-center items-center bg-[#129BFF] h-[270px] sm:h-[400px] lg:h-[500px] w-full bg-cover bg-center"
-        style={{
-          backgroundImage: `url(https://media.gettyimages.com/id/1583336780/photo/wide-angle-shot-if-times-square-with-bright-led-displays-on-a-sunny-day-new-york-city-usa.jpg?s=612x612&w=0&k=20&c=tXoj1QeAQoLEZMQwn7TVcXVh-8C64bm_er7gF5C-G2g=)`,
-        }}
-      >
-        <motion.div
-          className="flex flex-col justify-center text-center px-4"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 2 }}
-        >
-          <h1 className="text-[#FFFFFF] text-4xl sm:text-5xl lg:text-[60px] font-bold">
-            Media Owner
-          </h1>
-          <h1 className="text-[#FFFFFF] text-xl sm:text-2xl lg:text-[30px] font-bold mt-2">
-            Because Reach Matters
-          </h1>
-        </motion.div>
+      <div className="px-4 sm:px-10 md:px-16 lg:px-20">
+        <MediaOwnerGetStarted />
       </div>
 
       {/* Main Content */}
       <div className="flex justify-center mt-4 sm:m-8 px-4">
         <div className="flex flex-col w-full lg:w-[70%] w-[90%]">
           <motion.h1
-            className="text-[#254354] text-2xl sm:text-3xl lg:text-[40px] font-bold mt-4 self-start"
-            initial={{ opacity: 0, x: -30 }}
+            className="text-[#254354] text-[24px] sm:text-3xl lg:text-[48px] font-semibold mt-4  text-center leading-[59.04px] "
+            initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1 }}
           >
-            Unlock New Revenue Streams. Optimize Your Occupancy.
+            Unlock New Revenue Streams.
+            <br /> Optimize Your Occupancy.
           </motion.h1>
-          <motion.h2
-            className="text-[#254354] text-sm sm:text-base lg:text-[20px] mt-4"
-            initial={{ opacity: 0, x: 30 }}
+          <motion.p
+            className="text-[#667D8C] text-sm sm:text-base lg:text-[20px] mt-4 text-center  leading-[30px] tracking-[-0.02em]"
+            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1 }}
           >
-            Prooh ooh ad-network converts conventional media buys into audience
-            buys making ooh media more accountable & affordable.
-          </motion.h2>
+            PROOH OOH AD-NETWORK CONVERTS CONVENTIONAL MEDIA BUYS INTO AUDIENCE
+            BUYS MAKING OOH MEDIA MORE ACCOUNTABLE & AFFORDABLE.
+          </motion.p>
 
           {/* Features Section */}
-          <div className="flex flex-col lg:flex-row justify-between mt-4 lg:mt-8 gap-6">
+          <div className="flex flex-col lg:flex-row justify-between mt-8 lg:mt-16 gap-6">
             {mediaOwnerPageData1.map((feature, index) => (
-              <motion.div
-                key={index}
-                className="flex flex-col justify-center items-center border border-[#D6D2D2] rounded-lg p-6 sm:p-8 lg:p-[41px] h-auto transform transition-transform duration-300 hover:scale-105 hover:border-[#129BFF] hover:border-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2 }}
-              >
-                <div
-                  className={
-                    feature?.isImage
-                      ? ""
-                      : "h-[71px] w-[71px] bg-[#129BFF] rounded-full flex justify-center items-center p-2"
-                  }
-                >
-                  {feature.icon}
-                </div>
-                <h1 className="text-[#254354] text-lg sm:text-xl lg:text-2xl font-bold text-center mt-4">
-                  {feature.title}
-                </h1>
-                <p className="text-[#0E212E] text-sm sm:text-base text-center mt-2">
-                  {feature.description}
-                </p>
-              </motion.div>
+              <SmallChips section={feature} index={index} key={index} />
             ))}
           </div>
 
           {/* Onboarding Section */}
           <motion.div
-            className="mt-8 "
+            className="mt-16 "
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
           >
             <div className="flex flex-col gap-4 ">
-              <h1 className="text-[#254354] text-[16px] sm:text-[20px] lg:text-[24px] font-bold ">
+              <h1 className="text-[#667D8C] text-[16px] sm:text-[20px] lg:text-[20px] font-normal text-center leading-[24.6px] tracking-[0.09em]">
                 PARTNER WITH US:
               </h1>
-              <h1 className="text-[#254354] text-[22px] sm:text-[32px] md:text-[36px] lg:text-[40px] font-bold ">
+              <h1 className="text-[#254354] text-[22px] sm:text-[32px] md:text-[36px] lg:text-[40px] font-semibold text-center leading-[49px] tracking-tight">
                 Process Of On-Boarding A Media Owner
               </h1>
-              <h1 className="text-[#0E212E] text-[14px] sm:text-[16px] leading-relaxed text-start">
+              <h1 className="text-[#667D8C] text-[14px] sm:text-[16px] leading-relaxed text-center leading-[24px] tracking-[-0.02em] ">
                 Our industry-leading ad-network platform helps media owners
                 unlock the full value of their media sites through automation,
                 business optimization, and support for programmatic transactions
@@ -107,37 +73,17 @@ export const MediaOwnerPage: React.FC = () => {
           </motion.div>
 
           {/* Sections with Images */}
-          <div className="mt-8">
+          <div className="mt-8 flex flex-col gap-8">
             {mediaOwnerPageData2.map((section, index) => (
-              <motion.div
-                key={index}
-                className={`flex flex-col lg:flex-row justify-between items-center gap-8 ${
-                  index % 2 === 0 ? "lg:flex-row-reverse" : ""
-                }`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
-              >
-                <motion.img
-                  src={section.img}
-                  alt={`section${index}`}
-                  className="w-full lg:w-[50%] rounded-md object-cover"
-                  whileHover={{ scale: 1.1 }}
-                />
-                <div className="flex flex-col w-full lg:w-[50%]">
-                  <h1 className="text-[#254354] text-lg sm:text-xl lg:text-2xl font-bold">
-                    {section.title}
-                  </h1>
-                  <p className="text-[#0E212E] text-sm sm:text-base lg:text-[16px] mt-4">
-                    {section.content}
-                  </p>
-                </div>
-              </motion.div>
+              <ImageWithContent section={section} index={index} key={index} />
             ))}
           </div>
         </div>
       </div>
-      <CreateCampaignOption />
+      <div className="mt-16 px-4 sm:px-10 md:px-16 lg:px-20">
+        <SellLoss />
+      </div>
+      <GetOnboardOption />
       <PageFooter />
     </div>
   );

@@ -79,6 +79,19 @@ export const AdsPlayTimeTable = ({
     );
   };
 
+  function countKeys(keys: any) {
+    let count = 0;
+    
+    for (const key in keys) {
+        if (typeof keys[key] === 'object' && keys[key] !== null) {
+            count += Object.keys(keys[key]).length;
+        }
+    }
+    
+    return count;
+}
+
+
   return (
     <div className="w-full border-b text[#2B2B2B]">
       {/* header of the table */}
@@ -90,7 +103,7 @@ export const AdsPlayTimeTable = ({
         <h1 className="w-full text-center col-span-2 "> T3 Evening</h1>
         <h1 className="w-full text-center col-span-2 "> T4 Night</h1>
       </div>
-      <div className="overflow-y-auto h-[50vh]">
+      <div className={`overflow-y-auto h-[${countKeys(data) > 10 ? "50vh": ""}]`}>
         {/* d= {screenData : [], touchPoint }*/}
         {data?.map((d: ResultData, i: number) => (
           <div key={i} className="grid grid-cols-12">
@@ -226,7 +239,7 @@ export const AdsPlayTimeTable = ({
         ))}
       </div>
       <div className="flex w-full align-center grid grid-cols-12">
-        <h1 className="w-full text-center bg-[#C9E9FF] border-b border-l py-2 col-span-2">
+        <h1 className="w-full text-center bg-[#C9E9FF] border-y border-l py-2 col-span-2">
           {" "}
           Total {data?.length}
         </h1>

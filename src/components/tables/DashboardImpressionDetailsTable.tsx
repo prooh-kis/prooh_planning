@@ -41,7 +41,7 @@ export const DashboardImpressionDetailsTable = ({
           </th> */}
         </tr>
       </thead>
-      <tbody className="block h-[220px] overflow-y-scroll">
+      <tbody className="block h-[220px] overflow-y-scroll scrollbar-minimal">
         {Object.keys(screenLevelData?.impressionsCohortWise)?.map(
           (imp: any, index: any) => (
             <tr key={index} className="p-2 grid grid-cols-12 gap-2 border-b">
@@ -60,9 +60,7 @@ export const DashboardImpressionDetailsTable = ({
                       ]?.impressionDeliveredMale?.toFixed(0) || 0
                     }
                     colors={["", "#84CBFF"]}
-                    highest={screenLevelData[
-                      "totalData"
-                    ]?.impressionsCohortWise[
+                    highest={screenLevelData?.impressionsCohortWise[
                       imp
                     ]?.impressionPromisedMale?.toFixed(0)}
                   />
@@ -85,9 +83,7 @@ export const DashboardImpressionDetailsTable = ({
                       ]?.impressionDeliveredFemale?.toFixed(0) || 0
                     }
                     colors={["", "#D0B3FF"]}
-                    highest={screenLevelData[
-                      "totalData"
-                    ]?.impressionsCohortWise[
+                    highest={screenLevelData?.impressionsCohortWise[
                       imp
                     ]?.impressionPromisedFemale?.toFixed(0)}
                   />

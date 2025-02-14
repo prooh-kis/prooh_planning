@@ -19,7 +19,7 @@ import {
 
 export const marketPageData1 = [
   {
-    title: "Audience Impressions",
+    title: "Sell Media on Audience Impressions",
     description: `Discover locations frequented most by your lookalike audiences
                 and Accurately forecast total traffic and target audience
                 impressions.`,
@@ -44,7 +44,7 @@ export const marketPageData1 = [
 
 export const marketPageData2 = [
   {
-    title: "1. END TO END WORKFLOWS WITH 100% TRANSPARENCY",
+    title: "1. End To End Workflow With 100% Transparency",
     content: `Super-Fast-Map with real time filters help Analyst
                   Geographies, Audience Segmentation, Audience planning, Site
                   Selection, Site pricing based on Target audience adjustment,
@@ -54,23 +54,13 @@ export const marketPageData2 = [
                   reporting is achieved through submission of Date-time-stamp
                   Camera for OOH and through a Log report in PDOOH. Complete
                   transparency is provided in terms of client- supplier pricing,
-                  supplier visibility & prooh earnings.`,
+                  supplier visibility & PROOH earnings.`,
     img: image10,
   },
   {
     title:
       "2. Find Locations with the highest audience personas using real-time filters.",
-    content: `Each media is able to forecast audience impressions for the
-                  selected campaign days and auto adjusts its price to form a
-                  campaign budget. Our site score on LTS along with previous
-                  advertisers data helps in the site selection process
-                  immensely. The shortlisted sites are layered with Points of
-                  Interest and multiple filters for campaign visualization by
-                  the client to understand very quickly, how the shortlisted
-                  locations are the ideal locations targeting the desired
-                  audience personas which makes it possible to perform
-                  contextual ad-placement at different locations & time of the
-                  day.`,
+    content: `Tap into the most premium locations at scale. Near to Real-time Spatial telco data fused with all road segments and points of interest allows identification of hotspots relevant to a defined target group. Such behavioral ooh media planning empowers ability to predict movement patterns for particular audiences to provide dependable locations for ooh & dooh ad  placements.Interestingly each location mapped on our ad-network provides the target audience personas in varied proportions making it possible for a brand to have larger coverage of their campaign with accountable investment.`,
     img: image11,
   },
   {
@@ -87,7 +77,7 @@ export const marketPageData2 = [
                   audience personas which makes it possible to perform
                   contextual ad-placement at different locations & time of the
                   day.`,
-    img: image12,
+    img: image4,
   },
   {
     title: "4. Suggestive creative improvisation & measurement of KPIs",
@@ -102,7 +92,7 @@ export const marketPageData2 = [
                   store around the site location, direct response enquiry on
                   telephone number mentioned on the AD or tracking social
                   sharing of the AD.`,
-    img: image4,
+    img: image12,
   },
   {
     title: "5. Installation through traditional & programmatic methods",
@@ -245,7 +235,7 @@ results into steep fall and rise in the traffic during the campaign days.`,
     img: image6,
   },
   {
-    title: "7. END TO END WORKFLOWS WITH 100% TRANSPARENCY",
+    title: "7. End To End Workflow With 100% Transparency",
     content: `Analyst Geographies, Audience Segmentation, Audience planning,
                   Site Selection, Site pricing based on Target audience
                   adjustment, reporting of execution, proof of display,
@@ -259,7 +249,7 @@ results into steep fall and rise in the traffic during the campaign days.`,
     img: image7,
   },
   {
-    title: "7. Earning potential of media owner with prooh ad-network",
+    title: "8. Earning potential of media owner with prooh ad-network",
     content: `Each media owner is paid 70% of the client invoice value.
                   Prooh retains 30% of all media billings and also charges the
                   client 4% fee for logistics and management of their campaign.
@@ -272,3 +262,55 @@ results into steep fall and rise in the traffic during the campaign days.`,
     img: image8,
   },
 ];
+
+export const SellLossData = [
+  {
+    title: "Monthly Card Rate vs. Floor Price",
+    descriptions:
+      "OOH media owners publish a Monthly Card Rate for each site but also maintain a Minimum Monthly Operating Rental (Floor Price).",
+    data: [],
+  },
+  {
+    title: "Floor Price Calculation",
+    data: [],
+    descriptions:
+      "The floor price is determined after accounting for a 33% average annual vacancy.",
+  },
+  {
+    title: "Market Operating Rate & Discounts",
+    descriptions: "The minimum transaction rate is subject to:",
+    data: [
+      "Volume discounts",
+      "Cash discounts",
+      "Sales costs incurred by media owners to secure bookings from brands/agencies.",
+    ],
+  },
+  {
+    title: "Post-COVID Impact",
+    descriptions: "",
+    data: [
+      "Higher vacancies observed across the OOH industry.",
+      "Small-to-mid-sized media owners exiting the business.",
+      "Large media owners reporting operating losses.",
+    ],
+  },
+  {
+    title: "Sales Loss Calculation",
+    descriptions: "",
+    data: [
+      "Increased site-level vacancy is multiplied by the minimum monthly operating rental.",
+      "Results in total sales loss for a media owner's business.",
+    ],
+  },
+  {
+    title: "Monthly Card Rate vs. Floor Price",
+    descriptions: "",
+    data: [
+      "Uses sales loss data to engage with media owners.",
+      "Onboards sites to its Ad-Network platform.",
+      "Opens media for measurable OOH investments by brands.",
+      "Increases occupancy for participating vendors.",
+    ],
+  },
+];
+

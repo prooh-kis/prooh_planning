@@ -39,9 +39,9 @@ export function LandingPageMapStats({ data }: any) {
         ].map((item, index) => (
           <div
             key={index}
-            className={`truncate py-4 px-8 col-span-1 flex flex-col items-center text-[#20272C] justify-center bg-[#EFF9FF] rounded-[12px]`}
+            className={`truncate lg:py-6 py-4 px-8 col-span-1 flex flex-col items-center text-[#20272C] justify-center bg-[#EFF9FF] rounded-[12px]`}
           >
-            <h1 className="lg:text-[32px] text-[24px] font-bold">
+            <h1 className="lg:text-[32px] text-[20px] font-bold">
               {item.value ? item.value : 0}
             </h1>
             <p className="lg:text-[16px] text-[12px] truncate">{item.label}</p>

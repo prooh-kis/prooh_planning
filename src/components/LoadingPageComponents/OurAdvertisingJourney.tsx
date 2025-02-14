@@ -260,6 +260,27 @@ export const OurAdvertisingJourney = ({ data }: any) => {
           of the reasons why you
         </p>
       </div>
+
+      {/* Progress Bar */}
+      <div className="flex items-center justify-between max-w-3xl mx-auto my-6">
+        <div className="flex-1 h-1 bg-gray-200 relative">
+          <div 
+            className="absolute h-1 bg-blue-500 transition-all duration-500"
+            // style={{ width: `${((currentOfferIndex + 1) / offers.length) * 100}%` }}
+          />
+          <div className="absolute inset-x-0 flex justify-between">
+            {[...Array(6)].map((_, i) => (
+              <div 
+                key={i}
+                className="w-4 h-4 rounded-full -mt-1.5"
+                // className={`w-4 h-4 rounded-full -mt-1.5 
+                //   ${i <= currentOfferIndex ? 'bg-blue-500' : 'bg-gray-200'}
+                // `}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-2">
           {/* <YearSlider /> */}
@@ -270,66 +291,59 @@ export const OurAdvertisingJourney = ({ data }: any) => {
               view={view}
             />
           </div>
-          <div className="lg:h-[360px] md:h-[240px] sm:h-[240px] w-full z-0">
-            <LandingPageMap data={landingPageData} />
+          <div className="lg:h-[400px] md:h-[320px] h-[240px] w-full z-0">
+            {view === "list" ? (
+              <div className="w-full h-full">
+                <LandingPageListView screens={landingPageData?.screens} />
+              </div>
+            ) : view === "table" ? (
+              <div className="w-full h-full">
+                <LandingPageTableView
+                  data={screenData}
+                  stateCities={stateCities}
+                  cityTouchpoints={cityTouchpoints}
+                  touchpointsCities={touchpointsCities}
+                  defCnt={defCnt}
+                  setDefCnt={setDefCnt}
+                  defSt={defSt}
+                  setDefSt={setDefSt}
+                  defCt={defCt}
+                  getTotalCountryCount={getTotalCountryCount}
+                  handleCntClick={handleCntClick}
+                  getTotalStatesCounts={getTotalStatesCounts}
+                  handleStClick={handleStClick}
+                  getTotalCityCount={getTotalCityCount}
+                  getTotalScreensCountTouchpointWise={
+                    getTotalScreensCountTouchpointWise
+                  }
+                  getTotalScreensCount={getTotalScreensCount}
+                  getTotalScreensCountCityWise={getTotalScreensCountCityWise}
+                />
+              </div>
+            ) : (
+              <div className="w-full h-full">
+                <LandingPageMap data={landingPageData} />
+              </div>
+            )}
           </div>
         </div>
-        <div className="col-span-1 flex items-end">
+        <div className="col-span-1 flex items-center">
           <LandingPageMapStats data={landingPageData} />
         </div>
       </div>
-      <div className="py-2">
-        <h1 className="font-custom">Legends</h1>
-        <div className="grid grid-cols-12 gap-2 py-2">
-          {memoizedTouchPoints?.map((tp: any, i: any) => (
-            <div key={i} className="cursor-pointer lg:col-span-2 md:col-span-3 flex items-center gap-2 group">
-              <div className={clsx(`h-4 w-4 ${colors[i]} rounded-full`)}></div>
-              <h1 className={clsx(`text-[10px] ${colorsbg[i]}`)}>{tp?.tp}</h1>
+      {view === "map" && (
 
-            </div>
-          ))}
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-        {/* Left Column */}
-        <div className="col-span-1 md:col-span-4">
-          
-        </div>
+        <div className="py-2">
+          <h1 className="font-custom">Legends</h1>
+          <div className="grid grid-cols-12 gap-2 py-2">
+            {memoizedTouchPoints?.map((tp: any, i: any) => (
+              <div key={i} className="cursor-pointer lg:col-span-2 md:col-span-3 flex items-center gap-2 group">
+                <div className={clsx(`h-4 w-4 ${colors[i]} rounded-full`)}></div>
+                <h1 className={clsx(`text-[10px] ${colorsbg[i]}`)}>{tp?.tp}</h1>
 
-        {/* Right Column */}
-        
-      </div>
-
-      {/* List or Table View */}
-      {view === "list" && (
-        <div ref={targetDivRef} className="pt-8 z-0">
-          <LandingPageListView screens={landingPageData?.screens} />
-        </div>
-      )}
-      {view === "table" && (
-        <div ref={targetDivRef} className="pt-8 z-0">
-          <LandingPageTableView
-            data={screenData}
-            stateCities={stateCities}
-            cityTouchpoints={cityTouchpoints}
-            touchpointsCities={touchpointsCities}
-            defCnt={defCnt}
-            setDefCnt={setDefCnt}
-            defSt={defSt}
-            setDefSt={setDefSt}
-            defCt={defCt}
-            getTotalCountryCount={getTotalCountryCount}
-            handleCntClick={handleCntClick}
-            getTotalStatesCounts={getTotalStatesCounts}
-            handleStClick={handleStClick}
-            getTotalCityCount={getTotalCityCount}
-            getTotalScreensCountTouchpointWise={
-              getTotalScreensCountTouchpointWise
-            }
-            getTotalScreensCount={getTotalScreensCount}
-            getTotalScreensCountCityWise={getTotalScreensCountCityWise}
-          />
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

@@ -106,7 +106,9 @@ export const calculateDaysPlayed = (startDate, endDate) => {
   const today = new Date().getTime();
   const campaignEnd = new Date(endDate).getTime();
   const effectiveEndDate = today < campaignEnd ? new Date() : endDate;
-  return getNumberOfDaysBetweenTwoDates(startDate, effectiveEndDate);
+  return today < campaignEnd
+    ? getNumberOfDaysBetweenTwoDates(startDate, effectiveEndDate) + 1
+    : getNumberOfDaysBetweenTwoDates(startDate, effectiveEndDate);
 };
 
 export function getAllDatesBetween(startDate, endDate) {

@@ -29,10 +29,6 @@ import ankur from "../assets/images/ankur.jpg";
 import anuj from "../assets/images/anuj.jpg";
 import partha from "../assets/images/partha.jpg";
 import vishnu from "../assets/images/vishnu.jpg";
-import testiO1 from "../assets/images/testi01.png";
-import testiO2 from "../assets/images/testi02.png";
-import testiO3 from "../assets/images/testi03.png";
-import testiO4 from "../assets/images/testi04.png";
 
 import UserImage from "../assets/userImage.png";
 import { testO11, testO12, testO13, testO14 } from "../assets";
@@ -321,39 +317,103 @@ export const meetArchitects = [
 //   };
 // });
 
-const testimonials = [testiO1, testiO2, testiO3, testiO4];
-
-export const feedbackData = [
+export const testimonials = [
   {
-    image: testO11,
-    quote:
-      "Being a Tech Company, we believe in everything which can demonstrate measurability. PROOH practices are extremely fresh and deliver the assurances around accountability.",
-    author: "Ms. Bhawna Talwar",
-    position: "Brand Marketing",
+    id: 1,
+    name: 'Corina McCoy',
+    type: "Media Owner",
+    role: '@sales head at icons',
+    date: 'Jan 28, 2025',
+    rating: 5,
+    comment: 'looks like an angel to me',
+    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
+    experienceDate: 'January 27, 2025',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=faces',
   },
   {
-    image: testO12,
-    quote:
-      "PROOH promises to bring the advertising experience closer to audience-driven buying of digital ads.",
-    author: "Ms. Akriti Thakur",
-    position: "AVP - Branding & Communications, Founding Member",
+    id: 2,
+    name: 'Autumn Phillips',
+    type: "Advertiser",
+    role: '@media buying head at kinetic',
+    date: 'Jan 28, 2025',
+    rating: 5,
+    comment: 'looks like an angel to me',
+    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
+    experienceDate: 'January 27, 2025',
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=faces',
   },
   {
-    image: testO13,
-    quote:
-      "  Being an International tech company, Our mandate to select the OOH partner was based on measurement and Cost efficiencies. PROOH is an interesting Find.",
-    author: "Ms. Ridhima Gupta",
-    position: "Global Head Of Product Marketing",
+    id: 3,
+    name: 'Mary Freund',
+    type: "Media Owner",
+    role: '@sales head at AAO',
+    date: 'Jan 28, 2025',
+    rating: 5,
+    comment: 'looks like an angel to me',
+    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
+    experienceDate: 'January 27, 2025',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=faces',
   },
   {
-    image: testO14,
-    quote:
-      "PROOH uses far superior tech than other Exiting Large agencies helping media buying on impressions (never happened before) and guaranteed cost savings.",
-    author: "Mr. Ankit Kumar",
-    position: "Head Brand & Marketing",
+    id: 4,
+    name: 'Bhawna Talwar',
+    type: "Advertiser",
+    role: '@gloabal head of product marketing at blinkit',
+    date: 'Jan 28, 2025',
+    rating: 4,
+    comment: 'looks like an angel to me',
+    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
+    experienceDate: 'January 27, 2025',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces',
   },
-
-  // Add more testimonials here
+  {
+    id: 5,
+    name: 'Ankit Kumar',
+    type: "Advertiser",
+    role: '@head brand and marketing at magicpin',
+    date: 'Jan 28, 2025',
+    rating: 5,
+    comment: 'looks like an angel to me',
+    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
+    experienceDate: 'January 27, 2025',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=faces',
+  },
+  {
+    id: 6,
+    name: 'Frances Swann',
+    type: "Data Heroes",
+    role: '@liasoning officer at m3m',
+    date: 'Jan 28, 2025',
+    rating: 5,
+    comment: 'looks like an angel to me',
+    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
+    experienceDate: 'January 27, 2025',
+    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=faces',
+  },
+  {
+    id: 7,
+    name: 'Akriti Thakur',
+    type: "Advertiser",
+    role: '@avp - branding and communication at healthians',
+    date: 'Jan 28, 2025',
+    rating: 5,
+    comment: 'looks like an angel to me',
+    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
+    experienceDate: 'January 27, 2025',
+    avatar: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?w=150&h=150&fit=crop&crop=faces',
+  },
+  {
+    id: 8,
+    name: 'David Elson',
+    type: "Data Heroes",
+    role: '@lease head at dlf',
+    date: 'Jan 28, 2025',
+    rating: 5,
+    comment: 'looks like an angel to me',
+    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
+    experienceDate: 'January 27, 2025',
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=faces',
+  }
 ];
 
 export const heroData = [
@@ -480,3 +540,5 @@ export const heroData = [
     aboutMe: "I automate the deployment pipeline for faster releases.",
   },
 ];
+
+

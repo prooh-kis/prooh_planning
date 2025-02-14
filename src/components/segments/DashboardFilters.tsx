@@ -21,8 +21,22 @@ export const DashboardFilters = ({
   };
 
   return (
-    <div className="flex gap-2 py-2">
-      <DropdownInput
+    <div className="grid grid-cols-6 gap-2 py-2 ">
+      <h1 className="col-span-3 flex items-center">
+        <span>
+          <i className="fi fi-rr-calendar-clock flex items-center pr-2"></i>
+        </span>
+        {`${new Date(campaignDetails?.startDate)
+          .toDateString()
+          ?.split(" ")
+          ?.splice(1, 2)
+          ?.join(" ")} - ${new Date(campaignDetails?.endDate)
+          .toDateString()
+          ?.split(" ")
+          ?.splice(1, 3)
+          ?.join(" ")}`}
+      </h1>
+      {/* <DropdownInput
         border="border-gray-100"
         height="h-8"
         width="w-full"
@@ -59,35 +73,39 @@ export const DashboardFilters = ({
             value: "",
           },
         ]}
-      />
-      <DropdownInput
-        border="border-gray-100"
-        height="h-8"
-        width="w-full"
-        placeHolder="City"
-        selectedOption={""}
-        setSelectedOption={""}
-        options={getCityList()?.map((city: string) => {
-          return {
-            label: city,
-            value: city,
-          };
-        })}
-      />
-      <DropdownInput
-        border="border-gray-100"
-        height="h-8"
-        width="w-full"
-        placeHolder="QSR"
-        selectedOption={""}
-        setSelectedOption={""}
-        options={[
-          {
-            label: "tty",
-            value: "",
-          },
-        ]}
-      />
+      /> */}
+      <div className="col-span-2">
+        <DropdownInput
+          border="border-gray-100"
+          height="h-8"
+          width="w-full"
+          placeHolder="City"
+          selectedOption={""}
+          setSelectedOption={""}
+          options={getCityList()?.map((city: string) => {
+            return {
+              label: city,
+              value: city,
+            };
+          })}
+        />
+      </div>
+      <div className="col-span-1">
+        <DropdownInput
+          border="border-gray-100"
+          height="h-8"
+          width="w-full"
+          placeHolder="QSR"
+          selectedOption={""}
+          setSelectedOption={""}
+          options={[
+            {
+              label: "tty",
+              value: "",
+            },
+          ]}
+        />
+      </div>
       {/* <DropdownInput
         border="border-gray-100"
         height="h-8"

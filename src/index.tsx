@@ -1,29 +1,29 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import '@fontsource/open-sans';
-import '@fontsource/open-sans/600.css';
-import '@fontsource/open-sans/700.css';
+import "@fontsource/open-sans";
+import "@fontsource/open-sans/600.css";
+import "@fontsource/open-sans/700.css";
 import "./index.css";
 // import "cal-sans";
 
 import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
-import { Provider } from 'react-redux';
-import store from './store';
+import { Provider } from "react-redux";
+import store from "./store";
 import loadUserFromLocalStorage from "./store/loadFromLocalStorage";
 
 loadUserFromLocalStorage();
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement,
+  document.getElementById("root") as HTMLElement
 );
 root.render(
   // <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+  <Provider store={store}>
+    <App />
+  </Provider>
   // </React.StrictMode>,
 );
 

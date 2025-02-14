@@ -11,7 +11,7 @@ export const PublicRoute = (props: any) => {
   return (
     <div className="h-[100vh] w-[100vw] p-0 m-0">
       <Header />
-      <div className="h-[100vh] w-[100vw] bg-gray-100 overflow-y-auto scrollbar-minimal">
+      <div className="h-[100vh] w-[100vw] bg-[#FFFFFF] overflow-y-auto scrollbar-minimal">
         {children}
       </div>
     </div>
