@@ -382,9 +382,9 @@ export const EnterCampaignBasicDetails = ({
       </div>
       {endDate !== "" && startDate !== "" && duration && (
         <h1 className="text-[12px] pt-4 text-[#129BFF]">
-          Note: The billing of your campaign will start from{" "}
+          Note: Your campaign will be billed from{" "}
           {new Date(startDate).toLocaleDateString()} to{" "}
-          {new Date(endDate).toLocaleDateString()}...
+          {new Date(new Date(endDate).setDate(new Date(endDate).getDate() - 1)).toLocaleDateString()}...
         </h1>
       )}
 
