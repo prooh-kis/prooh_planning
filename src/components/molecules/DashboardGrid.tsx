@@ -56,7 +56,9 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
       Number((delivered / days).toFixed(2)) -
       Number((promised / totalDays).toFixed(2));
 
-    return Number((result * 0.01)?.toFixed(2));
+    const averagePromised = Number((promised / totalDays).toFixed(2));
+
+    return Number(((result / averagePromised) * 100)?.toFixed(2));
   };
 
   const calculateAudience = () => {
@@ -82,7 +84,36 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
       Number((delivered / days).toFixed(2)) -
       Number((promised / totalDays).toFixed(2));
 
-    return Number((result * 0.01)?.toFixed(2));
+    const averagePromised = Number((promised / totalDays).toFixed(2));
+
+    return Number(((result / averagePromised) * 100)?.toFixed(2));
+  };
+
+  const calculateCost = () => {
+    const days =
+      calculateDaysPlayed(
+        campaignDetails?.startDate,
+        campaignDetails?.endDate
+      ) === 0
+        ? 1
+        : calculateDaysPlayed(
+            campaignDetails?.startDate,
+            campaignDetails?.endDate
+          );
+
+    const totalDays = campaignDetails?.duration;
+    const delivered =
+      screenLevelData?.result?.totalData?.costConsumed?.toFixed(0);
+
+    const promised = screenLevelData?.result?.totalData?.costTaken?.toFixed(0);
+
+    const result =
+      Number((delivered / days).toFixed(2)) -
+      Number((promised / totalDays).toFixed(2));
+
+    const averagePromised = Number((promised / totalDays).toFixed(2));
+
+    return Number(((result / averagePromised) * 100)?.toFixed(2));
   };
   return (
     <div className="w-full">
@@ -287,6 +318,19 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
               {formatNumber(
                 screenLevelData?.result?.totalData?.costTaken?.toFixed(0) || 0
               )}
+              <span
+                className={`text-[14px] ${
+                  calculateCost() > 0 ? "text-[#2A892D]" : "text-[#CC0000]"
+                }`}
+              >
+                {" "}
+                {`(${formatNumber(calculateCost() || 0)}%)`}
+                {calculateCost() > 0 ? (
+                  <i className="fi fi-rr-arrow-up "></i>
+                ) : (
+                  <i className="fi fi-rr-arrow-down "></i>
+                )}
+              </span>
             </h1>
           </div>
           <div className="mt-4">
