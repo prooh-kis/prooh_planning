@@ -75,7 +75,7 @@ export const RegularCohortComparisonDetails = ({
       saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: {} });
 
     }
-  },[priceData, campaignId]);
+  }, [priceData, campaignId]);
   useEffect(() => {
     dispatch(
       getRegularVsCohortPriceData({
@@ -142,16 +142,15 @@ export const RegularCohortComparisonDetails = ({
                 </Tooltip>
               </div>
               <div
-                // title="regular"
-                // type="button"
-                className={`w-full ${
-                  selecting === "regular"
-                    ? "border border-[#C9E9FF] rounded"
-                    : ""
-                }`}
+                className={`w-full ${selecting === "regular"
+                  ? "border border-[#C9E9FF] rounded"
+                  : ""
+                  }`}
                 onMouseEnter={() => {
-                  setSelecting("regular");
-                  handleRegularVsCohortSelection("regular");
+                  if (!showSummary) {
+                    setSelecting("regular");
+                    handleRegularVsCohortSelection("regular");
+                  }
                 }}
                 onMouseLeave={() => {
                   setSelecting(null);
@@ -182,14 +181,15 @@ export const RegularCohortComparisonDetails = ({
                 </Tooltip>
               </div>
               <div
-                className={`w-full ${
-                  selecting === "cohort"
-                    ? "border border-[#C9E9FF] rounded"
-                    : ""
-                }`}
+                className={`w-full ${selecting === "cohort"
+                  ? "border border-[#C9E9FF] rounded"
+                  : ""
+                  }`}
                 onMouseEnter={() => {
-                  setSelecting("cohort");
-                  handleRegularVsCohortSelection("cohort");
+                  if (!showSummary) {
+                    setSelecting("cohort");
+                    handleRegularVsCohortSelection("cohort");
+                  }
                 }}
                 onMouseLeave={() => {
                   setSelecting(null);

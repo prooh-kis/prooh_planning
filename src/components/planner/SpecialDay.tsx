@@ -111,12 +111,13 @@ export const SpecialDay = ({
 
   useEffect(() => {
     const year = new Date().getFullYear();
-    const lastDays = getLastDay(month);
+    const todayDate = new Date().getDate();
+    const lastDayOfCurrentMonth = new Date(year, new Date().getMonth() + 1, 0).getDate();
 
     dispatch(
       getCalendarListData({
-        startDate: `${year}-${month + 1}-01`,
-        endDate: `${year}-${month + 1}-31`,
+        startDate: `${year}-${month + 1}-${month === new Date().getMonth() ? todayDate : "01"}`,
+        endDate: `${year}-${month + 1}-${lastDayOfCurrentMonth}`,
         category: [category],
       })
     );

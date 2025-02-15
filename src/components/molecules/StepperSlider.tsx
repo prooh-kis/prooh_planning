@@ -163,7 +163,6 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
                   }`}
                 ></div>
               </Tooltip>
-       
             </div>
           ))}
         </div>

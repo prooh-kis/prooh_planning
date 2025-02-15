@@ -74,7 +74,6 @@ export const SpecialDayPlanPage: React.FC = () => {
     pathname?.split("/")?.length > 2
       ? pathname?.split("/")?.splice(2)[0]
       : null;
-  // console.log(campaignId);
 
   const [currentStep, setCurrentStep] = useState<any>(
     campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] : 1
@@ -82,24 +81,6 @@ export const SpecialDayPlanPage: React.FC = () => {
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
-
-  const screensDataAdvanceFilterGet = useSelector(
-    (state: any) => state.screensDataAdvanceFilterGet
-  );
-  const {
-    loading: loadingAdvanceFilterScreens,
-    error: errorAdvanceFilterScreens,
-    data: advanceFilterScreens,
-  } = screensDataAdvanceFilterGet;
-
-  const screenSummaryPlanTableDataGet = useSelector(
-    (state: any) => state.screenSummaryPlanTableDataGet
-  );
-  const {
-    loading: loadingScreenSummaryPlanTable,
-    error: errorScreenSummaryPlanTable,
-    data: screenSummaryPlanTableData,
-  } = screenSummaryPlanTableDataGet;
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -112,8 +93,7 @@ export const SpecialDayPlanPage: React.FC = () => {
   } = detailsToCreateCampaignAdd;
 
   useEffect(() => {
-    if (campaignDetails) {
-      // const campDetails = location.state.campaign
+    if (success) {
       const campDetails = campaignDetails;
 
       setCurrentStep(
@@ -123,27 +103,6 @@ export const SpecialDayPlanPage: React.FC = () => {
           )[0]?.id || 0
         ) + 1
       );
-      // dispatch(
-      //   getScreensAudiencesData({
-      //     id: campDetails?._id,
-      //     markets: campDetails?.markets,
-      //   })
-      // );
-      // dispatch(
-      //   getScreensCostData({
-      //     id: campDetails?._id,
-      //     cohorts: campDetails?.cohorts,
-      //     touchPoints: campDetails?.touchPoints,
-      //     gender: campDetails?.gender,
-      //     duration: campDetails?.duration,
-      //   })
-      // );
-      // dispatch(
-      //   getScreenSummaryPlanTableData({
-      //     id: campaignId,
-      //     screenIds: campDetails?.screenIds,
-      //   })
-      // );
       const curr =
         Number(
           pages.filter(
@@ -154,22 +113,11 @@ export const SpecialDayPlanPage: React.FC = () => {
         [campaignId]: curr,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
-    } else {
-      // dispatch(getScreensAudiencesData({ id: "", markets: [] }));
-      // dispatch(
-      //   getScreensCostData({
-      //     id: "",
-      //     cohorts: [],
-      //     touchPoints: [],
-      //     gender: "both",
-      //     duration: 30,
-      //   })
-      // );
     }
-  }, [success, campaignDetails, campaignId]);
+  }, [success]);
 
   useEffect(() => {
-    if (campaignId !== null || undefined) {
+    if (campaignId !== null || undefined || pages?.filter((page: any) => page.label === getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.currentPage)[0]?.id !== currentStep) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
   }, [dispatch, campaignId]);
@@ -181,6 +129,7 @@ export const SpecialDayPlanPage: React.FC = () => {
           step={currentStep}
           setStep={setCurrentStep}
           steps={pathname?.split("/").includes("specialdayplan") ? 8 : 9}
+          campaignId={campaignId}
         />
       </div>
       <div className="w-full h-full flex justify-center items-top">
