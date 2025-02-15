@@ -279,7 +279,7 @@ export const ScreenSummaryDetails = ({
         })
       );
     }
-    else {
+    else if (!pathname.split("/").includes("iknowitallplan") && !pathname.split("/").includes("storebasedplan")) {
       dispatch(
         getScreenSummaryData({
           id: campaignId,
@@ -555,7 +555,7 @@ export const ScreenSummaryDetails = ({
             // }
           }}
           campaignId={campaignId}
-          pageName={(pathname?.split("/").splice(-2)[0] === "iknowitallplan" || pathname.split("/").splice(-2)[0] === "storebasedplan") 
+          pageName={(pathname?.split("/").splice(-2)[0] === "iknowitallplan" || pathname.split("/").splice(-2)[0] === "storebasedplan")
             && currentTab === "1" ? "Select Screens Page" : "Screen Summary Page"}
           successAddCampaignDetails={success}
         />
