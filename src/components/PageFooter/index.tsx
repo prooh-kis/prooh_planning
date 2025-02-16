@@ -41,7 +41,7 @@ export const PageFooter = () => {
                 <h1 className="text-[12px] font-normal leading-[18px] opacity-40">
                   Email
                 </h1>
-                <p>prooh.aws@gmail.com</p>
+                <p>contact@prooh.ai</p>
               </div>
             </div>
             {/* Social & Chat Section */}
@@ -103,7 +103,7 @@ export const PageFooter = () => {
       <div className="w-full px-4 py-4 sm:px-8 md:px-20 lg:px-40 bg-[#1F1F1F]">
         <div className="flex flex-col sm:flex-row justify-between items-center">
           <p className="text-[12px] font-normal text-[#BABCD2] leading-[19.86px]">
-            © 2023 prooh.ai All rights reserved.
+            © 2025 PROOH.AI All rights reserved.
           </p>
           <div className="flex gap-2 items-center mt-4 sm:mt-0">
             <div className="h-1 w-1 bg-[#6633EE] rounded-full"></div>

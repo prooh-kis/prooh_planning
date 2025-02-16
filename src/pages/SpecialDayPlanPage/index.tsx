@@ -62,8 +62,6 @@ const pages = [
     id: 8,
     value: "Vendor Confirmation Page",
   },
-
-  {},
 ];
 
 export const SpecialDayPlanPage: React.FC = () => {
@@ -83,23 +81,6 @@ export const SpecialDayPlanPage: React.FC = () => {
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-  const screensDataAdvanceFilterGet = useSelector(
-    (state: any) => state.screensDataAdvanceFilterGet
-  );
-  const {
-    loading: loadingAdvanceFilterScreens,
-    error: errorAdvanceFilterScreens,
-    data: advanceFilterScreens,
-  } = screensDataAdvanceFilterGet;
-
-  const screenSummaryPlanTableDataGet = useSelector(
-    (state: any) => state.screenSummaryPlanTableDataGet
-  );
-  const {
-    loading: loadingScreenSummaryPlanTable,
-    error: errorScreenSummaryPlanTable,
-    data: screenSummaryPlanTableData,
-  } = screenSummaryPlanTableDataGet;
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -112,7 +93,7 @@ export const SpecialDayPlanPage: React.FC = () => {
   } = detailsToCreateCampaignAdd;
 
   useEffect(() => {
-    if (campaignDetails) {
+    if (success) {
       // const campDetails = location.state.campaign
       const campDetails = campaignDetails;
 
@@ -154,22 +135,11 @@ export const SpecialDayPlanPage: React.FC = () => {
         [campaignId]: curr,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
-    } else {
-      // dispatch(getScreensAudiencesData({ id: "", markets: [] }));
-      // dispatch(
-      //   getScreensCostData({
-      //     id: "",
-      //     cohorts: [],
-      //     touchPoints: [],
-      //     gender: "both",
-      //     duration: 30,
-      //   })
-      // );
     }
-  }, [success, campaignDetails, campaignId]);
+  }, [success]);
 
   useEffect(() => {
-    if (campaignId !== null || undefined) {
+    if (campaignId !== null || undefined || pages?.filter((page: any) => page.label === getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.currentPage)[0]?.id !== currentStep) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
   }, [dispatch, campaignId]);
@@ -178,6 +148,7 @@ export const SpecialDayPlanPage: React.FC = () => {
     <div className="w-full h-full px-8">
       <div className="w-full pt-[60px]">
         <StepperSlider
+          campaignId={campaignId}
           step={currentStep}
           setStep={setCurrentStep}
           steps={pathname?.split("/").includes("specialdayplan") ? 8 : 9}

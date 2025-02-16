@@ -16,7 +16,7 @@ export const PrimaryButton = ({
   icon,
   reverse,
   textSize,
-  disabled,
+  disabled = false,
   width,
   height,
   title,

@@ -264,13 +264,16 @@ export const OurAdvertisingJourney = ({ data }: any) => {
       </div>
 
       {/* Progress Bar */}
-      <div className="flex items-center justify-between max-w-3xl mx-auto my-6">
+      <div className="flex items-center justify-between my-6">
         <div className="flex-1 h-1 bg-gray-200 relative">
-          <div 
-            className="absolute h-1 bg-blue-500 transition-all duration-500"
-            style={{ width: `${((currentOfferIndex) / [2022, 2023, 2024, 2025].length) * 100}%` }}
-          />
           <div className="absolute inset-x-0 flex justify-between">
+            <div 
+              className="absolute h-1 inset-x-0 bg-primaryButton transition-all duration-500"
+              // style={{ width: `${((currentOfferIndex) / [2022, 2023, 2024, 2025].length) * 100}%` }}
+              style={{ width: `${Number(currentOfferIndex)/3 * 100}%` }}
+
+
+            />
             {[...Array(4)].map((_, i) => (
               <div 
                 key={i}
@@ -279,7 +282,9 @@ export const OurAdvertisingJourney = ({ data }: any) => {
                 className={`w-4 h-4 rounded-full -mt-1.5 
                   ${i <= currentOfferIndex ? 'bg-primaryButton' : 'bg-gray-200'}
                 `}
-              />
+              >
+                {/* <h1>3</h1> */}
+              </div>
             ))}
           </div>
         </div>
@@ -294,7 +299,7 @@ export const OurAdvertisingJourney = ({ data }: any) => {
               view={view}
             />
           </div>
-          <div className="lg:h-[400px] md:h-[320px] h-[240px] w-full z-0">
+          <div className="h-[500px] w-full z-0">
             {view === "list" ? (
               <div className="w-full h-full">
                 <LandingPageListView screens={landingPageData?.screens} />

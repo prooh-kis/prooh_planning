@@ -1,6 +1,6 @@
 import { ImageCarousel } from "../../components/molecules/ImageCarousel";
 import { images } from "../../data/LandingPageData";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import illu1 from "../../assets/images/illu1.png";
 import illu2 from "../../assets/images/illu2.png";
 import illu3 from "../../assets/images/illu3.png";
@@ -9,61 +9,106 @@ import illu5 from "../../assets/images/illu5.png";
 import illu6 from "../../assets/images/illu6.png";
 import illu7 from "../../assets/images/illu7.png";
 import { PrimaryButton } from "../../components/atoms/PrimaryButton";
-
+import { useNavigate } from "react-router-dom";
+import { AUTH } from "../../routes/routes";
 export const FlowDiagram = () => {
+  const firstRef = useRef<HTMLDivElement>(null);
+  const secondRef = useRef<HTMLDivElement>(null);
+  const thirdRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   return (
-    <div className="lg:px-16 px-4 w-full pt-12">
-      <div className="flex">
-        <div className="flex items-center">
-          <code className="rotated-text">FLY AND DMP</code>
+    <div className="py-16 px-4 relative w-full h-[1920px] bg-gray-50 overflow-scroll flex justify-center items-center">
+      <div className="absolute top-0 w-[80vw] h-full">
+        <svg 
+          className="absolute inset-0 w-full h-full"
+          viewBox="0 0 968 1861"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <path d="M60 295.5L655.431 101.723C752.946 69.9871 801.704 54.1193 837.185 63.6068C874.99 73.7157 905.805 101.077 920.314 137.421C933.933 171.53 923.944 221.823 903.967 322.408V322.408L898.046 422.627C890.104 557.038 886.133 624.243 840.649 658.74C795.164 693.237 729.378 678.939 597.805 650.342L339.028 594.098C214.259 566.98 151.874 553.421 107.175 585.314C62.4752 617.208 55.0035 680.61 40.06 807.415L39.284 814C21.3084 966.534 12.3206 1042.8 57.9376 1085.61C103.555 1128.42 179.097 1114.6 330.183 1086.98L628.514 1032.44C718.007 1016.07 762.754 1007.89 795.308 1020.43C827.79 1032.94 853.518 1058.53 866.207 1090.94C878.924 1123.43 870.988 1168.22 855.117 1257.8V1257.8C842.947 1326.49 836.861 1360.84 819.297 1384.4C801.717 1407.98 776.329 1424.54 747.666 1431.13C719.029 1437.71 685.141 1429.44 617.366 1412.89L444.374 1370.66C361.278 1350.38 319.729 1340.24 287 1350.35C257.762 1359.38 232.897 1378.91 217.188 1405.17C199.603 1434.57 199.603 1477.34 199.603 1562.87V1562.87C199.603 1621.17 199.603 1650.32 210.045 1674.13C219.426 1695.52 234.656 1713.82 253.982 1726.93C275.496 1741.53 304.159 1746.83 361.486 1757.43L818.923 1842" stroke="#E3F3FF" strokeWidth="37"/>
+          <path d="M80.0153 283.054C86.763 284.625 89.2795 292.911 84.545 297.969L65.0153 318.834C60.2808 323.892 51.8462 321.928 49.8329 315.299L41.5284 287.954C39.5152 281.324 45.4333 275.002 52.181 276.573L80.0153 283.054Z" fill="#129BFF"/>
+          <path d="M56.7553 291.508L53.3315 293.316L53.1074 292.892L54.4237 287.094L58.3851 285.001L68.8471 304.808L64.8858 306.901L56.7553 291.508Z" fill="white"/>
+          <path d="M932.157 174.098C928.929 180.229 920.276 180.566 916.58 174.706L901.336 150.532C897.641 144.672 901.675 137.009 908.598 136.738L937.155 135.624C944.078 135.354 948.697 142.679 945.47 148.81L932.157 174.098Z" fill="#129BFF"/>
+          <path d="M918.433 161.133L918.407 158.918L923.529 154.064C923.964 153.633 924.329 153.245 924.624 152.901C924.923 152.557 925.148 152.22 925.301 151.892C925.453 151.558 925.527 151.2 925.523 150.817C925.518 150.39 925.417 150.025 925.219 149.719C925.021 149.409 924.753 149.173 924.415 149.011C924.077 148.844 923.695 148.764 923.269 148.769C922.824 148.774 922.437 148.868 922.107 149.052C921.778 149.236 921.525 149.497 921.349 149.835C921.173 150.173 921.088 150.574 921.093 151.038L918.175 151.072C918.164 150.12 918.369 149.291 918.792 148.586C919.215 147.88 919.812 147.331 920.584 146.939C921.356 146.546 922.249 146.344 923.262 146.332C924.304 146.32 925.213 146.495 925.989 146.855C926.769 147.211 927.379 147.71 927.817 148.354C928.255 148.997 928.479 149.738 928.489 150.576C928.495 151.126 928.393 151.669 928.181 152.206C927.974 152.744 927.6 153.342 927.058 154.002C926.517 154.657 925.752 155.445 924.763 156.365L922.664 158.471L922.665 158.57L928.772 158.5L928.801 161.014L918.433 161.133Z" fill="white"/>
+          <path d="M112.683 591.608C105.757 591.405 101.649 583.781 105.288 577.885L120.298 553.566C123.937 547.67 132.593 547.924 135.88 554.023L149.436 579.182C152.723 585.281 148.174 592.651 141.249 592.448L112.683 591.608Z" fill="#129BFF"/>
+          <path d="M130.017 581.426C129.023 581.794 128.074 581.951 127.17 581.897C126.269 581.836 125.483 581.587 124.811 581.149C124.141 580.705 123.653 580.088 123.346 579.298L126.25 578.224C126.391 578.55 126.608 578.803 126.901 578.982C127.198 579.155 127.54 579.248 127.928 579.261C128.317 579.274 128.722 579.202 129.144 579.046C129.583 578.883 129.943 578.661 130.223 578.381C130.503 578.101 130.688 577.788 130.777 577.442C130.866 577.096 130.844 576.743 130.711 576.383C130.576 576.019 130.355 575.735 130.047 575.531C129.742 575.321 129.371 575.205 128.934 575.185C128.502 575.163 128.029 575.248 127.513 575.438L126.241 575.909L125.457 573.791L126.729 573.32C127.165 573.159 127.521 572.942 127.798 572.667C128.08 572.392 128.264 572.086 128.352 571.75C128.438 571.411 128.415 571.061 128.282 570.701C128.155 570.359 127.962 570.09 127.703 569.893C127.446 569.69 127.144 569.57 126.796 569.532C126.454 569.492 126.089 569.544 125.703 569.687C125.312 569.831 124.981 570.035 124.709 570.297C124.436 570.554 124.249 570.848 124.149 571.178C124.049 571.508 124.057 571.848 124.171 572.2L121.407 573.223C121.13 572.432 121.098 571.656 121.311 570.896C121.524 570.135 121.937 569.45 122.549 568.839C123.164 568.223 123.938 567.742 124.87 567.397C125.812 567.049 126.699 566.915 127.531 566.995C128.364 567.076 129.083 567.335 129.689 567.772C130.298 568.203 130.733 568.779 130.995 569.5C131.282 570.262 131.281 570.987 130.99 571.675C130.704 572.362 130.205 572.915 129.492 573.336L129.531 573.442C130.582 573.199 131.475 573.265 132.209 573.64C132.947 574.008 133.47 574.617 133.779 575.467C134.071 576.242 134.103 577.016 133.873 577.787C133.648 578.557 133.205 579.262 132.543 579.901C131.88 580.54 131.039 581.048 130.017 581.426Z" fill="white"/>
+          <path d="M261.25 1095.08C267.25 1098.55 267.25 1107.21 261.25 1110.67L236.5 1124.96C230.5 1128.43 223 1124.1 223 1117.17V1088.59C223 1081.66 230.5 1077.33 236.5 1080.79L261.25 1095.08Z" fill="#129BFF"/>
+          <path d="M233.678 1107.33V1104.91L239.75 1095.35H241.838V1098.7H240.602L236.774 1104.76V1104.87H245.403V1107.33H233.678ZM240.659 1109.89V1106.6L240.716 1105.52V1095.35H243.599V1109.89H240.659Z" fill="white"/>
+          <path d="M715.505 1009.09C722.015 1011.46 723.518 1019.99 718.21 1024.44L696.315 1042.81C691.007 1047.26 682.869 1044.3 681.667 1037.48L676.708 1009.33C675.506 1002.51 682.141 996.942 688.651 999.313L715.505 1009.09Z" fill="#129BFF"/>
+          <path d="M696.401 1027.69C695.412 1027.87 694.499 1027.84 693.661 1027.61C692.827 1027.38 692.128 1026.99 691.563 1026.43C690.998 1025.87 690.634 1025.18 690.47 1024.36L693.408 1023.84C693.538 1024.39 693.85 1024.8 694.345 1025.07C694.839 1025.34 695.385 1025.42 695.982 1025.31C696.458 1025.23 696.859 1025.05 697.185 1024.78C697.516 1024.5 697.751 1024.15 697.889 1023.74C698.032 1023.32 698.059 1022.86 697.972 1022.37C697.884 1021.86 697.698 1021.44 697.417 1021.1C697.139 1020.75 696.795 1020.5 696.384 1020.35C695.974 1020.21 695.528 1020.17 695.047 1020.25C694.627 1020.33 694.234 1020.48 693.868 1020.73C693.507 1020.97 693.243 1021.26 693.076 1021.59L690.298 1021.59L689.646 1013.91L698.403 1012.37L698.839 1014.84L692.579 1015.95L692.841 1019.6L692.925 1019.59C693.114 1019.19 693.442 1018.83 693.909 1018.5C694.377 1018.18 694.925 1017.96 695.555 1017.85C696.417 1017.7 697.222 1017.77 697.97 1018.06C698.718 1018.34 699.35 1018.81 699.866 1019.45C700.382 1020.08 700.718 1020.86 700.876 1021.78C701.05 1022.74 700.978 1023.64 700.658 1024.47C700.341 1025.29 699.818 1025.99 699.087 1026.56C698.359 1027.13 697.464 1027.51 696.401 1027.69Z" fill="white"/>
+          <path d="M206.388 1505.36C202.584 1511.15 193.938 1510.65 190.825 1504.46L177.987 1478.93C174.875 1472.74 179.63 1465.5 186.547 1465.9L215.078 1467.55C221.995 1467.95 225.885 1475.68 222.081 1481.47L206.388 1505.36Z" fill="#129BFF"/>
+          <path d="M199.656 1490.61C198.908 1490.62 198.185 1490.5 197.486 1490.26C196.793 1490.02 196.169 1489.62 195.615 1489.07C195.061 1488.52 194.618 1487.79 194.288 1486.88C193.963 1485.97 193.794 1484.85 193.782 1483.52C193.776 1482.3 193.906 1481.21 194.172 1480.24C194.442 1479.28 194.833 1478.45 195.343 1477.78C195.858 1477.1 196.476 1476.58 197.197 1476.22C197.918 1475.86 198.729 1475.68 199.628 1475.67C200.599 1475.66 201.457 1475.84 202.204 1476.22C202.951 1476.58 203.552 1477.09 204.008 1477.73C204.468 1478.37 204.749 1479.09 204.851 1479.88L201.818 1479.91C201.695 1479.41 201.443 1479.01 201.062 1478.73C200.681 1478.44 200.21 1478.3 199.652 1478.31C198.705 1478.31 197.989 1478.73 197.504 1479.56C197.024 1480.39 196.785 1481.51 196.788 1482.93L196.888 1482.93C197.102 1482.49 197.392 1482.12 197.759 1481.82C198.13 1481.51 198.551 1481.27 199.023 1481.1C199.5 1480.93 200.004 1480.84 200.534 1480.84C201.396 1480.83 202.165 1481.03 202.841 1481.43C203.516 1481.83 204.052 1482.38 204.446 1483.08C204.841 1483.78 205.042 1484.59 205.05 1485.49C205.059 1486.48 204.837 1487.36 204.385 1488.13C203.937 1488.9 203.306 1489.51 202.491 1489.95C201.68 1490.39 200.735 1490.61 199.656 1490.61ZM199.62 1488.2C200.093 1488.19 200.516 1488.08 200.888 1487.85C201.26 1487.62 201.551 1487.31 201.76 1486.92C201.97 1486.53 202.073 1486.09 202.068 1485.61C202.064 1485.12 201.954 1484.69 201.737 1484.31C201.525 1483.93 201.234 1483.62 200.862 1483.4C200.491 1483.18 200.069 1483.07 199.595 1483.07C199.24 1483.07 198.912 1483.14 198.61 1483.28C198.313 1483.41 198.052 1483.6 197.826 1483.84C197.606 1484.08 197.433 1484.36 197.308 1484.67C197.183 1484.98 197.122 1485.31 197.125 1485.66C197.13 1486.13 197.24 1486.55 197.457 1486.94C197.678 1487.33 197.974 1487.63 198.346 1487.86C198.722 1488.09 199.146 1488.2 199.62 1488.2Z" fill="white"/>
+          <path d="M549.516 1784.09C555.003 1788.32 553.854 1796.9 547.447 1799.54L521.019 1810.42C514.613 1813.05 507.754 1807.77 508.673 1800.9L512.467 1772.57C513.387 1765.71 521.395 1762.41 526.882 1766.64L549.516 1784.09Z" fill="#129BFF"/>
+          <path d="M522.443 1796.65L529.27 1785.15L529.276 1785.05L522.268 1784.58L522.439 1782.07L532.622 1782.76L532.448 1785.3L525.61 1796.86L522.443 1796.65Z" fill="white"/>
+        </svg>
+      </div>
+
+      <div className="absolute top-0 left-0 w-full">
+        <div
+          ref={firstRef}
+          className="flex pt-8 items-center justify-center"
+        >
+          <div className="flex items-center px-8">
+            <code className="rotated-text">FLY AND DMP</code>
+          </div>
+          <div className="w-full flex flex-col items-center justify-center">
+            <div className="-ml-[650px] mt-28 flex justify-start items-start">
+              <img src={illu1} alt={"Supply Side Platform"} className="w-60"/>
+            </div>
+            <div className="-mr-[800px] -mt-56 flex justify-center items-end">
+              <img src={illu2} alt={"Audience Intelligence Data"} className="w-60"/>
+            </div>
+          </div>
         </div>
-        <div className="w-full grid grid-cols-2 h-[420px] py-4">
-          <div className="col-span-1 flex justify-center items-start">
-            <img src={illu1} alt={"Supply Side Platform"} className="w-60"/>
+        <div
+          ref={secondRef}
+          className="flex items-center justify-center"
+        >
+          <div className="flex items-center px-8">
+            <code className="rotated-text">PROOH PLANNING TOOL</code>
           </div>
-          <div className="col-span-1 flex justify-center items-end">
-            <img src={illu2} alt={"Audience Intelligence Data"} className="w-60"/>
+          <div className="w-full flex flex-col items-center justify-center">
+            <div className="-ml-[940px] mt-48 flex justify-start items-start">
+              <img src={illu3} alt={"Instant Campaign Planning With Prooh"} className="w-60"/>
+            </div>
+            <div className="-ml-48 flex justify-center items-end">
+              <img src={illu4} alt={"Hassle Free Pre-Deployment Approvals"} className="w-60"/>
+            </div>
+            <div className="ml-[640px] -mt-[180px] flex justify-center items-end">
+              <img src={illu5} alt={"Real Time Campaign Deployment"} className="w-60"/>
+            </div>
           </div>
+        </div>
+        <div
+          ref={thirdRef}
+          className="flex items-center justify-center"
+        >
+          <div className="flex items-center px-8">
+            <code className="rotated-text">FLY AND DMP</code>
+          </div>
+          <div className="w-full flex flex-col items-center justify-center">
+            <div className="-ml-[600px] mt-44 flex justify-start items-start">
+              <img src={illu6} alt={"Real-Time Campaign Reporting And Impression Adjustment"} className="w-60"/>
+            </div>
+            <div className="ml-[400px] -mt-48 flex justify-center items-end">
+              <img src={illu7} alt={"Auto Invoicing And Archiving"} className="w-60"/>
+            </div>
+          </div>
+        </div>
+        <div className="mt-6 md:mt-8 flex justify-center">
+          <PrimaryButton
+            title="Start Planning"
+            rounded="rounded-[8px]"
+            action={() => navigate(AUTH)} // Scroll to the target on click
+            icon={<i className="fi fi-sr-megaphone mx-2 flex items-center jusify-center"></i>}
+          />
         </div>
       </div>
-      <div className="flex">
-        <div className="flex items-center">
-          <code className="rotated-text">PROOH PLANNING TOOL</code>
-        </div>
-        <div className="w-full grid grid-cols-3 h-[420px] py-4">
-          <div className="col-span-1 flex justify-center items-start">
-            <img src={illu3} alt={"Instant Campaign Planning With Prooh"} className="w-60"/>
-          </div>
-          <div className="col-span-1 flex justify-center items-center">
-            <img src={illu4} alt={"Hassle Free Pre-Deployment Approvals"} className="w-60"/>
-          </div>
-          <div className="col-span-1 flex justify-center items-end">
-            <img src={illu5} alt={"Real Time Campaign Deployment"} className="w-60"/>
-          </div>
-        </div>
-      </div>
-      <div className="flex">
-        <div className="flex items-center">
-          <code className="rotated-text">REPORTING AND INVOICING</code>
-        </div>
-        <div className="w-full grid grid-cols-2 h-[420px] py-4">
-          <div className="col-span-1 flex justify-center items-start">
-            <img src={illu6} alt={"Real-Time Campaign Reporting And Impression Adjustment"} className="w-60"/>
-          </div>
-          <div className="col-span-1 flex justify-center items-end">
-            <img src={illu7} alt={"Auto Invoicing And Archiving"} className="w-60"/>
-          </div>
-        </div>
-      </div>
-      <div className="mt-6 md:mt-8 flex justify-center">
-        <PrimaryButton
-          title="Start Planning"
-          rounded="rounded-[8px]"
-          // action={() => navigate(AUTH)} // Scroll to the target on click
-          icon={<i className="fi fi-sr-megaphone mx-2 flex items-center jusify-center"></i>}
-        />
-      </div>
+
+     
+
     </div>
   );
 };
