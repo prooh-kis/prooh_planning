@@ -88,14 +88,14 @@ export const CampaignTemplates: React.FC = () => {
           </p>
         </div>
         <div className="grid grid-cols-12 gap-8 py-8">
-          <div className="col-span-4 rounded-[16px] bg-white px-4 py-4">
+          <div className="col-span-4 rounded-[16px] bg-white px-4 py-4 grid grid-rows-5">
             {allPlans?.map((plan: any, i: any) => (
               <div
                 key={plan.id}
                 onClick={() => {
                   handleCardClick(plan.id)
                 }}
-                className={`${selectedCard === plan.id ? "bg-primaryButton" : ""} flex items-center justify-start gap-4 border-b p-4 rounded-[12px] my-2`}
+                className={`row-span-1 ${selectedCard === plan.id ? "bg-primaryButton" : ""} flex items-center justify-start gap-4 border-b p-4 rounded-[12px] my-1`}
               >
                 <span className={`bg-[${selectedCard === plan.id ? "#ffffff" : plan.color}] rounded-full h-8 w-8 flex items-center justify-center`}>
                   <i className={`${plan.icon} flex items-center justify-center ${selectedCard === plan.id ? "text-primaryButton" : "text-white"}`} />
@@ -106,16 +106,16 @@ export const CampaignTemplates: React.FC = () => {
               </div>
             ))}
           </div>
-          <div className="col-span-8 rounded-[16px] bg-white px-8 py-12">
+          <div className="col-span-8 rounded-[16px] bg-white px-8 pt-8 pb-4">
             <div className="flex flex-col h-full justify-between items-between">
               <div className="">
-                <span className={`bg-[${allPlans[selectedCard].color}] rounded-full h-8 w-8 flex items-center justify-center`}>
-                  <i className={`${allPlans[selectedCard].icon} flex items-center justify-center text-white `} />
+                <span className={`bg-[${allPlans[selectedCard].color}] rounded-full h-12 w-12 flex items-center justify-center`}>
+                  <i className={`${allPlans[selectedCard].icon} text-[24px] flex items-center justify-center text-white `} />
                 </span>
-                <h1 className="font-custom text-[16px] font-semibold py-2">
+                <h1 className="font-custom text-[24px] font-semibold py-4 border-b">
                   {allPlans[selectedCard].label}
                 </h1>
-                <p className="text-wrap text-[12px] text-gray-500">
+                <p className="font-custom text-wrap text-[14px] text-gray-500 my-4">
                   {allPlans[selectedCard].description}
                 </p>
               </div>
