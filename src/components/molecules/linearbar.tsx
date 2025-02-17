@@ -18,7 +18,7 @@ export const LinearBar = ({
   const widthPercentage = highest ? (value * 100) / highest : value;
   return (
     <div
-      className="relative flex items-center w-full h-2 rounded group overflow-visible"
+      className="relative flex items-center w-full h-2 rounded group overflow-visible my-1"
       style={{ backgroundColor: colors[0] || "#00000020" }}
     >
       <Tooltip

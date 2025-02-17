@@ -157,7 +157,7 @@ export const SpecialDay = ({
   };
 
   return (
-    <div className="w-full py-3">
+    <div className="w-full pt-4 pb-8">
       <AddCampaignDetails
         handleCancel={handleCancel}
         open={isOpen}
@@ -225,7 +225,7 @@ export const SpecialDay = ({
             </span>
             events according to your category{" "}
           </h1>
-          <div className="flex flex-col gap-4 mt-4 overflow-y-auto pr-4 h-96">
+          <div className="flex flex-col gap-4 mt-4 overflow-y-auto pr-4 h-[480px]">
             {loadingCalendarListDat && (
               <div className="flex flex-col gap-4">
                 <div

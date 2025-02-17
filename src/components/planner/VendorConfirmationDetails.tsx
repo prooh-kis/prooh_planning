@@ -474,7 +474,7 @@ export const VendorConfirmationDetails = ({
                 setToEmail={setToEmail}
                 cc={cc}
                 sendEmail={sendEmailToAll}
-                // sendEmailToAll={sendEmailToAll}
+                sendEmailToAll={sendEmailToAll}
               />
             </div>
             <div className="col-span-1 border rounded-[12px] p-2">

@@ -105,12 +105,11 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between my-6">
+      <div className="flex items-center justify-between pt-2 mb-6">
         <div className="flex-1 h-1 bg-gray-200 relative mx-4">
           <div className="absolute inset-x-0 flex justify-between">
             <div 
               className="absolute h-1 inset-x-0 bg-primaryButton transition-all duration-500"
-              // style={{ width: `${((currentOfferIndex) / [2022, 2023, 2024, 2025].length) * 100}%` }}
               style={{ width: `${Number(step - 1)/(steps-1) * 100}%` }}
 
 
@@ -130,13 +129,15 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
                 <div className="relative mt-[-32px] w-full">
                   
                   <div
-                      className={`fi ${
+                      className={`flex w-full gap-2 ${
                         i <= step
-                          ? "text-primaryButton" // Blue for selected steps
-                          : "text-[#D6D2D2]" // Gray for unselected steps
-                      }`}
+                          ? "text-primaryButton"
+                          : "text-[#D6D2D2]"
+                      }
+                      ${i + 1 === steps ? "-pl-4" : ""}
+                      `}
                     >
-                    {icons[i]}
+                    {icons[i]} 
                   </div>
                 </div>
               </Tooltip>
@@ -147,7 +148,7 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
             className={
               `flex justify-center w-full mt-4 text-primaryButton text-[14px] font-medium truncate`
           }>
-            {stepLabels[step-1]} {/* Show the label text for the current step */}
+            {stepLabels[step-1]}
           </div>
         </div>
       </div>

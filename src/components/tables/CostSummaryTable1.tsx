@@ -17,6 +17,7 @@ export const CostSummaryTable1 = ({
   loading,
 }: CostSummartTabelProps) => {
   const getCurrentStep = getDataFromLocalStorage("currentStep");
+  console.log(totalData);
   return (
     <table className="w-full">
       <thead className="bg-[#F7F7F7] flex justify-between items-center w-full">
@@ -115,7 +116,7 @@ export const CostSummaryTable1 = ({
               <div className="grid grid-cols-4 w-full items-center">
                 <p className="col-span-1"></p>
                 <h1 className="col-span-2 lg:text-[14px] md:text-[12px] text-[#21394F] truncate font-normal">
-                  {data?.totalDuration} Days
+                  {data?.duration} Days
                 </h1>
               </div>
             </th>

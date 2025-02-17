@@ -104,33 +104,12 @@ export const SpecialDayPlanPage: React.FC = () => {
           )[0]?.id || 0
         ) + 1
       );
-      // dispatch(
-      //   getScreensAudiencesData({
-      //     id: campDetails?._id,
-      //     markets: campDetails?.markets,
-      //   })
-      // );
-      // dispatch(
-      //   getScreensCostData({
-      //     id: campDetails?._id,
-      //     cohorts: campDetails?.cohorts,
-      //     touchPoints: campDetails?.touchPoints,
-      //     gender: campDetails?.gender,
-      //     duration: campDetails?.duration,
-      //   })
-      // );
-      // dispatch(
-      //   getScreenSummaryPlanTableData({
-      //     id: campaignId,
-      //     screenIds: campDetails?.screenIds,
-      //   })
-      // );
       const curr =
         Number(
           pages.filter(
             (page: any) => page.value === campDetails?.currentPage
           )[0]?.id || 0
-        ) + 1;
+        );
       const currStep = {
         [campaignId]: curr,
       };
@@ -168,12 +147,14 @@ export const SpecialDayPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
           />
         ) : currentStep === 3 ? (
           <AdvanceFiltersDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
           />
         ) : currentStep === 4 ? (
           <RegularCohortComparisonDetails
@@ -186,6 +167,7 @@ export const SpecialDayPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            success={success}
           />
         ) : currentStep === 6 ? (
           <ViewFinalPlanPODetails
