@@ -464,27 +464,30 @@ export const VendorConfirmationDetails = ({
           statusTableData={statusTableData}
         />
       </div>
-      {!loadingStatusTableData && !errorStatusTableData && (
-        <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-1 border rounded-[12px] p-2">
-            <EmailSendBox
-              type="vendor"
-              toEmail={toEmail}
-              setToEmail={setToEmail}
-              cc={cc}
-              sendEmail={sendEmail}
-              sendEmailToAll={sendEmailToAll}
-            />
+      <div className="pb-20">
+        {!loadingStatusTableData && !errorStatusTableData && (
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-1 border rounded-[12px] p-2">
+              <EmailSendBox
+                type="vendor"
+                toEmail={toEmail}
+                setToEmail={setToEmail}
+                cc={cc}
+                sendEmail={sendEmailToAll}
+                // sendEmailToAll={sendEmailToAll}
+              />
+            </div>
+            <div className="col-span-1 border rounded-[12px] p-2">
+              <EmailConfirmationImage
+                files={files}
+                handleAddNewFile={handleAddNewFile}
+                removeImage={removeImage}
+              />
+            </div>
           </div>
-          <div className="col-span-1 border rounded-[12px] p-2">
-            <EmailConfirmationImage
-              files={files}
-              handleAddNewFile={handleAddNewFile}
-              removeImage={removeImage}
-            />
-          </div>
-        </div>
-      )}
+        )}
+      </div>
+
 
       <div
         className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]"

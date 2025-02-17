@@ -143,25 +143,25 @@ export const VendorConfirmationStatusTable = ({
                   <h1
                     className={`text-[14px] ${
                       status.status === "PleaRequestBudgetSent"
-                        ? "text-purple-400"
+                        ? "text-[#129BFF]"
                         : status.status === "PleaRequestBudgetAccepted"
                         ? "text-[#129BFF]"
                         : status.status === "PleaRequestBudgetRejected"
-                        ? "text-red-400"
+                        ? "text-[#129BFF]"
                         : status.status === "PleaRequestScreenApprovalSent"
-                        ? "text-purple-800"
+                        ? "text-[#129BFF]"
                         : status.status === "PleaRequestScreenApprovalAccepted"
                         ? "text-[#129BFF]"
                         : status.status === "PleaRequestScreenApprovalRejected"
-                        ? "text-red-800"
+                        ? "text-[#129BFF]"
                         : status.status === "PleaRequestFinalApprovalSent"
-                        ? "text-purple-800"
+                        ? "text-[#129BFF]"
                         : status.status === "PleaRequestFinalApprovalAccepted"
                         ? "text-[#129BFF]"
                         : status.status === "PleaRequestFinalApprovalRejected"
-                        ? "text-red-800"
+                        ? "text-[#129BFF]"
                         : status.status === "Pending"
-                        ? "text-green-700"
+                        ? "text-[#129BFF]"
                         : ""
                     }`}
                   >
@@ -203,7 +203,7 @@ export const VendorConfirmationStatusTable = ({
                       setOpenShowMediaPopup(true);
                     }}
                   >
-                    <i className="fi fi-sr-photo-video text-[20px] text-violet-500 flex justify-center"></i>
+                    <i className="fi fi-sr-photo-video text-[20px] text-violet flex justify-center"></i>
                   </div>
                 </td>
               </tr>
