@@ -101,7 +101,7 @@ export const ProohCreator = ({
                     )}
                   </div>
                   <h3 className="mt-4 text-xl font-semibold text-gray-900">{member.name}</h3>
-                  <p className="text-gray-600">{member.role}</p>
+                  <p className="text-gray-600 text-[12px]">{member.role}</p>
                   {member.location && (
                     <p className="text-gray-600">{member.location}</p>
                   )}

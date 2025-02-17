@@ -9,6 +9,7 @@ import { getLandingPageData } from "../../actions/screenAction";
 import { useDispatch } from "react-redux";
 import clsx from "clsx";
 import { LandingPageMapStats } from "../../components/molecules/LandingPageMapStats";
+import { Tooltip } from "antd";
 
 
 const colors = [
@@ -264,9 +265,9 @@ export const OurAdvertisingJourney = ({ data }: any) => {
       </div>
 
       {/* Progress Bar */}
-      <div className="flex items-center justify-between my-6">
+      <div className="flex items-center justify-between my-6 pt-4 px-4">
         <div className="flex-1 h-1 bg-gray-200 relative">
-          <div className="absolute inset-x-0 flex justify-between">
+          <div className="absolute inset-x-0 flex justify-between p">
             <div 
               className="absolute h-1 inset-x-0 bg-primaryButton transition-all duration-500"
               // style={{ width: `${((currentOfferIndex) / [2022, 2023, 2024, 2025].length) * 100}%` }}
@@ -275,15 +276,31 @@ export const OurAdvertisingJourney = ({ data }: any) => {
 
             />
             {[...Array(4)].map((_, i) => (
+              // <div 
+              //   key={i}
+              //   onClick={() => setCurrentOfferIndex(i)}
+              //   // className="w-4 h-4 rounded-full -mt-1.5"
+              //   className={`w-4 h-4 rounded-full -mt-1.5 
+              //     ${i <= currentOfferIndex ? 'bg-primaryButton' : 'bg-gray-200'}
+              //   `}
+              // >
+              //   {/* <h1>3</h1> */}
+              // </div>
               <div 
                 key={i}
                 onClick={() => setCurrentOfferIndex(i)}
-                // className="w-4 h-4 rounded-full -mt-1.5"
-                className={`w-4 h-4 rounded-full -mt-1.5 
+                className={`w-4 h-4 rounded-full -mt-1.5 border border-primaryButton
                   ${i <= currentOfferIndex ? 'bg-primaryButton' : 'bg-gray-200'}
                 `}
               >
-                {/* <h1>3</h1> */}
+                <Tooltip
+                  title={[2022, 2023, 2024, 2025][i]}
+                >
+                  {/* Icon or Text for each step */}
+                  <div className={`${i <= currentOfferIndex ? "text-primaryButton": "text-gray-300"} relative mt-[-32px] w-full flex justify-center`}>
+                    {[2022, 2023, 2024, 2025][i]}
+                  </div>
+                </Tooltip>
               </div>
             ))}
           </div>

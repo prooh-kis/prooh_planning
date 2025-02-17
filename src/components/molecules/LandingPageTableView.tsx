@@ -21,7 +21,7 @@ export const LandingPageTableView = ({
     <div className="">
       <div className="grid grid-cols-12 border-y border border-proohGray bg-[#00A0FA]">
         <div className="border-r border-proohGray col-span-4 flex justify-between lg:px-5">
-          <h1 className="lg:text-[14px] text-[12px] text-black font-bold text-center px-4 py-2">
+          <h1 className="text-[14px] text-black font-bold text-center px-4 py-2">
             Countries ({getTotalCountryCount()})
           </h1>
         </div>
@@ -41,7 +41,7 @@ export const LandingPageTableView = ({
                 handleCntClick(c);
               }}
             >
-              <h1 className="lg:text-[14px] text-[12px] text-black font-bold align-center truncate">
+              <h1 className="text-[14px] text-black font-bold align-center truncate">
                 {c}
               </h1>
             </div>
@@ -50,7 +50,7 @@ export const LandingPageTableView = ({
       </div>
       <div className="grid grid-cols-12 border border-proohGray bg-[#D4F0FF]">
         <div className="border-r border-proohGray col-span-4 flex justify-between px-5 py-2">
-          <h1 className="lg:text-[14px] text-[12px] text-black font-bold text-center lg:px-4">
+          <h1 className="text-[14px] text-black font-bold text-center lg:px-4">
             States ({getTotalStatesCounts()})
           </h1>
         </div>
@@ -70,7 +70,7 @@ export const LandingPageTableView = ({
                 handleStClick(s);
               }}
             >
-              <h1 className="lg:text-[14px] text-[12px] text-black font-bold align-center truncate">
+              <h1 className="text-[14px] text-black font-bold align-center truncate">
                 {s}
               </h1>
             </div>
@@ -80,12 +80,12 @@ export const LandingPageTableView = ({
       <div className="grid grid-cols-12">
         <div className="col-span-4">
           <div className="border-y border-l border-proohGray flex justify-between px-5 items-center py-2 bg-[#EDF9FF]">
-            <h1 className="lg:text-[14px] text-[12px] text-black font-bold text-center px-4">
+            <h1 className="text-[14px] text-black font-bold text-center px-4">
               City ({getTotalCityCount()})
             </h1>
           </div>
           <div
-            className="h-[160px] overflow-auto no-scrollbar sync-scroll-container"
+            className="h-[360px] overflow-auto no-scrollbar sync-scroll-container"
             onScroll={(e) => {
               const { scrollLeft, scrollTop } = e.currentTarget;
               document.querySelectorAll(".sync-scroll-container").forEach((el) => {
@@ -99,14 +99,14 @@ export const LandingPageTableView = ({
                 className="flex flex-row justify-between px-5 border-b border-l border-proohGray py-2"
                 key={i}
               >
-                <h1 className="lg:text-[14px] text-[12px] font-semibold truncate lg:px-4">
+                <h1 className="text-[14px] font-semibold truncate lg:px-4">
                   {tp} ({getTotalScreensCountTouchpointWise(tp)})
                 </h1>
               </div>
             ))}
           </div>
           <div className="bg-[#00A0FA] flex flex-row border justify-between px-5 py-2">
-            <div className="lg:text-[14px] text-[12px] lg:px-4 font-semibold">
+            <div className="text-[14px] lg:px-4 font-semibold">
               Total ({getTotalScreensCount()})
             </div>
           </div>
@@ -122,10 +122,10 @@ export const LandingPageTableView = ({
                       : "border-r border-b border-proohGray bg-transparent flex justify-center cursor-pointer py-2 bg-[#FFFADF]"
                   }
                 >
-                  <h1 className="lg:text-[14px] text-[12px]">{c}</h1>
+                  <h1 className="text-[14px]">{c}</h1>
                 </div>
                 <div
-                  className="h-[160px] overflow-auto no-scrollbar sync-scroll-container"
+                  className="h-[360px] overflow-auto no-scrollbar sync-scroll-container"
                   onScroll={(e) => {
                     const { scrollLeft, scrollTop } = e.currentTarget;
                     document.querySelectorAll(".sync-scroll-container").forEach((el) => {
@@ -139,7 +139,7 @@ export const LandingPageTableView = ({
                       className="border-b border-r border-proohGray flex justify-center py-2"
                       key={k}
                     >
-                      <h1 className="lg:text-[14px] text-[12px]">
+                      <h1 className="text-[14px]">
                         {touchpointsCities[t][c]?.length || 0}
                       </h1>
                     </div>

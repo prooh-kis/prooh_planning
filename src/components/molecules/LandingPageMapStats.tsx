@@ -45,11 +45,11 @@ export function LandingPageMapStats({ data }: any) {
             anchor: "center" as const,
             align: "center" as const,
             font: { weight: "bold" as const },
-            // formatter: (value: number) => formatNumber(value.toFixed(0)), // Hide zero values
-            formatter: (value: number) => {
-              const percentage = ((value / totalValue) * 100).toFixed(1);
-              return `${percentage}%`;
-            },
+            // // formatter: (value: number) => formatNumber(value.toFixed(0)), // Hide zero values
+            // formatter: (value: number) => {
+            //   const percentage = ((value / totalValue) * 100).toFixed(1);
+            //   return `${percentage}%`;
+            // },
           },
         },
       ],
