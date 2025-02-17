@@ -45,11 +45,11 @@ export function LandingPageMapStats({ data }: any) {
             anchor: "center" as const,
             align: "center" as const,
             font: { weight: "bold" as const },
-            // // formatter: (value: number) => formatNumber(value.toFixed(0)), // Hide zero values
-            // formatter: (value: number) => {
-            //   const percentage = ((value / totalValue) * 100).toFixed(1);
-            //   return `${percentage}%`;
-            // },
+            // formatter: (value: number) => formatNumber(value.toFixed(0)), // Hide zero values
+            formatter: (value: number) => {
+              const percentage = ((value / totalValue) * 100).toFixed(1);
+              return `${percentage}%`;
+            },
           },
         },
       ],
@@ -82,20 +82,21 @@ export function LandingPageMapStats({ data }: any) {
     <div className="w-full rounded-[12px]">
       <div className="grid grid-cols-3 w-full gap-y-2">
         {[
-          { label: "Countries", value: data?.countries },
-          { label: "Cities", value: data?.cities },
+          {
+            label: "Countries",
+            value: ("0" + data?.countries).slice(-2),
+          },
+          { label: "Cities", value: ("0" + data?.cities).slice(-2) },
           {
             label: "Touchpoints",
-            value: data?.touchPoints?.length,
+            value: ("0" + data?.touchPoints?.length).slice(-2),
           },
           { label: "Venues", value: data?.venues },
           {
             label: "Screens",
             value: data?.screens?.length,
           },
-          {
-
-          },
+          {},
           {
             label: "Campaigns",
             value: data?.campaigns,
@@ -111,7 +112,7 @@ export function LandingPageMapStats({ data }: any) {
         ].map((item, index) => (
           <div
             key={index}
-            className={`truncate h-40 lg:py-6 py-4 px-8 col-span-1 border border-x-2 border-white flex flex-col items-center text-[#20272C] justify-center bg-[#EFF9FF] rounded-[12px]`}
+            className={`truncate h-40 lg:py-6 py-4 px-8 col-span-1 border border-x-2 border-white flex flex-col items-center text-[#20272C] justify-center bg-[#F8FCFF] rounded-[12px]`}
           >
             {index === 5 ? (
               <div className="">
@@ -119,13 +120,14 @@ export function LandingPageMapStats({ data }: any) {
               </div>
             ) : (
               <div className="flex flex-col items-center">
-                <h1 className="lg:text-[32px] text-[20px] font-bold">
+                <h1 className="lg:text-[32px] md:text-[28px] sm:text-[24px] text-[20px] font-bold text-[#2076B5] lg:leading-[42.77px] md:leading-[36px] sm:leading-[32px] leading-[28px] tracking-[0.01em]">
                   {item.value ? item.value : 0}
                 </h1>
-                <p className="lg:text-[16px] text-[12px] truncate">{item.label}</p>
+                <p className="lg:text-[16px] md:text-[14px] sm:text-[12px] text-[10px] lg:leading-[21.39px] md:leading-[18px] sm:leading-[16px] leading-[14px] text-[#2076B5] tracking-[0.01em]">
+                  {item.label}
+                </p>
               </div>
             )}
-
           </div>
         ))}
       </div>

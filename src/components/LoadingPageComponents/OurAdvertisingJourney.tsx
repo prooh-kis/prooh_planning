@@ -11,15 +11,35 @@ import clsx from "clsx";
 import { LandingPageMapStats } from "../../components/molecules/LandingPageMapStats";
 import { Tooltip } from "antd";
 
-
 const colors = [
-  "bg-[#8B5CF6]", "bg-[#6366F1]", "bg-[#3B82F6]", "bg-[#06B6D4]", "bg-[#22C55E]", "bg-[#F59E0B]", "bg-[#EF4444]", "bg-[#FF77E9]"
+  "bg-[#8B5CF6]",
+  "bg-[#6366F1]",
+  "bg-[#3B82F6]",
+  "bg-[#06B6D4]",
+  "bg-[#22C55E]",
+  "bg-[#F59E0B]",
+  "bg-[#EF4444]",
+  "bg-[#FF77E9]",
 ];
 const textColors = [
-  "text-[#8B5CF6]", "text-[#6366F1]", "text-[#3B82F6]", "text-[#06B6D4]", "text-[#22C55E]", "text-[#F59E0B]", "text-[#EF4444]", "text-[#FF77E9]"
+  "text-[#8B5CF6]",
+  "text-[#6366F1]",
+  "text-[#3B82F6]",
+  "text-[#06B6D4]",
+  "text-[#22C55E]",
+  "text-[#F59E0B]",
+  "text-[#EF4444]",
+  "text-[#FF77E9]",
 ];
 const colorsbg = [
-  "group-hover:bg-[#8B5CF630]", "group-hover:bg-[#6366F130]", "group-hover:bg-[#3B82F630]", "group-hover:bg-[#06B6D430]", "group-hover:bg-[#22C55E30]", "group-hover:bg-[#F59E0B30]", "group-hover:bg-[#EF444430]", "group-hover:bg-[#FF77E9]"
+  "group-hover:bg-[#8B5CF630]",
+  "group-hover:bg-[#6366F130]",
+  "group-hover:bg-[#3B82F630]",
+  "group-hover:bg-[#06B6D430]",
+  "group-hover:bg-[#22C55E30]",
+  "group-hover:bg-[#F59E0B30]",
+  "group-hover:bg-[#EF444430]",
+  "group-hover:bg-[#FF77E9]",
 ];
 export const OurAdvertisingJourney = ({ data }: any) => {
   const targetDivRef = useRef<HTMLDivElement>(null);
@@ -217,16 +237,30 @@ export const OurAdvertisingJourney = ({ data }: any) => {
   const markers = useMemo(() => {
     const newMarkers: any[] = [];
     const tpColors: any[] = [];
-    
-    const locations = data?.location ? data?.locations : getDataFromLocalStorage(LANDING_PAGE_DATA)?.locations;
-    const touchPoints = data?.touchPoints || getDataFromLocalStorage(LANDING_PAGE_DATA)?.touchPoints;
+
+    const locations = data?.location
+      ? data?.locations
+      : getDataFromLocalStorage(LANDING_PAGE_DATA)?.locations;
+    const touchPoints =
+      data?.touchPoints ||
+      getDataFromLocalStorage(LANDING_PAGE_DATA)?.touchPoints;
 
     locations?.forEach((s: any) => {
       const [screenId, details]: any = Object.entries(s)[0];
-      const exists = newMarkers.some((marker: any) => marker[0] === details?.lat && marker[1] === details?.lng && marker[2] === screenId);
+      const exists = newMarkers.some(
+        (marker: any) =>
+          marker[0] === details?.lat &&
+          marker[1] === details?.lng &&
+          marker[2] === screenId
+      );
 
       if (!exists) {
-        newMarkers.push([details?.lat, details?.lng, screenId, details.touchpoint]);
+        newMarkers.push([
+          details?.lat,
+          details?.lng,
+          screenId,
+          details.touchpoint,
+        ]);
       }
     });
 
@@ -237,7 +271,8 @@ export const OurAdvertisingJourney = ({ data }: any) => {
     return { markers: newMarkers, touchPoints: tpColors };
   }, [data]);
 
-  const { markers: memoizedMarkers, touchPoints: memoizedTouchPoints } = markers;
+  const { markers: memoizedMarkers, touchPoints: memoizedTouchPoints } =
+    markers;
   useEffect(() => {
     if (memoizedMarkers?.length > 0 && landingMapRef.current) {
       const latitudes = memoizedMarkers.map((marker: any) => marker[0]);
@@ -255,10 +290,10 @@ export const OurAdvertisingJourney = ({ data }: any) => {
   return (
     <div className="px-4 sm:px-2 md:px-8 w-full mt-16">
       <div className="flex flex-col gap-4 py-2 w-full">
-        <h1 className="font-custom text-[40px] leading-[48px] font-bold tracking-[-0.03em] text-[#20272C] text-left font-inter">
+        <h1 className="font-custom text-[32px] sm:text-[40px] md:text-[48px] lg:text-[56px] font-semibold leading-[40px] sm:leading-[48px] md:leading-[57.6px] lg:leading-[64px] tracking-normal text-[#0E212E] text-center font-inter">
           Our Advertising Journey
         </h1>
-        <p className="text-[16px] font-[400] tracking-[-0.03em] text-[#254354] text-left font-inter">
+        <p className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-[300] leading-[20px] sm:leading-[24px] md:leading-[28px] lg:leading-[32px] tracking-normal text-[#667D8C] text-center font-inter">
           Our platform helps your business in managing expenses. These are some
           of the reasons why you
         </p>
@@ -268,36 +303,28 @@ export const OurAdvertisingJourney = ({ data }: any) => {
       <div className="flex items-center justify-between my-6 pt-4 px-4">
         <div className="flex-1 h-1 bg-gray-200 relative">
           <div className="absolute inset-x-0 flex justify-between p">
-            <div 
+            <div
               className="absolute h-1 inset-x-0 bg-primaryButton transition-all duration-500"
               // style={{ width: `${((currentOfferIndex) / [2022, 2023, 2024, 2025].length) * 100}%` }}
-              style={{ width: `${Number(currentOfferIndex)/3 * 100}%` }}
-
-
+              style={{ width: `${(Number(currentOfferIndex) / 3) * 100}%` }}
             />
             {[...Array(4)].map((_, i) => (
-              // <div 
-              //   key={i}
-              //   onClick={() => setCurrentOfferIndex(i)}
-              //   // className="w-4 h-4 rounded-full -mt-1.5"
-              //   className={`w-4 h-4 rounded-full -mt-1.5 
-              //     ${i <= currentOfferIndex ? 'bg-primaryButton' : 'bg-gray-200'}
-              //   `}
-              // >
-              //   {/* <h1>3</h1> */}
-              // </div>
-              <div 
+              <div
                 key={i}
                 onClick={() => setCurrentOfferIndex(i)}
                 className={`w-4 h-4 rounded-full -mt-1.5 border border-primaryButton
-                  ${i <= currentOfferIndex ? 'bg-primaryButton' : 'bg-gray-200'}
+                  ${i <= currentOfferIndex ? "bg-primaryButton" : "bg-gray-200"}
                 `}
               >
-                <Tooltip
-                  title={[2022, 2023, 2024, 2025][i]}
-                >
+                <Tooltip title={[2022, 2023, 2024, 2025][i]}>
                   {/* Icon or Text for each step */}
-                  <div className={`${i <= currentOfferIndex ? "text-primaryButton": "text-gray-300"} relative mt-[-32px] w-full flex justify-center`}>
+                  <div
+                    className={`${
+                      i <= currentOfferIndex
+                        ? "text-primaryButton"
+                        : "text-gray-300"
+                    } relative mt-[-32px] w-full flex justify-center`}
+                  >
                     {[2022, 2023, 2024, 2025][i]}
                   </div>
                 </Tooltip>
@@ -306,8 +333,8 @@ export const OurAdvertisingJourney = ({ data }: any) => {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-4">
-        <div className="col-span-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="col-span-1 sm:col-span-2 lg:col-span-2">
           {/* <YearSlider /> */}
           <div className="relative">
             <LandingPageMapHeader
@@ -352,23 +379,29 @@ export const OurAdvertisingJourney = ({ data }: any) => {
             )}
           </div>
         </div>
-        <div className="col-span-1 flex items-center">
+
+        <div className="col-span-1 sm:col-span-2 lg:col-span-1 flex items-center">
           <LandingPageMapStats data={landingPageData} />
         </div>
       </div>
+
       {view === "map" && (
-
-        <div className="py-2">
-          <h1 className="font-custom">Legends</h1>
-          <div className="grid grid-cols-12 gap-2 py-2">
-            {memoizedTouchPoints?.map((tp: any, i: any) => (
-              <div key={i} className="cursor-pointer lg:col-span-2 md:col-span-3 flex items-center gap-2 group">
-                <div className={clsx(`h-4 w-4 ${colors[i]} rounded-full`)}></div>
-                <h1 className={clsx(`text-[10px] ${colorsbg[i]}`)}>{tp?.tp}</h1>
-
-              </div>
-            ))}
-          </div>
+        <div className="flex justify-between flex-wrap justify-start gap-4 py-4">
+          {memoizedTouchPoints?.map((tp: any, i: any) => (
+            <div
+              key={i}
+              className="cursor-pointer flex items-center gap-2 group"
+            >
+              <div className={clsx(`h-4 w-4 ${colors[i]} rounded-full`)}></div>
+              <h1
+                className={clsx(
+                  `text-[10px] sm:text-[12px] md:text-[14px] leading-[18.1px] tracking-[0.01em] ${colorsbg[i]}`
+                )}
+              >
+                {tp?.tp}
+              </h1>
+            </div>
+          ))}
         </div>
       )}
     </div>
