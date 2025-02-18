@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 interface ImageCarouselProps {
   images: string[];
   imagesToShow: number; // Number of images to display at once
@@ -35,12 +34,10 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
   return (
     <div
       className="relative w-full overflow-hidden"
-      // onMouseEnter={() => setIsHovered(true)} // Stop on hover
-      // onMouseLeave={() => setIsHovered(false)} // Resume sliding when not hovered
       onMouseMove={handleMouseMove} // Update index on mouse move
     >
       <div
-        className="flex justify-around py-1"
+        className="flex justify-start gap-4 py-1" // Adjust gap between logos
         style={{
           animation: `${
             isHovered ? "none" : `slide-left ${slideDuration}s linear infinite`

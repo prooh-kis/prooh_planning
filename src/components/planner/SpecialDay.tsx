@@ -18,10 +18,11 @@ import { SingleCalenderData } from "../../components/molecules/SingleCalenderDat
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { endOfDay, startOfDay } from "date-fns";
 import { formatNumber } from "../../utils/formatValue";
+import { CAMPAIGN_PLAN_TYPE_TOPICAL } from "../../constants/campaignConstants";
 
 const lastDateMonthWise: any = {
   1: 31,
-  2: 28,
+  2: 29,
   3: 31,
   4: 30,
   5: 31,
@@ -91,10 +92,6 @@ export const SpecialDay = ({
     data: addDetails,
   } = detailsToCreateCampaignAdd;
 
-  const getLastDay = (month: number) => {
-    return lastDateMonthWise[month];
-  };
-
   const handleCancel = useCallback(() => {
     setIsOpen(false);
   }, [isOpen]);
@@ -145,7 +142,7 @@ export const SpecialDay = ({
   }, [navigate, successAddDetails, errorAddDetails]);
 
   const handleSaveData = (data: any) => {
-    console.log("all datat :", data);
+    // console.log("all datat :", data);
     dispatch(
       addDetailsToCreateCampaign({
         ...data,
@@ -158,14 +155,14 @@ export const SpecialDay = ({
   };
 
   return (
-    <div className="w-full py-3">
+    <div className="w-full pt-4 pb-8">
       <AddCampaignDetails
         handleCancel={handleCancel}
         open={isOpen}
         userInfo={userInfo}
         setCurrentStep={setCurrentStep}
         step={step}
-        router="specialdayplan"
+        router={CAMPAIGN_PLAN_TYPE_TOPICAL}
         setCampaignId={setCampaignId}
         campaignId={idCampaign}
         date={selectedDate}
@@ -226,7 +223,7 @@ export const SpecialDay = ({
             </span>
             events according to your category{" "}
           </h1>
-          <div className="flex flex-col gap-4 mt-4 overflow-y-auto pr-4 h-96">
+          <div className="flex flex-col gap-4 mt-4 overflow-y-auto pr-4 h-[480px]">
             {loadingCalendarListDat && (
               <div className="flex flex-col gap-4">
                 <div

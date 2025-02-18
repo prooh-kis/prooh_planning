@@ -455,7 +455,7 @@ export const ViewFinalPlanPODetails = ({
           />
           <MyDiv
             left={"CPM"}
-            right={`${String.fromCharCode(8377)} ${Number(
+            right={`${Number(
               poTableData?.totalCpm
             ).toFixed(2)}`}
           />
@@ -511,7 +511,7 @@ export const ViewFinalPlanPODetails = ({
               {poTableData?.couponId && poTableData?.couponId !== "NA" && (
                 <h1 className="text-left ">
                   &#8377;{" "}
-                  {formatNumber(Number(poTableData?.finalCampaignBudget))}*
+                  {formatNumber(Number(poTableData?.finalCampaignBudget)?.toFixed(2))}*
                 </h1>
               )}
               <h1
@@ -521,7 +521,7 @@ export const ViewFinalPlanPODetails = ({
                     : ""
                 }`}
               >
-                &#8377; {formatNumber(Number(poTableData?.totalCampaignBudget))}
+                &#8377; {formatNumber(Number(poTableData?.totalCampaignBudget)?.toFixed(2))}
                 *
               </h1>
 
@@ -644,6 +644,10 @@ export const ViewFinalPlanPODetails = ({
                 }}
               />
             </div>
+          </div>
+          <div className="flex gap-2 pb-4">
+            <i className="fi fi-sr-lightbulb-on flex items-top justify-center text-primaryButton"></i>
+            <h1 className="text-[12px] text-primaryButton">Check the document that you wish to see, Campaign Summary contains Campaign Details, Plan Summary and Creative Ratios, while Screen Pictures have all the inventory pictures for your references...</h1>
           </div>
           <button
             type="submit"

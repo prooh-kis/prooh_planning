@@ -193,14 +193,14 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
     ["Duration (days)", `${campaignApproach.duration} Days`],
     ["Markets", campaignApproach.markets.join(", ")],
     ["SOV", `${campaignApproach.sov}/18`],
-    ["Total Impressions", campaignApproach.totalImpression.toFixed(0)],
-    ["Total CPM", `INR ${campaignApproach.totalCpm.toFixed(2)}`],
-    ["Total Reach", campaignApproach.totalReach.toFixed(0)],
-    ["Total Campaign Budget", `INR ${campaignApproach.totalCampaignBudget.toFixed(0)}`],
-    ["Discount Availed", `${campaignApproach.couponId !== "" ? `INR ${campaignApproach.totalDiscount.toFixed(0)}` : "None"}`],
+    ["Total Impressions", campaignApproach?.totalImpression?.toFixed(0)],
+    ["Total CPM", `INR ${campaignApproach?.totalCpm?.toFixed(2) || 0}`],
+    ["Total Reach", campaignApproach?.totalReach?.toFixed(0)],
+    ["Total Campaign Budget", `INR ${campaignApproach?.totalCampaignBudget?.toFixed(0) || 0}`],
+    ["Discount Availed", `${campaignApproach.couponId !== "" ? `INR ${campaignApproach.totalDiscount?.toFixed(0)}` : "None"}`],
     campaignApproach?.couponId !== "" ? [
-      "Final Campaign Budget", `INR ${campaignApproach.finalCampaignBudget.toFixed(0)}`
-    ] : ["Final Campaign Budget", `INR ${campaignApproach.totalCampaignBudget.toFixed(0)}`],
+      "Final Campaign Budget", `INR ${campaignApproach.finalCampaignBudget?.toFixed(0) || 0}`
+    ] : ["Final Campaign Budget", `INR ${campaignApproach.totalCampaignBudget?.toFixed(0) || 0}`],
   ];
   // Campaign Overview
   doc.setFontSize(16);

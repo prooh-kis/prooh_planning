@@ -17,20 +17,26 @@ export const MarketersPage: React.FC = () => {
       <div className="px-4 sm:px-10 md:px-16 lg:px-20">
         <MarketGetStarted />
       </div>
+
       {/* Main Content */}
       <div className="flex justify-center mt-8 sm:mt-16 px-4">
         <div className="flex flex-col w-full justify-between lg:w-[70%] w-[90%]">
+          {/* Hero Title */}
           <motion.h1
-            className="text-[#254354] text-[24px] sm:text-3xl lg:text-[48px] font-semibold mt-4  text-center leading-[59.04px] "
+            className="text-[#254354] text-[24px] sm:text-3xl lg:text-[48px] font-semibold mt-4 text-center 
+                       leading-[32px] sm:leading-[44px] lg:leading-[59.04px] tracking-tight"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1 }}
           >
             Buy Billboards on Audience Impressions.
-            <br /> No Fixed Rental.{" "}
+            <br /> No Fixed Rental.
           </motion.h1>
+
+          {/* Hero Subtitle */}
           <motion.p
-            className="text-[#667D8C] text-sm sm:text-base lg:text-[20px] mt-4 text-center  leading-[30px] tracking-[-0.02em]"
+            className="text-[#667D8C] text-sm sm:text-base lg:text-[20px] mt-4 text-center 
+                       leading-[22px] sm:leading-[26px] lg:leading-[30px] tracking-tight sm:tracking-normal"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1 }}
@@ -48,15 +54,18 @@ export const MarketersPage: React.FC = () => {
 
           {/* How It Works Section */}
           <motion.h1
-            className="text-[#254354] text-[24px] sm:text-3xl lg:text-[40px] font-bold mt-16  text-center leading-[49.2px] tracking-[-0.04em]"
+            className="text-[#254354] text-[24px] sm:text-3xl lg:text-[40px] font-bold mt-16 text-center 
+                       leading-[32px] sm:leading-[40px] lg:leading-[49.2px] tracking-[-0.02em] sm:tracking-[-0.03em] lg:tracking-[-0.04em]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
           >
             How IT Works?
           </motion.h1>
+
           <motion.p
-            className="text-[#667D8C] text-sm sm:text-base lg:text-[16px] mt-2 text-center leading-[24.2px] tracking-[-0.02em]"
+            className="text-[#667D8C] text-sm sm:text-base lg:text-[16px] mt-2 text-center 
+                       leading-[20px] sm:leading-[22px] lg:leading-[24.2px] tracking-tight sm:tracking-normal lg:tracking-[0.02em]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
@@ -74,7 +83,11 @@ export const MarketersPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* CTA Section */}
       <CreateCampaignOption />
+
+      {/* Footer */}
       <PageFooter />
     </div>
   );

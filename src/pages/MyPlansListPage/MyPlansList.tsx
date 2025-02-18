@@ -56,9 +56,11 @@ export const MyPlansList = ({ loading, plansList }: any) => {
               ?.map((data: any, i: any) => (
                 <div key={i}
                   className="pointer-cursor"
-                  onClick={() => navigate(`/${getCampaignPageNameFromCampaignType(
-                    data?.campaignType
-                  )}/${data._id}`)}
+                  onClick={() => {
+                      navigate(`/${getCampaignPageNameFromCampaignType(
+                      data?.campaignType
+                    )}/${data._id}`)
+                  }}
                 >
                   <CampaignsListModel data={data} />
                 </div>

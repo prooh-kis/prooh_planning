@@ -54,7 +54,7 @@ export const TouchpointTable = ({
 
   useEffect(() => {
     const lockedData = {
-      cohorts: locked.cohorts,
+      cohorts: clicked,
       touchPoints: clicked,
     }
     setLocked(lockedData);

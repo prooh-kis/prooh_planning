@@ -172,6 +172,7 @@ export const CampaignDashboard = ({
         }}
         invoiceBill={campaignDetails}
         // loading={loadingBillInvoice}
+        jsonDataForInvoice={jsonDataForInvoice}
         poNumber={poNumber}
         setPoNumber={setPoNumber}
         clientAgencyName={clientAgencyName}
@@ -204,7 +205,6 @@ export const CampaignDashboard = ({
         setPocContact={setPocContact}
         setPocDesignation={setPocDesignation}
         pocDesignation={pocDesignation}
-        jsonDataForInvoice={jsonDataForInvoice}
         setJsonDataForInvoice={setJsonDataForInvoice}
         campaignDetails={campaignDetails}
         invoiceDescription={invoiceDescription}

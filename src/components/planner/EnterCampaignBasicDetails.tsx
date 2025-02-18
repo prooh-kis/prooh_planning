@@ -241,7 +241,7 @@ export const EnterCampaignBasicDetails = ({
 
   useEffect(() => {
     dispatch(getAllClientAgencyNames());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="w-full py-3">
@@ -384,23 +384,27 @@ export const EnterCampaignBasicDetails = ({
         <h1 className="text-[12px] pt-4 text-[#129BFF]">
           Note: Your campaign will be billed from{" "}
           {new Date(startDate).toLocaleDateString()} to{" "}
-          {new Date(new Date(endDate).setDate(new Date(endDate).getDate() - 1)).toLocaleDateString()}...
+          {new Date(
+            new Date(endDate).setDate(new Date(endDate).getDate() - 1)
+          ).toLocaleDateString()}
+          ...
         </h1>
       )}
 
       <div className="flex py-4">
-        {!loadingAddDetails && (
-          <PrimaryButton
-            disabled={loadingAddDetails}
-            rounded="rounded-[6px]"
-            title="Continue"
-            action={() => {
-              if (validateForm()) {
-                saveCampaignDetailsOnLocalStorage();
-              }
-            }}
-          />
-        )}
+        <button
+          type="submit"
+          className="border border-1 py-2 px-8 text-[16px]  font-semibold rounded-md bg-[#00A0FA] text-[#FFFFFF] hover:bg-[#D7D7D7] hover:text-black truncate font-custom h-12 w-48" 
+          title="Save and go next"
+          onClick={() => {
+            if (validateForm()) {
+              saveCampaignDetailsOnLocalStorage();
+            }
+          }}
+          disabled={loadingAddDetails}
+        >
+          {loadingAddDetails ? "Please Wait...." : "Continue"}
+        </button>
       </div>
     </div>
   );

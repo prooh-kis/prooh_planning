@@ -62,7 +62,10 @@ export const EmailSendBox = ({
         </div>
         {page !== "VendorApproval" ? (
           <div className="py-4 flex items-center gap-2"
-            onClick={sendEmailToAll}
+            onClick={() => {
+              alert("Sending email to all vendors...")
+              sendEmailToAll()
+            }}
           >
             <p className="text-gray-500 text-[14px] truncate">
               Click here to send request for email confirmation to vendor

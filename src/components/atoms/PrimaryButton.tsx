@@ -16,7 +16,7 @@ export const PrimaryButton = ({
   icon,
   reverse,
   textSize,
-  disabled,
+  disabled = false,
   width,
   height,
   title,
@@ -31,7 +31,7 @@ export const PrimaryButton = ({
         onClick={action}
         disabled={disabled}
         className={`
-          px-4 py-2
+          px-4 py-2 font-custom
           ${width ? width : "w-[180px]"} flex items-center justify-center
           ${height ? height : "h-[48px]"}
           ${rounded} ${textSize ? textSize : "text-[16px]"}

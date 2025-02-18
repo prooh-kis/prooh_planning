@@ -117,7 +117,7 @@ export const AddCampaignDetails = ({
 
   useEffect(() => {
     dispatch(getAllClientAgencyNames());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Modal
@@ -146,14 +146,20 @@ export const AddCampaignDetails = ({
             />
           </div>
           <div className="col-span-1 py-1">
-            <label className="block text-secondaryText text-[14px] mb-2">
-              Brand Name
-            </label>
+            <div className="block flex justify-between gap-2 items-center mb-2">
+              <label className="block text-secondaryText text-[14px]">
+                Brand Name
+              </label>
+              <Tooltip title="Enter campaign's brand name">
+                <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+              </Tooltip>
+            </div>
+
             <PrimaryInput
               inputType="text"
               placeholder="Brand Name"
               value={brandName}
-              action={setBrandName}
+              action={(value) => setBrandName(value?.toUpperCase())}
             />
           </div>
         </div>

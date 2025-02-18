@@ -7,7 +7,7 @@ export const FloatingBrandIcon = () => {
 
   return (
     <div className="lg:px-16 px-4 w-full pt-12">
-      <div className="flex justify-center gap-2">
+      {/* <div className="flex justify-center gap-2">
         {["Demand", "Supply"].map((option) => (
           <button
             key={option}
@@ -19,7 +19,7 @@ export const FloatingBrandIcon = () => {
             {option}
           </button>
         ))}
-      </div>
+      </div> */}
       <div className="flex gap-4 items-center ">
         <ImageCarousel images={images} imagesToShow={6} />
       </div>

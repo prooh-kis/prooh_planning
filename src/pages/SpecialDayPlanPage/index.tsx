@@ -62,8 +62,6 @@ const pages = [
     id: 8,
     value: "Vendor Confirmation Page",
   },
-
-  {},
 ];
 
 export const SpecialDayPlanPage: React.FC = () => {
@@ -82,6 +80,7 @@ export const SpecialDayPlanPage: React.FC = () => {
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
+
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
   );
@@ -94,6 +93,8 @@ export const SpecialDayPlanPage: React.FC = () => {
 
   useEffect(() => {
     if (success) {
+    if (success) {
+      // const campDetails = location.state.campaign
       const campDetails = campaignDetails;
 
       setCurrentStep(
@@ -108,7 +109,7 @@ export const SpecialDayPlanPage: React.FC = () => {
           pages.filter(
             (page: any) => page.value === campDetails?.currentPage
           )[0]?.id || 0
-        ) + 1;
+        );
       const currStep = {
         [campaignId]: curr,
       };
@@ -126,10 +127,10 @@ export const SpecialDayPlanPage: React.FC = () => {
     <div className="w-full h-full px-8">
       <div className="w-full pt-[60px]">
         <StepperSlider
+          campaignId={campaignId}
           step={currentStep}
           setStep={setCurrentStep}
-          steps={pathname?.split("/").includes("specialdayplan") ? 8 : 9}
-          campaignId={campaignId}
+          steps={8}
         />
       </div>
       <div className="w-full h-full flex justify-center items-top">
@@ -146,24 +147,28 @@ export const SpecialDayPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
           />
         ) : currentStep === 3 ? (
           <AdvanceFiltersDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
           />
         ) : currentStep === 4 ? (
           <RegularCohortComparisonDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            success={success}
           />
         ) : currentStep === 5 ? (
           <ScreenSummaryDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            success={success}
           />
         ) : currentStep === 6 ? (
           <ViewFinalPlanPODetails

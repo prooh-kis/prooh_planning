@@ -339,22 +339,22 @@ function MapDrawControl({
           !isNaN(marker[0])
       );
 
-      if (validMarkers?.length > 0) {
-        const bounds = validMarkers.reduce((bounds, marker) => {
-          return bounds.extend(marker);
-        }, new mapboxgl.LngLatBounds(validMarkers[0], validMarkers[0]));
+      // if (validMarkers?.length > 0) {
+      //   const bounds = validMarkers.reduce((bounds, marker) => {
+      //     return bounds.extend(marker);
+      //   }, new mapboxgl.LngLatBounds(validMarkers[0], validMarkers[0]));
 
-        if (mapRef?.current) {
-          mapRef?.current?.fitBounds(bounds, {
-            padding: 120,
-          });
-          console.log("Map reference loaded.")
-        } else {
-          console.error("Map reference is null.");
-        }
-      } else {
-        console.error("No valid markers to display.");
-      }
+      //   if (mapRef?.current) {
+      //     mapRef?.current?.fitBounds(bounds, {
+      //       padding: 120,
+      //     });
+      //     console.log("Map reference loaded.")
+      //   } else {
+      //     console.error("Map reference is null.");
+      //   }
+      // } else {
+      //   console.error("No valid markers to display.");
+      // }
     }
     popupRef.current?.trackPointer();
   }, [selectedMarkers]);
@@ -399,7 +399,7 @@ function MapDrawControl({
             process.env.REACT_APP_MAPBOX ||
             "pk.eyJ1Ijoic2FjaGlucmFpbmEiLCJhIjoiY2x3N242M2thMDB0MDJsczR2eGF4dXJsZSJ9.ocBaZJ9rPSUhmS4zGRi7vQ"
           }
-          onMove={(e) => setViewState(e.viewState)}
+          // onMove={(e) => setViewState(e.viewState)}
         >
           {/* {selectedMarkers && ( */}
           <MapDrawControl

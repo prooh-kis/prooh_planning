@@ -126,9 +126,7 @@ export const StoreBasedPlanPage: React.FC = () => {
           campaignId={campaignId}
           step={currentStep}
           setStep={setCurrentStep}
-          steps={
-            pathname?.split("/").includes("storebasedplan") ? 8 : 9
-          }
+          steps={pathname?.split("/").includes("storebasedplan") ? 8 : 9}
         />
       </div>
       <div className="w-full h-full flex justify-center items-top">
@@ -177,6 +175,7 @@ export const StoreBasedPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
           />
         ) : currentStep === 7 ? (
           <CreativeUploadDetails
@@ -191,8 +190,7 @@ export const StoreBasedPlanPage: React.FC = () => {
             campaignId={campaignId}
             userInfo={userInfo}
           />
-        ) :
-          null}
+        ) : null}
       </div>
     </div>
   );

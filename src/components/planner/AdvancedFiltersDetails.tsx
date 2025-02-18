@@ -288,7 +288,7 @@ export const AdvanceFiltersDetails = ({
 
   // Select all from map mannually
   const handleSelectFromMap = (checked: any, screenData: any) => {
-    console.log(screenData, "age");
+    // console.log(screenData, "age");
     setSelectedScreensFromMap((pre: any) => {
       if (pre.find((screen: any) => screen?._id == screenData?._id)) {
         return pre;
@@ -370,19 +370,43 @@ export const AdvanceFiltersDetails = ({
     );
     saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
   }, [dispatch, campId]);
-
-  console.log(
-    routes?.map((route: any) => {
-    return {
-      origin: route.origin,
-      destination: route.destination,
-      radius: routeRadius,
+  
+  useEffect(() => {
+    if (advanceFilterData) {
+      if (advanceFilterData?.screens.length === 0) {
+        console.log("relaod page auto : ", {
+          id: campId,
+          touchPoints: pathname?.split("/").includes("storebasedplan")
+            ? ALL_TOUCHPOINTS
+            : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
+                ?.touchPoints,
+        });
+        dispatch(
+          getScreenDataForAdvanceFilters({
+            id: campId,
+            touchPoints: pathname?.split("/").includes("storebasedplan")
+              ? ALL_TOUCHPOINTS
+              : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
+                  ?.touchPoints,
+          })
+        );
+        saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
+      }
     }
-  }));
-  console.log(dataBrand, dataComp);
+  }, [advanceFilterData]);
+
+  // console.log(
+  //   routes?.map((route: any) => {
+  //   return {
+  //     origin: route.origin,
+  //     destination: route.destination,
+  //     radius: routeRadius,
+  //   }
+  // }));
+  // console.log(dataBrand, dataComp);
   return (
     <div className="w-full">
-      <div className="h-full w-full py-3 grid grid-cols-2 gap-4">
+      <div className="h-full w-full py-3 grid grid-cols-2 gap-4 pb-20">
         <div className="col-span-1 h-full py-2 pr-4">
           {storeFilter && (
             <div className="h-auto">
@@ -473,24 +497,6 @@ export const AdvanceFiltersDetails = ({
                   checked: e,
                   screens: finalSelectedScreens,
                 });
-                if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)) {
-                  dispatch(
-                    getRegularVsCohortPriceData({
-                      id: campId,
-                      screenIds:
-                        getDataFromLocalStorage(SELECTED_SCREENS_ID)?.[campId],
-                      cohorts:
-                        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
-                          .cohorts,
-                      gender:
-                        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
-                          .gender,
-                      duration:
-                        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
-                          .duration,
-                    })
-                  );
-                }
               }}
             />
           </div>

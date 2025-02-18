@@ -29,7 +29,7 @@ export const RegularCohortComparisonDetails = ({
   campaignId,
   setCurrentStep,
   step,
-  successAddCampaignDetails,
+  success,
 }: any) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -74,23 +74,29 @@ export const RegularCohortComparisonDetails = ({
       });
       saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: {} });
 
+      if (priceData?.regular?.tableData.impressionPerDay === 0 || priceData?.cohort?.tableData.impressionPerDay === 0) {
+        message.error("Please select appropriate number of audiences for to get relevant impressions from the inventories available...")
+      }
     }
   }, [priceData, campaignId]);
   useEffect(() => {
-    dispatch(
-      getRegularVsCohortPriceData({
-        id: campaignId,
-        screenIds: screenIds,
-        cohorts: cohorts,
-        gender: gender,
-        duration: duration,
-      })
-    );
+    if (success) {
+      dispatch(
+        getRegularVsCohortPriceData({
+          id: campaignId,
+          screenIds: screenIds,
+          cohorts: cohorts,
+          gender: gender,
+          duration: duration,
+        })
+      );
+    }
+
     dispatch(getPlanningPageFooterData({
       id: campaignId,
       pageName: "Compare Plan Page",
     }));
-  }, [cohorts, dispatch, duration, gender, screenIds, campaignId]);
+  }, [cohorts, dispatch, duration, gender, screenIds, campaignId, success]);
 
   const handleRegularVsCohortSelection = (type: any) => {
     setSelectedBuyingOption(type);
@@ -267,6 +273,7 @@ export const RegularCohortComparisonDetails = ({
             setCurrentStep(step - 1);
           }}
           handleSave={() => {
+            console.log(step)
             if (isDisabled) {
               message.error("Please  confirm screen selection");
             } else {
@@ -285,9 +292,10 @@ export const RegularCohortComparisonDetails = ({
               setCurrentStep(step + 1);
             }
           }}
+          disabled={priceData?.regular?.tableData?.impressionPerDay === 0 || priceData?.cohort?.tableData?.impressionPerDay === 0 }
           campaignId={campaignId}
           pageName="Compare Plan Page"
-          successAddCampaignDetails={successAddCampaignDetails}
+          successAddCampaignDetails={success}
         />
       </div>
     </div>

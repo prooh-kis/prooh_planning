@@ -26,6 +26,9 @@ import {
   USER_LIST_ERROR,
   USER_DELETE_REQUEST,
   USER_DELETE_SUCCESS,
+  USER_UPDATE_PASSWORD_REQUEST,
+  USER_UPDATE_PASSWORD_SUCCESS,
+  USER_UPDATE_PASSWORD_FAIL,
 } from "../constants/userConstants";
 import store from "../store";
 import { login, logout } from "../store/authSlice";

@@ -89,7 +89,9 @@ export const CampaignDashboardTable = ({
       Number((delivered / days).toFixed(2)) -
       Number((promised / totalDays).toFixed(2));
 
-    return Number((result * 0.01)?.toFixed(2));
+    const averagePromised = Number((promised / totalDays).toFixed(2));
+
+    return Number(((result / averagePromised) * 100)?.toFixed(2));
   };
 
   const costConsumedData = (data: string) => {
@@ -112,7 +114,9 @@ export const CampaignDashboardTable = ({
       Number((delivered / days).toFixed(2)) -
       Number((promised / totalDays).toFixed(2));
 
-    return Number((result * 0.01)?.toFixed(2));
+    const averagePromised = Number((promised / totalDays).toFixed(2));
+
+    return Number(((result / averagePromised) * 100)?.toFixed(2));
   };
   const impressionsDeliveredPositive = (data: string) => {
     const days =
@@ -134,7 +138,9 @@ export const CampaignDashboardTable = ({
       Number((delivered / days).toFixed(2)) -
       Number((promised / totalDays).toFixed(2));
 
-    return Number((result * 0.01)?.toFixed(2));
+    const averagePromised = Number((promised / totalDays).toFixed(2));
+
+    return Number(((result / averagePromised) * 100)?.toFixed(2));
   };
 
   const getSpotDeliveryData = (data: any) => {

@@ -247,6 +247,10 @@ export const CreativeUploadDetails = ({
       if (file.type?.split("/")[0] === "video") {
         creativeDuration = await getVideoDurationFromVideoURL(fileURL);
       }
+      // if (creativeDuration > 10) {
+      //   message.error("Please select creative less then or equal to 10Sec");
+      //   return;
+      // }
 
       const ff = {
         file: file,

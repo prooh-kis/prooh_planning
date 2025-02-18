@@ -11,6 +11,8 @@ import {
 import React, { useRef, useState } from "react";
 import { StepperSliderHomePage } from "../../components/molecules/StepperSliderHomePage";
 import { marketImage, mediaImage, dataHeroImg } from "../../assets";
+import { MediaOwnerGetStarted } from "../../components/molecules/MediaOwnerGetStarted";
+import { MarketGetStarted } from "../../components/molecules/MarketGetStarted";
 
 export const HowItsWork = () => {
   const secondDivRef = useRef<HTMLDivElement>(null);
@@ -22,86 +24,41 @@ export const HowItsWork = () => {
   const CampaignStep = ({ step, image, title, description }: any) => {
     return (
       <div className="relative">
-        {currentTab === "1" && Number(currentAdvertiserTab) > 1 || currentTab === "2" && Number(currentMediaOwnerTab) > 1 || currentTab === "3" && Number(currentDataHeroTab) > 1 ? (
+        {(currentTab === "1" && Number(currentAdvertiserTab) > 1) ||
+        (currentTab === "2" && Number(currentMediaOwnerTab) > 1) ||
+        (currentTab === "3" && Number(currentDataHeroTab) > 1) ? (
           <button
             title="left"
             type="button"
             onClick={() => {
               if (currentTab === "1") {
-                setCurrentAdvertiserTab(String(Number(currentAdvertiserTab) - 1))
+                setCurrentAdvertiserTab(
+                  String(Number(currentAdvertiserTab) - 1)
+                );
               }
 
               if (currentTab === "2") {
-                setCurrentMediaOwnerTab(String(Number(currentMediaOwnerTab) - 1))
+                setCurrentMediaOwnerTab(
+                  String(Number(currentMediaOwnerTab) - 1)
+                );
               }
 
               if (currentTab === "3") {
-                setCurrentDataHeroTab(String(Number(currentDataHeroTab) - 1))
+                setCurrentDataHeroTab(String(Number(currentDataHeroTab) - 1));
               }
             }}
             className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center z-10 hover:bg-gray-50"
           >
             <i className="fi fi-br-angle-left"></i>
           </button>
-        ): null}
+        ) : null}
 
         {step === "Step 1" ? (
-          <div className={`${currentTab === "1" ? "bg-[#129BFF]" : currentTab === "2" ? "bg-[#3A6ED0]" : currentTab === "3" ? "bg-[#3A6754]" : ""} h-[270px] sm:h-[400px] lg:h-[460px] w-full px-20 py-10 rounded-[19px]`}>
+          <div className="h-auto">
             {currentTab === "1" ? (
-              <div className="flex justify-between">
-                <div className="flex flex-col w-[500px]">
-                  <h1 className="text-[#FFFFFF] text-sm sm:text-base lg:text-[16px] mt-4 font-medium  leading-[24px] tracking-[0.21em]">
-                    <span>
-                      <i className="fi fi-sr-sparkles text-[#FFFFFF] text-[20px]"></i>
-                    </span>{" "}
-                    offer for advertiser
-                  </h1>
-                  <h1 className="text-[#FFFFFF] text-sm sm:text-[32px] lg:text-[48px] mt-4 font-semibold  leading-[51.84px] tracking-[-0.02em]">
-                    Plan Your Campaign In Just A Few Clicks
-                  </h1>{" "}
-                  <h1 className="text-[#FFFFFF] text-sm sm:text-base lg:text-[16px] my-8 font-normal  leading-[24px] tracking-[-0.02em]">
-                    Our platform helps your business in managing expenses. These are
-                    some of the reasons why you should use our platform in
-                  </h1>
-                  <button
-                    id=""
-                    title=""
-                    type="button"
-
-                    className="bg-[#FFFFFF] text-[#129BFF] rounded-[87px] text-[14px] sm:text-[16px] font-bold hover:bg-black hover:text-[#FFFFFF] hover:text-[18px] w-[163px] h-[50px]">
-                    Get Started
-                  </button>
-                </div>
-                <div className="w-[421px] h-[400px]">
-                  <img src={marketImage} alt="dff" className="h-full w-full" />
-                </div>
-              </div>
+              <MarketGetStarted />
             ) : currentTab === "2" ? (
-              <div className="flex justify-between">
-                <div className="flex flex-col w-[500px]">
-                  <h1 className="text-[#FFFFFF] text-sm sm:text-base lg:text-[16px] mt-4 font-medium  leading-[24px] tracking-[0.21em]">
-                    <span>
-                      <i className="fi fi-sr-sparkles text-[#FFFFFF] text-[20px]"></i>
-                    </span>{" "}
-                    Offer for <span className="font-bold">media owner</span>
-                  </h1>
-                  <h1 className="text-[#FFFFFF] text-sm sm:text-base lg:text-[48px] mt-4 font-semibold  leading-[51.84px] tracking-[-0.02em]">
-                    Monetize Your unsold DOOH Inventory Today!
-                  </h1>{" "}
-                  <h1 className="truncate text-[#FFFFFF] text-sm sm:text-base lg:text-[16px] my-8 font-normal  leading-[24px] tracking-[-0.02em]">
-                    Unlock new revenue streams by listing your DOOH inventory with us.
-                    Seamless onboarding, real-time insights, and maximized earnings!
-                  </h1>
-                  <button
-                    
-                    className="bg-[#FFFFFF] text-[#129BFF] rounded-[87px] text-[14px] sm:text-[16px] font-bold hover:bg-black hover:text-[#FFFFFF] hover:text-[18px] w-[163px] h-[50px]">
-                    Get Started
-                  </button>
-                </div>
-                <div className="w-[410px] h-[450px]">
-                  <img src={mediaImage} alt="dff" className="h-full w-full" />
-                </div>
-              </div>
+              <MediaOwnerGetStarted />
             ) : currentTab === "3" ? (
               <div>
                 <img src={dataHeroImg} alt="dataheroimg" />
@@ -112,7 +69,11 @@ export const HowItsWork = () => {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 py-16 w-full h-[270px] sm:h-[400px] lg:h-[460px]">
             <div className="md:col-span-5 flex items-center">
               <div className="rounded-[12px] lg:w-[576px] lg:h-[419px]">
-                <img src={image} alt={title} className="shadow-lg rounded-[12px]" />
+                <img
+                  src={image}
+                  alt={title}
+                  className="shadow-lg rounded-[12px]"
+                />
               </div>
             </div>
             <div className="md:col-span-5  p-1 md:p-4 flex flex-col gap-4">
@@ -128,32 +89,37 @@ export const HowItsWork = () => {
             </div>
           </div>
         )}
-        {currentTab === "1" && Number(currentAdvertiserTab) < 7 || currentTab === "2" && Number(currentMediaOwnerTab) < 5 || currentTab === "3" && Number(currentDataHeroTab) < 4 ? (
+        {(currentTab === "1" && Number(currentAdvertiserTab) < 7) ||
+        (currentTab === "2" && Number(currentMediaOwnerTab) < 5) ||
+        (currentTab === "3" && Number(currentDataHeroTab) < 4) ? (
           <button
             title="right"
             type="button"
             onClick={() => {
               if (currentTab === "1") {
-                setCurrentAdvertiserTab(String(Number(currentAdvertiserTab) + 1))
+                setCurrentAdvertiserTab(
+                  String(Number(currentAdvertiserTab) + 1)
+                );
               }
 
               if (currentTab === "2") {
-                setCurrentMediaOwnerTab(String(Number(currentMediaOwnerTab) + 1))
+                setCurrentMediaOwnerTab(
+                  String(Number(currentMediaOwnerTab) + 1)
+                );
               }
 
               if (currentTab === "3") {
-                setCurrentDataHeroTab(String(Number(currentDataHeroTab) + 1))
+                setCurrentDataHeroTab(String(Number(currentDataHeroTab) + 1));
               }
             }}
             className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center z-10 hover:bg-gray-50"
           >
             <i className="fi fi-br-angle-right"></i>
           </button>
-        ): null}
-
+        ) : null}
       </div>
-
-  )};
+    );
+  };
 
   const CampaignSteps = ({ currentSubTab }: { currentSubTab: string }) => {
     const step =
@@ -176,73 +142,82 @@ export const HowItsWork = () => {
 
   return (
     <div ref={secondDivRef} className="px-6 lg:px-16 mt-16">
-      <div className="flex flex-cols items-center justify-center">
-        <code className="text-[16px] leading-[24px] tracking-[0.21em] font-normal tracking-[0.21em] text-center">
+      <div className="flex items-center justify-center">
+        <code className="text-[16px] leading-[18px] tracking-[0.24em] font-normal text-center text-[#667D8C]">
           {`ENGAGE WITH US`}
         </code>
       </div>
-      <h1 className="text-center font-custom font-bold text-[48px]">
+
+      <h1 className="text-center font-custom font-bold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">
         Where Collaboration Meets Innovation
       </h1>
-      <div className="my-4 flex justify-center items-center gap-4 w-full">
+
+      {/* Tabs */}
+      <div className="my-4 flex justify-center items-center gap-4 w-full overflow-scroll-x ">
         {tabData?.map((tab: any, i: any) => (
           <button
-            title=""
-            type="button"
             key={i}
+            type="button"
             onClick={() => {
               setCurrentTab(tab.id);
               setCurrentAdvertiserTab("1");
               setCurrentMediaOwnerTab("1");
               setCurrentDataHeroTab("1");
-
             }}
-            className={`${tab.id === currentTab ? "bg-primaryButton" : "bg-[#F6F6F6]"} rounded-[8px] py-1 px-2`}
+            className={`${
+              tab.id === currentTab
+                ? "bg-primaryButton text-white font-semibold"
+                : "bg-[#F6F6F6] text-gray-700"
+            } rounded-[8px] py-2 px-4 transition-all duration-300 w-full`}
           >
-            <h1 className={`text-[12px] ${tab.id === currentTab ? "text-white font-semibold" : ""}`}>
-              {tab.label}
-            </h1>
+            <span className="text-[12px]">{tab.label}</span>
           </button>
         ))}
       </div>
+
+      {/* Stepper Section */}
       <div className="py-4">
-        {currentTab === "1" ? (
-          <div className="pb-4">
-            <div className="py-4 flex items-center gap-4">
-              <StepperSliderHomePage
-                campaignId={"advertisersSteps"}
-                step={Number(currentAdvertiserTab)}
-                setStep={setCurrentAdvertiserTab}
-                steps={advertisersSteps?.length}
-              />
-            </div>
-            <CampaignSteps currentSubTab={currentAdvertiserTab} />
-          </div>
-        ) : currentTab === "2" ? (
-          <div className="pb-4">
-            <div className="py-4 flex items-center gap-4">
-              <StepperSliderHomePage
-                campaignId={"mediaOwnersSteps"}
-                step={Number(currentMediaOwnerTab)}
-                setStep={setCurrentMediaOwnerTab}
-                steps={mediaOwnersSteps?.length}
-              />
-            </div>
-            <CampaignSteps currentSubTab={currentMediaOwnerTab} />
-          </div>
-        ) : (
-          <div className="pb-4">
-            <div className="py-4 flex items-center gap-4">
-              <StepperSliderHomePage
-                campaignId={"dataHeroSteps"}
-                step={Number(currentDataHeroTab)}
-                setStep={setCurrentDataHeroTab}
-                steps={dataHeroSteps?.length}
-              />
-            </div>
-            <CampaignSteps currentSubTab={currentDataHeroTab} />
-          </div>
-        )}
+        <div className="py-4 flex items-center gap-4">
+          <StepperSliderHomePage
+            campaignId={
+              currentTab === "1"
+                ? "advertisersSteps"
+                : currentTab === "2"
+                ? "mediaOwnersSteps"
+                : "dataHeroSteps"
+            }
+            step={
+              currentTab === "1"
+                ? Number(currentAdvertiserTab)
+                : currentTab === "2"
+                ? Number(currentMediaOwnerTab)
+                : Number(currentDataHeroTab)
+            }
+            setStep={
+              currentTab === "1"
+                ? setCurrentAdvertiserTab
+                : currentTab === "2"
+                ? setCurrentMediaOwnerTab
+                : setCurrentDataHeroTab
+            }
+            steps={
+              currentTab === "1"
+                ? advertisersSteps?.length
+                : currentTab === "2"
+                ? mediaOwnersSteps?.length
+                : dataHeroSteps?.length
+            }
+          />
+        </div>
+        <CampaignSteps
+          currentSubTab={
+            currentTab === "1"
+              ? currentAdvertiserTab
+              : currentTab === "2"
+              ? currentMediaOwnerTab
+              : currentDataHeroTab
+          }
+        />
       </div>
     </div>
   );

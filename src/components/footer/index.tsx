@@ -119,7 +119,7 @@ export const Footer = ({
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">Impressions</h1>
               <h1 className="text-[14px] font-semibold">
-                {formatNumber(footerData?.totalImpression || 0)}
+                {formatNumber(footerData?.totalImpression?.toFixed(0) || 0)}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">
@@ -127,7 +127,7 @@ export const Footer = ({
               <h1 className="text-[14px] font-semibold">
                 {" "}
                 &#8377;
-                {formatNumber(footerData?.totalCampaignBudget || 0)}
+                {formatNumber(footerData?.totalCampaignBudget?.toFixed(0) || 0)}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">
@@ -160,9 +160,9 @@ export const Footer = ({
             className="border border-1 py-2 px-4 text-[14px] rounded-md bg-[#00A0FA] text-[#FFFFFF] hover:bg-[#D7D7D7] hover:text-black truncate"
             title="Save and go next"
             onClick={handleSave}
-            disabled={isDisabled}
+            disabled={isDisabled || loadingCost}
           >
-            {loading ? "Saving data...." : "Save and Continue"}
+            {loading || loadingCost ? "Please Wait...." : "Save and Continue"}
           </button>
         </div>
       )}

@@ -44,18 +44,18 @@ export const VendorConfirmationStatusTable = ({
         creativesToShow={creativesToShow}
       />
       <table className="w-full">
-        <thead className="">
-          {userInfo?.isBrand && (
-            <tr className="bg-[#D6EEFF]">
-              <th className="py-2">
-                <h1 className="text-[14px] px-2 flex justify-start">
+        <thead className="w-full flex">
+          {userInfo?.userRole==="campaignPlanner" && (
+            <tr className="bg-[#D6EEFF] w-full grid grid-cols-12">
+              <th className="py-2 col-span-3 flex justify-around">
+                <h1 className="text-[14px] px-2">
                   Screen Name
                 </h1>
               </th>
-              <th className="py-2">
+              <th className="py-2 col-span-2 flex justify-around">
                 <h1 className="text-[14px] flex justify-start">Touchpoint</h1>
               </th>
-              <th className="py-2">
+              <th className="py-2 col-span-2 flex justify-around">
                 <div className="flex gap-2">
                   <h1 className="text-[14px]">Media Type</h1>
                   <Tooltip title="Connected media type will have real time campaign delivery updates and monitoring.">
@@ -63,22 +63,22 @@ export const VendorConfirmationStatusTable = ({
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-2">
-                <h1 className="text-[14px] flex justify-start">Cost</h1>
+              <th className="py-2 col-span-1 flex justify-around">
+                <h1 className="text-[14px]">Cost</h1>
               </th>
-              <th className="py-2">
+              <th className="py-2 col-span-1 flex justify-around">
+                <h1 className="text-[14px]">SOV</h1>
+              </th>
+              <th className="py-2 col-span-1 flex justify-around">
+                <h1 className="text-[14px]">Creative</h1>
+              </th>
+              <th className="py-2 col-span-2 flex justify-around">
                 <div className="flex gap-2">
                   <h1 className="text-[14px]">Status</h1>
                   <Tooltip title="Campaign status subject to approval from screen owner/media vendor">
                     <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
                   </Tooltip>
                 </div>
-              </th>
-              <th className="py-2">
-                <h1 className="text-[14px] flex justify-start">SOV</h1>
-              </th>
-              <th className="py-2">
-                <h1 className="text-[14px]">Creative</h1>
               </th>
               {/* <th className="py-2">
                 <h1 className="text-[14px]">
@@ -87,29 +87,13 @@ export const VendorConfirmationStatusTable = ({
               </th> */}
             </tr>
           )}
-          {userInfo?.isMaster && (
-            <tr className="bg-[#D6EEFF]">
-              <th className="p-2">
-                <h1 className="text-[14px]">Screen Name</h1>
-              </th>
-              <th className="py-2">
-                <div className="flex gap-2">
-                  <h1 className="text-[14px]">Status</h1>
-                  <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
-                </div>
-              </th>
-              <th className="py-2">
-                <h1 className="text-[14px]">Creative</h1>
-              </th>
-            </tr>
-          )}
         </thead>
-        <tbody>
-          {userInfo?.isBrand &&
+        <tbody className="w-full">
+          {userInfo?.userRole==="campaignPlanner" &&
             statusTableData?.map((status: any, i: any) => (
               <tr
                 key={i}
-                className={`border 
+                className={`border w-full grid grid-cols-12
               ${status.status === "PleaRequestBudgetSent" && "bg-purple-50"}
               ${status.status === "PleaRequestBudgetAccepted" && "bg-purple-50"}
               ${status.status === "PleaRequestBudgetRejected" && "bg-purple-50"}
@@ -139,75 +123,26 @@ export const VendorConfirmationStatusTable = ({
               }
             `}
               >
-                <td className="p-2">
-                  <h1 className="text-[14px]">{status.screenName}</h1>
+                <td className="p-2 col-span-3 truncate flex justify-around items-center">
+                  <h1 className="text-[14px] truncate">{status.screenName}</h1>
                 </td>
-                <td className="py-2">
+                <td className="py-2 col-span-2 flex justify-around items-center">
                   <h1 className="text-[14px]">{status.touchPoint}</h1>
                 </td>
-                <td className="py-2">
+                <td className="py-2 col-span-2 flex justify-around items-center">
                   <h1 className="text-[14px]">
                     {status.mediaType || "Connected"}
                   </h1>
                 </td>
-                <td className="py-2">
+                <td className="py-2 col-span-1 flex justify-around items-center">
                   <h1 className="text-[14px]">
                     &#8377;{Number(status.cost).toFixed(0)}
                   </h1>
                 </td>
-                <td className="py-2">
-                  <h1
-                    className={`text-[14px] ${
-                      status.status === "PleaRequestBudgetSent"
-                        ? "text-purple-400"
-                        : status.status === "PleaRequestBudgetAccepted"
-                        ? "text-[#129BFF]"
-                        : status.status === "PleaRequestBudgetRejected"
-                        ? "text-red-400"
-                        : status.status === "PleaRequestScreenApprovalSent"
-                        ? "text-purple-800"
-                        : status.status === "PleaRequestScreenApprovalAccepted"
-                        ? "text-[#129BFF]"
-                        : status.status === "PleaRequestScreenApprovalRejected"
-                        ? "text-red-800"
-                        : status.status === "PleaRequestFinalApprovalSent"
-                        ? "text-purple-800"
-                        : status.status === "PleaRequestFinalApprovalAccepted"
-                        ? "text-[#129BFF]"
-                        : status.status === "PleaRequestFinalApprovalRejected"
-                        ? "text-red-800"
-                        : status.status === "Pending"
-                        ? "text-green-700"
-                        : ""
-                    }`}
-                  >
-                    {status.status === "PleaRequestBudgetSent"
-                      ? "Budget Approval Pending"
-                      : status.status === "PleaRequestBudgetAccepted"
-                      ? "Budget Approved"
-                      : status.status === "PleaRequestBudgetRejected"
-                      ? "Budget Rejected"
-                      : status.status === "PleaRequestScreenApprovalSent"
-                      ? "Screen Approval Pending"
-                      : status.status === "PleaRequestScreenApprovalAccepted"
-                      ? "Screen Approved"
-                      : status.status === "PleaRequestScreenApprovalRejected"
-                      ? "Screen Rejected"
-                      : status.status === "PleaRequestFinalApprovalSent"
-                      ? "Final Aprroval Pending"
-                      : status.status === "PleaRequestFinalApprovalAccepted"
-                      ? "Final Approved"
-                      : status.status === "PleaRequestFinalApprovalRejected"
-                      ? "Final Rejected"
-                      : status.status === "Pending"
-                      ? "Approved"
-                      : "Pending"}
-                  </h1>
-                </td>
-                <td className="p-2">
+                <td className="p-2 col-span-1 flex justify-around items-center">
                   <h1 className="text-[14px]">{status?.sov}</h1>
                 </td>
-                <td className="p-2">
+                <td className="p-2 col-span-1 flex justify-around items-center">
                   <div
                     className="flex justify-center items-center"
                     onClick={() => {
@@ -219,71 +154,32 @@ export const VendorConfirmationStatusTable = ({
                       setOpenShowMediaPopup(true);
                     }}
                   >
-                    <i className="fi fi-sr-photo-video text-[20px] text-violet-500 flex justify-center"></i>
+                    <i className="fi fi-sr-photo-video text-[20px] text-violet flex justify-center"></i>
                   </div>
                 </td>
-              </tr>
-            ))}
-          {userInfo?.isMaster &&
-            statusTableData?.map((status: any, i: any) => (
-              <tr
-                key={i}
-                className={`border 
-              ${status.status === "PleaRequestBudgetSent" && "bg-purple-50"}
-              ${status.status === "PleaRequestBudgetAccepted" && "bg-purple-50"}
-              ${status.status === "PleaRequestBudgetRejected" && "bg-purple-50"}
-              ${
-                status.status === "PleaRequestScreenApprovalSent" &&
-                "bg-blue-50"
-              }
-              ${
-                status.status === "PleaRequestScreenApprovalAccepted" &&
-                "bg-blue-50"
-              }
-              ${
-                status.status === "PleaRequestScreenApprovalRejected" &&
-                "bg-blue-50"
-              }
-              ${
-                status.status === "PleaRequestFinalApprovalSent" &&
-                "bg-violet-100"
-              }
-              ${
-                status.status === "PleaRequestFinalApprovalAccepted" &&
-                "bg-violet-100"
-              }
-              ${
-                status.status === "PleaRequestFinalApprovalRejected" &&
-                "bg-violet-100"
-              }
-            `}
-              >
-                <td className="p-2">
-                  <h1 className="text-[14px]">{status.screenName}</h1>
-                </td>
-                <td className="py-2">
+                <td className="py-2 col-span-2 flex justify-around items-center">
                   <h1
                     className={`text-[14px] ${
                       status.status === "PleaRequestBudgetSent"
-                        ? "text-purple-400"
+                        ? "text-[#129BFF]"
                         : status.status === "PleaRequestBudgetAccepted"
                         ? "text-[#129BFF]"
                         : status.status === "PleaRequestBudgetRejected"
-                        ? "text-red-400"
+                        ? "text-[#129BFF]"
                         : status.status === "PleaRequestScreenApprovalSent"
-                        ? "text-purple-800"
+                        ? "text-[#129BFF]"
                         : status.status === "PleaRequestScreenApprovalAccepted"
                         ? "text-[#129BFF]"
                         : status.status === "PleaRequestScreenApprovalRejected"
-                        ? "text-red-800"
+                        ? "text-[#129BFF]"
                         : status.status === "PleaRequestFinalApprovalSent"
-                        ? "text-purple-800"
+                        ? "text-[#129BFF]"
                         : status.status === "PleaRequestFinalApprovalAccepted"
                         ? "text-[#129BFF]"
                         : status.status === "PleaRequestFinalApprovalRejected"
-                        ? "text-red-800"
+                        ? "text-[#129BFF]"
                         : status.status === "Pending"
-                        ? "text-green-700"
+                        ? "text-[#129BFF]"
                         : ""
                     }`}
                   >
@@ -307,23 +203,8 @@ export const VendorConfirmationStatusTable = ({
                       ? "Final Rejected"
                       : status.status === "Pending"
                       ? "Approved"
-                      : "Pending"}
+                      : "Approved"}
                   </h1>
-                </td>
-                <td className="p-2">
-                  <div
-                    className="flex justify-center items-center"
-                    onClick={() => {
-                      setCreativesToShow({
-                        screenName: status.screenName,
-                        screenId: status.screenId,
-                        creatives: status.creatives,
-                      });
-                      setOpenShowMediaPopup(true);
-                    }}
-                  >
-                    <i className="fi fi-sr-photo-video text-[20px] text-violet-500 flex justify-center"></i>
-                  </div>
                 </td>
               </tr>
             ))}

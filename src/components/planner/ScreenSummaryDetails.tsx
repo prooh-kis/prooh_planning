@@ -8,6 +8,7 @@ import { PlanSummaryTable } from "../tables/PlanSummaryTable";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPlanningPageFooterData,
+  getRegularVsCohortPriceData,
   getScreenSummaryData,
   getScreenSummaryDataIKnowItAll,
   getScreenSummaryPlanTableData,
@@ -20,12 +21,14 @@ import { useLocation } from "react-router-dom";
 import { Footer } from "../../components/footer";
 import {
   FULL_CAMPAIGN_PLAN,
+  REGULAR_VS_COHORT_PRICE_DATA,
   SCREEN_SUMMARY_SELECTION,
   SCREEN_SUMMARY_TABLE_DATA,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { Loading } from "../../components/Loading";
 import { message, Tooltip } from "antd";
+import { CAMPAIGN_PLAN_TYPE_KNOW, CAMPAIGN_PLAN_TYPE_REGULAR, CAMPAIGN_PLAN_TYPE_STORE, CAMPAIGN_PLAN_TYPE_TOPICAL } from "../../constants/campaignConstants";
 
 interface Tab {
   label: string;
@@ -45,7 +48,6 @@ export const ScreenSummaryDetails = ({
   setCurrentStep,
   step,
   campaignId,
-  regularVsCohortSuccessStatus,
   success,
   successAddCampaignDetails,
 }: ScreenSummaryDetailsProps) => {
@@ -76,9 +78,11 @@ export const ScreenSummaryDetails = ({
 
   const [screensBuyingCount, setScreensBuyingCount] = useState(() => {
     // Check localStorage on the first load
-    return getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
-      ?? {};
+    return (
+      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] ?? {}
+    );
   });
+
   const [visitedTab, setVisitedTab] = useState<any>([]);
 
   const screenSummaryDataGet = useSelector(
@@ -87,7 +91,7 @@ export const ScreenSummaryDetails = ({
 
   const screenSummaryDataIKnowItAllGet = useSelector(
     (state: any) => state.screenSummaryDataIKnowItAllGet
-  )
+  );
   const {
     loading: loadingScreenSummary,
     error: errorScreenSummary,
@@ -97,8 +101,8 @@ export const ScreenSummaryDetails = ({
   const {
     loading: loadingScreenSummaryIKnowItAll,
     error: errorScreenSummaryIKnowItAll,
-    data: screenSummaryDataIKnowItAll
-  } = screenSummaryDataIKnowItAllGet
+    data: screenSummaryDataIKnowItAll,
+  } = screenSummaryDataIKnowItAllGet;
 
   const screenSummaryPlanTableDataGet = useSelector(
     (state: any) => state.screenSummaryPlanTableDataGet
@@ -108,6 +112,15 @@ export const ScreenSummaryDetails = ({
     error: errorScreenSummaryPlanTable,
     data: screenSummaryPlanTableData,
   } = screenSummaryPlanTableDataGet;
+
+  const regularVsCohortPriceDataGet = useSelector(
+    (state: any) => state.regularVsCohortPriceDataGet
+  );
+  const {
+    loading: loadingPriceData,
+    error: errorPriceData,
+    data: priceData,
+  } = regularVsCohortPriceDataGet;
 
   const getSelectedScreenIdsFromAllCities = (citiesData: any) => {
     let activeScreenIds: any = [];
@@ -124,7 +137,6 @@ export const ScreenSummaryDetails = ({
   };
 
   const handleSelectCurrentTab = (id: string) => {
-
     setCurrentSummaryTab(id);
 
     const city = citiesCreative?.find((data: any) => data.id === id)?.label;
@@ -148,7 +160,6 @@ export const ScreenSummaryDetails = ({
   };
 
   const getTabValue = (dataScreenSummary: any) => {
-    console.log(dataScreenSummary)
     if (
       dataScreenSummary &&
       getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] &&
@@ -156,31 +167,33 @@ export const ScreenSummaryDetails = ({
         getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
       )?.length !== 0
     ) {
-      return Object.keys(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId])?.map((s: any, index: any) => {
+      return Object.keys(
+        getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
+      )?.map((s: any, index: any) => {
         return {
           id: `${index + 1}`,
           label: s,
           params:
             getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !==
               null ||
-              getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !==
+            getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !==
               undefined
               ? [
-                Object.values(
-                  getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
-                  campaignId
-                  ]?.[s]
-                )
-                  ?.map((f: any) => f.status)
-                  ?.filter((s: any) => s === true)?.length,
-                Object.values(
-                  getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
-                  campaignId
-                  ]?.[s]
-                )
-                  ?.map((f: any) => f.status)
-                  ?.filter((s: any) => s === false)?.length,
-              ]
+                  Object.values(
+                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
+                      campaignId
+                    ]?.[s]
+                  )
+                    ?.map((f: any) => f.status)
+                    ?.filter((s: any) => s === true)?.length,
+                  Object.values(
+                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
+                      campaignId
+                    ]?.[s]
+                  )
+                    ?.map((f: any) => f.status)
+                    ?.filter((s: any) => s === false)?.length,
+                ]
               : [0, 0],
         };
       });
@@ -216,7 +229,10 @@ export const ScreenSummaryDetails = ({
   };
 
   const handleSaveAndContinue = async () => {
-    if ((pathname.split("/").splice(-2)[0] === "iknowitallplan") || (pathname.split("/").splice(-2)[0] === "storebasedplan")) {
+    if (
+      pathname.split("/").splice(-2)[0] === "iknowitallplan" ||
+      pathname.split("/").splice(-2)[0] === "storebasedplan"
+    ) {
       if (currentTab === "1") {
         dispatch(
           addDetailsToCreateCampaign({
@@ -231,18 +247,18 @@ export const ScreenSummaryDetails = ({
             pageName: "Screen Summary Page",
             id: pathname.split("/").splice(-1)[0],
             totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-            totalImpression:
-              getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
-                ?.totalImpression,
-            totalReach:
-              getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
-                ?.totalReach,
-            totalCampaignBudget:
-              getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
-                ?.totalCampaignBudget,
-            totalCpm:
-              getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total
-                ?.totalCpm,
+            totalImpression: getDataFromLocalStorage(
+              SCREEN_SUMMARY_TABLE_DATA
+            )?.[campaignId]?.total?.totalImpression,
+            totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+              campaignId
+            ]?.total?.totalReach,
+            totalCampaignBudget: getDataFromLocalStorage(
+              SCREEN_SUMMARY_TABLE_DATA
+            )?.[campaignId]?.total?.totalCampaignBudget,
+            totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+              campaignId
+            ]?.total?.totalCpm,
           })
         );
       }
@@ -253,17 +269,16 @@ export const ScreenSummaryDetails = ({
           id: pathname.split("/").splice(-1)[0],
           totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
           totalImpression:
-            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-              ?.totalImpression,
+            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]
+              ?.total?.totalImpression,
           totalReach:
-            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-              ?.totalReach,
+            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]
+              ?.total?.totalReach,
           totalCampaignBudget:
-            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-              ?.totalCampaignBudget,
+            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]
+              ?.total?.totalCampaignBudget,
           totalCpm:
-            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-              ?.totalCpm,
+            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalCpm,
         })
       );
     }
@@ -272,14 +287,19 @@ export const ScreenSummaryDetails = ({
   };
 
   useEffect(() => {
-    if ((pathname.split("/").includes("iknowitallplan") && step === 2) || (pathname.split("/").includes("storebasedplan") && step === 3)) {
+    if (
+      (pathname.split("/").includes("iknowitallplan") && step === 2) ||
+      (pathname.split("/").includes("storebasedplan") && step === 3)
+    ) {
       dispatch(
         getScreenSummaryDataIKnowItAll({
-          id: campaignId
+          id: campaignId,
         })
       );
-    }
-    else if (!pathname.split("/").includes("iknowitallplan") && !pathname.split("/").includes("storebasedplan")) {
+    } else if (
+      !pathname.split("/").includes("iknowitallplan") &&
+      !pathname.split("/").includes("storebasedplan")
+    ) {
       dispatch(
         getScreenSummaryData({
           id: campaignId,
@@ -295,13 +315,16 @@ export const ScreenSummaryDetails = ({
         pageName: "Screen Summary Page",
       })
     );
-  }, [campaignId, dispatch, pathname, currentTab]);
+  }, [campaignId, dispatch, pathname, step]);
 
   useEffect(() => {
     const type =
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType;
     setRegularVsCohort(type);
-    if ((pathname.split("/").includes("iknowitallplan") && step === 4) || (pathname.split("/").includes("storebasedplan") && step === 5)) {
+    if (
+      (pathname.split("/").includes("iknowitallplan") && step === 4) ||
+      (pathname.split("/").includes("storebasedplan") && step === 5)
+    ) {
       setCurrentTab("2");
     } else {
       setCurrentTab("1");
@@ -312,8 +335,7 @@ export const ScreenSummaryDetails = ({
     //   // });
     //   setCurrentStep(2);
     // }
-
-  }, [campaignId, pathname, screenSummaryPlanTableData, step]);
+  }, [campaignId, pathname, step]);
 
   useEffect(() => {
     if (screensBuyingCount) {
@@ -336,7 +358,36 @@ export const ScreenSummaryDetails = ({
       saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
         [campaignId]: screensBuyingCount,
       });
-      setCityTabData(getTabValue(screenSummaryData || screenSummaryDataIKnowItAll));
+      setCityTabData(
+        getTabValue(screenSummaryData || screenSummaryDataIKnowItAll)
+      );
+    }
+    if (
+      (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+        ?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW ||
+        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+          ?.campaignType === CAMPAIGN_PLAN_TYPE_STORE ||
+        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+          ?.campaignType === CAMPAIGN_PLAN_TYPE_TOPICAL) &&
+      !priceData &&
+      getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[campaignId]?.[
+        `${regularVsCohort}`
+      ] === undefined
+    ) {
+      dispatch(
+        getRegularVsCohortPriceData({
+          id: campaignId,
+          screenIds:
+            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+              ?.screenIds,
+          cohorts:
+            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts,
+          gender:
+            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender,
+          duration:
+            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
+        })
+      );
     }
   }, [
     dispatch,
@@ -344,6 +395,8 @@ export const ScreenSummaryDetails = ({
     screenSummaryData,
     screenSummaryDataIKnowItAll,
     screensBuyingCount,
+    priceData,
+    regularVsCohort,
   ]);
 
   return (
@@ -356,11 +409,12 @@ export const ScreenSummaryDetails = ({
         You can further optimized your plan by deselecting locations in the
         screen summary
       </h1>
-      {(pathname.split("/").splice(-2)[0] === "iknowitallplan" || pathname.split("/").includes("storebasedplan")) ? (
+      {pathname.split("/").splice(-2)[0] === "iknowitallplan" ||
+      pathname.split("/").includes("storebasedplan") ? (
         <></>
       ) : (
         <div className="mt-2">
-          {!loadingScreenSummary && screenSummaryData && (
+          {screenSummaryData && (
             <TabWithIcon
               currentTab={currentTab}
               setCurrentTab={setCurrentTab}
@@ -372,7 +426,7 @@ export const ScreenSummaryDetails = ({
 
       {loadingScreenSummary || loadingScreenSummaryIKnowItAll ? (
         <Loading />
-      ) : (errorScreenSummary || errorScreenSummaryIKnowItAll) ? (
+      ) : errorScreenSummary || errorScreenSummaryIKnowItAll ? (
         <div className="p-4 bg-red-300 text-[#FFFFFF] ">
           Something went wrong! please refresh the page...
         </div>
@@ -382,8 +436,10 @@ export const ScreenSummaryDetails = ({
             <div>
               <div className="py-2 grid grid-cols-12 flex justify-between">
                 <div className="col-span-8 overflow-x-scroll no-scrollbar">
-                  {((!loadingScreenSummary && screenSummaryData) || (!loadingScreenSummaryIKnowItAll && screenSummaryDataIKnowItAll))
-                    && cityTabData?.length !== 0 && (
+                  {((!loadingScreenSummary && screenSummaryData) ||
+                    (!loadingScreenSummaryIKnowItAll &&
+                      screenSummaryDataIKnowItAll)) &&
+                    cityTabData?.length !== 0 && (
                       <TabWithoutIcon
                         currentTab={currentSummaryTab}
                         setCurrentTab={handleSelectCurrentTab}
@@ -394,10 +450,11 @@ export const ScreenSummaryDetails = ({
                 <div className="col-span-4 flex gap-2 truncate">
                   <Tooltip title="Single click to select the filter and Double click to deselect the filter">
                     <div
-                      className={`truncate px-1 border ${priceFilter.min === 1 && priceFilter.max === 100
-                        ? "border-[#129BFF]"
-                        : ""
-                        } rounded flex items-center gap-1`}
+                      className={`truncate px-1 border ${
+                        priceFilter.min === 1 && priceFilter.max === 100
+                          ? "border-[#129BFF]"
+                          : ""
+                      } rounded flex items-center gap-1`}
                       onClick={() => {
                         setPriceFilter({
                           min: 1,
@@ -419,10 +476,11 @@ export const ScreenSummaryDetails = ({
                   </Tooltip>
                   <Tooltip title="Single click to select the filter and Double click to deselect the filter">
                     <div
-                      className={`truncate px-1 border ${priceFilter.min === 100 && priceFilter.max === 300
-                        ? "border-[#129BFF]"
-                        : ""
-                        } rounded flex items-center gap-1`}
+                      className={`truncate px-1 border ${
+                        priceFilter.min === 100 && priceFilter.max === 300
+                          ? "border-[#129BFF]"
+                          : ""
+                      } rounded flex items-center gap-1`}
                       onClick={() => {
                         setPriceFilter({
                           min: 100,
@@ -445,8 +503,9 @@ export const ScreenSummaryDetails = ({
                   </Tooltip>
                   <Tooltip title="Click to see the list view">
                     <div
-                      className={`truncate px-1 border rounded flex items-center gap-1 ${listView && "border-primaryButton"
-                        }`}
+                      className={`truncate px-1 border rounded flex items-center gap-1 ${
+                        listView && "border-primaryButton"
+                      }`}
                       onClick={() => setListView(true)}
                     >
                       <i
@@ -455,8 +514,9 @@ export const ScreenSummaryDetails = ({
                           ${listView && "text-primaryButton"}`}
                       ></i>
                       <p
-                        className={`${listView && "text-primaryButton"
-                          } text-[12px] truncate`}
+                        className={`${
+                          listView && "text-primaryButton"
+                        } text-[12px] truncate`}
                       >
                         List View
                       </p>
@@ -464,8 +524,9 @@ export const ScreenSummaryDetails = ({
                   </Tooltip>
                   <Tooltip title="Click to see the grid view">
                     <div
-                      className={`truncate px-1 border rounded flex items-center gap-1 ${!listView && "border-primaryButton"
-                        }`}
+                      className={`truncate px-1 border rounded flex items-center gap-1 ${
+                        !listView && "border-primaryButton"
+                      }`}
                       onClick={() => setListView(false)}
                     >
                       <i
@@ -474,8 +535,9 @@ export const ScreenSummaryDetails = ({
                           ${!listView && "text-primaryButton"}`}
                       ></i>
                       <p
-                        className={`${!listView && "text-primaryButton"
-                          } text-[12px] truncate`}
+                        className={`${
+                          !listView && "text-primaryButton"
+                        } text-[12px] truncate`}
                       >
                         Grid View
                       </p>
@@ -555,8 +617,13 @@ export const ScreenSummaryDetails = ({
             // }
           }}
           campaignId={campaignId}
-          pageName={(pathname?.split("/").splice(-2)[0] === "iknowitallplan" || pathname.split("/").splice(-2)[0] === "storebasedplan")
-            && currentTab === "1" ? "Select Screens Page" : "Screen Summary Page"}
+          pageName={
+            (pathname?.split("/").splice(-2)[0] === "iknowitallplan" ||
+              pathname.split("/").splice(-2)[0] === "storebasedplan") &&
+            currentTab === "1"
+              ? "Select Screens Page"
+              : "Screen Summary Page"
+          }
           successAddCampaignDetails={success}
         />
       </div>

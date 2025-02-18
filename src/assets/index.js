@@ -22,7 +22,7 @@ export { default as testO14 } from "./images/testiO14.svg";
 export { default as mediaImage } from "./images/Mask group.png";
 export { default as marketImage } from "./images/two.png";
 export { default as PaymentInfo } from "./images/Payment Information-bro 1.png";
-export { default as dataHeroImg } from "./images/dataHeroImg.png";
+export { default as dataHeroImg } from "./images/dataheroimg.png";
 
 //icons
 
