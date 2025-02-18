@@ -288,7 +288,7 @@ export const AdvanceFiltersDetails = ({
 
   // Select all from map mannually
   const handleSelectFromMap = (checked: any, screenData: any) => {
-    console.log(screenData, "age");
+    // console.log(screenData, "age");
     setSelectedScreensFromMap((pre: any) => {
       if (pre.find((screen: any) => screen?._id == screenData?._id)) {
         return pre;
@@ -371,15 +371,15 @@ export const AdvanceFiltersDetails = ({
     saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
   }, [dispatch, campId]);
 
-  console.log(
-    routes?.map((route: any) => {
-    return {
-      origin: route.origin,
-      destination: route.destination,
-      radius: routeRadius,
-    }
-  }));
-  console.log(dataBrand, dataComp);
+  // console.log(
+  //   routes?.map((route: any) => {
+  //   return {
+  //     origin: route.origin,
+  //     destination: route.destination,
+  //     radius: routeRadius,
+  //   }
+  // }));
+  // console.log(dataBrand, dataComp);
   return (
     <div className="w-full">
       <div className="h-full w-full py-3 grid grid-cols-2 gap-4">

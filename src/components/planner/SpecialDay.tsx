@@ -22,7 +22,7 @@ import { CAMPAIGN_PLAN_TYPE_TOPICAL } from "../../constants/campaignConstants";
 
 const lastDateMonthWise: any = {
   1: 31,
-  2: 28,
+  2: 29,
   3: 31,
   4: 30,
   5: 31,
@@ -92,10 +92,6 @@ export const SpecialDay = ({
     data: addDetails,
   } = detailsToCreateCampaignAdd;
 
-  const getLastDay = (month: number) => {
-    return lastDateMonthWise[month];
-  };
-
   const handleCancel = useCallback(() => {
     setIsOpen(false);
   }, [isOpen]);
@@ -111,13 +107,16 @@ export const SpecialDay = ({
   }, [dispatch]);
 
   useEffect(() => {
-    const year = new Date().getFullYear();
-    const lastDays = getLastDay(month);
+    const date = new Date();
+    const year = date.getFullYear();
+    const lastDay = lastDateMonthWise[month + 1];
+    const currentMonth = new Date().getMonth();
+    const day = month == currentMonth ? new Date().getDate() : 1;
 
     dispatch(
       getCalendarListData({
-        startDate: `${year}-${month + 1}-01`,
-        endDate: `${year}-${month + 1}-31`,
+        startDate: `${year}-${month + 1}-${day}`,
+        endDate: `${year}-${month + 1}-${lastDay}`,
         category: [category],
       })
     );
@@ -145,7 +144,7 @@ export const SpecialDay = ({
   }, [navigate, successAddDetails, errorAddDetails]);
 
   const handleSaveData = (data: any) => {
-    console.log("all datat :", data);
+    // console.log("all datat :", data);
     dispatch(
       addDetailsToCreateCampaign({
         ...data,
