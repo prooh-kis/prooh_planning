@@ -332,7 +332,6 @@ export const VendorConfirmationDetails = ({
   };
 
   useEffect(() => {
-    if (campaignDetails) {
       dispatch(getVendorConfirmationDetails(vendorInput));
       dispatch(
         getVendorConfirmationStatusTableDetails({
@@ -345,8 +344,7 @@ export const VendorConfirmationDetails = ({
           pageName: "Vendor Confirmation Page",
         })
       );
-    }
-  }, [dispatch, vendorInput, campaignDetails, campaignId]);
+  }, [dispatch, vendorInput, campaignId]);
 
   return (
     <div className="w-full pt-3">

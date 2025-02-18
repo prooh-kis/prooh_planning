@@ -511,7 +511,7 @@ export const ViewFinalPlanPODetails = ({
               {poTableData?.couponId && poTableData?.couponId !== "NA" && (
                 <h1 className="text-left ">
                   &#8377;{" "}
-                  {formatNumber(Number(poTableData?.finalCampaignBudget))}*
+                  {formatNumber(Number(poTableData?.finalCampaignBudget)?.toFixed(2))}*
                 </h1>
               )}
               <h1
@@ -521,7 +521,7 @@ export const ViewFinalPlanPODetails = ({
                     : ""
                 }`}
               >
-                &#8377; {formatNumber(Number(poTableData?.totalCampaignBudget))}
+                &#8377; {formatNumber(Number(poTableData?.totalCampaignBudget)?.toFixed(2))}
                 *
               </h1>
 

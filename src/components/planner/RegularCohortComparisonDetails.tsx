@@ -74,6 +74,9 @@ export const RegularCohortComparisonDetails = ({
       });
       saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: {} });
 
+      if (priceData?.regular?.tableData.impressionPerDay === 0 || priceData?.cohort?.tableData.impressionPerDay === 0) {
+        message.error("Please select appropriate number of audiences for to get relevant impressions from the inventories available...")
+      }
     }
   },[priceData, campaignId]);
   useEffect(() => {
@@ -289,6 +292,7 @@ export const RegularCohortComparisonDetails = ({
               setCurrentStep(step + 1);
             }
           }}
+          disabled={priceData?.regular?.tableData?.impressionPerDay === 0 || priceData?.cohort?.tableData?.impressionPerDay === 0 }
           campaignId={campaignId}
           pageName="Compare Plan Page"
           successAddCampaignDetails={success}

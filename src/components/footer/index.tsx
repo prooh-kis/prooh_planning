@@ -119,7 +119,7 @@ export const Footer = ({
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">Impressions</h1>
               <h1 className="text-[14px] font-semibold">
-                {formatNumber(footerData?.totalImpression || 0)}
+                {formatNumber(footerData?.totalImpression?.toFixed(0) || 0)}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">
@@ -127,7 +127,7 @@ export const Footer = ({
               <h1 className="text-[14px] font-semibold">
                 {" "}
                 &#8377;
-                {formatNumber(footerData?.totalCampaignBudget || 0)}
+                {formatNumber(footerData?.totalCampaignBudget?.toFixed(0) || 0)}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">

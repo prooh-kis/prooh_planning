@@ -122,12 +122,12 @@ export const CostSummaryTable1 = ({
             </th>
             <th className="flex w-full items-center justify-center gap-2">
               <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F] font-normal">
-                {formatNumber(data?.totalImpression || 0)}
+                {formatNumber(data?.totalImpression?.toFixed(0) || 0)}
               </h1>
             </th>
             <th className="flex w-full items-center justify-center gap-2">
               <h1 className="lg:text-[14px] md:text-[12px] text-[#FF0808]">
-                &#8377;{formatNumber(data?.totalCampaignBudget || 0)}
+                &#8377;{formatNumber(data?.totalCampaignBudget?.toFixed(0) || 0)}
               </h1>
             </th>
             <th className="flex w-full items-center justify-center gap-2">

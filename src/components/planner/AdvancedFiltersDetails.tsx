@@ -406,7 +406,7 @@ export const AdvanceFiltersDetails = ({
   // console.log(dataBrand, dataComp);
   return (
     <div className="w-full">
-      <div className="h-full w-full py-3 grid grid-cols-2 gap-4">
+      <div className="h-full w-full py-3 grid grid-cols-2 gap-4 pb-20">
         <div className="col-span-1 h-full py-2 pr-4">
           {storeFilter && (
             <div className="h-auto">
