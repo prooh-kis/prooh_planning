@@ -177,7 +177,7 @@ export const changeCampaignStatusAfterVendorApproval =
       payload: { ids },
     });
     try {
-      const { data } = await axios.post(`${url}/approveCampaignScreenVendor`, {
+      const { data } = await axios.get(`${url}/approveCampaignScreenVendor`, {
         ids,
       });
       dispatch({

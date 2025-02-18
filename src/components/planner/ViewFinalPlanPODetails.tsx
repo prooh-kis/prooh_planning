@@ -455,7 +455,7 @@ export const ViewFinalPlanPODetails = ({
           />
           <MyDiv
             left={"CPM"}
-            right={`${String.fromCharCode(8377)} ${Number(
+            right={`${Number(
               poTableData?.totalCpm
             ).toFixed(2)}`}
           />
