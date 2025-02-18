@@ -93,7 +93,6 @@ export const SpecialDayPlanPage: React.FC = () => {
 
   useEffect(() => {
     if (success) {
-    if (success) {
       // const campDetails = location.state.campaign
       const campDetails = campaignDetails;
 
