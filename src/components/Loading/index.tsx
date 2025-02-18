@@ -8,6 +8,7 @@ export const Loading = (props: any) => {
   const playerRef = useRef<Player>(null);
   const [progress, setProgress] = useState(0);
   const [loadingComplete, setLoadingComplete] = useState(false);
+  const { row = 8 } = props;
 
   // Lottie options configuration
   const defaultOptions = {
@@ -60,7 +61,7 @@ export const Loading = (props: any) => {
     //   {/* <span className="loading-text">{progress}%</span> */}
     // </div>
     <div className="py-4">
-      <Skeleton active paragraph={{ rows: 8 }} />
+      <Skeleton active paragraph={{ rows: row }} />
     </div>
   );
 };

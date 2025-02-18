@@ -370,6 +370,30 @@ export const AdvanceFiltersDetails = ({
     );
     saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
   }, [dispatch, campId]);
+  
+  useEffect(() => {
+    if (advanceFilterData) {
+      if (advanceFilterData?.screens.length === 0) {
+        console.log("relaod page auto : ", {
+          id: campId,
+          touchPoints: pathname?.split("/").includes("storebasedplan")
+            ? ALL_TOUCHPOINTS
+            : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
+                ?.touchPoints,
+        });
+        dispatch(
+          getScreenDataForAdvanceFilters({
+            id: campId,
+            touchPoints: pathname?.split("/").includes("storebasedplan")
+              ? ALL_TOUCHPOINTS
+              : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
+                  ?.touchPoints,
+          })
+        );
+        saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
+      }
+    }
+  }, [advanceFilterData]);
 
   // console.log(
   //   routes?.map((route: any) => {

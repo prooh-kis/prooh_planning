@@ -166,7 +166,7 @@ export const RegularPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
-            successAddCampaignDetails={success}
+            success={success}
 
           />
         ) : currentStep === 5 ? (
@@ -175,7 +175,7 @@ export const RegularPlanPage: React.FC = () => {
             step={currentStep}
             campaignId={campaignId}
             regularVsCohortSuccessStatus={success}
-            successAddCampaignDetails={success}
+            success={success}
 
           />
         ) : currentStep === 6 ? (
