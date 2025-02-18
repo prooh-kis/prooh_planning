@@ -1,7 +1,7 @@
 
 export const SkeletonLoader = () => {
   return (
-    <div className="animate-pulse relative flex w-full justify-center">
+    <div className="w-full h-full animate-pulse relative flex justify-center">
       <div className="h-full bg-[#D7D7D7] w-full"></div>
     </div>
 )};

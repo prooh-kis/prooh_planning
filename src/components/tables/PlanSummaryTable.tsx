@@ -8,6 +8,7 @@ import { getRegularVsCohortPriceData, getScreenSummaryPlanTableData } from "../.
 import { useDispatch, useSelector } from "react-redux";
 import { Tooltip } from "antd";
 import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
+import { CAMPAIGN_PLAN_TYPE_KNOW, CAMPAIGN_PLAN_TYPE_STORE, CAMPAIGN_PLAN_TYPE_TOPICAL } from "../../constants/campaignConstants";
 
 export function PlanSummaryTable({
   regularVsCohort,
@@ -34,9 +35,7 @@ export function PlanSummaryTable({
   } = regularVsCohortPriceDataGet;
 
   useEffect(() => {
-    if (success) {
-
-      // if ()
+    if (success && getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.campaignType !== CAMPAIGN_PLAN_TYPE_TOPICAL || !data) {
       dispatch(
         getScreenSummaryPlanTableData({
           id: campaignId,
@@ -46,8 +45,12 @@ export function PlanSummaryTable({
     }
 
 
-    if (!priceData && getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[campaignId]?.[
-      `${regularVsCohort}`] === undefined) {
+    if (
+      (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW || 
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.campaignType === CAMPAIGN_PLAN_TYPE_STORE || 
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.campaignType === CAMPAIGN_PLAN_TYPE_TOPICAL) && 
+      !priceData && getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[campaignId]?.[`${regularVsCohort}`] === undefined
+    ) {
         dispatch(getRegularVsCohortPriceData({
           id: campaignId,
           screenIds: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
@@ -56,10 +59,10 @@ export function PlanSummaryTable({
           duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
         }));
       }
-  }, [dispatch, success]);
+  }, [dispatch, success, priceData]);
 
   return (
-    <div>
+    <div className="pb-10">
       {(pathname.split("/").splice(-2)[0] !== "iknowitallplan" && pathname.split("/").splice(-2)[0] !== "storebasedplan") && (
         <div className="py-4">
           <div className="flex justify-start gap-2">

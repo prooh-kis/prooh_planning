@@ -9,7 +9,7 @@ import {
   SCREEN_SUMMARY_SELECTION,
   SCREEN_TYPE_TOGGLE_SELECTION,
 } from "../../constants/localStorageConstants";
-import { Tooltip } from "antd";
+import { message, Tooltip } from "antd";
 
 export const ScreenSummaryTable = ({
   data,
@@ -160,6 +160,7 @@ export const ScreenSummaryTable = ({
             }
           }
         }
+        message.info(`You are ${newStatus === true ? "selecting" : "deselecting"} a screen from ${networkType}. Any action applicable to any one screen of any network will be applicable on all the screens of the same network.`)
       }
 
       // Update the specific city's screens in screensBuyingCount while preserving other cities

@@ -241,7 +241,7 @@ export const EnterCampaignBasicDetails = ({
 
   useEffect(() => {
     dispatch(getAllClientAgencyNames());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="w-full py-3">

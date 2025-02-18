@@ -378,7 +378,7 @@ export const AudienceTouchPointsDetails = ({
           campaignId={campaignId}
           pageName="Audience And TouchPoint Page"
           successAddCampaignDetails={successAddCampaignDetails}
-          // isDisabled={locked?.cohorts === false || locked?.touchPoints === false || loadingCost ? true : false}
+          loadingCost={loadingCost}
         />
       </div>
     </div>

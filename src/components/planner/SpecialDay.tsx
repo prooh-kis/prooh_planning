@@ -18,6 +18,7 @@ import { SingleCalenderData } from "../../components/molecules/SingleCalenderDat
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { endOfDay, startOfDay } from "date-fns";
 import { formatNumber } from "../../utils/formatValue";
+import { CAMPAIGN_PLAN_TYPE_TOPICAL } from "../../constants/campaignConstants";
 
 const lastDateMonthWise: any = {
   1: 31,
@@ -164,7 +165,7 @@ export const SpecialDay = ({
         userInfo={userInfo}
         setCurrentStep={setCurrentStep}
         step={step}
-        router="specialdayplan"
+        router={CAMPAIGN_PLAN_TYPE_TOPICAL}
         setCampaignId={setCampaignId}
         campaignId={idCampaign}
         date={selectedDate}

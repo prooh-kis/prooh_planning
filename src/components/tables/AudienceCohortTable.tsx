@@ -58,7 +58,7 @@ export const AudienceCohortTable = ({
   useEffect(() => {
     const lockedData = {
       cohorts: clicked,
-      touchPoints: locked.touchPoints,
+      touchPoints: clicked,
     };
     setLocked(lockedData);
   }, [clicked, setLocked]);

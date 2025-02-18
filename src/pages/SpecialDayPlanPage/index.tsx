@@ -115,7 +115,7 @@ export const SpecialDayPlanPage: React.FC = () => {
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
-  }, [success]);
+  }, [success, campaignDetails, campaignId]);
 
   useEffect(() => {
     if (campaignId !== null || undefined || pages?.filter((page: any) => page.label === getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.currentPage)[0]?.id !== currentStep) {
@@ -130,7 +130,7 @@ export const SpecialDayPlanPage: React.FC = () => {
           campaignId={campaignId}
           step={currentStep}
           setStep={setCurrentStep}
-          steps={pathname?.split("/").includes("specialdayplan") ? 8 : 9}
+          steps={8}
         />
       </div>
       <div className="w-full h-full flex justify-center items-top">
@@ -161,6 +161,7 @@ export const SpecialDayPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            success={success}
           />
         ) : currentStep === 5 ? (
           <ScreenSummaryDetails

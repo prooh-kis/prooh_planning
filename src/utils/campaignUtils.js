@@ -8,7 +8,6 @@ import {
 
 export const getCampaignPageNameFromCampaignType = (value) => {
   if (!value) return "";
-
   const campaignTypeMap = {
     [CAMPAIGN_PLAN_TYPE_REGULAR]: "regularplan",
     [CAMPAIGN_PLAN_TYPE_TRIGGER]: "triggerbasedplan",

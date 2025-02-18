@@ -160,9 +160,9 @@ export const Footer = ({
             className="border border-1 py-2 px-4 text-[14px] rounded-md bg-[#00A0FA] text-[#FFFFFF] hover:bg-[#D7D7D7] hover:text-black truncate"
             title="Save and go next"
             onClick={handleSave}
-            disabled={isDisabled}
+            disabled={isDisabled || loadingCost}
           >
-            {loading ? "Saving data...." : "Save and Continue"}
+            {loading || loadingCost ? "Please Wait...." : "Save and Continue"}
           </button>
         </div>
       )}

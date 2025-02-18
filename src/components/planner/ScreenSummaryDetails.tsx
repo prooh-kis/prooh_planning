@@ -45,7 +45,6 @@ export const ScreenSummaryDetails = ({
   setCurrentStep,
   step,
   campaignId,
-  regularVsCohortSuccessStatus,
   success,
   successAddCampaignDetails,
 }: ScreenSummaryDetailsProps) => {
