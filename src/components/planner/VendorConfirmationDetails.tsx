@@ -346,7 +346,7 @@ export const VendorConfirmationDetails = ({
         })
       );
     }
-  }, [dispatch, vendorInput, campaignDetails]);
+  }, [dispatch, vendorInput, campaignDetails, campaignId]);
 
   return (
     <div className="w-full pt-3">
