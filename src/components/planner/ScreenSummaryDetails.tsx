@@ -28,6 +28,7 @@ import {
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { Loading } from "../../components/Loading";
 import { message, Tooltip } from "antd";
+import { CAMPAIGN_PLAN_TYPE_KNOW, CAMPAIGN_PLAN_TYPE_REGULAR, CAMPAIGN_PLAN_TYPE_STORE, CAMPAIGN_PLAN_TYPE_TOPICAL } from "../../constants/campaignConstants";
 
 interface Tab {
   label: string;
@@ -81,7 +82,7 @@ export const ScreenSummaryDetails = ({
       getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] ?? {}
     );
   });
-  console.log("screensBuyingCount :", screensBuyingCount);
+
   const [visitedTab, setVisitedTab] = useState<any>([]);
 
   const screenSummaryDataGet = useSelector(
@@ -159,7 +160,6 @@ export const ScreenSummaryDetails = ({
   };
 
   const getTabValue = (dataScreenSummary: any) => {
-    console.log(dataScreenSummary);
     if (
       dataScreenSummary &&
       getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] &&
@@ -269,16 +269,16 @@ export const ScreenSummaryDetails = ({
           id: pathname.split("/").splice(-1)[0],
           totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
           totalImpression:
-            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-              ?.totalImpression,
+            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]
+              ?.total?.totalImpression,
           totalReach:
-            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-              ?.totalReach,
+            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]
+              ?.total?.totalReach,
           totalCampaignBudget:
-            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-              ?.totalCampaignBudget,
+            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]
+              ?.total?.totalCampaignBudget,
           totalCpm:
-            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.totalCpm,
+            getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalCpm,
         })
       );
     }
@@ -363,12 +363,12 @@ export const ScreenSummaryDetails = ({
       );
     }
     if (
-      // (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-      //   ?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW ||
-      //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-      //     ?.campaignType === CAMPAIGN_PLAN_TYPE_STORE ||
-      //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-      //     ?.campaignType === CAMPAIGN_PLAN_TYPE_TOPICAL) &&
+      (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+        ?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW ||
+        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+          ?.campaignType === CAMPAIGN_PLAN_TYPE_STORE ||
+        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+          ?.campaignType === CAMPAIGN_PLAN_TYPE_TOPICAL) &&
       !priceData &&
       getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[campaignId]?.[
         `${regularVsCohort}`
@@ -395,6 +395,8 @@ export const ScreenSummaryDetails = ({
     screenSummaryData,
     screenSummaryDataIKnowItAll,
     screensBuyingCount,
+    priceData,
+    regularVsCohort,
   ]);
 
   return (

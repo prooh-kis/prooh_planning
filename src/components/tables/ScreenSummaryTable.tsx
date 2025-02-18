@@ -123,7 +123,8 @@ export const ScreenSummaryTable = ({
   );
 
   const handleScreenClick = useCallback(
-    ({ screen, city, statusRes }: any) => {
+    ({ screen, city, statusRes, suppressMessage = false }: any) => {
+      
       const screenId = screen._id;
       const networkType = screen.networkType;
 
@@ -132,18 +133,8 @@ export const ScreenSummaryTable = ({
 
       const currentCityScreens = updatedScreensBuyingCount[city] || {};
 
-      if (networkType === "") {
-        // Toggle the status of the selected screen
-        if (statusRes === undefined && currentCityScreens[screenId]) {
-          currentCityScreens[screenId].status =
-            !currentCityScreens[screenId].status;
-        } else {
-          currentCityScreens[screenId] = {
-            status: statusRes,
-            data: screen,
-          };
-        }
-      } else {
+      if (networkType !== "") {
+
         // change network type in db then implement
         let newStatus;
         if (statusRes !== undefined) {
@@ -160,7 +151,22 @@ export const ScreenSummaryTable = ({
             }
           }
         }
-        message.info(`You are ${newStatus === true ? "selecting" : "deselecting"} a screen from ${networkType}. Any action applicable to any one screen of any network will be applicable on all the screens of the same network.`)
+        console.log("supress", suppressMessage);
+        if (!suppressMessage) {
+          message.info(`You are ${newStatus === true ? "selecting" : "deselecting"} a screen from ${networkType}. Any action applicable to any one screen of any network will be applicable on all the screens of the same network.`)
+        }
+      } else {
+        console.log("supress n", suppressMessage);
+        // Toggle the status of the selected screen
+        if (statusRes === undefined && currentCityScreens[screenId]) {
+          currentCityScreens[screenId].status =
+            !currentCityScreens[screenId].status;
+        } else {
+          currentCityScreens[screenId] = {
+            status: statusRes,
+            data: screen,
+          };
+        }
       }
 
       // Update the specific city's screens in screensBuyingCount while preserving other cities
@@ -207,14 +213,20 @@ export const ScreenSummaryTable = ({
     saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, {
       [campaignId]: stToggle,
     });
+    const networkMessageTracker = new Set<string>();
 
     screens.forEach((s: any) => {
+      const shouldShowMessage = s.network !== "" && !networkMessageTracker.has(s.networkType);
       handleScreenClick({
         screen: s,
         city,
         touchpoint,
         statusRes: !allSelected,
+        suppressMessage: !shouldShowMessage,
       }); // Update individual screen status
+      if (shouldShowMessage) {
+        networkMessageTracker.add(s.networkType);
+      }
     });
 
     // Update the screens buying count and save

@@ -21,10 +21,12 @@ export const CalendarInput = ({
     <div className="w-full">
       <input
         title="calendar_input"
-        type="date"
+        type="datetime-local"
         disabled={disabled}
         value={value}
-        onChange={(e) => action(e.target.value)}
+        onChange={(e) => {
+          action(e.target.value);
+        }}
         className="h-[48px] w-full border rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-gray-100 active:bg-[#F4F9FF] transition-colors"
         min={minDate ? new Date(minDate).toISOString().split("T")[0] : formattedYesterday}
       />

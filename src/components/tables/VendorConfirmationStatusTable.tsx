@@ -203,7 +203,7 @@ export const VendorConfirmationStatusTable = ({
                       ? "Final Rejected"
                       : status.status === "Pending"
                       ? "Approved"
-                      : "Pending"}
+                      : "Approved"}
                   </h1>
                 </td>
               </tr>
