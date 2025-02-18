@@ -645,6 +645,10 @@ export const ViewFinalPlanPODetails = ({
               />
             </div>
           </div>
+          <div className="flex gap-2 pb-4">
+            <i className="fi fi-sr-lightbulb-on flex items-top justify-center text-primaryButton"></i>
+            <h1 className="text-[12px] text-primaryButton">Check the document that you wish to see, Campaign Summary contains Campaign Details, Plan Summary and Creative Ratios, while Screen Pictures have all the inventory pictures for your references...</h1>
+          </div>
           <button
             type="submit"
             className="px-8 py-2 bg-[#3B82F6] text-white rounded-full text-gray-500 text-sm"
