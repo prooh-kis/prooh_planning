@@ -6,7 +6,7 @@ const containerStyle = {
   height: "100%",
 };
 
-export function GoogleMap(props) {
+export function GoogleMapWithGeometry(props) {
   const mapRef = useRef(null);
   const [selectedMarkers, setSelectedMarkers] = useState([]);
   const [unSelectedMarkers, setUnselectedMarkers] = useState([]);
