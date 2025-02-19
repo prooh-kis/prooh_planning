@@ -30,14 +30,14 @@ export const ImageContainer = ({
 export const VideoContainer = ({
   url,
   className = "rounded-lg",
-  height = "207px",
+  height = "200px",
   width = "383px",
   removeFile,
   showIcon = true,
 }: any) => (
-  <div className="relative inline-block max-h-[30vh] overflow-hidden">
+  <div className="relative inline-block max-h-[30vh] overflow-hidden w-full">
     <video
-      className={`${className} object-cover h-[${height}] w-full`}
+      className={`${className} object-cover h-[200px] w-full`}
       controls
     >
       <source src={url} />

@@ -130,3 +130,12 @@ export function formatDate(dateString) {
 
   return `${day} ${date.toLocaleString("en-US", { month: "short" })}`;
 }
+
+
+export function getCampaignEndingStatus(endDate) {
+  return getNumberOfDaysBetweenTwoDates(new Date(), endDate) < 0
+    ? "Already Ended"
+    : getNumberOfDaysBetweenTwoDates(new Date(), endDate) === 0
+    ? "Ending Today"
+    : `Ends In : ${getNumberOfDaysBetweenTwoDates(new Date(), endDate)} days`;
+}

@@ -17,12 +17,14 @@ import {
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
-import {
-  CURRENT_STEP,
-} from "../../constants/localStorageConstants";
+import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { CAMPAIGN_PLAN_TYPE_REGULAR } from "../../constants/campaignConstants";
-import { ALL_COHORTS, ALL_MARKETS, ALL_TOUCHPOINTS } from "../../constants/helperConstants";
+import {
+  ALL_COHORTS,
+  ALL_MARKETS,
+  ALL_TOUCHPOINTS,
+} from "../../constants/helperConstants";
 
 const pages = [
   {
@@ -118,22 +120,28 @@ export const RegularPlanPage: React.FC = () => {
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
-
   }, [success, campaignDetails, campaignId]);
 
   useEffect(() => {
     if (campaignId !== null || undefined) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
-
   }, [dispatch, campaignId]);
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full min-h-screen flex flex-col">
+      {/* Stepper Slider */}
       <div className="w-full pt-[60px]">
-        <StepperSlider campaignId={campaignId} step={currentStep} setStep={setCurrentStep} steps={9} />
+        <StepperSlider
+          campaignId={campaignId}
+          step={currentStep}
+          setStep={setCurrentStep}
+          steps={9}
+        />
       </div>
-      <div className="w-full h-full flex justify-center items-top">
+
+      {/* Step Content */}
+      <div className="w-full flex-grow flex justify-center items-start overflow-auto p-4">
         {currentStep === 1 ? (
           <EnterCampaignBasicDetails
             setCurrentStep={setCurrentStep}
@@ -155,11 +163,8 @@ export const RegularPlanPage: React.FC = () => {
           <AdvanceFiltersDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
-            // loading={loadingAdvanceFilterScreens}
-            // error={errorAdvanceFilterScreens}
             campaignId={campaignId}
             successAddCampaignDetails={success}
-
           />
         ) : currentStep === 4 ? (
           <RegularCohortComparisonDetails
@@ -167,7 +172,6 @@ export const RegularPlanPage: React.FC = () => {
             step={currentStep}
             campaignId={campaignId}
             success={success}
-
           />
         ) : currentStep === 5 ? (
           <ScreenSummaryDetails
@@ -176,7 +180,6 @@ export const RegularPlanPage: React.FC = () => {
             campaignId={campaignId}
             regularVsCohortSuccessStatus={success}
             success={success}
-
           />
         ) : currentStep === 6 ? (
           <TriggerDetails
@@ -184,7 +187,6 @@ export const RegularPlanPage: React.FC = () => {
             step={currentStep}
             campaignId={campaignId}
             successAddCampaignDetails={success}
-
           />
         ) : currentStep === 7 ? (
           <ViewFinalPlanPODetails
@@ -192,7 +194,6 @@ export const RegularPlanPage: React.FC = () => {
             step={currentStep}
             campaignId={campaignId}
             successAddCampaignDetails={success}
-
           />
         ) : currentStep === 8 ? (
           <CreativeUploadDetails
@@ -200,7 +201,6 @@ export const RegularPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             campaignId={campaignId}
             successAddCampaignDetails={success}
-
           />
         ) : currentStep === 9 ? (
           <VendorConfirmationDetails
@@ -209,7 +209,6 @@ export const RegularPlanPage: React.FC = () => {
             campaignId={campaignId}
             userInfo={userInfo}
             successAddCampaignDetails={success}
-
           />
         ) : null}
       </div>

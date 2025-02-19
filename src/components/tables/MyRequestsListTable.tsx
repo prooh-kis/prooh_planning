@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { formatNumber } from "../../utils/formatValue";
 import { useState } from "react";
+import { CampaignsListModel } from "../../components/molecules/CampaignsListModel";
 
 interface MyRequestsListTableProps {
   requestsList?: any;
@@ -54,7 +55,40 @@ export const MyRequestsListTable = ({
           ))}
         </div>
       )}
-      <table className="w-full">
+
+      <div className="overflow-y-scroll no-scrollbar h-[80vh] my-1 rounded-[12px] bg-gray-100 px-2">
+        {requestsList?.map((campaign: any, i: any) => (
+          <div
+            key={i}
+            className="pointer-cursor"
+            onClick={() =>
+              setShowDetails({
+                show: !showDetails.show,
+                data: {
+                  campaignId: campaign.campaignCreationId,
+                  name: campaign.name,
+                  brandName: campaign.brandName,
+                  clientName: campaign.clientName,
+                  startDate: campaign.startDate,
+                  endDate: campaign.endDate,
+                  duration: campaign.duration,
+                  campaignType: campaign.campaignType,
+                  totalCampaignBudget: campaign.totalCampaignBudget,
+                  trigger: campaign.triggers,
+                  screens: campaign.screens,
+                  campaigns: campaign.campaigns,
+                },
+              })
+            }
+          >
+            <CampaignsListModel
+              data={{ ...campaign, screenIds: [campaign.screenId] }}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* <table className="w-full">
         <thead>
           <tr className="bg-[#129BFF] text-[#FFFFFF] text-[14px]">
             <th className="py-2 font-semibold">
@@ -251,7 +285,7 @@ export const MyRequestsListTable = ({
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
     </div>
   );
 };

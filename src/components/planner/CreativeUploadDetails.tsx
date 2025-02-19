@@ -647,104 +647,105 @@ export const CreativeUploadDetails = ({
   }, [campaignId, errorScreeData, screenData]);
 
   return (
-    <div className="w-full h-[80vh] overflow-y-auto ">
-      <div>
+    <div className="w-full min-h-screen overflow-y-auto  ">
+      <div className="mx-auto">
+        {/* Heading */}
         <h1 className="text-2xl font-semibold">Upload Creative</h1>
-        <h1 className="text-sm text-gray-500 ">
+        <h2 className="text-sm text-gray-500">
           Upload your creatives for the campaigns for your selected screens
-        </h1>
-      </div>
-      {isLoading && (
-        <div className="p-2 bg-yellow-200 text-yellow-700 text-md">
-          Wait for some time file is uploading....
-        </div>
-      )}
-      {currentCity === "" ? null : (
-        <div>
-          <div className="flex gap-4">
-            <TabWithoutIcon
-              tabData={citiesCreative}
-              currentTab={currentTab}
-              setCurrentTab={handleSelectCurrentTab}
-            />
+        </h2>
+
+        {/* Loader Message */}
+        {isLoading && (
+          <div className="p-2 bg-yellow-200 text-yellow-700 text-md">
+            Wait for some time, file is uploading...
           </div>
-          <div className="mr-48 w-full">
-            <div className="flex bg-[#129BFF] py-2 mt-4 items-center">
-              <div className="flex">
-                <h1 className="w-24 text-center text-[#FFFFFF] font-semibold ">
-                  Screens
-                </h1>
-                <h1 className="w-24 text-center text-[#FFFFFF] font-semibold ">
-                  Duration
-                </h1>
-                <h1 className="w-48 text-center text-[#FFFFFF] font-semibold ">
-                  Screen Dimension
-                </h1>
-              </div>
-              <h1 className="w-full text-center text-[#FFFFFF] font-semibold">
-                Upload creatives
-              </h1>
+        )}
+        {currentCity === "" ? null : (
+          <div>
+            <div className="flex gap-4">
+              <TabWithoutIcon
+                tabData={citiesCreative}
+                currentTab={currentTab}
+                setCurrentTab={handleSelectCurrentTab}
+              />
             </div>
-            <div className="flex">
-              <div className="border border-1 h-[60vh] w-[560px] overflow-scroll ">
-                {creativeUploadData[currentCity]?.map(
-                  (singleData: any, index: number) => {
-                    return (
-                      <div
-                        title={
-                          isCreativeUploaded(index)
-                            ? "click to select row"
-                            : "this row has no creative"
-                        }
-                        className={`${
-                          index === currentScreen && isCreativeUploaded(index)
-                            ? "bg-[#E8F3FF]"
-                            : !(
-                                index === currentScreen ||
-                                isCreativeUploaded(index)
-                              )
-                            ? ""
-                            : isCreativeUploaded(index)
-                            ? "bg-[#E8F3FF]"
-                            : "bg-[#E8F3FF]"
-                        } hover:bg-[#e5e7eb]`}
-                        key={index}
-                        onClick={() => setCurrentScreen(index)}
-                      >
-                        <div className="flex">
-                          <h1 className="border-b border-1 p-2 w-24 text-center ">
-                            {singleData?.count}
-                          </h1>
-                          <h1 className="border-b border-x border-1 p-2 w-24 text-center ">
-                            {singleData?.creativeDuration}
-                          </h1>
-                          <h1 className="border-b border-1 p-2 w-48 text-center ">
-                            {singleData?.screenResolution}
-                          </h1>
+            <div className="mr-48 w-full">
+              <div className="grid grid-cols-12 bg-[#129BFF] py-2 mt-4 items-center text-[16px]">
+                <div className="col-span-3 flex">
+                  <h1 className="w-24 text-center text-[#FFFFFF] font-semibold ">
+                    Screens
+                  </h1>
+                  <h1 className="w-24 text-center text-[#FFFFFF] font-semibold ">
+                    Duration
+                  </h1>
+                  <h1 className="w-48 text-center text-[#FFFFFF] font-semibold">
+                    Screen Dimension
+                  </h1>
+                </div>
+                <h1 className="w-full text-center text-[#FFFFFF] font-semibold col-span-9">
+                  Upload creatives
+                </h1>
+              </div>
+              <div className="grid grid-cols-12">
+                <div className="border border-1 h-[60vh] overflow-scroll scrollbar-minimal col-span-3">
+                  {creativeUploadData[currentCity]?.map(
+                    (singleData: any, index: number) => {
+                      return (
+                        <div
+                          title={
+                            isCreativeUploaded(index)
+                              ? "click to select row"
+                              : "this row has no creative"
+                          }
+                          className={`${
+                            index === currentScreen && isCreativeUploaded(index)
+                              ? "bg-[#E8F3FF]"
+                              : !(
+                                  index === currentScreen ||
+                                  isCreativeUploaded(index)
+                                )
+                              ? ""
+                              : isCreativeUploaded(index)
+                              ? "bg-[#E8F3FF]"
+                              : "bg-[#E8F3FF]"
+                          } hover:bg-[#e5e7eb]`}
+                          key={index}
+                          onClick={() => setCurrentScreen(index)}
+                        >
+                          <div className="flex">
+                            <h1 className="border-b border-1 p-2 w-24 text-center ">
+                              {singleData?.count}
+                            </h1>
+                            <h1 className="border-b border-x border-1 p-2 w-24 text-center ">
+                              {singleData?.creativeDuration}
+                            </h1>
+                            <h1 className="border-b border-1 p-2 w-48 text-center ">
+                              {singleData?.screenResolution}
+                            </h1>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  }
-                )}
-              </div>
-              <div className="border-b border-1  px-2 py-1 w-72">
-                <Radio.Group
-                  onChange={handleSetCreativeType}
-                  value={creativeType}
-                  className="text-xl"
-                >
-                  <Space direction="vertical">
-                    {!pathname?.split("/").includes("triggerbasedplan") && (
-                      <Radio value={"Standard"}>Standard</Radio>
-                    )}
-                    {isTriggerAvailable() && (
-                      <Radio value={"Trigger"}>Trigger</Radio>
-                    )}
-                  </Space>
-                </Radio.Group>
-              </div>
-              <div className="flex border-1 w-full">
-                <div className="border border-1  p-2  w-1/2  h-[60vh]">
+                      );
+                    }
+                  )}
+                </div>
+                <div className="border-b border-1  px-2 py-1 col-span-1">
+                  <Radio.Group
+                    onChange={handleSetCreativeType}
+                    value={creativeType}
+                    className="text-xl"
+                  >
+                    <Space direction="vertical">
+                      {!pathname?.split("/").includes("triggerbasedplan") && (
+                        <Radio value={"Standard"}>Standard</Radio>
+                      )}
+                      {isTriggerAvailable() && (
+                        <Radio value={"Trigger"}>Trigger</Radio>
+                      )}
+                    </Space>
+                  </Radio.Group>
+                </div>
+                <div className="border border-1  p-2  col-span-4  h-[60vh]">
                   {creativeType === "Standard" ? (
                     <div>
                       <TabWithIcon
@@ -807,7 +808,7 @@ export const CreativeUploadDetails = ({
                     />
                   )}
                 </div>
-                <div className="border-b border-r border-1  h-[60vh] px-4 py-2 w-1/2">
+                <div className="border-b border-r border-1  h-[60vh] px-4 py-2 col-span-4 ">
                   <h1 className="font-semibold">
                     {creativeType === "Standard"
                       ? currentPlayTimeCreative === "1"
@@ -845,25 +846,25 @@ export const CreativeUploadDetails = ({
                 </div>
               </div>
             </div>
+            <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
+              <Footer
+                handleBack={() => {
+                  setCurrentStep(step - 1);
+                }}
+                campaignId={campaignId}
+                handleSave={handleSaveAndContinue}
+                loading={isLoading}
+                isDisabled={isLoading}
+                totalScreensData={
+                  getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+                }
+                pageName="Upload Creative Page"
+                successAddCampaignDetails={successAddCampaignDetails}
+              />
+            </div>
           </div>
-          <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
-            <Footer
-              handleBack={() => {
-                setCurrentStep(step - 1);
-              }}
-              campaignId={campaignId}
-              handleSave={handleSaveAndContinue}
-              loading={isLoading}
-              isDisabled={isLoading}
-              totalScreensData={
-                getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-              }
-              pageName="Upload Creative Page"
-              successAddCampaignDetails={successAddCampaignDetails}
-            />
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

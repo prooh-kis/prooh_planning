@@ -57,11 +57,13 @@ export const VendorsRequestsList = ({ requestsList, userInfo }: any) => {
 
   const [selectedCampaignIds, setSelectedCampaignIds] = useState<any>([]);
 
-  const campaignStatusChangeAfterVendorApproval = useSelector((state: any) => state.campaignStatusChangeAfterVendorApproval);
+  const campaignStatusChangeAfterVendorApproval = useSelector(
+    (state: any) => state.campaignStatusChangeAfterVendorApproval
+  );
   const {
     loading: loadingVendorApprovalStatus,
     error: errorVendorApprovalStatus,
-    data: vendorApprovalStatus
+    data: vendorApprovalStatus,
   } = campaignStatusChangeAfterVendorApproval;
 
   useEffect(() => {
@@ -113,7 +115,8 @@ export const VendorsRequestsList = ({ requestsList, userInfo }: any) => {
         }, [])
       );
     }
-  }, [requestsList]);
+  }, [requestsList, vendorApprovalStatus, errorVendorApprovalStatus]);
+
   return (
     <div className="w-full">
       <div className="flex justify-between py-2">
@@ -142,7 +145,7 @@ export const VendorsRequestsList = ({ requestsList, userInfo }: any) => {
             showDetails={showDetails}
           />
         ) : (
-          <div>
+          <div className="">
             <VendorConfirmationBasicTable
               vendorConfirmationData={showDetails?.data}
             />
@@ -152,28 +155,21 @@ export const VendorsRequestsList = ({ requestsList, userInfo }: any) => {
                   Screens Selected ({showDetails?.data?.campaigns?.length})
                 </h1>
                 <div className="flex gap-4">
-                  <PrimaryButton
-                    title="Approve"
-                    rounded="rounded-[8px]"
-                    action={() => {
+                  <button
+                    className="bg-[#129BFF] text-[#FFFFFF] font-custom rounded-[9px] text-[14px] sm:text-[16px] font-bold hover:bg-[#129BFF90] hover:text-[#FFFFFF] w-[163px] h-[40px]"
+                    onClick={() => {
                       dispatch(
                         changeCampaignStatusAfterVendorApproval({
                           ids: selectedCampaignIds,
                         })
                       );
                     }}
-                    width=""
-                    height="h-10"
-                    // disabled?: boolean;
-                    // textSize?: any;
-                  />
-                  <SecondaryButton
-                    title="Reject"
-                    rounded="rounded-[8px]"
-                    action={() => {}}
-                    width=""
-                    height="h-10"
-                  />
+                  >
+                    Create Campaign
+                  </button>
+                  <button className="bg-gray-300 text-[#FFFFFF] font-custom rounded-[9px] text-[14px] sm:text-[16px] font-bold hover:bg-[#129BFF90] hover:text-[#FFFFFF] w-[163px] h-[40px]">
+                    Reset
+                  </button>
                 </div>
               </div>
               <VendorConfirmationStatusTable

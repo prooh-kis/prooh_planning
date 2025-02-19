@@ -2,13 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
-import { getMyCreateCampaignsManagerRequestsList, getMyCreateCampaignsVendorRequestsList } from "../../actions/campaignAction";
+import {
+  getMyCreateCampaignsManagerRequestsList,
+  getMyCreateCampaignsVendorRequestsList,
+} from "../../actions/campaignAction";
 import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import { PrimaryInput } from "../../components/atoms/PrimaryInput";
 import { ClientsRequestsList } from "./ClientRequestsList";
 import { VendorsRequestsList } from "./VendorRequestsList";
 import { CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT } from "../../constants/campaignConstants";
-
 
 export const MiddleArea: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -18,18 +20,22 @@ export const MiddleArea: React.FC = () => {
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-  const myCreateCampaignsManagerRequestsListGet = useSelector((state: any) => state.myCreateCampaignsManagerRequestsListGet);
+  const myCreateCampaignsManagerRequestsListGet = useSelector(
+    (state: any) => state.myCreateCampaignsManagerRequestsListGet
+  );
   const {
     loading: loadingManagerRequestsList,
     error: errorManagerRequestsList,
-    data: clientRequestsList
+    data: clientRequestsList,
   } = myCreateCampaignsManagerRequestsListGet;
 
-  const myCreateCampaignsVendorRequestsListGet = useSelector((state: any) => state.myCreateCampaignsVendorRequestsListGet);
+  const myCreateCampaignsVendorRequestsListGet = useSelector(
+    (state: any) => state.myCreateCampaignsVendorRequestsListGet
+  );
   const {
     loading: loadingVendorRequestsList,
     error: errorVendorRequestsList,
-    data: vendorRequestsList
+    data: vendorRequestsList,
   } = myCreateCampaignsVendorRequestsListGet;
 
   useEffect(() => {
@@ -37,13 +43,23 @@ export const MiddleArea: React.FC = () => {
       navigate("/login");
     }
     if (userInfo?.isMaster) {
-      dispatch(getMyCreateCampaignsVendorRequestsList({id: userInfo?._id, status: CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT}))
+      dispatch(
+        getMyCreateCampaignsVendorRequestsList({
+          id: userInfo?._id,
+          status: CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT,
+        })
+      );
     }
 
     if (userInfo?.isBrand) {
-      dispatch(getMyCreateCampaignsManagerRequestsList({id: userInfo?._id, type: "incomplete"}))
+      dispatch(
+        getMyCreateCampaignsManagerRequestsList({
+          id: userInfo?._id,
+          type: "incomplete",
+        })
+      );
     }
-  },[dispatch, navigate, userInfo]);
+  }, [dispatch, navigate, userInfo]);
 
   return (
     <div className="mt-6 w-full h-full pb-5">
@@ -74,25 +90,22 @@ export const MiddleArea: React.FC = () => {
         </div>
       </div>
       {userInfo && userInfo?.isBrand ? (
-        <ClientsRequestsList requestsList={
-          clientRequestsList?.filter((campaign: any) => campaign.campaignManagerEmail === userInfo?.email)
-          } 
+        <ClientsRequestsList
+          requestsList={clientRequestsList?.filter(
+            (campaign: any) => campaign.campaignManagerEmail === userInfo?.email
+          )}
         />
       ) : userInfo && userInfo?.isMaster ? (
         <VendorsRequestsList
           userInfo={userInfo}
-          requestsList={
-            vendorRequestsList?.campaigns?.filter((campaign: any) => vendorRequestsList?.screenIds?.includes(campaign?.screenId))
-          } 
+          requestsList={vendorRequestsList?.campaigns?.filter((campaign: any) =>
+            vendorRequestsList?.screenIds?.includes(campaign?.screenId)
+          )}
         />
       ) : (
         <div className="">
-          <h1 className="text-2xl font-bold">
-            No Campaigns Found
-          </h1>
-          <p className="text-md">
-            Please contact support !!!
-          </p>
+          <h1 className="text-2xl font-bold">No Campaigns Found</h1>
+          <p className="text-md">Please contact support !!!</p>
         </div>
       )}
     </div>

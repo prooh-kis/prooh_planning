@@ -33,7 +33,7 @@ export const UploadCreativeForStandardCampaign = ({
             <ImageContainer
               url={file?.url}
               className=" rounded-lg"
-              height="250px"
+              height="230px"
               width="full"
               removeFile={removeFile}
             />
@@ -41,7 +41,7 @@ export const UploadCreativeForStandardCampaign = ({
             <VideoContainer
               url={file?.url}
               className="rounded-lg"
-              height="250px"
+              height="230px"
               width="full"
               removeFile={removeFile}
             />

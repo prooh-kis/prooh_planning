@@ -6,7 +6,10 @@ import {
   RegularCohortSummaryTable,
 } from "../tables";
 import { useDispatch, useSelector } from "react-redux";
-import { getPlanningPageFooterData, getRegularVsCohortPriceData } from "../../actions/screenAction";
+import {
+  getPlanningPageFooterData,
+  getRegularVsCohortPriceData,
+} from "../../actions/screenAction";
 import {
   getAllLocalStorageData,
   getDataFromLocalStorage,
@@ -74,8 +77,13 @@ export const RegularCohortComparisonDetails = ({
       });
       saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: {} });
 
-      if (priceData?.regular?.tableData.impressionPerDay === 0 || priceData?.cohort?.tableData.impressionPerDay === 0) {
-        message.error("Please select appropriate number of audiences for to get relevant impressions from the inventories available...")
+      if (
+        priceData?.regular?.tableData.impressionPerDay === 0 ||
+        priceData?.cohort?.tableData.impressionPerDay === 0
+      ) {
+        message.error(
+          "Please select appropriate number of audiences for to get relevant impressions from the inventories available..."
+        );
       }
     }
   }, [priceData, campaignId]);
@@ -92,10 +100,12 @@ export const RegularCohortComparisonDetails = ({
       );
     }
 
-    dispatch(getPlanningPageFooterData({
-      id: campaignId,
-      pageName: "Compare Plan Page",
-    }));
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "Compare Plan Page",
+      })
+    );
   }, [cohorts, dispatch, duration, gender, screenIds, campaignId, success]);
 
   const handleRegularVsCohortSelection = (type: any) => {
@@ -116,8 +126,8 @@ export const RegularCohortComparisonDetails = ({
   };
 
   return (
-    <div className="w-full pt-3">
-      <div>
+    <div className="w-full">
+      <div className="ml-[-16px]">
         <h1 className="text-[24px] text-primaryText font-semibold">
           Compare Plan
         </h1>
@@ -134,7 +144,7 @@ export const RegularCohortComparisonDetails = ({
         <div className="flex gap-2">
           <div className="ml-[-25px] pt-6">
             <VerticalLine height="120px" color="#B5B5B5" thickness="1px" />
-            <h1 className="py-4">vs</h1>
+            {/* <h1 className="py-4">vs</h1> */}
             <VerticalLine height="100px" color="#B5B5B5" thickness="1px" />
           </div>
           <div className="w-full">
@@ -148,10 +158,11 @@ export const RegularCohortComparisonDetails = ({
                 </Tooltip>
               </div>
               <div
-                className={`w-full ${selecting === "regular"
-                  ? "border border-[#C9E9FF] rounded"
-                  : ""
-                  }`}
+                className={`w-full ${
+                  selecting === "regular"
+                    ? "border border-[#C9E9FF] rounded"
+                    : ""
+                }`}
                 onMouseEnter={() => {
                   if (!showSummary) {
                     setSelecting("regular");
@@ -187,10 +198,11 @@ export const RegularCohortComparisonDetails = ({
                 </Tooltip>
               </div>
               <div
-                className={`w-full ${selecting === "cohort"
-                  ? "border border-[#C9E9FF] rounded"
-                  : ""
-                  }`}
+                className={`w-full ${
+                  selecting === "cohort"
+                    ? "border border-[#C9E9FF] rounded"
+                    : ""
+                }`}
                 onMouseEnter={() => {
                   if (!showSummary) {
                     setSelecting("cohort");
@@ -273,7 +285,7 @@ export const RegularCohortComparisonDetails = ({
             setCurrentStep(step - 1);
           }}
           handleSave={() => {
-            console.log(step)
+            console.log(step);
             if (isDisabled) {
               message.error("Please  confirm screen selection");
             } else {
@@ -292,7 +304,10 @@ export const RegularCohortComparisonDetails = ({
               setCurrentStep(step + 1);
             }
           }}
-          disabled={priceData?.regular?.tableData?.impressionPerDay === 0 || priceData?.cohort?.tableData?.impressionPerDay === 0 }
+          disabled={
+            priceData?.regular?.tableData?.impressionPerDay === 0 ||
+            priceData?.cohort?.tableData?.impressionPerDay === 0
+          }
           campaignId={campaignId}
           pageName="Compare Plan Page"
           successAddCampaignDetails={success}
