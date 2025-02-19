@@ -19,12 +19,8 @@ import {
 import { useLocation } from "react-router-dom";
 import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { CAMPAIGN_PLAN_TYPE_REGULAR } from "../../constants/campaignConstants";
-import {
-  ALL_COHORTS,
-  ALL_MARKETS,
-  ALL_TOUCHPOINTS,
-} from "../../constants/helperConstants";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET, CAMPAIGN_PLAN_TYPE_REGULAR } from "../../constants/campaignConstants";
+import { ALL_COHORTS, ALL_MARKETS, ALL_TOUCHPOINTS } from "../../constants/helperConstants";
 
 const pages = [
   {
@@ -122,7 +118,10 @@ export const RegularPlanPage: React.FC = () => {
     }
   }, [success, campaignDetails, campaignId]);
 
+
   useEffect(() => {
+    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+
     if (campaignId !== null || undefined) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }

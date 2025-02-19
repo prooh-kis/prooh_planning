@@ -15,9 +15,6 @@ export const MiddleArea: React.FC = () => {
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-  useEffect(() => {
-    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-  }, [dispatch]);
   return (
     <div className="w-full h-full flex justify-center items-center">
       {userInfo && userInfo?.userRole === CAMPAIGN_PLANNER ? (

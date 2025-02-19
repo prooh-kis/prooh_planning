@@ -330,33 +330,33 @@ function MapDrawControl({
   }, [props]);
 
   useEffect(() => {
-    if (selectedMarkers?.length > 0) {
-      const validMarkers = selectedMarkers.filter(
-        (marker) =>
-          marker[1] !== undefined &&
-          marker[0] !== undefined &&
-          !isNaN(marker[1]) &&
-          !isNaN(marker[0])
-      );
+    // if (selectedMarkers?.length > 0) {
+    //   const validMarkers = selectedMarkers.filter(
+    //     (marker) =>
+    //       marker[1] !== undefined &&
+    //       marker[0] !== undefined &&
+    //       !isNaN(marker[1]) &&
+    //       !isNaN(marker[0])
+    //   );
 
-      // if (validMarkers?.length > 0) {
-      //   const bounds = validMarkers.reduce((bounds, marker) => {
-      //     return bounds.extend(marker);
-      //   }, new mapboxgl.LngLatBounds(validMarkers[0], validMarkers[0]));
+    //   if (validMarkers?.length > 0) {
+    //     const bounds = validMarkers.reduce((bounds, marker) => {
+    //       return bounds.extend(marker);
+    //     }, new mapboxgl.LngLatBounds(validMarkers[0], validMarkers[0]));
 
-      //   if (mapRef?.current) {
-      //     mapRef?.current?.fitBounds(bounds, {
-      //       padding: 120,
-      //     });
-      //     console.log("Map reference loaded.")
-      //   } else {
-      //     console.error("Map reference is null.");
-      //   }
-      // } else {
-      //   console.error("No valid markers to display.");
-      // }
-    }
-    popupRef.current?.trackPointer();
+    //     if (mapRef?.current) {
+    //       mapRef?.current?.fitBounds(bounds, {
+    //         padding: 120,
+    //       });
+    //       console.log("Map reference loaded.")
+    //     } else {
+    //       console.error("Map reference is null.");
+    //     }
+    //   } else {
+    //     console.error("No valid markers to display.");
+    //   }
+    // }
+    // popupRef.current?.trackPointer();
   }, [selectedMarkers]);
 
   return (
@@ -478,6 +478,8 @@ function MapDrawControl({
                 setScreenData(null);
               }}
               anchor="right"
+              offset={[10, 10]} // Adjusts popup position
+              dynamicPosition={true} // Prevents Mapbox from repositioning
             >
               <MapboxScreen
                 handleAddManualSelection={props?.handleAddManualSelection}

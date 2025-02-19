@@ -174,7 +174,7 @@ export const AudienceTouchPointsDetails = ({
   useEffect(() => {
     dispatch(
       getScreensAudiencesData({
-        id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
+        id: campaignId,
         markets:
           getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.markets,
       })

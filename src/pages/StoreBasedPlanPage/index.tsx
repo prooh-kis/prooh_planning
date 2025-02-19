@@ -22,7 +22,7 @@ import {
 import { useLocation } from "react-router-dom";
 import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { CAMPAIGN_PLAN_TYPE_STORE } from "../../constants/campaignConstants";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET, CAMPAIGN_PLAN_TYPE_STORE } from "../../constants/campaignConstants";
 
 const pages = [
   {
@@ -114,6 +114,7 @@ export const StoreBasedPlanPage: React.FC = () => {
   }, [dispatch, campaignDetails]);
 
   useEffect(() => {
+    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
     if (campaignId !== null || undefined) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }

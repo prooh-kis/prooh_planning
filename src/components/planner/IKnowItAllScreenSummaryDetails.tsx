@@ -18,7 +18,7 @@ import {
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
-import { Footer } from "../../components/footer";
+import { Footer } from "../footer";
 import {
   FULL_CAMPAIGN_PLAN,
   REGULAR_VS_COHORT_PRICE_DATA,
@@ -26,7 +26,7 @@ import {
   SCREEN_SUMMARY_TABLE_DATA,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { Loading } from "../../components/Loading";
+import { Loading } from "../Loading";
 import { message, Tooltip } from "antd";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET, CAMPAIGN_PLAN_TYPE_KNOW, CAMPAIGN_PLAN_TYPE_REGULAR, CAMPAIGN_PLAN_TYPE_STORE, CAMPAIGN_PLAN_TYPE_TOPICAL } from "../../constants/campaignConstants";
 
@@ -43,7 +43,7 @@ interface ScreenSummaryDetailsProps {
   success?: any;
 }
 
-export const ScreenSummaryDetails = ({
+export const IKnowItAllScreenSummaryDetails = ({
   setCurrentStep,
   step,
   campaignId,

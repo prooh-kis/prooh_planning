@@ -25,6 +25,7 @@ import { useLocation } from "react-router-dom";
 import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
+  ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
   CAMPAIGN_PLAN_TYPE_KNOW,
   CAMPAIGN_PLAN_TYPE_STORE,
   CAMPAIGN_PLAN_TYPE_TRIGGER,
@@ -124,10 +125,11 @@ export const TriggerBasedPlanPage: React.FC = () => {
   }, [dispatch, campaignDetails]);
 
   useEffect(() => {
+    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
     if (campaignId !== null || undefined) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
-    dispatch(getScreensAudiencesData({ id: "", markets: ALL_MARKETS }));
+    // dispatch(getScreensAudiencesData({ id: "", markets: ALL_MARKETS }));
   }, [dispatch, campaignId]);
 
   return (

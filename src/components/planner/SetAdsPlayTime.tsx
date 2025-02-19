@@ -135,15 +135,13 @@ export const SetAdsPlayTime = ({
   }, [tableData]);
 
   useEffect(() => {
-    if (!loading && success) {
-      dispatch(getTableDataScreenWiseAdPlayTime({ id: campaignId }));
-      dispatch(getPlanningPageFooterData({
-        id: campaignId,
-        pageName: "Set Ad Play time Page",
-      }));
-    }
+    dispatch(getTableDataScreenWiseAdPlayTime({ id: campaignId }));
+    dispatch(getPlanningPageFooterData({
+      id: campaignId,
+      pageName: "Set Ad Play time Page",
+    }));
 
-  }, [dispatch, campaignId, success, loading]);
+  }, [dispatch, campaignId]);
 
   // useEffect(() => {
   //   if (tableData) {

@@ -27,6 +27,7 @@ import {
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { SpecialDay } from "../../components/planner/SpecialDay";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 
 const pages = [
   {
@@ -117,6 +118,7 @@ export const SpecialDayPlanPage: React.FC = () => {
   }, [success]);
 
   useEffect(() => {
+    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
     if (campaignId !== null || undefined || pages?.filter((page: any) => page.label === getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.currentPage)[0]?.id !== currentStep) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }

@@ -27,6 +27,7 @@ import {
   SCREEN_SUMMARY_SELECTION,
 } from "../../constants/localStorageConstants";
 import { Loading } from "../../components/Loading";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 
 export const RegularCohortComparisonDetails = ({
   campaignId,
@@ -89,6 +90,9 @@ export const RegularCohortComparisonDetails = ({
   }, [priceData, campaignId]);
   useEffect(() => {
     if (success) {
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      })
       dispatch(
         getRegularVsCohortPriceData({
           id: campaignId,
@@ -136,9 +140,7 @@ export const RegularCohortComparisonDetails = ({
           cohort data
         </p>
       </div>
-      {loadingPriceData ? (
-        <Loading />
-      ) : errorPriceData ? (
+      {errorPriceData ? (
         <p>Error: {errorPriceData}</p>
       ) : (
         <div className="flex gap-2">
@@ -218,6 +220,7 @@ export const RegularCohortComparisonDetails = ({
                   priceData={priceData?.cohort}
                   setShowSummary={setShowSummary}
                   showSummary={showSummary}
+                  loading={loadingPriceData}
                 />
               </div>
 

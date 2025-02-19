@@ -146,7 +146,7 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
           </div>
           <div
             className={
-              `flex justify-center w-full mt-4 text-primaryButton text-[14px] font-medium truncate`
+              `flex justify-end w-full mt-4 text-primaryButton text-[14px] font-medium truncate`
           }>
             {stepLabels[step-1]}
           </div>

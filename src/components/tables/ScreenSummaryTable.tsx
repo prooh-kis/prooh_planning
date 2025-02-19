@@ -245,6 +245,7 @@ export const ScreenSummaryTable = ({
 
   return (
     <div className="h-full">
+      
       {currentCity && data && Object.keys(cityZones).length > 0 && (
         <div className="w-full h-full border-b">
           <div className="bg-[#D0D0D0] grid grid-cols-12 flex items-center">
@@ -271,16 +272,16 @@ export const ScreenSummaryTable = ({
               >
                 <div
                   className="grid grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))] gap-0"
-                  style={{ width: "calc(6rem * 6)" }}
+                  style={{ width: "calc(8rem * 8)" }}
                 >
                   {Object.keys(cityZones[currentCity])?.map(
                     (d: any, i: any) => (
                       <div
-                        className="col-span-1 border-x min-w-[2rem] truncate"
+                        className="col-span-1 border-x min-w-[2rem]"
                         key={i}
                       >
                         <h1 className="md:text-[16px] sm:text-[14px] font-bold flex justify-center truncate">
-                          {d}
+                          {d?.split(" ")?.splice(0, 3)?.join(" ")}
                         </h1>
                       </div>
                     )
@@ -338,7 +339,7 @@ export const ScreenSummaryTable = ({
                         >
                           <div
                             className="grid grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))] gap-0"
-                            style={{ width: "calc(6rem * 6)" }}
+                            style={{ width: "calc(8rem * 8)" }}
                           >
                             {Object.keys(cityZones?.[currentCity])?.map(
                               (zone: any, k: any) => (

@@ -17,6 +17,8 @@ import { useLocation } from "react-router-dom";
 import { CURRENT_STEP, FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { CAMPAIGN_PLAN_TYPE_KNOW } from "../../constants/campaignConstants";
+import { IKnowItAllPlanSummaryTable } from "../../components/planner/IKnowItAllPlanSummaryTable";
+import { IKnowItAllScreenSummaryDetails } from "../../components/planner/IKnowItAllScreenSummaryDetails";
 
 const pages = [
   {
@@ -121,7 +123,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
             path={"iknowitallplan"}
           />
         ) : currentStep === 2 ? (
-          <ScreenSummaryDetails
+          <IKnowItAllScreenSummaryDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
@@ -136,7 +138,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
             loading={loading}
           />
         ) : currentStep === 4 ? (
-          <ScreenSummaryDetails
+          <IKnowItAllPlanSummaryTable
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
