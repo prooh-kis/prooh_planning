@@ -8,6 +8,7 @@
     "@lordicon/react": "^1.10.0",
     "@mapbox/mapbox-gl-draw": "^1.4.3",
     "@mapbox/mapbox-sdk": "^0.16.0",
+    "@react-google-maps/api": "^2.20.6",
     "@reduxjs/toolkit": "^2.2.3",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",

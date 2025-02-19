@@ -30,6 +30,7 @@ import {
 import { ALL_TOUCHPOINTS } from "../../constants/helperConstants";
 import { MapWithGeometry } from "../../components/map/MapWithGeometry";
 import { getUniqueScreens } from "../../utils/screenRanking";
+import { GoogleMap } from "../../components/map/GoogleMap";
 // import { MapWithGeometry } from "../../components/molecules/MapWithGeometry";
 
 type Coordinate = [number, number];
@@ -504,7 +505,7 @@ export const AdvanceFiltersDetails = ({
 
         <div className="col-span-1 w-full h-full py-2">
           {allScreens?.length > 0 && (
-            <MapWithGeometry
+            <GoogleMap
               userLocation={userLocation}
               setUserLocation={setUserLocation}
               handleRouteData={handleRouteData}
