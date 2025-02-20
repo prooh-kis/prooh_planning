@@ -83,6 +83,22 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
     saveDataOnLocalStorage("STATE_CITY_ZONE", data);
   };
 
+  useEffect(() => {
+    const initialCollapsed: Record<string, boolean> = {};
+    Object.keys(processedData).forEach((state) => {
+      initialCollapsed[state] = false; // Keep states expanded
+      Object.keys(processedData[state]?.cities || {}).forEach((city) => {
+        initialCollapsed[city] = true; // Keep cities expanded
+        Object.keys(processedData[state]?.cities?.[city]?.zones || {}).forEach(
+          (zone) => {
+            initialCollapsed[zone] = true; // Collapse zones initially
+          }
+        );
+      });
+    });
+    setCollapsed(initialCollapsed);
+  }, [data]);
+
   // Initialize all checkboxes as checked
   useEffect(() => {
     let data = getDataFromLocalStorage("STATE_CITY_ZONE");
