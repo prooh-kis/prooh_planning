@@ -65,6 +65,8 @@ export const AudienceTouchPointsDetails = ({
   const [markets, setMarkets] = useState<any>({});
   const [audiences, setAudiences] = useState<any>({});
   const [touchPoints, setTouchPoints] = useState<any>({});
+  const [zones, setSelectedZone] = useState<string[]>([]);
+  const [cities, setSelectedCity] = useState<string[]>([]);
 
   const [totalScreensData, setTotalScreensData] = useState<any>({});
   const [selectedScreensData, setSelectedScreensData] = useState<any>({});
@@ -291,12 +293,15 @@ export const AudienceTouchPointsDetails = ({
       <div className="grid grid-cols-8 gap-1 pt-4">
         <div ref={marketRef} className="col-span-2 flex justify-center">
           <LocationTable
-            loading={loadingCost}
+            loading={loadingCost || loadingAudiences}
             markets={markets}
             handleSelection={handleSelection}
             selectedMarkets={selectedMarket}
             selectedGender={selectedGender}
             setSelectedGender={setSelectedGender}
+            data={screensAudiences || {}}
+            setSelectedCity={setSelectedCity}
+            setSelectedZone={setSelectedZone}
           />
         </div>
         <div ref={audienceRef} className="col-span-3 flex justify-center">
@@ -348,9 +353,9 @@ export const AudienceTouchPointsDetails = ({
                 addDetailsToCreateCampaign({
                   pageName: "Audience And TouchPoint Page",
                   id: campaignId,
-                  markets: Object.keys(
-                    getDataFromLocalStorage(AUDIENCE_DATA)?.[campaignId]
-                  )?.filter((c: any) => c.market !== "id"),
+                  markets: Object.keys(screensAudiences)?.filter(
+                    (c: any) => c !== "id"
+                  ),
                   cohorts: getDataFromLocalStorage(
                     SELECTED_AUDIENCE_TOUCHPOINTS
                   )?.[campaignId]?.cohorts,
@@ -366,6 +371,8 @@ export const AudienceTouchPointsDetails = ({
                   cpmSelected: screensCost?.cpmSelected,
                   pricePerSlotSelectedCount: screensCost?.pricePerSlotSelected,
                   citiesSelectedCount: screensCost?.citiesSelectedCount,
+                  cities,
+                  zones,
                 })
               );
 

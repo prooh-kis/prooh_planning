@@ -14,13 +14,7 @@ import {
 } from "../../actions/screenAction";
 import { useDispatch, useSelector } from "react-redux";
 import { Tooltip } from "antd";
-import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
-import {
-  CAMPAIGN_PLAN_TYPE_KNOW,
-  CAMPAIGN_PLAN_TYPE_REGULAR,
-  CAMPAIGN_PLAN_TYPE_STORE,
-  CAMPAIGN_PLAN_TYPE_TOPICAL,
-} from "../../constants/campaignConstants";
+import { CAMPAIGN_PLAN_TYPE_KNOW } from "../../constants/campaignConstants";
 import { Loading } from "../../components/Loading";
 
 export function PlanSummaryTable({
@@ -35,7 +29,7 @@ export function PlanSummaryTable({
   screensBuyingCount,
   pathname,
   success,
-  setCurrentStep
+  setCurrentStep,
 }: any) {
   const dispatch = useDispatch<any>();
 
@@ -53,13 +47,17 @@ export function PlanSummaryTable({
     //     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
     //       ?.campaignType !== CAMPAIGN_PLAN_TYPE_TOPICAL
     // ) {
-      
-      dispatch(
-        getScreenSummaryPlanTableData({
-          id: campaignId,
-          screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount)?.length > 0 ? getSelectedScreenIdsFromAllCities(screensBuyingCount) : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
-        })
-      );
+
+    dispatch(
+      getScreenSummaryPlanTableData({
+        id: campaignId,
+        screenIds:
+          getSelectedScreenIdsFromAllCities(screensBuyingCount)?.length > 0
+            ? getSelectedScreenIdsFromAllCities(screensBuyingCount)
+            : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+                ?.screenIds,
+      })
+    );
     // }
     if (
       // (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
@@ -73,7 +71,10 @@ export function PlanSummaryTable({
         `${regularVsCohort}`
       ] === undefined
     ) {
-      if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW) {
+      if (
+        getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+          ?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW
+      ) {
         dispatch(getTableDataScreenWiseAdPlayTime({ id: campaignId }));
       } else {
         dispatch(
@@ -83,11 +84,13 @@ export function PlanSummaryTable({
               getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
                 ?.screenIds,
             cohorts:
-              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts,
+              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+                ?.cohorts,
             gender:
               getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender,
             duration:
-              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
+              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+                ?.duration,
           })
         );
       }
@@ -97,11 +100,8 @@ export function PlanSummaryTable({
       alert("No screens selected yet, please select screens to proceed...");
       setCurrentStep(2);
     }
-
   }, [dispatch, success, priceData, screensBuyingCount, setCurrentStep]);
-  // console.log(priceData);
-  // console.log(getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA));
-  // console.log(data);
+
   return (
     <div className="pb-10">
       {pathname.split("/").splice(-2)[0] !== "iknowitallplan" &&
@@ -154,11 +154,13 @@ export function PlanSummaryTable({
             <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
           </Tooltip>
         </div>
-        {loading || loadingPriceData || data && Object.keys(data).length < 2 && (
-          <div className="flex border rounded-b justify-between w-full h-[45px] animate-pulse">
-            <div className="bg-gray-200 rounded-b dark:bg-gray-700 w-full"></div>
-          </div>
-        )}
+        {loading ||
+          loadingPriceData ||
+          (data && Object.keys(data).length < 2 && (
+            <div className="flex border rounded-b justify-between w-full h-[45px] animate-pulse">
+              <div className="bg-gray-200 rounded-b dark:bg-gray-700 w-full"></div>
+            </div>
+          ))}
         {data && (
           <table className="w-full">
             <thead className="border rounded-t">
@@ -226,11 +228,13 @@ export function PlanSummaryTable({
             <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
           </Tooltip>
         </div>
-        {loading || loadingPriceData || data && Object.keys(data).length < 2 && (
-          <div className="flex border rounded-b justify-between w-full h-[45px] animate-pulse">
-            <div className="bg-gray-200 rounded-b dark:bg-gray-700 w-full"></div>
-          </div>
-        )}
+        {loading ||
+          loadingPriceData ||
+          (data && Object.keys(data).length < 2 && (
+            <div className="flex border rounded-b justify-between w-full h-[45px] animate-pulse">
+              <div className="bg-gray-200 rounded-b dark:bg-gray-700 w-full"></div>
+            </div>
+          ))}
         {data && (
           <table className="w-full rounded-[12px]">
             <thead className="w-full">
