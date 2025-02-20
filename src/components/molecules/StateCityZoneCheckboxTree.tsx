@@ -1,3 +1,7 @@
+import {
+  getDataFromLocalStorage,
+  saveDataOnLocalStorage,
+} from "../../utils/localStorageUtils";
 import React, { useState, useEffect } from "react";
 
 interface Zone {
@@ -72,23 +76,33 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
 
   useEffect(() => {
     handleSave();
+    let data = getDataFromLocalStorage("STATE_CITY_ZONE");
   }, [selected]);
+
+  const handleSaveData = (data: any) => {
+    saveDataOnLocalStorage("STATE_CITY_ZONE", data);
+  };
 
   // Initialize all checkboxes as checked
   useEffect(() => {
-    const initialSelected: Record<string, boolean> = {};
-    Object.keys(processedData).forEach((state) => {
-      initialSelected[state] = true;
-      Object.keys(processedData[state]?.cities || {}).forEach((city) => {
-        initialSelected[city] = true;
-        Object.keys(processedData[state]?.cities?.[city]?.zones || {}).forEach(
-          (zone) => {
+    let data = getDataFromLocalStorage("STATE_CITY_ZONE");
+    if (Object.keys(data)?.length > 0) {
+      setSelected(data);
+    } else {
+      const initialSelected: Record<string, boolean> = {};
+      Object.keys(processedData).forEach((state) => {
+        initialSelected[state] = true;
+        Object.keys(processedData[state]?.cities || {}).forEach((city) => {
+          initialSelected[city] = true;
+          Object.keys(
+            processedData[state]?.cities?.[city]?.zones || {}
+          ).forEach((zone) => {
             initialSelected[zone] = true;
-          }
-        );
+          });
+        });
       });
-    });
-    setSelected(initialSelected);
+      setSelected(initialSelected);
+    }
   }, [data]);
 
   const toggleState = (state: string) => {
@@ -101,6 +115,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
           newState[zone] = isChecked;
         });
       });
+      handleSaveData(newState);
       return newState;
     });
   };
@@ -112,7 +127,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
       Object.keys(data[state].cities[city].zones).forEach((zone) => {
         newState[zone] = isChecked;
       });
-
+      handleSaveData(newState);
       return newState;
     });
   };
@@ -120,6 +135,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
   const toggleZone = (state: string, city: string, zone: string) => {
     const isChecked = !selected[zone];
     setSelected((prev) => ({ ...prev, [zone]: isChecked }));
+    handleSaveData({ ...selected, [zone]: isChecked });
   };
 
   const toggleCollapse = (key: string) => {
@@ -257,7 +273,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                                     className="w-4 h-4"
                                   />
                                   <div className="flex justify-between">
-                                    <div className="flex items-center gap-1">
+                                    <div className="flex items-center gap-1 ">
                                       <span
                                         className={`text-[12px] font-[500] ${
                                           selected[zone] ? "" : "text-[#6F7F8E]"
