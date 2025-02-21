@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { MyCampaignsList } from "./MyCampaignsList";
 import { getMyCreateCampaignsList, getMyCreateCampaignsManagerRequestsList, getMyCreateCampaignsVendorRequestsList } from "../../actions/campaignAction";
-import { CAMPAIGN_PLANNER, SCREEN_OWNER } from "../../constants/userConstants";
+import { CAMPAIGN_MANAGER, CAMPAIGN_PLANNER, SCREEN_OWNER } from "../../constants/userConstants";
 
 
 export const MiddleArea: React.FC = () => {
@@ -41,12 +41,12 @@ export const MiddleArea: React.FC = () => {
     if (!userInfo) {
       navigate("/login");
     }
-    if (userInfo?.userRole === CAMPAIGN_PLANNER) {
+    if (userInfo?.userRole === CAMPAIGN_PLANNER || userInfo?.userRole === CAMPAIGN_MANAGER) {
       if (currentTab === "1") {
-        dispatch(getMyCreateCampaignsList({ id: userInfo?._id, type: "complete" }));
+        dispatch(getMyCreateCampaignsList({ id: userInfo?._id, type: "Active" }));
       }
       if (currentTab === "2") {
-        dispatch(getMyCreateCampaignsList({ id: userInfo?._id, type: "incomplete" }));
+        dispatch(getMyCreateCampaignsList({ id: userInfo?._id, type: "Completed" }));
       }
     }
     if (userInfo?.isMaster) {
@@ -64,7 +64,7 @@ export const MiddleArea: React.FC = () => {
           currentTab={currentTab}
           setCurrentTab={setCurrentTab}
           campaignsList={
-            userInfo?.isBrand && userInfo?.userRole === CAMPAIGN_PLANNER ? campaignsList :
+            (userInfo?.userRole === CAMPAIGN_PLANNER || userInfo?.userRole === CAMPAIGN_MANAGER) ? campaignsList :
               userInfo?.isBrand && userInfo?.userRole === SCREEN_OWNER ? clientRequestsList :
                 userInfo?.isMaster ? vendorCampaignsList?.campaigns : []
           }

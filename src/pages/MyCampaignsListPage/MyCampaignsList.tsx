@@ -11,13 +11,14 @@ const allTabs = [{
   label: "Active"
 },{
   id: "2",
-  label: "Archived"
+  label: "Completed"
 }];
 
 
 export const MyCampaignsList = ({ loading, campaignsList, currentTab, setCurrentTab }: any) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<any>("");
+  console.log(campaignsList)
   return (
     <div className="w-full">
       <div className="flex justify-between border-b py-2">
@@ -45,7 +46,7 @@ export const MyCampaignsList = ({ loading, campaignsList, currentTab, setCurrent
               placeholder="Search Campaign by campaign name or brand"
             />
           </div>
-          <div className="col-span-1">
+          {/* <div className="col-span-1">
             <DropdownInput />
           </div>
           <div className="col-span-1">
@@ -53,7 +54,7 @@ export const MyCampaignsList = ({ loading, campaignsList, currentTab, setCurrent
           </div>
           <div className="col-span-1">
             <DropdownInput />
-          </div>
+          </div> */}
         </div>
         {loading ? (
           <div className="">
@@ -64,9 +65,9 @@ export const MyCampaignsList = ({ loading, campaignsList, currentTab, setCurrent
             {campaignsList
               ?.filter(
               (campaign: any) =>
-                campaign?.campaignName?.toLowerCase().includes(searchQuery) ||
+                campaign?.name?.toLowerCase().includes(searchQuery) ||
                 campaign?.brandName?.toLowerCase().includes(searchQuery) ||
-                campaign?.campaignName?.toUpperCase().includes(searchQuery) ||
+                campaign?.name?.toUpperCase().includes(searchQuery) ||
                 campaign?.brandName?.toUpperCase().includes(searchQuery)
               )
               ?.map((data: any, i: any) => (

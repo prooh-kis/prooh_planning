@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signout } from "../../actions/userAction";
 import { useState } from "react";
-import { CAMPAIGN_PLANNER, SCREEN_OWNER } from "../../constants/userConstants";
+import { CAMPAIGN_MANAGER, CAMPAIGN_PLANNER, SCREEN_OWNER } from "../../constants/userConstants";
 
 export const Menu = (props: any) => {
   const { userInfo } = props;
@@ -29,26 +29,25 @@ export const Menu = (props: any) => {
     navigate(AUTH);
   };
 
-  const arr = [
+  const plannerArray = [
     {
       label: "Campaigns",
       path: MY_CAMPAIGNS_LIST,
     },
-    // {
-    //   label: "Requests",
-    //   path: MY_REQUESTS_LIST,
-    // },
     {
       label: "Plans",
       path: MY_PLANS_LIST,
-    },
-    // {
-    //   label: "Users",
-    //   path: USERS,
-    // },
+    }
   ];
 
-  const arr1 = [
+  const managerArray = [
+    {
+      label: "Campaigns",
+      path: MY_CAMPAIGNS_LIST,
+    }
+  ]
+
+  const ownerArray = [
     {
       label: "Requests",
       path: MY_REQUESTS_LIST,
@@ -67,7 +66,20 @@ export const Menu = (props: any) => {
           className="absolute z-10 mt-2 w-[200px] bg-[#FFFFFF] border border-[#D6D2D2] rounded-md shadow-lg right-0 font-bold text-lg text-black-1000"
         >
           {userInfo?.userRole === CAMPAIGN_PLANNER &&
-            arr.map((data: any, index: any) => (
+            plannerArray.map((data: any, index: any) => (
+              <div
+                key={index}
+                onClick={() => {
+                  toggleDropdown();
+                  navigate(data.path);
+                }}
+                className="px-4 py-2  text-gray-700 hover:bg-[#129BFF] hover:text-[#FFFFFF] cursor-pointer"
+              >
+                {data?.label}
+              </div>
+            ))}
+          {userInfo?.userRole === CAMPAIGN_MANAGER &&
+            managerArray.map((data: any, index: any) => (
               <div
                 key={index}
                 onClick={() => {
@@ -80,7 +92,7 @@ export const Menu = (props: any) => {
               </div>
             ))}
           {userInfo?.userRole === SCREEN_OWNER &&
-            arr1.map((data: any, index: any) => (
+            ownerArray.map((data: any, index: any) => (
               <div
                 key={index}
                 onClick={() => {
