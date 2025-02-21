@@ -67,21 +67,30 @@ export const AdvanceFiltersDetails = ({
   const [storeFilter, setStoreFilter] = useState<any>(true);
 
   const [circleRadius, setCircleRadius] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.stores?.[0]?.radius ||
-    1);
-  const [routes, setRoutes] = useState<any[]>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.routes || []);
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData
+      ?.stores?.[0]?.radius || 1
+  );
+  const [routes, setRoutes] = useState<any[]>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData
+      ?.routes || []
+  );
   const [isDisabled, setIsDisabled] = useState<any>(true);
 
   const [dataBrand, setDataBrand] = useState<any[]>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.stores?.[0]?.brands ||
-    []);
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData
+      ?.stores?.[0]?.brands || []
+  );
   const [dataComp, setDataComp] = useState<any[]>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.stores?.[0]?.comp ||
-    []);
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData
+      ?.stores?.[0]?.comp || []
+  );
   const [routeOrigin, setRouteOrigin] = useState<any>([]);
   const [routeDestination, setRouteDestination] = useState<any>([]);
   const [routeRadius, setRouteRadius] = useState<any>(1000); // in meteres
-  const [pois, setPOIs] = useState<any[]>(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.pois || []);
+  const [pois, setPOIs] = useState<any[]>(
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData
+      ?.pois || []
+  );
   const [selectedPOIs, setSelectedPOIs] = useState<any[]>([]);
 
   const [allScreens, setAllScreens] = useState<any>([]);
@@ -90,10 +99,11 @@ export const AdvanceFiltersDetails = ({
   const [poiFilteredScreens, setPOIFilteredScreens] = useState<any>([]);
 
   const [polygons, setPolygons] = useState<any>(
-  //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.polygons?.map((poly: any) => {
-  //   return {...poly, properties: {}};
-  // }) || 
-  []);
+    //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.polygons?.map((poly: any) => {
+    //   return {...poly, properties: {}};
+    // }) ||
+    []
+  );
   const [selectedScreensFromMap, setSelectedScreensFromMap] = useState<any>([]);
 
   const [circleData, setCircleData] = useState<any>({});
@@ -199,14 +209,14 @@ export const AdvanceFiltersDetails = ({
     const radiusInMeters = routeRadius; // 1000 meters radius
 
     let combinedFilteredRecords: any[] = []; // To store all filtered screens across routes
-  
+
     // Iterate over each route in the routeData array
     for (const routeData of routeDataArray) {
       const line = turf.lineString(routeData.geometry.coordinates); // Create a LineString from route coordinates
       const bufferedArea: any = turf.buffer(line, radiusInMeters / 1000, {
         units: "kilometers",
       }); // Buffer area around the route
-  
+
       const filteredRecords = allScreens?.filter((point: any) => {
         const screenPoint = turf.point([
           point.location.geographicalLocation.longitude,
@@ -214,7 +224,7 @@ export const AdvanceFiltersDetails = ({
         ]);
         return turf.booleanPointInPolygon(screenPoint, bufferedArea); // Check if screen is within the buffer
       });
-  
+
       combinedFilteredRecords = [
         ...combinedFilteredRecords,
         ...filteredRecords.filter(
@@ -225,10 +235,10 @@ export const AdvanceFiltersDetails = ({
         ),
       ]; // Add unique records to combinedFilteredRecords
     }
-  
+
     let arr = routes;
     const screens: any = routeFilteredScreens;
-  
+
     for (let data of arr) {
       if (data?.id === id) {
         data.selectedScreens = combinedFilteredRecords;
@@ -239,16 +249,16 @@ export const AdvanceFiltersDetails = ({
         });
       }
     }
-  
+
     setRouteFilteredScreens(screens);
     setRoutes(arr);
-  
+
     handleFinalSelectedScreens({
       type: "add",
       screens: combinedFilteredRecords || [],
     });
   };
-  
+
   // Add/remove routes to select screens
   const handleRouteSetup = async (originData: any, destinationData: any) => {
     let route: any = {};
@@ -356,32 +366,30 @@ export const AdvanceFiltersDetails = ({
   ]);
 
   useEffect(() => {
-    dispatch(getPlanningPageFooterData({
-      id: campaignId,
-      pageName: "Advance Filter Page",
-    }));
+    if (successAddCampaignDetails) {
+      dispatch(
+        getPlanningPageFooterData({
+          id: campaignId,
+          pageName: "Advance Filter Page",
+        })
+      );
 
-    dispatch(
-      getScreenDataForAdvanceFilters({
-        id: campId,
-        touchPoints: pathname?.split("/").includes("storebasedplan")
-          ? ALL_TOUCHPOINTS
-          : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.touchPoints,
-      })
-    );
-    saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
-  }, [dispatch, campId]);
-  
-  useEffect(() => {
-    if (advanceFilterData) {
-      if (advanceFilterData?.screens.length === 0) {
-        console.log("relaod page auto : ", {
+      dispatch(
+        getScreenDataForAdvanceFilters({
           id: campId,
           touchPoints: pathname?.split("/").includes("storebasedplan")
             ? ALL_TOUCHPOINTS
             : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
                 ?.touchPoints,
-        });
+        })
+      );
+      saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
+    }
+  }, [dispatch, campId, successAddCampaignDetails]);
+
+  useEffect(() => {
+    if (advanceFilterData) {
+      if (advanceFilterData?.screens.length === 0) {
         dispatch(
           getScreenDataForAdvanceFilters({
             id: campId,
@@ -489,8 +497,8 @@ export const AdvanceFiltersDetails = ({
                   Confirm and take{" "}
                   <span className=" font-bold">
                     {`${finalSelectedScreens.length} Sites Out of ${allScreens.length} Sites`}
-                  </span>
-                  {" "} for my plan
+                  </span>{" "}
+                  for my plan
                 </>
               }
               onChange={(e) => {
@@ -542,13 +550,19 @@ export const AdvanceFiltersDetails = ({
                   id: pathname.split("/").splice(-1)[0],
                   screenIds: finalSelectedScreens.map((s: any) => s._id),
                   advanceFilterData: {
-                    stores: [{brands: dataBrand, comp: dataComp, radius: circleRadius}],
+                    stores: [
+                      {
+                        brands: dataBrand,
+                        comp: dataComp,
+                        radius: circleRadius,
+                      },
+                    ],
                     routes: routes?.map((route: any) => {
                       return {
                         origin: route.origin,
                         destination: route.destination,
                         radius: routeRadius,
-                      }
+                      };
                     }),
                     poiLists: pois,
                     polygons: polygons?.map((poly: any) => {
@@ -557,10 +571,10 @@ export const AdvanceFiltersDetails = ({
                         type: poly.type,
                         properties: poly.properties,
                         geometry: poly.geometry,
-                        screens: poly.screens
-                      }
+                        screens: poly.screens,
+                      };
                     }),
-                  }
+                  },
                 })
               );
               setCurrentStep(step + 1);

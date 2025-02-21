@@ -291,7 +291,7 @@ export const ScreenSummaryTable = ({
             </div>
           </div>
           <div className="overflow-y-auto scrollbar-minimal h-[50vh] pb-10">
-            {Object.keys(data?.[currentCity])?.map((tp: any, i: any) => (
+            {Object.keys(data?.[currentCity] || {})?.map((tp: any, i: any) => (
               <div key={i} className="grid grid-cols-12">
                 <div className="border-b border-l col-span-2 py-2 px-4 border-r truncate">
                   <Tooltip title={tp}>
