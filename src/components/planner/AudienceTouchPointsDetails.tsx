@@ -293,7 +293,7 @@ export const AudienceTouchPointsDetails = ({
       <div className="grid grid-cols-8 gap-1 pt-4">
         <div ref={marketRef} className="col-span-2 flex justify-center">
           <LocationTable
-            loading={loadingCost || loadingAudiences}
+            loading={loadingAudiences}
             markets={markets}
             handleSelection={handleSelection}
             selectedMarkets={selectedMarket}
@@ -307,7 +307,7 @@ export const AudienceTouchPointsDetails = ({
         <div ref={audienceRef} className="col-span-3 flex justify-center">
           <AudienceCohortTable
             showIconHighlight={showIconHighlight}
-            loading={loadingCost}
+            loading={loadingAudiences}
             locked={locked}
             setLocked={setLocked}
             handleSelection={handleSelection}
@@ -318,7 +318,7 @@ export const AudienceTouchPointsDetails = ({
         </div>
         <div ref={touchpointRef} className="col-span-3 flex justify-center">
           <TouchpointTable
-            loading={loadingCost}
+            loading={loadingAudiences}
             locked={locked}
             setLocked={setLocked}
             handleSelection={handleSelection}
@@ -341,51 +341,42 @@ export const AudienceTouchPointsDetails = ({
             setCurrentStep(step - 1);
           }}
           handleSave={() => {
-            if (locked?.cohorts === false || locked?.touchPoints === false) {
-              setShowIconHighlight(true);
-              alert(
-                "Please confirm target audience and touch points by clicking on the lock icons..."
-              );
-              // setShowIconHighlight(false);
-              return;
-            } else {
-              dispatch(
-                addDetailsToCreateCampaign({
-                  pageName: "Audience And TouchPoint Page",
-                  id: campaignId,
-                  markets: Object.keys(screensAudiences)?.filter(
-                    (c: any) => c !== "id"
-                  ),
-                  cohorts: getDataFromLocalStorage(
-                    SELECTED_AUDIENCE_TOUCHPOINTS
-                  )?.[campaignId]?.cohorts,
-                  touchPoints: getDataFromLocalStorage(
-                    SELECTED_AUDIENCE_TOUCHPOINTS
-                  )?.[campaignId]?.touchPoints,
-                  gender: getDataFromLocalStorage(
-                    SELECTED_AUDIENCE_TOUCHPOINTS
-                  )?.[campaignId]?.gender,
-                  screensSelectedCount: screensCost?.screensSelectedCount,
-                  impressionSelectedCount: screensCost?.impressionSelectedCount,
-                  budgetSelected: screensCost?.budgetSelected,
-                  cpmSelected: screensCost?.cpmSelected,
-                  pricePerSlotSelectedCount: screensCost?.pricePerSlotSelected,
-                  citiesSelectedCount: screensCost?.citiesSelectedCount,
-                  cities,
-                  zones,
-                })
-              );
+            dispatch(
+              addDetailsToCreateCampaign({
+                pageName: "Audience And TouchPoint Page",
+                id: campaignId,
+                markets: Object.keys(screensAudiences)?.filter(
+                  (c: any) => c !== "id"
+                ),
+                cohorts: getDataFromLocalStorage(
+                  SELECTED_AUDIENCE_TOUCHPOINTS
+                )?.[campaignId]?.cohorts,
+                touchPoints: getDataFromLocalStorage(
+                  SELECTED_AUDIENCE_TOUCHPOINTS
+                )?.[campaignId]?.touchPoints,
+                gender: getDataFromLocalStorage(
+                  SELECTED_AUDIENCE_TOUCHPOINTS
+                )?.[campaignId]?.gender,
+                screensSelectedCount: screensCost?.screensSelectedCount,
+                impressionSelectedCount: screensCost?.impressionSelectedCount,
+                budgetSelected: screensCost?.budgetSelected,
+                cpmSelected: screensCost?.cpmSelected,
+                pricePerSlotSelectedCount: screensCost?.pricePerSlotSelected,
+                citiesSelectedCount: screensCost?.citiesSelectedCount,
+                cities,
+                zones,
+              })
+            );
 
-              setCurrentStep(step + 1);
-              saveDataOnLocalStorage(COST_SUMMARY, {
-                [campaignId]: [selectedScreensData, totalScreensData],
-              });
-            }
+            setCurrentStep(step + 1);
+            saveDataOnLocalStorage(COST_SUMMARY, {
+              [campaignId]: [selectedScreensData, totalScreensData],
+            });
           }}
           campaignId={campaignId}
           pageName="Audience And TouchPoint Page"
           successAddCampaignDetails={successAddCampaignDetails}
-          loadingCost={loadingCost}
+          loadingCost={loadingAudiences}
         />
       </div>
     </div>

@@ -76,30 +76,6 @@ export const AudienceCohortTable = ({
                 Audience Cohorts
               </h1>
             </div>
-            <Tooltip title="Click to lock your audience cohort selections">
-              <div
-                className={`${
-                  showIconHighlight
-                    ? ""
-                    // : "animate-pulse duration-200 ease-in-out forwards bg-[#358E0B50] rounded-full p-1"
-                    : ""
-                }`}
-                onClick={() => {
-                  if (!loading) {
-                    setClicked(true);
-                    handleConfirmClick();
-                  } else {
-                    alert("Please let us calculate the cost for you...");
-                  }
-                }}
-              >
-                {clicked ? (
-                  <i className="fi fi-sr-lock flex items-center text-[#22C55E] lg:text-[14px] text-[12px]"></i>
-                ) : (
-                  <i className="fi fi-sr-lock-open-alt flex items-center text-[#EF4444] lg:text-[14px] text-[12px]"></i>
-                )}
-              </div>
-            </Tooltip>
           </th>
         </tr>
       </thead>
