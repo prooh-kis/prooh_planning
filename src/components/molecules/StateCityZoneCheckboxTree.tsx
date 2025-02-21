@@ -101,8 +101,8 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
 
   // Initialize all checkboxes as checked
   useEffect(() => {
-    let data = getDataFromLocalStorage("STATE_CITY_ZONE");
-    if (Object.keys(data)?.length > 0) {
+    let data = getDataFromLocalStorage("STATE_CITY_ZONE") || {};
+    if (Object?.keys(data)?.length > 0) {
       setSelected(data);
     } else {
       const initialSelected: Record<string, boolean> = {};
