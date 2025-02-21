@@ -647,7 +647,7 @@ export const CreativeUploadDetails = ({
   }, [campaignId, errorScreeData, screenData]);
 
   return (
-    <div className="w-full min-h-screen overflow-y-auto  ">
+    <div className="w-full h-[80vh] overflow-y-auto  scrollbar-minimal ">
       <div className="mx-auto">
         {/* Heading */}
         <h1 className="text-2xl font-semibold">Upload Creative</h1>
@@ -662,7 +662,7 @@ export const CreativeUploadDetails = ({
           </div>
         )}
         {currentCity === "" ? null : (
-          <div>
+          <div className="">
             <div className="flex gap-4">
               <TabWithoutIcon
                 tabData={citiesCreative}

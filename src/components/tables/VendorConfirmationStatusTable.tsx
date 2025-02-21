@@ -10,6 +10,8 @@ export const VendorConfirmationStatusTable = ({
   statusTableData,
   selectedCampaignIds,
   setSelectedCampaignIds,
+  handleOpenStatusModel,
+  handleOpenMediaModel,
 }: any) => {
   const [openShowMediaPopup, setOpenShowMediaPopup] = useState<any>(false);
   const [creativesToShow, setCreativesToShow] = useState<any>({
@@ -45,12 +47,10 @@ export const VendorConfirmationStatusTable = ({
       />
       <table className="w-full">
         <thead className="w-full flex">
-          {userInfo?.userRole==="campaignPlanner" && (
+          {userInfo?.userRole === "campaignPlanner" && (
             <tr className="bg-[#D6EEFF] w-full grid grid-cols-12">
               <th className="py-2 col-span-3 flex justify-around">
-                <h1 className="text-[14px] px-2">
-                  Screen Name
-                </h1>
+                <h1 className="text-[14px] px-2">Screen Name</h1>
               </th>
               <th className="py-2 col-span-2 flex justify-around">
                 <h1 className="text-[14px] flex justify-start">Touchpoint</h1>
@@ -59,7 +59,10 @@ export const VendorConfirmationStatusTable = ({
                 <div className="flex gap-2">
                   <h1 className="text-[14px]">Media Type</h1>
                   <Tooltip title="Connected media type will have real time campaign delivery updates and monitoring.">
-                    <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
+                    <i
+                      className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"
+                      onClick={handleOpenMediaModel}
+                    ></i>
                   </Tooltip>
                 </div>
               </th>
@@ -76,7 +79,10 @@ export const VendorConfirmationStatusTable = ({
                 <div className="flex gap-2">
                   <h1 className="text-[14px]">Status</h1>
                   <Tooltip title="Campaign status subject to approval from screen owner/media vendor">
-                    <i className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"></i>
+                    <i
+                      className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"
+                      onClick={handleOpenStatusModel}
+                    ></i>
                   </Tooltip>
                 </div>
               </th>
@@ -89,7 +95,7 @@ export const VendorConfirmationStatusTable = ({
           )}
         </thead>
         <tbody className="w-full">
-          {userInfo?.userRole==="campaignPlanner" &&
+          {userInfo?.userRole === "campaignPlanner" &&
             statusTableData?.map((status: any, i: any) => (
               <tr
                 key={i}

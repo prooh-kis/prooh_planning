@@ -34,6 +34,8 @@ import {
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT,
 } from "../../constants/campaignConstants";
 import { convertDateIntoDateMonthYear } from "../../utils/dateAndTimeUtils";
+import { StatusPopup } from "../../components/popup/StatusPopup";
+import { ShowMediaTypePopup } from "../../components/popup/ShowMediaTypePopup";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -56,6 +58,8 @@ export const VendorConfirmationDetails = ({
 
   const [toEmail, setToEmail] = useState<any>("");
   const [cc, setCC] = useState<any>(["itisvinciis@gmail.com"]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [openMedia, setOpenMedia] = useState<boolean>(false);
 
   const [files, setFiles] = useState<any>([]);
   const [isDisabled, setIsDisabled] = useState<any>(true);
@@ -332,22 +336,80 @@ export const VendorConfirmationDetails = ({
   };
 
   useEffect(() => {
-      dispatch(getVendorConfirmationDetails(vendorInput));
-      dispatch(
-        getVendorConfirmationStatusTableDetails({
-          id: campaignId,
-        })
-      );
-      dispatch(
-        getPlanningPageFooterData({
-          id: campaignId,
-          pageName: "Vendor Confirmation Page",
-        })
-      );
+    dispatch(getVendorConfirmationDetails(vendorInput));
+    dispatch(
+      getVendorConfirmationStatusTableDetails({
+        id: campaignId,
+      })
+    );
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "Vendor Confirmation Page",
+      })
+    );
   }, [dispatch, vendorInput, campaignId]);
+
+  const handleOpenStatusModel = () => {
+    setOpen((pre: boolean) => !open);
+  };
+  const handleOpenMediaModel = () => {
+    setOpenMedia((pre: boolean) => !pre);
+  };
+
+  const myData = {
+    Approved: {
+      Connected:
+        statusTableData?.filter(
+          (c: any) =>
+            c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
+          // c.status === "Pending"
+        ).length || 0,
+      "Third Party": 0,
+    },
+    Rejected: {
+      Connected:
+        statusTableData?.filter(
+          (c: any) =>
+            c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
+        ).length || 0,
+      "Third Party": 0,
+    },
+    Pending: {
+      Connected:
+        statusTableData
+          ?.filter(
+            (c: any) =>
+              c.status !== CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
+            // c.status !== "Pending"
+          )
+          ?.filter(
+            (c: any) =>
+              c.status !== CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
+            // c.status !== "Pending"
+          ).length || 0,
+      "Third Party": 0,
+    },
+  };
+
+  const mediaTypeData = {
+    Connected: statusTableData?.length || 0,
+    "Third Party": 0,
+  };
 
   return (
     <div className="w-full pt-3">
+      <StatusPopup
+        open={open}
+        onClose={handleOpenStatusModel}
+        myData={myData}
+      />
+      <ShowMediaTypePopup
+        open={openMedia}
+        onClose={handleOpenMediaModel}
+        mediaTypeData={mediaTypeData}
+      />
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-[24px] text-primaryText font-semibold">
@@ -460,6 +522,8 @@ export const VendorConfirmationDetails = ({
           campaignId={campaignId}
           userInfo={userInfo}
           statusTableData={statusTableData}
+          handleOpenStatusModel={handleOpenStatusModel}
+          handleOpenMediaModel={handleOpenMediaModel}
         />
       </div>
       <div className="pb-20">
@@ -485,7 +549,6 @@ export const VendorConfirmationDetails = ({
           </div>
         )}
       </div>
-
 
       <div
         className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]"
