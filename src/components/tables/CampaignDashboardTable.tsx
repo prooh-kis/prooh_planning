@@ -16,15 +16,19 @@ import { DashBoardSlotGraph } from "../../components/segments/DashBoardSlotGraph
 import { DashboardImpressionDetailsTable } from "./DashboardImpressionDetailsTable";
 
 const analyticsV1 = `${process.env.REACT_APP_PROOH_SERVER}/api/v1/analytics`;
-interface CostSummartTabelProps {
+interface CostSummaryTableProps {
   screenLevelData?: any;
   campaignDetails?: any;
+  city: string;
+  currentTouchPoint: string;
 }
 
 export const CampaignDashboardTable = ({
   screenLevelData,
   campaignDetails,
-}: CostSummartTabelProps) => {
+  city,
+  currentTouchPoint,
+}: CostSummaryTableProps) => {
   const dispatch = useDispatch<any>();
   const [isDownLoad, setIsDownload] = useState<string>("");
 
@@ -210,286 +214,288 @@ export const CampaignDashboardTable = ({
           </tr>
         </thead>
         <tbody className=" max-h-[250px] overflow-scroll">
-          {screenLevelData &&
-            Object.keys(screenLevelData)?.length &&
-            Object.keys(screenLevelData)
-              ?.filter((d: any) => d !== "totalData")
-              ?.map((data: any, index: any) => (
-                <React.Fragment key={index}>
-                  <tr
-                    key={data}
-                    className="flex w-full h-[40px] hover:bg-gray-100 hover:rounded-[6px] border-b text-[#0E212E]"
-                  >
-                    <td className="w-full flex items-center justify-center">
-                      <p className="text-[12px]">{index + 1}</p>
-                    </td>
-                    <td className="w-full flex items-center justify-center truncate">
-                      <p className="text-[12px] truncate px-1">
-                        {screenLevelData[data]?.screenName}
-                      </p>
-                    </td>
-                    <td className="w-full flex items-center justify-center truncate">
-                      <p className="text-[12px] truncate">
-                        {screenLevelData[data]?.location}
-                      </p>
-                    </td>
-                    <td className="w-full flex items-center justify-center truncate">
-                      <p className="text-[12px] truncate">
-                        {screenLevelData[data]?.touchPoint}
-                      </p>
-                    </td>
-                    <td className="w-full flex items-center justify-center">
+          {Object.keys(screenLevelData || {})
+            .filter((d: string) => d !== "totalData")
+            .filter((d: string) => {
+              const item = screenLevelData[d];
+              const cityMatch = city ? item?.city === city : true;
+              const touchpointMatch = currentTouchPoint
+                ? item?.touchPoint === currentTouchPoint
+                : true;
+              return cityMatch && touchpointMatch;
+            })
+            .map((data: string, index: number) => (
+              <React.Fragment key={index}>
+                <tr
+                  key={data}
+                  className="flex w-full h-[40px] hover:bg-gray-100 hover:rounded-[6px] border-b text-[#0E212E]"
+                >
+                  <td className="w-full flex items-center justify-center">
+                    <p className="text-[12px]">{index + 1}</p>
+                  </td>
+                  <td className="w-full flex items-center justify-center truncate">
+                    <p className="text-[12px] truncate px-1">
+                      {screenLevelData[data]?.screenName}
+                    </p>
+                  </td>
+                  <td className="w-full flex items-center justify-center truncate">
+                    <p className="text-[12px] truncate">
+                      {screenLevelData[data]?.location}
+                    </p>
+                  </td>
+                  <td className="w-full flex items-center justify-center truncate">
+                    <p className="text-[12px] truncate">
+                      {screenLevelData[data]?.touchPoint}
+                    </p>
+                  </td>
+                  <td className="w-full flex items-center justify-center">
+                    <p className="text-[12px]">
+                      {screenLevelData[data]?.durationPromised}{" "}
+                      <span className="text-[#2A892D] text-[10px]">
+                        (
+                        {(
+                          (calculateDaysPlayed(
+                            campaignDetails?.startDate,
+                            campaignDetails?.endDate
+                          ) *
+                            100) /
+                          screenLevelData[data]?.durationPromised
+                        ).toFixed(0)}
+                        %)
+                      </span>
+                    </p>
+                  </td>
+                  <td className="w-full flex items-center justify-center">
+                    <div className="flex flex-row justify-center items-center gap-1">
                       <p className="text-[12px]">
-                        {screenLevelData[data]?.durationPromised}{" "}
-                        <span className="text-[#2A892D] text-[10px]">
-                          (
-                          {(
-                            (calculateDaysPlayed(
-                              campaignDetails?.startDate,
-                              campaignDetails?.endDate
-                            ) *
-                              100) /
-                            screenLevelData[data]?.durationPromised
-                          ).toFixed(0)}
-                          %)
-                        </span>
+                        {formatNumber(screenLevelData[data]?.slotsDelivered)}
                       </p>
-                    </td>
-                    <td className="w-full flex items-center justify-center">
-                      <div className="flex flex-row justify-center items-center gap-1">
-                        <p className="text-[12px]">
-                          {formatNumber(screenLevelData[data]?.slotsDelivered)}
-                        </p>
-                        <p
-                          className={`text-[10px] ${
-                            slotDeliveryData(data) > 0
-                              ? "text-[#2A892D]"
-                              : "text-[#CC0000]"
-                          }`}
-                        >
-                          {`(${formatNumber(slotDeliveryData(data))}%)`}{" "}
-                          {slotDeliveryData(data) > 0 ? (
-                            <i className="fi fi-rr-arrow-up "></i>
-                          ) : (
-                            <i className="fi fi-rr-arrow-down "></i>
-                          )}
-                        </p>
-                      </div>
-                    </td>
-                    <td className="w-full flex items-center justify-center">
-                      <div className="flex flex-row justify-center items-center gap-1">
-                        <p className="text-[12px]">
-                          {formatNumber(
-                            screenLevelData[
-                              data
-                            ]?.impressionsDelivered?.toFixed(0)
-                          )}
-                        </p>
-                        <p
-                          className={`text-[10px] ${
-                            impressionsDeliveredPositive(data) > 0
-                              ? "text-[#2A892D]"
-                              : "text-[#CC0000]"
-                          }`}
-                        >
-                          {`(${formatNumber(
-                            impressionsDeliveredPositive(data)
-                          )}%)`}{" "}
-                          {impressionsDeliveredPositive(data) > 0 ? (
-                            <i className="fi fi-rr-arrow-up "></i>
-                          ) : (
-                            <i className="fi fi-rr-arrow-down "></i>
-                          )}
-                        </p>
-                      </div>
-                    </td>
-                    <td className="w-full flex items-center justify-center">
-                      <div className="flex flex-row justify-center items-center gap-1">
-                        <p className="text-[12px]">
-                          {formatNumber(
-                            screenLevelData[data]?.costConsumed?.toFixed(0)
-                          )}
-                        </p>
-                        <p
-                          className={`text-[10px] ${
-                            costConsumedData(data) > 0
-                              ? "text-[#2A892D]"
-                              : "text-[#CC0000]"
-                          }`}
-                        >
-                          {`(${formatNumber(costConsumedData(data))}%)`}{" "}
-                          {costConsumedData(data) > 0 ? (
-                            <i className="fi fi-rr-arrow-up "></i>
-                          ) : (
-                            <i className="fi fi-rr-arrow-down "></i>
-                          )}
-                        </p>
-                      </div>
-                    </td>
-                    <td className="w-full flex items-center justify-center">
-                      <div className="flex flex-col justify-center items-center gap-1">
-                        <p className="text-[12px]">
-                          {(
-                            (screenLevelData?.[data]?.slotsDelivered * 100) /
-                            screenLevelData?.[data]?.slotsPromised
-                          )?.toFixed(2)}{" "}
-                          %
-                        </p>
-                      </div>
-                    </td>
-                    <td
-                      className="w-full flex items-center justify-center"
-                      onClick={() => {
-                        // console.log("Logs clicked...")
-
-                        dispatch(
-                          GetCampaignMonitoringPicsAction({
-                            campaignId: screenLevelData[data]?.campaignId,
-                            screenId: data,
-                            date: campaignDetails.startDate,
-                          })
-                        );
-                        setScreenId(data);
-                        setOpenMonitoringPicsPopup(true);
-                      }}
-                    >
-                      <i className="fi fi-sr-picture text-[12px] text-[#129BFF]"></i>
-                    </td>
-                    <td className="w-full flex items-center justify-center">
-                      <div className="flex gap-4">
-                        <i
-                          className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}
-                          onClick={() => {
-                            dispatch(
-                              GetCampaignLogsAction(
-                                screenLevelData[data]?.campaignId
-                              )
+                      <p
+                        className={`text-[10px] ${
+                          slotDeliveryData(data) > 0
+                            ? "text-[#2A892D]"
+                            : "text-[#CC0000]"
+                        }`}
+                      >
+                        {`(${formatNumber(slotDeliveryData(data))}%)`}{" "}
+                        {slotDeliveryData(data) > 0 ? (
+                          <i className="fi fi-rr-arrow-up "></i>
+                        ) : (
+                          <i className="fi fi-rr-arrow-down "></i>
+                        )}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="w-full flex items-center justify-center">
+                    <div className="flex flex-row justify-center items-center gap-1">
+                      <p className="text-[12px]">
+                        {formatNumber(
+                          screenLevelData[data]?.impressionsDelivered?.toFixed(
+                            0
+                          )
+                        )}
+                      </p>
+                      <p
+                        className={`text-[10px] ${
+                          impressionsDeliveredPositive(data) > 0
+                            ? "text-[#2A892D]"
+                            : "text-[#CC0000]"
+                        }`}
+                      >
+                        {`(${formatNumber(
+                          impressionsDeliveredPositive(data)
+                        )}%)`}{" "}
+                        {impressionsDeliveredPositive(data) > 0 ? (
+                          <i className="fi fi-rr-arrow-up "></i>
+                        ) : (
+                          <i className="fi fi-rr-arrow-down "></i>
+                        )}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="w-full flex items-center justify-center">
+                    <div className="flex flex-row justify-center items-center gap-1">
+                      <p className="text-[12px]">
+                        {formatNumber(
+                          screenLevelData[data]?.costConsumed?.toFixed(0)
+                        )}
+                      </p>
+                      <p
+                        className={`text-[10px] ${
+                          costConsumedData(data) > 0
+                            ? "text-[#2A892D]"
+                            : "text-[#CC0000]"
+                        }`}
+                      >
+                        {`(${formatNumber(costConsumedData(data))}%)`}{" "}
+                        {costConsumedData(data) > 0 ? (
+                          <i className="fi fi-rr-arrow-up "></i>
+                        ) : (
+                          <i className="fi fi-rr-arrow-down "></i>
+                        )}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="w-full flex items-center justify-center">
+                    <div className="flex flex-col justify-center items-center gap-1">
+                      <p className="text-[12px]">
+                        {(
+                          (screenLevelData?.[data]?.slotsDelivered * 100) /
+                          screenLevelData?.[data]?.slotsPromised
+                        )?.toFixed(2)}{" "}
+                        %
+                      </p>
+                    </div>
+                  </td>
+                  <td
+                    className="w-full flex items-center justify-center"
+                    onClick={() => {
+                      dispatch(
+                        GetCampaignMonitoringPicsAction({
+                          campaignId: screenLevelData[data]?.campaignId,
+                          screenId: data,
+                          date: campaignDetails.startDate,
+                        })
+                      );
+                      setScreenId(data);
+                      setOpenMonitoringPicsPopup(true);
+                    }}
+                  >
+                    <i className="fi fi-sr-picture text-[12px] text-[#129BFF]"></i>
+                  </td>
+                  <td className="w-full flex items-center justify-center">
+                    <div className="flex gap-4">
+                      <i
+                        className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}
+                        onClick={() => {
+                          dispatch(
+                            GetCampaignLogsAction(
+                              screenLevelData[data]?.campaignId
+                            )
+                          );
+                          setscreenName(screenLevelData[data]?.screenName);
+                          setOpenLogsPopup(true);
+                        }}
+                      ></i>
+                      <i
+                        className={`fi fi-sr-download text-[12px] text-[#129BFF] ${
+                          isDownLoad == screenLevelData[data]?.campaignId
+                            ? "text-gray-400"
+                            : "text-[#129BFF]"
+                        }`}
+                        onClick={() => {
+                          if (isDownLoad != screenLevelData[data]?.campaignId)
+                            downloadLogs(screenLevelData[data]?.campaignId);
+                          else
+                            message.warning(
+                              "Please wait..., data has start fetching"
                             );
-                            setscreenName(screenLevelData[data]?.screenName);
-                            setOpenLogsPopup(true);
-                          }}
-                        ></i>
-                        <i
-                          className={`fi fi-sr-download text-[12px] text-[#129BFF] ${
-                            isDownLoad == screenLevelData[data]?.campaignId
-                              ? "text-gray-400"
-                              : "text-[#129BFF]"
-                          }`}
-                          onClick={() => {
-                            if (isDownLoad != screenLevelData[data]?.campaignId)
-                              downloadLogs(screenLevelData[data]?.campaignId);
-                            else
-                              message.warning(
-                                "Please wait..., data has start fetching"
-                              );
-                          }}
-                        ></i>
-                        <i
-                          className="fi fi-rs-chart-histogram text-[12px] text-[#129BFF]"
-                          title="Analytic"
-                          onClick={() => {
-                            if (data === currentIndex) {
-                              setCurrentIndex(null);
-                            } else {
-                              setCurrentIndex(data);
-                            }
-                          }}
-                        ></i>
-                      </div>
-                    </td>
-                  </tr>
-                  {currentIndex === data && (
-                    <tr className="h-full w-full p-4">
-                      <td>
-                        <div className="grid grid-cols-7 gap-4 p-2">
-                          <div className="col-span-4 bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100">
-                            <div className="flex justify-between">
-                              <div className="flex items-center gap-2 px-4 py-1">
-                                <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                                  Day Wise Spot Delivered
-                                </h1>
-                                <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
-                              </div>
-                              <div className="flex items-center gap-2 px-4 py-1">
-                                <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                                  Promised :{" "}
-                                  {(
-                                    getPromisedSpotDeliveryData(
-                                      screenLevelData[data]
-                                    ).countsArray?.reduce(
-                                      (a: number, c: number) => a + c,
-                                      0
-                                    ) /
-                                    getPromisedSpotDeliveryData(
-                                      screenLevelData[data]
-                                    ).countsArray?.length
-                                  ).toFixed(0)}{" "}
-                                </h1>
-                                <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                                  Delivered :{" "}
-                                  {(
-                                    getSpotDeliveryData(
-                                      screenLevelData[data]
-                                    ).countsArray?.reduce(
-                                      (a: number, c: number) => a + c,
-                                      0
-                                    ) /
-                                    getSpotDeliveryData(screenLevelData[data])
-                                      .countsArray?.length
-                                  ).toFixed(0)}{" "}
-                                </h1>
-                              </div>
-                            </div>
-                            <div className="p-2">
-                              <DashBoardSlotGraph
-                                total={`${screenLevelData[
-                                  data
-                                ]?.slotsDelivered?.toFixed(
-                                  0
-                                )}/${screenLevelData[
-                                  data
-                                ]?.slotsPromised?.toFixed(0)}`}
-                                label={"Spot Delivery"}
-                                targetData={
-                                  getPromisedSpotDeliveryData(
-                                    screenLevelData[data]
-                                  ).countsArray
-                                }
-                                currentData={
-                                  getSpotDeliveryData(screenLevelData[data])
-                                    .countsArray
-                                }
-                                labels={
-                                  getSpotDeliveryData(screenLevelData[data])
-                                    .datesArray
-                                }
-                                color="#77C1E3"
-                                bgColor="#77C1E3"
-                                color2="#FFC2A8"
-                                bgColor2="#FFC2A8"
-                              />
-                            </div>
-                          </div>
-                          <div className="col-span-3 bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100 ">
+                        }}
+                      ></i>
+                      <i
+                        className="fi fi-rs-chart-histogram text-[12px] text-[#129BFF]"
+                        title="Analytic"
+                        onClick={() => {
+                          if (data === currentIndex) {
+                            setCurrentIndex(null);
+                          } else {
+                            setCurrentIndex(data);
+                          }
+                        }}
+                      ></i>
+                    </div>
+                  </td>
+                </tr>
+                {currentIndex === data && (
+                  <tr className="h-full w-full p-4">
+                    <td>
+                      <div className="grid grid-cols-7 gap-4 p-2">
+                        <div className="col-span-4 bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100">
+                          <div className="flex justify-between">
                             <div className="flex items-center gap-2 px-4 py-1">
                               <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                                Audience Type Wise Impressions
+                                Day Wise Spot Delivered
                               </h1>
                               <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
                             </div>
-                            <div className="p-2">
-                              <DashboardImpressionDetailsTable
-                                screenLevelData={screenLevelData[data]}
-                              />
-                              {/* {JSON.stringify(screenLevelData[data])} */}
+                            <div className="flex items-center gap-2 px-4 py-1">
+                              <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
+                                Promised :{" "}
+                                {(
+                                  getPromisedSpotDeliveryData(
+                                    screenLevelData[data]
+                                  ).countsArray?.reduce(
+                                    (a: number, c: number) => a + c,
+                                    0
+                                  ) /
+                                  getPromisedSpotDeliveryData(
+                                    screenLevelData[data]
+                                  ).countsArray?.length
+                                ).toFixed(0)}{" "}
+                              </h1>
+                              <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
+                                Delivered :{" "}
+                                {(
+                                  getSpotDeliveryData(
+                                    screenLevelData[data]
+                                  ).countsArray?.reduce(
+                                    (a: number, c: number) => a + c,
+                                    0
+                                  ) /
+                                  getSpotDeliveryData(screenLevelData[data])
+                                    .countsArray?.length
+                                ).toFixed(0)}{" "}
+                              </h1>
                             </div>
-                          </div>{" "}
+                          </div>
+                          <div className="p-2">
+                            <DashBoardSlotGraph
+                              total={`${screenLevelData[
+                                data
+                              ]?.slotsDelivered?.toFixed(0)}/${screenLevelData[
+                                data
+                              ]?.slotsPromised?.toFixed(0)}`}
+                              label={"Spot Delivery"}
+                              targetData={
+                                getPromisedSpotDeliveryData(
+                                  screenLevelData[data]
+                                ).countsArray
+                              }
+                              currentData={
+                                getSpotDeliveryData(screenLevelData[data])
+                                  .countsArray
+                              }
+                              labels={
+                                getSpotDeliveryData(screenLevelData[data])
+                                  .datesArray
+                              }
+                              color="#77C1E3"
+                              bgColor="#77C1E3"
+                              color2="#FFC2A8"
+                              bgColor2="#FFC2A8"
+                            />
+                          </div>
                         </div>
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              ))}
+                        <div className="col-span-3 bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100 ">
+                          <div className="flex items-center gap-2 px-4 py-1">
+                            <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
+                              Audience Type Wise Impressions
+                            </h1>
+                            <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                          </div>
+                          <div className="p-2">
+                            <DashboardImpressionDetailsTable
+                              screenLevelData={screenLevelData[data]}
+                            />
+                            {/* {JSON.stringify(screenLevelData[data])} */}
+                          </div>
+                        </div>{" "}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
+            ))}
         </tbody>
       </table>
     </div>
