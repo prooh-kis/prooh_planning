@@ -47,6 +47,8 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
     Object.entries(data || {}).filter(([key]) => key !== "id")
   );
 
+  console.log("getDataFromLocalStorage(AUDIENCE_DATA)?.[campaignId] : ", data);
+
   const handleSave = () => {
     const selectedCities: string[] = [];
     const selectedZones: string[] = [];
@@ -193,16 +195,16 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
               </div>
               <div className="flex gap-2">
                 <div className="flex gap-4 pr-4">
-                  <h1 className="text-gray-600 text-[10px]">
+                  <h1 className="text-[#6F7F8E] text-[10px]">
                     {processedData[state]?.gender?.Male?.toFixed(1)}%
                   </h1>
-                  <h1 className="text-gray-600 text-[10px]">
+                  <h1 className="text-[#6F7F8E] text-[10px]">
                     {processedData[state]?.gender?.Female?.toFixed(1)}%
                   </h1>
                 </div>
                 <button
                   onClick={() => toggleCollapse(state)}
-                  className="focus:outline-none text-black text-[10px] "
+                  className="focus:outline-none text-black text-[10px] pr-2 "
                 >
                   <i
                     className={`text-[#9A9A9A] ${
@@ -244,13 +246,13 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                         </div>
                         <div className="flex gap-2">
                           <div className="flex gap-4 pr-4">
-                            <h1 className="text-gray-600 text-[10px]">
+                            <h1 className="text-[#6F7F8E] text-[10px]">
                               {processedData[state]?.cities?.[
                                 city
                               ]?.Male?.toFixed(1)}
                               %
                             </h1>
-                            <h1 className="text-gray-600 text-[10px]">
+                            <h1 className="text-[#6F7F8E] text-[10px]">
                               {processedData[state]?.cities?.[
                                 city
                               ]?.Female?.toFixed(1)}
@@ -259,7 +261,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                           </div>
                           <button
                             onClick={() => toggleCollapse(city)}
-                            className="focus:outline-none text-black text-[10px] text-[#9A9A9A]"
+                            className="focus:outline-none text-black text-[10px] pr-2 text-[#9A9A9A]"
                           >
                             <i
                               className={`text-[#9A9A9A] ${
@@ -310,13 +312,13 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                                 </div>
                                 <div className="flex gap-2 pr-4">
                                   <div className="flex gap-4 pr-4">
-                                    <h1 className="text-gray-600 text-[10px]">
+                                    <h1 className="text-[#6F7F8E] text-[10px]">
                                       {processedData[state]?.cities?.[
                                         city
                                       ]?.zones?.[zone]?.Male?.toFixed(1)}
                                       %
                                     </h1>
-                                    <h1 className="text-gray-600 text-[10px]">
+                                    <h1 className="text-[#6F7F8E] text-[10px]">
                                       {processedData[state]?.cities?.[
                                         city
                                       ]?.zones?.[zone]?.Female?.toFixed(1)}

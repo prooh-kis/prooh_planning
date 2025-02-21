@@ -106,19 +106,12 @@ export const LocationTable = ({
         </tr>
       </thead>
       <tbody className="border overflow-scroll">
-        {loading ? (
-          <tr className="w-full">
-            <th className="w-full">
-              <Loading row={1} />
-            </th>
-          </tr>
-        ) : (
-          <StateCityZoneCheckboxTree
-            data={data || {}}
-            setSelectedCity={setSelectedCity}
-            setSelectedZone={setSelectedZone}
-          />
-        )}
+        <StateCityZoneCheckboxTree
+          data={data || {}}
+          setSelectedCity={setSelectedCity}
+          setSelectedZone={setSelectedZone}
+        />
+
         {/* {Object.keys(markets)?.map((market: any, index: any) => (
           <tr
             key={index}
