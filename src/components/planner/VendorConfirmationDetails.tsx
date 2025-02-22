@@ -36,6 +36,7 @@ import {
 import { convertDateIntoDateMonthYear } from "../../utils/dateAndTimeUtils";
 import { StatusPopup } from "../../components/popup/StatusPopup";
 import { ShowMediaTypePopup } from "../../components/popup/ShowMediaTypePopup";
+import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -142,49 +143,7 @@ export const VendorConfirmationDetails = ({
       "message",
       `
       <div style='max-width: 720px; margin: auto; padding: 16px; background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;'>
-          <table style='width: 100%; border-collapse: collapse; margin-bottom: 16px;'>
-            <thead>
-              <tr style='background-color: #007BFF; color: white;'>
-                <th style='padding: 8px; text-align: left;'>Screen Name</th>
-                <th style='padding: 8px; text-align: left;'>Touchpoint</th>
-                <th style='padding: 8px; text-align: left;'>Start Date</th>
-                <th style='padding: 8px; text-align: left;'>End Date</th>
-                <th style='padding: 8px; text-align: left;'>Cost</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${statusTableData
-                ?.map((d: any) => {
-                  return {
-                    screenName: d.screenName,
-                    touchPoint: d.touchPoint,
-                    startDate: convertDateIntoDateMonthYear(d.startDate),
-                    endDate: convertDateIntoDateMonthYear(d.endDate),
-                    cost: `${"\u20B9"}${d.cost.toFixed(0)}`,
-                  };
-                })
-                ?.map(
-                  (c: any, i: any) =>
-                    `<tr key=${i} style='background-color: #F8F9FA;'>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${
-                    c.screenName
-                  }</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${
-                    c.touchPoint
-                  }</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${convertDateIntoDateMonthYear(
-                    c.startDate
-                  )}</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${convertDateIntoDateMonthYear(
-                    c.endDate
-                  )}</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${
-                    c.cost
-                  }</td>
-                </tr>`
-                )}
-            </tbody>
-          </table>
+          <a href={https://plan.prooh.ai/campaignDetails/${campaignId}}>View Dashboard</a>
         </div>
       `
     );
@@ -521,7 +480,7 @@ export const VendorConfirmationDetails = ({
                 toEmail={toEmail}
                 setToEmail={setToEmail}
                 cc={cc}
-                sendEmail={sendEmailToAll}
+                sendEmail={sendEmail}
                 sendEmailToAll={sendEmailToAll}
               />
             </div>

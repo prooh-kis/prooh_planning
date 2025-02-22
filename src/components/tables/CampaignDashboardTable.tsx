@@ -8,8 +8,12 @@ import {
 } from "../../actions/campaignAction";
 import { ShowCampaignLogsPopup } from "../../components/popup/ShowCampaignLogsPopup";
 import { ShowMonitoringPicsPopup } from "../../components/popup/ShowMonitoringPics";
-import { calculateDaysPlayed } from "../../utils/dateAndTimeUtils";
-import { message } from "antd";
+import {
+  calculateDaysPlayed,
+  convertIntoDateAndTime,
+  getTimeDifferenceInMin,
+} from "../../utils/dateAndTimeUtils";
+import { message, Tooltip } from "antd";
 import { downloadExcel } from "../../utils/excelUtils";
 import axios from "axios";
 import { DashBoardSlotGraph } from "../../components/segments/DashBoardSlotGraph";
@@ -160,6 +164,21 @@ export const CampaignDashboardTable = ({
     );
     return { datesArray, countsArray };
   };
+
+  const getScreenClassName = (lastActive: any) => {
+    if (lastActive) {
+      if (getTimeDifferenceInMin(lastActive) < 15)
+        return "border w-4 h-4 bg-[#348730] rounded-full justify-end";
+      else return "border w-4 h-4 bg-[#ffec33] rounded-full justify-end";
+    } else return "border w-4 h-4 bg-[#ff3333] rounded-full justify-end";
+  };
+
+  const getScreenStatus = (lastActive: any) => {
+    if (lastActive) {
+      if (getTimeDifferenceInMin(lastActive) < 15) return "Active";
+      else return "Close";
+    } else return "Close";
+  };
   return (
     <div>
       <ShowMonitoringPicsPopup
@@ -233,7 +252,20 @@ export const CampaignDashboardTable = ({
                   <td className="w-full flex items-center justify-center">
                     <p className="text-[12px]">{index + 1}</p>
                   </td>
-                  <td className="w-full flex items-center justify-center truncate">
+                  <td className="w-full flex items-center justify-center gap-2 truncate">
+                    <Tooltip
+                      title={`${getScreenStatus(
+                        screenLevelData?.[data]?.lastActive
+                      )}, ${convertIntoDateAndTime(
+                        screenLevelData?.[data]?.lastActive
+                      )} `}
+                    >
+                      <div
+                        className={getScreenClassName(
+                          screenLevelData?.[data]?.lastActive
+                        )}
+                      />
+                    </Tooltip>
                     <p className="text-[12px] truncate px-1">
                       {screenLevelData[data]?.screenName}
                     </p>
