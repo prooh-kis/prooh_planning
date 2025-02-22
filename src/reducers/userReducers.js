@@ -35,6 +35,10 @@ import {
   USER_DELETE_SUCCESS,
   USER_DELETE_ERROR,
   USER_DELETE_RESET,
+  USER_ADD_NEW_USER_REQUEST,
+  USER_ADD_NEW_USER_SUCCESS,
+  USER_ADD_NEW_USER_FAIL,
+  USER_ADD_NEW_USER_RESET,
 } from "../constants/userConstants";
 
 export function userSignupReducer(state = {}, action) {
@@ -46,6 +50,21 @@ export function userSignupReducer(state = {}, action) {
     case USER_SIGNUP_FAIL:
       return { loading: false, error: action.payload };
     case USER_SIGNUP_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function userAddNewUserReducer(state = {}, action) {
+  switch (action.type) {
+    case USER_ADD_NEW_USER_REQUEST:
+      return { loading: true };
+    case USER_ADD_NEW_USER_SUCCESS:
+      return { loading: false, data: action.payload, success: true };
+    case USER_ADD_NEW_USER_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_ADD_NEW_USER_RESET:
       return {};
     default:
       return state;

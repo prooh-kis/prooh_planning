@@ -26,7 +26,7 @@ export const PrimaryButton = ({
   return (
     <div className="flex justify-center items-center">
       <button
-        title="plan_campaign"
+        title={title || "plan_campaign"}
         type="submit"
         onClick={action}
         disabled={disabled}

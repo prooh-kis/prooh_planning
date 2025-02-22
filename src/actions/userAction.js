@@ -29,6 +29,9 @@ import {
   USER_UPDATE_PASSWORD_REQUEST,
   USER_UPDATE_PASSWORD_SUCCESS,
   USER_UPDATE_PASSWORD_FAIL,
+  USER_ADD_NEW_USER_REQUEST,
+  USER_ADD_NEW_USER_SUCCESS,
+  USER_ADD_NEW_USER_FAIL,
 } from "../constants/userConstants";
 import store from "../store";
 import { login, logout } from "../store/authSlice";
@@ -88,6 +91,34 @@ export const createUser = (reqBody) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_SIGNUP_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const addNewUser = (input) => async (dispatch, getState) => {
+  dispatch({
+    type: USER_ADD_NEW_USER_REQUEST,
+    payload: input,
+  });
+  try {
+    const {
+      auth: { userInfo },
+    } = getState();
+
+    const { data } = await Axios.post(`${USER_URL}/create`, input, {
+      headers: { authorization: `Bearer ${userInfo.token}` },
+    });
+    dispatch({
+      type: USER_ADD_NEW_USER_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_ADD_NEW_USER_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
@@ -318,17 +349,18 @@ export const sendEmailForVendorConfirmation = (emailData) => async (dispatch, ge
   }
 }
 
-export const getUserList = () => async (dispatch, getState) => {
+export const getUserList = (input) => async (dispatch, getState) => {
   dispatch({
     type: USER_LIST_REQUEST,
-    payload: {},
+    payload: input,
   });
   try {
     const {
       auth: { userInfo },
     } = getState();
     const { data } = await Axios.get(`${USER_URL}/users`, {
-      headers: { Authorization: `Bearer ${userInfo.token}` },
+      headers: { authorization: `Bearer ${userInfo.token}` },
+      params: input,
     });
     dispatch({
       type: USER_LIST_SUCCESS,
@@ -346,20 +378,18 @@ export const getUserList = () => async (dispatch, getState) => {
   }
 };
 
-export const deleteUser = (userId) => async (dispatch, getState) => {
+export const deleteUser = (input) => async (dispatch, getState) => {
   dispatch({
     type: USER_DELETE_REQUEST,
-    payload: { userId },
+    payload: input,
   });
   try {
     const {
       auth: { userInfo },
     } = getState();
     const { data } = await Axios.delete(`${USER_URL}/deleteUser`, {
-      params: {
-        userId: userId,
-      },
-      headers: { Authorization: `Bearer ${userInfo.token}` },
+      params: input,
+      headers: { authorization: `Bearer ${userInfo.token}` },
     });
     dispatch({
       type: USER_DELETE_SUCCESS,

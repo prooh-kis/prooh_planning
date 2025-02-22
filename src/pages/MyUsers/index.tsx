@@ -1,21 +1,28 @@
 import { useNavigate } from "react-router-dom";
 import { AUTH } from "../../routes/routes";
 import {
+  CAMPAIGN_MANAGER,
+  CAMPAIGN_PLANNER,
   MASTER_USER_ROLE,
   USER_DELETE_RESET,
   USER_ROLE_PRIMARY,
   USER_ROLE_SECONDARY,
+  USERS_DELETE_PLANNING_PAGE,
+  USERS_GET_PLANNING_PAGE,
 } from "../../constants/userConstants";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { deleteUser, getUserList } from "../../actions/userAction";
 import { message } from "antd";
+import { PrimaryButton } from "../../components/atoms/PrimaryButton";
+import { AddUserDetails } from "../../components/popup/AddUserDetails";
 
 export const MyUsers = (props: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
 
+  const [open, setOpen] = useState<boolean>(false);
   const userList = useSelector((state: any) => state.userList);
   const { loading, error, data: users } = userList;
 
@@ -31,7 +38,9 @@ export const MyUsers = (props: any) => {
     if (success) {
       alert(userDeleteMessage);
       dispatch({ type: USER_DELETE_RESET });
-      dispatch(getUserList());
+      dispatch(getUserList({
+        event : USERS_GET_PLANNING_PAGE
+      }));
     }
     if (errorUserDelete) {
       alert(errorUserDelete);
@@ -40,31 +49,48 @@ export const MyUsers = (props: any) => {
   }, [errorUserDelete, errorUserDelete]);
 
   const handleDeleteUser = (userId: string) => {
-    dispatch(deleteUser(userId));
+    dispatch(deleteUser({userId , event : USERS_DELETE_PLANNING_PAGE}));
   };
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
+  const toggleOpen = useCallback(() => {
+    setOpen((pre: boolean) => !pre);
+  }, [open]);
+
   useEffect(() => {
     if (!userInfo) {
       navigate(AUTH);
     } else {
-      dispatch(getUserList());
-      if (userInfo?.userRole !== USER_ROLE_PRIMARY) {
+      if (userInfo?.userRole !== CAMPAIGN_MANAGER) {
         console.log("You have no access to this page");
         message.warning("You have no access to this page");
         navigate(-1);
       } else {
-        dispatch(getUserList());
+        dispatch(getUserList({
+          event : USERS_GET_PLANNING_PAGE
+        }));
       }
     }
   }, [userInfo]);
 
   return (
     <div className="w-full h-full mt-8 ">
-      <div className="border rounded p-4 w-full bg-white">
+      {open && <AddUserDetails open={open} onClose={toggleOpen}/>}
+      <div className="flex justify-between border rounded p-4 w-full bg-white">
         <h1 className="text-[16px] font-semibold">Users</h1>
+        <div className="flex items-center mt-1 w-96 flex gap-4">
+          <PrimaryButton
+            action={toggleOpen}
+            title="Add user"
+            rounded="rounded-lg"
+            height="h-8"
+            width="w-32"
+            textSize="text-[16px] font-semibold"
+            reverse={true}
+          />
+        </div>
       </div>
 
       <div className="w-full mt-1">
@@ -86,13 +112,13 @@ export const MyUsers = (props: any) => {
                 <td className="border pl-4">{user.email}</td>
                 <td className="border  pl-4">{user?.userRole}</td>
                 <td className="border  flex justify-center">
-                  {user.userRole === USER_ROLE_PRIMARY ? null : (
+                  {user.userRole === CAMPAIGN_PLANNER ? (
                     <i
                       className="fi fi-rs-trash text-red-500"
                       title="delete user"
                       onClick={() => handleDeleteUser(user?._id)}
                     ></i>
-                  )}
+                  ) : null}
                 </td>
               </tr>
             ))}

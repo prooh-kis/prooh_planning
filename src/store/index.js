@@ -24,6 +24,7 @@ import {
 import {
   emailSendForConfirmationReducer,
   emailSendForVendorConfirmationReducer,
+  userAddNewUserReducer,
   userDeleteReducer,
   userEmailVerificationReducer,
   userListReducer,
@@ -118,6 +119,7 @@ const store = configureStore({
     auth: authReducer,
     userSignin: userSigninReducer,
     userSignup: userSignupReducer,
+    userAddNewUser : userAddNewUserReducer,
     userUpdatePassword: userUpdatePasswordReducer,
     emailVerify: userEmailVerificationReducer,
     userSendEmailToResetPassword: userSendEmailToResetPasswordReducer,

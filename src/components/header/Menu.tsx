@@ -44,6 +44,10 @@ export const Menu = (props: any) => {
     {
       label: "Campaigns",
       path: MY_CAMPAIGNS_LIST,
+    },
+    {
+      label: "Users",
+      path: USERS
     }
   ]
 
