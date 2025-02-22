@@ -68,58 +68,68 @@ export function StatusPopup({ onClose, open, myData }: CalendarPopupProps) {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-12 mt-4">
-            <div className="col-span-4">
-              <PieChart
-                data={{
-                  labels: ["Connected", "Third Party"],
-                  values: [
-                    myData?.Approved?.Connected,
-                    myData?.Approved?.["Third Party"],
-                  ],
-                  colors: ["#84D3FF", "#FFBE17"],
-                  centerText: `${
-                    myData?.Approved?.Connected +
-                    myData?.Approved?.["Third Party"]
-                  } Screens`,
-                }}
-              />
-              <h1 className="text-center pt-4">Approved</h1>
-            </div>
-            <div className="col-span-4">
-              <PieChart
-                data={{
-                  labels: ["Connected", "Third Party"],
-                  values: [
-                    myData?.Pending?.Connected,
-                    myData?.Pending?.["Third Party"],
-                  ],
-                  colors: ["#84D3FF", "#FFBE17"],
-                  centerText: `${
-                    myData?.Pending?.Connected +
-                    myData?.Pending?.["Third Party"]
-                  } Screens`,
-                }}
-              />
-              <h1 className="text-center pt-4">Pending</h1>
-            </div>
-            <div className="col-span-4">
-              <PieChart
-                data={{
-                  labels: ["Connected", "Third Party"],
-                  values: [
-                    myData?.Rejected?.Connected,
-                    myData?.Rejected?.["Third Party"],
-                  ],
-                  colors: ["#84D3FF", "#FFBE17"],
-                  centerText: `${
-                    myData?.Rejected?.Connected +
-                    myData?.Rejected?.["Third Party"]
-                  } Screens`,
-                }}
-              />
-              <h1 className="text-center pt-4">Rejected</h1>
-            </div>
+          <div className="grid grid-cols-12 mt-4  flex justify-center">
+            {myData?.Approved?.Connected + myData?.Approved?.["Third Party"] >
+              0 && (
+              <div className="col-span-4">
+                <PieChart
+                  data={{
+                    labels: ["Connected", "Third Party"],
+                    values: [
+                      myData?.Approved?.Connected,
+                      myData?.Approved?.["Third Party"],
+                    ],
+                    colors: ["#84D3FF", "#FFBE17"],
+                    centerText: `${
+                      myData?.Approved?.Connected +
+                      myData?.Approved?.["Third Party"]
+                    } Screens`,
+                  }}
+                />
+                <h1 className="text-center pt-4">Approved</h1>
+              </div>
+            )}
+            {myData?.Pending?.Connected + myData?.Pending?.["Third Party"] >
+              0 && (
+              <div className="col-span-4">
+                <PieChart
+                  data={{
+                    labels: ["Connected", "Third Party"],
+                    values: [
+                      myData?.Pending?.Connected,
+                      myData?.Pending?.["Third Party"],
+                    ],
+                    colors: ["#84D3FF", "#FFBE17"],
+                    centerText: `${
+                      myData?.Pending?.Connected +
+                      myData?.Pending?.["Third Party"]
+                    } Screens`,
+                  }}
+                />
+                <h1 className="text-center pt-4">Pending</h1>
+              </div>
+            )}
+
+            {myData?.Rejected?.Connected + myData?.Rejected?.["Third Party"] >
+              0 && (
+              <div className="col-span-4">
+                <PieChart
+                  data={{
+                    labels: ["Connected", "Third Party"],
+                    values: [
+                      myData?.Rejected?.Connected,
+                      myData?.Rejected?.["Third Party"],
+                    ],
+                    colors: ["#84D3FF", "#FFBE17"],
+                    centerText: `${
+                      myData?.Rejected?.Connected +
+                      myData?.Rejected?.["Third Party"]
+                    } Screens`,
+                  }}
+                />
+                <h1 className="text-center pt-4">Rejected</h1>
+              </div>
+            )}
           </div>
         </div>
       </div>

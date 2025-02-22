@@ -52,6 +52,8 @@ export const CampaignDashboard = ({
       ? Number(campaignDetails?.totalCampaignBudget)
       : Number(campaignDetails?.finalCampaignBudget)
   );
+  const [currentCity, setCurrentCity] = useState<string>("");
+  const [currentTouchPoint, setCurrentTouchPoint] = useState<string>("");
 
   const [jsonDataForInvoice, setJsonDataForInvoice] = useState<any>({});
 
@@ -160,6 +162,25 @@ export const CampaignDashboard = ({
     };
   }, []);
 
+  const handleSelectCity = (city: string) => {
+    setCurrentCity(city);
+  };
+
+  const handleSelectTouchPoint = (touchPont: string) => {
+    setCurrentTouchPoint(touchPont);
+  };
+
+  function extractAllTouchPoints() {
+    let touchPointsArray: string[] = [];
+    const data = screenLevelData?.result;
+    for (const key in data || {}) {
+      if (data[key].touchPoint) {
+        touchPointsArray.push(data?.[key].touchPoint);
+      }
+    }
+    return touchPointsArray;
+  }
+
   return (
     <div className="w-full h-full pt-10 flex flex-col gap-2 bg-gray-100">
       <BillingAndInvoice
@@ -249,7 +270,12 @@ export const CampaignDashboard = ({
           </div>
         </div>
         <div className="flex items-center justify-end  gap-2 ">
-          <DashboardFilters campaignDetails={campaignDetails} />
+          <DashboardFilters
+            campaignDetails={campaignDetails}
+            handleSelectCity={handleSelectCity}
+            handleSelectTouchPoint={handleSelectTouchPoint}
+            touchPointList={extractAllTouchPoints()}
+          />
           <div className="grid grid-cols-2 gap-2">
             <button
               id="asd"
@@ -591,6 +617,8 @@ export const CampaignDashboard = ({
             <CampaignDashboardTable
               campaignDetails={campaignDetails}
               screenLevelData={screenLevelData?.result}
+              city={currentCity}
+              currentTouchPoint={currentTouchPoint}
             />
           </div>
         </div>

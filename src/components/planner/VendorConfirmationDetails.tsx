@@ -362,7 +362,16 @@ export const VendorConfirmationDetails = ({
       Connected:
         statusTableData?.filter(
           (c: any) =>
-            c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
+            [
+              CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED,
+              "Completed",
+              "Pending",
+              "Hold",
+              "Active",
+              "Pause",
+              "Deleted",
+            ].includes(c.status)
+
           // c.status === "Pending"
         ).length || 0,
       "Third Party": 0,
@@ -377,17 +386,20 @@ export const VendorConfirmationDetails = ({
     },
     Pending: {
       Connected:
-        statusTableData
-          ?.filter(
-            (c: any) =>
-              c.status !== CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
-            // c.status !== "Pending"
-          )
-          ?.filter(
-            (c: any) =>
-              c.status !== CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
-            // c.status !== "Pending"
-          ).length || 0,
+        statusTableData?.filter(
+          (c: any) =>
+            ![
+              CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED,
+              CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED,
+              "Completed",
+              "Pending",
+              "Hold",
+              "Active",
+              "Pause",
+              "Deleted",
+            ].includes(c.status)
+          // c.status !== "Pending"
+        )?.length || 0,
       "Third Party": 0,
     },
   };
@@ -431,48 +443,22 @@ export const VendorConfirmationDetails = ({
             <div className="flex">
               <h1 className="text-[14px]">
                 Approved (
-                {
-                  statusTableData?.filter(
-                    (c: any) =>
-                      c.status ===
-                      CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
-                    // c.status === "Pending"
-                  ).length
-                }
+                {myData?.Approved?.Connected +
+                  myData?.Approved?.["Third Party"]}
                 )
               </h1>
             </div>
             <div className="flex">
               <h1 className="text-[14px]">
                 Pending (
-                {
-                  statusTableData
-                    ?.filter(
-                      (c: any) =>
-                        c.status !==
-                        CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
-                      // c.status !== "Pending"
-                    )
-                    ?.filter(
-                      (c: any) =>
-                        c.status !==
-                        CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
-                      // c.status !== "Pending"
-                    ).length
-                }
-                )
+                {myData?.Pending?.Connected + myData?.Pending?.["Third Party"]})
               </h1>
             </div>
             <div className="flex">
               <h1 className="text-[14px]">
                 Rejected (
-                {
-                  statusTableData?.filter(
-                    (c: any) =>
-                      c.status ===
-                      CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
-                  ).length
-                }
+                {myData?.Rejected?.Connected +
+                  myData?.Rejected?.["Third Party"]}
                 )
               </h1>
             </div>
