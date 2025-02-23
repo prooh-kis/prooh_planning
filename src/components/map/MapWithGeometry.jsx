@@ -29,7 +29,7 @@ export function MapWithGeometry(props) {
   const [viewState, setViewState] = useState({
     longitude: props?.geometry?.coordinates[1] || 77.0891,
     latitude: props?.geometry?.coordinates[0] || 28.495,
-    zoom: props?.zoom || 5,
+    zoom: props?.zoom || 9,
   });
 
   // console.log(props?.data["brand"][0]?.concat(props?.data["comp"][0]))

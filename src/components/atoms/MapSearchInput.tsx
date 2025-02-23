@@ -1,112 +1,97 @@
-import React, { useEffect, useRef, useState } from "react";
-import "mapbox-gl/dist/mapbox-gl.css";
-import MapboxGeocoder from "@mapbox/mapbox-sdk/services/geocoding";
-import mapboxgl from "mapbox-gl";
-
-mapboxgl.accessToken =
-  process.env.REACT_APP_MAPBOX ||
-  "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A";
-
-const geocoder = MapboxGeocoder({
-  accessToken: mapboxgl.accessToken,
-});
-
-const customSuggestions = [
-  {
-    id: "custom-1",
-    place_name: "New Delhi Railway Station",
-    center: [77.514, 29.54],
-  },
-  {
-    id: "custom-2",
-    place_name: "New Delhi Public School",
-    center: [28.54, 77.451],
-  },
-];
+import React, { useEffect, useState } from "react";
+import { APIProvider, useMapsLibrary } from "@vis.gl/react-google-maps";
 
 export function MapSearchInput(props: any) {
-  // console.log(props);
-
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const placesLib = useMapsLibrary("places");
+
+  // Get user's location using Geolocation API
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+        }
+      );
+    }
+  }, []);
 
   const handleSuggestionClick = async (suggestion: any) => {
-    // Set the query to the place_name of the clicked suggestion
-    setQuery(suggestion.place_name);
+    setQuery(suggestion.description);
+    setSuggestions([]);
 
-    const response = await geocoder
-      .forwardGeocode({
-        query: suggestion.place_name, // Use the place_name of the clicked suggestion
-        countries: ['ind'], // Restrict to India
-        proximity: props?.userLocation ? [props?.userLocation.longitude, props?.userLocation.latitude] : undefined,
-        limit: 2,
-      })
-      .send();
+    if (!placesLib) return;
+    const placesService = new placesLib.PlacesService(document.createElement("div"));
 
-    if (response.body.features.length > 0) {
-      setSuggestions([]);
-      props?.handleClick(response.body.features);
-    }
+    placesService.getDetails(
+      { placeId: suggestion.place_id },
+      (place: any, status: any) => {
+        if (status === placesLib.PlacesServiceStatus.OK) {
+          props?.handleClick([
+            {
+              place_name: place.formatted_address,
+              center: [place.geometry.location.lng(), place.geometry.location.lat()],
+            },
+          ]);
+        }
+      }
+    );
   };
 
   const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && suggestions[highlightedIndex]) {
       await handleSuggestionClick(suggestions[highlightedIndex]);
     } else if (e.key === "ArrowDown") {
-      // setHighlightedIndex((prevIndex) => Math.min(prevIndex + 1, suggestions.length - 1));
-      setHighlightedIndex((prevIndex) => prevIndex + 1);
-      // setQuery(e.target.value);
+      setHighlightedIndex((prevIndex) => Math.min(prevIndex + 1, suggestions.length - 1));
     } else if (e.key === "ArrowUp") {
       setHighlightedIndex((prevIndex) => Math.max(prevIndex - 1, 0));
     }
   };
 
-  const handleQueryChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    const normalizeQuery = (input: string): string =>
-      input
-        .toLowerCase()
-        .replace(/[\s-]+/g, ' ') // Normalize whitespace and dashes
-        .trim();
-    
-    const normalizedQuery = normalizeQuery(value);
-    // console.log(value)
     setQuery(value);
     setHighlightedIndex(-1);
-    let nearbySuggestions: any[] = [];
-    if (props?.userLocation) {
-      const proximityResponse = await geocoder.reverseGeocode({
-        query: [props?.userLocation.longitude, props?.userLocation.latitude],
-        // limit: 5,
-      }).send();
 
-      nearbySuggestions = proximityResponse.body.features.filter((feature: any) => feature.place_type.includes("poi") || feature.place_type.includes("address"));
-      // console.log(nearbySuggestions)
-    }
-    if (value) {
-      const response = await geocoder.forwardGeocode({
-        query: normalizedQuery,
-        autocomplete: true,
-        countries: ['IN'],
-        proximity: props?.userLocation
-          ? [props.userLocation.longitude, props.userLocation.latitude]
-          : [77.891, 28.95],
-        types: ['poi', 'address', 'locality'],
-        bbox: [76.84, 28.10, 77.83, 28.95], // get city limit of the user dynamically in future updates
-        limit: 10,
-      }).send();
-
-      const mapBoxSuggestions = response.body.features.filter((feature: any) => feature.place_type.includes("poi") || feature.place_type.includes("address"));
-
-      const filteredCustomSuggestions = nearbySuggestions?.filter((suggestion: any) =>
-        suggestion.place_name.toLowerCase().includes(value.toLowerCase())
-      );
-
-      // console.log(response);
-      setSuggestions([...filteredCustomSuggestions, ...mapBoxSuggestions]);
-    } else {
+    if (!value || !placesLib) {
       setSuggestions([]);
+      return;
+    }
+
+    try {
+      const autocompleteService = new placesLib.AutocompleteService();
+      autocompleteService.getPlacePredictions(
+        {
+          input: value,
+          types: ["geocode", "establishment"],
+          componentRestrictions: { country: "IN" },
+          ...(userLocation && {
+            locationBias: {
+              lat: userLocation.lat,
+              lng: userLocation.lng,
+              radius: 5000, // 5km radius from the user's location
+            },
+          }),
+        },
+        (predictions, status) => {
+          if (status === placesLib.PlacesServiceStatus.OK && predictions) {
+            setSuggestions(predictions);
+          } else {
+            setSuggestions([]);
+          }
+        }
+      );
+    } catch (error) {
+      console.error("Google Maps AutocompleteService Error:", error);
     }
   };
 
@@ -114,24 +99,20 @@ export function MapSearchInput(props: any) {
     <ul className="absolute z-10 w-full max-h-40 overflow-y-auto bg-[#FFFFFF] rounded-lg shadow-lg">
       {suggestions.map((suggestion: any, index: number) => (
         <li
-          key={suggestion.id}
-          onClick={() => {
-            handleSuggestionClick(suggestion);
-          }}
-          onMouseEnter={(e: any) => {
+          key={suggestion.place_id}
+          onClick={() => handleSuggestionClick(suggestion)}
+          onMouseEnter={() => {
             setHighlightedIndex(index);
-            setQuery(suggestion?.place_name);
+            setQuery(suggestion.description);
           }}
-          onMouseDown={() => {
-            handleSuggestionClick(suggestion);
-          }}
+          onMouseDown={() => handleSuggestionClick(suggestion)}
           className={
             highlightedIndex === index
               ? "cursor-pointer p-4 bg-gray-200"
               : "cursor-pointer p-4 bg-[#FFFFFF]"
           }
         >
-          <h1 className="text-[12px]">{suggestion.place_name}</h1>
+          <h1 className="text-[12px]">{suggestion.description}</h1>
         </li>
       ))}
     </ul>
@@ -139,7 +120,7 @@ export function MapSearchInput(props: any) {
 
   useEffect(() => {
     if (highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
-      setQuery(suggestions[highlightedIndex].place_name);
+      setQuery(suggestions[highlightedIndex].description);
     }
   }, [highlightedIndex, suggestions]);
 

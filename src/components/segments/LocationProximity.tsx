@@ -1,7 +1,7 @@
 import { Tooltip } from "antd";
 import { DrawnMapPolygon } from "../../components/molecules/DrawnMapPolygon";
 import { CheckboxInput } from "../atoms/CheckboxInput";
-import { ExcelImport } from "../molecules/ExcelImport"
+import { ExcelImport } from "../molecules/ExcelImport copy"
 import { RouteProximity } from "../molecules/RouteProximity"
 import { LinearBar } from "../molecules/linearbar";
 import { POIProximity } from "./POIProximity";
@@ -15,6 +15,7 @@ interface LocationProximityProps {
   setRouteOrigin?: any;
   routeDestination?: any;
   setRouteDestination?: any;
+  routeRadius?: any;
   setDataBrand?: any;
   setDataComp?: any;
   dataBrand?: any;
@@ -37,6 +38,8 @@ interface LocationProximityProps {
   selectedScreensFromMap?: any;
   handleSelectFromMap?: any;
   handleConfirmScreensSelections?: any;
+  setRoutes?: any;
+  setRouteFilteredScreens?: any;
 }
 export const LocationProximity = ({
   userLocation,
@@ -46,6 +49,7 @@ export const LocationProximity = ({
   setRouteOrigin,
   routeDestination,
   setRouteDestination,
+  routeRadius,
   setDataBrand,
   setDataComp,
   dataBrand,
@@ -55,8 +59,6 @@ export const LocationProximity = ({
   setExcelFilteredScreens,
   excelFilteredScreens,
   circleRadius,
-  handleRouteSetup,
-  handleRemoveRoute,
   handleFinalSelectedScreens,
   polygons,
   setPolygons,
@@ -68,13 +70,15 @@ export const LocationProximity = ({
   selectedScreensFromMap,
   handleSelectFromMap,
   handleConfirmScreensSelections,
+  setRouteFilteredScreens,
+  setRoutes
 }: LocationProximityProps) => {
 
   const [open, setOpen] = useState<any>({
-    "excel": false,
-    "route": false,
-    "polygon": false,
-    "poi": false,
+    "excel": true,
+    "route": true,
+    "polygon": true,
+    "poi": true,
   });
   return (
     <div className="pt-2 h-full">
@@ -87,8 +91,6 @@ export const LocationProximity = ({
         text="Stores"
         setDataBrand={setDataBrand}
         setDataComp={setDataComp}
-        dataBrand={dataBrand}
-        dataComp={dataComp}
         allScreens={allScreens}
         setFilteredScreens={setExcelFilteredScreens}
         filteredScreens={excelFilteredScreens}
@@ -100,6 +102,7 @@ export const LocationProximity = ({
       <RouteProximity
         open={open}
         setOpen={setOpen}
+        routeRadius={routeRadius}
         userLocation={userLocation}
         setUserLocation={userLocation}
         routeFilteredScreens={routeFilteredScreens}
@@ -108,8 +111,9 @@ export const LocationProximity = ({
         setRouteOrigin={setRouteOrigin}
         routeDestination={routeDestination}
         setRouteDestination={setRouteDestination}
-        handleRouteSetup={handleRouteSetup}
-        handleRemoveRoute={handleRemoveRoute}
+        handleFinalSelectedScreens={handleFinalSelectedScreens}
+        setRoutes={setRoutes}
+        setRouteFilteredScreens={setRouteFilteredScreens}
       />
       <DrawnMapPolygon
         open={open}
@@ -117,7 +121,7 @@ export const LocationProximity = ({
         polygons={polygons}
         setPolygons={setPolygons}
       />
-      <POIProximity
+      {/* <POIProximity
         open={open}
         setOpen={setOpen}
         pois={pois}
@@ -129,7 +133,7 @@ export const LocationProximity = ({
         selectedScreensFromMap={selectedScreensFromMap}
         handleSelectFromMap={handleSelectFromMap}
         handleConfirmScreensSelections={handleConfirmScreensSelections}
-      />
+      /> */}
     </div>
 
     <div className="pt-2">

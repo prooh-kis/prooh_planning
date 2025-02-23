@@ -13,10 +13,12 @@ interface ExcelImportProps {
   type?: any;
   setDataBrand?: any;
   setDataComp?: any;
+  dataBrand?: any;
+  dataComp?: any;
   allScreens?: any;
   circleRadius?: any;
-  setExcelFilteredScreens?: any;
-  excelFilteredScreens?: any;
+  setFilteredScreens?: any;
+  filteredScreens?: any;
 
   handleFinalSelectedScreens?: any;
 }
@@ -29,10 +31,12 @@ export function ExcelImport({
   allScreens,
   setDataBrand,
   setDataComp,
+  dataBrand,
+  dataComp,
   type,
   circleRadius,
-  setExcelFilteredScreens,
-  excelFilteredScreens,
+  setFilteredScreens,
+  filteredScreens,
   handleFinalSelectedScreens,
 }: ExcelImportProps) {
   const hiddenFileInput = useRef<HTMLInputElement>(null);
@@ -48,7 +52,7 @@ export function ExcelImport({
   const getUniqueScreens = (data: any) => {
     const uniqueScreens = new Set();
     data.forEach((location: any) => {
-      location?.screens.forEach((screen: any) => {
+      location.screens.forEach((screen: any) => {
         uniqueScreens.add(screen);
       });
     });
@@ -59,44 +63,37 @@ export function ExcelImport({
 
   const handleResetFile = () => {
     setFile(null);
-  
     if (type.includes("brand")) {
-      setExcelFilteredScreens((prevScreens: any) =>
-        prevScreens.filter(
-          (s: any) => !brandScreens?.some((sc: any) => sc._id === s._id)
-        )
-      );
-      setDataBrand([]);
-      setBrandScreens(null);
       handleFinalSelectedScreens({
         type: "remove",
         screens: brandScreens,
       });
-    }
-  
-    if (type.includes("comp")) {
-      setExcelFilteredScreens((prevScreens: any) =>
-        prevScreens.filter(
-          (s: any) => !compScreens?.some((sc: any) => sc._id === s._id)
+      setFilteredScreens(
+        filteredScreens.filter(
+          (s: any) => !brandScreens.map((sc: any) => sc._id).includes(s._id)
         )
       );
-      setDataComp([]);
-      setCompScreens(null);
+      setDataBrand([]);
+      setBrandScreens(null);
+    }
+    if (type.includes("comp")) {
       handleFinalSelectedScreens({
         type: "remove",
         screens: compScreens,
       });
+      setFilteredScreens(
+        filteredScreens.filter((s: any) =>
+          compScreens.map((sc: any) => sc._id).includes(s._id)
+        )
+      );
+      setDataComp([]);
+      setCompScreens(null);
     }
-  
-    // Reset excelFilteredScreens to match the latest dataBrand and dataComp
-    const updatedFilteredScreens = getUniqueScreens([]);
-    setExcelFilteredScreens(updatedFilteredScreens);
-  
     if (hiddenFileInput.current) {
       hiddenFileInput.current.value = ""; // Clear the file input value
     }
   };
-  
+
   const withinRadius = (center: any, point: any, radius: any) => {
     const distance = getDistance(
       {
@@ -133,6 +130,14 @@ export function ExcelImport({
       }
 
       const coordinatesWithScreensData: any = [];
+      // for (const coordinate of coordinates) {
+      //   const center = coordinate;
+
+      //   let x = allScreens.filter((l: any) =>
+      //     withinRadius(center, [l.location.geographicalLocation.longitude, l.location.geographicalLocation.latitude], circleRadius)
+      //   );
+      //   coordinatesWithScreensData.push({ screens: x, coordinate: coordinate });
+      // }
       for (const coordinate of brandCoordinates) {
         const center = coordinate;
 
@@ -164,7 +169,7 @@ export function ExcelImport({
         coordinatesWithScreensData.push({ screens: x, coordinate: coordinate });
       }
       const filtered: any = getUniqueScreens(coordinatesWithScreensData);
-      const newFiltered: any = excelFilteredScreens;
+      const newFiltered: any = filteredScreens;
 
       if (type.includes("brand")) {
         setBrandScreens(filtered);
@@ -179,13 +184,13 @@ export function ExcelImport({
         return newFiltered;
       });
 
-      setExcelFilteredScreens(newFiltered);
+      setFilteredScreens(newFiltered);
       handleFinalSelectedScreens({
         type: "add",
         screens: newFiltered,
       });
     } else alert("Something went wrong, please send us correct data");
-  },[allScreens, circleRadius, excelFilteredScreens, handleFinalSelectedScreens, setDataBrand, setDataComp, setExcelFilteredScreens, type]);
+  },[]);
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -201,9 +206,10 @@ export function ExcelImport({
     }
   };
 
+
   return (
     <div className="py-4 w-full border-b border-gray-100">
-      <div className="flex items-center justify-between"
+      <button title="" type="button" className="flex items-center justify-between"
         onClick={() => {
           setOpen((prev: any) => ({
             ...prev,
@@ -220,16 +226,16 @@ export function ExcelImport({
               >
             <i className="fi fi-rs-info pr-1 lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
           </Tooltip>
-          <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({excelFilteredScreens.length} sites)</h1>
+          <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({filteredScreens.length} sites)</h1>
         </div>
-        {/* <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center">
           {open["excel"] ? (
             <i className="fi fi-sr-caret-up text-[#EF4444] flex items-center"></i>
           ) : (
             <i className="fi fi-sr-caret-down text-[#22C55E] flex items-center"></i>
           )}
-        </div> */}
-      </div>
+        </div>
+      </button>
       
       {open["excel"] && (
         <div className="w-full">
@@ -260,7 +266,7 @@ export function ExcelImport({
                     <p className="lg:text-[14px] text-[12px] text-green truncate">{file?.name}</p>
                     <i className="fi fi-sr-cross-small text-green flex items-center" onClick={() => handleResetFile()}></i>
                   </div>
-                  <p className="lg:text-[14ps] text-[12px] text-blue truncate">({excelFilteredScreens.length} matching locations found)</p>
+                  <p className="lg:text-[14ps] text-[12px] text-blue truncate">({filteredScreens.length} matching locations found)</p>
                 </div>
         
               )}

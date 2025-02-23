@@ -15,7 +15,6 @@ export const RegularCohortSlotsCampaignTable = ({
   showSummary,
   loading
 }: RegularCohortSlotsCampaignTableProps) => {
-  console.log(priceData);
   return (
     <table className="w-full">
       <thead

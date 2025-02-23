@@ -5,20 +5,23 @@ import { PrimaryButton } from "../atoms/PrimaryButton";
 import { LinearBar } from "../../components/molecules/linearbar";
 import { MapSearchInput } from "../../components/atoms/MapSearchInput";
 import { Tooltip } from "antd";
+import { MapBoxSearchInput } from "../../components/atoms/MapboxSearchInput";
 
 interface RouteProximityProps {
   open: any;
   setOpen: any;
   userLocation?: any;
   setUserLocation?: any;
+  routeRadius?: any;
   routes?: any;
   routeOrigin?: any;
   setRouteOrigin?: any;
   routeDestination?: any;
   setRouteDestination?: any;
-  handleRouteSetup?: any;
-  handleRemoveRoute?: any;
   routeFilteredScreens?: any;
+  handleFinalSelectedScreens?: any
+  setRouteFilteredScreens?: any
+  setRoutes?: any;
 }
 
 export const RouteProximity = ({
@@ -26,14 +29,16 @@ export const RouteProximity = ({
   setOpen,
   userLocation,
   setUserLocation,
+  routeRadius,
   routes,
   routeOrigin,
   setRouteOrigin,
   routeDestination,
   setRouteDestination,
-  handleRouteSetup,
-  handleRemoveRoute,
   routeFilteredScreens,
+  setRouteFilteredScreens,
+  setRoutes,
+  handleFinalSelectedScreens
 }: RouteProximityProps) => {
   const [showDetails, setShowDetails] = useState<any>(null);
 
@@ -41,6 +46,42 @@ export const RouteProximity = ({
     const colors = ["#540b0e", "#e09f3e", "#073b4c", "#0f4c5c", "#ef476f"];
     return colors[index % 5];
   }
+
+  const handleRouteSetup = async (originData: any, destinationData: any) => {
+    let route: any = {};
+    route["origin"] = originData[0];
+    route["destination"] = destinationData[0];
+    route["selectedScreens"] = [];
+    route["id"] = routes?.length + 1;
+
+    if (routes.includes(route)) {
+    } else {
+      routes.push(route);
+    }
+
+    setRoutes([...routes]);
+  };
+
+  const handleRemoveRoute = (id: any) => {
+    let arr = routes;
+    for (let data of arr) {
+      if (data?.id === id) {
+        setRouteFilteredScreens(
+          routeFilteredScreens?.filter(
+            (rf: any) =>
+              !data.selectedScreens.map((s: any) => s._id).includes(rf._id)
+          )
+        );
+        handleFinalSelectedScreens({
+          type: "remove",
+          screens: data?.selectedScreens,
+        });
+      }
+    }
+    arr = arr.filter((data: any) => data?.id != id);
+    setRoutes(arr);
+  };
+
 
   return (
     <div className="py-4 border-b border-gray-100">
@@ -74,7 +115,7 @@ export const RouteProximity = ({
         <div className="w-full">
           <div className="grid grid-cols-5 gap-2 flex items-center pt-2">
             <div className="col-span-2">
-              <MapSearchInput 
+              <MapBoxSearchInput
                 setUserLocation={setUserLocation}
                 userLocation={userLocation}
                 handleClick={(e: any) => setRouteOrigin(e)}
@@ -85,9 +126,20 @@ export const RouteProximity = ({
                 }
                 reset={routeOrigin.length === 0 ? true : false}
               />
+              {/* <MapSearchInput 
+                setUserLocation={setUserLocation}
+                userLocation={userLocation}
+                handleClick={(e: any) => setRouteOrigin(e)}
+                value={routeOrigin}
+                placeholder="Origin"
+                prefix={
+                  <i className="fi fi-sr-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 w-5 h-5"></i>
+                }
+                reset={routeOrigin.length === 0 ? true : false}
+              /> */}
             </div>
             <div className="col-span-2">
-            <MapSearchInput 
+              <MapBoxSearchInput
                 setUserLocation={setUserLocation}
                 userLocation={userLocation}
                 handleClick={(e: any) => setRouteDestination(e)}
@@ -98,6 +150,17 @@ export const RouteProximity = ({
                 }
                 reset={routeDestination.length === 0 ? true : false}
               />
+            {/* <MapSearchInput 
+                setUserLocation={setUserLocation}
+                userLocation={userLocation}
+                handleClick={(e: any) => setRouteDestination(e)}
+                value={routeDestination}
+                placeholder="Destination"
+                prefix={
+                  <i className="fi fi-sr-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 w-5 h-5"></i>
+                }
+                reset={routeDestination.length === 0 ? true : false}
+              /> */}
             </div>
             <div className="col-span-1">
               <PrimaryButton
@@ -137,7 +200,7 @@ export const RouteProximity = ({
                   `}
                   onClick={() => {
                     // console.log(randomColor(index));
-                    console.log(route)
+                    // console.log(route)
                   }}
                 >
                   <div className="">
@@ -145,15 +208,15 @@ export const RouteProximity = ({
                       setShowDetails(index);
                     }}>
                       <p className="text-sm">
-                        {index + 1}. <span className="font-bold">{route.origin.place_name?.split(",")[0]}</span> to {" "}
+                        {index + 1}. <span className="font-bold">{route?.origin?.place_name?.split(",")[0]}</span> to {" "}
                         <span className="font-bold">
-                          {route.destination.place_name?.split(",")[0]}
+                          {route?.destination?.place_name?.split(",")[0]}
                         </span>
                         <span className="px-2 text-blue">
                         ({route?.selectedScreens?.length})
                         </span>
                       </p>
-                      <i className="fi fi-sr-cross-small text-gray-700 flex items-center" onClick={() => handleRemoveRoute(route.id)}></i>
+                      <i className="fi fi-sr-cross-small text-gray-700 flex items-center" onClick={() => handleRemoveRoute(route?.id)}></i>
                     </div>
                   </div>
 
@@ -164,14 +227,14 @@ export const RouteProximity = ({
                         <i className="fi fi-sr-marker text-violet-500 text-[12px]"></i>
 
                         <p className="text-[12px]">
-                          {route.origin.place_name}
+                          {route?.origin?.place_name}
                         </p>
                       </div>
                       <div className="flex gap-2 items-center">
                         {/* <i className="fi fi-br-arrow-alt-to-left text-[12px] text-red-600"></i> */}
                         <i className="fi fi-sr-marker text-pink-500 text-[12px]"></i>
                         <p className="text-[12px]">
-                          {route.destination.place_name}
+                          {route?.destination?.place_name}
                         </p>
                       </div>
                     </div>

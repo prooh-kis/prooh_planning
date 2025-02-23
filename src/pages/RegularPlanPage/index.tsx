@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
 import {
-  AdvanceFiltersDetails,
   AudienceTouchPointsDetails,
   RegularCohortComparisonDetails,
   CreativeUploadDetails,
@@ -21,6 +20,7 @@ import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET, CAMPAIGN_PLAN_TYPE_REGULAR } from "../../constants/campaignConstants";
 import { ALL_COHORTS, ALL_MARKETS, ALL_TOUCHPOINTS } from "../../constants/helperConstants";
+import { AdvanceFiltersDetails } from "../../components/planner/AdvancedFiltersDetails copy";
 
 const pages = [
   {
