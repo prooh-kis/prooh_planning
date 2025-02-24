@@ -97,6 +97,7 @@ export const AdvanceFiltersDetails = ({
   const [routeFilteredScreens, setRouteFilteredScreens] = useState<any>([]);
   const [poiFilteredScreens, setPOIFilteredScreens] = useState<any>([]);
 
+  const [draw, setDraw] = useState<any>("simple_select");
   const [polygons, setPolygons] = useState<any>(
     //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.polygons?.map((poly: any) => {
     //   return {...poly, properties: {}};
@@ -402,20 +403,11 @@ export const AdvanceFiltersDetails = ({
       }
     }
   }, [advanceFilterData]);
-
-  // console.log(
-  //   routes?.map((route: any) => {
-  //   return {
-  //     origin: route.origin,
-  //     destination: route.destination,
-  //     radius: routeRadius,
-  //   }
-  // }));
-  // console.log(dataBrand, dataComp);
+ 
   return (
     <div className="w-full">
-      <div className="h-full w-full py-3 grid grid-cols-2 gap-4 pb-20">
-        <div className="col-span-1 h-full py-2 pr-4">
+      <div className="h-full w-full py-3 grid grid-cols-2 gap-4 pb-4">
+        <div className="col-span-1 h-full py-1 pr-4">
           {storeFilter && (
             <div className="h-auto">
               <div className="flex justify-between">
@@ -477,6 +469,7 @@ export const AdvanceFiltersDetails = ({
                 handleRouteSetup={handleRouteSetup}
                 handleRemoveRoute={handleRemoveRoute}
                 handleFinalSelectedScreens={handleFinalSelectedScreens}
+                setDraw={setDraw}
                 polygons={polygons}
                 setPolygons={setPolygons}
                 userLocation={userLocation}
@@ -491,7 +484,7 @@ export const AdvanceFiltersDetails = ({
               />
             </div>
           )}
-          <div className="flex items-center mx-[-1px] mb-20 mt-4">
+          <div className="flex items-center mx-[-1px] mb-0 mt-4">
             <CheckboxInput
               label={
                 <>
@@ -512,7 +505,7 @@ export const AdvanceFiltersDetails = ({
           </div>
         </div>
 
-        <div className="col-span-1 w-full h-full py-2">
+        <div className="col-span-1 w-full h-full py-1">
           {allScreens?.length > 0 && (
             <MapWithGeometry
               userLocation={userLocation}
@@ -532,6 +525,7 @@ export const AdvanceFiltersDetails = ({
               }
               setPolygons={setPolygons}
               polygons={polygons}
+              draw={draw}
             />
           )}
         </div>

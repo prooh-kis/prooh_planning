@@ -28,6 +28,7 @@ interface LocationProximityProps {
   handleRouteSetup?: any;
   handleRemoveRoute?: any;
   handleFinalSelectedScreens?: any;
+  setDraw?: any;
   polygons?: any;
   setPolygons?: any;
   routeFilteredScreens?: any;
@@ -60,6 +61,7 @@ export const LocationProximity = ({
   excelFilteredScreens,
   circleRadius,
   handleFinalSelectedScreens,
+  setDraw,
   polygons,
   setPolygons,
   routeFilteredScreens,
@@ -82,7 +84,7 @@ export const LocationProximity = ({
   });
   return (
     <div className="pt-2 h-full">
-      <div className="h-[60vh] overflow-scroll no-scrollbar">
+      <div className="h-[65vh] overflow-scroll no-scrollbar">
 
       <ExcelImport
         open={open}
@@ -119,6 +121,7 @@ export const LocationProximity = ({
         open={open}
         setOpen={setOpen}
         polygons={polygons}
+        setDraw={setDraw}
         setPolygons={setPolygons}
       />
       {/* <POIProximity

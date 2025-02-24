@@ -13,6 +13,7 @@ import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import * as turf from "@turf/turf";
+import { Tooltip } from "antd";
 
 mapboxgl.accessToken =
   // process.env.REACT_APP_MAPBOX ||
@@ -27,9 +28,9 @@ export function MapWithGeometry(props) {
   const [screenData, setScreenData] = useState(null);
   const [isSelectedData, setIsSelectedData] = useState(false);
   const [viewState, setViewState] = useState({
-    longitude: props?.geometry?.coordinates[1] || 77.0891,
-    latitude: props?.geometry?.coordinates[0] || 28.495,
-    zoom: props?.zoom || 9,
+    longitude: props?.geometry?.coordinates[1] || 77.25,
+    latitude: props?.geometry?.coordinates[0] || 28.5,
+    zoom: props?.zoom || 9.5,
   });
 
   // console.log(props?.data["brand"][0]?.concat(props?.data["comp"][0]))
@@ -54,6 +55,7 @@ export function MapWithGeometry(props) {
   }, []);
 
 function MapDrawControl({
+  drawMode = "simple_select",
   onCreate = () => {},
   onUpdate = () => {},
   onDelete = () => {},
@@ -67,7 +69,7 @@ function MapDrawControl({
         trash: false, // Enable delete control
         direct_select: false, // Allow direct selection of drawn features
       },
-      // defaultMode: "draw_polygon", // Set default mode to polygon drawing
+      defaultMode: drawMode, // Set default mode to polygon drawing
     }),
     ({ map }) => {
       map.on("draw.create", onCreate);
@@ -115,6 +117,7 @@ function MapDrawControl({
         screen.location.geographicalLocation.longitude,
         screen.location.geographicalLocation.latitude,
         screen._id,
+        screen.screenType,
       ])
     );
 
@@ -127,6 +130,7 @@ function MapDrawControl({
           screen.location.geographicalLocation.longitude,
           screen.location.geographicalLocation.latitude,
           screen._id,
+          screen.screenType,
         ])
     );
     return updatedPolygons;
@@ -313,6 +317,7 @@ function MapDrawControl({
         m.location.geographicalLocation.longitude,
         m.location.geographicalLocation.latitude,
         m._id,
+        m.screenType,
       ])
     );
 
@@ -325,6 +330,7 @@ function MapDrawControl({
           m.location.geographicalLocation.longitude,
           m.location.geographicalLocation.latitude,
           m._id,
+          m.screenType,
         ])
     );
   }, [props]);
@@ -404,34 +410,30 @@ function MapDrawControl({
           {/* {selectedMarkers && ( */}
           <MapDrawControl
             position="top-left"
+            drawMode = {props?.draw}
             onCreate={onCreatePolygon}
             onUpdate={onUpdatePolygon}
             onDelete={onDeletePolygon}
           />
           {/* )} */}
 
-          {selectedMarkers && selectedMarkers.length > 0 && selectedMarkers.map((marker, i) => (
-            <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
+          {selectedMarkers && selectedMarkers.length > 0 && selectedMarkers.map((marker) => (
+            <Marker key={marker[2]} latitude={marker[1]} longitude={marker[0]}>
               <div 
                 title={`Selected screens ${props?.filteredScreens?.length}`}
                 className="cursor-pointer"
-                // onMouseEnter={(e) => {
-                //   e.stopPropagation();
-                //   setIsSelectedData(true);
-                //   getSingleScreenData(marker[2]);
-                // }}
-                // onMouseLeave={(e) => {
-                //   // e.stopPropagation();
-                //   // setScreenData(null);
-                // }}
               >
-                <i className="fi fi-ss-circle text-primaryButton text-[14px]"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsSelectedData(true);
-                    getSingleScreenData(marker[2]);
-                  }}
-                ></i>
+                <Tooltip
+                  title={`${marker[3]} Inventory`}
+                >
+                  <i className={`fi fi-ss-circle border rounded-full flex items-center justify-center text-primaryButton ${marker[3] === "Spectacular" ? "text-[24px]" : marker[3] === "Large" ? "text-[18px]" : "text-[12px]"}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsSelectedData(true);
+                      getSingleScreenData(marker[2]);
+                    }}
+                  ></i>
+                </Tooltip>
               </div>
             </Marker>
           ))}
@@ -446,24 +448,20 @@ function MapDrawControl({
                     )?.length
                   }`}
                   className="cursor-pointer"
-                  // onMouseEnter={(e) => {
-                  //   e.stopPropagation();
-                  //   setIsSelectedData(false);
-                  //   getSingleScreenData(marker[2]);
-                  // }}
-                  // onMouseLeave={(e) => {
-                  //   // e.stopPropagation();
-                  //   // setScreenData(null);
-                  // }}
                 >
-                  <i
-                    className="fi-ss-circle text-[#F94623] text-[12px]"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsSelectedData(false);
-                      getSingleScreenData(marker[2]);
-                    }}
-                  ></i>
+                  <Tooltip
+                    title={`${marker[3]} Inventory`}
+                  >
+                    <i
+                      className={`fi fi-ss-circle  text-[#F94623] border rounded-full flex items-center justify-center ${marker[3] === "Spectacular" ? "text-[24px]" : marker[3] === "Large" ? "text-[18px]" : "text-[12px]"}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsSelectedData(false);
+                        getSingleScreenData(marker[2]);
+                      }}
+                    ></i>
+                  </Tooltip>
+                  
                 </div>
               </Marker>
             ))}
@@ -474,15 +472,15 @@ function MapDrawControl({
               key={screenData._id}
               latitude={screenData?.location?.geographicalLocation?.latitude}
               longitude={screenData?.location?.geographicalLocation?.longitude}
-              onClose={() => {
-                setScreenData(null);
-              }}
-              anchor="right"
-              offset={[10, 10]} // Adjusts popup position
+              // onClose={() => {
+              //   setScreenData(null);
+              // }}
+              closeButton={false}
+              anchor="bottom"
+              offset={[0, -10]} // Adjusts popup position
               dynamicPosition={true} // Prevents Mapbox from repositioning
             >
               <MapboxScreen
-                handleAddManualSelection={props?.handleAddManualSelection}
                 screenData={screenData}
                 setScreenData={setScreenData}
                 handleSelectFromMap={props.handleSelectFromMap}

@@ -115,18 +115,7 @@ export const RouteProximity = ({
         <div className="w-full">
           <div className="grid grid-cols-5 gap-2 flex items-center pt-2">
             <div className="col-span-2">
-              <MapBoxSearchInput
-                setUserLocation={setUserLocation}
-                userLocation={userLocation}
-                handleClick={(e: any) => setRouteOrigin(e)}
-                value={routeOrigin}
-                placeholder="Origin"
-                prefix={
-                  <i className="fi fi-sr-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 w-5 h-5"></i>
-                }
-                reset={routeOrigin.length === 0 ? true : false}
-              />
-              {/* <MapSearchInput 
+              {/* <MapBoxSearchInput
                 setUserLocation={setUserLocation}
                 userLocation={userLocation}
                 handleClick={(e: any) => setRouteOrigin(e)}
@@ -137,20 +126,20 @@ export const RouteProximity = ({
                 }
                 reset={routeOrigin.length === 0 ? true : false}
               /> */}
+              <MapSearchInput 
+                setUserLocation={setUserLocation}
+                userLocation={userLocation}
+                handleClick={(e: any) => setRouteOrigin(e)}
+                value={routeOrigin}
+                placeholder="Origin"
+                prefix={
+                  <i className="fi fi-sr-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 w-5 h-5"></i>
+                }
+                reset={routeOrigin.length === 0 ? true : false}
+              />
             </div>
             <div className="col-span-2">
-              <MapBoxSearchInput
-                setUserLocation={setUserLocation}
-                userLocation={userLocation}
-                handleClick={(e: any) => setRouteDestination(e)}
-                value={routeDestination}
-                placeholder="Destination"
-                prefix={
-                  <i className="fi fi-sr-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 w-5 h-5"></i>
-                }
-                reset={routeDestination.length === 0 ? true : false}
-              />
-            {/* <MapSearchInput 
+              {/* <MapBoxSearchInput
                 setUserLocation={setUserLocation}
                 userLocation={userLocation}
                 handleClick={(e: any) => setRouteDestination(e)}
@@ -161,6 +150,17 @@ export const RouteProximity = ({
                 }
                 reset={routeDestination.length === 0 ? true : false}
               /> */}
+            <MapSearchInput 
+                setUserLocation={setUserLocation}
+                userLocation={userLocation}
+                handleClick={(e: any) => setRouteDestination(e)}
+                value={routeDestination}
+                placeholder="Destination"
+                prefix={
+                  <i className="fi fi-sr-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 w-5 h-5"></i>
+                }
+                reset={routeDestination.length === 0 ? true : false}
+              />
             </div>
             <div className="col-span-1">
               <PrimaryButton
