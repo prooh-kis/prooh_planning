@@ -3,11 +3,10 @@ import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { formatNumber } from "../../utils/formatValue";
 
-// Register required components with Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface DoughnutChartProps {
-  data: { [city: string]: number }; // Audience data as an object
+  data: { [key: string]: { promised?: number; delivered?: number } };
   type?: string;
   total?: number;
 }
@@ -17,14 +16,14 @@ export const DashboardPieChart: React.FC<DoughnutChartProps> = ({
   type,
   data,
 }) => {
-  // Extract labels (cities) and values (audience numbers) from the object
+  // Extract labels (keys of the data object)
   const labels = Object.keys(data);
-  const values = Object.values(data);
 
-  const totalValue = values.reduce((sum, value) => sum + value, 0);
-  // console.log("data : ", data);
+  // Extract values for promised and delivered
+  const promisedValues = labels.map((key) => data[key].promised || 0);
+  const deliveredValues = labels.map((key) => data[key].delivered || 0);
 
-  // Define colors for each segment
+  // Define colors for promised and delivered
   const backgroundColors = [
     "#FF6384",
     "#36A2EB",
@@ -40,24 +39,28 @@ export const DashboardPieChart: React.FC<DoughnutChartProps> = ({
     labels,
     datasets: [
       {
-        data: values,
-        backgroundColor: backgroundColors.slice(0, labels.length),
-        hoverBackgroundColor: backgroundColors
-          .slice(0, labels.length)
-          .map((color) => color + "70"), // Transparent hover effect
-        borderWidth: 1,
-        spacing: 2, // Adds spacing between each segment
-        datalabels: {
-          color: "#fff",
-          anchor: "center" as const,
-          align: "center" as const,
-          font: { weight: "bold" as const },
-          // formatter: (value: number) => formatNumber(value.toFixed(0)), // Hide zero values
-          formatter: (value: number) => {
-            const percentage = ((value / totalValue) * 100).toFixed(1);
-            return `${percentage}%`;
-          },
-        },
+        label: "Promised",
+        data: promisedValues,
+        backgroundColor: labels.map(
+          (_, index) => backgroundColors[index % backgroundColors.length]
+        ),
+        hoverBackgroundColor: labels.map(
+          (_, index) => backgroundColors[index % backgroundColors.length] + "70"
+        ),
+      },
+      {
+        label: "Delivered",
+        data: deliveredValues,
+        backgroundColor: labels.map(
+          (_, index) =>
+            backgroundColors[(index + labels.length) % backgroundColors.length]
+        ),
+        hoverBackgroundColor: labels.map(
+          (_, index) =>
+            backgroundColors[
+              (index + labels.length) % backgroundColors.length
+            ] + "70"
+        ),
       },
     ],
   };
@@ -65,52 +68,35 @@ export const DashboardPieChart: React.FC<DoughnutChartProps> = ({
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    aspectRatio: 1, // Keep the chart square
     plugins: {
       legend: {
         display: false,
+        position: "bottom" as const,
       },
       tooltip: {
         callbacks: {
           label: function (tooltipItem: any) {
-            const label = labels[tooltipItem.dataIndex];
-            const value = values[tooltipItem.dataIndex];
-            return `${label}: ${formatNumber(value.toFixed(0))}`;
+            return `${tooltipItem.dataset.label}: ${formatNumber(
+              tooltipItem.raw?.toFixed(2)
+            )}`;
           },
         },
       },
+      datalabels: {
+        display: false, // 👈 This completely hides data labels
+      },
     },
-    cutout: "30%", // Adjust the size of the inner circle (doughnut size)
-    radius: "95%", // Adjusts the outer radius of the doughnut
-    hoverOffset: 20, // "Explode" effect on hover
+    cutout: "50%", // Adjust inner circle size
   };
 
   return (
-    <div
-      className="w-full max-w-md mx-auto p-4"
-      style={{
-        position: "relative",
-        padding: "10px", // Add padding around the chart
-        boxSizing: "border-box", // Ensure padding does not affect dimensions
-        overflow: "visible", // Allow hover effect to show fully
-      }}
-    >
-      {/* Chart container */}
-      <div
-        className="relative py-10"
-        style={{
-          // width: "300px",
-          // height: "300px", // Control chart size
-          margin: "0 auto", // Center the chart
-        }}
-      >
+    <div className="w-full max-w-md mx-auto p-4">
+      <div className="relative">
         <Doughnut data={chartData} options={options} />
       </div>
-      <div className="w-full flex items-center justify-center">
-        <h1 className="text-[14px]">
-          {type === "city" ? "City wise" : "Touchpoints wise"}
-        </h1>
-        <h1 className="text-[14px]">{total}</h1>
+      <div className="w-full flex items-center justify-center mt-2 text-[#0E212E] text-[16px]">
+        <h1 className="text-[14px]">{type}</h1>
+        <h1 className="text-[14px] ml-2">{total}</h1>
       </div>
     </div>
   );

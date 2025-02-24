@@ -5,26 +5,15 @@ interface DashboardFiltersProps {
   handleSelectCity: any;
   handleSelectTouchPoint: any;
   touchPointList: string[];
+  cityList: string[];
 }
 export const DashboardFilters = ({
   campaignDetails,
   handleSelectCity,
   handleSelectTouchPoint,
   touchPointList,
+  cityList,
 }: DashboardFiltersProps) => {
-  const getCityList = () => {
-    return campaignDetails?.creatives?.reduce(
-      (creative: string[], currentCreative: any) => {
-        if (creative.includes(currentCreative?.city)) {
-          return creative;
-        } else {
-          return [...creative, currentCreative?.city];
-        }
-      },
-      []
-    );
-  };
-
   return (
     <div className="grid grid-cols-6 gap-2 py-2 ">
       <h1 className="col-span-2 flex items-center">
@@ -86,7 +75,7 @@ export const DashboardFilters = ({
           width="w-full"
           placeHolder="----Select City----"
           setSelectedOption={handleSelectCity}
-          options={getCityList()?.map((city: string) => {
+          options={cityList?.map((city: string) => {
             return {
               label: city,
               value: city,

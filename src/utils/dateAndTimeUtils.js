@@ -1,12 +1,14 @@
 export function getNumberOfDaysBetweenTwoDates(date1, date2) {
+  // Convert to Date objects ensuring only date part (set time to 00:00:00)
   date1 = new Date(date1);
   date2 = new Date(date2);
 
-  //calculate time difference
-  var time_difference = date2.getTime() - date1.getTime();
-  //calculate days difference by dividing total milliseconds in a day
-  var days_difference = time_difference / (1000 * 60 * 60 * 24);
-  return Math.round(days_difference);
+  date1.setHours(0, 0, 0, 0);
+  date2.setHours(0, 0, 0, 0);
+
+  // Calculate the difference in days
+  const time_difference = date2.getTime() - date1.getTime();
+  return Math.round(time_difference / (1000 * 60 * 60 * 24));
 }
 
 export function getEndDateFromStartDateANdDuration(date1, duration) {
@@ -103,12 +105,15 @@ export function getTimeFromDate(string) {
 }
 
 export const calculateDaysPlayed = (startDate, endDate) => {
-  const today = new Date().getTime();
-  const campaignEnd = new Date(endDate).getTime();
-  const effectiveEndDate = today < campaignEnd ? new Date() : endDate;
-  return today < campaignEnd
-    ? getNumberOfDaysBetweenTwoDates(startDate, effectiveEndDate) + 1
-    : getNumberOfDaysBetweenTwoDates(startDate, effectiveEndDate);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Remove time component from today
+
+  const campaignEnd = new Date(endDate);
+  campaignEnd.setHours(0, 0, 0, 0); // Remove time component
+
+  const effectiveEndDate = today < campaignEnd ? today : campaignEnd;
+
+  return getNumberOfDaysBetweenTwoDates(startDate, effectiveEndDate) + 1;
 };
 
 export function getAllDatesBetween(startDate, endDate) {
@@ -130,7 +135,6 @@ export function formatDate(dateString) {
 
   return `${day} ${date.toLocaleString("en-US", { month: "short" })}`;
 }
-
 
 export function getCampaignEndingStatus(endDate) {
   return getNumberOfDaysBetweenTwoDates(new Date(), endDate) < 0
