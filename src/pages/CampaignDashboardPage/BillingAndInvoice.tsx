@@ -92,29 +92,29 @@ export const BillingAndInvoice = (props: any) => {
 
   const saveClientAgencyDetails = () => {
     
-    // dispatch(addClientAgencyDetails({
-    //   clientAgencyName: clientAgencyName,
-    //   pocName: pocName,
-    //   pocEmail: pocEmail,
-    //   pocContact: pocContact,
-    //   pocDesignation: pocDesignation,
-    //   officeAddress: {
-    //     address: address,
-    //     city: city,
-    //     state: stateName,
-    //     country: country,
-    //     phone: phone,
-    //     email: email,
-    //     website: website,
-    //     zipCode: zipCode,
-    //     gst: gst,
-    //     pan: pan,
-    //   },
-    //   poRecieved: poNumber && !clientAgencyDetailsData?.poRecieved?.map((po: any) => po.poNumber)?.includes(poNumber) ? clientAgencyDetailsData?.poRecieved.push({
-    //     poNumber: poNumber,
-    //     poDoc: ""
-    //   }) : clientAgencyDetailsData?.poRecieved
-    // }));
+    dispatch(addClientAgencyDetails({
+      clientAgencyName: clientAgencyName,
+      pocName: pocName,
+      pocEmail: pocEmail,
+      pocContact: pocContact,
+      pocDesignation: pocDesignation,
+      officeAddress: {
+        address: address,
+        city: city,
+        state: stateName,
+        country: country,
+        phone: phone,
+        email: email,
+        website: website,
+        zipCode: zipCode,
+        gst: gst,
+        pan: pan,
+      },
+      poRecieved: poNumber && !clientAgencyDetailsData?.poRecieved?.map((po: any) => po.poNumber)?.includes(poNumber) ? clientAgencyDetailsData?.poRecieved.push({
+        poNumber: poNumber,
+        poDoc: ""
+      }) : clientAgencyDetailsData?.poRecieved
+    }));
 
     dispatch(createBillInvoice({
       campaignCreationId: campaignDetails?._id,

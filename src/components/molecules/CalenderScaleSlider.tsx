@@ -81,7 +81,7 @@ export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({
                           <div
                             className={`w-4 h-4 rounded-full relative z-10 ${
                               lastPlayedDay === day
-                                ? "bg-[#22C55E]"
+                                ? "bg-[#22C55E] animate-ping"
                                 : isDayPlayed(day)
                                 ? "bg-[#129BFF]"
                                 : "bg-[#D7D7D7]"

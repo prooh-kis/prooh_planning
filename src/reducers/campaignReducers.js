@@ -31,6 +31,9 @@ import {
   CAMPAIGN_MONITORING_PICS_REQUEST,
   CAMPAIGN_MONITORING_PICS_SUCCESS,
   CAMPAIGN_MONITORING_PICS_FAIL,
+  GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_REQUEST,
+  GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_SUCCESS,
+  GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_ERROR,
 } from "../constants/campaignConstants";
 import { FULL_CAMPAIGN_PLAN } from "../constants/localStorageConstants";
 
@@ -76,6 +79,26 @@ export function myCreateCampaignsListGetReducer(state = [], action) {
         data: action.payload,
       };
     case GET_MY_CREATE_CAMPAIGNS_LIST_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function myCreateCampaignsListForPlanGetReducer(state = [], action) {
+  switch (action.type) {
+    case GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_REQUEST:
+      return { loading: true };
+    case GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        data: action.payload,
+      };
+    case GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_ERROR:
       return {
         loading: false,
         error: action.payload,

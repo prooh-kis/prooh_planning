@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
 import { MyPlansList } from "./MyPlansList";
-import { getMyCreateCampaignsList } from "../../actions/campaignAction";
+import { getMyCreateCampaignsList, getMyCreateCampaignsListForPlan } from "../../actions/campaignAction";
 import { Loading } from "../../components/Loading";
 import { message } from "antd";
 import { NoDataView } from "../../components/molecules/NoDataView";
@@ -17,14 +17,14 @@ export const MiddleArea: React.FC = () => {
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-  const myCreateCampaignsListGet = useSelector(
-    (state: any) => state.myCreateCampaignsListGet
+  const myCreateCampaignsListForPlanGet = useSelector(
+    (state: any) => state.myCreateCampaignsListForPlanGet
   );
   const {
-    loading: loadingCampaignsList,
-    error: errorCampaignsList,
-    data: campaignsList,
-  } = myCreateCampaignsListGet;
+    loading: loadingCampaignsListForPlan,
+    error: errorCampaignsListForPlan,
+    data: campaignsListForPlan,
+  } = myCreateCampaignsListForPlanGet;
 
   useEffect(() => {
     if (!userInfo) {
@@ -35,21 +35,21 @@ export const MiddleArea: React.FC = () => {
       navigate("/auth");
     }
 
-    if (userInfo?.isBrand) {
+    if (userInfo?.userRole === CAMPAIGN_PLANNER ) {
       dispatch(
-        getMyCreateCampaignsList({ id: userInfo?._id, type: "incomplete" })
+        getMyCreateCampaignsListForPlan({ id: userInfo?._id })
       );
     }
   }, [dispatch, navigate, userInfo]);
   return (
     <div className="mt-6 w-full h-full pb-5 flex justify-center">
-      {loadingCampaignsList ? (
+      {loadingCampaignsListForPlan ? (
         <div className="w-full">
-          <h1>Loading Data....., please wait</h1>
+          {/* <h1>Loading Data....., please wait</h1> */}
           <Loading />
         </div>
-      ) : campaignsList?.length > 0 ? (
-        <MyPlansList plansList={campaignsList} />
+      ) : campaignsListForPlan?.length > 0 ? (
+        <MyPlansList plansList={campaignsListForPlan} />
       ) : (
         <NoDataView />
       )}

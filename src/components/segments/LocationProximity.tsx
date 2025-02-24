@@ -83,64 +83,62 @@ export const LocationProximity = ({
     "poi": true,
   });
   return (
-    <div className="pt-2 h-full">
-      <div className="h-[65vh] overflow-scroll no-scrollbar">
+    <div className="h-auto">
+      <div className="h-[60vh] lg:h-[60vh] overflow-scroll no-scrollbar">
 
-      <ExcelImport
-        open={open}
-        setOpen={setOpen}
-        icon="fi fi-rr-shop pl-2 text text-primaryButton flex items-center"
-        text="Stores"
-        setDataBrand={setDataBrand}
-        setDataComp={setDataComp}
-        allScreens={allScreens}
-        setFilteredScreens={setExcelFilteredScreens}
-        filteredScreens={excelFilteredScreens}
-        circleRadius={circleRadius}
-        type={["brand", "comp"]}
-        handleFinalSelectedScreens={handleFinalSelectedScreens}
+        <ExcelImport
+          open={open}
+          setOpen={setOpen}
+          icon="fi fi-rr-shop pl-2 text text-primaryButton flex items-center"
+          text="Stores"
+          setDataBrand={setDataBrand}
+          setDataComp={setDataComp}
+          allScreens={allScreens}
+          setFilteredScreens={setExcelFilteredScreens}
+          filteredScreens={excelFilteredScreens}
+          circleRadius={circleRadius}
+          type={["brand", "comp"]}
+          handleFinalSelectedScreens={handleFinalSelectedScreens}
+        />
+        <RouteProximity
+          open={open}
+          setOpen={setOpen}
+          routeRadius={routeRadius}
+          userLocation={userLocation}
+          setUserLocation={userLocation}
+          routeFilteredScreens={routeFilteredScreens}
+          routes={routes}
+          routeOrigin={routeOrigin}
+          setRouteOrigin={setRouteOrigin}
+          routeDestination={routeDestination}
+          setRouteDestination={setRouteDestination}
+          handleFinalSelectedScreens={handleFinalSelectedScreens}
+          setRoutes={setRoutes}
+          setRouteFilteredScreens={setRouteFilteredScreens}
+        />
+        <DrawnMapPolygon
+          open={open}
+          setOpen={setOpen}
+          polygons={polygons}
+          setDraw={setDraw}
+          setPolygons={setPolygons}
+        />
+        {/* <POIProximity
+          open={open}
+          setOpen={setOpen}
+          pois={pois}
+          selectedPOIs={selectedPOIs}
+          setSelectedPOIs={setSelectedPOIs}
+          setPOIFilteredScreens={setPOIFilteredScreens}
+          allScreens={allScreens}
+          finalSelectedScreens={finalSelectedScreens}
+          selectedScreensFromMap={selectedScreensFromMap}
+          handleSelectFromMap={handleSelectFromMap}
+          handleConfirmScreensSelections={handleConfirmScreensSelections}
+        /> */}
+      </div>
 
-      />
-      <RouteProximity
-        open={open}
-        setOpen={setOpen}
-        routeRadius={routeRadius}
-        userLocation={userLocation}
-        setUserLocation={userLocation}
-        routeFilteredScreens={routeFilteredScreens}
-        routes={routes}
-        routeOrigin={routeOrigin}
-        setRouteOrigin={setRouteOrigin}
-        routeDestination={routeDestination}
-        setRouteDestination={setRouteDestination}
-        handleFinalSelectedScreens={handleFinalSelectedScreens}
-        setRoutes={setRoutes}
-        setRouteFilteredScreens={setRouteFilteredScreens}
-      />
-      <DrawnMapPolygon
-        open={open}
-        setOpen={setOpen}
-        polygons={polygons}
-        setDraw={setDraw}
-        setPolygons={setPolygons}
-      />
-      {/* <POIProximity
-        open={open}
-        setOpen={setOpen}
-        pois={pois}
-        selectedPOIs={selectedPOIs}
-        setSelectedPOIs={setSelectedPOIs}
-        setPOIFilteredScreens={setPOIFilteredScreens}
-        allScreens={allScreens}
-        finalSelectedScreens={finalSelectedScreens}
-        selectedScreensFromMap={selectedScreensFromMap}
-        handleSelectFromMap={handleSelectFromMap}
-        handleConfirmScreensSelections={handleConfirmScreensSelections}
-      /> */}
-    </div>
-
-    <div className="pt-2">
-      <div className="flex justify-start gap-2">
+      <div className="flex justify-start gap-2 pt-2">
         <h1 className="lg:text-[16px] text-[14px] font-semibold">Showing Results Below</h1>
         <Tooltip
             title="Only showing unique screens from all the above filters selected"
@@ -149,8 +147,8 @@ export const LocationProximity = ({
         </Tooltip>
       </div>
 
-      <div className="pb-1 grid grid-cols-12 gap-2 flex items-center">
-        <div className="col-span-2">
+      <div className="grid grid-cols-12 gap-2 flex items-center pt-2">
+        <div className="col-span-1">
           <CheckboxInput
             color="#52A2FF"
             label={finalSelectedScreens.length}
@@ -159,12 +157,11 @@ export const LocationProximity = ({
             onChange={() => {}}
           />
         </div>
-        <div className="col-span-8">
+        <div className="col-span-10">
           <LinearBar value={(finalSelectedScreens.length * 100 / (allScreens.length))?.toFixed(2)} colors={["#F3F3F3", "#7AB3A2"]} />
         </div>
-        <p className="col-span-2 text-[12px] text-semibold flex justify-end truncate">{allScreens?.length} Sites</p>
+        <p className="col-span-1 text-[12px] text-semibold flex justify-end truncate">{allScreens?.length} Sites</p>
       </div>
     </div>
-  </div>
   )
 }

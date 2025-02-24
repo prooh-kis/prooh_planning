@@ -5,6 +5,8 @@ import { CampaignsListModel } from '../../components/molecules/CampaignsListMode
 import SearchInputField from '../../components/molecules/SearchInputField';
 import { DropdownInput } from '../../components/atoms/DropdownInput';
 import { useNavigate } from 'react-router-dom';
+import { Loading } from '../../components/Loading';
+import { NoDataView } from '../../components/molecules/NoDataView';
 
 const allTabs = [{
   id: "1",
@@ -58,7 +60,7 @@ export const MyCampaignsList = ({ loading, campaignsList, currentTab, setCurrent
         </div>
         {loading ? (
           <div className="">
-            <SkeletonLoader />
+            <Loading />
           </div>
         ) : (
           <div className="overflow-y-scroll no-scrollbar h-[80vh] my-1 rounded-[12px]">
@@ -78,6 +80,9 @@ export const MyCampaignsList = ({ loading, campaignsList, currentTab, setCurrent
                   <CampaignsListModel data={data} />
                 </div>
             ))}
+            {campaignsList?.length === 0 && (
+              <NoDataView />
+            )}
           </div>
         )}
       </div>

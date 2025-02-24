@@ -306,7 +306,7 @@ export const CampaignDashboard = ({
           />
           <div className="grid grid-cols-2 gap-2">
             <div
-              className="col-span-1 border border-gray-300 rounded-lg p-2 flex justify-center items-center h-[38px]"
+              className="col-span-1 border border-gray-300 rounded-lg px-2 flex justify-center items-center h-[32px]"
               onClick={() =>
                 navigate(
                   `/${getCampaignPageNameFromCampaignType(
@@ -315,13 +315,13 @@ export const CampaignDashboard = ({
                 )
               }
             >
-              <i className="fi fi-tr-file-edit text-[14px]"></i>
+              <i className="fi fi-tr-file-edit text-[14px] flex items-center justify-center"></i>
             </div>
             <div
-              className="col-span-1 border border-gray-300 rounded-lg p-2 flex justify-center items-center h-[38px]"
+              className="col-span-1 border border-gray-300 rounded-lg px-2 flex justify-center items-center h-[32px]"
               onClick={() => setOpenInvoice(true)}
             >
-              <i className="fi fi-tr-point-of-sale-bill text-[14px]"></i>
+              <i className="fi fi-tr-point-of-sale-bill text-[14px] flex items-center justify-center"></i>
             </div>
           </div>
         </div>

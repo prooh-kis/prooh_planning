@@ -88,14 +88,14 @@ export const removeCouponForCampaign = ({campaignCreationId}) => async (dispatch
 };
 
 export const addClientAgencyDetails =
-  ({ clientAgencyName }) =>
+  (input) =>
   async (dispatch, getState) => {
     dispatch({
       type: ADD_CLIENT_AGENCY_DETAILS_REQUEST,
-      payload: { clientAgencyName },
+      payload: input,
     });
     try {
-      const { data } = await axios.post(`${url}/add`, { clientAgencyName });
+      const { data } = await axios.post(`${url}/add`, input);
       dispatch({
         type: ADD_CLIENT_AGENCY_DETAILS_SUCCESS,
         payload: data,

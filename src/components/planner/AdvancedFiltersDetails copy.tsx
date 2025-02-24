@@ -15,6 +15,7 @@ import { message, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPlanningPageFooterData,
+  getPoiBasedAudienceDataForAdvanceFilters,
   getRegularVsCohortPriceData,
   getScreenDataForAdvanceFilters,
 } from "../../actions/screenAction";
@@ -30,6 +31,7 @@ import {
 import { ALL_TOUCHPOINTS } from "../../constants/helperConstants";
 import { MapWithGeometry } from "../../components/map/MapWithGeometry";
 import { getUniqueScreens } from "../../utils/screenRanking";
+import { Loading } from "../../components/Loading";
 // import { MapWithGeometry } from "../../components/molecules/MapWithGeometry";
 
 type Coordinate = [number, number];
@@ -357,7 +359,21 @@ export const AdvanceFiltersDetails = ({
           screens: advanceFilterData?.screens,
         });
       }
+      // dispatch(getPoiBasedAudienceDataForAdvanceFilters({id: campId}));
+
+    } else {
+      dispatch(
+        getScreenDataForAdvanceFilters({
+          id: campId,
+          touchPoints: pathname?.split("/").includes("storebasedplan")
+            ? ALL_TOUCHPOINTS
+            : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
+                ?.touchPoints,
+        })
+      );
+      saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
     }
+
   }, [
     advanceFilterData,
     getMapData,
@@ -369,7 +385,7 @@ export const AdvanceFiltersDetails = ({
     if (successAddCampaignDetails) {
       dispatch(
         getPlanningPageFooterData({
-          id: campaignId,
+          id: campId,
           pageName: "Advance Filter Page",
         })
       );
@@ -385,125 +401,110 @@ export const AdvanceFiltersDetails = ({
       );
       saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
     }
-  }, [dispatch, campId, successAddCampaignDetails]);
 
-  useEffect(() => {
-    if (advanceFilterData) {
-      if (advanceFilterData?.screens.length === 0) {
-        dispatch(
-          getScreenDataForAdvanceFilters({
-            id: campId,
-            touchPoints: pathname?.split("/").includes("storebasedplan")
-              ? ALL_TOUCHPOINTS
-              : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
-                  ?.touchPoints,
-          })
-        );
-        saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
-      }
-    }
-  }, [advanceFilterData]);
- 
+  }, [dispatch, successAddCampaignDetails, pathname]);
+
   return (
     <div className="w-full">
-      <div className="h-full w-full py-3 grid grid-cols-2 gap-4 pb-4">
-        <div className="col-span-1 h-full py-1 pr-4">
-          {storeFilter && (
-            <div className="h-auto">
-              <div className="flex justify-between">
-                <div className="truncate w-full flex items-center">
-                  <h1 className="lg:text-[24px] md:text-[18px] text-primaryText font-semibold truncate">
-                    Store & Route Proximity
-                  </h1>
-                </div>
-
-                <div className="flex mt-3 items-top justify-end gap-2">
-                  <Tooltip title="Click to refresh the map data">
-                    <i
-                      className="fi fi-br-rotate-right text-[12px] flex items-center cursor-pointer"
-                      onClick={() => window.location.reload()}
-                    ></i>
-                  </Tooltip>
-                  <Tooltip title="Click to skip the advance filters">
-                    <i
-                      className="fi fi-br-ban text-[12px] text-[#FF0808] flex items-center cursor-pointer"
-                      onClick={() => {
-                        if (isDisabled) {
-                          message.error("Please  confirm screen selection");
-                        } else {
-                          dispatch(
-                            addDetailsToCreateCampaign({
-                              pageName: "Advance Filter Page",
-                              id: pathname.split("/").splice(-1)[0],
-                              screenIds: finalSelectedScreens.map(
-                                (s: any) => s._id
-                              ),
-                            })
-                          );
-                          setCurrentStep(step + 1);
-                        }
-                      }}
-                    ></i>
-                  </Tooltip>
-                </div>
+      <div className="h-full w-full py-3 grid grid-cols-2 gap-8 pb-4">
+        {loadingAdvanceFilterData ? (
+          <div className="h-full">
+            <Loading />
+          </div>
+        ) : (
+          <div className="col-span-1 h-full pt-1">
+            <div className="flex justify-between">
+              <div className="truncate w-full flex items-center">
+                <h1 className="lg:text-[24px] md:text-[18px] text-primaryText font-semibold truncate">
+                  Store & Route Proximity
+                </h1>
               </div>
+              <div className="flex mt-3 items-top justify-end gap-2">
+                <Tooltip title="Click to refresh the map data">
+                  <i
+                    className="fi fi-br-rotate-right text-[12px] flex items-center cursor-pointer"
+                    onClick={() => window.location.reload()}
+                  ></i>
+                </Tooltip>
+                <Tooltip title="Click to skip the advance filters">
+                  <i
+                    className="fi fi-br-ban text-[12px] text-[#FF0808] flex items-center cursor-pointer"
+                    onClick={() => {
+                      if (isDisabled) {
+                        message.error("Please  confirm screen selection");
+                      } else {
+                        dispatch(
+                          addDetailsToCreateCampaign({
+                            pageName: "Advance Filter Page",
+                            id: pathname.split("/").splice(-1)[0],
+                            screenIds: finalSelectedScreens.map(
+                              (s: any) => s._id
+                            ),
+                          })
+                        );
+                        setCurrentStep(step + 1);
+                      }
+                    }}
+                  ></i>
+                </Tooltip>
+              </div>
+            </div>
 
-              <LocationProximity
-                routeFilteredScreens={routeFilteredScreens}
-                setRouteFilteredScreens={setRouteFilteredScreens}
-                routes={routes}
-                setRoutes={setRoutes}
-                routeOrigin={routeOrigin}
-                setRouteOrigin={setRouteOrigin}
-                routeDestination={routeDestination}
-                setRouteDestination={setRouteDestination}
-                setDataBrand={setDataBrand}
-                setDataComp={setDataComp}
-                dataBrand={dataBrand}
-                dataComp={dataComp}
-                allScreens={allScreens}
-                finalSelectedScreens={finalSelectedScreens}
-                setExcelFilteredScreens={setExcelFilteredScreens}
-                excelFilteredScreens={excelFilteredScreens}
-                circleRadius={circleRadius}
-                handleRouteSetup={handleRouteSetup}
-                handleRemoveRoute={handleRemoveRoute}
-                handleFinalSelectedScreens={handleFinalSelectedScreens}
-                setDraw={setDraw}
-                polygons={polygons}
-                setPolygons={setPolygons}
-                userLocation={userLocation}
-                setUserLocation={setUserLocation}
-                pois={pois}
-                selectedPOIs={selectedPOIs}
-                setSelectedPOIs={setSelectedPOIs}
-                setPOIFilteredScreens={setPOIFilteredScreens}
-                selectedScreensFromMap={selectedScreensFromMap}
-                handleSelectFromMap={handleSelectFromMap}
-                handleConfirmScreensSelections={handleConfirmScreensSelections}
+            <LocationProximity
+              routeFilteredScreens={routeFilteredScreens}
+              setRouteFilteredScreens={setRouteFilteredScreens}
+              routes={routes}
+              setRoutes={setRoutes}
+              routeOrigin={routeOrigin}
+              setRouteOrigin={setRouteOrigin}
+              routeDestination={routeDestination}
+              setRouteDestination={setRouteDestination}
+              setDataBrand={setDataBrand}
+              setDataComp={setDataComp}
+              dataBrand={dataBrand}
+              dataComp={dataComp}
+              allScreens={allScreens}
+              finalSelectedScreens={finalSelectedScreens}
+              setExcelFilteredScreens={setExcelFilteredScreens}
+              excelFilteredScreens={excelFilteredScreens}
+              circleRadius={circleRadius}
+              handleRouteSetup={handleRouteSetup}
+              handleRemoveRoute={handleRemoveRoute}
+              handleFinalSelectedScreens={handleFinalSelectedScreens}
+              setDraw={setDraw}
+              polygons={polygons}
+              setPolygons={setPolygons}
+              userLocation={userLocation}
+              setUserLocation={setUserLocation}
+              pois={pois}
+              selectedPOIs={selectedPOIs}
+              setSelectedPOIs={setSelectedPOIs}
+              setPOIFilteredScreens={setPOIFilteredScreens}
+              selectedScreensFromMap={selectedScreensFromMap}
+              handleSelectFromMap={handleSelectFromMap}
+              handleConfirmScreensSelections={handleConfirmScreensSelections}
+            />
+            <div className="flex items-center mx-[-1px] pt-4">
+              <CheckboxInput
+                label={
+                  <>
+                    Confirm and take{" "}
+                    <span className=" font-bold">
+                      {`${finalSelectedScreens.length} Sites Out of ${allScreens.length} Sites `}
+                    </span>
+                    {" "}for my plan
+                  </>
+                }
+                onChange={(e) => {
+                  handleConfirmScreensSelections({
+                    checked: e,
+                    screens: finalSelectedScreens,
+                  });
+                }}
               />
             </div>
-          )}
-          <div className="flex items-center mx-[-1px] mb-0 mt-4">
-            <CheckboxInput
-              label={
-                <>
-                  Confirm and take{" "}
-                  <span className=" font-bold">
-                    {`${finalSelectedScreens.length} Sites Out of ${allScreens.length} Sites`}
-                  </span>{" "}
-                  for my plan
-                </>
-              }
-              onChange={(e) => {
-                handleConfirmScreensSelections({
-                  checked: e,
-                  screens: finalSelectedScreens,
-                });
-              }}
-            />
           </div>
-        </div>
+        )}
 
         <div className="col-span-1 w-full h-full py-1">
           {allScreens?.length > 0 && (

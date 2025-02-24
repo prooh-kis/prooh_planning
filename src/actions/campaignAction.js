@@ -27,6 +27,9 @@ import {
   CAMPAIGN_MONITORING_PICS_REQUEST,
   CAMPAIGN_MONITORING_PICS_SUCCESS,
   CAMPAIGN_MONITORING_PICS_FAIL,
+  GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_REQUEST,
+  GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_SUCCESS,
+  GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_ERROR,
 } from "../constants/campaignConstants";
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/campaigns`;
 const url2 = `${process.env.REACT_APP_PROOH_SERVER}/api/v1/analytics`;
@@ -76,6 +79,34 @@ export const getMyCreateCampaignsList =
     } catch (error) {
       dispatch({
         type: GET_MY_CREATE_CAMPAIGNS_LIST_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
+
+export const getMyCreateCampaignsListForPlan =
+  ({ id }) =>
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_REQUEST,
+      payload: { id },
+    });
+    try {
+      const { data } = await axios.post(
+        `${url}/campaignCreationsCampaignPlannerForPlan`,
+        { id }
+      );
+      dispatch({
+        type: GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_ERROR,
         payload: {
           message: error.message,
           status: error.response?.status,
