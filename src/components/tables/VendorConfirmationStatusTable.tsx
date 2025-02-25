@@ -49,7 +49,10 @@ export const VendorConfirmationStatusTable = ({
         <thead className="w-full flex">
           {userInfo?.userRole === "campaignPlanner" && (
             <tr className="bg-[#D6EEFF] w-full grid grid-cols-12">
-              <th className="py-2 col-span-3 flex justify-around">
+              <th className="py-2 col-span-1 flex justify-around">
+                <h1 className="text-[14px] px-2">S.N.</h1>
+              </th>
+              <th className="py-2 col-span-2 flex justify-around">
                 <h1 className="text-[14px] px-2">Screen Name</h1>
               </th>
               <th className="py-2 col-span-2 flex justify-around">
@@ -129,7 +132,10 @@ export const VendorConfirmationStatusTable = ({
               }
             `}
               >
-                <td className="p-2 col-span-3 truncate flex justify-around items-center">
+                <td className="p-2 col-span-1 truncate flex justify-around items-center">
+                  <h1 className="text-[14px] truncate">{i + 1}</h1>
+                </td>
+                <td className="p-2 col-span-2 truncate flex justify-around items-center">
                   <h1 className="text-[14px] truncate">{status.screenName}</h1>
                 </td>
                 <td className="py-2 col-span-2 flex justify-around items-center">
