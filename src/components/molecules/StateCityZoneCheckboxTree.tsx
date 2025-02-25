@@ -33,10 +33,12 @@ interface Props {
   data: DataStructure;
   setSelectedCity: (cities: string[]) => void;
   setSelectedZone: (zones: string[]) => void;
+  loading?: any;
 }
 
 export const StateCityZoneCheckboxTree: React.FC<Props> = ({
   data,
+  loading,
   setSelectedCity,
   setSelectedZone,
 }) => {
@@ -47,7 +49,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
     Object.entries(data || {}).filter(([key]) => key !== "id")
   );
 
-  console.log("getDataFromLocalStorage(AUDIENCE_DATA)?.[campaignId] : ", data);
+  // console.log("getDataFromLocalStorage(AUDIENCE_DATA)?.[campaignId] : ", data);
 
   const handleSave = () => {
     const selectedCities: string[] = [];
@@ -166,12 +168,14 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
         {Object.keys(processedData || {}).map((state) => (
           <li key={state} className="mb-2 text-[#303030]">
             <div className="flex items-center justify-between gap-2 py-1">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 truncate">
                 <input
                   type="checkbox"
-                  checked={selected[state]}
+                  title="1"
+                  checked={selected[state] ? true : false}
                   onChange={() => toggleState(state)}
-                  className="w-4 h-4"
+                  className="w-4 h-4 truncate"
+                  disabled={loading}
                 />
                 <div className="flex justify-between">
                   <div className="flex items-center gap-1">
@@ -182,7 +186,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                     >
                       {state}
                     </span>
-                    <span className="text-gray-600 text-[10px]">
+                    <span className="text-gray-600 text-[12px]">
                       (
                       {Object.values(processedData[state]?.cities || {}).reduce(
                         (acc, city) => acc + city.count,
@@ -194,26 +198,29 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                 </div>
               </div>
               <div className="flex gap-2">
-                <div className="flex gap-4 pr-4">
-                  <h1 className="text-[#6F7F8E] text-[10px]">
-                    {processedData[state]?.gender?.Male?.toFixed(1)}%
-                  </h1>
-                  <h1 className="text-[#6F7F8E] text-[10px]">
-                    {processedData[state]?.gender?.Female?.toFixed(1)}%
-                  </h1>
-                </div>
                 <button
+                    title="1"
+                  type="button"
                   onClick={() => toggleCollapse(state)}
-                  className="focus:outline-none text-black text-[10px] pr-2 "
+                  className="focus:outline-none text-black text-[10px] "
                 >
                   <i
-                    className={`text-[#9A9A9A] ${
+                    className={`text-[#9A9A9A] flex items-center ${
                       !collapsed[state]
                         ? "fi fi-br-angle-up"
                         : "fi fi-br-angle-down"
                     }`}
                   ></i>
                 </button>
+                <div className="flex gap-2 px-1">
+                  <h1 className="text-[#6F7F8E] text-[12px]">
+                    {processedData[state]?.gender?.Male?.toFixed(1)}%
+                  </h1>
+                  <h1 className="text-[#6F7F8E] text-[12px]">
+                    {processedData[state]?.gender?.Female?.toFixed(1)}%
+                  </h1>
+                </div>
+                
               </div>
             </div>
             {!collapsed[state] && (
@@ -222,12 +229,13 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                   (city) => (
                     <li key={city} className="mb-2 ">
                       <div className="flex items-center justify-between gap-2 py-1">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 truncate">
                           <input
+                            title="2"
                             type="checkbox"
-                            checked={selected[city]}
+                            checked={selected[city] ? true : false}
                             onChange={() => toggleCity(state, city)}
-                            className="w-4 h-4"
+                            className="w-4 h-4 truncate"
                           />
                           <div className="flex justify-between">
                             <div className="flex items-center gap-1">
@@ -238,30 +246,19 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                               >
                                 {city}
                               </span>
-                              <span className="text-gray-600 text-[10px]">
+                              <span className="text-gray-600 text-[12px]">
                                 ({processedData[state]?.cities?.[city]?.count})
                               </span>
+                             
                             </div>
                           </div>
                         </div>
                         <div className="flex gap-2">
-                          <div className="flex gap-4 pr-4">
-                            <h1 className="text-[#6F7F8E] text-[10px]">
-                              {processedData[state]?.cities?.[
-                                city
-                              ]?.Male?.toFixed(1)}
-                              %
-                            </h1>
-                            <h1 className="text-[#6F7F8E] text-[10px]">
-                              {processedData[state]?.cities?.[
-                                city
-                              ]?.Female?.toFixed(1)}
-                              %
-                            </h1>
-                          </div>
                           <button
+                            title="2"
+                            type="button"
                             onClick={() => toggleCollapse(city)}
-                            className="focus:outline-none text-black text-[10px] pr-2 text-[#9A9A9A]"
+                            className="focus:outline-none text-black text-[10px] text-[#9A9A9A]"
                           >
                             <i
                               className={`text-[#9A9A9A] ${
@@ -271,6 +268,21 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                               }`}
                             ></i>
                           </button>
+                          <div className="flex gap-2 px-1">
+                            <h1 className="text-[#6F7F8E] text-[12px]">
+                              {processedData[state]?.cities?.[
+                                city
+                              ]?.Male?.toFixed(1)}
+                              %
+                            </h1>
+                            <h1 className="text-[#6F7F8E] text-[12px]">
+                              {processedData[state]?.cities?.[
+                                city
+                              ]?.Female?.toFixed(1)}
+                              %
+                            </h1>
+                          </div>
+                          
                         </div>
                       </div>
 
@@ -283,12 +295,13 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                               <div className="flex items-center justify-between gap-2 py-1">
                                 <div className="flex items-center gap-2">
                                   <input
+                                    title="3"
                                     type="checkbox"
-                                    checked={selected[zone]}
+                                    checked={selected[zone] ? true : false}
                                     onChange={() =>
                                       toggleZone(state, city, zone)
                                     }
-                                    className="w-4 h-4"
+                                    className="w-4 h-4 truncate"
                                   />
                                   <div className="flex justify-between">
                                     <div className="flex items-center gap-1 ">
@@ -299,7 +312,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                                       >
                                         {zone}
                                       </span>
-                                      <span className="text-gray-600 text-[10px]">
+                                      <span className="text-gray-600 text-[12px]">
                                         (
                                         {
                                           processedData[state]?.cities?.[city]
@@ -310,15 +323,15 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                                     </div>
                                   </div>
                                 </div>
-                                <div className="flex gap-2 pr-4">
-                                  <div className="flex gap-4 pr-4">
-                                    <h1 className="text-[#6F7F8E] text-[10px]">
+                                <div className="flex gap-2">
+                                  <div className="flex gap-2 px-1">
+                                    <h1 className="text-[#6F7F8E] text-[12px]">
                                       {processedData[state]?.cities?.[
                                         city
                                       ]?.zones?.[zone]?.Male?.toFixed(1)}
                                       %
                                     </h1>
-                                    <h1 className="text-[#6F7F8E] text-[10px]">
+                                    <h1 className="text-[#6F7F8E] text-[12px]">
                                       {processedData[state]?.cities?.[
                                         city
                                       ]?.zones?.[zone]?.Female?.toFixed(1)}
