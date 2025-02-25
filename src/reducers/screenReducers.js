@@ -3,6 +3,9 @@ import {
   saveDataOnLocalStorage,
 } from "../utils/localStorageUtils";
 import {
+  GET_AUDIENCES_DATA_ADVANCE_FILTER_ERROR,
+  GET_AUDIENCES_DATA_ADVANCE_FILTER_REQUEST,
+  GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS,
   GET_CAMPAIGN_DASHBOARD_DATA_ERROR,
   GET_CAMPAIGN_DASHBOARD_DATA_REQUEST,
   GET_CAMPAIGN_DASHBOARD_DATA_SUCCESS,
@@ -154,6 +157,30 @@ export function screensDataAdvanceFilterGetReducer(state = [], action) {
         data: action.payload,
       };
     case GET_SCREENS_DATA_ADVANCE_FILTER_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function poiBasedAudienceDataAdvanceFilterGetReducer(state = [], action) {
+  switch (action.type) {
+    case GET_AUDIENCES_DATA_ADVANCE_FILTER_REQUEST:
+      return { loading: true };
+    case GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS:
+      const {id, ...data} = action.payload;
+      // const saveData = {};
+      // saveData[campaign.id] = campaign;
+      // saveDataOnLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA, saveData);
+      console.log(data);
+      return {
+        loading: false,
+        data: data,
+      };
+    case GET_AUDIENCES_DATA_ADVANCE_FILTER_ERROR:
       return {
         loading: false,
         error: action.payload,

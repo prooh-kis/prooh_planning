@@ -20,6 +20,7 @@ import {
   vendorConfirmationStatusTableDetailsGetReducer,
   tableDataSetAdPlayTimeReducer,
   screenSummaryDataIKnowItAllGetReducer,
+  poiBasedAudienceDataAdvanceFilterGetReducer,
 } from "../reducers/screenReducers";
 import {
   emailSendForConfirmationReducer,
@@ -43,6 +44,7 @@ import {
   campaignDurationChangeReducer,
   campaignLogsGetReducer,
   campaignMonitoringPicsGetReducer,
+  myCreateCampaignsListForPlanGetReducer,
 } from "../reducers/campaignReducers";
 import {
   cricketMatchesListGetReducer,
@@ -76,6 +78,7 @@ const store = configureStore({
     screensAudiencesDataGet: screensAudiencesDataGetReducer,
     screensCostDataGet: screensCostDataGetReducer,
     screensDataAdvanceFilterGet: screensDataAdvanceFilterGetReducer,
+    poiBasedAudienceDataAdvanceFilterGet: poiBasedAudienceDataAdvanceFilterGetReducer,
     regularVsCohortPriceDataGet: regularVsCohortPriceDataGetReducer,
     screenSummaryDataGet: screenSummaryDataGetReducer,
     screenSummaryDataIKnowItAllGet : screenSummaryDataIKnowItAllGetReducer,
@@ -99,6 +102,7 @@ const store = configureStore({
     // campaign
     detailsToCreateCampaignAdd: detailsToCreateCampaignAddReducer,
     myCreateCampaignsListGet: myCreateCampaignsListGetReducer,
+    myCreateCampaignsListForPlanGet: myCreateCampaignsListForPlanGetReducer,
     myCreateCampaignsManagerRequestsListGet:
       myCreateCampaignsManagerRequestsListGetReducer,
     myCreateCampaignsVendorRequestsListGet:

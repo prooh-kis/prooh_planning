@@ -699,14 +699,11 @@ export const CreativeUploadDetails = ({
                               : "this row has no creative"
                           }
                           className={`${
-                            index === currentScreen && isCreativeUploaded(index)
-                              ? "bg-[#E8F3FF]"
-                              : !(
-                                  index === currentScreen ||
-                                  isCreativeUploaded(index)
-                                )
-                              ? ""
+                            index === currentScreen
+                              ? "bg-[#aed6f1]  border border-[#000000]"
                               : isCreativeUploaded(index)
+                              ? "bg-[#abebc6]"
+                              : !isCreativeUploaded(index)
                               ? "bg-[#E8F3FF]"
                               : "bg-[#E8F3FF]"
                           } hover:bg-[#e5e7eb]`}

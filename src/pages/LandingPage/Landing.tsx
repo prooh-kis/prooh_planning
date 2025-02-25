@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./index.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getLandingPageData } from "../../actions/screenAction";
-import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { getDataFromLocalStorage, removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 import { LANDING_PAGE_DATA } from "../../constants/localStorageConstants";
 import { CreateCampaignOption } from "../../components";
 import { PageFooter } from "../../components/PageFooter";
@@ -31,6 +31,7 @@ export const Landing: React.FC = () => {
 
   useEffect(() => {
     dispatch(getLandingPageData());
+    removeAllKeyFromLocalStorage();
   },[dispatch])
   return (
     <div className="w-screen h-full bg-white">

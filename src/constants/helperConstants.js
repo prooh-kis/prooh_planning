@@ -98,3 +98,170 @@ export const DEFINE_ALL_COHORTS = [
     definition: "Individuals with higher than average income with significant purchasing power",
   }
 ]
+
+export const allpois = {
+    "Arterial Route": [
+      "gas_station",
+      "electric_vehicle_charging_station",
+      "parking",
+      "transit_station",
+      "bus_stop",
+      "taxi_stand",
+      "train_station",
+      "airport",
+      "convenience_store"
+    ],
+    "CBD-Corporate Offices": [
+      "bank",
+      "atm",
+      "cafe",
+      "coffee_shop",
+      "fast_food_restaurant",
+      "restaurant",
+      "telecommunications_service_provider",
+      "insurance_agency",
+      "real_estate_agency",
+      "travel_agency"
+    ],
+    "CBD-Govt": [
+      "city_hall",
+      "courthouse",
+      "embassy",
+      "local_government_office",
+      "police",
+      "post_office",
+      "school_district"
+    ],
+    "CBD-SOHO": [
+      "cafe",
+      "coffee_shop",
+      "fast_food_restaurant",
+      "bar",
+      "bakery",
+      "convenience_store",
+      "laundry"
+    ],
+    "Feeder Route": [
+      "bus_stop",
+      "bus_station",
+      "light_rail_station",
+      "subway_station",
+      "taxi_stand",
+      "train_station",
+      "convenience_store",
+      "fast_food_restaurant"
+    ],
+    "Golf Course": [
+      "golf_course",
+      "restaurant",
+      "bar"
+    ],
+    "Govt Hospital": [
+      "hospital",
+      "medical_lab",
+      "pharmacy",
+      "doctor",
+      "dentist",
+      "physiotherapist",
+      "drugstore",
+      "spa"
+    ],
+    "High Street": [
+      "shopping_mall",
+      "clothing_store",
+      "electronics_store",
+      "department_store",
+      "book_store",
+      "gift_shop",
+      "jewelry_store",
+      "market",
+      "supermarket",
+      "restaurant",
+      "cafe"
+    ],
+    "Joggers Park": [
+      "park",
+      "playground",
+      "fitness_center",
+      "sports_club",
+      "swimming_pool"
+    ],
+    "Luxury Mall": [
+      "shopping_mall",
+      "jewelry_store",
+      "clothing_store",
+      "restaurant",
+      "spa"
+    ],
+    "Luxury Residential": [
+      "resort_hotel",
+      "guest_house",
+      "grocery_store",
+      "pharmacy",
+      "bakery"
+    ],
+    "Neighborhood Hi-Street": [
+      "convenience_store",
+      "fast_food_restaurant",
+      "supermarket",
+      "vegetarian_restaurant",
+      "pizza_restaurant",
+      "bakery",
+      "pharmacy"
+    ],
+    "Neighborhood Premium Mall": [
+      "shopping_mall",
+      "department_store",
+      "electronics_store",
+      "home_goods_store",
+      "restaurant",
+      "cafe"
+    ],
+    "Premium F&B": [
+      "bar",
+      "bakery",
+      "cafe",
+      "coffee_shop",
+      "vegetarian_restaurant",
+      "ice_cream_shop",
+      "indian_restaurant",
+      "korean_restaurant"
+    ],
+    "Premium F&B Cluster": [
+      "restaurant",
+      "bar",
+      "cafe",
+      "coffee_shop",
+      "fast_food_restaurant"
+    ],
+    "Premium High Street": [
+      "clothing_store",
+      "electronics_store",
+      "jewelry_store",
+      "gift_shop",
+      "shopping_mall",
+      "book_store",
+      "restaurant"
+    ],
+    "Premium Hotel Cluster": [
+      "hotel",
+      "resort_hotel",
+      "lodging",
+      "guest_house",
+      "restaurant",
+      "spa"
+    ],
+    "Premium Salons": [
+      "beauty_salon",
+      "hair_salon",
+      "barber_shop",
+      "spa"
+    ],
+    "QSR's": [
+      "fast_food_restaurant",
+      "pizza_restaurant",
+      "coffee_shop",
+      "cafe",
+      "bakery"
+    ]
+  }

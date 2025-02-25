@@ -13,10 +13,52 @@ import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import * as turf from "@turf/turf";
+import { Tooltip } from "antd";
+import { useSelector } from "react-redux";
 
 mapboxgl.accessToken =
   // process.env.REACT_APP_MAPBOX ||
   "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A";
+
+
+const MAX_ZOOM_LEVEL = 9;
+
+export const heatmapLayer = {
+  id: 'heatmap',
+  maxzoom: MAX_ZOOM_LEVEL,
+  type: 'heatmap',
+  paint: {
+    // Increase the heatmap weight based on frequency and property magnitude
+    'heatmap-weight': ['interpolate', ['linear'], ['get', 'mag'], 0, 0, 6, 1],
+    // Increase the heatmap color weight weight by zoom level
+    // heatmap-intensity is a multiplier on top of heatmap-weight
+    'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 0, 1, MAX_ZOOM_LEVEL, 3],
+    // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
+    // Begin color ramp at 0-stop with a 0-transparancy color
+    // to create a blur-like effect.
+    'heatmap-color': [
+      'interpolate',
+      ['linear'],
+      ['heatmap-density'],
+      0,
+      'rgba(33,102,172,0)',
+      0.2,
+      'rgb(103,169,207)',
+      0.4,
+      'rgb(209,229,240)',
+      0.6,
+      'rgb(253,219,199)',
+      0.8,
+      'rgb(239,138,98)',
+      0.9,
+      'rgb(255,201,101)'
+    ],
+    // Adjust the heatmap radius by zoom level
+    'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 2, MAX_ZOOM_LEVEL, 20],
+    // Transition from heatmap to circle layer by zoom level
+    'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 7, 1, 9, 0]
+  }
+};
 
 export function MapWithGeometry(props) {
   const mapRef = useRef(null);
@@ -27,10 +69,39 @@ export function MapWithGeometry(props) {
   const [screenData, setScreenData] = useState(null);
   const [isSelectedData, setIsSelectedData] = useState(false);
   const [viewState, setViewState] = useState({
-    longitude: props?.geometry?.coordinates[1] || 77.0891,
-    latitude: props?.geometry?.coordinates[0] || 28.495,
-    zoom: props?.zoom || 5,
+    longitude: props?.geometry?.coordinates[1] || 77.25,
+    latitude: props?.geometry?.coordinates[0] || 28.5,
+    zoom: props?.zoom || 9.5,
   });
+
+  const [heatMapData, setHeatMapData] = useState({});
+
+  const poiBasedAudienceDataAdvanceFilterGet = useSelector((state) => state.poiBasedAudienceDataAdvanceFilterGet);
+  const {
+    loading: loadingPoiBasedAudience,
+    error: errorPoiBasedAudience,
+    data: poiBasedAudience
+  } = poiBasedAudienceDataAdvanceFilterGet;
+
+  // console.log(poiBasedAudience)
+  // console.log(poiBasedAudience?.length)
+  // useEffect(() => {
+  //   setHeatMapData(() => {
+  //     return poiBasedAudience?.map((p) => {
+  //       return {
+  //         "type": "Feature",
+  //         "properties": {
+  //           "id": p._id,
+  //           "mag": p.audiences.totalAudienceCount,
+  //         },
+  //         "geometry": {
+  //           "type": "Point",
+  //           "coordinates": [p.location.geographicalLocation.latitude, p.location.geographicalLocation.longitude]
+  //         }
+  //       }
+  //     })
+  //   })
+  // },[poiBasedAudience]);
 
   // console.log(props?.data["brand"][0]?.concat(props?.data["comp"][0]))
   const coordinates =
@@ -54,6 +125,7 @@ export function MapWithGeometry(props) {
   }, []);
 
 function MapDrawControl({
+  drawMode = "simple_select",
   onCreate = () => {},
   onUpdate = () => {},
   onDelete = () => {},
@@ -67,7 +139,7 @@ function MapDrawControl({
         trash: false, // Enable delete control
         direct_select: false, // Allow direct selection of drawn features
       },
-      // defaultMode: "draw_polygon", // Set default mode to polygon drawing
+      defaultMode: drawMode, // Set default mode to polygon drawing
     }),
     ({ map }) => {
       map.on("draw.create", onCreate);
@@ -87,50 +159,65 @@ function MapDrawControl({
     return null;
   }
 
-  const updateSelectedMarkers = useCallback((polygons) => {
-    const updatedPolygons = polygons.map((polygon) => {
-      const selectedScreens = props?.allScreens.filter((screen) => {
-        const point = [
-          screen?.location.geographicalLocation?.longitude,
-          screen?.location?.geographicalLocation?.latitude,
-        ];
-        // Check if the point is inside the current polygon
-        return booleanPointInPolygon(point, polygon);
+  const updateSelectedMarkers = useCallback(
+    (polygons) => {
+      // Step 1: Update each polygon with selected screens
+      const updatedPolygons = polygons.map((polygon) => {
+        const selectedScreens = props?.allScreens.filter((screen) => {
+          const point = [
+            screen?.location?.geographicalLocation?.longitude,
+            screen?.location?.geographicalLocation?.latitude,
+          ];
+          return booleanPointInPolygon(point, polygon); // Check if the screen is inside the polygon
+        });
+        return { ...polygon, screens: selectedScreens };
       });
-      return { ...polygon, screens: selectedScreens };
-    });
-
-    // Update polygons in state
-    props?.setPolygons(updatedPolygons);
-
-    // Collect all selected markers from all polygons
-    const allSelectedScreens = updatedPolygons.flatMap(
-      (polygon) => polygon.screens || []
-    );
-
-    props?.onPolygonComplete(allSelectedScreens);
-
-    setSelectedMarkers(
-      allSelectedScreens.map((screen) => [
-        screen.location.geographicalLocation.longitude,
-        screen.location.geographicalLocation.latitude,
-        screen._id,
-      ])
-    );
-
-    setUnselectedMarkers(
-      props.allScreens
-        ?.filter(
-          (screen) => !allSelectedScreens.map((s) => s._id).includes(screen._id)
-        )
-        ?.map((screen) => [
+  
+      // Step 2: Update polygons in state
+      props?.setPolygons(updatedPolygons);
+  
+      // Step 3: Collect unique selected screens from all polygons
+      const allSelectedScreens = new Map();
+  
+      updatedPolygons.forEach((polygon) => {
+        polygon.screens.forEach((screen) => {
+          allSelectedScreens.set(screen._id, screen);
+        });
+      });
+  
+      const finalSelectedScreens = Array.from(allSelectedScreens.values());
+  
+      // Step 4: Update selected screens state
+      props?.onPolygonComplete(finalSelectedScreens);
+  
+      setSelectedMarkers(
+        finalSelectedScreens.map((screen) => [
           screen.location.geographicalLocation.longitude,
           screen.location.geographicalLocation.latitude,
           screen._id,
+          screen.screenType,
         ])
-    );
-    return updatedPolygons;
-  },[props]);
+      );
+  
+      // Step 5: Update unselected markers (screens that are not in any polygon)
+      const selectedScreenIds = new Set(finalSelectedScreens.map((s) => s._id));
+  
+      setUnselectedMarkers(
+        props.allScreens
+          ?.filter((screen) => !selectedScreenIds.has(screen._id))
+          ?.map((screen) => [
+            screen.location.geographicalLocation.longitude,
+            screen.location.geographicalLocation.latitude,
+            screen._id,
+            screen.screenType,
+          ])
+      );
+  
+      return updatedPolygons;
+    },
+    [props]
+  );
+  
 
   const onCreatePolygon = useCallback(
     (e) => {
@@ -167,18 +254,33 @@ function MapDrawControl({
   const onDeletePolygon = useCallback(
     (e) => {
       const deletedPolygonIds = e.features.map((feature) => feature.id);
+      
       props?.setPolygons((prevPolygons) => {
+        // Remove deleted polygons
         const remainingPolygons = prevPolygons.filter(
           (polygon) => !deletedPolygonIds.includes(polygon.id)
         );
+  
+        if (remainingPolygons.length === 0) {
+          // If no polygons remain, reset selected markers
+          setSelectedMarkers([]);
+          setUnselectedMarkers(
+            props.allScreens?.map((screen) => [
+              screen.location.geographicalLocation.longitude,
+              screen.location.geographicalLocation.latitude,
+              screen._id,
+              screen.screenType,
+            ])
+          );
+          return [];
+        }
+  
+        // Recalculate selected screens based on remaining polygons
         return updateSelectedMarkers(remainingPolygons);
-        // return remainingPolygons;
       });
     },
     [props, updateSelectedMarkers]
   );
-
-
 
   const findCoordinates = (arrays, target) => {
     for (let i = 0; i < arrays.length; i++) {
@@ -313,6 +415,7 @@ function MapDrawControl({
         m.location.geographicalLocation.longitude,
         m.location.geographicalLocation.latitude,
         m._id,
+        m.screenType,
       ])
     );
 
@@ -325,39 +428,10 @@ function MapDrawControl({
           m.location.geographicalLocation.longitude,
           m.location.geographicalLocation.latitude,
           m._id,
+          m.screenType,
         ])
     );
   }, [props]);
-
-  useEffect(() => {
-    // if (selectedMarkers?.length > 0) {
-    //   const validMarkers = selectedMarkers.filter(
-    //     (marker) =>
-    //       marker[1] !== undefined &&
-    //       marker[0] !== undefined &&
-    //       !isNaN(marker[1]) &&
-    //       !isNaN(marker[0])
-    //   );
-
-    //   if (validMarkers?.length > 0) {
-    //     const bounds = validMarkers.reduce((bounds, marker) => {
-    //       return bounds.extend(marker);
-    //     }, new mapboxgl.LngLatBounds(validMarkers[0], validMarkers[0]));
-
-    //     if (mapRef?.current) {
-    //       mapRef?.current?.fitBounds(bounds, {
-    //         padding: 120,
-    //       });
-    //       console.log("Map reference loaded.")
-    //     } else {
-    //       console.error("Map reference is null.");
-    //     }
-    //   } else {
-    //     console.error("No valid markers to display.");
-    //   }
-    // }
-    // popupRef.current?.trackPointer();
-  }, [selectedMarkers]);
 
   return (
     <div className="relative h-full w-full items-top">
@@ -367,9 +441,7 @@ function MapDrawControl({
           <div className="h-4 w-4 bg-[#00A0FA] rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-[#F9462310] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
-            Unselected Screens
-          </h1>
+          <h1 className="text-[10px] group-hover:opacity-100 group-hover:bg-[#F9462310] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Unselected Screens</h1>
           <div className="h-4 w-4 bg-[#F94623] rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
@@ -404,34 +476,30 @@ function MapDrawControl({
           {/* {selectedMarkers && ( */}
           <MapDrawControl
             position="top-left"
+            drawMode = {props?.draw}
             onCreate={onCreatePolygon}
             onUpdate={onUpdatePolygon}
             onDelete={onDeletePolygon}
           />
           {/* )} */}
 
-          {selectedMarkers && selectedMarkers.length > 0 && selectedMarkers.map((marker, i) => (
-            <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
+          {selectedMarkers && selectedMarkers.length > 0 && selectedMarkers.map((marker) => (
+            <Marker key={marker[2]} latitude={marker[1]} longitude={marker[0]}>
               <div 
-                title={`Selected screens ${props?.filteredScreens?.length}`}
+                // title={`Selected screens ${props?.filteredScreens?.length}`}
                 className="cursor-pointer"
-                // onMouseEnter={(e) => {
-                //   e.stopPropagation();
-                //   setIsSelectedData(true);
-                //   getSingleScreenData(marker[2]);
-                // }}
-                // onMouseLeave={(e) => {
-                //   // e.stopPropagation();
-                //   // setScreenData(null);
-                // }}
               >
-                <i className="fi fi-ss-circle text-primaryButton text-[14px]"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsSelectedData(true);
-                    getSingleScreenData(marker[2]);
-                  }}
-                ></i>
+                <Tooltip
+                  title={`Selected ${marker[3]} Inventory`}
+                >
+                  <i className={`fi fi-ss-circle border rounded-full flex items-center justify-center text-primaryButton ${marker[3] === "Spectacular" ? "text-[24px]" : marker[3] === "Large" ? "text-[18px]" : "text-[12px]"}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsSelectedData(true);
+                      getSingleScreenData(marker[2]);
+                    }}
+                  ></i>
+                </Tooltip>
               </div>
             </Marker>
           ))}
@@ -440,30 +508,26 @@ function MapDrawControl({
             unSelectedMarkers.map((marker, i) => (
               <Marker key={i} latitude={marker[1]} longitude={marker[0]}>
                 <div
-                  title={`UnSeletced screens ${
-                    props.allScreens?.filter((s) =>
-                      props?.filteredScreens?.map((f) => f._id).includes(s._id)
-                    )?.length
-                  }`}
+                  // title={`UnSeletced screens ${
+                  //   props.allScreens?.filter((s) =>
+                  //     props?.filteredScreens?.map((f) => f._id).includes(s._id)
+                  //   )?.length
+                  // }`}
                   className="cursor-pointer"
-                  // onMouseEnter={(e) => {
-                  //   e.stopPropagation();
-                  //   setIsSelectedData(false);
-                  //   getSingleScreenData(marker[2]);
-                  // }}
-                  // onMouseLeave={(e) => {
-                  //   // e.stopPropagation();
-                  //   // setScreenData(null);
-                  // }}
                 >
-                  <i
-                    className="fi-ss-circle text-[#F94623] text-[12px]"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsSelectedData(false);
-                      getSingleScreenData(marker[2]);
-                    }}
-                  ></i>
+                  <Tooltip
+                    title={`Unselected ${marker[3]} Inventory`}
+                  >
+                    <i
+                      className={`fi fi-ss-circle  text-[#F94623] border rounded-full flex items-center justify-center ${marker[3] === "Spectacular" ? "text-[24px]" : marker[3] === "Large" ? "text-[18px]" : "text-[12px]"}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsSelectedData(false);
+                        getSingleScreenData(marker[2]);
+                      }}
+                    ></i>
+                  </Tooltip>
+                  
                 </div>
               </Marker>
             ))}
@@ -474,15 +538,15 @@ function MapDrawControl({
               key={screenData._id}
               latitude={screenData?.location?.geographicalLocation?.latitude}
               longitude={screenData?.location?.geographicalLocation?.longitude}
-              onClose={() => {
-                setScreenData(null);
-              }}
-              anchor="right"
-              offset={[10, 10]} // Adjusts popup position
+              // onClose={() => {
+              //   setScreenData(null);
+              // }}
+              closeButton={false}
+              anchor="bottom"
+              offset={[0, -10]} // Adjusts popup position
               dynamicPosition={true} // Prevents Mapbox from repositioning
             >
               <MapboxScreen
-                handleAddManualSelection={props?.handleAddManualSelection}
                 screenData={screenData}
                 setScreenData={setScreenData}
                 handleSelectFromMap={props.handleSelectFromMap}
@@ -606,6 +670,11 @@ function MapDrawControl({
               }}
             />
           </Source>
+          {/* {heatMapData && (
+            <Source type="geojson" data={heatMapData}>
+              <Layer {...heatmapLayer} />
+            </Source>
+          )} */}
         </ReactMapGL>
       </div>
     </div>

@@ -33,7 +33,13 @@ export const CampaignDashboardPage: React.FC = () => {
   useEffect(() => {
     dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     dispatch(getCampaignDashboardData({ id: campaignId }));
-  }, [dispatch]);
+
+    const interval = setInterval(() => {
+      dispatch(getCampaignDashboardData({ id: campaignId })); // Refresh data every 5 seconds
+    }, 60000);
+  
+    return () => clearInterval(interval); 
+  }, [dispatch, campaignId]);
   return (
     <div className="w-full h-full">
       {loading || loadingDashboard ? (

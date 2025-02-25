@@ -35,7 +35,7 @@ export const MapboxScreen = ({
             <p>{screenData?.location?.address}</p>
           </div>
           <div>
-            {!isSelectedData ? (
+            {/* {!isSelectedData ? (
               <i
                 className="fi fi-rr-add text-[14px] cursor-pointer"
                 onClick={() => handleClickScreen(true, screenData)}
@@ -45,7 +45,7 @@ export const MapboxScreen = ({
                 className="fi fi-rr-cross text-[10px] cursor-pointer"
                 onClick={() => handleClickScreen(false, screenData)}
               ></i>
-            )}
+            )} */}
           </div>
         </div>
       </div>

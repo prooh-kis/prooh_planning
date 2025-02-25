@@ -1,10 +1,12 @@
 import { Tooltip } from "antd";
 import { PolygonShape } from "../../components/atoms/PolygonShape";
+import { useEffect } from "react";
 
 interface DrawnMapPolygonProps {
   open?: any;
   setOpen?: any;
   polygons?: any;
+  setDraw?: any;
   setPolygons?: any;
 }
 
@@ -12,7 +14,9 @@ export const DrawnMapPolygon = ({
   open,
   setOpen,
   polygons,
+  setDraw,
   setPolygons,
+
 }: DrawnMapPolygonProps) => {
 
   function randomColor(index: any) {
@@ -65,7 +69,9 @@ export const DrawnMapPolygon = ({
       {open["polygon"] && (
         <div className="h-full my-2 border rounded h-full grid grid-cols-3 gap-4">
           {polygons?.length === 0 && (
-            <div className="col-span-3 w-full h-full bg-[#3B82F620] flex justify-center items-center p-4">
+            <div className="col-span-3 w-full h-full bg-[#3B82F620] flex justify-center items-center p-4"
+              onClick={() => setDraw("draw_polygon")}
+            >
               <div className="w-full h-full flex flex-col justify-center items-center">
                 <i className="fi fi-sr-map-location-track md:text-[40px] sm:text-[32px] text-blue"></i>
                 <h1 className="md:text-[12px] sm:text-[10px] text-blue text-center">
@@ -93,15 +99,10 @@ export const DrawnMapPolygon = ({
                   <h1 className="text-[12px]">Area {i+1} ({polygon?.screens?.length})</h1>
                 </div>
               </div>
-              
-          
             </div>
           ))}
         </div>
       )}
     </div>
-
-  
-
   )
 }

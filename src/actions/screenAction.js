@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+  GET_AUDIENCES_DATA_ADVANCE_FILTER_ERROR,
+  GET_AUDIENCES_DATA_ADVANCE_FILTER_REQUEST,
+  GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS,
   GET_CAMPAIGN_DASHBOARD_DATA_ERROR,
   GET_CAMPAIGN_DASHBOARD_DATA_REQUEST,
   GET_CAMPAIGN_DASHBOARD_DATA_SUCCESS,
@@ -169,6 +172,34 @@ export const getScreenDataForAdvanceFilters =
         });
       }
     };
+
+  export const getPoiBasedAudienceDataForAdvanceFilters =
+    ({ id }) =>
+      async (dispatch, getState) => {
+        dispatch({
+          type: GET_AUDIENCES_DATA_ADVANCE_FILTER_REQUEST,
+          payload: { id },
+        });
+  
+        try {
+          const { data } = await axios.post(`${url}/poiBasedAudienceData`, {
+            id,
+          });
+          dispatch({
+            type: GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS,
+            payload: data,
+          });
+        } catch (error) {
+          dispatch({
+            type: GET_AUDIENCES_DATA_ADVANCE_FILTER_ERROR,
+            payload: {
+              message: error.message,
+              status: error.response?.status,
+              data: error.response?.data,
+            },
+          });
+        }
+      };
 
 export const getRegularVsCohortPriceData =
   ({ id, screenIds, cohorts, gender, duration }) =>

@@ -148,7 +148,7 @@ export const EnterCampaignBasicDetails = ({
           startDate,
           newDuration
         );
-        setEndDate(new Date(endDate1).toISOString().slice(0, 16));
+        setEndDate(new Date(endDate1).toISOString());
       } else {
         message.error("Please enter a start date first");
       }
@@ -156,25 +156,8 @@ export const EnterCampaignBasicDetails = ({
     [startDate]
   );
 
-  const handleSetNewDuration = useCallback(
-    (dur: any) => {
-      // if (!enterDuration) {
-      //   setDuration(getNumberOfDaysBetweenTwoDates(startDate, endDate));
-      // } else {
-      updateEndDateBasedOnDuration(dur);
-      // }
-      // else message.error("Please enter first start , end Date");
-    },
-    [
-      // endDate,
-      // enterDuration,
-      // startDate,
-      updateEndDateBasedOnDuration,
-    ]
-  );
-
   const saveCampaignDetailsOnLocalStorage = useCallback(() => {
-    handleSetNewDuration(duration);
+    updateEndDateBasedOnDuration(duration);
     handleAddNewClient(clientName);
     dispatch(
       addDetailsToCreateCampaign({
@@ -196,7 +179,7 @@ export const EnterCampaignBasicDetails = ({
       })
     );
   }, [
-    handleSetNewDuration,
+    updateEndDateBasedOnDuration,
     dispatch,
     campaignName,
     brandName,
@@ -359,7 +342,7 @@ export const EnterCampaignBasicDetails = ({
             disabled={startDate === ""}
             action={(e: any) => {
               setDuration(e);
-              handleSetNewDuration(e);
+              updateEndDateBasedOnDuration(e);
             }}
           />
         </div>

@@ -19,26 +19,27 @@ export const DashboardImpressionDetailsTable = ({
               </h1>
             </div>
           </th>
-          <th className="col-span-3 bg-gray-100">
+          <th className="col-span-2 bg-gray-100">
             <div className="p-2">
               <h1 className="text-[12px] font-regular">Male</h1>
             </div>
           </th>
-          <th className="col-span-3 bg-gray-100">
+          <th className="col-span-2 bg-gray-100">
             <div className="p-2">
               <h1 className="text-[12px] font-regular">Female</h1>
             </div>
           </th>
+
           <th className="col-span-2 bg-gray-100">
             <div className="py-2 ">
               <h1 className="text-[12px] font-regular">Delivered</h1>
             </div>
           </th>
-          {/* <th className="col-span-2 rounded-tr-[8px] bg-gray-100">
-            <div className="p-1">
+          <th className="col-span-2 bg-gray-100">
+            <div className="py-2 ">
               <h1 className="text-[12px] font-regular">Promised</h1>
             </div>
-          </th> */}
+          </th>
         </tr>
       </thead>
       <tbody className="block h-[220px] overflow-y-scroll scrollbar-minimal">
@@ -47,11 +48,11 @@ export const DashboardImpressionDetailsTable = ({
             <tr key={index} className="p-2 grid grid-cols-12 gap-2 border-b">
               <td className="col-span-4 text-[12px]">
                 <div className="flex items-center">
-                  <p>{screenLevelData?.impressionsCohortWise[imp]?.cohort}</p>
+                  <p className="truncate">{screenLevelData?.impressionsCohortWise[imp]?.cohort}</p>
                 </div>
               </td>
-              <td className="col-span-3">
-                <div className="flex gap-4 items-center">
+              <td className="col-span-2">
+                <div className="flex gap-3 items-center">
                   <LinearBar
                     percent={false}
                     value={
@@ -64,17 +65,17 @@ export const DashboardImpressionDetailsTable = ({
                       imp
                     ]?.impressionPromisedMale?.toFixed(0)}
                   />
-                  {/* <p className="text-[10px]">
+                  <p className="text-[10px]">
                     {formatNumber(
                       screenLevelData?.impressionsCohortWise[
                         imp
                       ]?.impressionDeliveredMale?.toFixed(0)
                     ) || 0}
-                  </p> */}
+                  </p>
                 </div>
               </td>
-              <td className="col-span-3">
-                <div className="flex gap-4 items-center">
+              <td className="col-span-2">
+                <div className="flex gap-3 items-center">
                   <LinearBar
                     percent={false}
                     value={
@@ -87,13 +88,13 @@ export const DashboardImpressionDetailsTable = ({
                       imp
                     ]?.impressionPromisedFemale?.toFixed(0)}
                   />
-                  {/* <p className="text-[10px]">
+                  <p className="text-[10px]">
                     {formatNumber(
                       screenLevelData?.impressionsCohortWise[
                         imp
                       ]?.impressionDeliveredFemale?.toFixed(0)
                     ) || 0}
-                  </p> */}
+                  </p>
                 </div>
               </td>
               <td className="col-span-2 text-[12px]">
@@ -104,16 +105,10 @@ export const DashboardImpressionDetailsTable = ({
                         imp
                       ]?.impressionDeliveredTotal?.toFixed(0)
                     ) || 0}
-                    /{" "}
-                    {formatNumber(
-                      screenLevelData?.impressionsCohortWise[
-                        imp
-                      ]?.impressionPromisedTotal?.toFixed(0)
-                    ) || 0}
                   </p>
                 </div>
               </td>
-              {/* <td className="col-span-2 text-[12px]">
+              <td className="col-span-2 text-[12px]">
                 <div className="flex items-center justify-center">
                   <p>
                     {formatNumber(
@@ -123,7 +118,7 @@ export const DashboardImpressionDetailsTable = ({
                     ) || 0}
                   </p>
                 </div>
-              </td> */}
+              </td>
             </tr>
           )
         )}

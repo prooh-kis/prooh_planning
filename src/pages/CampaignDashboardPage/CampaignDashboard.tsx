@@ -175,11 +175,38 @@ export const CampaignDashboard = ({
     const data = screenLevelData?.result;
     for (const key in data || {}) {
       if (data[key].touchPoint) {
-        touchPointsArray.push(data?.[key].touchPoint);
+        if (!touchPointsArray.includes(data?.[key].touchPoint))
+          touchPointsArray.push(data?.[key].touchPoint);
       }
     }
     return touchPointsArray;
   }
+
+  function extractAllCity() {
+    let cityArray: string[] = [];
+    const data = screenLevelData?.result;
+    for (const key in data || {}) {
+      if (data[key].city) {
+        if (!cityArray.includes(data?.[key].city))
+          cityArray.push(data?.[key].city);
+      }
+    }
+    return cityArray;
+  }
+
+  const getCostDataScreenWise = (data: any) => {
+    const newData: any = {};
+    const data1 = screenLevelData?.result;
+    for (const key in data1 || {}) {
+      newData[key] = data1[key].screenName;
+    }
+    const result: any = {};
+
+    for (let key in data) {
+      result[newData[key]] = data[key];
+    }
+    return result; // {"ScreenName" : value,....}
+  };
 
   return (
     <div className="w-full h-full pt-10 flex flex-col gap-2 bg-gray-100">
@@ -275,14 +302,11 @@ export const CampaignDashboard = ({
             handleSelectCity={handleSelectCity}
             handleSelectTouchPoint={handleSelectTouchPoint}
             touchPointList={extractAllTouchPoints()}
+            cityList={extractAllCity()}
           />
           <div className="grid grid-cols-2 gap-2">
-            <button
-              id="asd"
-              title="edit campaign"
-              type="button"
-              className="col-span-1 border border-gray-100 rounded-[8px] p-2"
-              // onClick={() => setOpenEdit(true)}
+            <div
+              className="col-span-1 border border-gray-300 rounded-lg px-2 flex justify-center items-center h-[32px]"
               onClick={() =>
                 navigate(
                   `/${getCampaignPageNameFromCampaignType(
@@ -291,17 +315,14 @@ export const CampaignDashboard = ({
                 )
               }
             >
-              <i className="fi fi-tr-file-edit text-[12px] flex items-center justify-center"></i>
-            </button>
-            <button
-              id="asd"
-              title="edit campaign"
-              type="button"
-              className="col-span-1 border border-gray-100 rounded-[8px] p-2"
+              <i className="fi fi-tr-file-edit text-[14px] flex items-center justify-center"></i>
+            </div>
+            <div
+              className="col-span-1 border border-gray-300 rounded-lg px-2 flex justify-center items-center h-[32px]"
               onClick={() => setOpenInvoice(true)}
             >
-              <i className="fi fi-tr-point-of-sale-bill text-[12px] flex items-center justify-center"></i>
-            </button>
+              <i className="fi fi-tr-point-of-sale-bill text-[14px] flex items-center justify-center"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -371,19 +392,27 @@ export const CampaignDashboard = ({
                   </h1>
                   <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
                 </div>
-                <div className="grid grid-cols-2 gap-2 ">
+                <div className="grid grid-cols-3 gap-2 ">
                   <div className="col-span-1">
                     <DashboardPieChart
-                      type="city"
+                      type="City Wise"
                       data={screenLevelData?.audiencePerformanceData?.cityWise}
                     />
                   </div>
                   <div className="col-span-1">
                     <DashboardPieChart
-                      type="touchpoint"
+                      type="Touchpoint Wise"
                       data={
                         screenLevelData?.audiencePerformanceData?.touchPointWise
                       }
+                    />
+                  </div>
+                  <div className="col-span-1">
+                    <DashboardPieChart
+                      type="Screen Cost"
+                      data={getCostDataScreenWise(
+                        screenLevelData?.costConsumedData?.screenWise || {}
+                      )}
                     />
                   </div>
                 </div>
@@ -414,19 +443,28 @@ export const CampaignDashboard = ({
                   </h1>
                   <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
                 </div>
-                <div className="grid grid-cols-2 gap-2 p-2 ">
+                <div className="grid grid-cols-3 gap-2 p-2 ">
                   <div className="col-span-1">
                     <DashboardPieChart
-                      type="city"
+                      type="city Wise"
                       data={screenLevelData?.screenPerformanceData?.cityWise}
+                    />
+                  </div>
+
+                  <div className="col-span-1">
+                    <DashboardPieChart
+                      type="Touchpoint Wise"
+                      data={
+                        screenLevelData?.screenPerformanceData?.touchPointWise
+                      }
                     />
                   </div>
                   <div className="col-span-1">
                     <DashboardPieChart
-                      type="touchpoint"
-                      data={
-                        screenLevelData?.screenPerformanceData?.touchPointWise
-                      }
+                      type="Screen Wise"
+                      data={getCostDataScreenWise(
+                        screenLevelData?.screenPerformanceData?.screenWise || {}
+                      )}
                     />
                   </div>
                 </div>
@@ -490,17 +528,25 @@ export const CampaignDashboard = ({
                   </h1>
                   <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
                 </div>
-                <div className="grid grid-cols-2 gap-2 p-2">
+                <div className="grid grid-cols-3 gap-2 p-2">
                   <div className="col-span-1">
                     <DashboardPieChart
-                      type="city"
+                      type="City Wise"
                       data={screenLevelData?.spotDeliveryData?.cityWise}
                     />
                   </div>
                   <div className="col-span-1">
                     <DashboardPieChart
-                      type="touchpoint"
+                      type="Touchpoint Wise"
                       data={screenLevelData?.spotDeliveryData?.touchPointWise}
+                    />
+                  </div>
+                  <div className="col-span-1">
+                    <DashboardPieChart
+                      type="Screen Wise"
+                      data={getCostDataScreenWise(
+                        screenLevelData?.spotDeliveryData?.screenWise || {}
+                      )}
                     />
                   </div>
                 </div>
@@ -561,21 +607,29 @@ export const CampaignDashboard = ({
                     <i className="fi fi-rr-target-audience text-blue lg:text-[14px] text-[12px] flex items-center justify-center"></i>
                   </div>
                   <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                    Spot Delivery
+                    Cost Consumed
                   </h1>
                   <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
                 </div>
-                <div className="grid grid-cols-2 p-2">
+                <div className="grid grid-cols-3 p-2">
                   <div className="col-span-1">
                     <DashboardPieChart
-                      type="city"
+                      type="City Wise"
                       data={screenLevelData?.costConsumedData?.cityWise}
                     />
                   </div>
                   <div className="col-span-1">
                     <DashboardPieChart
-                      type="touchpoint"
+                      type="Touchpoint Wise"
                       data={screenLevelData?.costConsumedData?.touchPointWise}
+                    />
+                  </div>
+                  <div className="col-span-1">
+                    <DashboardPieChart
+                      type="Screen Wise"
+                      data={getCostDataScreenWise(
+                        screenLevelData?.costConsumedData?.screenWise || {}
+                      )}
                     />
                   </div>
                 </div>
