@@ -348,7 +348,7 @@ export const CampaignDashboard = ({
         </div>
         <div className="mt-2">
           {clicked === "1" ? (
-            <div className="bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100">
+            <div className="relative bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100">
               <div className="flex items-center gap-2 px-4">
                 <div className="rounded-full bg-[#8079F910] p-2">
                   <i className="fi fi-rr-calendar text-[#8079F9] lg:text-[14px] text-[12px] flex items-center justify-center"></i>
@@ -358,7 +358,7 @@ export const CampaignDashboard = ({
                 </h1>
                 <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
               </div>
-              <div className="pt-8 pb-4 px-2">
+              <div className="relative pt-8 pb-4 px-2">
                 <CalendarScaleSlider
                   days={getNumberOfDaysBetweenTwoDates(
                     campaignDetails?.startDate,

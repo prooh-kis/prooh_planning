@@ -226,7 +226,6 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
       }
     },
   });
-  console.log(doc);
   yOffset = doc.lastAutoTable.finalY + 10;
   checkPageBreak();
 
@@ -287,31 +286,34 @@ export const generateCampaignSummaryPdfFromJSON = ({ preview=false, download, js
 
   campaignApproach.screenWiseSlotDetails.forEach((screen, idx) => {
     doc.setFontSize(10);
-    doc.text(`${screen.screenName}`, 15, yOffset);
+    doc.text(`${screen.screenName}`, 10, yOffset);
     yOffset += 10;
-    checkPageBreak();
 
     doc.autoTable({
       head: [["Day", "Slot"]],
       body: Object.entries(
-        screen.slotsInfo.reduce((acc, { day, slot }) => ((acc[day.toUpperCase()] ??= []).push(slot.toUpperCase()), acc), {})
+        screen.slotsInfo.reduce((acc, { day, slot }) => {
+          (acc[day.toUpperCase()] ??= []).push(slot.toUpperCase());
+          return acc;
+        }, {})
       ),
       startY: yOffset,
-      margin: { top: 30 },
-      didDrawCell: (data) => {
-        if (data.row.index === 0 && data.cursor.y + 10 > PAGE_HEIGHT - FOOTER_MARGIN) {
-          // If the first cell of the row is exceeding the page, add a new page
+      margin: { top: 30, left: 15, right: 15 },
+      pageBreak: "avoid", // Avoid breaking table across pages
+      willDrawPage: (data) => {
+        if (data.cursor.y + 10 > PAGE_HEIGHT - FOOTER_MARGIN) {
           doc.addPage();
-          yOffset = HEADER_MARGIN + 20; // Reset yOffset for the new page
-          doc.text(screen.screenName, 15, yOffset - 10); // Redraw the section title
-          data.cursor.y = HEADER_MARGIN + 10; // Reset the cursor position for the new page
+          yOffset = HEADER_MARGIN + 20;
+          doc.text(screen.screenName, 15, yOffset - 10);
+          data.cursor.y = HEADER_MARGIN + 10;
         }
       },
       columnStyles: {
-        0: { halign: "let", cellWidth: PAGE_WIDTH/4 },
-        1: { halign: "left", cellWidth: 3 * PAGE_WIDTH / 4 },
+        0: { halign: "left", cellWidth: "auto" }, 
+        1: { halign: "left", cellWidth: "auto" },
       },
     });
+
     
     yOffset = doc.lastAutoTable.finalY + 20;
     checkPageBreak();

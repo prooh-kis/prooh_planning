@@ -36,7 +36,7 @@ export const CampaignDashboardPage: React.FC = () => {
 
     const interval = setInterval(() => {
       dispatch(getCampaignDashboardData({ id: campaignId })); // Refresh data every 5 seconds
-    }, 60000);
+    }, 600000);
   
     return () => clearInterval(interval); 
   }, [dispatch, campaignId]);

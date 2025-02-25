@@ -43,21 +43,22 @@ export const EmailSendBox = ({
             />
           </div>
           <div className="col-span-2">
-            {loading ? (
+            {/* {loading ? (
               <Loading />
-            ) : (
-              <PrimaryButton
-                title={"Send"}
-                rounded="rounded-[8px]"
-                action={(value: any) => {
-                  if (isValidEmail(toEmail)) sendEmail(value);
-                  else message.error("Please Enter valid email");
-                }}
-                width="w-full"
-                height=""
-                textSize="14px"
-              />
-            )}
+            ) : ( */}
+            <PrimaryButton
+              title={"Send"}
+              rounded="rounded-[8px]"
+              action={(value: any) => {
+                if (isValidEmail(toEmail)) sendEmail(value);
+                else message.error("Please Enter valid email");
+              }}
+              width="w-full"
+              height=""
+              textSize="14px"
+              disabled={loading}
+            />
+            {/* )} */}
           </div>
         </div>
         {page !== "VendorApproval" ? (

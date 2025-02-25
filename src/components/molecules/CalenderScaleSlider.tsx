@@ -43,7 +43,7 @@ export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({
       ></div>
 
       {/* Weeks in a linear scale */}
-      <div className="flex items-center justify-between w-full relative z-10 mt-[-17px]">
+      <div className="flex items-center justify-between w-full relative z-1 mt-[-17px]">
         {/* Loop through each week */}
         {Array.from({ length: Math.ceil(days / 7) }, (_, weekIndex) => {
           // Calculate the start and end day of the current week
@@ -79,7 +79,7 @@ export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({
                         >
                           <div className="text-[12px] text-gray-400">{day}</div>
                           <div
-                            className={`w-4 h-4 rounded-full relative z-10 ${
+                            className={`w-4 h-4 rounded-full relative z-1 ${
                               lastPlayedDay === day
                                 ? "bg-[#22C55E] animate-ping"
                                 : isDayPlayed(day)
@@ -99,7 +99,7 @@ export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({
                     Week {weekIndex + 1}
                   </div>
                   <div
-                    className={`w-3 h-3 rounded-full relative z-10 ${
+                    className={`w-3 h-3 rounded-full relative z-1 ${
                       isFutureWeek ? "bg-[#D7D7D7]" : "bg-[#129BFF]"
                     }`}
                   ></div>

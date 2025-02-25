@@ -92,15 +92,6 @@ export const ScreenSummaryDetails = ({
     data: screenSummaryData,
   } = screenSummaryDataGet;
 
-  const screenSummaryDataIKnowItAllGet = useSelector(
-    (state: any) => state.screenSummaryDataIKnowItAllGet
-  );
-  const {
-    loading: loadingScreenSummaryIKnowItAll,
-    error: errorScreenSummaryIKnowItAll,
-    data: screenSummaryDataIKnowItAll,
-  } = screenSummaryDataIKnowItAllGet;
-
   const screenSummaryPlanTableDataGet = useSelector(
     (state: any) => state.screenSummaryPlanTableDataGet
   );
@@ -323,7 +314,7 @@ export const ScreenSummaryDetails = ({
   }, [campaignId, pathname, step]);
 
   useEffect(() => {
-    if (screenSummaryData || screenSummaryDataIKnowItAll || screensBuyingCount) {
+    if (screenSummaryData || screensBuyingCount) {
       // console.log(screenSummaryData);
       // dispatch(
       //   getScreenSummaryPlanTableData({
@@ -335,14 +326,13 @@ export const ScreenSummaryDetails = ({
         [campaignId]: screensBuyingCount,
       });
       setCityTabData(
-        getTabValue(screenSummaryData || screenSummaryDataIKnowItAll)
+        getTabValue(screenSummaryData)
       );
     }
   }, [
     dispatch,
     campaignId,
     screenSummaryData,
-    screenSummaryDataIKnowItAll,
     screensBuyingCount,
   ]);
 
@@ -370,193 +360,189 @@ export const ScreenSummaryDetails = ({
           )}
         </div>
       )}
-      {errorScreenSummary || errorScreenSummaryIKnowItAll ? (
+      {errorScreenSummary && (
         <div className="p-4 bg-red-300 text-[#FFFFFF] ">
           Something went wrong! please refresh the page...
         </div>
-      ) : (
-        <div className="pb-10">
-          {currentTab === "1" ? (
-            <div className="w-full">
-              <div className="py-2 grid grid-cols-12 flex justify-between">
-                <div className="col-span-8 overflow-x-scroll no-scrollbar">
-                  {loadingScreenSummary || loadingScreenSummaryIKnowItAll && (
-                    <div className="border flex border rounded-b justify-between w-full h-[25px] animate-pulse">
-                      <div className="h-[25px] bg-[#D7D7D720] rounded-b dark:bg-[#D7D7D7] w-full"></div>
-                    </div>
-                  )}
-
-                  {((!loadingScreenSummary && screenSummaryData) ||
-                    (!loadingScreenSummaryIKnowItAll &&
-                      screenSummaryDataIKnowItAll)) &&
-                    cityTabData?.length !== 0 && (
-                      <TabWithoutIcon
-                        currentTab={currentSummaryTab}
-                        setCurrentTab={handleSelectCurrentTab}
-                        tabData={cityTabData}
-                      />
-                    )}
-                </div>
-                <div className="col-span-4 flex gap-2 truncate">
-                  <Tooltip title="Single click to select the filter and Double click to deselect the filter">
-                    <div
-                      className={`truncate px-1 border ${
-                        priceFilter.min === 1 && priceFilter.max === 100
-                          ? "border-[#129BFF]"
-                          : ""
-                      } rounded flex items-center gap-1`}
-                      onClick={() => {
-                        setPriceFilter({
-                          min: 1,
-                          max: 100,
-                        });
-                      }}
-                      onDoubleClick={() => {
-                        setPriceFilter({
-                          min: 1,
-                          max: 300,
-                        });
-                      }}
-                    >
-                      <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
-                      <p className="text-[12px] truncate">
-                        &#8377;1 - &#8377;100
-                      </p>
-                    </div>
-                  </Tooltip>
-                  <Tooltip title="Single click to select the filter and Double click to deselect the filter">
-                    <div
-                      className={`truncate px-1 border ${
-                        priceFilter.min === 100 && priceFilter.max === 300
-                          ? "border-[#129BFF]"
-                          : ""
-                      } rounded flex items-center gap-1`}
-                      onClick={() => {
-                        setPriceFilter({
-                          min: 100,
-                          max: 300,
-                        });
-                      }}
-                      onDoubleClick={() => {
-                        setPriceFilter({
-                          min: 1,
-                          max: 300,
-                        });
-                      }}
-                    >
-                      <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
-                      <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
-                      <p className="text-[12px] truncate">
-                        &#8377;101 - &#8377;300
-                      </p>
-                    </div>
-                  </Tooltip>
-                  <Tooltip title="Click to see the list view">
-                    <div
-                      className={`truncate px-1 border rounded flex items-center gap-1 ${
-                        listView && "border-primaryButton"
-                      }`}
-                      onClick={() => setListView(true)}
-                    >
-                      <i
-                        className={`fi fi-rr-table-list flex items-center
-                          text-[12px]
-                          ${listView && "text-primaryButton"}`}
-                      ></i>
-                      <p
-                        className={`${
-                          listView && "text-primaryButton"
-                        } text-[12px] truncate`}
-                      >
-                        List View
-                      </p>
-                    </div>
-                  </Tooltip>
-                  <Tooltip title="Click to see the grid view">
-                    <div
-                      className={`truncate px-1 border rounded flex items-center gap-1 ${
-                        !listView && "border-primaryButton"
-                      }`}
-                      onClick={() => setListView(false)}
-                    >
-                      <i
-                        className={`fi fi-sr-apps flex items-center
-                          text-[12px]
-                          ${!listView && "text-primaryButton"}`}
-                      ></i>
-                      <p
-                        className={`${
-                          !listView && "text-primaryButton"
-                        } text-[12px] truncate`}
-                      >
-                        Grid View
-                      </p>
-                    </div>
-                  </Tooltip>
-                </div>
-              </div>
-              {loadingScreenSummary || loadingScreenSummaryIKnowItAll && (
-                <div className="flex border rounded-b justify-between w-full h-[45px] animate-pulse">
-                  <div className="h-[45px] bg-gray-200 rounded-b dark:bg-gray-700 w-full"></div>
-                </div>
-              )}
-              {listView ? (
-                <ScreenSummaryTable
-                  data={screenSummaryData || screenSummaryDataIKnowItAll}
-                  currentCity={currentCity}
-                  currentSummaryTab={currentSummaryTab}
-                  setCurrentCity={setCurrentCity}
-                  setScreensBuyingCount={setScreensBuyingCount}
-                  screensBuyingCount={screensBuyingCount}
-                  setCityZones={setCityZones}
-                  cityZones={cityZones}
-                  setCityTP={setCityTP}
-                  cityTP={cityTP}
-                  setScreenTypes={setScreenTypes}
-                  refreshScreenSummary={refreshScreenSummary}
-                  priceFilter={priceFilter}
-                  campaignId={campaignId}
-                  listView={listView}
-                />
-              ) : (
-                <ViewPlanPic
-                  currentSummaryTab={currentSummaryTab}
-                  screensBuyingCount={screensBuyingCount}
-                  setScreensBuyingCount={setScreensBuyingCount}
-                  refreshScreenSummary={refreshScreenSummary}
-                  cityZones={cityZones}
-                  cityTP={cityTP}
-                  screenTypes={screenTypes}
-                  setCurrentCity={setCurrentCity}
-                  priceFilter={priceFilter}
-                  listView={listView}
-                />
-              )}
-            </div>
-          ) : (
-            currentTab === "2" && (
-              <div className="w-full">
-                <PlanSummaryTable
-                  success={success}
-                  showSummary={showSummary}
-                  setShowSummary={setShowSummary}
-                  regularVsCohort={regularVsCohort}
-                  loading={loadingScreenSummaryPlanTable}
-                  error={errorScreenSummaryPlanTable}
-                  data={screenSummaryPlanTableData}
-                  getSelectedScreenIdsFromAllCities={
-                    getSelectedScreenIdsFromAllCities
-                  }
-                  campaignId={campaignId}
-                  screensBuyingCount={screensBuyingCount}
-                  pathname={pathname}
-                  setCurrentStep={setCurrentStep}
-                />
-              </div>
-            )
-          )}
-        </div>
       )}
+
+      <div className="pb-10">
+        {currentTab === "1" ? (
+          <div className="w-full">
+            <div className="py-2 grid grid-cols-12 flex justify-between">
+              <div className="col-span-8 overflow-x-scroll no-scrollbar">
+                {loadingScreenSummary && (
+                  <div className="flex rounded-b justify-between w-full h-[32px] animate-pulse">
+                    <div className="h-[32px] bg-[#D7D7D750] rounded-b dark:bg-[#D7D7D7] w-full"></div>
+                  </div>
+                )}
+
+                {(!loadingScreenSummary && screenSummaryData) &&
+                  cityTabData?.length !== 0 && (
+                    <TabWithoutIcon
+                      currentTab={currentSummaryTab}
+                      setCurrentTab={handleSelectCurrentTab}
+                      tabData={cityTabData}
+                    />
+                )}
+              </div>
+              <div className="col-span-4 flex justify-end gap-2 truncate">
+                <Tooltip title="Single click to select the filter and Double click to deselect the filter">
+                  <div
+                    className={`truncate px-1 border ${
+                      priceFilter.min === 1 && priceFilter.max === 100
+                        ? "border-[#129BFF]"
+                        : ""
+                    } rounded flex items-center gap-1`}
+                    onClick={() => {
+                      setPriceFilter({
+                        min: 1,
+                        max: 100,
+                      });
+                    }}
+                    onDoubleClick={() => {
+                      setPriceFilter({
+                        min: 1,
+                        max: 300,
+                      });
+                    }}
+                  >
+                    <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
+                    <p className="text-[12px] truncate">
+                      &#8377;1 - &#8377;100
+                    </p>
+                  </div>
+                </Tooltip>
+                <Tooltip title="Single click to select the filter and Double click to deselect the filter">
+                  <div
+                    className={`truncate px-1 border ${
+                      priceFilter.min === 100 && priceFilter.max === 300
+                        ? "border-[#129BFF]"
+                        : ""
+                    } rounded flex items-center gap-1`}
+                    onClick={() => {
+                      setPriceFilter({
+                        min: 100,
+                        max: 300,
+                      });
+                    }}
+                    onDoubleClick={() => {
+                      setPriceFilter({
+                        min: 1,
+                        max: 300,
+                      });
+                    }}
+                  >
+                    <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
+                    <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
+                    <p className="text-[12px] truncate">
+                      &#8377;101 - &#8377;300
+                    </p>
+                  </div>
+                </Tooltip>
+                <Tooltip title="Click to see the list view">
+                  <div
+                    className={`truncate px-1 border rounded flex items-center gap-1 ${
+                      listView && "border-primaryButton"
+                    }`}
+                    onClick={() => setListView(true)}
+                  >
+                    <i
+                      className={`fi fi-rr-table-list flex items-center
+                        text-[12px]
+                        ${listView && "text-primaryButton"}`}
+                    ></i>
+                    <p
+                      className={`${
+                        listView && "text-primaryButton"
+                      } text-[12px] truncate`}
+                    >
+                      List View
+                    </p>
+                  </div>
+                </Tooltip>
+                <Tooltip title="Click to see the grid view">
+                  <div
+                    className={`truncate px-1 border rounded flex items-center gap-1 ${
+                      !listView && "border-primaryButton"
+                    }`}
+                    onClick={() => setListView(false)}
+                  >
+                    <i
+                      className={`fi fi-sr-apps flex items-center
+                        text-[12px]
+                        ${!listView && "text-primaryButton"}`}
+                    ></i>
+                    <p
+                      className={`${
+                        !listView && "text-primaryButton"
+                      } text-[12px] truncate`}
+                    >
+                      Grid View
+                    </p>
+                  </div>
+                </Tooltip>
+              </div>
+            </div>
+            {loadingScreenSummary && (
+              <Loading />
+            )}
+            {listView ? (
+              <ScreenSummaryTable
+                data={screenSummaryData}
+                currentCity={currentCity}
+                currentSummaryTab={currentSummaryTab}
+                setCurrentCity={setCurrentCity}
+                setScreensBuyingCount={setScreensBuyingCount}
+                screensBuyingCount={screensBuyingCount}
+                setCityZones={setCityZones}
+                cityZones={cityZones}
+                setCityTP={setCityTP}
+                cityTP={cityTP}
+                setScreenTypes={setScreenTypes}
+                refreshScreenSummary={refreshScreenSummary}
+                priceFilter={priceFilter}
+                campaignId={campaignId}
+                listView={listView}
+              />
+            ) : (
+              <ViewPlanPic
+                currentSummaryTab={currentSummaryTab}
+                screensBuyingCount={screensBuyingCount}
+                setScreensBuyingCount={setScreensBuyingCount}
+                refreshScreenSummary={refreshScreenSummary}
+                cityZones={cityZones}
+                cityTP={cityTP}
+                screenTypes={screenTypes}
+                setCurrentCity={setCurrentCity}
+                priceFilter={priceFilter}
+                listView={listView}
+              />
+            )}
+          </div>
+        ) : (
+          currentTab === "2" && (
+            <div className="w-full">
+              <PlanSummaryTable
+                success={success}
+                showSummary={showSummary}
+                setShowSummary={setShowSummary}
+                regularVsCohort={regularVsCohort}
+                loading={loadingScreenSummaryPlanTable}
+                error={errorScreenSummaryPlanTable}
+                data={screenSummaryPlanTableData}
+                getSelectedScreenIdsFromAllCities={
+                  getSelectedScreenIdsFromAllCities
+                }
+                campaignId={campaignId}
+                screensBuyingCount={screensBuyingCount}
+                pathname={pathname}
+                setCurrentStep={setCurrentStep}
+              />
+            </div>
+          )
+        )}
+      </div>
       <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
         <Footer
           handleBack={() => {

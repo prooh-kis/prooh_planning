@@ -75,10 +75,10 @@ export const AudienceTouchPointsDetails = ({
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.markets || []
   );
   const [selectedGender, setSelectedGender] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender === "male"
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender === "Male"
       ? ["Male"]
       : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender ===
-        "female"
+        "Female"
       ? ["Female"]
       : ["Male", "Female"]
   );
@@ -150,12 +150,12 @@ export const AudienceTouchPointsDetails = ({
 
     if (
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender ===
-      "male"
+      "Male"
     ) {
       setSelectedGender(["Male"]);
     } else if (
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender ===
-      "female"
+      "Female"
     ) {
       setSelectedGender(["Female"]);
     } else if (
@@ -233,9 +233,9 @@ export const AudienceTouchPointsDetails = ({
           touchPoints: selectedTouchPoints,
           gender:
             selectedGender.length === 1 && selectedGender.includes("Male")
-              ? "male"
+              ? "Male"
               : selectedGender.length === 1 && selectedGender.includes("Female")
-              ? "female"
+              ? "Female"
               : "both",
           duration:
             getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
