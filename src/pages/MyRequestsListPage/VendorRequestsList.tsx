@@ -114,7 +114,7 @@ export const VendorsRequestsList = ({ requestsList, userInfo, campaignsList }: a
             />
             <div className="">
               <div className="flex justify-between items-between">
-                // TODO make design better
+                (// TODO make design better)
                 <div className="flex flex-col justify-start items-start max-w-md mx-auto bg-white shadow-lg rounded-xl">
                   <h1>
                     Screens Selected ({showDetails?.data?.screenIds?.length})
