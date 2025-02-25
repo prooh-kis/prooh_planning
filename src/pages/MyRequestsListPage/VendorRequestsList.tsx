@@ -32,7 +32,7 @@ const allTabs = [
   },
 ];
 
-export const VendorsRequestsList = ({ requestsList, userInfo }: any) => {
+export const VendorsRequestsList = ({ requestsList, userInfo, campaignsList }: any) => {
   const dispatch = useDispatch<any>();
   const [currentTab, setCurrentTab] = useState<any>("1");
   const [showDetails, setShowDetails] = useState<any>({
@@ -76,44 +76,7 @@ export const VendorsRequestsList = ({ requestsList, userInfo }: any) => {
     }
 
     if (requestsList?.length > 0) {
-      setPlanRequest(
-        requestsList?.reduce((acc: any, item: any) => {
-          if (!Array.isArray(acc)) {
-            acc = [];
-          }
-          const existingCampaign = acc.find(
-            (campaign: any) =>
-              campaign.campaignCreationId === item.campaignCreationId
-          );
-
-          const totalSlotBooked = Number(item.totalSlotBooked);
-          const pricePerSlot = Number(item.pricePerSlot);
-          const cost = totalSlotBooked * pricePerSlot;
-
-          if (!existingCampaign) {
-            acc.push({
-              campaignCreationId: item.campaignCreationId,
-              name: item.name,
-              brandName: item.brandName,
-              clientName: item.clientName,
-              campaignType: item.campaignType,
-              totalCampaignBudget: cost,
-              startDate: item.startDate,
-              endDate: item.endDate,
-              duration: item.campaignDuration,
-              campaigns: [item], // You can adjust this if you have multiple campaigns per ID
-              triggers: item.triggers,
-            });
-          } else {
-            existingCampaign.totalCampaignBudget += cost;
-            if (!existingCampaign.campaigns.includes(item)) {
-              existingCampaign.campaigns.push(item);
-            }
-          }
-
-          return acc;
-        }, [])
-      );
+      setPlanRequest(requestsList);
     }
   }, [requestsList, vendorApprovalStatus, errorVendorApprovalStatus]);
 
@@ -150,10 +113,20 @@ export const VendorsRequestsList = ({ requestsList, userInfo }: any) => {
               vendorConfirmationData={showDetails?.data}
             />
             <div className="">
-              <div className="py-2 flex justify-between items-center">
-                <h1>
-                  Screens Selected ({showDetails?.data?.campaigns?.length})
-                </h1>
+              <div className="flex justify-between items-between">
+                // TODO make design better
+                <div className="flex flex-col justify-start items-start max-w-md mx-auto bg-white shadow-lg rounded-xl">
+                  <h1>
+                    Screens Selected ({showDetails?.data?.screenIds?.length})
+                  </h1>
+                  <ul className="space-y-2">
+                    {showDetails?.data?.screenNames?.map((item: any, index: number) => (
+                      <li key={index} className="p-2 bg-gray-100 rounded-md shadow-sm">
+                        {typeof item === "object" ? JSON.stringify(item) : item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
                 <div className="flex gap-4">
                   <button
                     className="bg-[#129BFF] text-[#FFFFFF] font-custom rounded-[9px] text-[14px] sm:text-[16px] font-bold hover:bg-[#129BFF90] hover:text-[#FFFFFF] w-[163px] h-[40px]"
@@ -165,7 +138,7 @@ export const VendorsRequestsList = ({ requestsList, userInfo }: any) => {
                       );
                     }}
                   >
-                    Create Campaign
+                    Approve Campaign
                   </button>
                   <button className="bg-gray-300 text-[#FFFFFF] font-custom rounded-[9px] text-[14px] sm:text-[16px] font-bold hover:bg-[#129BFF90] hover:text-[#FFFFFF] w-[163px] h-[40px]">
                     Reset
@@ -174,9 +147,10 @@ export const VendorsRequestsList = ({ requestsList, userInfo }: any) => {
               </div>
               <VendorConfirmationStatusTable
                 userInfo={userInfo}
-                statusTableData={showDetails?.data?.campaigns}
+                statusTableData={showDetails?.data}
                 selectedCampaignIds={selectedCampaignIds}
                 setSelectedCampaignIds={setSelectedCampaignIds}
+                campaignsList = {campaignsList}
               />
             </div>
           </div>

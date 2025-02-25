@@ -12,6 +12,7 @@ export const VendorConfirmationStatusTable = ({
   setSelectedCampaignIds,
   handleOpenStatusModel,
   handleOpenMediaModel,
+  campaignsList
 }: any) => {
   const [openShowMediaPopup, setOpenShowMediaPopup] = useState<any>(false);
   const [creativesToShow, setCreativesToShow] = useState<any>({
@@ -33,7 +34,13 @@ export const VendorConfirmationStatusTable = ({
   };
 
   useEffect(() => {
-    setSelectedCampaignIds(statusTableData?.map((c: any) => c._id));
+    var campaignIds : any = []
+    for ( const campaign of campaignsList ){
+      if ( campaign.campaignCreationId === statusTableData._id )
+        campaignIds.push(campaign._id.toString())
+    }
+    console.log(campaignIds)
+    setSelectedCampaignIds(campaignIds);
   }, [setSelectedCampaignIds, statusTableData]);
   return (
     <div className="w-full">

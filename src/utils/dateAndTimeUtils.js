@@ -12,6 +12,7 @@ export function getNumberOfDaysBetweenTwoDates(date1, date2) {
 export function getEndDateFromStartDateANdDuration(date1, duration) {
   const time_difference = duration * 1000 * 60 * 60 * 24;
   // const oneDay = 1000 * 60 * 60 * 24;
+  // TODO check this code
   let date2InTime = time_difference + new Date(date1).getTime();
   return new Date(date2InTime);
 }

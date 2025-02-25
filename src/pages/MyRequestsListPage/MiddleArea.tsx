@@ -98,9 +98,8 @@ export const MiddleArea: React.FC = () => {
       ) : userInfo && userInfo?.isMaster ? (
         <VendorsRequestsList
           userInfo={userInfo}
-          requestsList={vendorRequestsList?.campaigns?.filter((campaign: any) =>
-            vendorRequestsList?.screenIds?.includes(campaign?.screenId)
-          )}
+          requestsList={vendorRequestsList?.campaignCreations}
+          campaignsList = {vendorRequestsList?.campaigns}
         />
       ) : (
         <div className="">

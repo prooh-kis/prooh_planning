@@ -64,25 +64,12 @@ export const MyRequestsListTable = ({
             onClick={() =>
               setShowDetails({
                 show: !showDetails.show,
-                data: {
-                  campaignId: campaign.campaignCreationId,
-                  name: campaign.name,
-                  brandName: campaign.brandName,
-                  clientName: campaign.clientName,
-                  startDate: campaign.startDate,
-                  endDate: campaign.endDate,
-                  duration: campaign.duration,
-                  campaignType: campaign.campaignType,
-                  totalCampaignBudget: campaign.totalCampaignBudget,
-                  trigger: campaign.triggers,
-                  screens: campaign.screens,
-                  campaigns: campaign.campaigns,
-                },
+                data: campaign
               })
             }
           >
             <CampaignsListModel
-              data={{ ...campaign, screenIds: [campaign.screenId] }}
+              data={{ ...campaign }}
             />
           </div>
         ))}
