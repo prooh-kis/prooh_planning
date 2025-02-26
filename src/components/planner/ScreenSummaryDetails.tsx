@@ -155,24 +155,24 @@ export const ScreenSummaryDetails = ({
           params:
             getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !==
               null ||
-            getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !==
+              getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !==
               undefined
               ? [
-                  Object.values(
-                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
-                      campaignId
-                    ]?.[s]
-                  )
-                    ?.map((f: any) => f.status)
-                    ?.filter((s: any) => s === true)?.length,
-                  Object.values(
-                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
-                      campaignId
-                    ]?.[s]
-                  )
-                    ?.map((f: any) => f.status)
-                    ?.filter((s: any) => s === false)?.length,
-                ]
+                Object.values(
+                  getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
+                  campaignId
+                  ]?.[s]
+                )
+                  ?.map((f: any) => f.status)
+                  ?.filter((s: any) => s === true)?.length,
+                Object.values(
+                  getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
+                  campaignId
+                  ]?.[s]
+                )
+                  ?.map((f: any) => f.status)
+                  ?.filter((s: any) => s === false)?.length,
+              ]
               : [0, 0],
         };
       });
@@ -238,6 +238,7 @@ export const ScreenSummaryDetails = ({
             totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
               campaignId
             ]?.total?.totalCpm,
+            duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration
           })
         );
       }
@@ -258,6 +259,7 @@ export const ScreenSummaryDetails = ({
               ?.total?.totalCampaignBudget,
           totalCpm:
             getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalCpm,
+          duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration
         })
       );
     }
@@ -295,7 +297,7 @@ export const ScreenSummaryDetails = ({
         })
       );
     }
-      
+
   }, [campaignId, dispatch, pathname, step, success]);
 
   useEffect(() => {
@@ -347,7 +349,7 @@ export const ScreenSummaryDetails = ({
         screen summary
       </h1>
       {pathname.split("/").splice(-2)[0] === "iknowitallplan" ||
-      pathname.split("/").includes("storebasedplan") ? (
+        pathname.split("/").includes("storebasedplan") ? (
         <></>
       ) : (
         <div className="mt-2">
@@ -384,16 +386,15 @@ export const ScreenSummaryDetails = ({
                       setCurrentTab={handleSelectCurrentTab}
                       tabData={cityTabData}
                     />
-                )}
+                  )}
               </div>
               <div className="col-span-4 flex justify-end gap-2 truncate">
                 <Tooltip title="Single click to select the filter and Double click to deselect the filter">
                   <div
-                    className={`truncate px-1 border ${
-                      priceFilter.min === 1 && priceFilter.max === 100
+                    className={`truncate px-1 border ${priceFilter.min === 1 && priceFilter.max === 100
                         ? "border-[#129BFF]"
                         : ""
-                    } rounded flex items-center gap-1`}
+                      } rounded flex items-center gap-1`}
                     onClick={() => {
                       setPriceFilter({
                         min: 1,
@@ -415,11 +416,10 @@ export const ScreenSummaryDetails = ({
                 </Tooltip>
                 <Tooltip title="Single click to select the filter and Double click to deselect the filter">
                   <div
-                    className={`truncate px-1 border ${
-                      priceFilter.min === 100 && priceFilter.max === 300
+                    className={`truncate px-1 border ${priceFilter.min === 100 && priceFilter.max === 300
                         ? "border-[#129BFF]"
                         : ""
-                    } rounded flex items-center gap-1`}
+                      } rounded flex items-center gap-1`}
                     onClick={() => {
                       setPriceFilter({
                         min: 100,
@@ -442,9 +442,8 @@ export const ScreenSummaryDetails = ({
                 </Tooltip>
                 <Tooltip title="Click to see the list view">
                   <div
-                    className={`truncate px-1 border rounded flex items-center gap-1 ${
-                      listView && "border-primaryButton"
-                    }`}
+                    className={`truncate px-1 border rounded flex items-center gap-1 ${listView && "border-primaryButton"
+                      }`}
                     onClick={() => setListView(true)}
                   >
                     <i
@@ -453,9 +452,8 @@ export const ScreenSummaryDetails = ({
                         ${listView && "text-primaryButton"}`}
                     ></i>
                     <p
-                      className={`${
-                        listView && "text-primaryButton"
-                      } text-[12px] truncate`}
+                      className={`${listView && "text-primaryButton"
+                        } text-[12px] truncate`}
                     >
                       List View
                     </p>
@@ -463,9 +461,8 @@ export const ScreenSummaryDetails = ({
                 </Tooltip>
                 <Tooltip title="Click to see the grid view">
                   <div
-                    className={`truncate px-1 border rounded flex items-center gap-1 ${
-                      !listView && "border-primaryButton"
-                    }`}
+                    className={`truncate px-1 border rounded flex items-center gap-1 ${!listView && "border-primaryButton"
+                      }`}
                     onClick={() => setListView(false)}
                   >
                     <i
@@ -474,9 +471,8 @@ export const ScreenSummaryDetails = ({
                         ${!listView && "text-primaryButton"}`}
                     ></i>
                     <p
-                      className={`${
-                        !listView && "text-primaryButton"
-                      } text-[12px] truncate`}
+                      className={`${!listView && "text-primaryButton"
+                        } text-[12px] truncate`}
                     >
                       Grid View
                     </p>
@@ -562,7 +558,7 @@ export const ScreenSummaryDetails = ({
           pageName={
             (pathname?.split("/").splice(-2)[0] === "iknowitallplan" ||
               pathname.split("/").splice(-2)[0] === "storebasedplan") &&
-            currentTab === "1"
+              currentTab === "1"
               ? "Select Screens Page"
               : "Screen Summary Page"
           }
