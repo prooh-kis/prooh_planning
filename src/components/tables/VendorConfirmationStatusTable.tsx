@@ -39,7 +39,6 @@ export const VendorConfirmationStatusTable = ({
       if ( campaign.campaignCreationId === statusTableData._id )
         campaignIds.push(campaign._id.toString())
     }
-    console.log(campaignIds)
     setSelectedCampaignIds(campaignIds);
   }, [setSelectedCampaignIds, statusTableData]);
   return (

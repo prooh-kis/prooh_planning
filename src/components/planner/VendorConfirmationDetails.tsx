@@ -301,12 +301,13 @@ export const VendorConfirmationDetails = ({
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
-      dispatch(
-        getVendorConfirmationStatusTableDetails({
-          id: campaignId,
-        })
-      );
     }
+
+    dispatch(
+      getVendorConfirmationStatusTableDetails({
+        id: campaignId,
+      })
+    );
 
     dispatch(
       getPlanningPageFooterData({
