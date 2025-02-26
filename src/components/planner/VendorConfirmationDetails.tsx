@@ -297,11 +297,11 @@ export const VendorConfirmationDetails = ({
 
   useEffect(() => {
     dispatch(getVendorConfirmationDetails(vendorInput));
-    if (successAddCampaignDetails) {
-      dispatch({
-        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
-      });
-    }
+    // if (successAddCampaignDetails) {
+    //   dispatch({
+    //     type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+    //   });
+    // }
 
     dispatch(
       getVendorConfirmationStatusTableDetails({

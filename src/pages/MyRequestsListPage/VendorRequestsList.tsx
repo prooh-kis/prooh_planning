@@ -114,8 +114,7 @@ export const VendorsRequestsList = ({ requestsList, userInfo, campaignsList }: a
             />
             <div className="">
               <div className="flex justify-between items-between">
-                (// TODO make design better)
-                <div className="flex flex-col justify-start items-start max-w-md mx-auto bg-white shadow-lg rounded-xl">
+                {/* <div className="flex flex-col justify-start items-start max-w-md mx-auto bg-white shadow-lg rounded-xl">
                   <h1>
                     Screens Selected ({showDetails?.data?.screenIds?.length})
                   </h1>
@@ -126,7 +125,7 @@ export const VendorsRequestsList = ({ requestsList, userInfo, campaignsList }: a
                       </li>
                     ))}
                   </ul>
-                </div>
+                </div> */}
                 <div className="flex gap-4">
                   <button
                     className="bg-[#129BFF] text-[#FFFFFF] font-custom rounded-[9px] text-[14px] sm:text-[16px] font-bold hover:bg-[#129BFF90] hover:text-[#FFFFFF] w-[163px] h-[40px]"
