@@ -3,36 +3,28 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import * as turf from "@turf/turf";
 import {
-  getAllLocalStorageData,
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import { LocationProximity } from "../../components/segments/LocationProximity";
-import { POIProximity } from "../../components/segments/POIProximity";
 import { Footer } from "../../components/footer";
-import { SelectManuallyScreensCheckBox } from "../../components/segments/SelectManuallyScreensCheckBox";
 import { message, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPlanningPageFooterData,
-  getPoiBasedAudienceDataForAdvanceFilters,
-  getRegularVsCohortPriceData,
   getScreenDataForAdvanceFilters,
 } from "../../actions/screenAction";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
-  ADVANCE_FILTER_SCREENS_MAP_DATA,
-  COST_SUMMARY,
   FULL_CAMPAIGN_PLAN,
   REGULAR_VS_COHORT_PRICE_DATA,
-  SELECTED_AUDIENCE_TOUCHPOINTS,
   SELECTED_SCREENS_ID,
 } from "../../constants/localStorageConstants";
 import { ALL_TOUCHPOINTS } from "../../constants/helperConstants";
 import { MapWithGeometry } from "../../components/map/MapWithGeometry";
 import { getUniqueScreens } from "../../utils/screenRanking";
 import { Loading } from "../../components/Loading";
-// import { MapWithGeometry } from "../../components/molecules/MapWithGeometry";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 
 type Coordinate = [number, number];
 
@@ -100,12 +92,7 @@ export const AdvanceFiltersDetails = ({
   const [poiFilteredScreens, setPOIFilteredScreens] = useState<any>([]);
 
   const [draw, setDraw] = useState<any>("simple_select");
-  const [polygons, setPolygons] = useState<any>(
-    //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData?.polygons?.map((poly: any) => {
-    //   return {...poly, properties: {}};
-    // }) ||
-    []
-  );
+  const [polygons, setPolygons] = useState<any>([]);
   const [selectedScreensFromMap, setSelectedScreensFromMap] = useState<any>([]);
 
   const [circleData, setCircleData] = useState<any>({});
@@ -128,11 +115,6 @@ export const AdvanceFiltersDetails = ({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
-        // setViewState({
-        //   ...viewState,
-        //   latitude: position.coords.latitude,
-        //   longitude: position.coords.longitude,
-        // });
       },
       (error) => {
         console.error("Error getting user location:", error);
@@ -300,29 +282,29 @@ export const AdvanceFiltersDetails = ({
   };
 
   // Select all from map mannually
-  const handleSelectFromMap = (checked: any, screenData: any) => {
-    // console.log(screenData, "age");
-    setSelectedScreensFromMap((pre: any) => {
-      if (pre.find((screen: any) => screen?._id == screenData?._id)) {
-        return pre;
-      } else {
-        return [...pre, screenData];
-      }
-    });
+  const handleSelectFromMap = useCallback(
+    (checked: any, screenData: any) => {
+      setSelectedScreensFromMap((prev: any) => {
+        if (prev.some((screen: any) => screen?._id === screenData?._id)) {
+          return prev;
+        }
+        return [...prev, screenData];
+      });
 
-    setFinalSelectedScreens((pre: any) => {
-      if (pre.find((screen: any) => screen?._id == screenData?._id)) {
-        return pre;
-      } else {
-        return [...pre, screenData];
-      }
-    });
+      setFinalSelectedScreens((prev: any) => {
+        if (prev.some((screen: any) => screen?._id === screenData?._id)) {
+          return prev;
+        }
+        return [...prev, screenData];
+      });
 
-    handleFinalSelectedScreens({
-      type: checked ? "add" : "remove",
-      screens: [screenData],
-    });
-  };
+      handleFinalSelectedScreens({
+        type: checked ? "add" : "remove",
+        screens: [screenData],
+      });
+    },
+    [handleFinalSelectedScreens]
+  );
 
   // Confirm all screens selection
   const handleConfirmScreensSelections = ({ checked, screens }: any) => {
@@ -332,54 +314,25 @@ export const AdvanceFiltersDetails = ({
         type: "add",
         screens: screens,
       });
-    } else {
-      // handleFinalSelectedScreens({
-      //   type: "remove",
-      //   screens: screens,
-      // });
     }
     // saveDataOnLocalStorage(SELECTED_SCREENS_ID, getUniqueScreens([{screens: selectedScreenIds}]));
   };
 
   useEffect(() => {
-    if (advanceFilterData?.screens.length > 0) {
-      getMapData(advanceFilterData || {});
+    if (advanceFilterData?.screens?.length) {
+      getMapData(advanceFilterData);
       setPOIs(advanceFilterData.poiList || []);
       setSelectedPOIs(advanceFilterData.poiList || []);
 
-      if (
-        excelFilteredScreens.length === 0 &&
-        routeFilteredScreens.length === 0 &&
-        selectedScreensFromMap.length === 0 &&
-        poiFilteredScreens.length === 0
-      ) {
+      if (!finalSelectedScreens.length) {
         setFinalSelectedScreens(advanceFilterData?.screens);
         handleFinalSelectedScreens({
           type: "add",
           screens: advanceFilterData?.screens,
         });
       }
-      // dispatch(getPoiBasedAudienceDataForAdvanceFilters({id: campId}));
-
-    } else {
-      dispatch(
-        getScreenDataForAdvanceFilters({
-          id: campId,
-          touchPoints: pathname?.split("/").includes("storebasedplan")
-            ? ALL_TOUCHPOINTS
-            : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
-                ?.touchPoints,
-        })
-      );
-      saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
     }
-
-  }, [
-    advanceFilterData,
-    getMapData,
-    excelFilteredScreens,
-    routeFilteredScreens,
-  ]);
+  }, [advanceFilterData, getMapData]);
 
   useEffect(() => {
     if (successAddCampaignDetails) {
@@ -393,16 +346,19 @@ export const AdvanceFiltersDetails = ({
       dispatch(
         getScreenDataForAdvanceFilters({
           id: campId,
-          touchPoints: pathname?.split("/").includes("storebasedplan")
+          touchPoints: pathname?.includes("storebasedplan")
             ? ALL_TOUCHPOINTS
             : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
                 ?.touchPoints,
         })
       );
-      saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
-    }
 
-  }, [dispatch, successAddCampaignDetails, pathname]);
+      saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, { [campId]: {} });
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
+    }
+  }, [successAddCampaignDetails, dispatch, pathname]);
 
   return (
     <div className="w-full">
@@ -491,8 +447,8 @@ export const AdvanceFiltersDetails = ({
                     Confirm and take{" "}
                     <span className=" font-bold">
                       {`${finalSelectedScreens.length} Sites Out of ${allScreens.length} Sites `}
-                    </span>
-                    {" "}for my plan
+                    </span>{" "}
+                    for my plan
                   </>
                 }
                 onChange={(e) => {
