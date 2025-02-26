@@ -103,6 +103,7 @@ export const IKnowItAllPlanSummaryTable = ({
         totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
           campaignId
         ]?.total?.totalCpm,
+        duration : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration
       })
     );
 

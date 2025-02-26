@@ -123,7 +123,7 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
                 `}
               >
               <Tooltip
-                title={stepLabels[i+1]}
+                title={stepLabels[i]}
               >
                 {/* Icon or Text for each step */}
                 <div className="relative mt-[-32px] w-full">
