@@ -29,6 +29,7 @@ import {
   sendEmailForVendorConfirmation,
 } from "../../actions/userAction";
 import {
+  ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED,
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED,
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT,
@@ -296,18 +297,24 @@ export const VendorConfirmationDetails = ({
 
   useEffect(() => {
     dispatch(getVendorConfirmationDetails(vendorInput));
-    dispatch(
-      getVendorConfirmationStatusTableDetails({
-        id: campaignId,
-      })
-    );
+    if (successAddCampaignDetails) {
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
+      dispatch(
+        getVendorConfirmationStatusTableDetails({
+          id: campaignId,
+        })
+      );
+    }
+
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
         pageName: "Vendor Confirmation Page",
       })
     );
-  }, [dispatch, vendorInput, campaignId]);
+  }, [dispatch, vendorInput, campaignId, successAddCampaignDetails]);
 
   const handleOpenStatusModel = () => {
     setOpen((pre: boolean) => !open);
@@ -469,6 +476,7 @@ export const VendorConfirmationDetails = ({
           statusTableData={statusTableData}
           handleOpenStatusModel={handleOpenStatusModel}
           handleOpenMediaModel={handleOpenMediaModel}
+          campaignsList={[]}
         />
       </div>
       <div className="pb-20">
