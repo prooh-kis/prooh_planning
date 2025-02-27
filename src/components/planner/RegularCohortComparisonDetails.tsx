@@ -11,7 +11,6 @@ import {
   getRegularVsCohortPriceData,
 } from "../../actions/screenAction";
 import {
-  getAllLocalStorageData,
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
@@ -20,13 +19,10 @@ import { message, Tooltip } from "antd";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { useLocation } from "react-router-dom";
 import {
-  CAMPAIGN,
-  COST_SUMMARY,
   FULL_CAMPAIGN_PLAN,
   REGULAR_VS_COHORT_PRICE_DATA,
   SCREEN_SUMMARY_SELECTION,
 } from "../../constants/localStorageConstants";
-import { Loading } from "../../components/Loading";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 
 export const RegularCohortComparisonDetails = ({
@@ -38,13 +34,8 @@ export const RegularCohortComparisonDetails = ({
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
 
-  // for beauty
   const [selecting, setSelecting] = useState<any>(null);
-
-  // for beauty
-
   const [isDisabled, setIsDisabled] = useState<any>(true);
-
   const [showSummary, setShowSummary] = useState<any>(null);
   const [screenIds, setScreenIds] = useState<any>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds || []
@@ -72,37 +63,35 @@ export const RegularCohortComparisonDetails = ({
   } = regularVsCohortPriceDataGet;
 
   useEffect(() => {
-    if (priceData) {
-      saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, {
-        [campaignId]: priceData,
-      });
-      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: {} });
+    if (!priceData) return;
 
-      if (
-        priceData?.regular?.tableData.impressionPerDay === 0 ||
-        priceData?.cohort?.tableData.impressionPerDay === 0
-      ) {
-        message.error(
-          "Please select appropriate number of audiences for to get relevant impressions from the inventories available..."
-        );
-      }
-    }
-  }, [priceData, campaignId]);
-  useEffect(() => {
-    if (success) {
-      dispatch({
-        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
-      })
-      dispatch(
-        getRegularVsCohortPriceData({
-          id: campaignId,
-          screenIds: screenIds,
-          cohorts: cohorts,
-          gender: gender,
-          duration: duration,
-        })
+    saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, {
+      [campaignId]: priceData,
+    });
+    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: {} });
+
+    if (
+      priceData?.regular?.tableData.impressionPerDay === 0 ||
+      priceData?.cohort?.tableData.impressionPerDay === 0
+    ) {
+      message.error(
+        "Please select an appropriate number of audiences to get relevant impressions from the available inventories..."
       );
     }
+  }, [priceData, campaignId]);
+
+  useEffect(() => {
+    if (!success) return;
+
+    dispatch(
+      getRegularVsCohortPriceData({
+        id: campaignId,
+        screenIds,
+        cohorts,
+        gender,
+        duration,
+      })
+    );
 
     dispatch(
       getPlanningPageFooterData({
@@ -110,6 +99,8 @@ export const RegularCohortComparisonDetails = ({
         pageName: "Compare Plan Page",
       })
     );
+
+    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
   }, [cohorts, dispatch, duration, gender, screenIds, campaignId, success]);
 
   const handleRegularVsCohortSelection = (type: any) => {
@@ -123,10 +114,6 @@ export const RegularCohortComparisonDetails = ({
       [campaign?._id || campaignId]: campaign,
     };
     saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, tcamp);
-    // dispatch(getScreenSummaryData({
-    //   id: pathname.split("/").splice(-1)[0],
-    //   type: type
-    // }));
   };
 
   return (
