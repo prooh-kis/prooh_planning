@@ -103,7 +103,8 @@ export const IKnowItAllPlanSummaryTable = ({
         totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
           campaignId
         ]?.total?.totalCpm,
-        duration : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration
+        duration:
+          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
       })
     );
 
@@ -112,15 +113,15 @@ export const IKnowItAllPlanSummaryTable = ({
 
   useEffect(() => {
     if (success) {
-      dispatch({
-        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
-      });
       dispatch(
         getPlanningPageFooterData({
           id: campaignId,
           pageName: "Screen Summary Page",
         })
       );
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
     }
   }, [campaignId, dispatch, success]);
 
@@ -141,7 +142,6 @@ export const IKnowItAllPlanSummaryTable = ({
       });
     }
   }, [
-    dispatch,
     campaignId,
     screenSummaryData,
     screenSummaryDataIKnowItAll,

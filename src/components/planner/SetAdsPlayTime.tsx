@@ -9,8 +9,13 @@ import {
   AdsPlayTimeTable,
 } from "../../components/tables";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { getPlanningPageFooterData, getTableDataScreenWiseAdPlayTime, tableDataSetAdPlayTime } from "../../actions/screenAction";
+import {
+  getPlanningPageFooterData,
+  getTableDataScreenWiseAdPlayTime,
+  tableDataSetAdPlayTime,
+} from "../../actions/screenAction";
 import { Loading } from "../../components/Loading";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 
 interface BottomTableData {
   selected: {
@@ -93,12 +98,15 @@ export const SetAdsPlayTime = ({
   const { pathname } = useLocation();
 
   const [currentTab, setCurrentTab] = useState<keyof DayWiseData>("weekdays");
-  // const [data, setData] = useState<ResultData[]>([]);
 
   const tableDataScreenWiseAdPlayTimeGet = useSelector(
     (state: any) => state.tableDataScreenWiseAdPlayTimeGet
   );
-  const { loading: loadingTableData, error, data: tableData } = tableDataScreenWiseAdPlayTimeGet;
+  const {
+    loading: loadingTableData,
+    error,
+    data: tableData,
+  } = tableDataScreenWiseAdPlayTimeGet;
 
   const [data, setData] = useState<ResultData[]>([]);
   const [bottomTableData, setBottomTableData] = useState<any>({});
@@ -135,26 +143,20 @@ export const SetAdsPlayTime = ({
   }, [tableData]);
 
   useEffect(() => {
-    dispatch(getTableDataScreenWiseAdPlayTime({ id: campaignId }));
-    dispatch(getPlanningPageFooterData({
-      id: campaignId,
-      pageName: "Set Ad Play time Page",
-    }));
+    console.log("useEffect 1", success);
+    if (success) {
+      console.log("useEffect 2 reset success", success);
 
-  }, [dispatch, campaignId]);
-
-  // useEffect(() => {
-  //   if (tableData) {
-  //     dispatch(
-  //       tableDataSetAdPlayTime({
-  //         touchPointScreenWiseData: tableData?.result,
-  //         id: campaignId,
-  //       })
-  //     );
-  //     console.log("successfullt dispatch");
-  //     console.log("tableData  4444: ", data);
-  //   }
-  // }, [tableData, campaignId]);
+      dispatch(getTableDataScreenWiseAdPlayTime({ id: campaignId }));
+      dispatch(
+        getPlanningPageFooterData({
+          id: campaignId,
+          pageName: "Set Ad Play time Page",
+        })
+      );
+      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+    }
+  }, [dispatch, campaignId, success]);
 
   return (
     <div className="w-full py-3">
