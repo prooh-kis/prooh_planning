@@ -9,6 +9,7 @@ import {
   MY_PLANS_LIST,
   USERS,
 } from "../../routes/routes";
+import NoInternetPage from "../../components/segments/NoInternetPage";
 
 interface AppDashBoardLayoutProps {
   children: React.ReactNode;
@@ -70,6 +71,25 @@ export const AppDashBoardLayout: React.FC<AppDashBoardLayoutProps> = ({
       navigate(AUTH);
     }
   };
+
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  if (!isOnline) {
+    return <NoInternetPage />;
+  }
 
   return (
     <div className="h-screen w-screen bg-gray-100 overflow-y-scroll no-scrollbar ">
