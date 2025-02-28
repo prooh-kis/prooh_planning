@@ -4,7 +4,7 @@ import { PrimaryInput } from "../atoms/PrimaryInput";
 import { useNavigate } from "react-router-dom";
 import { CalendarInput } from "../atoms/CalendarInput";
 import {
-  getEndDateFromStartDateANdDuration,
+  getEndDateFromStartDateAndDuration,
   getNumberOfDaysBetweenTwoDates,
 } from "../../utils/dateAndTimeUtils";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
@@ -144,7 +144,7 @@ export const EnterCampaignBasicDetails = ({
   const updateEndDateBasedOnDuration = useCallback(
     (newDuration: number) => {
       if (startDate) {
-        const endDate1 = getEndDateFromStartDateANdDuration(
+        const endDate1 = getEndDateFromStartDateAndDuration(
           startDate,
           newDuration
         );
@@ -377,7 +377,7 @@ export const EnterCampaignBasicDetails = ({
       <div className="flex py-4">
         <button
           type="submit"
-          className="border border-1 py-2 px-8 text-[16px]  font-semibold rounded-md bg-[#00A0FA] text-[#FFFFFF] hover:bg-[#D7D7D7] hover:text-black truncate font-custom h-12 w-48" 
+          className="border border-1 py-2 px-8 text-[16px]  font-semibold rounded-md bg-[#00A0FA] text-[#FFFFFF] hover:bg-[#D7D7D7] hover:text-black truncate font-custom h-12 w-48"
           title="Save and go next"
           onClick={() => {
             if (validateForm()) {

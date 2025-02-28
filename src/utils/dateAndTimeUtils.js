@@ -11,13 +11,23 @@ export function getNumberOfDaysBetweenTwoDates(date1, date2) {
   return Math.round(time_difference / (1000 * 60 * 60 * 24));
 }
 
-export function getEndDateFromStartDateANdDuration(date1, duration) {
-  const time_difference = duration * 1000 * 60 * 60 * 24;
-  // const oneDay = 1000 * 60 * 60 * 24;
-  // TODO check this code
-  let date2InTime = time_difference + new Date(date1).getTime();
-  // date2InTime.setHours(23, 59, 59, 999);
-  return new Date(date2InTime).setHours(23, 59, 59, 999);
+export function getEndDateFromStartDateAndDuration(startDate, duration) {
+  const start = new Date(startDate);
+
+  // Ensure the date part remains unchanged
+  const endDate = new Date(
+    start.getFullYear(),
+    start.getMonth(),
+    start.getDate()
+  );
+
+  // Add duration days
+  endDate.setDate(endDate.getDate() + (duration - 1));
+
+  // Set time to 23:59:59.999
+  endDate.setHours(23, 59, 59, 999);
+
+  return endDate;
 }
 
 export function convertDataTimeToLocale(date) {

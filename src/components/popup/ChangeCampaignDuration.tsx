@@ -4,7 +4,7 @@ import { message, Modal, Tooltip } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import {
-  getEndDateFromStartDateANdDuration,
+  getEndDateFromStartDateAndDuration,
   getNumberOfDaysBetweenTwoDates,
 } from "../../utils/dateAndTimeUtils";
 import { CalendarInput } from "../atoms/CalendarInput";
@@ -59,7 +59,7 @@ export const ChangeCampaignDuration = ({ campaignId }: any) => {
   const updateEndDateBasedOnDuration = useCallback(
     (newDuration: number) => {
       if (startDate) {
-        const endDate1 = getEndDateFromStartDateANdDuration(
+        const endDate1 = getEndDateFromStartDateAndDuration(
           startDate,
           newDuration
         );
