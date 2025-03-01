@@ -3,7 +3,6 @@ import { StepperSlider } from "../../components/molecules/StepperSlider";
 import {
   CreativeUploadDetails,
   EnterCampaignBasicDetails,
-  ScreenSummaryDetails,
   ViewFinalPlanPODetails,
   VendorConfirmationDetails,
   SetAdsPlayTime,
@@ -14,7 +13,10 @@ import {
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
-import { CURRENT_STEP, FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
+import {
+  CURRENT_STEP,
+  FULL_CAMPAIGN_PLAN,
+} from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { CAMPAIGN_PLAN_TYPE_KNOW } from "../../constants/campaignConstants";
 import { IKnowItAllPlanSummaryTable } from "../../components/planner/IKnowItAllPlanSummaryTable";
@@ -96,7 +98,15 @@ export const IKnowItAllPlanPage: React.FC = () => {
   }, [success]);
 
   useEffect(() => {
-    if (campaignId !== null || undefined || pages?.filter((page: any) => page.label === getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.currentPage)[0]?.id !== currentStep) {
+    if (
+      campaignId !== null ||
+      undefined ||
+      pages?.filter(
+        (page: any) =>
+          page.label ===
+          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.currentPage
+      )[0]?.id !== currentStep
+    ) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
   }, [dispatch, campaignId]);
@@ -149,12 +159,14 @@ export const IKnowItAllPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
           />
         ) : currentStep === 6 ? (
           <CreativeUploadDetails
             step={currentStep}
             setCurrentStep={setCurrentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
           />
         ) : currentStep === 7 ? (
           <VendorConfirmationDetails
@@ -162,6 +174,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             campaignId={campaignId}
             userInfo={userInfo}
+            successAddCampaignDetails={success}
           />
         ) : null}
       </div>

@@ -368,7 +368,7 @@ export const EnterCampaignBasicDetails = ({
           Note: Your campaign will be billed from{" "}
           {new Date(startDate).toLocaleDateString()} to{" "}
           {new Date(
-            new Date(endDate).setDate(new Date(endDate).getDate() - 1)
+            getEndDateFromStartDateAndDuration(startDate, duration)
           ).toLocaleDateString()}
           ...
         </h1>

@@ -28,7 +28,10 @@ import { generateCampaignSummaryPdfFromJSON } from "../../utils/generatePdf";
 import { sendEmailForConfirmation } from "../../actions/userAction";
 import { SEND_EMAIL_FOR_CONFIRMATION_RESET } from "../../constants/userConstants";
 import { generatePPT } from "../../utils/generatePPT";
-import { convertDateIntoDateMonthYear, convertIntoDateAndTime } from "../../utils/dateAndTimeUtils";
+import {
+  convertDateIntoDateMonthYear,
+  convertIntoDateAndTime,
+} from "../../utils/dateAndTimeUtils";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
 import {
   applyCouponForCampaign,
@@ -37,6 +40,7 @@ import {
 } from "../../actions/couponAction";
 import { APPLY_COUPON_RESET } from "../../constants/couponConstants";
 import { Loading } from "../../components/Loading";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -75,7 +79,6 @@ export const ViewFinalPlanPODetails = ({
   const [pdfDownload, setPdfDownload] = useState<any>({});
   const [summaryChecked, setSummaryChecked] = useState<any>(false);
   const [picturesChecked, setPicturesChecked] = useState<any>(false);
-
 
   const [poInput, setPoInput] = useState<any>({
     pageName: "View Final Plan Page",
@@ -120,12 +123,20 @@ export const ViewFinalPlanPODetails = ({
   const couponApplyForCampaign = useSelector(
     (state: any) => state.couponApplyForCampaign
   );
-  const { data: couponApply, success: couponApplySuccess,  error: errorApply } = couponApplyForCampaign;
+  const {
+    data: couponApply,
+    success: couponApplySuccess,
+    error: errorApply,
+  } = couponApplyForCampaign;
 
   const couponRemoveForCampaign = useSelector(
     (state: any) => state.couponRemoveForCampaign
   );
-  const { data: couponRemove, success: couponRemoveSuccess, error: errorRemove } = couponRemoveForCampaign;
+  const {
+    data: couponRemove,
+    success: couponRemoveSuccess,
+    error: errorRemove,
+  } = couponRemoveForCampaign;
 
   const finalPlanPOTableDataGet = useSelector(
     (state: any) => state.finalPlanPOTableDataGet
@@ -149,41 +160,6 @@ export const ViewFinalPlanPODetails = ({
   const [currentCoupon, setCurrentCoupon] = useState<string>(
     poTableData?.couponId || ""
   );
-
-  useEffect(() => {
-    if (errorApply) {
-      message.error(
-        "Something went wrong applying this discount. Please try again."
-      );
-    }
-
-    if (errorRemove) {
-      message.error(
-        "Something went wrong applying this discount. Please try again."
-      );
-    } 
-    if (couponApplySuccess) {
-      setSummaryChecked(false);
-      setPicturesChecked(false);
-      setCurrentCoupon("");
-      dispatch({
-        type: APPLY_COUPON_RESET
-      });
-      dispatch(getFinalPlanPOTableData(poInput));
-      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
-    }
-
-    if (couponRemoveSuccess) {
-      setSummaryChecked(false);
-      setPicturesChecked(false);
-      setCurrentCoupon("");
-      dispatch({
-        type: APPLY_COUPON_RESET
-      });
-      dispatch(getFinalPlanPOTableData(poInput));
-      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
-    }
-  },[dispatch, campaignId, poInput, couponApplySuccess, couponRemoveSuccess, errorRemove, errorApply]);
 
   const sendEmail = (fileLinks: string) => {
     const formData = new FormData();
@@ -381,9 +357,7 @@ export const ViewFinalPlanPODetails = ({
     (couponId: any) => {
       console.log("handleApplyCoupon : ", campaignId, currentCoupon);
       if (poTableData?.couponId) {
-        message.warning(
-          "Applying discount coupon..."
-        );
+        message.warning("Applying discount coupon...");
       }
       dispatch(
         applyCouponForCampaign({
@@ -396,36 +370,82 @@ export const ViewFinalPlanPODetails = ({
   );
 
   useEffect(() => {
+    if (errorApply) {
+      message.error(
+        "Something went wrong applying this discount. Please try again."
+      );
+    }
+    if (errorRemove) {
+      message.error(
+        "Something went wrong removing this discount. Please try again."
+      );
+    }
+  }, [errorApply, errorRemove]);
+
+  useEffect(() => {
+    if (couponApplySuccess) {
+      setSummaryChecked(false);
+      setPicturesChecked(false);
+      setCurrentCoupon("");
+      dispatch({ type: APPLY_COUPON_RESET });
+      dispatch(getFinalPlanPOTableData(poInput));
+      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
+    }
+  }, [couponApplySuccess, dispatch, campaignId, poInput]);
+
+  // Handle coupon removal success
+  useEffect(() => {
+    if (couponRemoveSuccess) {
+      setSummaryChecked(false);
+      setPicturesChecked(false);
+      setCurrentCoupon("");
+      dispatch({ type: APPLY_COUPON_RESET });
+      dispatch(getFinalPlanPOTableData(poInput));
+      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
+    }
+  }, [couponRemoveSuccess, dispatch, campaignId, poInput]);
+
+  useEffect(() => {
+    if (userInfo) {
+      setCC(userInfo?.email);
+      setLoadingEmailReady(loadingSendEmail);
+    }
+  }, [userInfo, loadingSendEmail]);
+
+  // Fetch data on campaign or poInput change
+  useEffect(() => {
+    dispatch(getCouponList());
+
+    if (successAddCampaignDetails) {
+      dispatch(getFinalPlanPOTableData(poInput));
+      dispatch(
+        getScreenSummaryPlanTableData({
+          id: campaignId,
+          screenIds:
+            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+              ?.screenIds,
+        })
+      );
+      dispatch(
+        getPlanningPageFooterData({
+          id: campaignId,
+          pageName: "View Final Plan Page",
+        })
+      );
+      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+    }
+  }, [dispatch, campaignId, poInput, successAddCampaignDetails]);
+
+  // Handle success email sending
+  useEffect(() => {
     if (successSendEmail) {
       message.success("Email sent successfully!");
       setToEmail("");
       setCC("");
       setConfirmationImageFiles([]);
-      dispatch({
-        type: SEND_EMAIL_FOR_CONFIRMATION_RESET,
-      });
+      dispatch({ type: SEND_EMAIL_FOR_CONFIRMATION_RESET });
     }
-    dispatch(getFinalPlanPOTableData(poInput));
-    dispatch(getCouponList());
-    dispatch(
-      getScreenSummaryPlanTableData({
-        id: campaignId,
-        screenIds:
-          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
-      })
-    );
-    dispatch(
-      getPlanningPageFooterData({
-        id: campaignId,
-        pageName: "View Final Plan Page",
-      })
-    );
-
-    if (userInfo) {
-      setCC(userInfo?.email);
-      setLoadingEmailReady(loadingSendEmail);
-    }
-  }, [dispatch, poInput, campaignId, successSendEmail, userInfo, loadingSendEmail]);
+  }, [successSendEmail, dispatch]);
 
   return (
     <div className="w-full py-3">
@@ -462,7 +482,10 @@ export const ViewFinalPlanPODetails = ({
                 left={"End Date"}
                 right={convertDateIntoDateMonthYear(poTableData?.endDate)}
               />
-              <MyDiv left={"Duration"} right={`${poTableData?.duration} Days`} />
+              <MyDiv
+                left={"Duration"}
+                right={`${poTableData?.duration} Days`}
+              />
               <Divider />
               <h1 className="font-semibold py-2	">Performance Metrics</h1>
               <MyDiv
@@ -480,9 +503,7 @@ export const ViewFinalPlanPODetails = ({
               />
               <MyDiv
                 left={"CPM"}
-                right={`${Number(
-                  poTableData?.totalCpm
-                ).toFixed(2)}`}
+                right={`${Number(poTableData?.totalCpm).toFixed(2)}`}
               />
               <MyDiv
                 left={"Selected Triggers"}
@@ -497,7 +518,9 @@ export const ViewFinalPlanPODetails = ({
                 }
               />
               <div className="flex font-normal text-[#2B2B2B] mt-4">
-                <h1 className="text-left text-[14px] basis-1/2">Apply Discount%</h1>
+                <h1 className="text-left text-[14px] basis-1/2">
+                  Apply Discount%
+                </h1>
                 <div className="flex gap-4">
                   <DropdownInput
                     border="border-gray-100"
@@ -536,7 +559,10 @@ export const ViewFinalPlanPODetails = ({
                   {poTableData?.couponId && poTableData?.couponId !== "NA" && (
                     <h1 className="text-left ">
                       &#8377;{" "}
-                      {formatNumber(Number(poTableData?.finalCampaignBudget)?.toFixed(2))}*
+                      {formatNumber(
+                        Number(poTableData?.finalCampaignBudget)?.toFixed(2)
+                      )}
+                      *
                     </h1>
                   )}
                   <h1
@@ -546,15 +572,19 @@ export const ViewFinalPlanPODetails = ({
                         : ""
                     }`}
                   >
-                    &#8377; {formatNumber(Number(poTableData?.totalCampaignBudget)?.toFixed(2))}
+                    &#8377;{" "}
+                    {formatNumber(
+                      Number(poTableData?.totalCampaignBudget)?.toFixed(2)
+                    )}
                     *
                   </h1>
 
                   {poTableData?.couponId && poTableData?.couponId !== "NA" && (
                     <h1 className="text-left text-[#388e3c]">
                       {
-                        coupons?.find((c: any) => c._id == poTableData?.couponId)
-                          ?.discountPercent
+                        coupons?.find(
+                          (c: any) => c._id == poTableData?.couponId
+                        )?.discountPercent
                       }
                       % off
                     </h1>
@@ -574,8 +604,9 @@ export const ViewFinalPlanPODetails = ({
                       Discount Applied:{" "}
                       <span className="text-[#129BFF]">
                         {
-                          coupons?.find((c: any) => c._id == poTableData?.couponId)
-                            ?.couponCode
+                          coupons?.find(
+                            (c: any) => c._id == poTableData?.couponId
+                          )?.couponCode
                         }
                       </span>
                     </h1>
@@ -594,7 +625,6 @@ export const ViewFinalPlanPODetails = ({
               )}
             </div>
           )}
-
         </div>
         <div
           ref={pageRef}
@@ -681,7 +711,11 @@ export const ViewFinalPlanPODetails = ({
           </div>
           <div className="flex gap-2 pb-4">
             <i className="fi fi-sr-lightbulb-on flex items-top justify-center text-primaryButton"></i>
-            <h1 className="text-[12px] text-primaryButton">Check the document that you wish to see, Campaign Summary contains Campaign Details, Plan Summary and Creative Ratios, while Screen Pictures have all the inventory pictures for your references...</h1>
+            <h1 className="text-[12px] text-primaryButton">
+              Check the document that you wish to see, Campaign Summary contains
+              Campaign Details, Plan Summary and Creative Ratios, while Screen
+              Pictures have all the inventory pictures for your references...
+            </h1>
           </div>
           <button
             type="submit"

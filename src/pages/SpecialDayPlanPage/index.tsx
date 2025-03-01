@@ -81,7 +81,6 @@ export const SpecialDayPlanPage: React.FC = () => {
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
   );
@@ -104,12 +103,10 @@ export const SpecialDayPlanPage: React.FC = () => {
           )[0]?.id || 0
         ) + 1
       );
-      const curr =
-        Number(
-          pages.filter(
-            (page: any) => page.value === campDetails?.currentPage
-          )[0]?.id || 0
-        );
+      const curr = Number(
+        pages.filter((page: any) => page.value === campDetails?.currentPage)[0]
+          ?.id || 0
+      );
       const currStep = {
         [campaignId]: curr,
       };
@@ -119,7 +116,15 @@ export const SpecialDayPlanPage: React.FC = () => {
 
   useEffect(() => {
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-    if (campaignId !== null || undefined || pages?.filter((page: any) => page.label === getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.currentPage)[0]?.id !== currentStep) {
+    if (
+      campaignId !== null ||
+      undefined ||
+      pages?.filter(
+        (page: any) =>
+          page.label ===
+          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.currentPage
+      )[0]?.id !== currentStep
+    ) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
   }, [dispatch, campaignId]);
@@ -176,12 +181,14 @@ export const SpecialDayPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
           />
         ) : currentStep === 7 ? (
           <CreativeUploadDetails
             step={currentStep}
             setCurrentStep={setCurrentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
           />
         ) : currentStep === 8 ? (
           <VendorConfirmationDetails
@@ -189,6 +196,7 @@ export const SpecialDayPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             campaignId={campaignId}
             userInfo={userInfo}
+            successAddCampaignDetails={success}
           />
         ) : null}
       </div>

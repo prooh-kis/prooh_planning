@@ -4,8 +4,15 @@ import { message, Tooltip } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
-import { FULL_CAMPAIGN_PLAN, REGULAR_VS_COHORT_PRICE_DATA, SELECTED_SCREENS_ID } from "../../constants/localStorageConstants";
+import {
+  getDataFromLocalStorage,
+  saveDataOnLocalStorage,
+} from "../../utils/localStorageUtils";
+import {
+  FULL_CAMPAIGN_PLAN,
+  REGULAR_VS_COHORT_PRICE_DATA,
+  SELECTED_SCREENS_ID,
+} from "../../constants/localStorageConstants";
 import { LocationProximity } from "../../components/segments/LocationProximity";
 import { Footer } from "../../components/footer";
 import { getScreenDataForAdvanceFilters } from "../../actions/screenAction";
@@ -120,12 +127,10 @@ export const AdvanceFiltersDetails = ({
     }
   };
 
-  
-
   // Get user's current location
   useEffect(() => {
     if (errorAdvanceFilterData) {
-      alert("Your system is having some issue, please refresh the page...")
+      alert("Your system is having some issue, please refresh the page...");
     }
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -150,10 +155,6 @@ export const AdvanceFiltersDetails = ({
     getMapData(advanceFilterData || {});
 
     if (successAddCampaignDetails) {
-      dispatch({
-        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET
-      });
-
       dispatch(
         getScreenDataForAdvanceFilters({
           id: campId,
@@ -163,8 +164,18 @@ export const AdvanceFiltersDetails = ({
                 ?.touchPoints,
         })
       );
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
     }
-  }, [dispatch, campId, pathname, successAddCampaignDetails, getMapData, advanceFilterData]);
+  }, [
+    dispatch,
+    campId,
+    pathname,
+    successAddCampaignDetails,
+    getMapData,
+    advanceFilterData,
+  ]);
   return (
     <div className="w-full">
       <div className="w-full h-full py-3 grid grid-cols-2 gap-4 pb-20">
@@ -213,7 +224,6 @@ export const AdvanceFiltersDetails = ({
                 allScreens={allScreens}
                 finalSelectedScreens={finalSelectedScreens}
                 handleFinalSelectedScreens={handleFinalSelectedScreens}
-
                 setDataBrand={setDataBrand}
                 setDataComp={setDataComp}
                 dataBrand={dataBrand}
@@ -221,7 +231,6 @@ export const AdvanceFiltersDetails = ({
                 setExcelFilteredScreens={setExcelFilteredScreens}
                 excelFilteredScreens={excelFilteredScreens}
                 circleRadius={circleRadius}
-
                 routes={routes}
                 routeOrigin={routeOrigin}
                 setRouteOrigin={setRouteOrigin}
@@ -231,7 +240,7 @@ export const AdvanceFiltersDetails = ({
                 setRoutes={setRoutes}
                 setRouteFilteredScreens={setRouteFilteredScreens}
                 routeFilteredScreens={routeFilteredScreens}
-           
+
                 // polygons={polygons}
                 // setPolygons={setPolygons}
                 // pois={pois}
@@ -256,9 +265,8 @@ export const AdvanceFiltersDetails = ({
               data={circleData}
               circleRadius={circleRadius}
               setCircleRadius={setCircleRadius}
-
               routes={routes}
-           
+
               // handleSelectFromMap={handleSelectFromMap}
               // handleAddManualSelection={
               //   handleAddManualSelectedScreenIntoFinalSelectedScreens
@@ -323,4 +331,5 @@ export const AdvanceFiltersDetails = ({
         />
       </div>
     </div>
-)}
+  );
+};
