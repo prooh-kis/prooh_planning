@@ -76,3 +76,6 @@ export const SEND_EMAIL_FOR_VENDOR_CONFIRMATION_RESET =
 export const USERS_GET_PLANNING_PAGE = "usersGetPlanningPage";
 export const USERS_DELETE_PLANNING_PAGE = "usersDeletePlanningPage";
 export const USERS_ADD_PLANNING_PAGE = "usersAddPlanningPage";
+
+export const CREATIVE_GET_CMS = "creativeGetCms"
+export const CREATIVE_ADD_CMS = "creativeAddCms"

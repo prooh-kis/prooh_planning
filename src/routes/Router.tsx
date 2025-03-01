@@ -41,10 +41,12 @@ import {
   UPDATE_PASSWORD,
   USERS,
   VERIFY_EMAIL,
+  MY_CREATIVES,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 import { PublicRoute } from "../layout/PublicRoute";
 import { PlayLiveUrl } from "../pages/PageNotFound/PlayLiveUrl";
+import { MyCreativesPage } from "pages/MyCreativesPage";
 
 const Routers: React.FC = () => {
   return (
@@ -147,6 +149,14 @@ const Routers: React.FC = () => {
           element={
             <PrivateRoute layout={HomePageLayout}>
               <MyPlansListPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path={MY_CREATIVES}
+          element={
+            <PrivateRoute layout={HomePageLayout}>
+              <MyCreativesPage/>
             </PrivateRoute>
           }
         />

@@ -1,6 +1,7 @@
 import {
   AUTH,
   MY_CAMPAIGNS_LIST,
+  MY_CREATIVES,
   MY_PLANS_LIST,
   MY_REQUESTS_LIST,
   USERS,
@@ -29,6 +30,7 @@ export const Menu = (props: any) => {
     navigate(AUTH);
   };
 
+  // todo remove comment
   const plannerArray = [
     {
       label: "Campaigns",
@@ -37,7 +39,11 @@ export const Menu = (props: any) => {
     {
       label: "Plans",
       path: MY_PLANS_LIST,
-    }
+    },
+    // {
+    //   label: "Creatives",
+    //   path: MY_CREATIVES,
+    // }
   ];
 
   const managerArray = [

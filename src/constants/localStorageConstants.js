@@ -7,7 +7,10 @@ export const CREATIVES_DATA = "creatives";
 export const PRICING_DATA = "pricingData";
 export const FILTERED_SCREENS_IN_FILTER_FIVE = "filteredFive";
 
-
+// used for creatives
+export const ALL_NETWORK_LIST = "ALL_NETWORK_LIST";
+export const ALL_BRAND_LIST = "ALL_BRAND_LIST";
+export const ALL_PACKAGE_LIST = "ALL_PACKAGE_LIST";
 
 // used for planning page
 

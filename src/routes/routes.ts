@@ -11,6 +11,7 @@ export const MY_PLANS_LIST = "/myPlansList";
 
 export const USERS = "/users";
 
+export const MY_CREATIVES = "/my-creatives";
 
 export const CAMPAIGN_DETAILS_PAGE = "/campaignDetails";
 

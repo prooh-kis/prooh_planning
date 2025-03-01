@@ -61,6 +61,7 @@ import {
 } from "../reducers/couponReducers";
 import { billInvoiceCreationReducer, billInvoiceDetailsGetReducer } from "../reducers/billInvoiceReducers";
 import { allClientAgencyNamesListGetReducer, clientAgencyDetailsAddGetReducer, clientAgencyDetailsGetReducer } from "../reducers/clientAgencyReducers";
+import { creativesMediaGetReducer, creativesMediaUploadReducer, getAllBrandAndNetworkReducer } from "../reducers/creativeReducers";
 
 const initialState = {
   userSignin: {
@@ -150,6 +151,11 @@ const store = configureStore({
     //USER
     userList: userListReducer,
     userDelete: userDeleteReducer,
+
+    // creative
+    creativesMediaUpload: creativesMediaUploadReducer,
+    creativesMediaGet: creativesMediaGetReducer,
+    getAllBrandAndNetwork: getAllBrandAndNetworkReducer,
   },
   // middleware: thunk
   // devTools: process.env.NODE_ENV !== 'production'

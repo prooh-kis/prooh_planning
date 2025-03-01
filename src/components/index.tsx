@@ -26,5 +26,8 @@ export { ViewPlanPic } from "./segments/ViewPlanPic";
 
 export { FileUploadButton } from "./FileUploadButton";
 
+export { NoDataView } from "./molecules/NoDataView";
+export { SearchInputField } from "./molecules/SearchInputField";
+
 //molecule
 export { CreateCampaignOption } from "./molecules/CreateCampaignOption";
