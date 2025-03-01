@@ -174,30 +174,35 @@ export const TriggerBasedPlanPage: React.FC = () => {
             // loading={loadingAdvanceFilterScreens}
             // error={errorAdvanceFilterScreens}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
           />
         ) : currentStep === 5 ? (
           <RegularCohortComparisonDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            success={success}
           />
         ) : currentStep === 6 ? (
           <ScreenSummaryDetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            success={success}
           />
         ) : currentStep === 7 ? (
           <ViewFinalPlanPODetails
             setCurrentStep={setCurrentStep}
             step={currentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
           />
         ) : currentStep === 8 ? (
           <CreativeUploadDetails
             step={currentStep}
             setCurrentStep={setCurrentStep}
             campaignId={campaignId}
+            successAddCampaignDetails={success}
           />
         ) : currentStep === 9 ? (
           <VendorConfirmationDetails
@@ -205,6 +210,7 @@ export const TriggerBasedPlanPage: React.FC = () => {
             setCurrentStep={setCurrentStep}
             campaignId={campaignId}
             userInfo={userInfo}
+            successAddCampaignDetails={success}
           />
         ) : null}
       </div>

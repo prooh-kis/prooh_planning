@@ -296,25 +296,24 @@ export const VendorConfirmationDetails = ({
   };
 
   useEffect(() => {
-    dispatch(getVendorConfirmationDetails(vendorInput));
-    // if (successAddCampaignDetails) {
-    //   dispatch({
-    //     type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
-    //   });
-    // }
-
-    dispatch(
-      getVendorConfirmationStatusTableDetails({
-        id: campaignId,
-      })
-    );
-
-    dispatch(
-      getPlanningPageFooterData({
-        id: campaignId,
-        pageName: "Vendor Confirmation Page",
-      })
-    );
+    if (successAddCampaignDetails) {
+      dispatch(
+        getVendorConfirmationStatusTableDetails({
+          id: campaignId,
+        })
+      );
+      dispatch(getVendorConfirmationDetails(vendorInput));
+      dispatch(
+        getPlanningPageFooterData({
+          id: campaignId,
+          pageName: "Vendor Confirmation Page",
+        })
+      );
+      
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
+    }
   }, [dispatch, vendorInput, campaignId, successAddCampaignDetails]);
 
   const handleOpenStatusModel = () => {
