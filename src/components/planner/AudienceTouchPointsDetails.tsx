@@ -109,7 +109,7 @@ export const AudienceTouchPointsDetails = ({
     data: screensCost,
   } = screensCostDataGet;
 
-  console.log(selectedGender);
+  console.log("selectedGender", selectedGender);
   const getMatchedData = (myData: any) => {
     const { id, ...marketData } = myData;
     setMarkets(marketData);
@@ -149,7 +149,6 @@ export const AudienceTouchPointsDetails = ({
         : Object.keys(touchPointsData)
     );
 
-   
     setSelectedGender(selectedGender);
 
     return { audiencesData, touchPointsData };
@@ -268,6 +267,22 @@ export const AudienceTouchPointsDetails = ({
     );
   };
 
+  const getSelectedGender = () => {
+    console.log(
+      "getSelectedGender",
+      selectedGender.length === 1 && selectedGender.includes("Male")
+        ? "Male"
+        : selectedGender.length === 1 && selectedGender.includes("Female")
+        ? "Female"
+        : "both"
+    );
+    return selectedGender.length === 1 && selectedGender.includes("Male")
+      ? "Male"
+      : selectedGender.length === 1 && selectedGender.includes("Female")
+      ? "Female"
+      : "both";
+  };
+
   return (
     <div className="w-full py-3">
       <div>
@@ -342,7 +357,7 @@ export const AudienceTouchPointsDetails = ({
                 touchPoints: getDataFromLocalStorage(
                   SELECTED_AUDIENCE_TOUCHPOINTS
                 )?.[campaignId]?.touchPoints,
-                gender: selectedGender[0],
+                gender: getSelectedGender(),
                 screensSelectedCount: screensCost?.screensSelectedCount,
                 impressionSelectedCount: screensCost?.impressionSelectedCount,
                 budgetSelected: screensCost?.budgetSelected,

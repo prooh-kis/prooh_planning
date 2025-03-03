@@ -46,7 +46,7 @@ import {
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 import { PublicRoute } from "../layout/PublicRoute";
 import { PlayLiveUrl } from "../pages/PageNotFound/PlayLiveUrl";
-import { MyCreativesPage } from "pages/MyCreativesPage";
+import { MyCreativesPage } from "../pages/MyCreativesPage";
 
 const Routers: React.FC = () => {
   return (
@@ -156,7 +156,7 @@ const Routers: React.FC = () => {
           path={MY_CREATIVES}
           element={
             <PrivateRoute layout={HomePageLayout}>
-              <MyCreativesPage/>
+              <MyCreativesPage />
             </PrivateRoute>
           }
         />
