@@ -20,6 +20,7 @@ import { ALL_TOUCHPOINTS } from "../../constants/helperConstants";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { Loading } from "../../components/Loading";
 import { getUniqueScreens } from "../../utils/screenRanking";
+import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 
 interface AdvanceFiltersDetailsProps {
   step?: any;
@@ -53,6 +54,7 @@ export const AdvanceFiltersDetails = ({
 
   const [excelFilteredScreens, setExcelFilteredScreens] = useState<any>([]);
   const [routeFilteredScreens, setRouteFilteredScreens] = useState<any>([]);
+  const [polygonFilteredScreens, setPolygonFilteredScreens] = useState<any>([]);
 
   const [dataBrand, setDataBrand] = useState<any[]>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData
@@ -67,7 +69,6 @@ export const AdvanceFiltersDetails = ({
       ?.stores?.[0]?.radius || 1000 // in meters
   );
   const [circleData, setCircleData] = useState<any>({});
-
   const [routes, setRoutes] = useState<any[]>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData
       ?.routes || []
@@ -75,6 +76,8 @@ export const AdvanceFiltersDetails = ({
   const [routeOrigin, setRouteOrigin] = useState<any>([]);
   const [routeDestination, setRouteDestination] = useState<any>([]);
   const [routeRadius, setRouteRadius] = useState<any>(1000); // in meteres
+
+  const [polygons, setPolygons] = useState<google.maps.Polygon[]>([]);
 
   const screensDataAdvanceFilterGet = useSelector(
     (state: any) => state.screensDataAdvanceFilterGet
@@ -85,25 +88,12 @@ export const AdvanceFiltersDetails = ({
     data: advanceFilterData,
   } = screensDataAdvanceFilterGet;
 
-  const getMapData = useCallback(
-    (myData: any) => {
-      setAllScreens(myData?.screens);
-      const data: any = {
-        brand: [],
-        comp: [],
-      };
-      data["brand"].push(dataBrand);
-      data["comp"].push(dataComp);
-      setCircleData(data);
-    },
-    [dataBrand, dataComp]
-  );
-
   const handleFinalSelectedScreens = ({ type, screens }: any) => {
     if (type === "add") {
       screens = [
         ...excelFilteredScreens,
-        // ...routeFilteredScreens,
+        ...routeFilteredScreens,
+        ...polygonFilteredScreens,
         ...screens,
         // ...poiFilteredScreens,
         // ...selectedScreensFromMap,
@@ -125,6 +115,18 @@ export const AdvanceFiltersDetails = ({
         ),
       });
     }
+  };
+
+  // Confirm all screens selection
+  const handleConfirmScreensSelections = ({ checked, screens }: any) => {
+    setIsDisabled(!checked);
+    if (checked) {
+      handleFinalSelectedScreens({
+        type: "add",
+        screens: screens,
+      });
+    }
+    // saveDataOnLocalStorage(SELECTED_SCREENS_ID, getUniqueScreens([{screens: selectedScreenIds}]));
   };
 
   // Get user's current location
@@ -152,8 +154,6 @@ export const AdvanceFiltersDetails = ({
   }, [errorAdvanceFilterData]);
 
   useEffect(() => {
-    getMapData(advanceFilterData || {});
-
     if (successAddCampaignDetails) {
       dispatch(
         getScreenDataForAdvanceFilters({
@@ -168,14 +168,19 @@ export const AdvanceFiltersDetails = ({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
     }
-  }, [
-    dispatch,
-    campId,
-    pathname,
-    successAddCampaignDetails,
-    getMapData,
-    advanceFilterData,
-  ]);
+  }, [dispatch, campId, pathname, successAddCampaignDetails]);
+
+  useEffect(() => {
+
+    if (advanceFilterData && finalSelectedScreens?.length === 0) {
+      setAllScreens(advanceFilterData?.screens);
+      setFinalSelectedScreens(advanceFilterData?.screens);
+      saveDataOnLocalStorage(SELECTED_SCREENS_ID, { [campId]: advanceFilterData?.screens });
+    }
+
+  },[advanceFilterData, campId, finalSelectedScreens]);
+  console.log("final selected screens", finalSelectedScreens);
+  console.log("polugonsFiltereedSCreens", polygonFilteredScreens)
   return (
     <div className="w-full">
       <div className="w-full h-full py-3 grid grid-cols-2 gap-4 pb-20">
@@ -228,6 +233,7 @@ export const AdvanceFiltersDetails = ({
                 setDataComp={setDataComp}
                 dataBrand={dataBrand}
                 dataComp={dataComp}
+                setCircleData={setCircleData}
                 setExcelFilteredScreens={setExcelFilteredScreens}
                 excelFilteredScreens={excelFilteredScreens}
                 circleRadius={circleRadius}
@@ -240,9 +246,9 @@ export const AdvanceFiltersDetails = ({
                 setRoutes={setRoutes}
                 setRouteFilteredScreens={setRouteFilteredScreens}
                 routeFilteredScreens={routeFilteredScreens}
-
-                // polygons={polygons}
-                // setPolygons={setPolygons}
+                polygons={polygons}
+                setPolygons={setPolygons}
+                polygonFilteredScreens={polygonFilteredScreens}
                 // pois={pois}
                 // selectedPOIs={selectedPOIs}
                 // setSelectedPOIs={setSelectedPOIs}
@@ -252,6 +258,25 @@ export const AdvanceFiltersDetails = ({
                 // handleConfirmScreensSelections={handleConfirmScreensSelections}
               />
             )}
+            <div className="flex items-center mx-[-1px] pt-4">
+              <CheckboxInput
+                label={
+                  <>
+                    Confirm and take{" "}
+                    <span className=" font-bold">
+                      {`${finalSelectedScreens.length} Sites Out of ${allScreens.length} Sites `}
+                    </span>
+                    {" "}for my plan
+                  </>
+                }
+                onChange={(e) => {
+                  handleConfirmScreensSelections({
+                    checked: e,
+                    screens: finalSelectedScreens,
+                  });
+                }}
+              />
+            </div>
           </div>
         )}
 
@@ -262,11 +287,17 @@ export const AdvanceFiltersDetails = ({
               setUserLocation={setUserLocation}
               allScreens={allScreens}
               filteredScreens={finalSelectedScreens}
+              heatmap={advanceFilterData?.heatmap}
+
               data={circleData}
               circleRadius={circleRadius}
               setCircleRadius={setCircleRadius}
               routes={routes}
-
+              setRoutes={setRoutes}
+              routeFilteredScreens={routeFilteredScreens}
+              setRouteFilteredScreens={setRouteFilteredScreens}
+              handleFinalSelectedScreens={handleFinalSelectedScreens}
+           
               // handleSelectFromMap={handleSelectFromMap}
               // handleAddManualSelection={
               //   handleAddManualSelectedScreenIntoFinalSelectedScreens
@@ -274,8 +305,9 @@ export const AdvanceFiltersDetails = ({
               // onPolygonComplete={(screens: any) =>
               //   handleFinalSelectedScreens({ type: "add", screens })
               // }
-              // setPolygons={setPolygons}
-              // polygons={polygons}
+              setPolygons={setPolygons}
+              polygons={polygons}
+              setPolygonFilteredScreens={setPolygonFilteredScreens}
             />
           )}
         </div>

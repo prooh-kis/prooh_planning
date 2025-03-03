@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PrimaryInput } from "../atoms/PrimaryInput";
 import { CheckboxInput } from "../atoms/CheckboxInput";
 import { PrimaryButton } from "../atoms/PrimaryButton";
@@ -38,7 +38,7 @@ export const RouteProximity = ({
   routeFilteredScreens,
   setRouteFilteredScreens,
   setRoutes,
-  handleFinalSelectedScreens
+  handleFinalSelectedScreens,
 }: RouteProximityProps) => {
   const [showDetails, setShowDetails] = useState<any>(null);
 
@@ -58,7 +58,6 @@ export const RouteProximity = ({
     } else {
       routes.push(route);
     }
-
     setRoutes([...routes]);
   };
 
@@ -81,7 +80,6 @@ export const RouteProximity = ({
     arr = arr.filter((data: any) => data?.id != id);
     setRoutes(arr);
   };
-
 
   return (
     <div className="py-4 border-b border-gray-100">

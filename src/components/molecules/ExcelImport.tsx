@@ -13,6 +13,9 @@ interface ExcelImportProps {
   type?: any;
   setDataBrand?: any;
   setDataComp?: any;
+  dataBrand?: any;
+  dataComp?: any;
+  setCircleData?: any;
   allScreens?: any;
   circleRadius?: any;
   setExcelFilteredScreens?: any;
@@ -29,6 +32,9 @@ export function ExcelImport({
   allScreens,
   setDataBrand,
   setDataComp,
+  dataBrand,
+  dataComp,
+  setCircleData,
   type,
   circleRadius,
   setExcelFilteredScreens,
@@ -48,7 +54,7 @@ export function ExcelImport({
   const getUniqueScreens = (data: any) => {
     const uniqueScreens = new Set();
     data.forEach((location: any) => {
-      location?.screens.forEach((screen: any) => {
+      location.screens.forEach((screen: any) => {
         uniqueScreens.add(screen);
       });
     });
@@ -59,44 +65,30 @@ export function ExcelImport({
 
   const handleResetFile = () => {
     setFile(null);
-  
+    setCircleData([]);
     if (type.includes("brand")) {
-      setExcelFilteredScreens((prevScreens: any) =>
-        prevScreens.filter(
-          (s: any) => !brandScreens?.some((sc: any) => sc._id === s._id)
-        )
-      );
-      setDataBrand([]);
-      setBrandScreens(null);
       handleFinalSelectedScreens({
         type: "remove",
         screens: brandScreens,
       });
+      setExcelFilteredScreens([]);
+      setDataBrand([]);
+      setBrandScreens(null);
     }
-  
     if (type.includes("comp")) {
-      setExcelFilteredScreens((prevScreens: any) =>
-        prevScreens.filter(
-          (s: any) => !compScreens?.some((sc: any) => sc._id === s._id)
-        )
-      );
-      setDataComp([]);
-      setCompScreens(null);
       handleFinalSelectedScreens({
         type: "remove",
         screens: compScreens,
       });
+      setExcelFilteredScreens([]);
+      setDataComp([]);
+      setCompScreens(null);
     }
-  
-    // Reset excelFilteredScreens to match the latest dataBrand and dataComp
-    const updatedFilteredScreens = getUniqueScreens([]);
-    setExcelFilteredScreens(updatedFilteredScreens);
-  
     if (hiddenFileInput.current) {
       hiddenFileInput.current.value = ""; // Clear the file input value
     }
   };
-  
+
   const withinRadius = (center: any, point: any, radius: any) => {
     const distance = getDistance(
       {
@@ -184,8 +176,14 @@ export function ExcelImport({
         type: "add",
         screens: newFiltered,
       });
-    } else alert("Something went wrong, please send us correct data");
-  },[allScreens, circleRadius, excelFilteredScreens, handleFinalSelectedScreens, setDataBrand, setDataComp, setExcelFilteredScreens, type]);
+      let dataCircle: any = {};
+      dataCircle["brand"] = brandCoordinates;
+      dataCircle["comp"] = compCoordinates;
+      setCircleData(dataCircle);
+    } else {
+      alert("Something went wrong, please send us correct data");
+    }
+  },[allScreens, circleRadius, excelFilteredScreens, handleFinalSelectedScreens, setCircleData, setDataBrand, setDataComp, setExcelFilteredScreens, type]);
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -201,9 +199,10 @@ export function ExcelImport({
     }
   };
 
+
   return (
     <div className="py-4 w-full border-b border-gray-100">
-      <div className="flex items-center justify-between"
+      <button title="" type="button" className="flex items-center justify-between"
         onClick={() => {
           setOpen((prev: any) => ({
             ...prev,
@@ -222,14 +221,14 @@ export function ExcelImport({
           </Tooltip>
           <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({excelFilteredScreens.length} sites)</h1>
         </div>
-        {/* <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center">
           {open["excel"] ? (
             <i className="fi fi-sr-caret-up text-[#EF4444] flex items-center"></i>
           ) : (
             <i className="fi fi-sr-caret-down text-[#22C55E] flex items-center"></i>
           )}
-        </div> */}
-      </div>
+        </div>
+      </button>
       
       {open["excel"] && (
         <div className="w-full">

@@ -7,7 +7,7 @@ import Routers from "./routes/Router";
 import { APIProvider } from '@vis.gl/react-google-maps';
 
 const queryClient = new QueryClient();
-const libraries = ["drawing", "geometry"];
+const libraries = ["drawing", "geometry", "marker"];
 
 const App: React.FC = () => {
   return (

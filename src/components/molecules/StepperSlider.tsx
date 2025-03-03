@@ -130,7 +130,7 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
                   
                   <div
                       className={`flex w-full gap-2 ${
-                        i <= step
+                        i + 1 <= step
                           ? "text-primaryButton"
                           : "text-[#D6D2D2]"
                       }

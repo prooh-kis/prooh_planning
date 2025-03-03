@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import {APIProvider, Map, useMapsLibrary, AdvancedMarker, Marker, InfoWindow, useMap} from "@vis.gl/react-google-maps";
+import {APIProvider, Map, useMapsLibrary, AdvancedMarker, Marker, InfoWindow, useMap, MapControl, ControlPosition} from "@vis.gl/react-google-maps";
 import { CustomAdvancedMarker } from "./CustomMarker";
 import { Circle } from "./MapCircle";
 import { Directions } from "./Direction";
+import { DrawPolygon } from "./DrawPolygon";
+import {FeatureCollection, Point, GeoJsonProperties} from 'geojson';
+import { Heatmap } from "./Heatmap";
+import { ToggleSwitch } from "../../components/atoms/ToggleSwitch";
+import { Tooltip } from "antd";
 
 const MapTypeId = {
   HYBRID: 'hybrid',
@@ -34,24 +39,36 @@ const MAP_CONFIGS: MapConfig[] = [
   // },
 ];
 
-export function GoogleMapWithGeometry(props: any) {
-  const mapRef = useRef(null);
 
+type POIProps = {
+  id: string;
+  mag: number;
+  time: number;
+  felt: number | null;
+  tsunami: 0 | 1;
+};
+
+type POIGeojson = FeatureCollection<Point, POIProps>;
+
+
+export function GoogleMapWithGeometry(props: any) {
+  const mapRef = useRef<google.maps.Map | null>(null);
+  console.log("map props", props);
   const [mapConfig, setMapConfig] = useState<MapConfig>(MAP_CONFIGS[0]);
   const [selectedMarkers, setSelectedMarkers] = useState([]);
   const [unSelectedMarkers, setUnselectedMarkers] = useState([]);
-  const [polygons, setPolygons] = useState([]);
   const [screenData, setScreenData] = useState<any>(null);
-  const [mapRoutes, setMapRoutes] = useState<any>([]);
+  const [heatmapOn, setHeatMapOn] = useState<any>(false);
   const [isSelectedData, setIsSelectedData] = useState(false);
-  const brandCoor = props?.data?.["brand"]?.[0]?.map((c: any) => {
+  
+  const brandCoor = props?.data?.["brand"]?.map((c: any) => {
     return {
       lat: c[1],
       lng: c[0],
     }
   });
 
-  const compCoor = props?.data?.["comp"]?.[0]?.map((c: any) => {
+  const compCoor = props?.data?.["comp"]?.map((c: any) => {
     return {
       lat: c[1],
       lng: c[0],
@@ -66,6 +83,27 @@ export function GoogleMapWithGeometry(props: any) {
     zoom: props?.zoom || 10,
   });
 
+  const [radiusHeatMap, setRadiusHeatMap] = useState(40);
+  const [opacityHeatMap, setOpacityHeatMap] = useState(0.8);
+
+  const [poiGeojson, setPoiGeojson] =
+    useState<POIGeojson>();
+
+  async function loadEarthquakeGeojson(heatmap: any[]): Promise<POIGeojson> {
+    return Promise.resolve({
+      type: "FeatureCollection",
+      crs: {
+        type: "name",
+        properties: { name: "urn:ogc:def:crs:OGC:1.3:CRS84" }
+      },
+      features: heatmap
+    });
+  }
+
+  useEffect(() => {
+    loadEarthquakeGeojson(props?.heatmap).then(data => setPoiGeojson(data));
+  }, [props?.heatmap]);
+
   const getSingleScreenData = async (screenId: any) => {
     let data;
     data = props?.allScreens?.find((screen: any) => screen._id == screenId);
@@ -73,83 +111,16 @@ export function GoogleMapWithGeometry(props: any) {
     setScreenData(data);
   };
 
-  const updateSelectedMarkers = useCallback(
-    (newPolygons: any) => {
-      if (!mapRef.current) return [];
-
-      const updatedPolygons = newPolygons?.map((polygon: any) => {
-        const selectedScreens = props?.allScreens.filter((screen: any) => {
-          const point = {
-            images: screen.images,
-            lat: screen?.location.geographicalLocation?.latitude,
-            lng: screen?.location.geographicalLocation?.longitude,
-            id: screen._id,
-            details: screen.screenName
-          };
-
-          return google.maps.geometry.poly.containsLocation(point, new google.maps.Polygon({ paths: polygon.paths }));
-        });
-
-        return { ...polygon, screens: selectedScreens };
-      });
-
-      props?.setPolygons(updatedPolygons);
-
-      const allSelectedScreens = updatedPolygons.flatMap((polygon: any) => polygon.screens || []);
-      props?.onPolygonComplete(allSelectedScreens);
-
-      setSelectedMarkers(
-        allSelectedScreens?.map((screen: any) => ({
-          images: screen.images,
-          lat: screen.location.geographicalLocation.latitude,
-          lng: screen.location.geographicalLocation.longitude,
-          id: screen._id,
-          details: screen.screenName
-        }))
-      );
-
-      setUnselectedMarkers(
-        props.allScreens
-          ?.filter((screen: any) => !allSelectedScreens?.map((s: any) => s._id).includes(screen._id))
-          ?.map((screen: any) => ({
-            images: screen.images,
-            lat: screen.location.geographicalLocation.latitude,
-            lng: screen.location.geographicalLocation.longitude,
-            id: screen._id,
-            details: screen.screenName
-          }))
-      );
-
-      return updatedPolygons;
-    },
-    [props]
-  );
-
-  const onPolygonComplete = useCallback(
-    (polygon: any) => {
-      if (polygons?.length < 3) {
-        const paths = polygon?.getPath()?.getArray()?.map((latLng: any) => ({
-          lat: latLng.lat(),
-          lng: latLng.lng(),
-        }));
-
-        setPolygons((prevPolygons) => updateSelectedMarkers([...prevPolygons, { paths }]));
-      } else {
-        alert("You can only create 3 polygons for selection.");
-      }
-    },
-    [updateSelectedMarkers, polygons]
-  );
-
   useEffect(() => {
-    setMapRoutes(props?.routes)
     setSelectedMarkers(
       props?.filteredScreens?.map((m: any) => ({
         images: m.images,
         lng: m.location.geographicalLocation.longitude,
         lat: m.location.geographicalLocation.latitude,
         id: m._id,
-        details: m.screenName
+        details: m.screenName,
+        screenType: m.screenType
+
       }))
     );
 
@@ -163,17 +134,51 @@ export function GoogleMapWithGeometry(props: any) {
           lng: m.location.geographicalLocation.longitude,
           lat: m.location.geographicalLocation.latitude,
           id: m._id,
-          details: m.screenName
+          details: m.screenName,
+          screenType: m.screenType
+
         }))
     );
   }, [props]);
 
-  useEffect(() => {
-    setMapRoutes(props?.routes);
-  }, [props?.routes]);
+  // console.log("selected screens", selectedMarkers);
+  // console.log("unselected screens", unSelectedMarkers);
 
   return (
-    <div className="h-full w-full">
+    <div className="relative h-full w-full items-top">
+      <div className="flex flex-col items-end gap-2 right-2 pt-2 absolute z-10">
+        <div className="flex items-center gap-2 group">
+          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#00A0FA] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Selected Screens</h1>
+          <div className="h-4 w-4 bg-[#00A0FA] rounded-full"></div>
+        </div>
+        <div className="flex items-center gap-2 group">
+          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#F94623] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Unselected Screens</h1>
+          <div className="h-4 w-4 bg-[#F94623] rounded-full"></div>
+        </div>
+        <div className="flex items-center gap-2 group">
+          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#22C55E] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Near Brand Store</h1>
+          <div className="h-4 w-4 bg-[#22C55E] rounded-full"></div>
+        </div>
+        <div className="flex items-center gap-2 group">
+          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#F59E0B] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Near Competitor Store</h1>
+          <div className="h-4 w-4 bg-[#F59E0B] rounded-full"></div>
+        </div>
+        <div className="flex items-center gap-2 group">
+          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#8B5CF6] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Route Starting Point</h1>
+          <div className="h-4 w-4 bg-[#8B5CF6] rounded-full"></div>
+        </div>
+        <div className="flex items-center gap-2 group">
+          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#FF77E9] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Route Ending Point</h1>
+          <div className="h-4 w-4 bg-[#FF77E9] rounded-full"></div>
+        </div>
+      </div>
+      <div className="absolute z-10 bottom-2 right-1">
+        <ToggleSwitch
+          
+          value={heatmapOn}
+          action={() => setHeatMapOn(!heatmapOn)}
+        />
+      </div>
       <Map
         // mapContainerStyle={containerStyle}
         defaultCenter={viewState.center}
@@ -190,10 +195,10 @@ export function GoogleMapWithGeometry(props: any) {
             radius={props?.circleRadius}
             center={coor}
             onRadiusChanged={props?.setCircleRadius}
-            strokeColor={'#8B5CF6'}
+            strokeColor={'#22C55E'}
             strokeOpacity={1}
             strokeWeight={3}
-            fillColor={'#8B5CF650'}
+            fillColor={'#22C55E90'}
             fillOpacity={0.3}
             // editable
             // draggable
@@ -205,10 +210,10 @@ export function GoogleMapWithGeometry(props: any) {
             radius={props?.circleRadius}
             center={coor}
             onRadiusChanged={props?.setCircleRadius}
-            strokeColor={'#8B5CF6'}
+            strokeColor={'#F59E0B'}
             strokeOpacity={1}
             strokeWeight={3}
-            fillColor={'#8B5CF650'}
+            fillColor={'#F59E0B90'}
             fillOpacity={0.3}
             // editable
             // draggable
@@ -216,31 +221,50 @@ export function GoogleMapWithGeometry(props: any) {
         ))}
         
         {/* <Directions allRoutes={mapRoutes} /> */}
-        {mapRoutes?.map((route: any) => (
-          <Directions route={route} key={route.id} allRoutes={props?.routes} />
+        <Directions
+          allRoutes={props?.routes}
+          setAllRoutes={props?.setRoutes}
+          allScreens={props?.allScreens}
+          routeFilteredScreens={props?.routeFilteredScreens}
+          setRouteFilteredScreens={props?.setRouteFilteredScreens}
+          handleFinalSelectedScreens={props?.handleFinalSelectedScreens}
+        />
+        
+        <DrawPolygon
+          allScreens={props?.allScreens}
+          setPolygonScreens={props?.setPolygonFilteredScreens}
+          polygons={props?.polygons}
+          setPolygons={props?.setPolygons}
+          handleFinalSelectedScreens={props?.handleFinalSelectedScreens}
+        />
+
+        {heatmapOn && (
+          <Heatmap
+            geojson={poiGeojson}
+            radius={radiusHeatMap}
+            opacity={opacityHeatMap}
+          />
+        )}
+
+        
+        
+        {selectedMarkers.map((marker: any) => (
+          <CustomAdvancedMarker
+            key={marker.id}
+            marker={marker}
+            color={"#00A0FA"}
+            // color={marker.screenType === "Spectacular" ? "#00A0FA" : marker.screenType === "Large" ? "#00A0FA60" : "#00A0FA20"}
+            size={marker.screenType == "Spectacular" ? 60 : marker.screenType == "Large" ? 44 : 36}
+            action={(e: any) => setScreenData(e.screenName)}
+          />
         ))}
 
-        
-        
-        {/* {selectedMarkers.map((marker: any) => (
-          // <AdvancedMarker
-          //   key={marker.id}
-          //   position={{ lat: marker.lat, lng: marker.lng}}
-          //   // icon={blueMarker}
-          //   className={clsx('real-estate-marker', {clicked, hovered})}
-          //   onClick={(e: any) => {
-          //     setIsSelectedData(false);
-          //     getSingleScreenData(marker[2]);
-          //   }}
-          // />
-          <CustomAdvancedMarker key={marker.id} marker={marker} />
-        ))} */}
-
         {unSelectedMarkers.map((marker: any) => (
-          <AdvancedMarker
+          <CustomAdvancedMarker
             key={marker.id}
-            position={{lat: marker?.lat, lng: marker?.lng}}
-            // icon={redMarker}
+            marker={marker}
+            color="#F94623"
+            size={marker.screenType == "Spectacular" ? 44 : marker.screenType == "Large" ? 36 : 28}
           />
         ))}
 

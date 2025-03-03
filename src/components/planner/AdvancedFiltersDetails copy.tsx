@@ -191,7 +191,7 @@ export const AdvanceFiltersDetails = ({
   // Add screens for selection after adding routes
   const handleRouteData = (routeDataArray: any[], id: any) => {
     const radiusInMeters = routeRadius; // 1000 meters radius
-
+    console.log(routeDataArray);
     let combinedFilteredRecords: any[] = []; // To store all filtered screens across routes
 
     // Iterate over each route in the routeData array

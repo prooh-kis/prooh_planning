@@ -1,17 +1,21 @@
 import React from "react";
 
-export const PolygonShape: React.FC<{ color: any, data: any[] }> = ({ data, color }) => {
-  // Ensure data is valid and contains at least one feature with coordinates
-  if (!data.length || !data[0]?.geometry?.coordinates?.[0]?.length) {
+export const PolygonShape: React.FC<{ color: string; polygon: google.maps.Polygon | any }> = ({
+  polygon,
+  color,
+}) => {
+  // Extract coordinates from the Google Maps Polygon object
+  const paths = polygon.getPath();
+  const polygonCoordinates = paths.getArray().map((latLng: any) => [latLng.lng(), latLng.lat()]);
+
+  // Ensure coordinates are valid
+  if (!polygonCoordinates.length) {
     return (
       <div className="h-full w-full rounded-md bg-gray-100 flex items-center justify-center">
         <p className="text-gray-500">No polygon data available</p>
       </div>
     );
   }
-
-  // Extract coordinates
-  const polygonCoordinates = data[0].geometry.coordinates[0];
 
   // Calculate bounding box
   const longitudes = polygonCoordinates.map(([lng]: any) => lng);
@@ -41,23 +45,15 @@ export const PolygonShape: React.FC<{ color: any, data: any[] }> = ({ data, colo
   ]);
 
   // Convert normalized coordinates to SVG points
-  const svgPoints = normalizedCoordinates
-    .map((point: any) => point.join(","))
-    .join(" ");
+  const svgPoints = normalizedCoordinates.map((point: any) => point.join(",")).join(" ");
 
   return (
     <div className="h-full w-full flex items-center justify-center p-2">
-      <svg
-        viewBox={`0 0 500 500`}
-        className="w-full h-full"
-      >
+      <svg viewBox={`0 0 500 500`} className="w-full h-full">
         <polygon
           points={svgPoints}
-          // fill={color}
-          // stroke={color}
-          // fill="rgba(59, 130, 246, 0.5)" /* Tailwind's blue-500 with transparency */
-          fill="#08888850"
-          stroke="#3b82f6" /* Tailwind's blue-500 */
+          fill={color} // Use the provided color
+          stroke={color} // Use the provided color
           strokeWidth="2"
         />
       </svg>

@@ -1,7 +1,8 @@
 import { Tooltip } from "antd";
 import { DrawnMapPolygon } from "../../components/molecules/DrawnMapPolygon";
 import { CheckboxInput } from "../atoms/CheckboxInput";
-import { ExcelImport } from "../molecules/ExcelImport copy"
+// import { ExcelImport } from "../molecules/ExcelImport copy";
+import { ExcelImport } from "../molecules/ExcelImport"
 import { RouteProximity } from "../molecules/RouteProximity"
 import { LinearBar } from "../molecules/linearbar";
 import { POIProximity } from "./POIProximity";
@@ -20,6 +21,7 @@ interface LocationProximityProps {
   setDataComp?: any;
   dataBrand?: any;
   dataComp?: any;
+  setCircleData?: any;
   allScreens?: any;
   finalSelectedScreens?: any;
   setExcelFilteredScreens?: any;
@@ -31,6 +33,8 @@ interface LocationProximityProps {
   setDraw?: any;
   polygons?: any;
   setPolygons?: any;
+  polygonFilteredScreens?: any;
+  setDrawingMode?: any;
   routeFilteredScreens?: any;
   pois?: any;
   selectedPOIs?: any;
@@ -55,6 +59,7 @@ export const LocationProximity = ({
   setDataComp,
   dataBrand,
   dataComp,
+  setCircleData,
   allScreens,
   finalSelectedScreens,
   setExcelFilteredScreens,
@@ -64,6 +69,7 @@ export const LocationProximity = ({
   setDraw,
   polygons,
   setPolygons,
+  polygonFilteredScreens,
   routeFilteredScreens,
   pois,
   selectedPOIs,
@@ -82,6 +88,7 @@ export const LocationProximity = ({
     "polygon": true,
     "poi": true,
   });
+
   return (
     <div className="h-auto">
       <div className="h-[60vh] lg:h-[60vh] overflow-scroll no-scrollbar">
@@ -93,9 +100,10 @@ export const LocationProximity = ({
           text="Stores"
           setDataBrand={setDataBrand}
           setDataComp={setDataComp}
+          setCircleData={setCircleData}
           allScreens={allScreens}
-          setFilteredScreens={setExcelFilteredScreens}
-          filteredScreens={excelFilteredScreens}
+          setExcelFilteredScreens={setExcelFilteredScreens}
+          excelFilteredScreens={excelFilteredScreens}
           circleRadius={circleRadius}
           type={["brand", "comp"]}
           handleFinalSelectedScreens={handleFinalSelectedScreens}
@@ -120,8 +128,10 @@ export const LocationProximity = ({
           open={open}
           setOpen={setOpen}
           polygons={polygons}
-          setDraw={setDraw}
           setPolygons={setPolygons}
+          polygonFilteredScreens={polygonFilteredScreens}
+          allScreens={allScreens}
+          handleFinalSelectedScreens={handleFinalSelectedScreens}
         />
         {/* <POIProximity
           open={open}
