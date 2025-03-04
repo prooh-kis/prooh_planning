@@ -42,7 +42,7 @@ export const SpecialDayPlanPage: React.FC = () => {
     if (success && campaignDetails) {
       const newStep =
         (specialDayPlanData.find(
-          (page) => page.value === campaignDetails.currentPage
+          (page : any) => page.value === campaignDetails.currentPage
         )?.id || 0) + 1;
       setCurrentStep(newStep);
       saveDataOnLocalStorage(CURRENT_STEP, { [campaignId ?? ""]: newStep });

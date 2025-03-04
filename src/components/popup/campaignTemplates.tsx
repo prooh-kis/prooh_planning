@@ -81,7 +81,7 @@ export const CampaignTemplates: React.FC = () => {
         </div>
         <div className="grid grid-cols-12 gap-8 py-8">
           <div className="col-span-4 rounded-[16px] bg-white px-4 py-4 grid grid-rows-5">
-            {allPlansData.map((plan) => (
+            {allPlansData.map((plan: any) => (
               <Cart
                 key={plan.id}
                 plan={plan}

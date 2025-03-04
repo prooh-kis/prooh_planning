@@ -56,7 +56,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
     const storedPage =
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.currentPage;
     const storedStep = iKnowItAllPlanData.find(
-      (page) => page.value === storedPage
+      (page: any) => page.value === storedPage
     )?.id;
 
     if (campaignId && storedStep !== currentStep) {

@@ -43,7 +43,7 @@ export const TriggerBasedPlanPage: React.FC = () => {
     if (success && campaignDetails) {
       const newStep =
         (triggerBasePlanData.find(
-          (page) => page.value === campaignDetails.currentPage
+          (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0) + 1;
 
       setCurrentStep(newStep);

@@ -41,7 +41,7 @@ export const StoreBasedPlanPage: React.FC = () => {
     if (success && campaignDetails) {
       const newStep =
         (storeBasePlanData.find(
-          (page) => page.value === campaignDetails.currentPage
+          (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0) + 1;
 
       setCurrentStep(newStep);
