@@ -5,6 +5,9 @@ import {
 import { LinearBar } from "./linearbar";
 import { MultiColorLinearBar2 } from "./MultiColorLinearBar2";
 import { formatNumber } from "../../utils/formatValue";
+import { Tooltip } from "antd";
+import { MyToolTip } from "./MyToolTip";
+import { calculateScreenTimePercentage } from "../../utils/dashboadUtils";
 
 interface BarChartProps {
   campaignDetails?: any;
@@ -23,12 +26,61 @@ const SectionHeader: React.FC<{ iconClass: string; title: string }> = ({
         className={`fi ${iconClass} text-[14px] flex items-center justify-center`}
       ></i>
     </div>
-    <h1 className="text-[14px] text-[#0E212E] leading-[16.94px] truncate">
+    <h1 className="text-[16px] text-[#0E212E] leading-[19.36px] truncate">
       {title}
     </h1>
-    <i className="fi fi-br-info text-[#BCBCBC] text-[14px] flex items-center justify-center"></i>
+    <MyToolTip label="My label" />
   </div>
 );
+
+const MyGrid = ({
+  upper1,
+  upper2,
+  lower1,
+  lower2,
+  lower3,
+  delivered,
+  expected,
+  total,
+  iconClass,
+  title,
+}: any) => {
+  return (
+    <div>
+      <SectionHeader iconClass={iconClass} title={title} />
+      <div className="mt-4">
+        <h1 className="text-[20px] font-semibold  leading-[24.2px] tracking-tight  text-[#9BB3C9]">
+          <span className="text-[#0E212E]">{upper1}</span>/{upper2}
+        </h1>
+      </div>
+      <div className="mt-2">
+        <MultiColorLinearBar2
+          delivered={delivered}
+          expected={expected}
+          total={total}
+        />
+      </div>
+      <div className="mt-2">
+        <h1 className="text-[16px] font-medium  leading-[19.36px] tracking-tight  text-[#9BB3C9]">
+          <span className="text-[#0E212E]">{lower1}</span> / {lower2}
+          <span
+            className={`text-[14px] ${
+              lower3 > 0 ? "text-[#2A892D]" : "text-[#CC0000]"
+            }`}
+          >
+            {" "}
+            {`(${formatNumber(lower3 || 0)}%)`}
+            {lower3 > 0 ? (
+              <i className="fi fi-rr-arrow-up "></i>
+            ) : (
+              <i className="fi fi-rr-arrow-down "></i>
+            )}
+          </span>
+        </h1>
+      </div>
+    </div>
+  );
+};
 
 export const DashboardGrid: React.FC<BarChartProps> = ({
   campaignDetails,
@@ -124,7 +176,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
             title="Campaign Duration"
           />
           <div className="mt-4">
-            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
+            <h1 className="text-[20px] font-semibold  leading-[24.2px] tracking-tight  text-[#9BB3C9]">
               <span className="text-[#0E212E]">
                 {calculateDaysPlayed(
                   campaignDetails?.startDate,
@@ -139,7 +191,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
               /{campaignDetails?.duration} <span> Days</span>
             </h1>
           </div>
-          <div className="mt-4">
+          <div className="mt-2">
             <LinearBar
               value={
                 calculateDaysPlayed(
@@ -157,195 +209,139 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
               percent={false}
             />
           </div>
+          <div className="mt-2">
+            <h1 className="text-[16px] font-medium  leading-[19.36px] tracking-tight  text-[#9BB3C9]">
+              <span className="text-[#3B8518]">
+                {calculateScreenTimePercentage()}{" "}
+              </span>
+              Duration Completed
+            </h1>
+          </div>
         </div>
       ) : type === "audience" ? (
-        <div>
-          <SectionHeader
-            iconClass="fi-rr-target-audience text-blue"
-            title="Audience Impressions"
-          />
-          <div className="mt-4">
-            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
-              <span className="text-[#0E212E]">
-                {formatNumber(
-                  screenLevelData?.result?.totalData?.impressionsDelivered?.toFixed(
-                    0
-                  ) || 0
-                )}
-              </span>{" "}
-              /{" "}
-              {formatNumber(
-                screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(
-                  0
-                ) || 0
-              )}
-              <span
-                className={`text-[14px] ${
-                  calculateAudience() > 0 ? "text-[#2A892D]" : "text-[#CC0000]"
-                }`}
-              >
-                {" "}
-                {`(${formatNumber(calculateAudience() || 0)}%)`}
-                {calculateAudience() > 0 ? (
-                  <i className="fi fi-rr-arrow-up "></i>
-                ) : (
-                  <i className="fi fi-rr-arrow-down "></i>
-                )}
-              </span>
-            </h1>
-          </div>
-          <div className="mt-4">
-            <MultiColorLinearBar2
-              delivered={screenLevelData?.result?.totalData?.impressionsDelivered?.toFixed(
-                0
-              )}
-              expected={
-                (screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(
-                  0
-                ) *
-                  calculateDaysPlayed(
-                    campaignDetails?.startDate,
-                    campaignDetails?.endDate
-                  )) /
-                campaignDetails?.duration
-              }
-              total={screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(
-                0
-              )}
-            />
-          </div>
-        </div>
+        <MyGrid
+          upper1={formatNumber(
+            screenLevelData?.result?.totalData?.impressionsDelivered?.toFixed(
+              0
+            ) || 0
+          )}
+          upper2={formatNumber(
+            screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(
+              0
+            ) || 0
+          )}
+          lower1={formatNumber(
+            screenLevelData?.result?.totalData?.impressionsDelivered?.toFixed(
+              0
+            ) || 0
+          )}
+          lower2={formatNumber(
+            screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(
+              0
+            ) || 0
+          )}
+          lower3={calculateAudience()}
+          delivered={screenLevelData?.result?.totalData?.impressionsDelivered?.toFixed(
+            0
+          )}
+          expected={
+            (screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(
+              0
+            ) *
+              calculateDaysPlayed(
+                campaignDetails?.startDate,
+                campaignDetails?.endDate
+              )) /
+            campaignDetails?.duration
+          }
+          total={screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(
+            0
+          )}
+          iconClass="fi-rr-target-audience text-blue"
+          title="Audience Impressions"
+        />
       ) : type === "screen" ? (
-        <div>
-          <SectionHeader
-            iconClass="fi-rs-dashboard text-[#B077FF]"
-            title="Screen Performance"
-          />
-          <div className="mt-4">
-            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
-              <span className="text-[#0E212E]">
-                {formatNumber(
-                  screenLevelData?.result?.totalData?.screenPerformance?.toFixed(
-                    0
-                  ) || 0
-                )}
-                %
-              </span>{" "}
-              / 100%
-            </h1>
-          </div>
-          <div className="mt-4">
-            <LinearBar
-              value={screenLevelData?.result?.totalData?.screenPerformance?.toFixed(
-                0
-              )}
-              colors={["#00000020", "#7AB3A2"]}
-              highest={100}
-            />
-          </div>
-        </div>
+        <MyGrid
+          upper1={`${formatNumber(
+            screenLevelData?.result?.totalData?.screenPerformance?.toFixed(0) ||
+              0
+          )}
+                %`}
+          upper2={`100%`}
+          lower1={`${formatNumber(
+            screenLevelData?.result?.totalData?.screenPerformance?.toFixed(0) ||
+              0
+          )}%`}
+          lower2={`100%`}
+          lower3={calculateAudience()}
+          delivered={screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(
+            0
+          )}
+          expected={
+            (screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0) *
+              calculateDaysPlayed(
+                campaignDetails?.startDate,
+                campaignDetails?.endDate
+              )) /
+            campaignDetails?.duration
+          }
+          total={screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0)}
+          iconClass="fi-rs-dashboard text-[#B077FF]"
+          title="Hardware Performance"
+        />
       ) : type === "spot" ? (
-        <div>
-          <SectionHeader
-            iconClass="fi-rs-selling text-indigo"
-            title="Spot Delivery"
-          />
-          <div className="mt-4">
-            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
-              <span className="text-[#0E212E]">
-                {formatNumber(
-                  screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(
-                    0
-                  ) || 0
-                )}
-              </span>{" "}
-              /{" "}
-              {formatNumber(
-                screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0) ||
-                  0
-              )}
-              <span
-                className={`text-[14px] ${
-                  calculateSpot() > 0 ? "text-[#2A892D]" : "text-[#CC0000]"
-                }`}
-              >
-                {" "}
-                {`(${formatNumber(calculateSpot() || 0)}%)`}
-                {calculateSpot() > 0 ? (
-                  <i className="fi fi-rr-arrow-up "></i>
-                ) : (
-                  <i className="fi fi-rr-arrow-down "></i>
-                )}
-              </span>
-            </h1>
-          </div>
-          <div className="mt-4">
-            <MultiColorLinearBar2
-              delivered={screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(
-                0
-              )}
-              expected={
-                (screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0) *
-                  calculateDaysPlayed(
-                    campaignDetails?.startDate,
-                    campaignDetails?.endDate
-                  )) /
-                campaignDetails?.duration
-              }
-              total={screenLevelData?.result?.totalData?.slotsPromised?.toFixed(
-                0
-              )}
-            />
-          </div>
-        </div>
+        <MyGrid
+          upper1={formatNumber(
+            screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(0) || 0
+          )}
+          upper2={formatNumber(
+            screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0) || 0
+          )}
+          lower1={formatNumber(
+            screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(0) || 0
+          )}
+          lower2={formatNumber(
+            screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0) || 0
+          )}
+          lower3={calculateSpot()}
+          delivered={screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(
+            0
+          )}
+          expected={
+            (screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0) *
+              calculateDaysPlayed(
+                campaignDetails?.startDate,
+                campaignDetails?.endDate
+              )) /
+            campaignDetails?.duration
+          }
+          total={screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0)}
+          iconClass="fi-rs-selling text-indigo"
+          title="Spot Delivery"
+        />
       ) : type === "cost" ? (
-        <div>
-          <SectionHeader
-            iconClass="fi-br-sack text-green"
-            title="Cost Consumed"
-          />
-          <div className="mt-4">
-            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
-              <span className="text-[#0E212E]">
-                &#8377;
-                {formatNumber(
-                  screenLevelData?.result?.totalData?.costConsumed?.toFixed(
-                    0
-                  ) || 0
-                )}
-              </span>{" "}
-              / &#8377;
-              {formatNumber(
-                screenLevelData?.result?.totalData?.costTaken?.toFixed(0) || 0
-              )}
-              <span
-                className={`text-[14px] ${
-                  calculateCost() > 0 ? "text-[#2A892D]" : "text-[#CC0000]"
-                }`}
-              >
-                {" "}
-                {`(${formatNumber(calculateCost() || 0)}%)`}
-                {calculateCost() > 0 ? (
-                  <i className="fi fi-rr-arrow-up "></i>
-                ) : (
-                  <i className="fi fi-rr-arrow-down "></i>
-                )}
-              </span>
-            </h1>
-          </div>
-          <div className="mt-4">
-            <LinearBar
-              percent={false}
-              value={screenLevelData?.result?.totalData?.costConsumed?.toFixed(
-                0
-              )}
-              colors={["#00000020", "#7AB3A2"]}
-              highest={screenLevelData?.result?.totalData?.costTaken?.toFixed(
-                0
-              )}
-            />
-          </div>
-        </div>
+        <MyGrid
+          upper1={formatNumber(
+            screenLevelData?.result?.totalData?.costConsumed?.toFixed(0) || 0
+          )}
+          upper2={formatNumber(
+            screenLevelData?.result?.totalData?.costTaken?.toFixed(0) || 0
+          )}
+          lower1={formatNumber(
+            screenLevelData?.result?.totalData?.costConsumed?.toFixed(0) || 0
+          )}
+          lower2={formatNumber(
+            screenLevelData?.result?.totalData?.costTaken?.toFixed(0) || 0
+          )}
+          lower3={calculateCost()}
+          delivered={screenLevelData?.result?.totalData?.costConsumed?.toFixed(
+            0
+          )}
+          expected={screenLevelData?.result?.totalData?.costTaken?.toFixed(0)}
+          total={screenLevelData?.result?.totalData?.costTaken?.toFixed(0)}
+          iconClass="fi-br-sack text-green"
+          title="Cost Consumed"
+        />
       ) : null}
     </div>
   );

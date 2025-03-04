@@ -333,8 +333,8 @@ export const CampaignDashboard = ({
               key={item.id}
               className={`${commonClasses} ${
                 clicked === item.id
-                  ? "border-[#0094FF] border-2"
-                  : "border-[#DCDCDC] border-[0.47px]"
+                  ? "border-[#0094FF] border-2 rounded-[21px]"
+                  : "rounded-[21px]"
               }`}
               onClick={() => setClicked(item.id)}
             >
