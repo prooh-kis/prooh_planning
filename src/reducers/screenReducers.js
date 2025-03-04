@@ -124,11 +124,13 @@ export function screensCostDataGetReducer(state = [], action) {
     case GET_SCREENS_COST_DATA_SUCCESS:
       const campaignId = action.payload.id;
 
-      saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, {[campaignId]: action.payload});
+      saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, {
+        [campaignId]: action.payload,
+      });
       const old = getDataFromLocalStorage(COST_SUMMARY)?.[campaignId] || [];
       const cost = action.payload;
       const newCost = [cost, ...old];
-      saveDataOnLocalStorage(COST_SUMMARY, {[campaignId]: newCost});
+      saveDataOnLocalStorage(COST_SUMMARY, { [campaignId]: newCost });
       return {
         loading: false,
         data: action.payload,
@@ -166,16 +168,19 @@ export function screensDataAdvanceFilterGetReducer(state = [], action) {
   }
 }
 
-export function poiBasedAudienceDataAdvanceFilterGetReducer(state = [], action) {
+export function poiBasedAudienceDataAdvanceFilterGetReducer(
+  state = [],
+  action
+) {
   switch (action.type) {
     case GET_AUDIENCES_DATA_ADVANCE_FILTER_REQUEST:
       return { loading: true };
     case GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS:
-      const {id, ...data} = action.payload;
+      const { id, ...data } = action.payload;
       // const saveData = {};
       // saveData[campaign.id] = campaign;
       // saveDataOnLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA, saveData);
-      console.log(data);
+
       return {
         loading: false,
         data: data,
@@ -218,7 +223,7 @@ export function screenSummaryDataGetReducer(state = {}, action) {
     case GET_SCREEN_SUMMARY_DATA_REQUEST:
       return { loading: true };
     case GET_SCREEN_SUMMARY_DATA_SUCCESS:
-      const {id, ...campaign} = action.payload;
+      const { id, ...campaign } = action.payload;
       const saveData = {};
       saveData[id] = campaign;
       saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, saveData);
@@ -241,7 +246,7 @@ export function screenSummaryDataIKnowItAllGetReducer(state = {}, action) {
     case GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_REQUEST:
       return { loading: true };
     case GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_SUCCESS:
-      const {id, ...campaign} = action.payload;
+      const { id, ...campaign } = action.payload;
       const saveData = {};
       saveData[id] = campaign;
       saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, saveData);
@@ -264,7 +269,7 @@ export function screenSummaryPlanTableDataGetReducer(state = [], action) {
     case GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_REQUEST:
       return { loading: true };
     case GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_SUCCESS:
-      const {id, ...campaign} = action.payload;
+      const { id, ...campaign } = action.payload;
       const saveData = {};
       saveData[id] = campaign;
       saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, saveData);
@@ -309,7 +314,7 @@ export function screenDataUploadCreativeReducer(state = {}, action) {
     case GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_REQUEST:
       return { loading: true };
     case GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_SUCCESS:
-      const { id, ...campaign} = action.payload
+      const { id, ...campaign } = action.payload;
       return {
         loading: false,
         data: campaign,
@@ -410,7 +415,7 @@ export function planningPageFooterDataGetReducer(state = {}, action) {
     case PLANNING_PAGE_FOOTER_DATA_REQUEST:
       return { loading: true };
     case PLANNING_PAGE_FOOTER_DATA_SUCCESS:
-      const {id, ...finalSummaryStepWise} = action.payload;
+      const { id, ...finalSummaryStepWise } = action.payload;
       const saveData = {};
       saveData[id] = finalSummaryStepWise;
       saveDataOnLocalStorage(FOOTER_DATA, finalSummaryStepWise);

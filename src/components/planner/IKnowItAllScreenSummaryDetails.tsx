@@ -27,14 +27,14 @@ interface ScreenSummaryDetailsProps {
   step: number;
   campaignId?: any;
   regularVsCohortSuccessStatus?: any;
-  success?: any;
+  successAddCampaignDetails?: any;
 }
 
 export const IKnowItAllScreenSummaryDetails = ({
   setCurrentStep,
   step,
   campaignId,
-  success,
+  successAddCampaignDetails,
 }: ScreenSummaryDetailsProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -169,7 +169,7 @@ export const IKnowItAllScreenSummaryDetails = ({
   };
 
   useEffect(() => {
-    if (success) {
+    if (successAddCampaignDetails) {
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
@@ -185,7 +185,7 @@ export const IKnowItAllScreenSummaryDetails = ({
         })
       );
     }
-  }, [campaignId, dispatch, success]);
+  }, [campaignId, dispatch, successAddCampaignDetails]);
 
   useEffect(() => {
     const type =
@@ -401,7 +401,7 @@ export const IKnowItAllScreenSummaryDetails = ({
           }}
           campaignId={campaignId}
           pageName={`Select Screens Page`}
-          successAddCampaignDetails={success}
+          successAddCampaignDetails={successAddCampaignDetails}
         />
       </div>
     </div>

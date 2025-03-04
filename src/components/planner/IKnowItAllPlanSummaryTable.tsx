@@ -21,14 +21,14 @@ interface ScreenSummaryDetailsProps {
   step: number;
   campaignId?: any;
   regularVsCohortSuccessStatus?: any;
-  success?: any;
+  successAddCampaignDetails?: any;
 }
 
 export const IKnowItAllPlanSummaryTable = ({
   setCurrentStep,
   step,
   campaignId,
-  success,
+  successAddCampaignDetails,
 }: ScreenSummaryDetailsProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -112,7 +112,7 @@ export const IKnowItAllPlanSummaryTable = ({
   };
 
   useEffect(() => {
-    if (success) {
+    if (successAddCampaignDetails) {
       dispatch(
         getPlanningPageFooterData({
           id: campaignId,
@@ -123,7 +123,7 @@ export const IKnowItAllPlanSummaryTable = ({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
     }
-  }, [campaignId, dispatch, success]);
+  }, [campaignId, dispatch, successAddCampaignDetails]);
 
   useEffect(() => {
     const type =
@@ -167,7 +167,7 @@ export const IKnowItAllPlanSummaryTable = ({
         <div className="pb-10">
           <div className="w-full">
             <PlanSummaryTable
-              success={success}
+              successAddCampaignDetails={successAddCampaignDetails}
               showSummary={showSummary}
               setShowSummary={setShowSummary}
               regularVsCohort={regularVsCohort}
@@ -195,7 +195,7 @@ export const IKnowItAllPlanSummaryTable = ({
           }}
           campaignId={campaignId}
           pageName={`Screen Summary Page`}
-          successAddCampaignDetails={success}
+          successAddCampaignDetails={successAddCampaignDetails}
         />
       </div>
     </div>

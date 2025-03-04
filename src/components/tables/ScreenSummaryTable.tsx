@@ -151,12 +151,10 @@ export const ScreenSummaryTable = ({
             }
           }
         }
-        console.log("supress", suppressMessage);
         if (!suppressMessage) {
           message.info(`You are ${newStatus === true ? "selecting" : "deselecting"} a screen from ${networkType}. Any action applicable to any one screen of any network will be applicable on all the screens of the same network.`)
         }
       } else {
-        console.log("supress n", suppressMessage);
         // Toggle the status of the selected screen
         if (statusRes === undefined && currentCityScreens[screenId]) {
           currentCityScreens[screenId].status =

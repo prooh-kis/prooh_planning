@@ -10,7 +10,6 @@ export function SingleCalenderData({
     return moment(date).format("ll");
   };
   const handleCheck = (e: any) => {
-    console.log("handleCheck clicked");
     setSelectedDate(data?.date);
     setSelectedSpacialDay(data?.specialDay);
   };

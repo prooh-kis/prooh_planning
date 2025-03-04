@@ -71,7 +71,6 @@ export const AddCampaignDetails = ({
       dispatch(
         addClientAgencyDetails({ clientAgencyName: value?.toUpperCase() })
       );
-      console.log("calling to save new client name");
     }
   };
 

@@ -19,6 +19,7 @@ import { Footer } from "../../components/footer";
 import { message } from "antd";
 import {
   addDetailsToCreateCampaign,
+  changeCampaignStatusAfterCreativeUpload,
   changeCampaignStatusAfterVendorApproval,
 } from "../../actions/campaignAction";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
@@ -126,15 +127,15 @@ export const VendorConfirmationDetails = ({
     data: vendorApprovalStatus,
   } = campaignStatusChangeAfterVendorApproval;
 
-  const detailsToCreateCampaignAdd = useSelector(
-    (state: any) => state.detailsToCreateCampaignAdd
+  const campaignStatusChangeAfterCreativeUpload = useSelector(
+    (state: any) => state.campaignStatusChangeAfterCreativeUpload
   );
   const {
-    loading,
-    error,
-    success,
-    data: campaignDetails,
-  } = detailsToCreateCampaignAdd;
+    loading: loadingCampaignStatusChangeAfterCreativeUpload,
+    error: errorCampaignStatusChangeAfterCreativeUpload,
+    data: dataCampaignStatusChangeAfterCreativeUpload,
+    success: successCampaignStatusChangeAfterCreativeUpload,
+  } = campaignStatusChangeAfterCreativeUpload;
 
   const sendEmail = () => {
     const formData = new FormData();
@@ -298,6 +299,18 @@ export const VendorConfirmationDetails = ({
   useEffect(() => {
     if (successAddCampaignDetails) {
       dispatch(
+        changeCampaignStatusAfterCreativeUpload({
+          id: campaignId,
+          status: CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT,
+        })
+      );
+      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+    }
+  }, [successAddCampaignDetails, dispatch, campaignId]);
+
+  useEffect(() => {
+    if (successCampaignStatusChangeAfterCreativeUpload) {
+      dispatch(
         getVendorConfirmationStatusTableDetails({
           id: campaignId,
         })
@@ -309,12 +322,17 @@ export const VendorConfirmationDetails = ({
           pageName: "Vendor Confirmation Page",
         })
       );
-      
+
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
     }
-  }, [dispatch, vendorInput, campaignId, successAddCampaignDetails]);
+  }, [
+    dispatch,
+    vendorInput,
+    campaignId,
+    successCampaignStatusChangeAfterCreativeUpload,
+  ]);
 
   const handleOpenStatusModel = () => {
     setOpen((pre: boolean) => !open);

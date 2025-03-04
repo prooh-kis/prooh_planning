@@ -17,7 +17,6 @@ export const CostSummaryTable1 = ({
   loading,
 }: CostSummartTabelProps) => {
   const getCurrentStep = getDataFromLocalStorage("currentStep");
-  console.log(totalData);
   return (
     <table className="w-full">
       <thead className="bg-[#F7F7F7] flex justify-between items-center w-full">

@@ -3,7 +3,6 @@ interface MatchDetailsProps {
 }
 
 export const MatchDetails = ({ details }: MatchDetailsProps) => {
-  console.log(details);
   return (
     <div className="overflow-y-auto h-28 no-scrollbar">
       {details.length < 1 && (

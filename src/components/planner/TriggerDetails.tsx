@@ -25,7 +25,10 @@ import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { useLocation } from "react-router-dom";
 import { RadioInput } from "../../components/atoms/RadioInput";
 import { QuickSummaryReciept } from "../../components/segments/QuickSummaryReciept";
-import { getPlanningPageFooterData, getTableDataForSelectTriggerPage } from "../../actions/screenAction";
+import {
+  getPlanningPageFooterData,
+  getTableDataForSelectTriggerPage,
+} from "../../actions/screenAction";
 import { useSelector } from "react-redux";
 interface TriggerProps {
   setCurrentStep: (step: number) => void;
@@ -37,7 +40,7 @@ export const TriggerDetails = ({
   setCurrentStep,
   step,
   campaignId,
-  successAddCampaignDetails
+  successAddCampaignDetails,
 }: TriggerProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -97,10 +100,12 @@ export const TriggerDetails = ({
     },
   ];
 
-  const timeOptionsWeatherTrigger = [{
-    label : "Forever",
-    value : "0"
-  }]
+  const timeOptionsWeatherTrigger = [
+    {
+      label: "Forever",
+      value: "0",
+    },
+  ];
 
   const weatherTabData = () => {
     return [
@@ -207,10 +212,6 @@ export const TriggerDetails = ({
   ]);
 
   const handleSaveAndContinue = () => {
-    console.log(
-      "handle save : ",
-      getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-    );
     if (isDisabled) {
       message.error(
         "Please confirm budget for your selected trigger or skip this step"
@@ -234,7 +235,7 @@ export const TriggerDetails = ({
           weatherTriggers: [],
           sportsTriggers: [],
           vacantSlots: [],
-        }
+        },
       });
       setIsDisabled(false);
       dispatch(
@@ -295,10 +296,12 @@ export const TriggerDetails = ({
     dispatch(
       getTableDataForSelectTriggerPage({ duration: 30, impactFactor: 0.1 })
     );
-    dispatch(getPlanningPageFooterData({
-      id: campaignId,
-      pageName: "Add Triggers Page",
-    }));
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "Add Triggers Page",
+      })
+    );
   }, [dispatch]);
   return (
     <div className="w-full py-3">
@@ -501,7 +504,10 @@ export const TriggerDetails = ({
                 placeHolder={"Set Time"}
                 selectedOption={selectedTimeOptions}
                 setSelectedOption={setSelectedTimeOptions}
-                options={(currentStep1 === 1 ? timeOptionsWeatherTrigger : timeOptionSportsTrigger)?.map((m: any) => {
+                options={(currentStep1 === 1
+                  ? timeOptionsWeatherTrigger
+                  : timeOptionSportsTrigger
+                )?.map((m: any) => {
                   return {
                     label: m.label,
                     value: m.value,

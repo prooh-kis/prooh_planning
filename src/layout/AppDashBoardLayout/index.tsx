@@ -30,7 +30,6 @@ export const AppDashBoardLayout: React.FC<AppDashBoardLayoutProps> = ({
     setCurrent(value);
   }, [value]);
 
-  console.log("userrrrrrrrrr : ", userInfo);
 
   useEffect(() => {
     if (!userInfo) {

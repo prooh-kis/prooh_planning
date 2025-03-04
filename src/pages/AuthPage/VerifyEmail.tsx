@@ -29,7 +29,6 @@ export const VerifyEmail = (props: any) => {
       dispatch({ type: USER_EMAIL_VERIFICATION_RESET });
     }
   }, [error, success, data, navigate, dispatch]);
-  console.log("token : ", searchParams.get("token"));
 
   const verifyUser = useCallback(
     async (token: string) => {

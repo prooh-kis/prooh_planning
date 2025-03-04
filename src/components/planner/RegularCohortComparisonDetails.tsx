@@ -29,7 +29,7 @@ export const RegularCohortComparisonDetails = ({
   campaignId,
   setCurrentStep,
   step,
-  success,
+  successAddCampaignDetails,
 }: any) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -81,7 +81,7 @@ export const RegularCohortComparisonDetails = ({
   }, [priceData, campaignId]);
 
   useEffect(() => {
-    if (!success) return;
+    if (!successAddCampaignDetails) return;
 
     dispatch(
       getRegularVsCohortPriceData({
@@ -101,7 +101,7 @@ export const RegularCohortComparisonDetails = ({
     );
 
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-  }, [cohorts, dispatch, duration, gender, screenIds, campaignId, success]);
+  }, [cohorts, dispatch, duration, gender, screenIds, campaignId, successAddCampaignDetails]);
 
   const handleRegularVsCohortSelection = (type: any) => {
     setSelectedBuyingOption(type);
@@ -275,7 +275,6 @@ export const RegularCohortComparisonDetails = ({
             setCurrentStep(step - 1);
           }}
           handleSave={() => {
-            console.log(step);
             if (isDisabled) {
               message.error("Please  confirm screen selection");
             } else {
@@ -300,7 +299,7 @@ export const RegularCohortComparisonDetails = ({
           }
           campaignId={campaignId}
           pageName="Compare Plan Page"
-          successAddCampaignDetails={success}
+          successAddCampaignDetails={successAddCampaignDetails}
         />
       </div>
     </div>

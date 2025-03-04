@@ -109,7 +109,6 @@ export const AudienceTouchPointsDetails = ({
     data: screensCost,
   } = screensCostDataGet;
 
-  console.log("selectedGender", selectedGender);
   const getMatchedData = (myData: any) => {
     const { id, ...marketData } = myData;
     setMarkets(marketData);
@@ -246,7 +245,6 @@ export const AudienceTouchPointsDetails = ({
   }, [screensAudiences]);
 
   const handleSelection = (input: any) => {
-    console.log(input);
     dispatch(
       getScreensCostData({
         id: campaignId,
@@ -268,14 +266,6 @@ export const AudienceTouchPointsDetails = ({
   };
 
   const getSelectedGender = () => {
-    console.log(
-      "getSelectedGender",
-      selectedGender.length === 1 && selectedGender.includes("Male")
-        ? "Male"
-        : selectedGender.length === 1 && selectedGender.includes("Female")
-        ? "Female"
-        : "both"
-    );
     return selectedGender.length === 1 && selectedGender.includes("Male")
       ? "Male"
       : selectedGender.length === 1 && selectedGender.includes("Female")

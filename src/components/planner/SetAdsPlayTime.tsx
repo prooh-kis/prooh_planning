@@ -83,7 +83,7 @@ interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
   campaignId?: any;
-  success?: any;
+  successAddCampaignDetails?: any;
   loading?: any;
 }
 
@@ -91,7 +91,7 @@ export const SetAdsPlayTime = ({
   setCurrentStep,
   step,
   campaignId,
-  success,
+  successAddCampaignDetails,
   loading,
 }: EnterCampaignBasicDetailsProps) => {
   const dispatch = useDispatch<any>();
@@ -131,7 +131,6 @@ export const SetAdsPlayTime = ({
         })
       );
       setCurrentStep(step + 1);
-      console.log("data : ", data);
     }, 0);
   };
 
@@ -143,10 +142,7 @@ export const SetAdsPlayTime = ({
   }, [tableData]);
 
   useEffect(() => {
-    console.log("useEffect 1", success);
-    if (success) {
-      console.log("useEffect 2 reset success", success);
-
+    if (successAddCampaignDetails) {
       dispatch(getTableDataScreenWiseAdPlayTime({ id: campaignId }));
       dispatch(
         getPlanningPageFooterData({
@@ -156,7 +152,7 @@ export const SetAdsPlayTime = ({
       );
       dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
     }
-  }, [dispatch, campaignId, success]);
+  }, [dispatch, campaignId, successAddCampaignDetails]);
 
   return (
     <div className="w-full py-3">

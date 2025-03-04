@@ -10,7 +10,6 @@ import {
 } from "../../utils/localStorageUtils";
 import {
   FULL_CAMPAIGN_PLAN,
-  REGULAR_VS_COHORT_PRICE_DATA,
   SELECTED_SCREENS_ID,
 } from "../../constants/localStorageConstants";
 import { LocationProximity } from "../../components/segments/LocationProximity";
@@ -179,8 +178,7 @@ export const AdvanceFiltersDetails = ({
     }
 
   },[advanceFilterData, campId, finalSelectedScreens]);
-  console.log("final selected screens", finalSelectedScreens);
-  console.log("polugonsFiltereedSCreens", polygonFilteredScreens)
+
   return (
     <div className="w-full">
       <div className="w-full h-full py-3 grid grid-cols-2 gap-4 pb-20">

@@ -25,8 +25,6 @@ const customSuggestions = [
 ];
 
 export function MapBoxSearchInput(props: any) {
-  // console.log(props);
-
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
@@ -38,8 +36,10 @@ export function MapBoxSearchInput(props: any) {
     const response = await geocoder
       .forwardGeocode({
         query: suggestion.place_name, // Use the place_name of the clicked suggestion
-        countries: ['ind'], // Restrict to India
-        proximity: props?.userLocation ? [props?.userLocation.longitude, props?.userLocation.latitude] : undefined,
+        countries: ["ind"], // Restrict to India
+        proximity: props?.userLocation
+          ? [props?.userLocation.longitude, props?.userLocation.latitude]
+          : undefined,
         limit: 2,
       })
       .send();
@@ -67,43 +67,53 @@ export function MapBoxSearchInput(props: any) {
     const normalizeQuery = (input: string): string =>
       input
         .toLowerCase()
-        .replace(/[\s-]+/g, ' ') // Normalize whitespace and dashes
+        .replace(/[\s-]+/g, " ") // Normalize whitespace and dashes
         .trim();
-    
+
     const normalizedQuery = normalizeQuery(value);
-    // console.log(value)
     setQuery(value);
     setHighlightedIndex(-1);
     let nearbySuggestions: any[] = [];
     if (props?.userLocation) {
-      const proximityResponse = await geocoder.reverseGeocode({
-        query: [props?.userLocation.longitude, props?.userLocation.latitude],
-        // limit: 5,
-      }).send();
+      const proximityResponse = await geocoder
+        .reverseGeocode({
+          query: [props?.userLocation.longitude, props?.userLocation.latitude],
+          // limit: 5,
+        })
+        .send();
 
-      nearbySuggestions = proximityResponse.body.features.filter((feature: any) => feature.place_type.includes("poi") || feature.place_type.includes("address"));
-      // console.log(nearbySuggestions)
+      nearbySuggestions = proximityResponse.body.features.filter(
+        (feature: any) =>
+          feature.place_type.includes("poi") ||
+          feature.place_type.includes("address")
+      );
     }
     if (value) {
-      const response = await geocoder.forwardGeocode({
-        query: normalizedQuery,
-        autocomplete: true,
-        countries: ['IN'],
-        proximity: props?.userLocation
-          ? [props.userLocation.longitude, props.userLocation.latitude]
-          : [77.891, 28.95],
-        types: ['poi', 'address', 'locality'],
-        bbox: [76.84, 28.10, 77.83, 28.95], // get city limit of the user dynamically in future updates
-        limit: 10,
-      }).send();
+      const response = await geocoder
+        .forwardGeocode({
+          query: normalizedQuery,
+          autocomplete: true,
+          countries: ["IN"],
+          proximity: props?.userLocation
+            ? [props.userLocation.longitude, props.userLocation.latitude]
+            : [77.891, 28.95],
+          types: ["poi", "address", "locality"],
+          bbox: [76.84, 28.1, 77.83, 28.95], // get city limit of the user dynamically in future updates
+          limit: 10,
+        })
+        .send();
 
-      const mapBoxSuggestions = response.body.features.filter((feature: any) => feature.place_type.includes("poi") || feature.place_type.includes("address"));
-
-      const filteredCustomSuggestions = nearbySuggestions?.filter((suggestion: any) =>
-        suggestion.place_name.toLowerCase().includes(value.toLowerCase())
+      const mapBoxSuggestions = response.body.features.filter(
+        (feature: any) =>
+          feature.place_type.includes("poi") ||
+          feature.place_type.includes("address")
       );
 
-      // console.log(response);
+      const filteredCustomSuggestions = nearbySuggestions?.filter(
+        (suggestion: any) =>
+          suggestion.place_name.toLowerCase().includes(value.toLowerCase())
+      );
+
       setSuggestions([...filteredCustomSuggestions, ...mapBoxSuggestions]);
     } else {
       setSuggestions([]);

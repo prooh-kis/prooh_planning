@@ -42,7 +42,6 @@ export const addDetailsToCreateCampaign =
       payload: input,
     });
     try {
-      // console.log("addDetailsToCreateCampaign : ", input);
       const { data } = await axios.post(`${url}/addDataForCampaign`, input);
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_SUCCESS,

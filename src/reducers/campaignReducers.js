@@ -165,11 +165,13 @@ export function campaignStatusChangeAfterCreativeUploadReducer(
       return {
         loading: false,
         data: action.payload,
+        success: true,
       };
     case CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_ERROR:
       return {
         loading: false,
         error: action.payload,
+        success: false,
       };
     case CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_RESET:
       return {};

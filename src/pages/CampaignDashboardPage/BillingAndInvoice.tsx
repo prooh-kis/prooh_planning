@@ -145,7 +145,6 @@ export const BillingAndInvoice = (props: any) => {
 
 
   const generateBillInvoice = useCallback(() => {
-    console.log(jsonDataForInvoice)
     generateBillAndInvoicePdf({download: true, fileName: `INVOICE_${campaignDetails?.brandName}_${campaignDetails?.name}`, jsonData: jsonDataForInvoice });
   },[jsonDataForInvoice])
 

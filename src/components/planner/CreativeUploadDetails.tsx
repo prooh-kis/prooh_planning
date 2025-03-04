@@ -30,7 +30,12 @@ import {
   FULL_CAMPAIGN_PLAN,
   SELECTED_TRIGGER,
 } from "../../constants/localStorageConstants";
-import { CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT } from "../../constants/campaignConstants";
+import {
+  ADD_DETAILS_TO_CREATE_CAMPAIGN_REQUEST,
+  ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+  CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT,
+  CHANGE_CAMPAIGN_STATUS_AFTER_CREATIVE_UPLOAD_RESET,
+} from "../../constants/campaignConstants";
 import { getVideoDurationFromVideoURL } from "../../utils/fileUtils";
 
 interface CreativeUploadDetailsProps {
@@ -97,15 +102,23 @@ export const CreativeUploadDetails = ({
     data: screenData,
   } = screenDataUploadCreative;
 
-  const detailsToCreateCampaignAdd = useSelector(
-    (state: any) => state.detailsToCreateCampaignAdd
-  );
-  const {
-    loading,
-    error,
-    success,
-    data: campaignDetails,
-  } = detailsToCreateCampaignAdd;
+  useEffect(() => {
+    if (successAddCampaignDetails) {
+      setCurrentStep(step + 1);
+    }
+  }, [successAddCampaignDetails]);
+
+  useEffect(() => {
+    const campaignIdFromPath = pathname?.split("/").splice(-1)[0];
+
+    dispatch(getScreenDataUploadCreativeData({ id: campaignIdFromPath }));
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "Upload Creative Page",
+      })
+    );
+  }, [dispatch, pathname, campaignId]);
 
   const mergeCreativeWithScreenData = (creatives: any, screenData: any) => {
     const combinedData: any = {};
@@ -186,8 +199,6 @@ export const CreativeUploadDetails = ({
 
       result[city].push(transformedItem);
     });
-    console.log("transformData  result:", result);
-
     return result;
   };
 
@@ -499,7 +510,6 @@ export const CreativeUploadDetails = ({
           let standardNightTimeCreatives: any = [];
           let triggerCreatives: any = [];
 
-          console.log(data);
           if (data?.standardDayTimeCreatives) {
             for (let file of data?.standardDayTimeCreatives) {
               let myData = await returnRequiredValue(file);
@@ -509,7 +519,6 @@ export const CreativeUploadDetails = ({
             }
           }
 
-          console.log(standardDayTimeCreatives);
           if (data?.standardNightTimeCreatives) {
             for (let file of data?.standardNightTimeCreatives) {
               let myData = await returnRequiredValue(file);
@@ -537,7 +546,6 @@ export const CreativeUploadDetails = ({
             standardNightTimeCreatives: standardNightTimeCreatives,
             triggerCreatives: triggerCreatives,
           });
-          console.log(requestBody);
         }
       }
       saveDataOnLocalStorage(CAMPAIGN_CREATIVES, { [campaignId]: sss });
@@ -555,91 +563,32 @@ export const CreativeUploadDetails = ({
   };
 
   useEffect(() => {
-    if (error && callToSendChangeStatus) {
-      setIsLoading(false);
-      message.error(error);
-    }
-    if (success && callToSendChangeStatus) {
-      console.log(
-        "Now calling to send CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT",
-        success,
-        callToSendChangeStatus
-      );
-      setIsLoading(false);
-      dispatch(
-        changeCampaignStatusAfterCreativeUpload({
-          id: campaignId,
-          status: CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT,
-        })
-      );
+    const storedCampaignData =
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId];
+    const storedCreatives = storedCampaignData?.creatives;
+    const storedTriggers = storedCampaignData?.triggers;
+    saveDataOnLocalStorage(SELECTED_TRIGGER, { [campaignId]: storedTriggers });
 
-      setCallToSendChangeStatus(false);
-      setCurrentStep(step + 1);
-    }
-  }, [error, success, callToSendChangeStatus]);
-
-  useEffect(() => {
-    dispatch(
-      getScreenDataUploadCreativeData({
-        id: pathname?.split("/").splice(-1)[0],
-      })
-    );
-    dispatch(
-      getPlanningPageFooterData({
-        id: campaignId,
-        pageName: "Upload Creative Page",
-      })
-    );
-  }, [dispatch, pathname]);
-
-  // this use effect runs only one when page reload
-  useEffect(() => {
-    // Get campaign creatives from local storage
-    const creatives =
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.creatives;
-
-    // If creatives exist in local storage, use them
-    if (Array.isArray(creatives) && creatives.length > 0) {
-      console.log("1 ok");
-      const transformedResult = transformData(creatives);
-      const transformedResult2 = mewTransformData(screenData || {});
-      console.log("screenData : ", JSON.stringify(screenData));
-
-      console.log("tra 1, tra 2 ", transformedResult, transformedResult2);
-
-      // Merge transformed creatives data with screen data
+    if (Array.isArray(storedCreatives) && storedCreatives.length > 0) {
+      const transformedCreatives = transformData(storedCreatives);
+      const transformedScreenData = mewTransformData(screenData || {});
       const combinedData = mergeCreativeWithScreenData(
-        transformedResult,
-        transformedResult2
+        transformedCreatives,
+        transformedScreenData
       );
 
-      console.log("combinedData : ", combinedData);
-
-      // Set the initial data and the transformed creative data
       handleSetInitialData(combinedData);
       setCreativeUploadData(filterUniqueResolutions(combinedData));
     } else if (screenData) {
-      console.log("2 ok");
-      // If no creatives are found, use screen data for setup
-      const campaignCreatives =
+      const storedCampaignCreatives =
         getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId];
+      const finalData = storedCampaignCreatives || screenData;
 
-      if (campaignCreatives) {
-        handleSetInitialData(campaignCreatives);
-        setCreativeUploadData(
-          filterUniqueResolutions(mewTransformData(campaignCreatives))
-        );
-      } else {
-        handleSetInitialData(screenData);
-        setCreativeUploadData(
-          filterUniqueResolutions(mewTransformData(screenData))
-        );
-      }
+      handleSetInitialData(finalData);
+      setCreativeUploadData(
+        filterUniqueResolutions(mewTransformData(finalData))
+      );
     }
-
-    const triggers =
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.triggers;
-    saveDataOnLocalStorage(SELECTED_TRIGGER, { [campaignId]: triggers });
 
     if (errorScreeData) {
       message.error(errorScreeData);
@@ -647,7 +596,7 @@ export const CreativeUploadDetails = ({
   }, [campaignId, errorScreeData, screenData]);
 
   return (
-    <div className="w-full h-[80vh] overflow-y-auto  scrollbar-minimal ">
+    <div className="w-full h-[80vh] overflow-y-auto  no-scrollbar ">
       <div className="mx-auto">
         {/* Heading */}
         <h1 className="text-2xl font-semibold">Upload Creative</h1>

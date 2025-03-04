@@ -20,7 +20,6 @@ const allTabs = [{
 export const MyCampaignsList = ({ loading, campaignsList, currentTab, setCurrentTab }: any) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<any>("");
-  console.log(campaignsList)
   return (
     <div className="w-full">
       <div className="flex justify-between border-b py-2">

@@ -28,7 +28,7 @@ export function PlanSummaryTable({
   error,
   screensBuyingCount,
   pathname,
-  success,
+  successAddCampaignDetails,
   setCurrentStep,
 }: any) {
   const dispatch = useDispatch<any>();
@@ -100,7 +100,7 @@ export function PlanSummaryTable({
       alert("No screens selected yet, please select screens to proceed...");
       setCurrentStep(2);
     }
-  }, [dispatch, success, priceData, screensBuyingCount, setCurrentStep]);
+  }, [dispatch, successAddCampaignDetails, priceData, screensBuyingCount, setCurrentStep]);
 
   return (
     <div className="pb-10">

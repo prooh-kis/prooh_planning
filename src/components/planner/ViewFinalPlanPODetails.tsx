@@ -355,7 +355,6 @@ export const ViewFinalPlanPODetails = ({
 
   const handleApplyCoupon = useCallback(
     (couponId: any) => {
-      console.log("handleApplyCoupon : ", campaignId, currentCoupon);
       if (poTableData?.couponId) {
         message.warning("Applying discount coupon...");
       }
@@ -734,13 +733,11 @@ export const ViewFinalPlanPODetails = ({
                 }
                 if (pdf === "screen-pictures") {
                   if (pdfDownload[pdf].pdfData?.length > 0) {
-                    console.log("start");
                     generatePPT({
                       download: true,
                       data: pdfDownload[pdf].pdfData,
                       fileName: pdfDownload[pdf].fileName,
                     });
-                    console.log("end");
                   } else {
                     message.error("No data found, to download!");
                   }

@@ -29,28 +29,15 @@ export const validateGioData = (data: any) => {
   const header = ["Longitude", "Latitude"];
   // first check its headers lenght
   if (data[0].length !== header.length) {
-    console.log("header leagth not same");
     return false;
   }
   // Now check its headers leve are same or not
   data[0].forEach((element: string, index: number) => {
     if (element !== header[index]) {
-      // console.log("header velev not same");
       return false;
     }
   });
-  // now check all its value must be number
-  // console.log("validateGioData : ", data);
 
-  //   for (let i = 1; i < data.length; i++) {
-  //     if (!Number.isNaN(data[i][0]) || !Number.isNaN(data[i][1])) {
-  //       console.log("validateGioData : ", data[i][0], data[i][1]);
-
-  //       return false;
-  //     }
-  //   }
-
-  // finally
   return true;
 };
 

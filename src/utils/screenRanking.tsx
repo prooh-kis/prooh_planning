@@ -45,7 +45,6 @@ export function filterScreensByInterests(screens: any, interests: string[]) {
 }
 
 export function filterScreensByLatLong(data: any) {
-  // console.log(data);
   const result = data.reduce((acc: any, item: any) => {
     const screenCount = item.screens.length;
 
@@ -63,7 +62,6 @@ export function filterScreensByLatLong(data: any) {
     acc[screenCount].coordinates.push(item.coordinate);
     return acc;
   }, {});
-  // console.log(result);
   return result
 }
 

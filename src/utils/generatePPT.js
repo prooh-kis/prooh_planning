@@ -3,13 +3,11 @@ import PptxGenJS from "pptxgenjs";
 
 export const generatePPT = async ({ data, fileName, download }) => {
     try {
-        console.log("Generating PPT...");
         const ppt = new PptxGenJS();
 
         // Create slides with data
         data.forEach((item) => {
             const slide = ppt.addSlide();
-            // console.log(item.imageUrl?.[0]?.replace(/\+/g, ' '));
 
             const imageUrl = item.images?.[0]?.replace(/\+/g, ' ') || "https://via.placeholder.com/1280x720";
             slide.addImage({
@@ -83,12 +81,10 @@ export const generatePPT = async ({ data, fileName, download }) => {
         if (download) {
             // Download the PPT directly
             await ppt.writeFile({ fileName: `${fileName}.pptx` });
-            console.log("PPT downloaded successfully.");
             return null; // Return null when download happens
         } else {
             // Return the PPT as a Blob
             const pptxBlob = await ppt.write("blob");
-            console.log("PPT Blob generated successfully.");
             const pptxFile = new File([pptxBlob], 'presentation.pptx', { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
             return pptxFile; // Return the Blob
         }

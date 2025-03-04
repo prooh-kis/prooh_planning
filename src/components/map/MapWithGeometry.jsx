@@ -387,8 +387,7 @@ function MapDrawControl({
       console.log("error in  finding routes : ", error);
     }
   };
-  // console.log("props?.filteredScreens : ", props?.filteredScreens);
-  // console.log("props.unSelectedScreens : ", props.unSelectedScreens);
+  
 
   const getSingleScreenData = async (screenId) => {
     let data;

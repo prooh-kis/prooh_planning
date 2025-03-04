@@ -27,21 +27,24 @@ export const Footer = ({
   pageName,
   successAddCampaignDetails,
 }: any) => {
+  // console.log("loadingCost : ", loadingCost);
   const dispatch = useDispatch<any>();
 
-  // console.log(pageName)
   const [footerData, setFooterData] = useState(() => {
-    const localStorageData = getDataFromLocalStorage(FOOTER_DATA)?.finalSummaryStepWise || [];
-    const filteredData = localStorageData.filter((data: any) => data.step === pageName);
-  
+    const localStorageData =
+      getDataFromLocalStorage(FOOTER_DATA)?.finalSummaryStepWise || [];
+    const filteredData = localStorageData.filter(
+      (data: any) => data.step === pageName
+    );
+
     if (filteredData.length > 0) {
       return filteredData[filteredData?.length - 1];
     }
-  
+
     if (localStorageData.length > 0) {
       return localStorageData[localStorageData?.length - 1];
     }
-  
+
     // Default fallback object
     return {
       totalScreens: 0,
@@ -53,25 +56,22 @@ export const Footer = ({
       totalCities: 0,
     };
   });
-  
+
   const planningPageFooterDataGet = useSelector(
     (state: any) => state.planningPageFooterDataGet
   );
   const { loading, error, data: totalScreensData } = planningPageFooterDataGet;
 
-  // console.log("totalScreensData : ", getDataFromLocalStorage(FOOTER_DATA)?.finalSummaryStepWise?.filter(
-  //   (data: any) => data.step === pageName
-  // ));
-
   useEffect(() => {
     if (successAddCampaignDetails) {
-      dispatch(getPlanningPageFooterData({
-        id: campaignId,
-        pageName: pageName,
-      }));
+      dispatch(
+        getPlanningPageFooterData({
+          id: campaignId,
+          pageName: pageName,
+        })
+      );
     }
-  },[dispatch, campaignId, pageName, successAddCampaignDetails]);
-  // console.log(footerData);
+  }, [dispatch, campaignId, pageName, successAddCampaignDetails]);
   return (
     <div className="py-4 z-10 flex justify-between">
       <div className="flex w-full justify-start items-center gap-4">

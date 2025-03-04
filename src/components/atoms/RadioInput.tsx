@@ -13,8 +13,7 @@ export const RadioInput = ({
   onChange,
   textSize,
 }: RadioInputProps) => {
-  // console.log(option);
-  // console.log(value);
+  
   return (
     <label className="inline-flex items-center">
       <input

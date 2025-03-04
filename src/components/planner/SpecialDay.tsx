@@ -97,7 +97,6 @@ export const SpecialDay = ({
   }, [isOpen]);
 
   const handleOpenModel = useCallback(() => {
-    console.log("selectedDate : ", selectedDate);
     if (selectedDate) setIsOpen(true);
     else message.error("Please select Date first");
   }, [isOpen, selectedDate]);

@@ -51,7 +51,6 @@ export const ShowCampaignLogsPopup = ({
     }, {});
   }, [logs?.logs]);
 
-  console.log("dddddddd : ", JSON.stringify(newData));
   useEffect(() => {
     if (open) {
       document.body.classList.add("overflow-hidden");

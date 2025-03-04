@@ -53,7 +53,6 @@ type POIGeojson = FeatureCollection<Point, POIProps>;
 
 export function GoogleMapWithGeometry(props: any) {
   const mapRef = useRef<google.maps.Map | null>(null);
-  console.log("map props", props);
   const [mapConfig, setMapConfig] = useState<MapConfig>(MAP_CONFIGS[0]);
   const [selectedMarkers, setSelectedMarkers] = useState([]);
   const [unSelectedMarkers, setUnselectedMarkers] = useState([]);

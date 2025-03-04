@@ -52,7 +52,6 @@ export function ShowMediaPopup({
     return null;
   }
 
-  console.log(creativesToShow.creatives);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
       <div className="border bg-[#FFFFFF] rounded-[10px] h-3/4 w-3/4 p-1">

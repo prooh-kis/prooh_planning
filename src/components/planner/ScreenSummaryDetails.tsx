@@ -40,14 +40,14 @@ interface ScreenSummaryDetailsProps {
   step: number;
   campaignId?: any;
   regularVsCohortSuccessStatus?: any;
-  success?: any;
+  successAddCampaignDetails?: any;
 }
 
 export const ScreenSummaryDetails = ({
   setCurrentStep,
   step,
   campaignId,
-  success,
+  successAddCampaignDetails,
 }: ScreenSummaryDetailsProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -268,7 +268,7 @@ export const ScreenSummaryDetails = ({
   };
 
   useEffect(() => {
-    if (success) {
+    if (successAddCampaignDetails) {
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET
       })
@@ -298,7 +298,7 @@ export const ScreenSummaryDetails = ({
       );
     }
 
-  }, [campaignId, dispatch, pathname, step, success]);
+  }, [campaignId, dispatch, pathname, step, successAddCampaignDetails]);
 
   useEffect(() => {
     const type =
@@ -520,7 +520,7 @@ export const ScreenSummaryDetails = ({
           currentTab === "2" && (
             <div className="w-full">
               <PlanSummaryTable
-                success={success}
+                successAddCampaignDetails={successAddCampaignDetails}
                 showSummary={showSummary}
                 setShowSummary={setShowSummary}
                 regularVsCohort={regularVsCohort}
@@ -562,7 +562,7 @@ export const ScreenSummaryDetails = ({
               ? "Select Screens Page"
               : "Screen Summary Page"
           }
-          successAddCampaignDetails={success}
+          successAddCampaignDetails={successAddCampaignDetails}
         />
       </div>
     </div>

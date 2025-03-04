@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
 import {
   CreativeUploadDetails,
@@ -8,13 +8,8 @@ import {
   VendorConfirmationDetails,
   SetAdsPlayTime,
   AdvanceFiltersDetails,
-  TriggerDetails,
 } from "../../components/planner";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getScreensAudiencesData,
-  getScreenSummaryPlanTableData,
-} from "../../actions/screenAction";
 import {
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
@@ -26,101 +21,112 @@ import {
   ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
   CAMPAIGN_PLAN_TYPE_STORE,
 } from "../../constants/campaignConstants";
-
-const pages = [
-  {
-    id: 1,
-    value: "Basic Details Page",
-  },
-  {
-    id: 2,
-    value: "Advance Filter Page",
-  },
-  {
-    id: 3,
-    value: "Select Screens Page",
-  },
-  {
-    id: 4,
-    value: "Set Ad Play time Page",
-  },
-  {
-    id: 5,
-    value: "Screen Summary Page",
-  },
-  {
-    id: 6,
-    value: "View Final Plan Page",
-  },
-  {
-    id: 7,
-    value: "Upload Creative Page",
-  },
-  {
-    id: 8,
-    value: "Vendor Confirmation Page",
-  },
-];
+import { storeBasePlanData } from "../../data";
 
 export const StoreBasedPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
-  const location = useLocation();
-  const { pathname } = location;
-  const campaignId: any =
-    pathname?.split("/")?.length > 2
-      ? pathname?.split("/")?.splice(2)[0]
-      : null;
-  // console.log(campaignId);
+  const { pathname } = useLocation();
+  const campaignId: any = pathname.split("/")[2] || null;
 
-  const [currentStep, setCurrentStep] = useState<any>(
-    campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] : 1
+  const [currentStep, setCurrentStep] = useState<number>(
+    campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] ?? 1 : 1
   );
 
-  const auth = useSelector((state: any) => state.auth);
-  const { userInfo } = auth;
-
-  const detailsToCreateCampaignAdd = useSelector(
+  const { userInfo } = useSelector((state: any) => state.auth);
+  const { success, data: campaignDetails } = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
   );
-  const {
-    loading,
-    error,
-    success,
-    data: campaignDetails,
-  } = detailsToCreateCampaignAdd;
 
   useEffect(() => {
-    if (success) {
-      // const campDetails = location.state.campaign
-      const campDetails = campaignDetails;
+    if (success && campaignDetails) {
+      const newStep =
+        (storeBasePlanData.find(
+          (page) => page.value === campaignDetails.currentPage
+        )?.id || 0) + 1;
 
-      setCurrentStep(
-        Number(
-          pages.filter(
-            (page: any) => page.value === campDetails?.currentPage
-          )[0]?.id || 0
-        ) + 1
-      );
-
-      const curr =
-        Number(
-          pages.filter(
-            (page: any) => page.value === campDetails?.currentPage
-          )[0]?.id || 0
-        ) + 1;
-      const currStep = {
-        [campaignId]: curr,
-      };
-      saveDataOnLocalStorage(CURRENT_STEP, currStep);
+      setCurrentStep(newStep);
+      saveDataOnLocalStorage(CURRENT_STEP, { [campaignId ?? ""]: newStep });
     }
-  }, [dispatch, campaignDetails]);
+  }, [success, campaignDetails, campaignId]);
 
   useEffect(() => {
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-    if (campaignId !== null || undefined) {
+
+    if (campaignId) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
   }, [dispatch, campaignId]);
+
+  const stepComponents: { [key: number]: React.ReactNode } = {
+    1: (
+      <EnterCampaignBasicDetails
+        setCurrentStep={setCurrentStep}
+        step={currentStep}
+        userInfo={userInfo}
+        pathname={pathname}
+        campaignId={campaignId}
+        campaignType={CAMPAIGN_PLAN_TYPE_STORE}
+        path="storebasedplan"
+      />
+    ),
+    2: (
+      <AdvanceFiltersDetails
+        setCurrentStep={setCurrentStep}
+        step={currentStep}
+        campaignId={campaignId}
+        successAddCampaignDetails={success}
+      />
+    ),
+    3: (
+      <ScreenSummaryDetails
+        setCurrentStep={setCurrentStep}
+        step={currentStep}
+        campaignId={campaignId}
+        successAddCampaignDetails={success}
+      />
+    ),
+    4: (
+      <SetAdsPlayTime
+        setCurrentStep={setCurrentStep}
+        step={currentStep}
+        campaignId={campaignId}
+        successAddCampaignDetails={success}
+      />
+    ),
+    5: (
+      <ScreenSummaryDetails
+        setCurrentStep={setCurrentStep}
+        step={currentStep}
+        campaignId={campaignId}
+        successAddCampaignDetails={success}
+      />
+    ),
+    6: (
+      <ViewFinalPlanPODetails
+        setCurrentStep={setCurrentStep}
+        step={currentStep}
+        campaignId={campaignId}
+        successAddCampaignDetails={success}
+      />
+    ),
+    7: (
+      <CreativeUploadDetails
+        setCurrentStep={setCurrentStep}
+        step={currentStep}
+        campaignId={campaignId}
+        successAddCampaignDetails={success}
+      />
+    ),
+    8: (
+      <VendorConfirmationDetails
+        setCurrentStep={setCurrentStep}
+        step={currentStep}
+        campaignId={campaignId}
+        userInfo={userInfo}
+        successAddCampaignDetails={success}
+      />
+    ),
+  };
 
   return (
     <div className="w-full h-full">
@@ -129,74 +135,11 @@ export const StoreBasedPlanPage: React.FC = () => {
           campaignId={campaignId}
           step={currentStep}
           setStep={setCurrentStep}
-          steps={pathname?.split("/").includes("storebasedplan") ? 8 : 9}
+          steps={pathname.includes("storebasedplan") ? 8 : 9}
         />
       </div>
       <div className="w-full h-full flex justify-center items-top">
-        {currentStep === 1 ? (
-          <EnterCampaignBasicDetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-            userInfo={userInfo}
-            pathname={pathname}
-            campaignId={campaignId}
-            campaignType={CAMPAIGN_PLAN_TYPE_STORE}
-            path={"storebasedplan"}
-          />
-        ) : currentStep === 2 ? (
-          <AdvanceFiltersDetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-            // loading={loadingAdvanceFilterScreens}
-            // error={errorAdvanceFilterScreens}
-            campaignId={campaignId}
-            successAddCampaignDetails={success}
-          />
-        ) : currentStep === 3 ? (
-          <ScreenSummaryDetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-            campaignId={campaignId}
-            success={success}
-          />
-        ) : currentStep === 4 ? (
-          <SetAdsPlayTime
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-            campaignId={campaignId}
-            success={success}
-            loading={loading}
-          />
-        ) : currentStep === 5 ? (
-          <ScreenSummaryDetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-            campaignId={campaignId}
-            success={success}
-          />
-        ) : currentStep === 6 ? (
-          <ViewFinalPlanPODetails
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-            campaignId={campaignId}
-            successAddCampaignDetails={success}
-          />
-        ) : currentStep === 7 ? (
-          <CreativeUploadDetails
-            step={currentStep}
-            setCurrentStep={setCurrentStep}
-            campaignId={campaignId}
-            successAddCampaignDetails={success}
-          />
-        ) : currentStep === 8 ? (
-          <VendorConfirmationDetails
-            step={currentStep}
-            setCurrentStep={setCurrentStep}
-            campaignId={campaignId}
-            userInfo={userInfo}
-            successAddCampaignDetails={success}
-          />
-        ) : null}
+        {stepComponents[currentStep] || null}
       </div>
     </div>
   );

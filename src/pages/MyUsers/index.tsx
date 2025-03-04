@@ -64,7 +64,6 @@ export const MyUsers = (props: any) => {
       navigate(AUTH);
     } else {
       if (userInfo?.userRole !== CAMPAIGN_MANAGER) {
-        console.log("You have no access to this page");
         message.warning("You have no access to this page");
         navigate(-1);
       } else {
