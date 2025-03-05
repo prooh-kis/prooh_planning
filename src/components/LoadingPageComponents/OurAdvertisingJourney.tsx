@@ -300,7 +300,7 @@ export const OurAdvertisingJourney = ({ data }: any) => {
       </div>
 
       {/* Progress Bar */}
-      <div className="flex items-center justify-between my-6 pt-4 px-4">
+      <div className="flex items-center justify-between my-6 pt-4 px-12">
         <div className="flex-1 h-1 bg-gray-200 relative">
           <div className="absolute inset-x-0 flex justify-between p">
             <div
@@ -333,7 +333,7 @@ export const OurAdvertisingJourney = ({ data }: any) => {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-8">
         <div className="col-span-1 sm:col-span-2 lg:col-span-2">
           {/* <YearSlider /> */}
           <div className="relative">
@@ -386,7 +386,7 @@ export const OurAdvertisingJourney = ({ data }: any) => {
       </div>
 
       {view === "map" && (
-        <div className="flex justify-between flex-wrap justify-start gap-4 py-4">
+        <div className="flex justify-between flex-wrap justify-start gap-4 py-4 px-8">
           {memoizedTouchPoints?.map((tp: any, i: any) => (
             <div
               key={i}
@@ -395,7 +395,7 @@ export const OurAdvertisingJourney = ({ data }: any) => {
               <div className={clsx(`h-4 w-4 ${colors[i]} rounded-full`)}></div>
               <h1
                 className={clsx(
-                  `text-[10px] sm:text-[12px] md:text-[14px] leading-[18.1px] tracking-[0.01em] ${colorsbg[i]}`
+                  `text-[10px] sm:text-[12px] md:text-[14px] leading-[18.1px] tracking-[0.01em] ${colorsbg[i]} p-1 rounded-[4px]`
                 )}
               >
                 {tp?.tp}

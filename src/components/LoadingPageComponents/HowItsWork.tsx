@@ -17,11 +17,12 @@ import { MarketGetStarted } from "../../components/molecules/MarketGetStarted";
 export const HowItsWork = () => {
   const secondDivRef = useRef<HTMLDivElement>(null);
   const [currentTab, setCurrentTab] = useState<any>("1");
-  const [currentAdvertiserTab, setCurrentAdvertiserTab] = useState<any>("1");
-  const [currentMediaOwnerTab, setCurrentMediaOwnerTab] = useState<any>("1");
-  const [currentDataHeroTab, setCurrentDataHeroTab] = useState<any>("1");
+  const [currentAdvertiserTab, setCurrentAdvertiserTab] = useState<any>("0");
+  const [currentMediaOwnerTab, setCurrentMediaOwnerTab] = useState<any>("0");
+  const [currentDataHeroTab, setCurrentDataHeroTab] = useState<any>("0");
 
   const CampaignStep = ({ step, image, title, description }: any) => {
+    console.log(step);
     return (
       <div className="relative">
         {(currentTab === "1" && Number(currentAdvertiserTab) > 1) ||
@@ -53,7 +54,7 @@ export const HowItsWork = () => {
           </button>
         ) : null}
 
-        {step === "Step 1" ? (
+        {!["Step 1", "Step 2", "Step 3", "Step 4", "Step 5", "Step 6", "Step 7"]?.includes(step) ? (
           <div className="h-auto">
             {currentTab === "1" ? (
               <MarketGetStarted />
@@ -89,9 +90,9 @@ export const HowItsWork = () => {
             </div>
           </div>
         )}
-        {(currentTab === "1" && Number(currentAdvertiserTab) < 7) ||
-        (currentTab === "2" && Number(currentMediaOwnerTab) < 5) ||
-        (currentTab === "3" && Number(currentDataHeroTab) < 4) ? (
+        {(currentTab === "1" && Number(currentAdvertiserTab) < 6) ||
+        (currentTab === "2" && Number(currentMediaOwnerTab) < 4) ||
+        (currentTab === "3" && Number(currentDataHeroTab) < 3) ? (
           <button
             title="right"
             type="button"
@@ -122,21 +123,23 @@ export const HowItsWork = () => {
   };
 
   const CampaignSteps = ({ currentSubTab }: { currentSubTab: string }) => {
+    console.log(currentSubTab);
     const step =
       tabData?.filter((tab: any) => tab.id === currentTab)[0]?.label ===
       "Are You An Advertiser?"
         ? advertisersStepsDetails.find((s) => s.id === currentSubTab) ||
-          advertisersStepsDetails[0]
+          {}
         : tabData?.filter((tab: any) => tab.id === currentTab)[0]?.label ===
           "Are You A Media Owner?"
         ? mediaOwnersStepsDetails.find((s) => s.id === currentSubTab) ||
-          mediaOwnersStepsDetails[0]
+          {}
         : tabData?.filter((tab: any) => tab.id === currentTab)[0]?.label ===
           "Become A Data Hero"
         ? dataHeroStepsDetails.find((s) => s.id === currentSubTab) ||
-          dataHeroStepsDetails[0]
+          {}
         : [];
 
+        console.log(step)
     return <CampaignStep {...step} />;
   };
 
@@ -160,9 +163,9 @@ export const HowItsWork = () => {
             type="button"
             onClick={() => {
               setCurrentTab(tab.id);
-              setCurrentAdvertiserTab("1");
-              setCurrentMediaOwnerTab("1");
-              setCurrentDataHeroTab("1");
+              setCurrentAdvertiserTab("0");
+              setCurrentMediaOwnerTab("0");
+              setCurrentDataHeroTab("0");
             }}
             className={`${
               tab.id === currentTab

@@ -28,6 +28,7 @@ export const StepperSliderHomePage = ({ campaignId, setStep, steps, step }: Step
       setStep(String(step));
     }
   };
+  console.log(step);
 
   // Example Flaticon SVG URLs (replace these with actual SVG URLs or import local SVGs)
   const icons = campaignId === "advertisersSteps" ? [

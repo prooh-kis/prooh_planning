@@ -24,7 +24,7 @@ export const StepperSlider = ({ campaignId, setStep, steps, step }: StepSliderPr
   // Function to handle step marker click
   const handleStepClick = (step: number) => {
     // console.log(getDataFromLocalStorage(CURRENT_STEP), step)
-    if (campaignId && getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] >= step) {
+    if (campaignId && getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] >= step + 1) {
       setStep(step+1);
       // console.log(":saddasd:")
     }
