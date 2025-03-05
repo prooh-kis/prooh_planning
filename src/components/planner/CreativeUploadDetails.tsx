@@ -258,10 +258,6 @@ export const CreativeUploadDetails = ({
       if (file.type?.split("/")[0] === "video") {
         creativeDuration = await getVideoDurationFromVideoURL(fileURL);
       }
-      // if (creativeDuration > 10) {
-      //   message.error("Please select creative less then or equal to 10Sec");
-      //   return;
-      // }
 
       const ff = {
         file: file,
@@ -272,67 +268,6 @@ export const CreativeUploadDetails = ({
         awsURL: "",
       };
       setFIle(ff);
-    }
-  };
-
-  const handleSaveFile = () => {
-    if (file) {
-      const myData = creativeUploadData;
-      if (creativeType === "Standard") {
-        if (currentPlayTimeCreative === "1") {
-          if (myData[currentCity][currentScreen].standardDayTimeCreatives) {
-            myData[currentCity][currentScreen].standardDayTimeCreatives.push(
-              file
-            );
-          } else {
-            myData[currentCity][currentScreen].standardDayTimeCreatives = [];
-            myData[currentCity][currentScreen].standardDayTimeCreatives.push(
-              file
-            );
-          }
-        } else {
-          if (myData[currentCity][currentScreen].standardNightTimeCreatives) {
-            myData[currentCity][currentScreen].standardNightTimeCreatives.push(
-              file
-            );
-          } else {
-            myData[currentCity][currentScreen].standardNightTimeCreatives = [];
-            myData[currentCity][currentScreen].standardNightTimeCreatives.push(
-              file
-            );
-          }
-        }
-      } else {
-        if (myData[currentCity][currentScreen].triggerCreatives) {
-          myData[currentCity][currentScreen].triggerCreatives.push(file);
-        } else {
-          myData[currentCity][currentScreen].triggerCreatives = [];
-          myData[currentCity][currentScreen].triggerCreatives.push(file);
-        }
-      }
-      setFIle(null);
-      setCreativeUploadData(filterUniqueResolutions(myData));
-      let citiesCreativeData = citiesCreative.map((data: any) => {
-        if (
-          data.label === currentCity &&
-          (myData[currentCity][currentScreen]?.standardDayTimeCreatives
-            ?.length === 0 ||
-            myData[currentCity][currentScreen]?.triggerCreatives?.length === 0)
-        ) {
-          data.params[0] =
-            myData[currentCity][
-              currentScreen
-            ]?.standardDayTimeCreatives?.length;
-          data.params[1] =
-            data.params[1] - myData[currentCity][currentScreen]?.count;
-        }
-
-        return data;
-      });
-      setCitiesCreative(citiesCreativeData);
-      saveDataOnLocalStorage(CAMPAIGN_CREATIVES, { [campaignId]: myData });
-    } else {
-      message.error("Please select file to save!");
     }
   };
 
@@ -404,7 +339,9 @@ export const CreativeUploadDetails = ({
       if (
         (!current?.standardDayTimeCreatives ||
           current.standardDayTimeCreatives.length === 0) &&
-        (!current?.triggerCreatives || current.triggerCreatives.length === 0)
+        (!current?.triggerCreatives || current.triggerCreatives.length === 0) &&
+        (!current?.standardNightTimeCreatives ||
+          current.standardNightTimeCreatives.length === 0)
       ) {
         return accum;
       }
@@ -427,10 +364,26 @@ export const CreativeUploadDetails = ({
         ],
       };
     });
-    // console.log(result);
+
     setCitiesCreative(result);
     let city = result?.find((data: any) => data.id == "1")?.label || "";
     setCurrentCity(city);
+  };
+
+  const handleNextStep = (data: any) => {
+    let arr = Object.keys(data || {});
+    let result = arr?.map((city: string, index: number) => {
+      return {
+        id: `${index + 1}`,
+        label: city,
+        params: [
+          getCreativeCountCityWise(data, city),
+          getScreenCountCityWise(data, city) -
+            getCreativeCountCityWise(data, city),
+        ],
+      };
+    });
+    setCitiesCreative(result);
   };
 
   const getAWSUrl = async (data: any) => {
@@ -494,7 +447,7 @@ export const CreativeUploadDetails = ({
 
     return result;
   };
-
+  
   // const findMax = (data: Creative[]) => {
   //   return Math.max(...data?.map((s: Creative) => s.creativeDuration), 0);
   // };
@@ -559,6 +512,51 @@ export const CreativeUploadDetails = ({
       setCallToSendChangeStatus(true);
     } else {
       message.error("Please upload creatives for each row and foreach city");
+    }
+  };
+
+  const handleSaveFile = () => {
+    if (file) {
+      const myData = creativeUploadData;
+      if (creativeType === "Standard") {
+        if (currentPlayTimeCreative === "1") {
+          if (myData[currentCity][currentScreen].standardDayTimeCreatives) {
+            myData[currentCity][currentScreen].standardDayTimeCreatives.push(
+              file
+            );
+          } else {
+            myData[currentCity][currentScreen].standardDayTimeCreatives = [];
+            myData[currentCity][currentScreen].standardDayTimeCreatives.push(
+              file
+            );
+          }
+        } else {
+          if (myData[currentCity][currentScreen].standardNightTimeCreatives) {
+            myData[currentCity][currentScreen].standardNightTimeCreatives.push(
+              file
+            );
+          } else {
+            myData[currentCity][currentScreen].standardNightTimeCreatives = [];
+            myData[currentCity][currentScreen].standardNightTimeCreatives.push(
+              file
+            );
+          }
+        }
+      } else {
+        if (myData[currentCity][currentScreen].triggerCreatives) {
+          myData[currentCity][currentScreen].triggerCreatives.push(file);
+        } else {
+          myData[currentCity][currentScreen].triggerCreatives = [];
+          myData[currentCity][currentScreen].triggerCreatives.push(file);
+        }
+      }
+      setFIle(null);
+      setCreativeUploadData(filterUniqueResolutions(myData));
+      handleNextStep(myData);
+
+      saveDataOnLocalStorage(CAMPAIGN_CREATIVES, { [campaignId]: myData });
+    } else {
+      message.error("Please select file to save!");
     }
   };
 

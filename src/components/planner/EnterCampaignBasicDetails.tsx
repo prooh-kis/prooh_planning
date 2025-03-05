@@ -225,6 +225,13 @@ export const EnterCampaignBasicDetails = ({
     dispatch(getAllClientAgencyNames());
   }, [dispatch]);
 
+  const handleStartDateChange = (value: any) => {
+    if (new Date() > new Date(value)) {
+      message.error("start date must be greater then today data and time!");
+      setStartDate("");
+    } else setStartDate(value);
+  };
+
   return (
     <div className="w-full py-3">
       <div className="">
@@ -320,7 +327,7 @@ export const EnterCampaignBasicDetails = ({
           <CalendarInput
             placeholder="Start Date"
             value={startDate}
-            action={setStartDate}
+            action={handleStartDateChange}
             disabled={false}
             minDate={new Date()}
           />

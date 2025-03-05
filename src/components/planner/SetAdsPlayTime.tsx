@@ -16,6 +16,7 @@ import {
 } from "../../actions/screenAction";
 import { Loading } from "../../components/Loading";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
+import { CustomTabWithSelectAll } from "../../components/molecules/CustomTabWithSelectAll";
 
 interface BottomTableData {
   selected: {
@@ -111,15 +112,6 @@ export const SetAdsPlayTime = ({
   const [data, setData] = useState<ResultData[]>([]);
   const [bottomTableData, setBottomTableData] = useState<any>({});
 
-  // const tableDataSetAdPlayTimeStore = useSelector(
-  //   (state: any) => state.tableDataSetAdPlayTimeStore
-  // );
-  // const {
-  //   loading: loadingSetPlayAdTime,
-  //   error: errorSetPlayAdTime,
-  //   data: bottomTableData,
-  // } = tableDataSetAdPlayTimeStore;
-
   const handleSaveAndContinue = async (e: any) => {
     e.preventDefault();
     setTimeout(() => {
@@ -154,6 +146,45 @@ export const SetAdsPlayTime = ({
     }
   }, [dispatch, campaignId, successAddCampaignDetails]);
 
+  const toggleAllIncludesByCurrentTab = (
+    included: boolean,
+    currentTab: keyof DayWiseData
+  ) => {
+    setData((prevData: any) =>
+      prevData.map((d: ResultData, i: number) => {
+        return {
+          ...d,
+          screenData: d.screenData.map((d1: ScreenData, j: number) => {
+            return {
+              ...d1,
+              dayWiseData: {
+                ...d1.dayWiseData,
+                [currentTab]: {
+                  morning: {
+                    ...d1.dayWiseData[currentTab].morning,
+                    included: included,
+                  },
+                  afternoon: {
+                    ...d1.dayWiseData[currentTab].afternoon,
+                    included: included,
+                  },
+                  evening: {
+                    ...d1.dayWiseData[currentTab].evening,
+                    included: included,
+                  },
+                  night: {
+                    ...d1.dayWiseData[currentTab].night,
+                    included: included,
+                  },
+                },
+              },
+            };
+          }),
+        };
+      })
+    );
+  };
+
   return (
     <div className="w-full py-3">
       <h1 className="text-[24px] font-semibold ">Set Ads Play time</h1>
@@ -162,10 +193,11 @@ export const SetAdsPlayTime = ({
         the same cost that your slots were booked.
       </h1>
       <div className="">
-        <TabWithIcon
+        <CustomTabWithSelectAll
           currentTab={currentTab}
           setCurrentTab={setCurrentTab}
           tabData={AdsPlayTimeTabData}
+          handleClick={toggleAllIncludesByCurrentTab}
         />
       </div>
       {loading || loadingTableData ? (
