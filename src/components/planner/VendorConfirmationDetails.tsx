@@ -20,7 +20,6 @@ import { message } from "antd";
 import {
   addDetailsToCreateCampaign,
   changeCampaignStatusAfterCreativeUpload,
-  changeCampaignStatusAfterVendorApproval,
 } from "../../actions/campaignAction";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { CAMPAIGN_DETAILS_PAGE } from "../../routes/routes";
@@ -38,7 +37,7 @@ import {
 import { convertDateIntoDateMonthYear } from "../../utils/dateAndTimeUtils";
 import { StatusPopup } from "../../components/popup/StatusPopup";
 import { ShowMediaTypePopup } from "../../components/popup/ShowMediaTypePopup";
-import { PrimaryButton } from "../../components/atoms/PrimaryButton";
+import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -322,10 +321,6 @@ export const VendorConfirmationDetails = ({
           pageName: "Vendor Confirmation Page",
         })
       );
-
-      dispatch({
-        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
-      });
     }
   }, [
     dispatch,
@@ -486,16 +481,23 @@ export const VendorConfirmationDetails = ({
             totalValue={statusTableData?.length}
           />
         </div>
-        <VendorConfirmationStatusTable
-          selectedCampaignIds={selectedCampaignIds}
-          setSelectedCampaignIds={setSelectedCampaignIds}
-          campaignId={campaignId}
-          userInfo={userInfo}
-          statusTableData={statusTableData}
-          handleOpenStatusModel={handleOpenStatusModel}
-          handleOpenMediaModel={handleOpenMediaModel}
-          campaignsList={[]}
-        />
+        {loadingCampaignStatusChangeAfterCreativeUpload ||
+        loadingStatusTableData ? (
+          <div className="w-full">
+            <SkeletonLoader />
+          </div>
+        ) : (
+          <VendorConfirmationStatusTable
+            selectedCampaignIds={selectedCampaignIds}
+            setSelectedCampaignIds={setSelectedCampaignIds}
+            campaignId={campaignId}
+            userInfo={userInfo}
+            statusTableData={statusTableData}
+            handleOpenStatusModel={handleOpenStatusModel}
+            handleOpenMediaModel={handleOpenMediaModel}
+            campaignsList={[]}
+          />
+        )}
       </div>
       <div className="pb-20">
         {!loadingStatusTableData && !errorStatusTableData && (

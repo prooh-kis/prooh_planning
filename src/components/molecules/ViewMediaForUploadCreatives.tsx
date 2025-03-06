@@ -4,7 +4,7 @@ export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
   return (
     <div className="pt-4">
       {files?.length > 0 && (
-        <div>
+        <div key={files[0]?.url}>
           {files[0].fileType?.split("/")[0] === "image" ? (
             <ImageContainer
               url={files[0]?.url}
@@ -29,7 +29,7 @@ export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
           if (index === 0) return null;
           if (file.fileType.split("/")[0] === "image")
             return (
-              <div className="w-[150px]" key={index}>
+              <div className="w-[150px]" key={file?.url}>
                 <ImageContainer
                   key={index}
                   url={file?.url}
@@ -42,7 +42,7 @@ export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
             );
           else
             return (
-              <div className="w-[150px]" key={index}>
+              <div className="w-[150px]" key={file?.url}>
                 <VideoContainer
                   key={index}
                   url={file?.url}

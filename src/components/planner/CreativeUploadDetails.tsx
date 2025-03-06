@@ -102,11 +102,11 @@ export const CreativeUploadDetails = ({
     data: screenData,
   } = screenDataUploadCreative;
 
-  useEffect(() => {
-    if (successAddCampaignDetails) {
-      setCurrentStep(step + 1);
-    }
-  }, [successAddCampaignDetails]);
+  // useEffect(() => {
+  //   if (successAddCampaignDetails) {
+  //     setCurrentStep(step + 1);
+  //   }
+  // }, [successAddCampaignDetails]);
 
   useEffect(() => {
     const campaignIdFromPath = pathname?.split("/").splice(-1)[0];
@@ -211,7 +211,7 @@ export const CreativeUploadDetails = ({
           screenResolution: screen.screenResolution,
           count: screen.count,
           screenIds: screen.screenIds,
-          creativeDuration: screen.duration,
+          creativeDuration: 10, //screen.duration,
           standardDayTimeCreatives: [],
           standardNightTimeCreatives: [],
           triggerCreatives: [],
@@ -447,7 +447,7 @@ export const CreativeUploadDetails = ({
 
     return result;
   };
-  
+
   // const findMax = (data: Creative[]) => {
   //   return Math.max(...data?.map((s: Creative) => s.creativeDuration), 0);
   // };
@@ -509,6 +509,7 @@ export const CreativeUploadDetails = ({
           creatives: requestBody,
         })
       );
+      setTimeout(() => setCurrentStep(step + 1), 1000);
       setCallToSendChangeStatus(true);
     } else {
       message.error("Please upload creatives for each row and foreach city");
@@ -594,7 +595,7 @@ export const CreativeUploadDetails = ({
   }, [campaignId, errorScreeData, screenData]);
 
   return (
-    <div className="w-full h-[80vh] overflow-y-auto  no-scrollbar ">
+    <div className="w-full h-[80vh] overflow-y-auto no-scrollbar">
       <div className="mx-auto">
         {/* Heading */}
         <h1 className="text-2xl font-semibold">Upload Creative</h1>
@@ -608,8 +609,9 @@ export const CreativeUploadDetails = ({
             Wait for some time, file is uploading...
           </div>
         )}
-        {currentCity === "" ? null : (
-          <div className="">
+
+        {currentCity && (
+          <div>
             <div className="flex gap-4">
               <TabWithoutIcon
                 tabData={citiesCreative}
@@ -617,6 +619,8 @@ export const CreativeUploadDetails = ({
                 setCurrentTab={handleSelectCurrentTab}
               />
             </div>
+
+            {/* Table Header */}
             <div className="mr-48 w-full">
               <div className="grid grid-cols-12 bg-[#129BFF] py-2 mt-4 items-center text-[16px]">
                 <div className="col-span-3 flex">
@@ -634,46 +638,50 @@ export const CreativeUploadDetails = ({
                   Upload creatives
                 </h1>
               </div>
+
+              {/* Creative Upload Section */}
               <div className="grid grid-cols-12">
+                {/* Screen Selection */}
                 <div className="border border-1 h-[60vh] overflow-scroll scrollbar-minimal col-span-3">
-                  {creativeUploadData[currentCity]?.map(
-                    (singleData: any, index: number) => {
-                      return (
-                        <div
-                          title={
-                            isCreativeUploaded(index)
-                              ? "click to select row"
-                              : "this row has no creative"
-                          }
-                          className={`${
-                            index === currentScreen
-                              ? "bg-[#aed6f1]  border border-[#000000]"
-                              : isCreativeUploaded(index)
-                              ? "bg-[#abebc6]"
-                              : !isCreativeUploaded(index)
-                              ? "bg-[#E8F3FF]"
-                              : "bg-[#E8F3FF]"
-                          } hover:bg-[#e5e7eb]`}
-                          key={index}
-                          onClick={() => setCurrentScreen(index)}
-                        >
-                          <div className="flex">
-                            <h1 className="border-b border-1 p-2 w-24 text-center ">
-                              {singleData?.count}
-                            </h1>
-                            <h1 className="border-b border-x border-1 p-2 w-24 text-center ">
-                              {singleData?.creativeDuration}
-                            </h1>
-                            <h1 className="border-b border-1 p-2 w-48 text-center ">
-                              {singleData?.screenResolution}
-                            </h1>
-                          </div>
-                        </div>
-                      );
-                    }
-                  )}
+                  {creativeUploadData[currentCity]?.map((singleData, index) => (
+                    <div
+                      key={index}
+                      title={
+                        isCreativeUploaded(index)
+                          ? "Click to select row"
+                          : "This row has no creative"
+                      }
+                      className={`${
+                        index === currentScreen
+                          ? "bg-[#aed6f1]  border border-[#000000]"
+                          : isCreativeUploaded(index)
+                          ? "bg-[#abebc6]"
+                          : !isCreativeUploaded(index)
+                          ? "bg-[#E8F3FF]"
+                          : "bg-[#E8F3FF]"
+                      } hover:bg-[#e5e7eb]`}
+                      onClick={() => setCurrentScreen(index)}
+                    >
+                      <div className="flex">
+                        {[
+                          singleData?.count,
+                          singleData?.creativeDuration,
+                          singleData?.screenResolution,
+                        ].map((item, i) => (
+                          <h1
+                            key={i}
+                            className="border-b border-1 p-2 w-24 text-center"
+                          >
+                            {item}
+                          </h1>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="border-b border-1  px-2 py-1 col-span-1">
+
+                {/* Creative Type Selection */}
+                <div className="border-b border-1 px-2 py-1 col-span-1">
                   <Radio.Group
                     onChange={handleSetCreativeType}
                     value={creativeType}
@@ -681,33 +689,33 @@ export const CreativeUploadDetails = ({
                   >
                     <Space direction="vertical">
                       {!pathname?.split("/").includes("triggerbasedplan") && (
-                        <Radio value={"Standard"}>Standard</Radio>
+                        <Radio value="Standard">Standard</Radio>
                       )}
                       {isTriggerAvailable() && (
-                        <Radio value={"Trigger"}>Trigger</Radio>
+                        <Radio value="Trigger">Trigger</Radio>
                       )}
                     </Space>
                   </Radio.Group>
                 </div>
-                <div className="border border-1  p-2  col-span-4  h-[60vh]">
+
+                {/* File Upload Section */}
+                <div className="border border-1 p-2 col-span-4 h-[60vh]">
                   {creativeType === "Standard" ? (
-                    <div>
+                    <>
                       <TabWithIcon
                         tabData={playCreativeTime}
                         currentTab={currentPlayTimeCreative}
                         setCurrentTab={setCurrentPlayTimeCreative}
                       />
-                      <div className="">
-                        <UploadCreativeForStandardCampaign
-                          handleSelectFileType={handleSelectFileType}
-                          selectFileType={selectFileType}
-                          handleAddNewFile={handleAddNewFile}
-                          file={file}
-                          handleSaveFile={handleSaveFile}
-                          removeFile={() => setFIle(null)}
-                        />
-                      </div>
-                    </div>
+                      <UploadCreativeForStandardCampaign
+                        handleSelectFileType={handleSelectFileType}
+                        selectFileType={selectFileType}
+                        handleAddNewFile={handleAddNewFile}
+                        file={file}
+                        handleSaveFile={handleSaveFile}
+                        removeFile={() => setFIle(null)}
+                      />
+                    </>
                   ) : (
                     <UploadCreativeForTriggerCampaign
                       handleSelectFileType={handleSelectFileType}
@@ -716,85 +724,58 @@ export const CreativeUploadDetails = ({
                       file={file}
                       handleSaveFile={handleSaveFile}
                       triggerData={
-                        getDataFromLocalStorage(SELECTED_TRIGGER)
-                          ?.weatherTriggers?.[0]?.type !== ""
-                          ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[
-                              campaignId
-                            ]?.weatherTriggers
-                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[
-                              campaignId
-                            ]?.sportsTriggers?.[0]?.sport !== ""
-                          ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[
-                              campaignId
-                            ]?.sportsTriggers
-                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[
-                              campaignId
-                            ]?.vacantSlots?.[0]?.slotType !== ""
-                          ? getDataFromLocalStorage(SELECTED_TRIGGER)?.[
-                              campaignId
-                            ]?.vacantSlots
-                          : {}
+                        getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
+                          ?.weatherTriggers ||
+                        getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
+                          ?.sportsTriggers ||
+                        getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
+                          ?.vacantSlots ||
+                        {}
                       }
                       triggerType={
                         getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                          ?.weatherTriggers?.[0]?.type !== ""
+                          ?.weatherTriggers?.[0]?.type
                           ? "Weather Trigger"
                           : getDataFromLocalStorage(SELECTED_TRIGGER)?.[
                               campaignId
-                            ]?.sportsTriggers?.[0]?.sport !== ""
+                            ]?.sportsTriggers?.[0]?.sport
                           ? "Sports Trigger"
-                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[
-                              campaignId
-                            ]?.vacantSlots?.[0]?.slotType !== ""
-                          ? "Fill Vacancy Trigger"
-                          : "No Trigger"
+                          : "Fill Vacancy Trigger"
                       }
                     />
                   )}
                 </div>
-                <div className="border-b border-r border-1  h-[60vh] px-4 py-2 col-span-4 ">
+
+                {/* Preview Section */}
+                <div className="border-b border-r border-1 h-[60vh] px-4 py-2 col-span-4">
                   <h1 className="font-semibold">
                     {creativeType === "Standard"
                       ? currentPlayTimeCreative === "1"
-                        ? "Day time creative"
+                        ? "Day Time Creative"
                         : "Night Time Creative"
-                      : "Trigger creative"}
+                      : "Trigger Creative"}
                   </h1>
-                  {creativeType === "Standard" ? (
-                    currentPlayTimeCreative === "1" ? (
-                      <ViewMediaForUploadCreatives
-                        files={
-                          creativeUploadData?.[currentCity]?.[currentScreen]
-                            ?.standardDayTimeCreatives
-                        }
-                        removeFile={removeFile}
-                      />
-                    ) : (
-                      <ViewMediaForUploadCreatives
-                        files={
-                          creativeUploadData?.[currentCity]?.[currentScreen]
-                            ?.standardNightTimeCreatives
-                        }
-                        removeFile={removeFile}
-                      />
-                    )
-                  ) : (
-                    <ViewMediaForUploadCreatives
-                      files={
-                        creativeUploadData?.[currentCity]?.[currentScreen]
-                          ?.triggerCreatives
-                      }
-                      removeFile={removeFile}
-                    />
-                  )}
+                  <ViewMediaForUploadCreatives
+                    files={
+                      creativeType === "Standard"
+                        ? currentPlayTimeCreative === "1"
+                          ? creativeUploadData?.[currentCity]?.[currentScreen]
+                              ?.standardDayTimeCreatives
+                          : creativeUploadData?.[currentCity]?.[currentScreen]
+                              ?.standardNightTimeCreatives
+                        : creativeUploadData?.[currentCity]?.[currentScreen]
+                            ?.triggerCreatives
+                    }
+                    removeFile={removeFile}
+                  />
                 </div>
               </div>
             </div>
+
+            {/* Footer */}
             <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
               <Footer
-                handleBack={() => {
-                  setCurrentStep(step - 1);
-                }}
+                handleBack={() => setCurrentStep(step - 1)}
                 campaignId={campaignId}
                 handleSave={handleSaveAndContinue}
                 loading={isLoading}
