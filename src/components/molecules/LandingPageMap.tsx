@@ -1,54 +1,105 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import ReactMapGL, { FullscreenControl, GeolocateControl, Marker, NavigationControl, ScaleControl } from "react-map-gl";
+import ReactMapGL, {
+  FullscreenControl,
+  GeolocateControl,
+  Marker,
+  NavigationControl,
+  ScaleControl,
+} from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import mapboxgl from "mapbox-gl";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { LANDING_PAGE_DATA } from "../../constants/localStorageConstants";
 import clsx from "clsx";
 
-mapboxgl.accessToken = "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A";
+mapboxgl.accessToken =
+  "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A";
 
 const colors = [
-  "bg-[#8B5CF6]", "bg-[#6366F1]", "bg-[#3B82F6]", "bg-[#06B6D4]", "bg-[#22C55E]", "bg-[#F59E0B]", "bg-[#EF4444]", "bg-[#FF77E9]"
+  "bg-[#8B5CF6]",
+  "bg-[#6366F1]",
+  "bg-[#3B82F6]",
+  "bg-[#06B6D4]",
+  "bg-[#22C55E]",
+  "bg-[#F59E0B]",
+  "bg-[#EF4444]",
+  "bg-[#FF77E9]",
 ];
 const textColors = [
-  "text-[#8B5CF6]", "text-[#6366F1]", "text-[#3B82F6]", "text-[#06B6D4]", "text-[#22C55E]", "text-[#F59E0B]", "text-[#EF4444]", "text-[#FF77E9]"
+  "text-[#8B5CF6]",
+  "text-[#6366F1]",
+  "text-[#3B82F6]",
+  "text-[#06B6D4]",
+  "text-[#22C55E]",
+  "text-[#F59E0B]",
+  "text-[#EF4444]",
+  "text-[#FF77E9]",
 ];
 const colorsbg = [
-  "group-hover:bg-[#8B5CF630]", "group-hover:bg-[#6366F130]", "group-hover:bg-[#3B82F630]", "group-hover:bg-[#06B6D430]", "group-hover:bg-[#22C55E30]", "group-hover:bg-[#F59E0B30]", "group-hover:bg-[#EF444430]", "group-hover:bg-[#FF77E9]"
+  "group-hover:bg-[#8B5CF630]",
+  "group-hover:bg-[#6366F130]",
+  "group-hover:bg-[#3B82F630]",
+  "group-hover:bg-[#06B6D430]",
+  "group-hover:bg-[#22C55E30]",
+  "group-hover:bg-[#F59E0B30]",
+  "group-hover:bg-[#EF444430]",
+  "group-hover:bg-[#FF77E9]",
 ];
 
 export function LandingPageMap(props: any) {
   const landingMapRef = useRef<any>(null);
 
-  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [userLocation, setUserLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
   const [viewState, setViewState] = useState<any>({});
 
   // Memoize markers and touchPoints to avoid recalculating on each render
   const markers = useMemo(() => {
     const newMarkers: any[] = [];
     const tpColors: any[] = [];
-    
-    const locations = props?.data?.location ? props?.data?.locations : getDataFromLocalStorage(LANDING_PAGE_DATA)?.locations;
-    const touchPoints = props?.data?.touchPoints || getDataFromLocalStorage(LANDING_PAGE_DATA)?.touchPoints;
+
+    const locations = props?.data?.location
+      ? props?.data?.locations
+      : getDataFromLocalStorage(LANDING_PAGE_DATA)?.locations;
+    const touchPoints =
+      props?.data?.touchPoints ||
+      getDataFromLocalStorage(LANDING_PAGE_DATA)?.touchPoints;
 
     locations?.forEach((s: any) => {
       const [screenId, details]: any = Object.entries(s)[0];
-      const exists = newMarkers.some((marker: any) => marker[0] === details?.lat && marker[1] === details?.lng && marker[2] === screenId);
+      const exists = newMarkers.some(
+        (marker: any) =>
+          marker[0] === details?.lat &&
+          marker[1] === details?.lng &&
+          marker[2] === screenId
+      );
 
       if (!exists) {
-        newMarkers.push([details?.lat, details?.lng, screenId, details.touchpoint]);
+        newMarkers.push([
+          details?.lat,
+          details?.lng,
+          screenId,
+          details.touchpoint,
+        ]);
       }
     });
 
-    touchPoints?.forEach((t: any, j: any) => {
-      tpColors.push({ tp: t, color: textColors[j] });
-    });
+    if (Array.isArray(touchPoints) && touchPoints.length > 0) {
+      touchPoints.forEach((t: any, j: any) => {
+        tpColors.push({ tp: t, color: textColors[j] });
+      });
+    } else {
+      // Handle case where touchPoints is not an array or is empty
+      console.warn("touchPoints is not a valid array or is empty.");
+    }
 
     return { markers: newMarkers, touchPoints: tpColors };
   }, [props?.data]);
 
-  const { markers: memoizedMarkers, touchPoints: memoizedTouchPoints } = markers;
+  const { markers: memoizedMarkers, touchPoints: memoizedTouchPoints } =
+    markers;
 
   // Get user's current location on mount
   useEffect(() => {
@@ -103,7 +154,10 @@ export function LandingPageMap(props: any) {
           initialViewState={viewState}
           style={{ borderRadius: "10px", zIndex: 0 }}
           mapStyle="mapbox://styles/vviicckkyy55/cm4l7klx300fx01sf61uthrog"
-          mapboxAccessToken={process.env.REACT_APP_MAPBOX || "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A"}
+          mapboxAccessToken={
+            process.env.REACT_APP_MAPBOX ||
+            "pk.eyJ1IjoidnZpaWNja2t5eTU1IiwiYSI6ImNsMzJwODk5ajBvNnMzaW1wcnR0cnpkYTAifQ.qIKhSIKdM9EDKULRBahZ-A"
+          }
           onMove={(e: any) => {
             setViewState(e.viewState);
           }}
@@ -118,7 +172,10 @@ export function LandingPageMap(props: any) {
               <div title={`${marker[2]}`} className="cursor-pointer">
                 <i
                   className={clsx(
-                    `fi fi-ss-circle ${memoizedTouchPoints?.find((c: any) => c.tp === marker[3])?.color} border border-[0.5px] rounded-full text-[14px] flex items-center justify-center`
+                    `fi fi-ss-circle ${
+                      memoizedTouchPoints?.find((c: any) => c.tp === marker[3])
+                        ?.color
+                    } border border-[0.5px] rounded-full text-[14px] flex items-center justify-center`
                   )}
                   onClick={(e: any) => {
                     e.stopPropagation();
@@ -141,11 +198,7 @@ export function LandingPageMap(props: any) {
             }}
             className={`truncate flex justify-between px-1 py-2`}
           >
-            <h1
-              className={`truncate text-[12px]`}
-            >
-              Reset
-            </h1>
+            <h1 className={`truncate text-[12px]`}>Reset</h1>
           </div>
         </div>
       </div>

@@ -36,39 +36,30 @@ export function PlanSummaryTable({
   const regularVsCohortPriceDataGet = useSelector(
     (state: any) => state.regularVsCohortPriceDataGet
   );
-  const {
-    loading: loadingPriceData,
-    error: errorPriceData,
-    data: priceData,
-  } = regularVsCohortPriceDataGet;
+  const { loading: loadingPriceData, data: priceData } =
+    regularVsCohortPriceDataGet;
 
   useEffect(() => {
-    // if (!loading  && !data && Object.keys(screensBuyingCount)?.length === 0 && priceData &&
-    //     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-    //       ?.campaignType !== CAMPAIGN_PLAN_TYPE_TOPICAL
-    // ) {
+    if (!campaignId) return; // Prevent API call if campaignId is undefined
 
-    dispatch(
-      getScreenSummaryPlanTableData({
-        id: campaignId,
-        screenIds:
-          getSelectedScreenIdsFromAllCities(screensBuyingCount)?.length > 0
-            ? getSelectedScreenIdsFromAllCities(screensBuyingCount)
-            : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-                ?.screenIds,
-      })
-    );
-    // }
+    const screenIds =
+      getSelectedScreenIdsFromAllCities(screensBuyingCount)?.length > 0
+        ? getSelectedScreenIdsFromAllCities(screensBuyingCount)
+        : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds;
+
     if (
-      // (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-      //   ?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW ||
-      //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-      //     ?.campaignType === CAMPAIGN_PLAN_TYPE_STORE ||
-      //   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-      //     ?.campaignType === CAMPAIGN_PLAN_TYPE_TOPICAL) &&
+      !loading &&
+      !data &&
+      screensBuyingCount &&
+      Object.keys(screensBuyingCount).length > 0
+    ) {
+      dispatch(getScreenSummaryPlanTableData({ id: campaignId, screenIds }));
+    }
+
+    if (
       !priceData &&
       getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[campaignId]?.[
-        `${regularVsCohort}`
+        regularVsCohort
       ] === undefined
     ) {
       if (
@@ -80,9 +71,7 @@ export function PlanSummaryTable({
         dispatch(
           getRegularVsCohortPriceData({
             id: campaignId,
-            screenIds:
-              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-                ?.screenIds,
+            screenIds,
             cohorts:
               getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
                 ?.cohorts,
@@ -96,11 +85,18 @@ export function PlanSummaryTable({
       }
     }
 
-    if (Object.keys(screensBuyingCount)?.length === 0) {
+    if (Object.keys(screensBuyingCount || {}).length === 0) {
       alert("No screens selected yet, please select screens to proceed...");
       setCurrentStep(2);
     }
-  }, [dispatch, successAddCampaignDetails, priceData, screensBuyingCount, setCurrentStep]);
+  }, [
+    campaignId,
+    screensBuyingCount,
+    successAddCampaignDetails,
+    priceData,
+    dispatch,
+    setCurrentStep,
+  ]);
 
   return (
     <div className="pb-10">
@@ -170,48 +166,51 @@ export function PlanSummaryTable({
             </tr>
           </thead>
           <tbody className="w-full overflow-scroll">
-            {loading || loadingPriceData || (data && Object.keys(data).length < 2) && (
-              <tr className="flex border rounded-b justify-between w-full h-[45px] animate-pulse">
-                <td className="h-[45px] bg-gray-200 rounded-b dark:bg-gray-700 w-full"></td>
-              </tr>
-            )}
-            {data && Object.keys(data)
-              ?.filter((s: any) => s === "total")
-              ?.map((d: any, i: any) => (
-                <tr
-                  key={i}
-                  className={`
-                    ${i === Object.keys(data).length - 1 ? "" : ""}
-                      py-1 text-[14px] border border-1`}
-                >
-                  <td className="py-2 text-center">
-                    {Object.keys(data).length - 1}
-                  </td>
-                  <td className="py-2 text-center">
-                    {data[d]?.totalScreens}
-                  </td>
-                  <td className="py-2 text-center">
-                    &#8377;{data[d]?.totalCpm?.toFixed(0)}
-                  </td>
-                  <td className="py-2 text-center">
-                    {formatNumber(data[d]?.totalImpression?.toFixed(0))}
-                  </td>
-                  <td className="py-2 text-center">
-                    {data[d]?.totalSlots?.toFixed(0)}
-                  </td>
-                  <td className="py-2 text-center">
-                    &#8377;{formatNumber(data[d]?.pricePerSlot?.toFixed(0))}
-                  </td>
-                  <td className="py-2 text-center">
-                    &#8377;
-                    {formatNumber(data[d]?.totalCampaignBudget?.toFixed(0))}
-                  </td>
-                  <td className="py-2 text-center">{data[d]?.sov}</td>
-                  <td className="py-2 text-center">
-                    {data[d]?.duration} Days
-                  </td>
+            {loading ||
+              loadingPriceData ||
+              (data && Object.keys(data).length < 2 && (
+                <tr className="flex border rounded-b justify-between w-full h-[45px] animate-pulse">
+                  <td className="h-[45px] bg-gray-200 rounded-b dark:bg-gray-700 w-full"></td>
                 </tr>
               ))}
+            {data &&
+              Object.keys(data)
+                ?.filter((s: any) => s === "total")
+                ?.map((d: any, i: any) => (
+                  <tr
+                    key={i}
+                    className={`
+                    ${i === Object.keys(data).length - 1 ? "" : ""}
+                      py-1 text-[14px] border border-1`}
+                  >
+                    <td className="py-2 text-center">
+                      {Object.keys(data).length - 1}
+                    </td>
+                    <td className="py-2 text-center">
+                      {data[d]?.totalScreens}
+                    </td>
+                    <td className="py-2 text-center">
+                      &#8377;{data[d]?.totalCpm?.toFixed(0)}
+                    </td>
+                    <td className="py-2 text-center">
+                      {formatNumber(data[d]?.totalImpression?.toFixed(0))}
+                    </td>
+                    <td className="py-2 text-center">
+                      {data[d]?.totalSlots?.toFixed(0)}
+                    </td>
+                    <td className="py-2 text-center">
+                      &#8377;{formatNumber(data[d]?.pricePerSlot?.toFixed(0))}
+                    </td>
+                    <td className="py-2 text-center">
+                      &#8377;
+                      {formatNumber(data[d]?.totalCampaignBudget?.toFixed(0))}
+                    </td>
+                    <td className="py-2 text-center">{data[d]?.sov}</td>
+                    <td className="py-2 text-center">
+                      {data[d]?.duration} Days
+                    </td>
+                  </tr>
+                ))}
           </tbody>
         </table>
       </div>
@@ -241,46 +240,49 @@ export function PlanSummaryTable({
             </tr>
           </thead>
           <tbody className="w-full">
-            {loading || loadingPriceData || (data && Object.keys(data).length < 2) && (
-              <tr className="flex border rounded-b justify-between w-full h-[45px] animate-pulse">
-                <td className="h-[45px] bg-gray-200 rounded-b dark:bg-gray-700 w-full"></td>
-              </tr>
-            )}
-            {data && Object.keys(data)
-              ?.filter((s: any) => s !== "total")
-              ?.map((d: any, i: any) => (
-                <tr
-                  key={i}
-                  className={`
-            ${i === Object.keys(data).length - 1 ? "" : ""}
-              py-1 text-[14px] border border-1`}
-                >
-                  <td className="py-2 text-center">{d.toUpperCase()}</td>
-                  <td className="py-2 text-center">
-                    {data[d]?.totalScreens}
-                  </td>
-                  <td className="py-2 text-center">
-                    &#8377;{data[d]?.totalCpm?.toFixed(0)}
-                  </td>
-                  <td className="py-2 text-center">
-                    {formatNumber(data[d]?.totalImpression?.toFixed(0))}
-                  </td>
-                  <td className="py-2 text-center">
-                    {data[d]?.totalSlots?.toFixed(0)}
-                  </td>
-                  <td className="py-2 text-center">
-                    {formatNumber(data[d]?.pricePerSlot?.toFixed(0))}
-                  </td>
-                  <td className="py-2 text-center">
-                    &#8377;
-                    {formatNumber(data[d]?.totalCampaignBudget?.toFixed(0))}
-                  </td>
-                  <td className="py-2 text-center">{data[d]?.sov}</td>
-                  <td className="py-2 text-center">
-                    {data[d]?.duration} Days
-                  </td>
+            {loading ||
+              loadingPriceData ||
+              (data && Object.keys(data).length < 2 && (
+                <tr className="flex border rounded-b justify-between w-full h-[45px] animate-pulse">
+                  <td className="h-[45px] bg-gray-200 rounded-b dark:bg-gray-700 w-full"></td>
                 </tr>
               ))}
+            {data &&
+              Object.keys(data)
+                ?.filter((s: any) => s !== "total")
+                ?.map((d: any, i: any) => (
+                  <tr
+                    key={i}
+                    className={`
+            ${i === Object.keys(data).length - 1 ? "" : ""}
+              py-1 text-[14px] border border-1`}
+                  >
+                    <td className="py-2 text-center">{d.toUpperCase()}</td>
+                    <td className="py-2 text-center">
+                      {data[d]?.totalScreens}
+                    </td>
+                    <td className="py-2 text-center">
+                      &#8377;{data[d]?.totalCpm?.toFixed(0)}
+                    </td>
+                    <td className="py-2 text-center">
+                      {formatNumber(data[d]?.totalImpression?.toFixed(0))}
+                    </td>
+                    <td className="py-2 text-center">
+                      {data[d]?.totalSlots?.toFixed(0)}
+                    </td>
+                    <td className="py-2 text-center">
+                      {formatNumber(data[d]?.pricePerSlot?.toFixed(0))}
+                    </td>
+                    <td className="py-2 text-center">
+                      &#8377;
+                      {formatNumber(data[d]?.totalCampaignBudget?.toFixed(0))}
+                    </td>
+                    <td className="py-2 text-center">{data[d]?.sov}</td>
+                    <td className="py-2 text-center">
+                      {data[d]?.duration} Days
+                    </td>
+                  </tr>
+                ))}
           </tbody>
         </table>
       </div>

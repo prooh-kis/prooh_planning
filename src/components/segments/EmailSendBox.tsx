@@ -43,9 +43,6 @@ export const EmailSendBox = ({
             />
           </div>
           <div className="col-span-2">
-            {/* {loading ? (
-              <Loading />
-            ) : ( */}
             <PrimaryButton
               title={"Send"}
               rounded="rounded-[8px]"
@@ -58,14 +55,14 @@ export const EmailSendBox = ({
               textSize="14px"
               disabled={loading}
             />
-            {/* )} */}
           </div>
         </div>
         {page !== "VendorApproval" ? (
-          <div className="py-4 flex items-center gap-2"
+          <div
+            className="py-4 flex items-center gap-2"
             onClick={() => {
-              alert("Sending email to all vendors...")
-              sendEmailToAll()
+              message.info("Sending email to all vendors...");
+              sendEmailToAll();
             }}
           >
             <p className="text-gray-500 text-[14px] truncate">
@@ -74,8 +71,7 @@ export const EmailSendBox = ({
             <i className="fi fi-ss-paper-plane text-primaryButton text-[14px] flex items-center"></i>
           </div>
         ) : (
-          <div className="py-4 flex items-center gap-2"
-          >
+          <div className="py-4 flex items-center gap-2">
             <p className="text-gray-500 text-[14px] truncate">
               Send email to client for budget approval with selected attachments
             </p>

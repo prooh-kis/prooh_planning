@@ -37,7 +37,7 @@ import {
 import { convertDateIntoDateMonthYear } from "../../utils/dateAndTimeUtils";
 import { StatusPopup } from "../../components/popup/StatusPopup";
 import { ShowMediaTypePopup } from "../../components/popup/ShowMediaTypePopup";
-import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -288,27 +288,12 @@ export const VendorConfirmationDetails = ({
           vendorApprovalImgs: imageArr, // return url array
         })
       );
-      // setCurrentStep(step + 1);
-      navigate(
-        `${CAMPAIGN_DETAILS_PAGE}/${pathname?.split("/").splice(-1)[0]}`
-      );
+      navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignId}`);
     }
   };
 
   useEffect(() => {
     if (successAddCampaignDetails) {
-      dispatch(
-        changeCampaignStatusAfterCreativeUpload({
-          id: campaignId,
-          status: CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT,
-        })
-      );
-      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-    }
-  }, [successAddCampaignDetails, dispatch, campaignId]);
-
-  useEffect(() => {
-    if (successCampaignStatusChangeAfterCreativeUpload) {
       dispatch(
         getVendorConfirmationStatusTableDetails({
           id: campaignId,
@@ -321,13 +306,9 @@ export const VendorConfirmationDetails = ({
           pageName: "Vendor Confirmation Page",
         })
       );
+      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
     }
-  }, [
-    dispatch,
-    vendorInput,
-    campaignId,
-    successCampaignStatusChangeAfterCreativeUpload,
-  ]);
+  }, [successAddCampaignDetails, dispatch, campaignId, vendorInput]);
 
   const handleOpenStatusModel = () => {
     setOpen((pre: boolean) => !open);
@@ -389,154 +370,156 @@ export const VendorConfirmationDetails = ({
   };
 
   return (
-    <div className="w-full pt-3">
-      <StatusPopup
-        open={open}
-        onClose={handleOpenStatusModel}
-        myData={myData}
-      />
-      <ShowMediaTypePopup
-        open={openMedia}
-        onClose={handleOpenMediaModel}
-        mediaTypeData={mediaTypeData}
-      />
-
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-[24px] text-primaryText font-semibold">
-            Vendor Confirmation Status
-          </h1>
-          <p className="text-[14px] text-secondaryText">
-            Check and confirm media availability for your campaign plan
-          </p>
-        </div>
-        <CountdownTimer createdAt={vendorConfirmationData?.createdAt} />
-      </div>
-      <VendorConfirmationBasicTable
-        vendorConfirmationData={vendorConfirmationData}
-      />
-
-      <div className="py-4 w-full">
-        <div className="flex justify-between">
-          <div className="flex gap-8">
-            <div className="flex">
-              <h1 className="text-[14px]">
-                Approved (
-                {myData?.Approved?.Connected +
-                  myData?.Approved?.["Third Party"]}
-                )
-              </h1>
-            </div>
-            <div className="flex">
-              <h1 className="text-[14px]">
-                Pending (
-                {myData?.Pending?.Connected + myData?.Pending?.["Third Party"]})
-              </h1>
-            </div>
-            <div className="flex">
-              <h1 className="text-[14px]">
-                Rejected (
-                {myData?.Rejected?.Connected +
-                  myData?.Rejected?.["Third Party"]}
-                )
-              </h1>
-            </div>
-          </div>
-          <div className="flex gap-4">
-            <h1 className="text-[14px]">Total Screen</h1>
-            <h1 className="text-[14px] font-semibold">
-              {statusTableData?.length}
-            </h1>
-          </div>
-        </div>
-        <div className="pb-4">
-          <MultiColorLinearBar
-            showPercentage={false}
-            values={[
-              statusTableData?.filter(
-                (c: any) =>
-                  c.status ===
-                  CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
-              ).length,
-              statusTableData
-                ?.filter(
-                  (c: any) =>
-                    c.status !==
-                    CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
-                  // c.status !== "Pending"
-                )
-                ?.filter(
-                  (c: any) =>
-                    c.status !==
-                    CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
-                  // c.status !== "Pending"
-                ).length,
-              statusTableData?.filter(
-                (c: any) =>
-                  c.status ===
-                  CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
-              ).length,
-            ]}
-            colors={["#FF0808", "#5FAC90", "#F9B34B"]}
-            totalValue={statusTableData?.length}
+    <>
+      {loadingStatusTableData ? (
+        <LoadingScreen />
+      ) : (
+        <div className="w-full pt-3">
+          <StatusPopup
+            open={open}
+            onClose={handleOpenStatusModel}
+            myData={myData}
           />
-        </div>
-        {loadingCampaignStatusChangeAfterCreativeUpload ||
-        loadingStatusTableData ? (
-          <div className="w-full">
-            <SkeletonLoader />
-          </div>
-        ) : (
-          <VendorConfirmationStatusTable
-            selectedCampaignIds={selectedCampaignIds}
-            setSelectedCampaignIds={setSelectedCampaignIds}
-            campaignId={campaignId}
-            userInfo={userInfo}
-            statusTableData={statusTableData}
-            handleOpenStatusModel={handleOpenStatusModel}
-            handleOpenMediaModel={handleOpenMediaModel}
-            campaignsList={[]}
+          <ShowMediaTypePopup
+            open={openMedia}
+            onClose={handleOpenMediaModel}
+            mediaTypeData={mediaTypeData}
           />
-        )}
-      </div>
-      <div className="pb-20">
-        {!loadingStatusTableData && !errorStatusTableData && (
-          <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-1 border rounded-[12px] p-2">
-              <EmailSendBox
-                type="vendor"
-                toEmail={toEmail}
-                setToEmail={setToEmail}
-                cc={cc}
-                sendEmail={sendEmail}
-                sendEmailToAll={sendEmailToAll}
+
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-[24px] text-primaryText font-semibold">
+                Vendor Confirmation Status
+              </h1>
+              <p className="text-[14px] text-secondaryText">
+                Check and confirm media availability for your campaign plan
+              </p>
+            </div>
+            <CountdownTimer createdAt={vendorConfirmationData?.createdAt} />
+          </div>
+          <VendorConfirmationBasicTable
+            vendorConfirmationData={vendorConfirmationData}
+          />
+
+          <div className="py-4 w-full">
+            <div className="flex justify-between">
+              <div className="flex gap-8">
+                <div className="flex">
+                  <h1 className="text-[14px]">
+                    Approved (
+                    {myData?.Approved?.Connected +
+                      myData?.Approved?.["Third Party"]}
+                    )
+                  </h1>
+                </div>
+                <div className="flex">
+                  <h1 className="text-[14px]">
+                    Pending (
+                    {myData?.Pending?.Connected +
+                      myData?.Pending?.["Third Party"]}
+                    )
+                  </h1>
+                </div>
+                <div className="flex">
+                  <h1 className="text-[14px]">
+                    Rejected (
+                    {myData?.Rejected?.Connected +
+                      myData?.Rejected?.["Third Party"]}
+                    )
+                  </h1>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <h1 className="text-[14px]">Total Screen</h1>
+                <h1 className="text-[14px] font-semibold">
+                  {statusTableData?.length}
+                </h1>
+              </div>
+            </div>
+            <div className="pb-4">
+              <MultiColorLinearBar
+                showPercentage={false}
+                values={[
+                  statusTableData?.filter(
+                    (c: any) =>
+                      c.status ===
+                      CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
+                  ).length,
+                  statusTableData
+                    ?.filter(
+                      (c: any) =>
+                        c.status !==
+                        CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
+                      // c.status !== "Pending"
+                    )
+                    ?.filter(
+                      (c: any) =>
+                        c.status !==
+                        CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
+                      // c.status !== "Pending"
+                    ).length,
+                  statusTableData?.filter(
+                    (c: any) =>
+                      c.status ===
+                      CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
+                  ).length,
+                ]}
+                colors={["#FF0808", "#5FAC90", "#F9B34B"]}
+                totalValue={statusTableData?.length}
               />
             </div>
-            <div className="col-span-1 border rounded-[12px] p-2">
-              <EmailConfirmationImage
-                files={files}
-                handleAddNewFile={handleAddNewFile}
-                removeImage={removeImage}
-              />
-            </div>
-          </div>
-        )}
-      </div>
 
-      <div
-        className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]"
-        onDoubleClick={() => setIsDisabled(!isDisabled)}
-      >
-        <Footer
-          handleBack={() => {
-            setCurrentStep(step - 1);
-          }}
-          handleSave={handleSaveAndContinue}
-          campaignId={campaignId}
-          pageName="Vendor Confirmation Page"
-          successAddCampaignDetails={successAddCampaignDetails}
-        />
-      </div>
-    </div>
+            <VendorConfirmationStatusTable
+              selectedCampaignIds={selectedCampaignIds}
+              setSelectedCampaignIds={setSelectedCampaignIds}
+              campaignId={campaignId}
+              userInfo={userInfo}
+              statusTableData={statusTableData}
+              handleOpenStatusModel={handleOpenStatusModel}
+              handleOpenMediaModel={handleOpenMediaModel}
+              campaignsList={[]}
+            />
+          </div>
+          <div className="pb-20">
+            {!loadingStatusTableData && !errorStatusTableData && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-1 border rounded-[12px] p-2">
+                  <EmailSendBox
+                    type="vendor"
+                    toEmail={toEmail}
+                    setToEmail={setToEmail}
+                    cc={cc}
+                    sendEmail={sendEmail}
+                    sendEmailToAll={sendEmailToAll}
+                  />
+                </div>
+                <div className="col-span-1 border rounded-[12px] p-2">
+                  <EmailConfirmationImage
+                    files={files}
+                    handleAddNewFile={handleAddNewFile}
+                    removeImage={removeImage}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div
+            className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]"
+            onDoubleClick={() => setIsDisabled(!isDisabled)}
+          >
+            <Footer
+              handleBack={() => {
+                setCurrentStep(step - 1);
+              }}
+              handleSave={handleSaveAndContinue}
+              campaignId={campaignId}
+              pageName="Vendor Confirmation Page"
+              successAddCampaignDetails={successAddCampaignDetails}
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 };

@@ -1,7 +1,7 @@
 import { GoogleMapWithGeometry } from "../../components/map/GoogleMapWithGeometry";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { message, Tooltip } from "antd";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import {
@@ -14,7 +14,10 @@ import {
 } from "../../constants/localStorageConstants";
 import { LocationProximity } from "../../components/segments/LocationProximity";
 import { Footer } from "../../components/footer";
-import { getScreenDataForAdvanceFilters } from "../../actions/screenAction";
+import {
+  getPlanningPageFooterData,
+  getScreenDataForAdvanceFilters,
+} from "../../actions/screenAction";
 import { ALL_TOUCHPOINTS } from "../../constants/helperConstants";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { Loading } from "../../components/Loading";
@@ -139,11 +142,6 @@ export const AdvanceFiltersDetails = ({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
-        // setViewState({
-        //   ...viewState,
-        //   latitude: position.coords.latitude,
-        //   longitude: position.coords.longitude,
-        // });
       },
       (error) => {
         console.error("Error getting user location:", error);
@@ -154,6 +152,12 @@ export const AdvanceFiltersDetails = ({
 
   useEffect(() => {
     if (successAddCampaignDetails) {
+      dispatch(
+        getPlanningPageFooterData({
+          id: campaignId,
+          pageName: "Advance Filter Page",
+        })
+      );
       dispatch(
         getScreenDataForAdvanceFilters({
           id: campId,
@@ -170,14 +174,14 @@ export const AdvanceFiltersDetails = ({
   }, [dispatch, campId, pathname, successAddCampaignDetails]);
 
   useEffect(() => {
-
     if (advanceFilterData && finalSelectedScreens?.length === 0) {
       setAllScreens(advanceFilterData?.screens);
       setFinalSelectedScreens(advanceFilterData?.screens);
-      saveDataOnLocalStorage(SELECTED_SCREENS_ID, { [campId]: advanceFilterData?.screens });
+      saveDataOnLocalStorage(SELECTED_SCREENS_ID, {
+        [campId]: advanceFilterData?.screens,
+      });
     }
-
-  },[advanceFilterData, campId, finalSelectedScreens]);
+  }, [advanceFilterData, campId, finalSelectedScreens]);
 
   return (
     <div className="w-full">
@@ -263,8 +267,8 @@ export const AdvanceFiltersDetails = ({
                     Confirm and take{" "}
                     <span className=" font-bold">
                       {`${finalSelectedScreens.length} Sites Out of ${allScreens.length} Sites `}
-                    </span>
-                    {" "}for my plan
+                    </span>{" "}
+                    for my plan
                   </>
                 }
                 onChange={(e) => {
@@ -286,7 +290,6 @@ export const AdvanceFiltersDetails = ({
               allScreens={allScreens}
               filteredScreens={finalSelectedScreens}
               heatmap={advanceFilterData?.heatmap}
-
               data={circleData}
               circleRadius={circleRadius}
               setCircleRadius={setCircleRadius}
@@ -295,7 +298,6 @@ export const AdvanceFiltersDetails = ({
               routeFilteredScreens={routeFilteredScreens}
               setRouteFilteredScreens={setRouteFilteredScreens}
               handleFinalSelectedScreens={handleFinalSelectedScreens}
-           
               // handleSelectFromMap={handleSelectFromMap}
               // handleAddManualSelection={
               //   handleAddManualSelectedScreenIntoFinalSelectedScreens

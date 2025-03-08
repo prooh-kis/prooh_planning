@@ -264,9 +264,14 @@ export const OurAdvertisingJourney = ({ data }: any) => {
       }
     });
 
-    touchPoints?.forEach((t: any, j: any) => {
-      tpColors.push({ tp: t, color: textColors[j] });
-    });
+    if (Array.isArray(touchPoints) && touchPoints.length > 0) {
+      touchPoints.forEach((t: any, j: any) => {
+        tpColors.push({ tp: t, color: textColors[j] });
+      });
+    } else {
+      // Handle case where touchPoints is not an array or is empty
+      console.warn("touchPoints is not a valid array or is empty.");
+    }
 
     return { markers: newMarkers, touchPoints: tpColors };
   }, [data]);

@@ -116,35 +116,6 @@ export const LocationTable = ({
             />
           </td>
         </tr>
-       
-
-        {/* {Object.keys(markets)?.map((market: any, index: any) => (
-          <tr
-            key={index}
-            className="grid grid-cols-12 w-full h-[40px] border-b border-gray-100"
-          >
-            <td className="col-span-6 flex items-center px-2">
-              {loading ? (
-                <SkeletonLoader />
-              ) : (
-                <CheckboxInput
-                  label={`${market}`}
-                  disabled={true}
-                  checked={true}
-                  onChange={() => {}}
-                />
-              )}
-            </td>
-            <td className="col-span-6 flex items-center justify-around gap-2 truncate">
-              <p className="lg:text-[14px] text-[12px] text-[#21394F] truncate">
-                {markets[market]["gender"]["Male"].toFixed(1)}%
-              </p>
-              <p className="lg:text-[14px] text-[12px] text-[#21394F] truncate">
-                {markets[market]["gender"]["Female"].toFixed(1)}%
-              </p>
-            </td>
-          </tr>
-        ))} */}
       </tbody>
     </table>
   );

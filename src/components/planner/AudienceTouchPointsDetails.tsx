@@ -33,6 +33,7 @@ import {
   ALL_MARKETS,
   ALL_TOUCHPOINTS,
 } from "../../constants/helperConstants";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 interface EnterAudienceTouchpointDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -85,6 +86,7 @@ export const AudienceTouchPointsDetails = ({
   const [selectedAudiences, setSelectedAudiences] = useState<any>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts || []
   );
+
   const [selectedTouchPoints, setSelectedTouchPoints] = useState<any>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints || []
   );
@@ -274,102 +276,111 @@ export const AudienceTouchPointsDetails = ({
   };
 
   return (
-    <div className="w-full py-3">
-      <div>
-        <h1 className="text-[24px] text-primaryText font-semibold">
-          Select Target Audiences and TouchPoints
-        </h1>
-        <p className="text-[14px] text-secondaryText">
-          Choose the audiences you want to target at your desired touchPoints
-        </p>
-      </div>
-      <div className="grid grid-cols-8 gap-1 pt-4">
-        <div ref={marketRef} className="col-span-2 flex justify-center">
-          <LocationTable
-            loading={loadingAudiences || loadingCost}
-            markets={markets}
-            handleSelection={handleSelection}
-            selectedMarkets={selectedMarket}
-            selectedGender={selectedGender}
-            setSelectedGender={setSelectedGender}
-            data={screensAudiences || {}}
-            setSelectedCity={setSelectedCity}
-            setSelectedZone={setSelectedZone}
-          />
+    <>
+      {loadingAudiences || loadingCost ? (
+        <LoadingScreen />
+      ) : (
+        <div className="w-full py-3">
+          <div>
+            <h1 className="text-[24px] text-primaryText font-semibold">
+              Select Target Audiences and TouchPoints
+            </h1>
+            <p className="text-[14px] text-secondaryText">
+              Choose the audiences you want to target at your desired
+              touchPoints
+            </p>
+          </div>
+          <div className="grid grid-cols-8 gap-1 pt-4">
+            <div ref={marketRef} className="col-span-2 flex justify-center">
+              <LocationTable
+                loading={loadingAudiences || loadingCost}
+                markets={markets}
+                handleSelection={handleSelection}
+                selectedMarkets={selectedMarket}
+                selectedGender={selectedGender}
+                setSelectedGender={setSelectedGender}
+                data={screensAudiences || {}}
+                setSelectedCity={setSelectedCity}
+                setSelectedZone={setSelectedZone}
+              />
+            </div>
+            <div ref={audienceRef} className="col-span-3 flex justify-center">
+              <AudienceCohortTable
+                showIconHighlight={showIconHighlight}
+                loading={loadingAudiences || loadingCost}
+                locked={locked}
+                setLocked={setLocked}
+                handleSelection={handleSelection}
+                audiences={audiences}
+                selectedAudiences={selectedAudiences}
+                setSelectedAudiences={setSelectedAudiences}
+              />
+            </div>
+            <div ref={touchpointRef} className="col-span-3 flex justify-center">
+              <TouchpointTable
+                loading={loadingAudiences || loadingCost}
+                locked={locked}
+                setLocked={setLocked}
+                handleSelection={handleSelection}
+                touchPoints={touchPoints}
+                selectedTouchPoints={selectedTouchPoints}
+                setSelectedTouchPoints={(value: string[]) => {
+                  console.log("new Value :", value);
+                  setSelectedTouchPoints(value);
+                }}
+              />
+            </div>
+          </div>
+          <div className="flex justify-start items-center gap-2 pt-2 pb-20">
+            <i className="fi fi-sr-lightbulb-on text-[#FFB904]"></i>
+            <h1 className="text-[14px] text-[#178967]">
+              Prooh Tip:- select target audience and select select target
+              audience and location target audience and location location
+            </h1>
+          </div>
+          <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
+            <Footer
+              handleBack={() => {
+                setCurrentStep(step - 1);
+              }}
+              handleSave={() => {
+                dispatch(
+                  addDetailsToCreateCampaign({
+                    pageName: "Audience And TouchPoint Page",
+                    id: campaignId,
+                    markets: Object.keys(screensAudiences)?.filter(
+                      (c: any) => c !== "id"
+                    ),
+                    cohorts: getDataFromLocalStorage(
+                      SELECTED_AUDIENCE_TOUCHPOINTS
+                    )?.[campaignId]?.cohorts,
+                    touchPoints: selectedTouchPoints,
+                    gender: getSelectedGender(),
+                    screensSelectedCount: screensCost?.screensSelectedCount,
+                    impressionSelectedCount:
+                      screensCost?.impressionSelectedCount,
+                    budgetSelected: screensCost?.budgetSelected,
+                    cpmSelected: screensCost?.cpmSelected,
+                    pricePerSlotSelectedCount:
+                      screensCost?.pricePerSlotSelected,
+                    citiesSelectedCount: screensCost?.citiesSelectedCount,
+                    cities,
+                    zones,
+                  })
+                );
+                setCurrentStep(step + 1);
+                saveDataOnLocalStorage(COST_SUMMARY, {
+                  [campaignId]: [selectedScreensData, totalScreensData],
+                });
+              }}
+              campaignId={campaignId}
+              pageName="Audience And TouchPoint Page"
+              successAddCampaignDetails={successAddCampaignDetails}
+              loadingCost={loadingAudiences || loadingCost}
+            />
+          </div>
         </div>
-        <div ref={audienceRef} className="col-span-3 flex justify-center">
-          <AudienceCohortTable
-            showIconHighlight={showIconHighlight}
-            loading={loadingAudiences || loadingCost}
-            locked={locked}
-            setLocked={setLocked}
-            handleSelection={handleSelection}
-            audiences={audiences}
-            selectedAudiences={selectedAudiences}
-            setSelectedAudiences={setSelectedAudiences}
-          />
-        </div>
-        <div ref={touchpointRef} className="col-span-3 flex justify-center">
-          <TouchpointTable
-            loading={loadingAudiences || loadingCost}
-            locked={locked}
-            setLocked={setLocked}
-            handleSelection={handleSelection}
-            touchPoints={touchPoints}
-            selectedTouchPoints={selectedTouchPoints}
-            setSelectedTouchPoints={setSelectedTouchPoints}
-          />
-        </div>
-      </div>
-      <div className="flex justify-start items-center gap-2 pt-2 pb-20">
-        <i className="fi fi-sr-lightbulb-on text-[#FFB904]"></i>
-        <h1 className="text-[14px] text-[#178967]">
-          Prooh Tip:- select target audience and select select target audience
-          and location target audience and location location
-        </h1>
-      </div>
-      <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
-        <Footer
-          handleBack={() => {
-            setCurrentStep(step - 1);
-          }}
-          handleSave={() => {
-            dispatch(
-              addDetailsToCreateCampaign({
-                pageName: "Audience And TouchPoint Page",
-                id: campaignId,
-                markets: Object.keys(screensAudiences)?.filter(
-                  (c: any) => c !== "id"
-                ),
-                cohorts: getDataFromLocalStorage(
-                  SELECTED_AUDIENCE_TOUCHPOINTS
-                )?.[campaignId]?.cohorts,
-                touchPoints: getDataFromLocalStorage(
-                  SELECTED_AUDIENCE_TOUCHPOINTS
-                )?.[campaignId]?.touchPoints,
-                gender: getSelectedGender(),
-                screensSelectedCount: screensCost?.screensSelectedCount,
-                impressionSelectedCount: screensCost?.impressionSelectedCount,
-                budgetSelected: screensCost?.budgetSelected,
-                cpmSelected: screensCost?.cpmSelected,
-                pricePerSlotSelectedCount: screensCost?.pricePerSlotSelected,
-                citiesSelectedCount: screensCost?.citiesSelectedCount,
-                cities,
-                zones,
-              })
-            );
-
-            setCurrentStep(step + 1);
-            saveDataOnLocalStorage(COST_SUMMARY, {
-              [campaignId]: [selectedScreensData, totalScreensData],
-            });
-          }}
-          campaignId={campaignId}
-          pageName="Audience And TouchPoint Page"
-          successAddCampaignDetails={successAddCampaignDetails}
-          loadingCost={loadingAudiences || loadingCost}
-        />
-      </div>
-    </div>
+      )}
+    </>
   );
 };

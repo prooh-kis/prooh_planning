@@ -108,11 +108,17 @@ export const SpecialDay = ({
   useEffect(() => {
     const year = new Date().getFullYear();
     const todayDate = new Date().getDate();
-    const lastDayOfCurrentMonth = new Date(year, new Date().getMonth() + 1, 0).getDate();
+    const lastDayOfCurrentMonth = new Date(
+      year,
+      new Date().getMonth() + 1,
+      0
+    ).getDate();
 
     dispatch(
       getCalendarListData({
-        startDate: `${year}-${month + 1}-${month === new Date().getMonth() ? todayDate : "01"}`,
+        startDate: `${year}-${month + 1}-${
+          month === new Date().getMonth() ? todayDate : "01"
+        }`,
         endDate: `${year}-${month + 1}-${lastDayOfCurrentMonth}`,
         category: [category],
       })
@@ -154,7 +160,7 @@ export const SpecialDay = ({
   };
 
   return (
-    <div className="w-full pt-4 pb-8">
+    <div className="w-full pt-1">
       <AddCampaignDetails
         handleCancel={handleCancel}
         open={isOpen}
@@ -171,11 +177,12 @@ export const SpecialDay = ({
         handleSaveData={handleSaveData}
         selectedSpacialDay={selectedSpacialDay}
       />
-      <h1 className="text-[24px] text-[#232323] font-semibold leading-[32.68px] tracking-[-0.02em]">
-        Select Topical Day
-      </h1>
       <div className="flex  justify-between">
-        <div className="flex gap-4">
+        <div>
+          <h1 className="text-[24px] text-[#232323] font-semibold leading-[32.68px] tracking-[-0.02em]">
+            Select Topical Day
+          </h1>
+
           <Select
             options={industryCategoryData?.filteredIndustryCategory?.map(
               (data: any) => {
@@ -194,6 +201,15 @@ export const SpecialDay = ({
             className="border border-[#D9D9D9] px-4 py-2 rounded-md text-[#D9D9D9]"
           >
             Reset
+          </button>
+        </div>
+        <div className="flex justify-end mt-4">
+          <button
+            className="px-8 py-2 bg-[#1297E2] text-[#FFFFFF] rounded-md h-12"
+            onClick={handleOpenModel}
+          >
+            Continue
+            {/* Proceed To Cost Optimization */}
           </button>
         </div>
         {/* <EventCalender events={calendarListData1?.filteredCalendar || []} /> */}
@@ -222,7 +238,7 @@ export const SpecialDay = ({
             </span>
             events according to your category{" "}
           </h1>
-          <div className="flex flex-col gap-4 mt-4 overflow-y-auto pr-4 h-[480px]">
+          <div className="flex flex-col gap-4 mt-4 overflow-y-auto pr-4 h-[50vh]">
             {loadingCalendarListDat && (
               <div className="flex flex-col gap-4">
                 <div
@@ -264,12 +280,12 @@ export const SpecialDay = ({
           <h1 className="text-[14px] font-normal text-[#737373]  leading-[19.07px]">
             Your final bill will include the cost of all the additional slots,{" "}
           </h1>
-          <div className="flex flex-col gap-2 mt-4 overflow-y-auto max-h-[396px]">
+          <div className="flex flex-col gap-2 mt-4 overflow-y-auto max-h-[40vh]">
             {Object.keys(tableDataForSelectTopicalDay1 || {})?.map(
               (key: string, index: any) => (
                 <div key={index} className="pr-4">
                   <div className="flex justify-between">
-                    <h1 className="text-[16px] font-normal text-[#232323]  leading-[21.79px] pb-2">
+                    <h1 className="text-[14px] font-normal text-[#232323]  leading-[21.79px] pb-2">
                       {key}
                     </h1>
                     <h1
@@ -304,14 +320,6 @@ export const SpecialDay = ({
             For Optimizing This Plan
           </h1>
         </div>
-      </div>
-      <div className="flex justify-end mt-4">
-        <button
-          className="px-8 py-2 bg-[#1297E2] text-[#FFFFFF] rounded-md"
-          onClick={handleOpenModel}
-        >
-          Proceed To Cost Optimization
-        </button>
       </div>
     </div>
   );

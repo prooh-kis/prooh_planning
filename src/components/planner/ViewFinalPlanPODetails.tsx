@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Divider, message, Tooltip } from "antd";
+import { Divider, message } from "antd";
 import { Footer } from "../../components/footer";
 import { EmailConfirmationImage } from "../../components/segments/EmailConfirmationImage";
 import { EmailSendBox } from "../../components/segments/EmailSendBox";
@@ -15,9 +15,7 @@ import {
   FULL_CAMPAIGN_PLAN,
   SCREEN_SUMMARY_TABLE_DATA,
 } from "../../constants/localStorageConstants";
-import { formatNumber } from "../../utils/formatValue";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-
 import {
   getAWSUrlToUploadFile,
   getDocUrlToSaveOnAWS,
@@ -29,33 +27,20 @@ import { sendEmailForConfirmation } from "../../actions/userAction";
 import { SEND_EMAIL_FOR_CONFIRMATION_RESET } from "../../constants/userConstants";
 import { generatePPT } from "../../utils/generatePPT";
 import {
-  convertDateIntoDateMonthYear,
-  convertIntoDateAndTime,
-} from "../../utils/dateAndTimeUtils";
-import { DropdownInput } from "../../components/atoms/DropdownInput";
-import {
   applyCouponForCampaign,
   getCouponList,
   removeCouponForCampaign,
 } from "../../actions/couponAction";
 import { APPLY_COUPON_RESET } from "../../constants/couponConstants";
-import { Loading } from "../../components/Loading";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
+import { ViewFinalPlanTable } from "../../components/tables/ViewFinalPlanTable";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
   campaignId?: any;
   successAddCampaignDetails?: any;
-}
-
-function MyDiv({ left, right }: any) {
-  return (
-    <div className="flex font-normal text-[#2B2B2B]">
-      <h1 className="text-left text-[14px] basis-1/2">{left}</h1>
-      <h1 className="text-left text-[14px] basis-1/2">{right}</h1>
-    </div>
-  );
 }
 
 export const ViewFinalPlanPODetails = ({
@@ -368,6 +353,14 @@ export const ViewFinalPlanPODetails = ({
     [campaignId, currentCoupon, poTableData, dispatch]
   );
 
+  const handleRemoveCoupon = () => {
+    dispatch(
+      removeCouponForCampaign({
+        campaignCreationId: campaignId,
+      })
+    );
+  };
+
   useEffect(() => {
     if (errorApply) {
       message.error(
@@ -412,9 +405,12 @@ export const ViewFinalPlanPODetails = ({
   }, [userInfo, loadingSendEmail]);
 
   // Fetch data on campaign or poInput change
+
   useEffect(() => {
     dispatch(getCouponList());
+  }, []);
 
+  useEffect(() => {
     if (successAddCampaignDetails) {
       dispatch(getFinalPlanPOTableData(poInput));
       dispatch(
@@ -454,333 +450,184 @@ export const ViewFinalPlanPODetails = ({
           Any specific route you want to cover in this campaign
         </h1>
       </div>
-      <div className="grid grid-cols-2 gap-4 pb-20">
-        <div
-          ref={pageRef}
-          className="col-span-1 mt-4 px-8 py-4 border border-1 border-#C3C3C3 rounded-2xl w-full"
-        >
-          {loadingPOData ? (
-            <Loading />
-          ) : (
-            <div>
-              <h1 className="font-semibold py-2	">Client Information</h1>
-              <MyDiv left={"Client Name"} right={poTableData?.clientName} />
-              <MyDiv left={"Brand Name"} right={poTableData?.brandName} />
-              <Divider />
-              <h1 className="font-semibold py-2	">Campaign Details</h1>
-              <MyDiv left={"Campaign Name"} right={poTableData?.name} />
-              <MyDiv
-                left={"Campaign Type"}
-                right={`${poTableData?.campaignType} Campaign`}
+      {loadingPOData ? (
+        <LoadingScreen />
+      ) : (
+        <div>
+          <div className="grid grid-cols-2 gap-4 pb-20">
+            <div
+              ref={pageRef}
+              className="col-span-1 mt-4 px-8 py-4 border border-1 border-#C3C3C3 rounded-2xl w-full"
+            >
+              <ViewFinalPlanTable
+                poTableData={poTableData}
+                currentCoupon={currentCoupon}
+                setCurrentCoupon={setCurrentCoupon}
+                handleApplyCoupon={handleApplyCoupon}
+                handleRemoveCoupon={handleRemoveCoupon}
+                coupons={coupons}
+                campaignId={campaignId}
               />
-              <MyDiv
-                left={"Start Date"}
-                right={convertDateIntoDateMonthYear(poTableData?.startDate)}
-              />
-              <MyDiv
-                left={"End Date"}
-                right={convertDateIntoDateMonthYear(poTableData?.endDate)}
-              />
-              <MyDiv
-                left={"Duration"}
-                right={`${poTableData?.duration} Days`}
-              />
-              <Divider />
-              <h1 className="font-semibold py-2	">Performance Metrics</h1>
-              <MyDiv
-                left={"Audience Impression"}
-                right={Number(poTableData?.totalImpression).toFixed(0)}
-              />
-              <MyDiv left={"Total screens"} right={poTableData?.screens} />
-              <MyDiv
-                left={"Reach"}
-                right={Number(poTableData?.totalReach).toFixed(0)}
-              />
-              <MyDiv
-                left={"TG%"}
-                right={`${Number(poTableData?.tgPercent).toFixed(1)} %`}
-              />
-              <MyDiv
-                left={"CPM"}
-                right={`${Number(poTableData?.totalCpm).toFixed(2)}`}
-              />
-              <MyDiv
-                left={"Selected Triggers"}
-                right={
-                  poTableData?.trigger === "weatherTriggers"
-                    ? "Weather Trigger"
-                    : poTableData?.trigger === "sportsTriggers"
-                    ? "Sports Trigger"
-                    : poTableData?.trigger === "vacantSlots"
-                    ? "Fill Vacancy"
-                    : "None"
-                }
-              />
-              <div className="flex font-normal text-[#2B2B2B] mt-4">
-                <h1 className="text-left text-[14px] basis-1/2">
-                  Apply Discount%
-                </h1>
-                <div className="flex gap-4">
-                  <DropdownInput
-                    border="border-gray-100"
-                    height="h-8"
-                    width="w-auto"
-                    placeHolder="-----Select coupon-----"
-                    selectedOption={currentCoupon}
-                    setSelectedOption={(e: any) => {
-                      setCurrentCoupon(e);
-                      handleApplyCoupon(e);
+            </div>
+            <div
+              ref={pageRef}
+              className="col-span-1 mt-4 p-8 border border-1 border-#C3C3C3 rounded-2xl w-full"
+            >
+              <h1 className="font-semibold text-lg">
+                1.Download or share your campaign plan{" "}
+              </h1>
+              <div className="flex flex-wrap gap-6 py-4">
+                <div className="flex items-center gap-2">
+                  <h1 className="text-[14px] truncate">Campaign Summary</h1>
+                  <input
+                    title="summary"
+                    type="checkbox"
+                    checked={summaryChecked}
+                    disabled={loadingPOData}
+                    onChange={(e) => {
+                      setSummaryChecked(true);
+
+                      const pdfToDownload = pdfDownload;
+                      if (e.target.checked) {
+                        pdfToDownload["summary"] = {
+                          heading: "CAMPAIGN SUMMARY",
+                          pdfData: {
+                            approach: [
+                              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
+                                campaignId
+                              ],
+                            ],
+                            costSummary: [
+                              getDataFromLocalStorage(
+                                SCREEN_SUMMARY_TABLE_DATA
+                              )?.[campaignId],
+                            ],
+                            creativeRatio: countScreensByResolutionAndCity(
+                              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
+                                campaignId
+                              ]?.screenWiseSlotDetails
+                            ),
+                          },
+                          fileName: `${poInput?.brandName} Campaign Summary`,
+                        };
+                      } else {
+                        delete pdfToDownload["summary"];
+                      }
+                      setPdfDownload(pdfToDownload);
                     }}
-                    options={coupons?.map((coupon: any) => {
-                      return {
-                        label: `${coupon?.couponCode} ${coupon?.discountPercent}% discount`,
-                        value: coupon?._id,
-                      };
-                    })}
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-[14px] truncate">Screen Picture</h1>
+                  <input
+                    title="screen-pictures"
+                    type="checkbox"
+                    checked={picturesChecked}
+                    disabled={loadingPOData}
+                    onChange={(e) => {
+                      setPicturesChecked(true);
+                      const pdfToDownload = pdfDownload;
+
+                      if (e.target.checked) {
+                        pdfToDownload["screen-pictures"] = {
+                          heading: "SCREEN PICTURES",
+                          pdfData: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)
+                            ?.[campaignId]?.screenWiseSlotDetails?.filter(
+                              (s: any) =>
+                                getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
+                                  campaignId
+                                ]?.screenIds.includes(s.screenId)
+                            )
+                            ?.map((screen: any) => {
+                              return screen;
+                            }),
+                          fileName: `${poInput?.brandName} Campaign Screen Pictures`,
+                        };
+                      } else {
+                        delete pdfToDownload["screen-pictures"];
+                      }
+
+                      setPdfDownload(pdfToDownload);
+                    }}
                   />
                 </div>
               </div>
-              <Divider />
-              <div className="flex font-semibold ">
-                <div className="basis-1/2 flex items-center justify-start gap-2">
-                  <h1 className="text-left">Total Cost</h1>
-                  <Tooltip
-                    title={`${
-                      poTableData?.trigger !== "None"
-                        ? "*Additional trigger cost also included in the total campaign budget"
-                        : "Total expected campaign budget."
-                    }`}
-                  >
-                    <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                  </Tooltip>
-                </div>
-                <div className="flex  basis-1/2 gap-8">
-                  {poTableData?.couponId && poTableData?.couponId !== "NA" && (
-                    <h1 className="text-left ">
-                      &#8377;{" "}
-                      {formatNumber(
-                        Number(poTableData?.finalCampaignBudget)?.toFixed(2)
-                      )}
-                      *
-                    </h1>
-                  )}
-                  <h1
-                    className={`text-left  ${
-                      poTableData?.couponId && poTableData?.couponId !== "NA"
-                        ? "line-through text-gray-400 "
-                        : ""
-                    }`}
-                  >
-                    &#8377;{" "}
-                    {formatNumber(
-                      Number(poTableData?.totalCampaignBudget)?.toFixed(2)
-                    )}
-                    *
-                  </h1>
-
-                  {poTableData?.couponId && poTableData?.couponId !== "NA" && (
-                    <h1 className="text-left text-[#388e3c]">
-                      {
-                        coupons?.find(
-                          (c: any) => c._id == poTableData?.couponId
-                        )?.discountPercent
-                      }
-                      % off
-                    </h1>
-                  )}
-                </div>
+              <div className="flex gap-2 pb-4">
+                <i className="fi fi-sr-lightbulb-on flex items-top justify-center text-primaryButton"></i>
+                <h1 className="text-[12px] text-primaryButton">
+                  Check the document that you wish to see, Campaign Summary
+                  contains Campaign Details, Plan Summary and Creative Ratios,
+                  while Screen Pictures have all the inventory pictures for your
+                  references...
+                </h1>
               </div>
-              {poTableData?.couponId && poTableData?.couponId !== "NA" && (
-                <>
-                  <div className="flex font-semibold ">
-                    <h1 className="text-left text-[#388e3c] text-sm">
-                      You saved &#8377;{" "}
-                      {formatNumber(Number(poTableData?.totalDiscount))}*
-                    </h1>
-                  </div>
-                  <div className="flex font-semibold items-center gap-4">
-                    <h1 className="text-left text-sm">
-                      Discount Applied:{" "}
-                      <span className="text-[#129BFF]">
-                        {
-                          coupons?.find(
-                            (c: any) => c._id == poTableData?.couponId
-                          )?.couponCode
-                        }
-                      </span>
-                    </h1>
-                    <i
-                      className="fi fi-sr-trash flex items-center lg:text-[14px] text-[12px] text-[#EF4444]"
-                      onClick={() => {
-                        dispatch(
-                          removeCouponForCampaign({
-                            campaignCreationId: campaignId,
-                          })
-                        );
-                      }}
-                    ></i>
-                  </div>
-                </>
-              )}
-            </div>
-          )}
-        </div>
-        <div
-          ref={pageRef}
-          className="col-span-1 mt-4 p-8 border border-1 border-#C3C3C3 rounded-2xl w-full"
-        >
-          <h1 className="font-semibold text-lg">
-            1.Download or share your campaign plan{" "}
-          </h1>
-          <div className="flex flex-wrap gap-6 py-4">
-            <div className="flex items-center gap-2">
-              <h1 className="text-[14px] truncate">Campaign Summary</h1>
-              <input
-                title="summary"
-                type="checkbox"
-                checked={summaryChecked}
+              <button
+                type="submit"
                 disabled={loadingPOData}
-                onChange={(e) => {
-                  setSummaryChecked(true);
-
-                  const pdfToDownload = pdfDownload;
-                  if (e.target.checked) {
-                    pdfToDownload["summary"] = {
-                      heading: "CAMPAIGN SUMMARY",
-                      pdfData: {
-                        approach: [
-                          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
-                            campaignId
-                          ],
-                        ],
-                        costSummary: [
-                          getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-                            campaignId
-                          ],
-                        ],
-                        creativeRatio: countScreensByResolutionAndCity(
-                          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
-                            campaignId
-                          ]?.screenWiseSlotDetails
-                        ),
-                      },
-                      fileName: `${poInput?.brandName} Campaign Summary`,
-                    };
-                  } else {
-                    delete pdfToDownload["summary"];
-                  }
-                  setPdfDownload(pdfToDownload);
-                }}
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-[14px] truncate">Screen Picture</h1>
-              <input
-                title="screen-pictures"
-                type="checkbox"
-                checked={picturesChecked}
-                disabled={loadingPOData}
-                onChange={(e) => {
-                  setPicturesChecked(true);
-                  const pdfToDownload = pdfDownload;
-
-                  if (e.target.checked) {
-                    pdfToDownload["screen-pictures"] = {
-                      heading: "SCREEN PICTURES",
-                      pdfData: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)
-                        ?.[campaignId]?.screenWiseSlotDetails?.filter(
-                          (s: any) =>
-                            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
-                              campaignId
-                            ]?.screenIds.includes(s.screenId)
-                        )
-                        ?.map((screen: any) => {
-                          return screen;
-                        }),
-                      fileName: `${poInput?.brandName} Campaign Screen Pictures`,
-                    };
-                  } else {
-                    delete pdfToDownload["screen-pictures"];
-                  }
-
-                  setPdfDownload(pdfToDownload);
-                }}
-              />
-            </div>
-          </div>
-          <div className="flex gap-2 pb-4">
-            <i className="fi fi-sr-lightbulb-on flex items-top justify-center text-primaryButton"></i>
-            <h1 className="text-[12px] text-primaryButton">
-              Check the document that you wish to see, Campaign Summary contains
-              Campaign Details, Plan Summary and Creative Ratios, while Screen
-              Pictures have all the inventory pictures for your references...
-            </h1>
-          </div>
-          <button
-            type="submit"
-            disabled={loadingPOData}
-            className="px-8 py-2 bg-[#3B82F6] text-white rounded-full text-gray-500 text-sm"
-            onClick={() => {
-              Object.keys(pdfDownload)?.map(async (pdf: any) => {
-                if (pdf === "summary") {
-                  generateCampaignSummaryPdfFromJSON({
-                    preview: false,
-                    download: true,
-                    jsonData: pdfDownload[pdf].pdfData,
-                    fileName: pdfDownload[pdf].fileName,
-                    heading: pdfDownload[pdf].heading,
+                className="px-8 py-2 bg-[#3B82F6] text-white rounded-full text-gray-500 text-sm"
+                onClick={() => {
+                  Object.keys(pdfDownload)?.map(async (pdf: any) => {
+                    if (pdf === "summary") {
+                      generateCampaignSummaryPdfFromJSON({
+                        preview: false,
+                        download: true,
+                        jsonData: pdfDownload[pdf].pdfData,
+                        fileName: pdfDownload[pdf].fileName,
+                        heading: pdfDownload[pdf].heading,
+                      });
+                    }
+                    if (pdf === "screen-pictures") {
+                      if (pdfDownload[pdf].pdfData?.length > 0) {
+                        generatePPT({
+                          download: true,
+                          data: pdfDownload[pdf].pdfData,
+                          fileName: pdfDownload[pdf].fileName,
+                        });
+                      } else {
+                        message.error("No data found, to download!");
+                      }
+                    }
                   });
-                }
-                if (pdf === "screen-pictures") {
-                  if (pdfDownload[pdf].pdfData?.length > 0) {
-                    generatePPT({
-                      download: true,
-                      data: pdfDownload[pdf].pdfData,
-                      fileName: pdfDownload[pdf].fileName,
-                    });
-                  } else {
-                    message.error("No data found, to download!");
-                  }
-                }
-              });
-            }}
-          >
-            Download
-          </button>
-          <Divider />
-          <div>
-            <EmailSendBox
-              page="VendorApproval"
-              toEmail={toEmail}
-              setToEmail={setToEmail}
-              cc={cc}
-              sendEmail={() => {
-                sendMultipleAttachments();
+                }}
+              >
+                Download
+              </button>
+              <Divider />
+              <div>
+                <EmailSendBox
+                  page="VendorApproval"
+                  toEmail={toEmail}
+                  setToEmail={setToEmail}
+                  cc={cc}
+                  sendEmail={() => {
+                    sendMultipleAttachments();
+                  }}
+                  type="po"
+                  loading={loadingEmailReady || loadingPOData}
+                />
+              </div>
+
+              <Divider />
+              <EmailConfirmationImage
+                files={confirmationImageFiles}
+                handleAddNewFile={handleAddNewFile}
+                removeImage={removeImage}
+              />
+            </div>
+          </div>
+          <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
+            <Footer
+              handleBack={() => {
+                setCurrentStep(step - 1);
               }}
-              type="po"
-              loading={loadingEmailReady || loadingPOData}
+              handleSave={handleSaveAndContinue}
+              campaignId={campaignId}
+              pageName="View Final Plan Page"
+              successAddCampaignDetails={successAddCampaignDetails}
             />
           </div>
-
-          <Divider />
-          <EmailConfirmationImage
-            files={confirmationImageFiles}
-            handleAddNewFile={handleAddNewFile}
-            removeImage={removeImage}
-          />
         </div>
-      </div>
-      <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
-        <Footer
-          handleBack={() => {
-            setCurrentStep(step - 1);
-          }}
-          handleSave={handleSaveAndContinue}
-          campaignId={campaignId}
-          pageName="View Final Plan Page"
-          successAddCampaignDetails={successAddCampaignDetails}
-        />
-      </div>
+      )}
     </div>
   );
 };

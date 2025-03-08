@@ -24,6 +24,7 @@ import {
   SCREEN_SUMMARY_SELECTION,
 } from "../../constants/localStorageConstants";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 export const RegularCohortComparisonDetails = ({
   campaignId,
@@ -101,7 +102,15 @@ export const RegularCohortComparisonDetails = ({
     );
 
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-  }, [cohorts, dispatch, duration, gender, screenIds, campaignId, successAddCampaignDetails]);
+  }, [
+    cohorts,
+    dispatch,
+    duration,
+    gender,
+    screenIds,
+    campaignId,
+    successAddCampaignDetails,
+  ]);
 
   const handleRegularVsCohortSelection = (type: any) => {
     setSelectedBuyingOption(type);
@@ -127,181 +136,184 @@ export const RegularCohortComparisonDetails = ({
           cohort data
         </p>
       </div>
-      {errorPriceData ? (
-        <p>Error: {errorPriceData}</p>
+      {errorPriceData && <p>Error: {errorPriceData}</p>}
+      {loadingPriceData ? (
+        <LoadingScreen />
       ) : (
-        <div className="flex gap-2">
-          <div className="ml-[-25px] pt-6">
-            <VerticalLine height="120px" color="#B5B5B5" thickness="1px" />
-            {/* <h1 className="py-4">vs</h1> */}
-            <VerticalLine height="100px" color="#B5B5B5" thickness="1px" />
-          </div>
-          <div className="w-full">
-            <div className="py-2">
-              <div className="py-2 flex items-center gap-2">
-                <h1 className="md:text-[16px] sm:text-[14px]">
-                  Regular slots per day buying
-                </h1>
-                <Tooltip title="Regular slots only have those slots in a timezone, which have more than 7% of total audiences available on the site">
-                  <i className="fi fi-rs-info lg:text-[12px] md:text-[10px] text-gray-400 flex justify-center items-center"></i>
-                </Tooltip>
-              </div>
-              <div
-                className={`w-full ${
-                  selecting === "regular"
-                    ? "border border-[#C9E9FF] rounded"
-                    : ""
-                }`}
-                onMouseEnter={() => {
-                  if (!showSummary) {
-                    setSelecting("regular");
-                    handleRegularVsCohortSelection("regular");
-                  }
-                }}
-                onMouseLeave={() => {
-                  setSelecting(null);
-                }}
-              >
-                <RegularCohortSlotsCampaignTable
-                  priceData={priceData?.regular}
-                  setShowSummary={setShowSummary}
-                  type="regular"
-                  showSummary={showSummary}
-                  loading={loadingPriceData}
-                />
-              </div>
-              {showSummary === "regular" && (
-                <RegularCohortSummaryTable
-                  type="regular"
-                  touchPointData={priceData?.regular?.touchPointData}
-                />
-              )}
+        <div>
+          <div className="flex gap-2">
+            <div className="ml-[-25px] pt-6">
+              <VerticalLine height="120px" color="#B5B5B5" thickness="1px" />
+              {/* <h1 className="py-4">vs</h1> */}
+              <VerticalLine height="100px" color="#B5B5B5" thickness="1px" />
             </div>
-            <div className="py-2">
-              <div className="py-2 flex items-center gap-2">
-                <h1 className="md:text-[16px] sm:text-[14px]">
-                  Cohort slots per day buying
-                </h1>
-                <Tooltip title="Cohort slots target your selected audiences using those slots in a timezone, which have more than 15% of total audiences available on the site">
-                  <i className="fi fi-rs-info lg:text-[12px] md:text-[10px] text-gray-400 flex justify-center items-center"></i>
-                </Tooltip>
+            <div className="w-full">
+              <div className="py-2">
+                <div className="py-2 flex items-center gap-2">
+                  <h1 className="md:text-[16px] sm:text-[14px]">
+                    Regular slots per day buying
+                  </h1>
+                  <Tooltip title="Regular slots only have those slots in a timezone, which have more than 7% of total audiences available on the site">
+                    <i className="fi fi-rs-info lg:text-[12px] md:text-[10px] text-gray-400 flex justify-center items-center"></i>
+                  </Tooltip>
+                </div>
+                <div
+                  className={`w-full ${
+                    selecting === "regular"
+                      ? "border border-[#C9E9FF] rounded"
+                      : ""
+                  }`}
+                  onMouseEnter={() => {
+                    if (!showSummary) {
+                      setSelecting("regular");
+                      // handleRegularVsCohortSelection("regular");
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    setSelecting(null);
+                  }}
+                >
+                  <RegularCohortSlotsCampaignTable
+                    priceData={priceData?.regular}
+                    setShowSummary={setShowSummary}
+                    type="regular"
+                    showSummary={showSummary}
+                    loading={loadingPriceData}
+                  />
+                </div>
+                {showSummary === "regular" && (
+                  <RegularCohortSummaryTable
+                    type="regular"
+                    touchPointData={priceData?.regular?.touchPointData}
+                  />
+                )}
               </div>
-              <div
-                className={`w-full ${
-                  selecting === "cohort"
-                    ? "border border-[#C9E9FF] rounded"
-                    : ""
-                }`}
-                onMouseEnter={() => {
-                  if (!showSummary) {
-                    setSelecting("cohort");
-                    handleRegularVsCohortSelection("cohort");
-                  }
-                }}
-                onMouseLeave={() => {
-                  setSelecting(null);
-                }}
-              >
-                <RegularCohortSlotsCampaignTable
-                  type="cohort"
-                  priceData={priceData?.cohort}
-                  setShowSummary={setShowSummary}
-                  showSummary={showSummary}
-                  loading={loadingPriceData}
-                />
-              </div>
+              <div className="py-2">
+                <div className="py-2 flex items-center gap-2">
+                  <h1 className="md:text-[16px] sm:text-[14px]">
+                    Cohort slots per day buying
+                  </h1>
+                  <Tooltip title="Cohort slots target your selected audiences using those slots in a timezone, which have more than 15% of total audiences available on the site">
+                    <i className="fi fi-rs-info lg:text-[12px] md:text-[10px] text-gray-400 flex justify-center items-center"></i>
+                  </Tooltip>
+                </div>
+                <div
+                  className={`w-full ${
+                    selecting === "cohort"
+                      ? "border border-[#C9E9FF] rounded"
+                      : ""
+                  }`}
+                  onMouseEnter={() => {
+                    if (!showSummary) {
+                      setSelecting("cohort");
+                      // handleRegularVsCohortSelection("cohort");
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    setSelecting(null);
+                  }}
+                >
+                  <RegularCohortSlotsCampaignTable
+                    type="cohort"
+                    priceData={priceData?.cohort}
+                    setShowSummary={setShowSummary}
+                    showSummary={showSummary}
+                    loading={loadingPriceData}
+                  />
+                </div>
 
-              {showSummary === "cohort" && (
-                <RegularCohortSummaryTable
-                  type="cohort"
-                  touchPointData={priceData?.cohort?.touchPointData}
-                />
-              )}
+                {showSummary === "cohort" && (
+                  <RegularCohortSummaryTable
+                    type="cohort"
+                    touchPointData={priceData?.cohort?.touchPointData}
+                  />
+                )}
+              </div>
             </div>
+          </div>
+
+          <div className="w-full">
+            <div className="py-2 flex justify-start items-center gap-2">
+              <h1 className="md:text-[16px] sm:text-[14px]">
+                Choose your desired targeting option among the above
+              </h1>
+              <Tooltip title="Cohort slots target your selected audiences using those slots in a timezone, which have more than 7% of total audiences available on the site">
+                <i className="fi fi-rs-info sm:text-[14px] md:text-[12px] text-gray-400 flex justify-center items-center"></i>
+              </Tooltip>
+            </div>
+            <div className="flex justify-start gap-4 pt-1">
+              <div
+                onMouseEnter={() => {
+                  setSelecting("regular");
+                }}
+                onMouseDown={() => {
+                  setSelecting("regular");
+                }}
+              >
+                <RadioInput
+                  title="Regular Slots Per Day"
+                  value={"regular"}
+                  isChecked={selectedBuyingOption === "regular" ? true : false}
+                  onChange={() => {
+                    handleRegularVsCohortSelection("regular");
+                  }}
+                />
+              </div>
+              <div
+                onMouseEnter={() => {
+                  setSelecting("cohort");
+                }}
+                onMouseDown={() => {
+                  setSelecting("cohort");
+                }}
+              >
+                <RadioInput
+                  title="Cohort Slots Per Day"
+                  value={"cohort"}
+                  isChecked={selectedBuyingOption === "cohort" ? true : false}
+                  onChange={() => {
+                    handleRegularVsCohortSelection("cohort");
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
+            <Footer
+              handleBack={() => {
+                setCurrentStep(step - 1);
+              }}
+              handleSave={() => {
+                if (isDisabled) {
+                  message.error("Please  confirm screen selection");
+                } else {
+                  dispatch(
+                    addDetailsToCreateCampaign({
+                      pageName: "Compare Plan Page",
+                      id: pathname.split("/").splice(-1)[0],
+                      regularTouchPointWiseSlotDetails:
+                        priceData?.regular?.touchPointData,
+                      cohortTouchPointWiseSlotDetails:
+                        priceData?.cohort?.touchPointData,
+                      selectedType: selectedBuyingOption,
+                      tableData: priceData?.[selectedBuyingOption]?.tableData,
+                    })
+                  );
+                  setCurrentStep(step + 1);
+                }
+              }}
+              disabled={
+                priceData?.regular?.tableData?.impressionPerDay === 0 ||
+                priceData?.cohort?.tableData?.impressionPerDay === 0
+              }
+              campaignId={campaignId}
+              pageName="Compare Plan Page"
+              successAddCampaignDetails={successAddCampaignDetails}
+            />
           </div>
         </div>
       )}
-
-      <div className="w-full">
-        <div className="py-2 flex justify-start items-center gap-2">
-          <h1 className="md:text-[16px] sm:text-[14px]">
-            Choose your desired targeting option among the above
-          </h1>
-          <Tooltip title="Cohort slots target your selected audiences using those slots in a timezone, which have more than 7% of total audiences available on the site">
-            <i className="fi fi-rs-info sm:text-[14px] md:text-[12px] text-gray-400 flex justify-center items-center"></i>
-          </Tooltip>
-        </div>
-        <div className="flex justify-start gap-4 pt-1">
-          <div
-            onMouseEnter={() => {
-              setSelecting("regular");
-            }}
-            onMouseDown={() => {
-              setSelecting("regular");
-            }}
-          >
-            <RadioInput
-              title="Regular Slots Per Day"
-              value={"regular"}
-              isChecked={selectedBuyingOption === "regular" ? true : false}
-              onChange={() => {
-                handleRegularVsCohortSelection("regular");
-              }}
-            />
-          </div>
-          <div
-            onMouseEnter={() => {
-              setSelecting("cohort");
-            }}
-            onMouseDown={() => {
-              setSelecting("cohort");
-            }}
-          >
-            <RadioInput
-              title="Cohort Slots Per Day"
-              value={"cohort"}
-              isChecked={selectedBuyingOption === "cohort" ? true : false}
-              onChange={() => {
-                handleRegularVsCohortSelection("cohort");
-              }}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
-        <Footer
-          handleBack={() => {
-            setCurrentStep(step - 1);
-          }}
-          handleSave={() => {
-            if (isDisabled) {
-              message.error("Please  confirm screen selection");
-            } else {
-              dispatch(
-                addDetailsToCreateCampaign({
-                  pageName: "Compare Plan Page",
-                  id: pathname.split("/").splice(-1)[0],
-                  regularTouchPointWiseSlotDetails:
-                    priceData?.regular?.touchPointData,
-                  cohortTouchPointWiseSlotDetails:
-                    priceData?.cohort?.touchPointData,
-                  selectedType: selectedBuyingOption,
-                  tableData: priceData?.[selectedBuyingOption]?.tableData,
-                })
-              );
-              setCurrentStep(step + 1);
-            }
-          }}
-          disabled={
-            priceData?.regular?.tableData?.impressionPerDay === 0 ||
-            priceData?.cohort?.tableData?.impressionPerDay === 0
-          }
-          campaignId={campaignId}
-          pageName="Compare Plan Page"
-          successAddCampaignDetails={successAddCampaignDetails}
-        />
-      </div>
     </div>
   );
 };
