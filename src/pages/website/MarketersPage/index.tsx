@@ -1,14 +1,14 @@
 import React from "react";
-import { PageFooter } from "../../components/PageFooter";
+import { PageFooter } from "../../../components/PageFooter";
 import {
   marketPageData1,
   marketPageData2,
-} from "../../data/websiteHardCodedData";
-import { CreateCampaignOption } from "../../components/index";
+} from "../../../data/websiteHardCodedData";
+import { CreateCampaignOption } from "../../../components/index";
 import { motion } from "framer-motion";
-import { MarketGetStarted } from "../../components/molecules/MarketGetStarted";
-import { SmallChips } from "../../components/molecules/SmallChips";
-import { ImageWithContent } from "../../components/molecules/ImageWithContent";
+import { MarketGetStarted } from "../../../components/molecules/MarketGetStarted";
+import { SmallChips } from "../../../components/molecules/SmallChips";
+import { ImageWithContent } from "../../../components/molecules/ImageWithContent";
 
 export const MarketersPage: React.FC = () => {
   return (

@@ -1,15 +1,15 @@
 import React from "react";
-import { PageFooter } from "../../components/PageFooter";
+import { PageFooter } from "../../../components/PageFooter";
 import {
   mediaOwnerPageData1,
   mediaOwnerPageData2,
-} from "../../data/websiteHardCodedData";
+} from "../../../data/websiteHardCodedData";
 import { motion } from "framer-motion";
-import { GetOnboardOption } from "../../components/molecules/GetOnboardOption";
-import { MediaOwnerGetStarted } from "../../components/molecules/MediaOwnerGetStarted";
-import { SellLoss } from "../../components/molecules/SellLoss";
-import { SmallChips } from "../../components/molecules/SmallChips";
-import { ImageWithContent } from "../../components/molecules/ImageWithContent";
+import { GetOnboardOption } from "../../../components/molecules/GetOnboardOption";
+import { MediaOwnerGetStarted } from "../../../components/molecules/MediaOwnerGetStarted";
+import { SellLoss } from "../../../components/molecules/SellLoss";
+import { SmallChips } from "../../../components/molecules/SmallChips";
+import { ImageWithContent } from "../../../components/molecules/ImageWithContent";
 
 export const MediaOwnerPage: React.FC = () => {
   return (

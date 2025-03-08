@@ -8,7 +8,6 @@ export {
   ForgetPassword,
 } from "./AuthPage/index";
 
-export { LandingPage } from "./LandingPage";
 export { MyCampaignsListPage } from "./MyCampaignsListPage";
 export { MyRequestsListPage } from "./MyRequestsListPage";
 export { MyPlansListPage } from "./MyPlansListPage";
@@ -21,7 +20,8 @@ export { TriggerBasedPlanPage } from "./TriggerBasedPlanPage";
 export { StoreBasedPlanPage } from "./StoreBasedPlanPage";
 export { IKnowItAllPlanPage } from "./IKnowItAllPlanPage";
 
-export { MediaOwnerPage } from "./MediaOwnerPage";
-export { MarketersPage } from "./MarketersPage";
+export { MediaOwnerPage } from "./website/MediaOwnerPage";
+export { MarketersPage } from "./website/MarketersPage";
+export { LandingPage } from "./website/LandingPage";
 
 export { MyUsers } from "./MyUsers";

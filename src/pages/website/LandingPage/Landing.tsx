@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./index.css";
 import { useDispatch, useSelector } from "react-redux";
-import { getLandingPageData } from "../../actions/screenAction";
-import { getDataFromLocalStorage, removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
-import { LANDING_PAGE_DATA } from "../../constants/localStorageConstants";
-import { CreateCampaignOption } from "../../components";
-import { PageFooter } from "../../components/PageFooter";
+import { getLandingPageData } from "../../../actions/screenAction";
+import {
+  getDataFromLocalStorage,
+  removeAllKeyFromLocalStorage,
+} from "../../../utils/localStorageUtils";
+import { LANDING_PAGE_DATA } from "../../../constants/localStorageConstants";
+import { CreateCampaignOption } from "../../../components";
+import { PageFooter } from "../../../components/PageFooter";
 import {
   FloatingBrandIcon,
   HowItsWork,
@@ -16,7 +19,7 @@ import {
   ContactForm,
   FindUsOnGoogle,
   FlowDiagram,
-} from "../../components/LoadingPageComponents";
+} from "../../../components/LoadingPageComponents";
 
 export const Landing: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -32,7 +35,7 @@ export const Landing: React.FC = () => {
   useEffect(() => {
     dispatch(getLandingPageData());
     removeAllKeyFromLocalStorage();
-  },[dispatch])
+  }, [dispatch]);
   return (
     <div className="w-screen h-full bg-white">
       <Section1 />
