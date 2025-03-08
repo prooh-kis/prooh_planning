@@ -160,7 +160,7 @@ export function PlanSummaryTable({
               <th className="border border-r">Impressions/Day</th>
               <th className="border border-r">Slots/Day</th>
               <th className="border border-r">Price/slot</th>
-              <th className="border border-r">Cost</th>
+              <th className="border border-r">Total Cost</th>
               <th className="border border-r">SOV</th>
               <th className="">Duration</th>
             </tr>
@@ -234,7 +234,7 @@ export function PlanSummaryTable({
               <th className="border border-r">Impressions/Day</th>
               <th className="border border-r">Slots/Day</th>
               <th className="border border-r">Price/slot</th>
-              <th className="border border-r">Cost</th>
+              <th className="border border-r">Total Cost</th>
               <th className="border border-r">SOV</th>
               <th className="border">Duration</th>
             </tr>
