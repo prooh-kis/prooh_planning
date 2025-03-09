@@ -12,6 +12,7 @@ import {
 import { useLocation } from "react-router-dom";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import {
+  CAMPAIGN_DETAILS,
   FULL_CAMPAIGN_PLAN,
   SCREEN_SUMMARY_TABLE_DATA,
 } from "../../constants/localStorageConstants";
@@ -302,10 +303,14 @@ export const ViewFinalPlanPODetails = ({
   const handleSaveAndContinue = async () => {
     let imageArr: string[] = [];
     for (let data of confirmationImageFiles) {
-      let url = await getAWSUrl(data);
-      imageArr.push(url);
+      if (data.awsURL) {
+        imageArr.push(data.awsURL);
+        console.log("no need to save again");
+      } else {
+        let url = await getAWSUrl(data);
+        imageArr.push(url);
+      }
     }
-
     dispatch(
       addDetailsToCreateCampaign({
         pageName: "View Final Plan Page",
@@ -408,6 +413,21 @@ export const ViewFinalPlanPODetails = ({
 
   useEffect(() => {
     dispatch(getCouponList());
+    const images =
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+        ?.clientApprovalImgs;
+
+    setConfirmationImageFiles(
+      images?.map((image: string) => {
+        return {
+          file: null,
+          url: image,
+          fileType: "",
+          fileSize: "",
+          awsURL: image,
+        };
+      })
+    );
   }, []);
 
   useEffect(() => {

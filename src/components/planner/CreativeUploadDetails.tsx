@@ -27,9 +27,9 @@ import {
   FULL_CAMPAIGN_PLAN,
   SELECTED_TRIGGER,
 } from "../../constants/localStorageConstants";
-
 import { getVideoDurationFromVideoURL } from "../../utils/fileUtils";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -70,6 +70,7 @@ export const CreativeUploadDetails = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { pathname } = useLocation();
   const dispatch = useDispatch<any>();
+  const [pageLoading, setPageLoading] = useState<boolean>(true);
   const [currentTab, setCurrentTab] = useState<any>("1");
   const [currentPlayTimeCreative, setCurrentPlayTimeCreative] =
     useState<string>("1");
@@ -102,8 +103,8 @@ export const CreativeUploadDetails = ({
   // }, [successAddCampaignDetails]);
 
   useEffect(() => {
+    if (!successAddCampaignDetails) return;
     const campaignIdFromPath = pathname?.split("/").splice(-1)[0];
-
     dispatch(getScreenDataUploadCreativeData({ id: campaignIdFromPath }));
     dispatch(
       getPlanningPageFooterData({
@@ -111,7 +112,8 @@ export const CreativeUploadDetails = ({
         pageName: "Upload Creative Page",
       })
     );
-  }, [dispatch, pathname, campaignId]);
+    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+  }, [dispatch, pathname, campaignId, successAddCampaignDetails]);
 
   const mergeCreativeWithScreenData = (creatives: any, screenData: any) => {
     const combinedData: any = {};
@@ -585,11 +587,12 @@ export const CreativeUploadDetails = ({
     if (errorScreeData) {
       message.error(errorScreeData);
     }
+    setPageLoading(false);
   }, [campaignId, errorScreeData, screenData]);
 
   return (
     <div className="w-full h-[80vh] overflow-y-auto no-scrollbar">
-      {isLoading ? (
+      {pageLoading ? (
         <LoadingScreen />
       ) : (
         <div className="mx-auto">

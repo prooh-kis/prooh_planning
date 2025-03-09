@@ -1,20 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
-import { PrimaryButton } from "../atoms/PrimaryButton";
 import { PrimaryInput } from "../atoms/PrimaryInput";
 import { useNavigate } from "react-router-dom";
 import { CalendarInput } from "../atoms/CalendarInput";
-import {
-  getEndDateFromStartDateAndDuration,
-  getNumberOfDaysBetweenTwoDates,
-} from "../../utils/dateAndTimeUtils";
+import { getEndDateFromStartDateAndDuration } from "../../utils/dateAndTimeUtils";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { message, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
-import { format } from "date-fns";
-import { getScreensAudiencesData } from "../../actions/screenAction";
-import { ALL_MARKETS } from "../../constants/helperConstants";
 import {
   addClientAgencyDetails,
   getAllClientAgencyNames,
@@ -88,8 +81,6 @@ export const EnterCampaignBasicDetails = ({
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.sov || 1
   );
 
-  const [enterDuration, setEnterDuration] = useState<any>(false);
-
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
   );
@@ -139,7 +130,6 @@ export const EnterCampaignBasicDetails = ({
     }
   };
 
-  // Function to handle duration change and update the end date
   const updateEndDateBasedOnDuration = useCallback(
     (newDuration: number) => {
       if (startDate) {
@@ -205,10 +195,6 @@ export const EnterCampaignBasicDetails = ({
       navigate(`/${path}/${addDetails?._id}`);
       setCurrentStep(step + 1);
     }
-    // dispatch(getScreensAudiencesData({
-    //   id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
-    //   markets: ALL_MARKETS
-    // }));
   }, [
     navigate,
     step,

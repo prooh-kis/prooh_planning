@@ -20,9 +20,9 @@ import {
 } from "../../actions/screenAction";
 import { ALL_TOUCHPOINTS } from "../../constants/helperConstants";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
-import { Loading } from "../../components/Loading";
 import { getUniqueScreens } from "../../utils/screenRanking";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 interface AdvanceFiltersDetailsProps {
   step?: any;
@@ -119,7 +119,6 @@ export const AdvanceFiltersDetails = ({
     }
   };
 
-  // Confirm all screens selection
   const handleConfirmScreensSelections = ({ checked, screens }: any) => {
     setIsDisabled(!checked);
     if (checked) {
@@ -128,10 +127,8 @@ export const AdvanceFiltersDetails = ({
         screens: screens,
       });
     }
-    // saveDataOnLocalStorage(SELECTED_SCREENS_ID, getUniqueScreens([{screens: selectedScreenIds}]));
   };
 
-  // Get user's current location
   useEffect(() => {
     if (errorAdvanceFilterData) {
       alert("Your system is having some issue, please refresh the page...");
@@ -148,7 +145,13 @@ export const AdvanceFiltersDetails = ({
       },
       { enableHighAccuracy: true }
     );
-  }, [errorAdvanceFilterData]);
+
+    if (advanceFilterData?.screens?.length == 0) {
+      message.error(
+        "You have got Zero screen, please change your previous selection"
+      );
+    }
+  }, [errorAdvanceFilterData, advanceFilterData]);
 
   useEffect(() => {
     if (successAddCampaignDetails) {
@@ -158,20 +161,26 @@ export const AdvanceFiltersDetails = ({
           pageName: "Advance Filter Page",
         })
       );
-      dispatch(
-        getScreenDataForAdvanceFilters({
-          id: campId,
-          touchPoints: pathname?.split("/").includes("storebasedplan")
-            ? ALL_TOUCHPOINTS
-            : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]
-                ?.touchPoints,
-        })
-      );
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
     }
   }, [dispatch, campId, pathname, successAddCampaignDetails]);
+
+  const handleReload = () => {
+    dispatch(
+      getScreenDataForAdvanceFilters({
+        id: campId,
+        touchPoints: pathname?.split("/").includes("storebasedplan")
+          ? ALL_TOUCHPOINTS
+          : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.touchPoints,
+      })
+    );
+  };
+
+  useEffect(() => {
+    handleReload();
+  }, []);
 
   useEffect(() => {
     if (advanceFilterData && finalSelectedScreens?.length === 0) {
@@ -187,7 +196,7 @@ export const AdvanceFiltersDetails = ({
     <div className="w-full">
       <div className="w-full h-full py-3 grid grid-cols-2 gap-4 pb-20">
         {loadingAdvanceFilterData ? (
-          <Loading />
+          <LoadingScreen />
         ) : (
           <div className="col-span-1 h-full py-2 pr-4">
             <div className="flex justify-between items-center">
@@ -198,28 +207,7 @@ export const AdvanceFiltersDetails = ({
                 <Tooltip title="Click to refresh the map data">
                   <i
                     className="fi fi-br-rotate-right text-[12px] flex items-center cursor-pointer"
-                    onClick={() => window.location.reload()}
-                  ></i>
-                </Tooltip>
-                <Tooltip title="Click to skip the advance filters">
-                  <i
-                    className="fi fi-br-ban text-[12px] text-[#FF0808] flex items-center cursor-pointer"
-                    onClick={() => {
-                      if (isDisabled) {
-                        message.error("Please  confirm screen selection");
-                      } else {
-                        dispatch(
-                          addDetailsToCreateCampaign({
-                            pageName: "Advance Filter Page",
-                            id: pathname.split("/").splice(-1)[0],
-                            screenIds: finalSelectedScreens.map(
-                              (s: any) => s._id
-                            ),
-                          })
-                        );
-                        setCurrentStep(step + 1);
-                      }
-                    }}
+                    onClick={handleReload}
                   ></i>
                 </Tooltip>
               </div>

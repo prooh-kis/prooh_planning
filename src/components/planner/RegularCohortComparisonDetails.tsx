@@ -34,7 +34,7 @@ export const RegularCohortComparisonDetails = ({
 }: any) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
-
+  const [pageLoading, setPageLoading] = useState<boolean>(true);
   const [selecting, setSelecting] = useState<any>(null);
   const [isDisabled, setIsDisabled] = useState<any>(true);
   const [showSummary, setShowSummary] = useState<any>(null);
@@ -66,19 +66,17 @@ export const RegularCohortComparisonDetails = ({
   useEffect(() => {
     if (!priceData) return;
 
-    saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, {
-      [campaignId]: priceData,
-    });
-    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: {} });
+    setPageLoading(false);
+    // saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: {} });
 
-    if (
-      priceData?.regular?.tableData.impressionPerDay === 0 ||
-      priceData?.cohort?.tableData.impressionPerDay === 0
-    ) {
-      message.error(
-        "Please select an appropriate number of audiences to get relevant impressions from the available inventories..."
-      );
-    }
+    // if (
+    //   priceData?.regular?.tableData.impressionPerDay === 0 ||
+    //   priceData?.cohort?.tableData.impressionPerDay === 0
+    // ) {
+    //   message.error(
+    //     "Please select an appropriate number of audiences to get relevant impressions from the available inventories..."
+    //   );
+    // }
   }, [priceData, campaignId]);
 
   useEffect(() => {
@@ -137,7 +135,7 @@ export const RegularCohortComparisonDetails = ({
         </p>
       </div>
       {errorPriceData && <p>Error: {errorPriceData}</p>}
-      {loadingPriceData ? (
+      {pageLoading ? (
         <LoadingScreen />
       ) : (
         <div>

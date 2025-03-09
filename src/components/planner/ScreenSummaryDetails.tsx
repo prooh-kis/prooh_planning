@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getPlanningPageFooterData,
   getScreenSummaryData,
-  getScreenSummaryDataIKnowItAll,
   getScreenSummaryPlanTableData,
 } from "../../actions/screenAction";
 import {
@@ -63,9 +62,9 @@ export const ScreenSummaryDetails = ({
     max: 300,
   });
 
-  const [regularVsCohort, setRegularVsCohort] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType
-  );
+  const regularVsCohort =
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType;
+
   const [showSummary, setShowSummary] = useState<any>(null);
 
   const [listView, setListView] = useState<any>(true);
@@ -74,13 +73,10 @@ export const ScreenSummaryDetails = ({
   const [screenTypes, setScreenTypes] = useState<any>({});
 
   const [screensBuyingCount, setScreensBuyingCount] = useState(() => {
-    // Check localStorage on the first load
     return (
       getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] ?? {}
     );
   });
-
-  const [visitedTab, setVisitedTab] = useState<any>([]);
 
   const screenSummaryDataGet = useSelector(
     (state: any) => state.screenSummaryDataGet
@@ -123,18 +119,6 @@ export const ScreenSummaryDetails = ({
     } else {
       setCurrentCity(currentCity);
     }
-
-    setVisitedTab((pre: any) => {
-      return pre.map((data: any) => {
-        if (data?.id == id) {
-          data.visited = true;
-          // console.log(data);
-        }
-        // console.log(data, "2");
-
-        return { pre, ...data };
-      });
-    });
   };
 
   const getTabValue = (dataScreenSummary: any) => {
@@ -188,66 +172,65 @@ export const ScreenSummaryDetails = ({
   };
 
   const handleSaveAndContinue = async () => {
-    if (
-      pathname.split("/").splice(-2)[0] === "iknowitallplan" ||
-      pathname.split("/").splice(-2)[0] === "storebasedplan"
-    ) {
-      if (currentTab === "1") {
-        dispatch(
-          addDetailsToCreateCampaign({
-            pageName: "Select Screens Page",
-            id: pathname.split("/").splice(-1)[0],
-            screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-          })
-        );
-      } else if (currentTab === "2") {
-        dispatch(
-          addDetailsToCreateCampaign({
-            pageName: "Screen Summary Page",
-            id: pathname.split("/").splice(-1)[0],
-            totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-            totalImpression: getDataFromLocalStorage(
-              SCREEN_SUMMARY_TABLE_DATA
-            )?.[campaignId]?.total?.totalImpression,
-            totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-              campaignId
-            ]?.total?.totalReach,
-            totalCampaignBudget: getDataFromLocalStorage(
-              SCREEN_SUMMARY_TABLE_DATA
-            )?.[campaignId]?.total?.totalCampaignBudget,
-            totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-              campaignId
-            ]?.total?.totalCpm,
-            duration:
-              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-                ?.duration,
-          })
-        );
-      }
-    } else {
-      dispatch(
-        addDetailsToCreateCampaign({
-          pageName: "Screen Summary Page",
-          id: pathname.split("/").splice(-1)[0],
-          totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-          totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-            campaignId
-          ]?.total?.totalImpression,
-          totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-            campaignId
-          ]?.total?.totalReach,
-          totalCampaignBudget: getDataFromLocalStorage(
-            SCREEN_SUMMARY_TABLE_DATA
-          )?.[campaignId]?.total?.totalCampaignBudget,
-          totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-            campaignId
-          ]?.total?.totalCpm,
-          duration:
-            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
-        })
-      );
-    }
-
+    // if (
+    //   pathname.split("/").splice(-2)[0] === "iknowitallplan" ||
+    //   pathname.split("/").splice(-2)[0] === "storebasedplan"
+    // ) {
+    //   if (currentTab === "1") {
+    //     dispatch(
+    //       addDetailsToCreateCampaign({
+    //         pageName: "Select Screens Page",
+    //         id: pathname.split("/").splice(-1)[0],
+    //         screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+    //       })
+    //     );
+    //   } else if (currentTab === "2") {
+    //     dispatch(
+    //       addDetailsToCreateCampaign({
+    //         pageName: "Screen Summary Page",
+    //         id: pathname.split("/").splice(-1)[0],
+    //         totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+    //         totalImpression: getDataFromLocalStorage(
+    //           SCREEN_SUMMARY_TABLE_DATA
+    //         )?.[campaignId]?.total?.totalImpression,
+    //         totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+    //           campaignId
+    //         ]?.total?.totalReach,
+    //         totalCampaignBudget: getDataFromLocalStorage(
+    //           SCREEN_SUMMARY_TABLE_DATA
+    //         )?.[campaignId]?.total?.totalCampaignBudget,
+    //         totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+    //           campaignId
+    //         ]?.total?.totalCpm,
+    //         duration:
+    //           getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+    //             ?.duration,
+    //       })
+    //     );
+    //   }
+    // } else {
+    dispatch(
+      addDetailsToCreateCampaign({
+        pageName: "Screen Summary Page",
+        id: pathname.split("/").splice(-1)[0],
+        totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+        totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+          campaignId
+        ]?.total?.totalImpression,
+        totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+          campaignId
+        ]?.total?.totalReach,
+        totalCampaignBudget: getDataFromLocalStorage(
+          SCREEN_SUMMARY_TABLE_DATA
+        )?.[campaignId]?.total?.totalCampaignBudget,
+        totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+          campaignId
+        ]?.total?.totalCpm,
+        duration:
+          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
+      })
+    );
+    // }
     setCurrentStep(step + 1);
   };
 
@@ -256,24 +239,24 @@ export const ScreenSummaryDetails = ({
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
-      if (
-        (pathname.split("/").includes("iknowitallplan") && step === 2) ||
-        (pathname.split("/").includes("storebasedplan") && step === 3)
-      ) {
-        dispatch(
-          getScreenSummaryDataIKnowItAll({
-            id: campaignId,
-          })
-        );
-      } else {
-        dispatch(
-          getScreenSummaryData({
-            id: campaignId,
-            type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-              ?.selectedType,
-          })
-        );
-      }
+      // if (
+      //   (pathname.split("/").includes("iknowitallplan") && step === 2) ||
+      //   (pathname.split("/").includes("storebasedplan") && step === 3)
+      // ) {
+      //   dispatch(
+      //     getScreenSummaryDataIKnowItAll({
+      //       id: campaignId,
+      //     })
+      //   );
+      // } else {
+      dispatch(
+        getScreenSummaryData({
+          id: campaignId,
+          type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+            ?.selectedType,
+        })
+      );
+      // }
       dispatch(
         getPlanningPageFooterData({
           id: campaignId,
@@ -281,37 +264,38 @@ export const ScreenSummaryDetails = ({
         })
       );
     }
-  }, [campaignId, dispatch, pathname, step, successAddCampaignDetails]);
+  }, [campaignId, dispatch, successAddCampaignDetails]);
 
-  useEffect(() => {
-    const type =
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType;
-    setRegularVsCohort(type);
-    if (
-      (pathname.split("/").includes("iknowitallplan") && step === 4) ||
-      (pathname.split("/").includes("storebasedplan") && step === 5)
-    ) {
-      setCurrentTab("2");
-    } else {
-      setCurrentTab("1");
-    }
-  }, [campaignId, pathname, step]);
+  // useEffect(() => {
+  //   const type =
+  //     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType;
+  //   setRegularVsCohort(type);
+  //   if (
+  //     (pathname.split("/").includes("iknowitallplan") && step === 4) ||
+  //     (pathname.split("/").includes("storebasedplan") && step === 5)
+  //   ) {
+  //     setCurrentTab("2");
+  //   } else {
+  //     setCurrentTab("1");
+  //   }
+  // }, [campaignId, pathname, step]);
 
   useEffect(() => {
     if (screenSummaryData || screensBuyingCount) {
-      // console.log(screenSummaryData);
-      // dispatch(
-      //   getScreenSummaryPlanTableData({
-      //     id: campaignId,
-      //     screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-      //   })
-      // );
       saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
         [campaignId]: screensBuyingCount,
       });
       setCityTabData(getTabValue(screenSummaryData));
     }
   }, [dispatch, campaignId, screenSummaryData, screensBuyingCount]);
+
+  const handleSave = () => {
+    if (currentTab === "1") {
+      setCurrentTab("2");
+    } else {
+      handleSaveAndContinue();
+    }
+  };
 
   return (
     <div className="w-full py-3">
@@ -529,16 +513,7 @@ export const ScreenSummaryDetails = ({
               handleBack={() => {
                 setCurrentStep(step - 1);
               }}
-              handleSave={() => {
-                let result =
-                  visitedTab?.filter((data: any) => data.visited == false)
-                    ?.length > 0;
-                // if (result) {
-                //   message.warning("Please visit all city wise screens once");
-                // } else {
-                handleSaveAndContinue();
-                // }
-              }}
+              handleSave={handleSave}
               campaignId={campaignId}
               pageName={
                 (pathname?.split("/").splice(-2)[0] === "iknowitallplan" ||
