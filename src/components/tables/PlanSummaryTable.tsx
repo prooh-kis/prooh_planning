@@ -13,7 +13,7 @@ import {
   getTableDataScreenWiseAdPlayTime,
 } from "../../actions/screenAction";
 import { useDispatch, useSelector } from "react-redux";
-import { Tooltip } from "antd";
+import { message, Tooltip } from "antd";
 import { CAMPAIGN_PLAN_TYPE_KNOW } from "../../constants/campaignConstants";
 import { Loading } from "../../components/Loading";
 
@@ -86,8 +86,9 @@ export function PlanSummaryTable({
     }
 
     if (Object.keys(screensBuyingCount || {}).length === 0) {
-      alert("No screens selected yet, please select screens to proceed...");
-      setCurrentStep(2);
+      message.info(
+        "No screens selected yet, please select screens to proceed..."
+      );
     }
   }, [
     campaignId,

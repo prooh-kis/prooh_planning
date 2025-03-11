@@ -172,10 +172,10 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                 <input
                   type="checkbox"
                   title="1"
-                  checked={selected[state] ? true : false}
+                  checked={true}
                   onChange={() => toggleState(state)}
                   className="w-4 h-4 truncate"
-                  disabled={loading}
+                  disabled={true}
                 />
                 <div className="flex justify-between">
                   <div className="flex items-center gap-1">
@@ -199,7 +199,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
               </div>
               <div className="flex gap-2">
                 <button
-                    title="1"
+                  title="1"
                   type="button"
                   onClick={() => toggleCollapse(state)}
                   className="focus:outline-none text-black text-[10px] "
@@ -220,7 +220,6 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                     {processedData[state]?.gender?.Female?.toFixed(1)}%
                   </h1>
                 </div>
-                
               </div>
             </div>
             {!collapsed[state] && (
@@ -249,7 +248,6 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                               <span className="text-gray-600 text-[12px]">
                                 ({processedData[state]?.cities?.[city]?.count})
                               </span>
-                             
                             </div>
                           </div>
                         </div>
@@ -282,7 +280,6 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                               %
                             </h1>
                           </div>
-                          
                         </div>
                       </div>
 

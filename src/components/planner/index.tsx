@@ -8,3 +8,5 @@ export { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
 export { CreativeUploadDetails } from "./CreativeUploadDetails";
 export { VendorConfirmationDetails } from "./VendorConfirmationDetails";
 export { SetAdsPlayTime } from "./SetAdsPlayTime";
+export { StoreBaseScreenSummaryDetails } from "./StoreBaseScreenSummaryDetails";
+export { StoreBasedPlanSummaryTable } from "./StoreBasedPlanSummaryTable";

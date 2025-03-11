@@ -30,6 +30,7 @@ export const RegularPlanPage: React.FC = () => {
   const location = useLocation();
   const { pathname } = location;
   const campaignId: any = pathname.split("/")[2] || null;
+  const [pageSuccess, setPageSuccess] = useState<boolean>(false);
 
   const [currentStep, setCurrentStep] = useState<number>(
     campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] || 1 : 1
@@ -81,6 +82,7 @@ export const RegularPlanPage: React.FC = () => {
           campaignId={campaignId}
           step={currentStep}
           setStep={setCurrentStep}
+          setPageSuccess={setPageSuccess}
           steps={9}
         />
       </div>
@@ -94,6 +96,8 @@ export const RegularPlanPage: React.FC = () => {
             successAddCampaignDetails={success}
             campaignType={CAMPAIGN_PLAN_TYPE_REGULAR}
             path="regularplan"
+            setPageSuccess={setPageSuccess}
+            pageSuccess={pageSuccess}
           />
         )}
       </div>

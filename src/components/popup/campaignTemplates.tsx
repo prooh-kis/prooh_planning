@@ -60,7 +60,10 @@ export const CampaignTemplates: React.FC = () => {
     removeAllKeyFromLocalStorage();
   }, []);
 
-  const handleCardClick = (id: number) => setSelectedCard(id);
+  const handleCardClick = (id: number) => {
+    removeAllKeyFromLocalStorage();
+    setSelectedCard(id);
+  };
 
   const handleContinue = () => {
     removeAllKeyFromLocalStorage();

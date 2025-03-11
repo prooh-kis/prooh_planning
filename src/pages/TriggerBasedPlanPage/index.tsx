@@ -29,6 +29,7 @@ export const TriggerBasedPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
   const campaignId: any = pathname.split("/")[2] || null;
+  const [pageSuccess, setPageSuccess] = useState<boolean>(false);
 
   const [currentStep, setCurrentStep] = useState<number>(
     campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] ?? 1 : 1
@@ -65,7 +66,6 @@ export const TriggerBasedPlanPage: React.FC = () => {
         setCurrentStep={setCurrentStep}
         step={currentStep}
         userInfo={userInfo}
-        pathname={pathname}
         campaignId={campaignId}
         campaignType={CAMPAIGN_PLAN_TYPE_TRIGGER}
         path="triggerbasedplan"
@@ -83,6 +83,9 @@ export const TriggerBasedPlanPage: React.FC = () => {
         setCurrentStep={setCurrentStep}
         step={currentStep}
         campaignId={campaignId}
+        successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     4: (
@@ -91,6 +94,8 @@ export const TriggerBasedPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     5: (
@@ -99,6 +104,8 @@ export const TriggerBasedPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     6: (
@@ -107,6 +114,8 @@ export const TriggerBasedPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     7: (
@@ -115,6 +124,8 @@ export const TriggerBasedPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     8: (
@@ -123,6 +134,8 @@ export const TriggerBasedPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     9: (
@@ -132,6 +145,8 @@ export const TriggerBasedPlanPage: React.FC = () => {
         campaignId={campaignId}
         userInfo={userInfo}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
   };
@@ -144,6 +159,7 @@ export const TriggerBasedPlanPage: React.FC = () => {
           step={currentStep}
           setStep={setCurrentStep}
           steps={9}
+          setPageSuccess={setPageSuccess}
         />
       </div>
       <div className="w-full h-full flex justify-center items-top">

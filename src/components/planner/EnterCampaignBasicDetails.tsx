@@ -19,7 +19,6 @@ interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
   userInfo?: any;
-  pathname?: string;
   campaignId?: any;
   campaignType: string;
   path: string;
@@ -34,7 +33,6 @@ export const EnterCampaignBasicDetails = ({
   setCurrentStep,
   step,
   userInfo,
-  pathname,
   campaignId,
   campaignType,
   path,
@@ -279,7 +277,7 @@ export const EnterCampaignBasicDetails = ({
               (value: any) => value.clientAgencyName
             )}
             placeholder="Client/Agency Name"
-            onChange={setClientName}
+            onChange={(value: string) => setClientName(value?.toUpperCase())}
             value={clientName || ""}
           />
         </div>

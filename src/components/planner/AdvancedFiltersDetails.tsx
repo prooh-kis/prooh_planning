@@ -31,13 +31,15 @@ interface AdvanceFiltersDetailsProps {
   error?: any;
   campaignId?: string;
   successAddCampaignDetails?: any;
+  pageSuccess?: boolean;
+  setPageSuccess?: any;
 }
 
 export const AdvanceFiltersDetails = ({
   step,
   setCurrentStep,
-  loading,
-  error,
+  pageSuccess,
+  setPageSuccess,
   campaignId,
   successAddCampaignDetails,
 }: AdvanceFiltersDetailsProps) => {
@@ -146,7 +148,7 @@ export const AdvanceFiltersDetails = ({
       { enableHighAccuracy: true }
     );
 
-    if (advanceFilterData?.screens?.length == 0) {
+    if (advanceFilterData && advanceFilterData?.screens?.length == 0) {
       message.error(
         "You have got Zero screen, please change your previous selection"
       );
@@ -154,18 +156,22 @@ export const AdvanceFiltersDetails = ({
   }, [errorAdvanceFilterData, advanceFilterData]);
 
   useEffect(() => {
-    if (successAddCampaignDetails) {
-      dispatch(
-        getPlanningPageFooterData({
-          id: campaignId,
-          pageName: "Advance Filter Page",
-        })
-      );
-      dispatch({
-        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
-      });
-    }
-  }, [dispatch, campId, pathname, successAddCampaignDetails]);
+    if (!pageSuccess) return;
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "Advance Filter Page",
+      })
+    );
+  }, [dispatch, campId, pathname, pageSuccess]);
+
+  useEffect(() => {
+    if (!successAddCampaignDetails) return;
+    dispatch({
+      type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+    });
+    setPageSuccess(true);
+  }, [successAddCampaignDetails]);
 
   const handleReload = () => {
     dispatch(
@@ -191,6 +197,48 @@ export const AdvanceFiltersDetails = ({
       });
     }
   }, [advanceFilterData, campId, finalSelectedScreens]);
+
+  const handleSaveAndContinue = () => {
+    if (isDisabled) {
+      message.error("Please  confirm screen selection");
+      return;
+    }
+    dispatch(
+      addDetailsToCreateCampaign({
+        pageName: "Advance Filter Page",
+        id: pathname.split("/").splice(-1)[0],
+        screenIds: finalSelectedScreens.map((s: any) => s._id),
+        advanceFilterData: {
+          stores: [
+            {
+              brands: dataBrand,
+              comp: dataComp,
+              radius: circleRadius,
+            },
+          ],
+          // routes: routes?.map((route: any) => {
+          //   return {
+          //     origin: route.origin,
+          //     destination: route.destination,
+          //     radius: routeRadius,
+          //   };
+          // }),
+          // poiLists: pois,
+          // polygons: polygons?.map((poly: any) => {
+          //   return {
+          //     id: poly.id,
+          //     type: poly.type,
+          //     properties: poly.properties,
+          //     geometry: poly.geometry,
+          //     screens: poly.screens,
+          //   };
+          // }),
+        },
+      })
+    );
+    setPageSuccess(false);
+    setCurrentStep(step + 1);
+  };
 
   return (
     <div className="w-full">
@@ -305,46 +353,7 @@ export const AdvanceFiltersDetails = ({
           handleBack={() => {
             setCurrentStep(step - 1);
           }}
-          handleSave={() => {
-            if (isDisabled) {
-              message.error("Please  confirm screen selection");
-            } else {
-              dispatch(
-                addDetailsToCreateCampaign({
-                  pageName: "Advance Filter Page",
-                  id: pathname.split("/").splice(-1)[0],
-                  screenIds: finalSelectedScreens.map((s: any) => s._id),
-                  advanceFilterData: {
-                    stores: [
-                      {
-                        brands: dataBrand,
-                        comp: dataComp,
-                        radius: circleRadius,
-                      },
-                    ],
-                    // routes: routes?.map((route: any) => {
-                    //   return {
-                    //     origin: route.origin,
-                    //     destination: route.destination,
-                    //     radius: routeRadius,
-                    //   };
-                    // }),
-                    // poiLists: pois,
-                    // polygons: polygons?.map((poly: any) => {
-                    //   return {
-                    //     id: poly.id,
-                    //     type: poly.type,
-                    //     properties: poly.properties,
-                    //     geometry: poly.geometry,
-                    //     screens: poly.screens,
-                    //   };
-                    // }),
-                  },
-                })
-              );
-              setCurrentStep(step + 1);
-            }
-          }}
+          handleSave={handleSaveAndContinue}
           campaignId={campaignId}
           pageName="Advance Filter Page"
           successAddCampaignDetails={successAddCampaignDetails}

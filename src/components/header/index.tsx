@@ -2,22 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Menu } from "./Menu";
-
-import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
-// import { ADD_SCREEN_CODE_RESET } from "../../../constants/screenDataConstant";
 import userImage from "../../assets/userImage.png";
-import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import {
   AUTH,
   ADVERTISERS_PAGE,
   MEDIA_OWNER_PAGE,
   SIGN_UP,
 } from "../../routes/routes";
-
-// import { getCreatives } from "../../../actions/creativeAction";
-// import { USER_ROLE_PRIMARY } from "../../../constants/userConstants";
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -75,7 +68,10 @@ export const Header: React.FC = () => {
       <div className="flex items-center">
         <div
           className="flex flex-col items-center justify-center cursor-pointer p-2"
-          onClick={() => navigate("/")}
+          onClick={() => {
+            removeAllKeyFromLocalStorage();
+            navigate("/");
+          }}
         >
           <h1 className="text-xl sm:text-2xl font-extrabold tracking-[-0.02em]">
             PROOH.AI

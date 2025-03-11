@@ -7,12 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getFinalPlanPOTableData,
   getPlanningPageFooterData,
-  getScreenSummaryPlanTableData,
 } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import {
-  CAMPAIGN_DETAILS,
   FULL_CAMPAIGN_PLAN,
   SCREEN_SUMMARY_TABLE_DATA,
 } from "../../constants/localStorageConstants";
@@ -42,6 +40,8 @@ interface ViewFinalPlanPODetailsProps {
   step: number;
   campaignId?: any;
   successAddCampaignDetails?: any;
+  pageSuccess?: boolean;
+  setPageSuccess?: any;
 }
 
 export const ViewFinalPlanPODetails = ({
@@ -49,11 +49,13 @@ export const ViewFinalPlanPODetails = ({
   step,
   campaignId,
   successAddCampaignDetails,
+  pageSuccess,
+  setPageSuccess,
 }: ViewFinalPlanPODetailsProps) => {
   const pageRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
-
+  const [pageLoading, setPageLoading] = useState<boolean>(true);
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
@@ -142,6 +144,15 @@ export const ViewFinalPlanPODetails = ({
     success: successSendEmail,
     data: sendEmailData,
   } = emailSendForConfirmation;
+
+  const screenSummaryPlanTableDataGet = useSelector(
+    (state: any) => state.screenSummaryPlanTableDataGet
+  );
+  const {
+    loading: loadingScreenSummaryPlanTable,
+    error: errorScreenSummaryPlanTable,
+    data: screenSummaryPlanTableData,
+  } = screenSummaryPlanTableDataGet;
 
   const [currentCoupon, setCurrentCoupon] = useState<string>(
     poTableData?.couponId || ""
@@ -318,6 +329,7 @@ export const ViewFinalPlanPODetails = ({
         clientApprovalImgs: imageArr,
       })
     );
+    setPageSuccess(false);
     setCurrentStep(step + 1);
   };
 
@@ -327,16 +339,12 @@ export const ViewFinalPlanPODetails = ({
     data.forEach((screen: any) => {
       const { city } = screen.location;
       const { screenResolution } = screen;
-
-      // Initialize city and resolution group if not already present
       if (!result[city]) {
         result[city] = {};
       }
       if (!result[city][screenResolution]) {
         result[city][screenResolution] = 0;
       }
-
-      // Increment the count for the screen resolution in that city
       result[city][screenResolution]++;
     });
 
@@ -409,8 +417,6 @@ export const ViewFinalPlanPODetails = ({
     }
   }, [userInfo, loadingSendEmail]);
 
-  // Fetch data on campaign or poInput change
-
   useEffect(() => {
     dispatch(getCouponList());
     const images =
@@ -431,25 +437,26 @@ export const ViewFinalPlanPODetails = ({
   }, []);
 
   useEffect(() => {
-    if (successAddCampaignDetails) {
-      dispatch(getFinalPlanPOTableData(poInput));
-      dispatch(
-        getScreenSummaryPlanTableData({
-          id: campaignId,
-          screenIds:
-            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-              ?.screenIds,
-        })
-      );
-      dispatch(
-        getPlanningPageFooterData({
-          id: campaignId,
-          pageName: "View Final Plan Page",
-        })
-      );
-      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-    }
-  }, [dispatch, campaignId, poInput, successAddCampaignDetails]);
+    if (!successAddCampaignDetails) return;
+    setPageSuccess(true);
+    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+  }, [successAddCampaignDetails, poInput, campaignId]);
+
+  useEffect(() => {
+    if (!pageSuccess) return;
+    dispatch(getFinalPlanPOTableData(poInput));
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "View Final Plan Page",
+      })
+    );
+  }, [pageSuccess, poInput, campaignId]);
+
+  useEffect(() => {
+    if (!poTableData) return;
+    setPageLoading(false);
+  }, [poTableData]);
 
   // Handle success email sending
   useEffect(() => {
@@ -470,7 +477,7 @@ export const ViewFinalPlanPODetails = ({
           Any specific route you want to cover in this campaign
         </h1>
       </div>
-      {loadingPOData ? (
+      {pageLoading ? (
         <LoadingScreen />
       ) : (
         <div>

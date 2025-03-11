@@ -1,16 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  getAllLocalStorageData,
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
-import {
-  AudienceCohortTable,
-  CostSummaryTable1,
-  LocationTable,
-  TouchpointTable,
-} from "../tables";
+import { AudienceCohortTable, LocationTable, TouchpointTable } from "../tables";
 import { useDispatch, useSelector } from "react-redux";
 import { Footer } from "../../components/footer";
 import {
@@ -21,19 +15,15 @@ import {
 } from "../../actions/screenAction";
 import {
   AUDIENCE_DATA,
-  CAMPAIGN,
   COST_SUMMARY,
   FULL_CAMPAIGN_PLAN,
   SELECTED_AUDIENCE_TOUCHPOINTS,
   TOTAL_SCREEN_COST_DATA,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import {
-  ALL_COHORTS,
-  ALL_MARKETS,
-  ALL_TOUCHPOINTS,
-} from "../../constants/helperConstants";
+import { ALL_COHORTS, ALL_TOUCHPOINTS } from "../../constants/helperConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 
 interface EnterAudienceTouchpointDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -44,6 +34,8 @@ interface EnterAudienceTouchpointDetailsProps {
   touchpointRef?: any;
   campaignId?: any;
   successAddCampaignDetails?: any;
+  pageSuccess?: boolean;
+  setPageSuccess?: any;
 }
 
 export const AudienceTouchPointsDetails = ({
@@ -54,6 +46,8 @@ export const AudienceTouchPointsDetails = ({
   touchpointRef,
   campaignId,
   successAddCampaignDetails,
+  pageSuccess,
+  setPageSuccess,
 }: EnterAudienceTouchpointDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -161,6 +155,7 @@ export const AudienceTouchPointsDetails = ({
   };
 
   useEffect(() => {
+    if (!pageSuccess) return;
     dispatch(
       getScreensAudiencesData({
         id: campaignId,
@@ -206,7 +201,15 @@ export const AudienceTouchPointsDetails = ({
         touchPoints: selectedTouchPoints,
       })
     );
-  }, [dispatch]);
+  }, [dispatch, pageSuccess]);
+
+  useEffect(() => {
+    if (!successAddCampaignDetails) return;
+    dispatch({
+      type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+    });
+    setPageSuccess(true);
+  }, [successAddCampaignDetails]);
 
   useEffect(() => {
     if (screensCost) {
@@ -273,6 +276,35 @@ export const AudienceTouchPointsDetails = ({
       : selectedGender.length === 1 && selectedGender.includes("Female")
       ? "Female"
       : "both";
+  };
+
+  const handleSaveAndContinue = () => {
+    dispatch(
+      addDetailsToCreateCampaign({
+        pageName: "Audience And TouchPoint Page",
+        id: campaignId,
+        markets: Object.keys(screensAudiences)?.filter((c: any) => c !== "id"),
+        cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.[
+          campaignId
+        ]?.cohorts,
+        touchPoints: selectedTouchPoints,
+        gender: getSelectedGender(),
+        screensSelectedCount: screensCost?.screensSelectedCount,
+        impressionSelectedCount: screensCost?.impressionSelectedCount,
+        budgetSelected: screensCost?.budgetSelected,
+        cpmSelected: screensCost?.cpmSelected,
+        pricePerSlotSelectedCount: screensCost?.pricePerSlotSelected,
+        citiesSelectedCount: screensCost?.citiesSelectedCount,
+        cities,
+        zones,
+      })
+    );
+
+    saveDataOnLocalStorage(COST_SUMMARY, {
+      [campaignId]: [selectedScreensData, totalScreensData],
+    });
+    setPageSuccess(false);
+    setCurrentStep(step + 1);
   };
 
   return (
@@ -343,36 +375,7 @@ export const AudienceTouchPointsDetails = ({
               handleBack={() => {
                 setCurrentStep(step - 1);
               }}
-              handleSave={() => {
-                dispatch(
-                  addDetailsToCreateCampaign({
-                    pageName: "Audience And TouchPoint Page",
-                    id: campaignId,
-                    markets: Object.keys(screensAudiences)?.filter(
-                      (c: any) => c !== "id"
-                    ),
-                    cohorts: getDataFromLocalStorage(
-                      SELECTED_AUDIENCE_TOUCHPOINTS
-                    )?.[campaignId]?.cohorts,
-                    touchPoints: selectedTouchPoints,
-                    gender: getSelectedGender(),
-                    screensSelectedCount: screensCost?.screensSelectedCount,
-                    impressionSelectedCount:
-                      screensCost?.impressionSelectedCount,
-                    budgetSelected: screensCost?.budgetSelected,
-                    cpmSelected: screensCost?.cpmSelected,
-                    pricePerSlotSelectedCount:
-                      screensCost?.pricePerSlotSelected,
-                    citiesSelectedCount: screensCost?.citiesSelectedCount,
-                    cities,
-                    zones,
-                  })
-                );
-                setCurrentStep(step + 1);
-                saveDataOnLocalStorage(COST_SUMMARY, {
-                  [campaignId]: [selectedScreensData, totalScreensData],
-                });
-              }}
+              handleSave={handleSaveAndContinue}
               campaignId={campaignId}
               pageName="Audience And TouchPoint Page"
               successAddCampaignDetails={successAddCampaignDetails}

@@ -28,17 +28,14 @@ import { Tooltip } from "antd";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
-interface Tab {
-  label: string;
-  id: string;
-}
-
 interface ScreenSummaryDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
   campaignId?: any;
   regularVsCohortSuccessStatus?: any;
   successAddCampaignDetails?: any;
+  pageSuccess?: boolean;
+  setPageSuccess?: any;
 }
 
 export const ScreenSummaryDetails = ({
@@ -46,6 +43,8 @@ export const ScreenSummaryDetails = ({
   step,
   campaignId,
   successAddCampaignDetails,
+  pageSuccess,
+  setPageSuccess,
 }: ScreenSummaryDetailsProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -172,43 +171,6 @@ export const ScreenSummaryDetails = ({
   };
 
   const handleSaveAndContinue = async () => {
-    // if (
-    //   pathname.split("/").splice(-2)[0] === "iknowitallplan" ||
-    //   pathname.split("/").splice(-2)[0] === "storebasedplan"
-    // ) {
-    //   if (currentTab === "1") {
-    //     dispatch(
-    //       addDetailsToCreateCampaign({
-    //         pageName: "Select Screens Page",
-    //         id: pathname.split("/").splice(-1)[0],
-    //         screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-    //       })
-    //     );
-    //   } else if (currentTab === "2") {
-    //     dispatch(
-    //       addDetailsToCreateCampaign({
-    //         pageName: "Screen Summary Page",
-    //         id: pathname.split("/").splice(-1)[0],
-    //         totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-    //         totalImpression: getDataFromLocalStorage(
-    //           SCREEN_SUMMARY_TABLE_DATA
-    //         )?.[campaignId]?.total?.totalImpression,
-    //         totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-    //           campaignId
-    //         ]?.total?.totalReach,
-    //         totalCampaignBudget: getDataFromLocalStorage(
-    //           SCREEN_SUMMARY_TABLE_DATA
-    //         )?.[campaignId]?.total?.totalCampaignBudget,
-    //         totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-    //           campaignId
-    //         ]?.total?.totalCpm,
-    //         duration:
-    //           getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-    //             ?.duration,
-    //       })
-    //     );
-    //   }
-    // } else {
     dispatch(
       addDetailsToCreateCampaign({
         pageName: "Screen Summary Page",
@@ -235,50 +197,35 @@ export const ScreenSummaryDetails = ({
   };
 
   useEffect(() => {
-    if (successAddCampaignDetails) {
-      dispatch({
-        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
-      });
-      // if (
-      //   (pathname.split("/").includes("iknowitallplan") && step === 2) ||
-      //   (pathname.split("/").includes("storebasedplan") && step === 3)
-      // ) {
-      //   dispatch(
-      //     getScreenSummaryDataIKnowItAll({
-      //       id: campaignId,
-      //     })
-      //   );
-      // } else {
-      dispatch(
-        getScreenSummaryData({
-          id: campaignId,
-          type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-            ?.selectedType,
-        })
-      );
-      // }
-      dispatch(
-        getPlanningPageFooterData({
-          id: campaignId,
-          pageName: "Screen Summary Page",
-        })
-      );
-    }
-  }, [campaignId, dispatch, successAddCampaignDetails]);
+    if (!pageSuccess) return;
 
-  // useEffect(() => {
-  //   const type =
-  //     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType;
-  //   setRegularVsCohort(type);
-  //   if (
-  //     (pathname.split("/").includes("iknowitallplan") && step === 4) ||
-  //     (pathname.split("/").includes("storebasedplan") && step === 5)
-  //   ) {
-  //     setCurrentTab("2");
-  //   } else {
-  //     setCurrentTab("1");
-  //   }
-  // }, [campaignId, pathname, step]);
+    dispatch({
+      type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+    });
+
+    dispatch(
+      getScreenSummaryData({
+        id: campaignId,
+        type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+          ?.selectedType,
+      })
+    );
+
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "Screen Summary Page",
+      })
+    );
+  }, [campaignId, dispatch, pageSuccess]);
+
+  useEffect(() => {
+    if (!successAddCampaignDetails) return;
+    dispatch({
+      type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+    });
+    setPageSuccess(true);
+  }, [successAddCampaignDetails]);
 
   useEffect(() => {
     if (screenSummaryData || screensBuyingCount) {
@@ -312,8 +259,7 @@ export const ScreenSummaryDetails = ({
         <LoadingScreen />
       ) : (
         <div>
-          {pathname.split("/").splice(-2)[0] === "iknowitallplan" ||
-          pathname.split("/").includes("storebasedplan") ? (
+          {pathname.split("/").includes("storebasedplan") ? (
             <></>
           ) : (
             <div className="mt-2">
@@ -516,8 +462,7 @@ export const ScreenSummaryDetails = ({
               handleSave={handleSave}
               campaignId={campaignId}
               pageName={
-                (pathname?.split("/").splice(-2)[0] === "iknowitallplan" ||
-                  pathname.split("/").splice(-2)[0] === "storebasedplan") &&
+                pathname.split("/").splice(-2)[0] === "storebasedplan" &&
                 currentTab === "1"
                   ? "Select Screens Page"
                   : "Screen Summary Page"

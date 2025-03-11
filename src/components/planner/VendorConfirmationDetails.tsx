@@ -17,10 +17,7 @@ import {
 } from "../../components/tables";
 import { Footer } from "../../components/footer";
 import { message } from "antd";
-import {
-  addDetailsToCreateCampaign,
-  changeCampaignStatusAfterCreativeUpload,
-} from "../../actions/campaignAction";
+import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { CAMPAIGN_DETAILS_PAGE } from "../../routes/routes";
 import { CountdownTimer } from "../../components/molecules/CountdownTimer";
@@ -32,7 +29,6 @@ import {
   ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED,
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED,
-  CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT,
 } from "../../constants/campaignConstants";
 import { convertDateIntoDateMonthYear } from "../../utils/dateAndTimeUtils";
 import { StatusPopup } from "../../components/popup/StatusPopup";
@@ -45,6 +41,8 @@ interface VendorConfirmationDetailsProps {
   campaignId?: any;
   userInfo?: any;
   successAddCampaignDetails?: any;
+  pageSuccess?: boolean;
+  setPageSuccess?: any;
 }
 
 export const VendorConfirmationDetails = ({
@@ -53,6 +51,8 @@ export const VendorConfirmationDetails = ({
   campaignId,
   userInfo,
   successAddCampaignDetails,
+  pageSuccess,
+  setPageSuccess,
 }: VendorConfirmationDetailsProps) => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
@@ -293,22 +293,27 @@ export const VendorConfirmationDetails = ({
   };
 
   useEffect(() => {
-    if (successAddCampaignDetails) {
-      dispatch(
-        getVendorConfirmationStatusTableDetails({
-          id: campaignId,
-        })
-      );
-      dispatch(getVendorConfirmationDetails(vendorInput));
-      dispatch(
-        getPlanningPageFooterData({
-          id: campaignId,
-          pageName: "Vendor Confirmation Page",
-        })
-      );
-      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-    }
-  }, [successAddCampaignDetails, dispatch, campaignId, vendorInput]);
+    if (!successAddCampaignDetails) return;
+    setPageSuccess(true);
+    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+  }, [successAddCampaignDetails]);
+
+  useEffect(() => {
+    if (!pageSuccess) return;
+
+    dispatch(
+      getVendorConfirmationStatusTableDetails({
+        id: campaignId,
+      })
+    );
+    dispatch(getVendorConfirmationDetails(vendorInput));
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "Vendor Confirmation Page",
+      })
+    );
+  }, [pageSuccess, dispatch, campaignId, vendorInput]);
 
   const handleOpenStatusModel = () => {
     setOpen((pre: boolean) => !open);

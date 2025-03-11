@@ -18,7 +18,10 @@ import {
   FULL_CAMPAIGN_PLAN,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { CAMPAIGN_PLAN_TYPE_KNOW } from "../../constants/campaignConstants";
+import {
+  ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+  CAMPAIGN_PLAN_TYPE_KNOW,
+} from "../../constants/campaignConstants";
 import { IKnowItAllPlanSummaryTable } from "../../components/planner/IKnowItAllPlanSummaryTable";
 import { IKnowItAllScreenSummaryDetails } from "../../components/planner/IKnowItAllScreenSummaryDetails";
 import { iKnowItAllPlanData } from "../../data";
@@ -27,7 +30,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
   const campaignId: any = pathname.split("/")[2] || null;
-
+  const [pageSuccess, setPageSuccess] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<number>(
     campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] ?? 1 : 1
   );
@@ -39,39 +42,31 @@ export const IKnowItAllPlanPage: React.FC = () => {
     data: campaignDetails,
   } = useSelector((state: any) => state.detailsToCreateCampaignAdd);
 
-  // Update the current step when campaign details are successfully loaded
   useEffect(() => {
     if (success && campaignDetails) {
       const newStep =
         (iKnowItAllPlanData.find(
-          (page) => page.value === campaignDetails.currentPage
+          (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0) + 1;
       setCurrentStep(newStep);
-      saveDataOnLocalStorage(CURRENT_STEP, { [campaignId ?? ""]: newStep });
+      const currStep = {
+        [campaignId]: newStep,
+      };
+      saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
   }, [success, campaignDetails, campaignId]);
 
-  // Fetch campaign details when needed
   useEffect(() => {
-    const storedPage =
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.currentPage;
-    const storedStep = iKnowItAllPlanData.find(
-      (page: any) => page.value === storedPage
-    )?.id;
+    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+    if (campaignId) dispatch(addDetailsToCreateCampaign({ id: campaignId }));
+  }, [dispatch, campaignId]);
 
-    if (campaignId && storedStep !== currentStep) {
-      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
-    }
-  }, [dispatch, campaignId, currentStep]);
-
-  // Step components mapping to simplify rendering
   const stepComponents: { [key: number]: React.ReactNode } = {
     1: (
       <EnterCampaignBasicDetails
         setCurrentStep={setCurrentStep}
         step={currentStep}
         userInfo={userInfo}
-        pathname={pathname}
         campaignId={campaignId}
         campaignType={CAMPAIGN_PLAN_TYPE_KNOW}
         path="iknowitallplan"
@@ -83,6 +78,8 @@ export const IKnowItAllPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     3: (
@@ -92,6 +89,8 @@ export const IKnowItAllPlanPage: React.FC = () => {
         campaignId={campaignId}
         successAddCampaignDetails={success}
         loading={loading}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     4: (
@@ -100,6 +99,8 @@ export const IKnowItAllPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     5: (
@@ -108,6 +109,8 @@ export const IKnowItAllPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     6: (
@@ -116,6 +119,8 @@ export const IKnowItAllPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     7: (
@@ -125,6 +130,8 @@ export const IKnowItAllPlanPage: React.FC = () => {
         campaignId={campaignId}
         userInfo={userInfo}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
   };
@@ -138,6 +145,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
           step={currentStep}
           setStep={setCurrentStep}
           steps={pathname.includes("iknowitallplan") ? 7 : 9}
+          setPageSuccess={setPageSuccess}
         />
       </div>
 

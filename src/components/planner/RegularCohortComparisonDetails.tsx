@@ -18,11 +18,7 @@ import { Footer } from "../../components/footer";
 import { message, Tooltip } from "antd";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { useLocation } from "react-router-dom";
-import {
-  FULL_CAMPAIGN_PLAN,
-  REGULAR_VS_COHORT_PRICE_DATA,
-  SCREEN_SUMMARY_SELECTION,
-} from "../../constants/localStorageConstants";
+import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
@@ -31,6 +27,8 @@ export const RegularCohortComparisonDetails = ({
   setCurrentStep,
   step,
   successAddCampaignDetails,
+  pageSuccess,
+  setPageSuccess,
 }: any) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -65,8 +63,7 @@ export const RegularCohortComparisonDetails = ({
 
   useEffect(() => {
     if (!priceData) return;
-
-    setPageLoading(false);
+    if (!loadingPriceData && priceData) setPageLoading(false);
     // saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: {} });
 
     // if (
@@ -80,7 +77,7 @@ export const RegularCohortComparisonDetails = ({
   }, [priceData, campaignId]);
 
   useEffect(() => {
-    if (!successAddCampaignDetails) return;
+    if (!pageSuccess) return;
 
     dispatch(
       getRegularVsCohortPriceData({
@@ -100,15 +97,15 @@ export const RegularCohortComparisonDetails = ({
     );
 
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-  }, [
-    cohorts,
-    dispatch,
-    duration,
-    gender,
-    screenIds,
-    campaignId,
-    successAddCampaignDetails,
-  ]);
+  }, [cohorts, dispatch, duration, gender, screenIds, campaignId, pageSuccess]);
+
+  useEffect(() => {
+    if (!successAddCampaignDetails) return;
+    dispatch({
+      type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+    });
+    setPageSuccess(true);
+  }, [successAddCampaignDetails]);
 
   const handleRegularVsCohortSelection = (type: any) => {
     setSelectedBuyingOption(type);
@@ -176,7 +173,7 @@ export const RegularCohortComparisonDetails = ({
                     setShowSummary={setShowSummary}
                     type="regular"
                     showSummary={showSummary}
-                    loading={loadingPriceData}
+                    loading={false}
                   />
                 </div>
                 {showSummary === "regular" && (

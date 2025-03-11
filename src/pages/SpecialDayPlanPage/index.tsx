@@ -28,6 +28,7 @@ export const SpecialDayPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
   const campaignId: any = pathname.split("/")[2] || null;
+  const [pageSuccess, setPageSuccess] = useState<boolean>(false);
 
   const [currentStep, setCurrentStep] = useState<number>(
     campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] ?? 1 : 1
@@ -38,30 +39,25 @@ export const SpecialDayPlanPage: React.FC = () => {
     (state: any) => state.detailsToCreateCampaignAdd
   );
 
+  // Fix: Ensure campaignId is always a string when used as an object key
   useEffect(() => {
     if (success && campaignDetails) {
       const newStep =
         (specialDayPlanData.find(
-          (page : any) => page.value === campaignDetails.currentPage
+          (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0) + 1;
       setCurrentStep(newStep);
-      saveDataOnLocalStorage(CURRENT_STEP, { [campaignId ?? ""]: newStep });
+      const currStep = {
+        [campaignId]: newStep,
+      };
+      saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
   }, [success, campaignDetails, campaignId]);
 
   useEffect(() => {
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-
-    const storedPage =
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.currentPage;
-    const storedStep = specialDayPlanData.find(
-      (page) => page.value === storedPage
-    )?.id;
-
-    if (campaignId && storedStep !== currentStep) {
-      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
-    }
-  }, [dispatch, campaignId, currentStep]);
+    if (campaignId) dispatch(addDetailsToCreateCampaign({ id: campaignId }));
+  }, [dispatch, campaignId]);
 
   const stepComponents: { [key: number]: React.ReactNode } = {
     1: (
@@ -69,7 +65,6 @@ export const SpecialDayPlanPage: React.FC = () => {
         setCurrentStep={setCurrentStep}
         step={currentStep}
         userInfo={userInfo}
-        pathname={pathname}
         campaignId={campaignId}
       />
     ),
@@ -79,6 +74,8 @@ export const SpecialDayPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     3: (
@@ -87,6 +84,8 @@ export const SpecialDayPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     4: (
@@ -95,6 +94,8 @@ export const SpecialDayPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     5: (
@@ -103,6 +104,8 @@ export const SpecialDayPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     6: (
@@ -111,6 +114,8 @@ export const SpecialDayPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     7: (
@@ -119,6 +124,8 @@ export const SpecialDayPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     8: (
@@ -128,6 +135,8 @@ export const SpecialDayPlanPage: React.FC = () => {
         campaignId={campaignId}
         userInfo={userInfo}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
   };
@@ -139,6 +148,7 @@ export const SpecialDayPlanPage: React.FC = () => {
           campaignId={campaignId}
           step={currentStep}
           setStep={setCurrentStep}
+          setPageSuccess={setPageSuccess}
           steps={8}
         />
       </div>

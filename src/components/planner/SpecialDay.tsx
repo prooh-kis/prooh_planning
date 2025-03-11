@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { message, Select } from "antd";
 import { AddCampaignDetails } from "../popup/AddCampaignDetails";
-import { EventCalender } from "../../components/popup/EventCalender";
 import { MonthRangeSlider } from "../../components/molecules/MonthRangeSlider";
 import moment from "moment";
 import {
@@ -10,36 +9,16 @@ import {
   getIndustryCategory,
 } from "../../actions/calenderAction";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getPlanningPageFooterData,
-  getTableDataForSelectTopicalDayPage,
-} from "../../actions/screenAction";
+import { getTableDataForSelectTopicalDayPage } from "../../actions/screenAction";
 import { SingleCalenderData } from "../../components/molecules/SingleCalenderData";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { endOfDay, startOfDay } from "date-fns";
 import { formatNumber } from "../../utils/formatValue";
 import { CAMPAIGN_PLAN_TYPE_TOPICAL } from "../../constants/campaignConstants";
-
-const lastDateMonthWise: any = {
-  1: 31,
-  2: 29,
-  3: 31,
-  4: 30,
-  5: 31,
-  6: 30,
-  7: 31,
-  8: 31,
-  9: 30,
-  10: 31,
-  11: 30,
-  12: 31,
-};
 
 interface SpecialDayProps {
   setCurrentStep: (step: number) => void;
   step: number;
   userInfo?: any;
-  pathname?: string;
   campaignId?: any;
 }
 
@@ -47,7 +26,6 @@ export const SpecialDay = ({
   setCurrentStep,
   step,
   userInfo,
-  pathname,
   campaignId,
 }: SpecialDayProps) => {
   const navigate = useNavigate();
@@ -127,10 +105,6 @@ export const SpecialDay = ({
 
   useEffect(() => {
     dispatch(getIndustryCategory({ category: [], industry: [] }));
-    // dispatch(getPlanningPageFooterData({
-    //   id: campaignId,
-    //   pageName: "Set Ad Play time Page",
-    // }));
   }, [dispatch]);
 
   useEffect(() => {
@@ -160,7 +134,7 @@ export const SpecialDay = ({
   };
 
   return (
-    <div className="w-full pt-1">
+    <div className="w-full pt-1 px-4">
       <AddCampaignDetails
         handleCancel={handleCancel}
         open={isOpen}
@@ -177,7 +151,7 @@ export const SpecialDay = ({
         handleSaveData={handleSaveData}
         selectedSpacialDay={selectedSpacialDay}
       />
-      <div className="flex  justify-between">
+      <div className="flex justify-between mt-4">
         <div>
           <h1 className="text-[24px] text-[#232323] font-semibold leading-[32.68px] tracking-[-0.02em]">
             Select Topical Day
@@ -218,7 +192,6 @@ export const SpecialDay = ({
         <h1 className="py-2">Months</h1>
         <div className="py-4 w-full">
           <MonthRangeSlider
-            // min={1} max={12} onChange={() => {}}
             setMonth={setMonth}
             setMonthName={setMonthName}
             months={12}

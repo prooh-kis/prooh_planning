@@ -71,7 +71,7 @@ export const LocationTable = ({
     <table className="w-full">
       <thead className="bg-[#F7F7F7] w-full">
         <tr className="grid grid-cols-12 w-full h-[40px] px-2">
-          <th className="col-span-8 flex items-center px-1 gap-2">
+          <th className="col-span-9 flex items-center px-1 gap-2">
             <div className="flex gap-2 items-center px-1">
               <Tooltip title="Choose your target audience gender wise in the given locations">
                 <i className="fi fi-sr-land-layer-location flex items-center lg:text-[14px] text-[12px] text-[#21394F]"></i>
@@ -106,8 +106,8 @@ export const LocationTable = ({
         </tr>
       </thead>
       <tbody className="border overflow-scroll">
-        <tr className="flex justify-center">
-          <td>
+        <tr className="flex">
+          <td className="w-full">
             <StateCityZoneCheckboxTree
               data={data || {}}
               loading={loading}

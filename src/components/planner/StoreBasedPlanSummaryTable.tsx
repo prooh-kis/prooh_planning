@@ -27,7 +27,7 @@ interface ScreenSummaryDetailsProps {
   setPageSuccess?: any;
 }
 
-export const IKnowItAllPlanSummaryTable = ({
+export const StoreBasedPlanSummaryTable = ({
   setCurrentStep,
   step,
   campaignId,
@@ -72,8 +72,7 @@ export const IKnowItAllPlanSummaryTable = ({
       addDetailsToCreateCampaign({
         pageName: "Screen Summary Page",
         id: pathname.split("/").splice(-1)[0],
-        totalScreens:
-          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
+        totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
         totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
           campaignId
         ]?.total?.totalImpression,
@@ -90,25 +89,26 @@ export const IKnowItAllPlanSummaryTable = ({
           getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
       })
     );
-    setPageSuccess(false);
     setCurrentStep(step + 1);
   };
 
   useEffect(() => {
-    if (!successAddCampaignDetails) return;
-    setPageSuccess(true);
-    dispatch({
-      type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
-    });
-  }, [successAddCampaignDetails]);
-
-  useEffect(() => {
-    if (!screenSummaryPlanTableData) return;
-    setPageLoading(false);
+    if (screenSummaryPlanTableData) {
+      setPageLoading(false);
+    }
   }, [screenSummaryPlanTableData]);
 
   useEffect(() => {
+    if (!successAddCampaignDetails) return;
+    dispatch({
+      type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+    });
+    setPageSuccess(true);
+  }, [successAddCampaignDetails]);
+
+  useEffect(() => {
     if (!pageSuccess) return;
+
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
@@ -122,6 +122,9 @@ export const IKnowItAllPlanSummaryTable = ({
           getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
       })
     );
+    dispatch({
+      type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+    });
   }, [campaignId, dispatch, pageSuccess]);
 
   return (

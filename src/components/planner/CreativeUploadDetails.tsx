@@ -36,6 +36,8 @@ interface CreativeUploadDetailsProps {
   step: number;
   campaignId?: any;
   successAddCampaignDetails?: any;
+  pageSuccess?: boolean;
+  setPageSuccess?: any;
 }
 
 interface Creative {
@@ -66,6 +68,8 @@ export const CreativeUploadDetails = ({
   step,
   campaignId,
   successAddCampaignDetails,
+  pageSuccess,
+  setPageSuccess,
 }: CreativeUploadDetailsProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { pathname } = useLocation();
@@ -96,14 +100,16 @@ export const CreativeUploadDetails = ({
     data: screenData,
   } = screenDataUploadCreative;
 
-  // useEffect(() => {
-  //   if (successAddCampaignDetails) {
-  //     setCurrentStep(step + 1);
-  //   }
-  // }, [successAddCampaignDetails]);
-
   useEffect(() => {
     if (!successAddCampaignDetails) return;
+    dispatch({
+      type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+    });
+    setPageSuccess(true);
+  }, [successAddCampaignDetails]);
+
+  useEffect(() => {
+    if (!pageSuccess) return;
     const campaignIdFromPath = pathname?.split("/").splice(-1)[0];
     dispatch(getScreenDataUploadCreativeData({ id: campaignIdFromPath }));
     dispatch(
@@ -113,31 +119,46 @@ export const CreativeUploadDetails = ({
       })
     );
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-  }, [dispatch, pathname, campaignId, successAddCampaignDetails]);
+  }, [dispatch, pathname, campaignId, pageSuccess]);
 
   const mergeCreativeWithScreenData = (creatives: any, screenData: any) => {
     const combinedData: any = {};
+    console.log("creatives : ", creatives);
+    console.log("screenData : ", screenData);
 
     for (const city in screenData) {
       if (!combinedData[city]) {
         combinedData[city] = [];
       }
+
       screenData[city].forEach((screen: any) => {
-        const creativeData = creatives[city]?.find(
-          (creative: any) =>
-            creative.screenResolution === screen.screenResolution
+        // Find the matching creative data by screenIds
+        const creativeData = creatives[city]?.find((creative: any) =>
+          creative.screenIds.every((id: string) =>
+            screen.screenIds.includes(id)
+          )
         );
+        console.log("screen : ", screen);
+        console.log("creativeData : ", creativeData);
 
         if (creativeData) {
+          // If creative exists, merge it with the screen
           combinedData[city].push({
-            ...screen,
-            ...creativeData,
+            count: screen.count,
+            creativeDuration: screen.creativeDuration,
+            screenIds: screen.screenIds,
+            screenResolution: screen.screenResolution,
+            standardDayTimeCreatives: creativeData.standardDayTimeCreatives,
+            standardNightTimeCreatives: creativeData.standardNightTimeCreatives,
+            triggerCreatives: creativeData.triggerCreatives,
           });
         } else {
+          // If no creative exists, push only the screen data
           combinedData[city].push(screen);
         }
       });
     }
+
     return combinedData;
   };
 
@@ -355,7 +376,8 @@ export const CreativeUploadDetails = ({
         label: city,
         params: [
           getCreativeCountCityWise(data, city),
-          getScreenCountCityWise(data, city),
+          getScreenCountCityWise(data, city) -
+            getCreativeCountCityWise(data, city),
         ],
       };
     });
@@ -443,10 +465,6 @@ export const CreativeUploadDetails = ({
     return result;
   };
 
-  // const findMax = (data: Creative[]) => {
-  //   return Math.max(...data?.map((s: Creative) => s.creativeDuration), 0);
-  // };
-
   const handleSaveAndContinue = async () => {
     if (validate()) {
       setIsLoading(true);
@@ -504,7 +522,10 @@ export const CreativeUploadDetails = ({
           creatives: requestBody,
         })
       );
-      setTimeout(() => setCurrentStep(step + 1), 1000);
+      setTimeout(() => {
+        setPageSuccess(false);
+        setCurrentStep(step + 1);
+      }, 1000);
       setCallToSendChangeStatus(true);
     } else {
       message.error("Please upload creatives for each row and foreach city");
@@ -557,36 +578,24 @@ export const CreativeUploadDetails = ({
   };
 
   useEffect(() => {
+    if (errorScreeData) {
+      message.error(errorScreeData);
+    }
+    if (!screenData) return;
     const storedCampaignData =
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId];
     const storedCreatives = storedCampaignData?.creatives;
     const storedTriggers = storedCampaignData?.triggers;
     saveDataOnLocalStorage(SELECTED_TRIGGER, { [campaignId]: storedTriggers });
+    const transformedCreatives = transformData(storedCreatives);
+    const transformedScreenData = mewTransformData(screenData || {});
+    const combinedData = mergeCreativeWithScreenData(
+      transformedCreatives,
+      transformedScreenData
+    );
 
-    if (Array.isArray(storedCreatives) && storedCreatives.length > 0) {
-      const transformedCreatives = transformData(storedCreatives);
-      const transformedScreenData = mewTransformData(screenData || {});
-      const combinedData = mergeCreativeWithScreenData(
-        transformedCreatives,
-        transformedScreenData
-      );
-
-      handleSetInitialData(combinedData);
-      setCreativeUploadData(filterUniqueResolutions(combinedData));
-    } else if (screenData) {
-      const storedCampaignCreatives =
-        getDataFromLocalStorage(CAMPAIGN_CREATIVES)?.[campaignId];
-      const finalData = storedCampaignCreatives || screenData;
-
-      handleSetInitialData(finalData);
-      setCreativeUploadData(
-        filterUniqueResolutions(mewTransformData(finalData))
-      );
-    }
-
-    if (errorScreeData) {
-      message.error(errorScreeData);
-    }
+    handleSetInitialData(combinedData);
+    setCreativeUploadData(filterUniqueResolutions(combinedData));
     setPageLoading(false);
   }, [campaignId, errorScreeData, screenData]);
 

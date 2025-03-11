@@ -8,6 +8,8 @@ import {
   VendorConfirmationDetails,
   SetAdsPlayTime,
   AdvanceFiltersDetails,
+  StoreBaseScreenSummaryDetails,
+  StoreBasedPlanSummaryTable,
 } from "../../components/planner";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -22,39 +24,44 @@ import {
   CAMPAIGN_PLAN_TYPE_STORE,
 } from "../../constants/campaignConstants";
 import { storeBasePlanData } from "../../data";
+import { IKnowItAllPlanSummaryTable } from "../../components/planner/IKnowItAllPlanSummaryTable";
+import { IKnowItAllScreenSummaryDetails } from "../../components/planner/IKnowItAllScreenSummaryDetails";
 
 export const StoreBasedPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
   const campaignId: any = pathname.split("/")[2] || null;
+  const [pageSuccess, setPageSuccess] = useState<boolean>(false);
 
   const [currentStep, setCurrentStep] = useState<number>(
     campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] ?? 1 : 1
   );
 
   const { userInfo } = useSelector((state: any) => state.auth);
-  const { success, data: campaignDetails } = useSelector(
-    (state: any) => state.detailsToCreateCampaignAdd
-  );
+  const {
+    loading,
+    success,
+    data: campaignDetails,
+  } = useSelector((state: any) => state.detailsToCreateCampaignAdd);
 
+  // Fix: Ensure campaignId is always a string when used as an object key
   useEffect(() => {
     if (success && campaignDetails) {
       const newStep =
         (storeBasePlanData.find(
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0) + 1;
-
       setCurrentStep(newStep);
-      saveDataOnLocalStorage(CURRENT_STEP, { [campaignId ?? ""]: newStep });
+      const currStep = {
+        [campaignId]: newStep,
+      };
+      saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
   }, [success, campaignDetails, campaignId]);
 
   useEffect(() => {
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-
-    if (campaignId) {
-      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
-    }
+    if (campaignId) dispatch(addDetailsToCreateCampaign({ id: campaignId }));
   }, [dispatch, campaignId]);
 
   const stepComponents: { [key: number]: React.ReactNode } = {
@@ -63,7 +70,6 @@ export const StoreBasedPlanPage: React.FC = () => {
         setCurrentStep={setCurrentStep}
         step={currentStep}
         userInfo={userInfo}
-        pathname={pathname}
         campaignId={campaignId}
         campaignType={CAMPAIGN_PLAN_TYPE_STORE}
         path="storebasedplan"
@@ -75,14 +81,18 @@ export const StoreBasedPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     3: (
-      <ScreenSummaryDetails
+      <StoreBaseScreenSummaryDetails
         setCurrentStep={setCurrentStep}
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     4: (
@@ -91,14 +101,19 @@ export const StoreBasedPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
+        loading={loading}
       />
     ),
     5: (
-      <ScreenSummaryDetails
+      <StoreBasedPlanSummaryTable
         setCurrentStep={setCurrentStep}
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     6: (
@@ -107,6 +122,8 @@ export const StoreBasedPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     7: (
@@ -115,6 +132,8 @@ export const StoreBasedPlanPage: React.FC = () => {
         step={currentStep}
         campaignId={campaignId}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
     8: (
@@ -124,6 +143,8 @@ export const StoreBasedPlanPage: React.FC = () => {
         campaignId={campaignId}
         userInfo={userInfo}
         successAddCampaignDetails={success}
+        setPageSuccess={setPageSuccess}
+        pageSuccess={pageSuccess}
       />
     ),
   };
@@ -135,6 +156,7 @@ export const StoreBasedPlanPage: React.FC = () => {
           campaignId={campaignId}
           step={currentStep}
           setStep={setCurrentStep}
+          setPageSuccess={setPageSuccess}
           steps={pathname.includes("storebasedplan") ? 8 : 9}
         />
       </div>

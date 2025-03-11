@@ -5,7 +5,7 @@ import { ViewPlanPic } from "../segments/ViewPlanPic";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPlanningPageFooterData,
-  getScreenSummaryDataIKnowItAll,
+  getScreenSummaryData,
 } from "../../actions/screenAction";
 import {
   getDataFromLocalStorage,
@@ -20,7 +20,7 @@ import {
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { Tooltip } from "antd";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
-import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { LoadingScreen } from "../molecules/LoadingScreen";
 
 interface ScreenSummaryDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -32,7 +32,7 @@ interface ScreenSummaryDetailsProps {
   setPageSuccess?: any;
 }
 
-export const IKnowItAllScreenSummaryDetails = ({
+export const StoreBaseScreenSummaryDetails = ({
   setCurrentStep,
   step,
   campaignId,
@@ -61,21 +61,21 @@ export const IKnowItAllScreenSummaryDetails = ({
   const [cityTP, setCityTP] = useState<any>({});
   const [screenTypes, setScreenTypes] = useState<any>({});
 
-  const [screensBuyingCount, setScreensBuyingCount] = useState<any>(() => {
+  const [screensBuyingCount, setScreensBuyingCount] = useState(() => {
     // Check localStorage on the first load
     return (
-      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] ?? null
+      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] ?? {}
     );
   });
 
-  const screenSummaryDataIKnowItAllGet = useSelector(
-    (state: any) => state.screenSummaryDataIKnowItAllGet
+  const screenSummaryDataGet = useSelector(
+    (state: any) => state.screenSummaryDataGet
   );
   const {
     loading: loadingScreenSummaryIKnowItAll,
     error: errorScreenSummaryIKnowItAll,
     data: screenSummaryDataIKnowItAll,
-  } = screenSummaryDataIKnowItAllGet;
+  } = screenSummaryDataGet;
 
   const getSelectedScreenIdsFromAllCities = (citiesData: any) => {
     let activeScreenIds: any = [];
@@ -151,30 +151,36 @@ export const IKnowItAllScreenSummaryDetails = ({
         screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
       })
     );
-    setPageSuccess(false);
     setCurrentStep(step + 1);
   };
 
   useEffect(() => {
     if (!successAddCampaignDetails) return;
+    dispatch({
+      type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+    });
     setPageSuccess(true);
-    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
   }, [successAddCampaignDetails]);
 
   useEffect(() => {
     if (!pageSuccess) return;
+    dispatch({
+      type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+    });
     dispatch(
-      getScreenSummaryDataIKnowItAll({
+      getScreenSummaryData({
         id: campaignId,
+        type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+          ?.selectedType,
       })
     );
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
-        pageName: "Screen Summary Page",
+        pageName: "Select Screens Page",
       })
     );
-  }, [pageSuccess, dispatch, campaignId]);
+  }, [campaignId, dispatch, pageSuccess]);
 
   useEffect(() => {
     const type =
