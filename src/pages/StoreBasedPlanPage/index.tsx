@@ -24,8 +24,6 @@ import {
   CAMPAIGN_PLAN_TYPE_STORE,
 } from "../../constants/campaignConstants";
 import { storeBasePlanData } from "../../data";
-import { IKnowItAllPlanSummaryTable } from "../../components/planner/IKnowItAllPlanSummaryTable";
-import { IKnowItAllScreenSummaryDetails } from "../../components/planner/IKnowItAllScreenSummaryDetails";
 
 export const StoreBasedPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
