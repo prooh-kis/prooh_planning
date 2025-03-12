@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { PrimaryButton } from "../atoms/PrimaryButton";
 import { useNavigate } from "react-router-dom";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 import { allPlansData } from "../../data";
+import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 
 interface Plan {
   id: number;
@@ -73,7 +73,7 @@ export const CampaignTemplates: React.FC = () => {
   };
 
   return (
-    <div className="py-2 flex items-center justify-center w-full h-full bg-gray-50">
+    <div className="py-2 pt-16 px-8 flex items-center justify-center w-full h-full bg-gray-50">
       <div className="border border-transparent rounded-lg w-full h-full">
         <div className="flex flex-col items-start p-2">
           <h1 className="font-custom text-[24px] font-bold text-primaryText">

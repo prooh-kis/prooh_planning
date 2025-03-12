@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Landing } from "./Landing";
 import { CAMPAIGN_PLANNER } from "../../../constants/userConstants";
 import { PLAY_CAMPAIGN } from "../../../routes/routes";
+import { CampaignTemplates } from "../../../components/popup";
 
 export const MiddleArea: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -13,14 +14,13 @@ export const MiddleArea: React.FC = () => {
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-  useEffect(() => {
-    if (userInfo && userInfo?.userRole === CAMPAIGN_PLANNER)
-      navigate(PLAY_CAMPAIGN);
-  }, [userInfo]);
-
   return (
     <div className="w-full h-full flex justify-center items-center">
-      <Landing />
+      {userInfo && userInfo?.userRole === CAMPAIGN_PLANNER ? (
+        <CampaignTemplates />
+      ) : (
+        <Landing />
+      )}
     </div>
   );
 };

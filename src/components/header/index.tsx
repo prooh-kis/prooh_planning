@@ -29,8 +29,8 @@ export const Header: React.FC = () => {
 
   const navLink = [
     { title: "Home", path: BASE_URL },
-    { title: "Advertisers", path: `${BASE_URL}/${ADVERTISERS_PAGE}` },
-    { title: "Media Owner", path: `${BASE_URL}/${MEDIA_OWNER_PAGE}` },
+    { title: "Advertisers", path: `${BASE_URL}${ADVERTISERS_PAGE}` },
+    { title: "Media Owner", path: `${BASE_URL}${MEDIA_OWNER_PAGE}` },
     { title: "Research", path: "https://prooh-dmp.vercel.app" },
   ];
 

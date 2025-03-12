@@ -130,14 +130,14 @@ const Routers: React.FC = () => {
             </AppDashBoardLayout>
           }
         />
-        <Route
+        {/* <Route
           path={PLAY_CAMPAIGN}
           element={
             <AppDashBoardLayout className="bg-gray-50 pt-16">
               <CampaignTemplates />
             </AppDashBoardLayout>
           }
-        />
+        /> */}
         <Route
           path={MEDIA_OWNER_PAGE}
           element={
