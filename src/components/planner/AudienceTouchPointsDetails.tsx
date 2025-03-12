@@ -284,9 +284,7 @@ export const AudienceTouchPointsDetails = ({
         pageName: "Audience And TouchPoint Page",
         id: campaignId,
         markets: Object.keys(screensAudiences)?.filter((c: any) => c !== "id"),
-        cohorts: getDataFromLocalStorage(SELECTED_AUDIENCE_TOUCHPOINTS)?.[
-          campaignId
-        ]?.cohorts,
+        cohorts: selectedAudiences,
         touchPoints: selectedTouchPoints,
         gender: getSelectedGender(),
         screensSelectedCount: screensCost?.screensSelectedCount,
