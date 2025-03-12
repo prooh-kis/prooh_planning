@@ -440,7 +440,7 @@ export const ViewFinalPlanPODetails = ({
     if (!successAddCampaignDetails) return;
     setPageSuccess(true);
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-  }, [successAddCampaignDetails, poInput, campaignId]);
+  }, [successAddCampaignDetails]);
 
   useEffect(() => {
     if (!pageSuccess) return;
@@ -470,7 +470,7 @@ export const ViewFinalPlanPODetails = ({
   }, [successSendEmail, dispatch]);
 
   return (
-    <div className="w-full py-3">
+    <div className="w-full">
       <div>
         <h1 className="text-2xl font-semibold">View Final Plan & Share</h1>
         <h1 className="text-sm text-gray-500 ">
@@ -481,10 +481,10 @@ export const ViewFinalPlanPODetails = ({
         <LoadingScreen />
       ) : (
         <div>
-          <div className="grid grid-cols-2 gap-4 pb-20">
+          <div className="grid grid-cols-2 gap-4 pb-20 mt-4">
             <div
               ref={pageRef}
-              className="col-span-1 mt-4 px-8 py-4 border border-1 border-#C3C3C3 rounded-2xl w-full"
+              className="col-span-1 p-4 border border-1 border-#C3C3C3 rounded-2xl w-full"
             >
               <ViewFinalPlanTable
                 poTableData={poTableData}
@@ -498,7 +498,7 @@ export const ViewFinalPlanPODetails = ({
             </div>
             <div
               ref={pageRef}
-              className="col-span-1 mt-4 p-8 border border-1 border-#C3C3C3 rounded-2xl w-full"
+              className="col-span-1 p-4 border border-1 border-#C3C3C3 rounded-2xl w-full"
             >
               <h1 className="font-semibold text-lg">
                 1.Download or share your campaign plan{" "}

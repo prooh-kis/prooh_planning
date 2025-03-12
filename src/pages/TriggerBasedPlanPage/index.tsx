@@ -152,16 +152,18 @@ export const TriggerBasedPlanPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full">
-      <div className="w-full pt-[60px]">
+    <div className="w-full min-h-screen flex flex-col">
+      {/* Stepper Slider */}
+      <div className="w-full">
         <StepperSlider
           campaignId={campaignId}
           step={currentStep}
           setStep={setCurrentStep}
-          steps={9}
           setPageSuccess={setPageSuccess}
+          steps={9}
         />
       </div>
+      {/* Step Content */}
       <div className="w-full h-full flex justify-center items-top">
         {stepComponents[currentStep] || null}
       </div>

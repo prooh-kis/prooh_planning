@@ -128,7 +128,7 @@ export const StoreBasedPlanSummaryTable = ({
   }, [campaignId, dispatch, pageSuccess]);
 
   return (
-    <div className="w-full py-3">
+    <div className="w-full">
       {pageLoading ? (
         <LoadingScreen />
       ) : errorScreenSummaryPlanTable ? (
@@ -136,7 +136,7 @@ export const StoreBasedPlanSummaryTable = ({
           Something went wrong! please refresh the page...
         </div>
       ) : (
-        <div className="w-full py-3">
+        <div className="w-full">
           <h1 className="text-3xl ">
             Screens summary as per “
             {regularVsCohort === "cohort" ? "COHORT" : "REGULAR"}” selection{" "}

@@ -100,7 +100,7 @@ export function PlanSummaryTable({
   ]);
 
   return (
-    <div className="pb-10">
+    <div className="w-full max-h-[60vh] overflow-scroll no-scrollbar ">
       {pathname.split("/").splice(-2)[0] !== "iknowitallplan" &&
         pathname.split("/").splice(-2)[0] !== "storebasedplan" && (
           <div className="py-4">

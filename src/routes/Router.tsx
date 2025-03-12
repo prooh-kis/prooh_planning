@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { HomePageLayout } from "../components";
+import { CampaignTemplates, HomePageLayout } from "../components";
 
 import {
   ForgetPassword,
@@ -42,9 +42,12 @@ import {
   USERS,
   VERIFY_EMAIL,
   MY_CREATIVES,
+  PLAY_CAMPAIGN,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 import { PublicRoute } from "../layout/PublicRoute";
+import { AppDashBoardLayout } from "../layout/AppDashBoardLayout";
+
 import { PlayLiveUrl } from "../pages/PageNotFound/PlayLiveUrl";
 import { MyCreativesPage } from "../pages/MyCreativesPage";
 
@@ -97,9 +100,9 @@ const Routers: React.FC = () => {
         <Route
           path={USERS}
           element={
-            <PrivateRoute layout={HomePageLayout}>
+            <AppDashBoardLayout>
               <MyUsers />
-            </PrivateRoute>
+            </AppDashBoardLayout>
           }
         />
 
@@ -114,17 +117,25 @@ const Routers: React.FC = () => {
         <Route
           path={MY_CAMPAIGNS_LIST}
           element={
-            <PrivateRoute layout={HomePageLayout}>
+            <AppDashBoardLayout className="bg-[#D3D3D350] pt-16">
               <MyCampaignsListPage />
-            </PrivateRoute>
+            </AppDashBoardLayout>
           }
         />
         <Route
           path={MY_REQUESTS_LIST}
           element={
-            <PrivateRoute layout={HomePageLayout}>
+            <AppDashBoardLayout className="bg-[#D3D3D350] pt-16">
               <MyRequestsListPage />
-            </PrivateRoute>
+            </AppDashBoardLayout>
+          }
+        />
+        <Route
+          path={PLAY_CAMPAIGN}
+          element={
+            <AppDashBoardLayout className="bg-gray-50 pt-16">
+              <CampaignTemplates />
+            </AppDashBoardLayout>
           }
         />
         <Route
@@ -147,17 +158,17 @@ const Routers: React.FC = () => {
         <Route
           path={MY_PLANS_LIST}
           element={
-            <PrivateRoute layout={HomePageLayout}>
+            <AppDashBoardLayout className="bg-[#D3D3D350] pt-16">
               <MyPlansListPage />
-            </PrivateRoute>
+            </AppDashBoardLayout>
           }
         />
         <Route
           path={MY_CREATIVES}
           element={
-            <PrivateRoute layout={HomePageLayout}>
+            <AppDashBoardLayout>
               <MyCreativesPage />
-            </PrivateRoute>
+            </AppDashBoardLayout>
           }
         />
         <Route
@@ -171,41 +182,41 @@ const Routers: React.FC = () => {
         <Route
           path={"/regularplan/:id?"}
           element={
-            <PrivateRoute layout={HomePageLayout}>
+            <AppDashBoardLayout>
               <RegularPlanPage />
-            </PrivateRoute>
+            </AppDashBoardLayout>
           }
         />
         <Route
           path={"/specialdayplan/:id?"}
           element={
-            <PrivateRoute layout={HomePageLayout}>
+            <AppDashBoardLayout>
               <SpecialDayPlanPage />
-            </PrivateRoute>
+            </AppDashBoardLayout>
           }
         />
         <Route
           path={"/triggerbasedplan/:id?"}
           element={
-            <PrivateRoute layout={HomePageLayout}>
+            <AppDashBoardLayout>
               <TriggerBasedPlanPage />
-            </PrivateRoute>
+            </AppDashBoardLayout>
           }
         />
         <Route
           path={"/storebasedplan/:id?"}
           element={
-            <PrivateRoute layout={HomePageLayout}>
+            <AppDashBoardLayout>
               <StoreBasedPlanPage />
-            </PrivateRoute>
+            </AppDashBoardLayout>
           }
         />
         <Route
           path={"/iknowitallplan/:id?"}
           element={
-            <PrivateRoute layout={HomePageLayout}>
+            <AppDashBoardLayout>
               <IKnowItAllPlanPage />
-            </PrivateRoute>
+            </AppDashBoardLayout>
           }
         />
         <Route

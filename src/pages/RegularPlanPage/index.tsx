@@ -77,7 +77,7 @@ export const RegularPlanPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col">
-      <div className="w-full pt-[60px]">
+      <div className="w-full">
         <StepperSlider
           campaignId={campaignId}
           step={currentStep}

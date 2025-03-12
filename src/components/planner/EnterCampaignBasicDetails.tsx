@@ -217,7 +217,7 @@ export const EnterCampaignBasicDetails = ({
   };
 
   return (
-    <div className="w-full py-3">
+    <div className="w-full">
       <div className="">
         <h1 className="text-[24px] text-primaryText font-semibold">
           Add Basic Details

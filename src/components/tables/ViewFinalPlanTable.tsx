@@ -1,4 +1,4 @@
-import { Divider, message, Tooltip } from "antd";
+import { message, Tooltip } from "antd";
 import { formatNumber } from "../../utils/formatValue";
 import { convertDateIntoDateMonthYear } from "../../utils/dateAndTimeUtils";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
@@ -13,6 +13,10 @@ function MyDiv({ left, right }: any) {
     </div>
   );
 }
+
+const MyDivider = () => (
+  <div className="h-[1px] border-1 w-fill bg-[#D9D9D9] my-4 "></div>
+);
 
 export const ViewFinalPlanTable = ({
   poTableData,
@@ -29,8 +33,8 @@ export const ViewFinalPlanTable = ({
       <h1 className="font-semibold py-2	">Client Information</h1>
       <MyDiv left={"Client Name"} right={poTableData?.clientName} />
       <MyDiv left={"Brand Name"} right={poTableData?.brandName} />
-      <Divider />
-      <h1 className="font-semibold py-2	">Campaign Details</h1>
+      <MyDivider />
+      <h1 className="font-semibold ">Campaign Details</h1>
       <MyDiv left={"Campaign Name"} right={poTableData?.name} />
       <MyDiv
         left={"Campaign Type"}
@@ -45,8 +49,8 @@ export const ViewFinalPlanTable = ({
         right={convertDateIntoDateMonthYear(poTableData?.endDate)}
       />
       <MyDiv left={"Duration"} right={`${poTableData?.duration} Days`} />
-      <Divider />
-      <h1 className="font-semibold py-2	">Performance Metrics</h1>
+      <MyDivider />
+      <h1 className="font-semibold">Performance Metrics</h1>
       <MyDiv
         left={"Audience Impression"}
         right={Number(poTableData?.totalImpression).toFixed(0)}
@@ -98,8 +102,7 @@ export const ViewFinalPlanTable = ({
           />
         </div>
       </div>
-      <Divider />
-      dispatch
+      <MyDivider />
       <div className="flex font-semibold ">
         <div className="basis-1/2 flex items-center justify-start gap-2">
           <h1 className="text-left">Total Cost</h1>

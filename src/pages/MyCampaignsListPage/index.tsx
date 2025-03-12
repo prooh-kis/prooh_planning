@@ -126,8 +126,8 @@ export const MyCampaignsListPage: React.FC = () => {
   );
 
   return (
-    <div className="w-full mt-8">
-      <div className="flex justify-between border-b py-2">
+    <div className="w-full p-4">
+      <div className="flex justify-between border-b">
         <div className="flex gap-2 items-center">
           <i className="fi fi-sr-megaphone flex items-center text-[#129BFF]"></i>
           <h1 className="text-[18px] text-primaryText font-semibold">
@@ -143,7 +143,7 @@ export const MyCampaignsListPage: React.FC = () => {
         />
       </div>
 
-      <div className="w-full p-2 bg-[#D7D7D750]">
+      <div className="w-full p-2">
         <div className="grid grid-cols-8 gap-2">
           <div className="col-span-5">
             <SearchInputField
@@ -158,7 +158,7 @@ export const MyCampaignsListPage: React.FC = () => {
         ) : filteredCampaigns?.length === 0 ? (
           <NoDataView />
         ) : (
-          <div className="overflow-y-scroll scrollbar-minimal h-[72vh] my-1 rounded-[12px] pr-2">
+          <div className="overflow-y-scroll scrollbar-minimal h-[75vh] my-1 rounded-[12px] pr-2">
             {filteredCampaigns?.map((data: any, i: any) => (
               <div
                 key={i}

@@ -148,16 +148,18 @@ export const StoreBasedPlanPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full">
-      <div className="w-full pt-[60px]">
+    <div className="w-full min-h-screen flex flex-col">
+      {/* Stepper Slider */}
+      <div className="w-full">
         <StepperSlider
           campaignId={campaignId}
           step={currentStep}
           setStep={setCurrentStep}
           setPageSuccess={setPageSuccess}
-          steps={pathname.includes("storebasedplan") ? 8 : 9}
+          steps={8}
         />
       </div>
+      {/* Step Content */}
       <div className="w-full h-full flex justify-center items-top">
         {stepComponents[currentStep] || null}
       </div>

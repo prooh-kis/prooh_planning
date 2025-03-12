@@ -245,20 +245,25 @@ export const ScreenSummaryDetails = ({
   };
 
   return (
-    <div className="w-full py-3">
-      <h1 className="text-3xl ">
-        Screens summary as per “
-        {regularVsCohort === "cohort" ? "COHORT" : "REGULAR"}” selection{" "}
-      </h1>
-      <h1 className="text-sm text-gray-500 ">
-        You can further optimized your plan by deselecting locations in the
-        screen summary
-      </h1>
-
+    <div className="w-full">
+      {errorScreenSummary && (
+        <div className="p-4 bg-red-300 text-[#FFFFFF] ">
+          Something went wrong! please refresh the page...
+        </div>
+      )}
       {loadingScreenSummary || loadingScreenSummaryPlanTable ? (
         <LoadingScreen />
       ) : (
-        <div>
+        <div className="w-full">
+          <h1 className="text-3xl ">
+            Screens summary as per “
+            {regularVsCohort === "cohort" ? "COHORT" : "REGULAR"}” selection{" "}
+          </h1>
+          <h1 className="text-sm text-gray-500 ">
+            You can further optimized your plan by deselecting locations in the
+            screen summary
+          </h1>
+
           {pathname.split("/").includes("storebasedplan") ? (
             <></>
           ) : (
@@ -270,11 +275,6 @@ export const ScreenSummaryDetails = ({
                   tabData={screenSummaryTabData}
                 />
               )}
-            </div>
-          )}
-          {errorScreenSummary && (
-            <div className="p-4 bg-red-300 text-[#FFFFFF] ">
-              Something went wrong! please refresh the page...
             </div>
           )}
 

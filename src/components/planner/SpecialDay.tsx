@@ -134,7 +134,7 @@ export const SpecialDay = ({
   };
 
   return (
-    <div className="w-full pt-1 px-4">
+    <div className="w-full">
       <AddCampaignDetails
         handleCancel={handleCancel}
         open={isOpen}
@@ -151,7 +151,7 @@ export const SpecialDay = ({
         handleSaveData={handleSaveData}
         selectedSpacialDay={selectedSpacialDay}
       />
-      <div className="flex justify-between mt-4">
+      <div className="flex justify-between">
         <div>
           <h1 className="text-[24px] text-[#232323] font-semibold leading-[32.68px] tracking-[-0.02em]">
             Select Topical Day

@@ -142,8 +142,9 @@ export const SpecialDayPlanPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full px-8">
-      <div className="w-full pt-[60px]">
+    <div className="w-full min-h-screen flex flex-col">
+      {/* Stepper Slider */}
+      <div className="w-full">
         <StepperSlider
           campaignId={campaignId}
           step={currentStep}
@@ -152,6 +153,7 @@ export const SpecialDayPlanPage: React.FC = () => {
           steps={8}
         />
       </div>
+      {/* Step Content */}
       <div className="w-full h-full flex justify-center items-top">
         {stepComponents[currentStep] || null}
       </div>

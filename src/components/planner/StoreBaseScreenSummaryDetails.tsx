@@ -199,7 +199,7 @@ export const StoreBaseScreenSummaryDetails = ({
   }, [dispatch, campaignId, screenSummaryDataIKnowItAll, screensBuyingCount]);
 
   return (
-    <div className="w-full py-3">
+    <div className="w-full">
       {pageLoading ? (
         <LoadingScreen />
       ) : errorScreenSummaryIKnowItAll ? (
@@ -207,7 +207,7 @@ export const StoreBaseScreenSummaryDetails = ({
           Something went wrong! please refresh the page...
         </div>
       ) : (
-        <div className="w-full py-3">
+        <div className="w-full">
           <h1 className="text-3xl ">
             Screens summary as per “
             {regularVsCohort === "cohort" ? "COHORT" : "REGULAR"}” selection{" "}

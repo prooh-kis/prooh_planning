@@ -379,7 +379,7 @@ export const VendorConfirmationDetails = ({
       {loadingStatusTableData ? (
         <LoadingScreen />
       ) : (
-        <div className="w-full pt-3">
+        <div className="w-full h-full">
           <StatusPopup
             open={open}
             onClose={handleOpenStatusModel}

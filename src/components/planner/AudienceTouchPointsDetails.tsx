@@ -310,7 +310,7 @@ export const AudienceTouchPointsDetails = ({
       {loadingAudiences || loadingCost ? (
         <LoadingScreen />
       ) : (
-        <div className="w-full py-3">
+        <div className="w-full">
           <div>
             <h1 className="text-[24px] text-primaryText font-semibold">
               Select Target Audiences and TouchPoints

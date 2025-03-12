@@ -137,14 +137,14 @@ export const IKnowItAllPlanPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full px-8 py-2">
+    <div className="w-full h-full flex flex-col">
       {/* Stepper Slider */}
-      <div className="w-full pt-[60px]">
+      <div className="w-full">
         <StepperSlider
           campaignId={campaignId}
           step={currentStep}
           setStep={setCurrentStep}
-          steps={pathname.includes("iknowitallplan") ? 7 : 9}
+          steps={7}
           setPageSuccess={setPageSuccess}
         />
       </div>

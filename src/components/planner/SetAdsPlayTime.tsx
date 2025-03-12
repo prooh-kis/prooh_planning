@@ -189,7 +189,7 @@ export const SetAdsPlayTime = ({
   };
 
   return (
-    <div className="w-full py-3">
+    <div className="w-full">
       {pageLoading ? (
         <LoadingScreen />
       ) : error ? (
@@ -197,7 +197,7 @@ export const SetAdsPlayTime = ({
           Something went wrong! please refresh the page...
         </div>
       ) : (
-        <div className="w-full py-3">
+        <div className="w-full">
           <h1 className="text-[24px] font-semibold ">Set Ads Play time</h1>
           <h1 className="text-sm text-gray-500 ">
             your final bill will include the cost of all the additional slots,

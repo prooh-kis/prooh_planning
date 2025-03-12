@@ -75,7 +75,7 @@ export const MyUsers = (props: any) => {
   }, [userInfo]);
 
   return (
-    <div className="w-full h-full mt-8 ">
+    <div className="w-full h-full">
       {open && <AddUserDetails open={open} onClose={toggleOpen}/>}
       <div className="flex justify-between border rounded p-4 w-full bg-white">
         <h1 className="text-[16px] font-semibold">Users</h1>

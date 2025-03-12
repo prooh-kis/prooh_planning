@@ -7,6 +7,8 @@ export const SIGN_UP = "/sign-up";
 export const HOME = "/";
 export const MY_CAMPAIGNS_LIST = "/myCampaignsList";
 export const MY_REQUESTS_LIST = "/myRequestsList";
+export const PLAY_CAMPAIGN = "/start-plan";
+
 export const MY_PLANS_LIST = "/myPlansList";
 
 export const USERS = "/users";

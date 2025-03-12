@@ -600,7 +600,7 @@ export const CreativeUploadDetails = ({
   }, [campaignId, errorScreeData, screenData]);
 
   return (
-    <div className="w-full h-[80vh] overflow-y-auto no-scrollbar">
+    <div className="w-full">
       {pageLoading ? (
         <LoadingScreen />
       ) : (
@@ -643,7 +643,7 @@ export const CreativeUploadDetails = ({
                 {/* Creative Upload Section */}
                 <div className="grid grid-cols-12">
                   {/* Screen Selection */}
-                  <div className="border border-1 h-[60vh] overflow-scroll scrollbar-minimal col-span-3">
+                  <div className="border border-1 h-[55vh] overflow-scroll scrollbar-minimal col-span-3">
                     {creativeUploadData[currentCity]?.map(
                       (singleData, index) => (
                         <div
@@ -702,7 +702,7 @@ export const CreativeUploadDetails = ({
                   </div>
 
                   {/* File Upload Section */}
-                  <div className="border border-1 p-2 col-span-4 h-[60vh]">
+                  <div className="border border-1 p-2 col-span-4 h-[55vh]">
                     {creativeType === "Standard" ? (
                       <>
                         <TabWithIcon
@@ -754,7 +754,7 @@ export const CreativeUploadDetails = ({
                   </div>
 
                   {/* Preview Section */}
-                  <div className="border-b border-r border-1 h-[60vh] px-4 py-2 col-span-4">
+                  <div className="border-b border-r border-1 h-[55vh] px-4 py-2 col-span-4">
                     <h1 className="font-semibold">
                       {creativeType === "Standard"
                         ? currentPlayTimeCreative === "1"

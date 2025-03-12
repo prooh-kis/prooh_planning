@@ -2,8 +2,8 @@ import { Tooltip } from "antd";
 import { DrawnMapPolygon } from "../../components/molecules/DrawnMapPolygon";
 import { CheckboxInput } from "../atoms/CheckboxInput";
 // import { ExcelImport } from "../molecules/ExcelImport copy";
-import { ExcelImport } from "../molecules/ExcelImport"
-import { RouteProximity } from "../molecules/RouteProximity"
+import { ExcelImport } from "../molecules/ExcelImport";
+import { RouteProximity } from "../molecules/RouteProximity";
 import { LinearBar } from "../molecules/linearbar";
 import { POIProximity } from "./POIProximity";
 import { useState } from "react";
@@ -79,20 +79,18 @@ export const LocationProximity = ({
   handleSelectFromMap,
   handleConfirmScreensSelections,
   setRouteFilteredScreens,
-  setRoutes
+  setRoutes,
 }: LocationProximityProps) => {
-
   const [open, setOpen] = useState<any>({
-    "excel": true,
-    "route": true,
-    "polygon": true,
-    "poi": true,
+    excel: true,
+    route: true,
+    polygon: true,
+    poi: true,
   });
 
   return (
     <div className="h-auto">
-      <div className="h-[60vh] lg:h-[60vh] overflow-scroll no-scrollbar">
-
+      <div className="h-[60vh] lg:h-[60vh] overflow-scroll scrollbar-minimal">
         <ExcelImport
           open={open}
           setOpen={setOpen}
@@ -147,12 +145,11 @@ export const LocationProximity = ({
           handleConfirmScreensSelections={handleConfirmScreensSelections}
         /> */}
       </div>
-
       <div className="flex justify-start gap-2 pt-2">
-        <h1 className="lg:text-[16px] text-[14px] font-semibold">Showing Results Below</h1>
-        <Tooltip
-            title="Only showing unique screens from all the above filters selected"
-            >
+        <h1 className="lg:text-[16px] text-[14px] font-semibold">
+          Showing Results Below
+        </h1>
+        <Tooltip title="Only showing unique screens from all the above filters selected">
           <i className="fi fi-rs-info pr-1 lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
         </Tooltip>
       </div>
@@ -168,10 +165,37 @@ export const LocationProximity = ({
           />
         </div>
         <div className="col-span-10">
-          <LinearBar value={(finalSelectedScreens.length * 100 / (allScreens.length))?.toFixed(2)} colors={["#F3F3F3", "#7AB3A2"]} />
+          <LinearBar
+            value={(
+              (finalSelectedScreens.length * 100) /
+              allScreens.length
+            )?.toFixed(2)}
+            colors={["#F3F3F3", "#7AB3A2"]}
+          />
         </div>
-        <p className="col-span-1 text-[12px] text-semibold flex justify-end truncate">{allScreens?.length} Sites</p>
+        <p className="col-span-1 text-[12px] text-semibold flex justify-end truncate">
+          {allScreens?.length} Sites
+        </p>
+      </div>
+      <div className="flex items-center mx-[-1px] pt-1">
+        <CheckboxInput
+          label={
+            <>
+              Confirm and take{" "}
+              <span className=" font-bold">
+                {`${finalSelectedScreens.length} Sites Out of ${allScreens.length} Sites `}
+              </span>{" "}
+              for my plan
+            </>
+          }
+          onChange={(e) => {
+            handleConfirmScreensSelections({
+              checked: e,
+              screens: finalSelectedScreens,
+            });
+          }}
+        />
       </div>
     </div>
-  )
-}
+  );
+};

@@ -28,7 +28,7 @@ export const RegularCohortSummaryTable = ({
       overall: { included: 0, total: 0 },
     };
 
-    data.forEach((entry: any) => {
+    data?.forEach((entry: any) => {
       const dayWiseData = entry.dayWiseData;
       Object.values(dayWiseData).forEach((dayData: any) => {
         Object.keys(result).forEach((period: any) => {
