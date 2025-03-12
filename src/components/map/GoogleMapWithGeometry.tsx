@@ -9,37 +9,6 @@ import { Heatmap } from "./Heatmap";
 import { ToggleSwitch } from "../../components/atoms/ToggleSwitch";
 import { Tooltip } from "antd";
 
-const MapTypeId = {
-  HYBRID: 'hybrid',
-  ROADMAP: 'roadmap',
-  SATELLITE: 'satellite',
-  TERRAIN: 'terrain'
-};
-
-export type MapConfig = {
-  id: string;
-  label: string;
-  mapId?: string;
-  mapTypeId?: string;
-  styles?: google.maps.MapTypeStyle[];
-};
-
-const MAP_CONFIGS: MapConfig[] = [
-  {
-    id: 'light',
-    label: 'Light',
-    mapId: '4f1f238ed9607822',
-    mapTypeId: MapTypeId.ROADMAP
-  },
-  // {
-  //   id: 'styled2',
-  //   label: 'Raster / "Vitamin C" (no mapId)',
-  //   mapTypeId: MapTypeId.ROADMAP,
-  //   styles: vitaminCStyles
-  // },
-];
-
-
 type POIProps = {
   id: string;
   mag: number;
@@ -50,10 +19,8 @@ type POIProps = {
 
 type POIGeojson = FeatureCollection<Point, POIProps>;
 
-
 export function GoogleMapWithGeometry(props: any) {
   const mapRef = useRef<google.maps.Map | null>(null);
-  const [mapConfig, setMapConfig] = useState<MapConfig>(MAP_CONFIGS[0]);
   const [selectedMarkers, setSelectedMarkers] = useState([]);
   const [unSelectedMarkers, setUnselectedMarkers] = useState([]);
   const [screenData, setScreenData] = useState<any>(null);
@@ -183,7 +150,7 @@ export function GoogleMapWithGeometry(props: any) {
         defaultCenter={viewState.center}
         defaultZoom={viewState.zoom}
         // onLoad={(map: any) => (mapRef.current = map)}
-        mapId="4f1f238ed9607822"
+        mapId="96194b21d9fc00de"
         gestureHandling={'greedy'}
         disableDefaultUI={true}
       >
