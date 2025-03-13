@@ -1,10 +1,7 @@
 import { CampaignDashboardTable } from "../../components/tables/CampaignDashboardTable";
 import React, { useEffect, useRef, useState } from "react";
 import { DashboardFilters } from "../../components/segments/DashboardFilters";
-import {
-  calculateDaysPlayed,
-  getNumberOfDaysBetweenTwoDates,
-} from "../../utils/dateAndTimeUtils";
+import { calculateDaysPlayed } from "../../utils/dateAndTimeUtils";
 import { CalendarScaleSlider } from "../../components/molecules/CalenderScaleSlider";
 import { DashboardImpressionDetailsTable } from "../../components/tables/DashboardImpressionDetailsTable";
 import { DashboardBarChart } from "../../components/segments/DashboardBarGraph";
@@ -360,10 +357,7 @@ export const CampaignDashboard = ({
               </div>
               <div className="relative pt-8 pb-4 px-2">
                 <CalendarScaleSlider
-                  days={getNumberOfDaysBetweenTwoDates(
-                    campaignDetails?.startDate,
-                    campaignDetails?.endDate
-                  )}
+                  days={campaignDetails?.duration}
                   daysPlayed={
                     calculateDaysPlayed(
                       campaignDetails?.startDate,

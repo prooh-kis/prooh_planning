@@ -3,8 +3,6 @@ import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { message, Modal, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
-import { getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
-import { CalendarInput } from "../atoms/CalendarInput";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {

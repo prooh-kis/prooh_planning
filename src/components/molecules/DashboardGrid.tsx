@@ -1,7 +1,4 @@
-import {
-  calculateDaysPlayed,
-  getNumberOfDaysBetweenTwoDates,
-} from "../../utils/dateAndTimeUtils";
+import { calculateDaysPlayed } from "../../utils/dateAndTimeUtils";
 import { LinearBar } from "./linearbar";
 import { MultiColorLinearBar2 } from "./MultiColorLinearBar2";
 import { formatNumber } from "../../utils/formatValue";
@@ -115,6 +112,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
 
     return Number(((result / averagePromised) * 100)?.toFixed(2));
   };
+
   return (
     <div className="w-full">
       {type === "duration" ? (
@@ -129,12 +127,12 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
                 {calculateDaysPlayed(
                   campaignDetails?.startDate,
                   campaignDetails?.endDate
-                ) > 0
-                  ? calculateDaysPlayed(
+                ) === 0
+                  ? 1
+                  : calculateDaysPlayed(
                       campaignDetails?.startDate,
                       campaignDetails?.endDate
-                    )
-                  : 1}
+                    )}
               </span>
               /{campaignDetails?.duration} <span> Days</span>
             </h1>

@@ -2,14 +2,11 @@ import { Skeleton } from "antd";
 import React, { useEffect, useMemo } from "react";
 import {
   calculateDaysPlayed,
-  convertDataTimeToLocale,
   convertDateIntoDateMonthYear,
-  getNumberOfDaysBetweenTwoDates,
   getTimeFromDate,
 } from "../../utils/dateAndTimeUtils";
 import { DownLoadCampaignLogReport } from "../../components/molecules/DownLoadCampaignLogReport";
 import { NoDataView } from "../../components/molecules/NoDataView";
-import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import { CalendarScaleSlider } from "../../components/molecules/CalenderScaleSlider";
 
 type DataRow = {
@@ -95,7 +92,7 @@ export const ShowCampaignLogsPopup = ({
         </div>
         <div className="flex items-center justify-center py-8 border">
           <CalendarScaleSlider
-            days={getNumberOfDaysBetweenTwoDates(
+            days={calculateDaysPlayed(
               logs?.campaign?.startDate,
               logs?.campaign?.endDate
             )}

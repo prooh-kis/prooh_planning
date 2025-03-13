@@ -3,15 +3,11 @@ import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { message, Modal, Tooltip } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
-import {
-  getEndDateFromStartDateAndDuration,
-  getNumberOfDaysBetweenTwoDates,
-} from "../../utils/dateAndTimeUtils";
+import { getEndDateFromStartDateAndDuration } from "../../utils/dateAndTimeUtils";
 import { CalendarInput } from "../atoms/CalendarInput";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { changeCampaignDuration } from "../../actions/campaignAction";
-import { start } from "repl";
 import { CHANGE_CAMPAIGN_DURATION_RESET } from "../../constants/campaignConstants";
 
 export const ChangeCampaignDuration = ({ campaignId }: any) => {

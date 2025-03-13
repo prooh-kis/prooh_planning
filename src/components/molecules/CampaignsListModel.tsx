@@ -1,7 +1,6 @@
 import {
   convertDataTimeToLocale,
   getCampaignEndingStatus,
-  getNumberOfDaysBetweenTwoDates,
 } from "../../utils/dateAndTimeUtils";
 import { generateColorFromAlphabet } from "../../utils/colorUtils";
 import clsx from "clsx";
