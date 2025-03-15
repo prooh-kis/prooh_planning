@@ -132,7 +132,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
                   : calculateDaysPlayed(
                       campaignDetails?.startDate,
                       campaignDetails?.endDate
-                    )}
+                    ) || 0}
               </span>
               /{campaignDetails?.duration} <span> Days</span>
             </h1>

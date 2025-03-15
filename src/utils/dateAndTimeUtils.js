@@ -155,3 +155,26 @@ export function getCampaignEndingStatus(endDate) {
     ? "Ending Today"
     : `Ends In : ${getNumberOfDaysBetweenTwoDates(new Date(), endDate)} days`;
 }
+
+
+export function formatDateForLogs(isoDate) {
+  const date = new Date(isoDate);
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const year = date.getUTCFullYear();
+  return {apiDate: `${day}/${month}/${year}`, logDate: date.toDateString()};
+}
+
+export function transformToAmPm(time) {
+    let [hour, minute, second] = time.split(':');
+    hour = Number(hour);
+    const period = hour >= 12 ? 'PM' : 'AM';
+    if (hour === 0) {
+        hour = 12;
+    } else if (hour > 12) {
+        hour -= 12;
+    }
+    const formattedTime = `${String(hour).padStart(2, '0')}:${minute}:${second} ${period}`;
+  
+    return formattedTime;
+}

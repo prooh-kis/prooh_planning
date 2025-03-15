@@ -43,9 +43,9 @@ export const SpecialDayPlanPage: React.FC = () => {
   useEffect(() => {
     if (success && campaignDetails) {
       const newStep =
-        (specialDayPlanData.find(
+        specialDayPlanData.find(
           (page: any) => page.value === campaignDetails.currentPage
-        )?.id || 0) + 1;
+        )?.id || 0;
       setCurrentStep(newStep);
       const currStep = {
         [campaignId]: newStep,

@@ -43,6 +43,7 @@ export const CampaignDashboardTable = ({
 
   const [screenName, setscreenName] = useState<any>(null);
   const [currentIndex, setCurrentIndex] = useState<any>(null);
+  const [campaignData, setCampaignData] = useState<any>({});
   const campaignLogsGet = useSelector((state: any) => state.campaignLogsGet);
   const {
     loading: loadingLogs,
@@ -63,7 +64,7 @@ export const CampaignDashboardTable = ({
       message.info("Start fetching data, it will take some time");
       setIsDownload(campaignId);
       const { data } = await axios.get(
-        `${analyticsV1}/getAllCampaignLogs?campaignId=${campaignId}`
+        `${analyticsV1}/downloadAllCampaignLogs?campaignId=${campaignId}`
       );
       await downloadExcel({
         campaign: data?.campaign,
@@ -179,6 +180,7 @@ export const CampaignDashboardTable = ({
       else return "Close";
     } else return "Close";
   };
+
   return (
     <div>
       <ShowMonitoringPicsPopup
@@ -193,6 +195,8 @@ export const CampaignDashboardTable = ({
         loading={loadingLogs}
         open={openLogsPopup}
         onClose={onClose}
+        campaignData={campaignData}
+        campaignDetails={campaignDetails}
       />
       <table className="table-auto w-full">
         <thead className="bg-[#F7F7F7] rounded-[6px] w-full flex justify-between items-center">
@@ -401,11 +405,15 @@ export const CampaignDashboardTable = ({
                         className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}
                         onClick={() => {
                           dispatch(
-                            GetCampaignLogsAction(
-                              screenLevelData[data]?.campaignId
-                            )
+                            GetCampaignLogsAction({
+                              campaignId: screenLevelData[data]?.campaignId,
+                              // date: formatDateForLogs(campaignDetails.startDate)
+                              date: "13/03/2025"
+
+                            })
                           );
                           setscreenName(screenLevelData[data]?.screenName);
+                          setCampaignData(screenLevelData[data]);
                           setOpenLogsPopup(true);
                         }}
                       ></i>

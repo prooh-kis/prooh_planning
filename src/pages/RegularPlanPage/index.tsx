@@ -47,7 +47,7 @@ export const RegularPlanPage: React.FC = () => {
       const newStep =
         (regularPlanData.find(
           (page: any) => page.value === campaignDetails.currentPage
-        )?.id || 0) + 1;
+        )?.id || 0);
       setCurrentStep(newStep);
       const currStep = {
         [campaignId]: newStep,

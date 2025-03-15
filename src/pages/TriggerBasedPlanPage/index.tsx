@@ -43,9 +43,9 @@ export const TriggerBasedPlanPage: React.FC = () => {
   useEffect(() => {
     if (success && campaignDetails) {
       const newStep =
-        (triggerBasePlanData.find(
+        triggerBasePlanData.find(
           (page: any) => page.value === campaignDetails.currentPage
-        )?.id || 0) + 1;
+        )?.id || 0;
 
       setCurrentStep(newStep);
       saveDataOnLocalStorage(CURRENT_STEP, { [campaignId ?? ""]: newStep });

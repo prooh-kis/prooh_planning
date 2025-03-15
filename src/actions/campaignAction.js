@@ -250,13 +250,13 @@ export const changeCampaignDuration = (input) => async (dispatch, getState) => {
 };
 
 
-export const GetCampaignLogsAction = (campaignId) => async (dispatch, getState) => {
+export const GetCampaignLogsAction = ({campaignId, date}) => async (dispatch, getState) => {
   dispatch({
     type: CAMPAIGN_LOGS_REQUEST,
-    payload: campaignId,
+    payload: {campaignId, date},
   });
   try {
-    const { data } = await axios.get(`${url2}/getAllCampaignLogs?campaignId=${campaignId}&limit="200`);
+    const { data } = await axios.get(`${url2}/getCampaignLogsDateWise?campaignId=${campaignId}&date=${date}`);
     dispatch({
       type: CAMPAIGN_LOGS_SUCCESS,
       payload: data,

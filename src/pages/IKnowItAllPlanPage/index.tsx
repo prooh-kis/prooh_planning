@@ -30,7 +30,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
   const campaignId: any = pathname.split("/")[2] || null;
-  const [pageSuccess, setPageSuccess] = useState<boolean>(false);
+  const [pageSuccess, setPageSuccess] = useState<any>(false);
   const [currentStep, setCurrentStep] = useState<number>(
     campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] ?? 1 : 1
   );
@@ -47,7 +47,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
       const newStep =
         (iKnowItAllPlanData.find(
           (page: any) => page.value === campaignDetails.currentPage
-        )?.id || 0) + 1;
+        )?.id || 0);
       setCurrentStep(newStep);
       const currStep = {
         [campaignId]: newStep,

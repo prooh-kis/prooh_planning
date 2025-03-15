@@ -9,6 +9,7 @@ export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({
   days,
   daysPlayed,
 }) => {
+  console.log(days, daysPlayed);
   // Generate an array of days from 1 to the provided total number of days
   const dayArray = Array.from({ length: days }, (_, i) => i + 1);
 

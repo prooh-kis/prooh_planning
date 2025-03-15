@@ -46,9 +46,9 @@ export const StoreBasedPlanPage: React.FC = () => {
   useEffect(() => {
     if (success && campaignDetails) {
       const newStep =
-        (storeBasePlanData.find(
+        storeBasePlanData.find(
           (page: any) => page.value === campaignDetails.currentPage
-        )?.id || 0) + 1;
+        )?.id || 0;
       setCurrentStep(newStep);
       const currStep = {
         [campaignId]: newStep,

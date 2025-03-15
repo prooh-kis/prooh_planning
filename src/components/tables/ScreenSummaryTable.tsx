@@ -126,8 +126,10 @@ export const ScreenSummaryTable = ({
     ({ screen, city, statusRes, suppressMessage = false }: any) => {
       
       const screenId = screen._id;
-      const networkType = screen.networkType;
+      // const networkType = screen.networkType;
+      const networkType = "";
 
+      
       // Create a deep clone to avoid modifying the original state directly
       const updatedScreensBuyingCount = { ...screensBuyingCount };
 
