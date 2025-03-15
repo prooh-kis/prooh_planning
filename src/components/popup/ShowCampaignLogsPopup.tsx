@@ -1,5 +1,5 @@
-import { Skeleton } from "antd";
-import React, { useEffect, useMemo } from "react";
+import { message, Skeleton } from "antd";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   calculateDaysPlayed,
   convertDateIntoDateMonthYear,
@@ -7,9 +7,10 @@ import {
   getTimeFromDate,
   transformToAmPm,
 } from "../../utils/dateAndTimeUtils";
-import { DownLoadCampaignLogReport } from "../../components/molecules/DownLoadCampaignLogReport";
 import { NoDataView } from "../../components/molecules/NoDataView";
-import { CalendarScaleSlider } from "../../components/molecules/CalenderScaleSlider";
+import { CalenderScaleStepper } from "../../components/molecules/CalenderScale2";
+import { useDispatch } from "react-redux";
+import { GetCampaignLogsAction } from "../../actions/campaignAction";
 
 type DataRow = {
   time: string;
@@ -31,8 +32,18 @@ export const ShowCampaignLogsPopup = ({
   loading,
   campaignData,
   campaignDetails,
+  setCurrentDay,
+  setCurrentWeek,
+  currentDay,
+  currentWeek,
+  allDates,
+  setCurrentDate,
+  currentDate,
+  downloadLogs,
+  isDownLoad
 }: any) => {
-  console.log(campaignData, logs);
+
+  const dispatch = useDispatch<any>();
   const newData = useMemo(() => {
     return logs?.reduce((accum: DataStructure, current: any) => {
       const key: any = formatDateForLogs(current?.logTime)?.logDate;
@@ -75,214 +86,6 @@ export const ShowCampaignLogsPopup = ({
           result[date][hour].push(item);
           return result;
       }, {});
-      // hrWiseLogs = {
-      //   "Thu Mar 13 2025": {
-      //     "11": [
-      //       {
-      //         "sortTime": 1741847394000,
-      //         "logTime": "2025-03-13T11:59:54.000+05:30",
-      //         "deviceTime": "Thu Mar 13 11:59:54 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741847199000,
-      //         "logTime": "2025-03-13T11:56:39.000+05:30",
-      //         "deviceTime": "Thu Mar 13 11:56:39 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       }
-      //     ],
-      //     "12": [
-      //       {
-      //         "sortTime": 1741850881000,
-      //         "logTime": "2025-03-13T12:58:01.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:58:01 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741850687000,
-      //         "logTime": "2025-03-13T12:54:47.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:54:47 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741850493000,
-      //         "logTime": "2025-03-13T12:51:33.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:51:33 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741850299000,
-      //         "logTime": "2025-03-13T12:48:19.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:48:19 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741850105000,
-      //         "logTime": "2025-03-13T12:45:05.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:45:05 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741849912000,
-      //         "logTime": "2025-03-13T12:41:52.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:41:52 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741849718000,
-      //         "logTime": "2025-03-13T12:38:38.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:38:38 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741849525000,
-      //         "logTime": "2025-03-13T12:35:25.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:35:25 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741849332000,
-      //         "logTime": "2025-03-13T12:32:12.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:32:12 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741849138000,
-      //         "logTime": "2025-03-13T12:28:58.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:28:58 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741848944000,
-      //         "logTime": "2025-03-13T12:25:44.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:25:44 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741848750000,
-      //         "logTime": "2025-03-13T12:22:30.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:22:30 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741848556000,
-      //         "logTime": "2025-03-13T12:19:16.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:19:16 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741848363000,
-      //         "logTime": "2025-03-13T12:16:03.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:16:03 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741848169000,
-      //         "logTime": "2025-03-13T12:12:49.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:12:49 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741847975000,
-      //         "logTime": "2025-03-13T12:09:35.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:09:35 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741847782000,
-      //         "logTime": "2025-03-13T12:06:22.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:06:22 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       },
-      //       {
-      //         "sortTime": 1741847588000,
-      //         "logTime": "2025-03-13T12:03:08.000+05:30",
-      //         "deviceTime": "Thu Mar 13 12:03:08 GMT+05:30 2025",
-      //         "mediaId": "67c83e18efc34a9341bf34a8_1X1_new",
-      //         "campaignId": "67a0a6a85f055df930bc2336",
-      //         "campaignName": "Rudram250203",
-      //         "brandName": "RUDRAM",
-      //         "screenStatus": "online"
-      //       }
-      //     ]
-      //   }
-      // }
     }
 
     return {hrWiseLogs: hrWiseLogs};
@@ -313,6 +116,16 @@ export const ShowCampaignLogsPopup = ({
   };
 
   useEffect(() => {
+    dispatch(
+      GetCampaignLogsAction({
+        campaignId: campaignData?.campaignId,
+        date: formatDateForLogs(new Date(currentDate))?.apiDate,
+        // date: "13/03/2025"
+      })
+    );
+  },[dispatch, campaignData, currentDate]);
+
+  useEffect(() => {
     if (open) {
       document.body.classList.add("overflow-hidden");
     } else {
@@ -336,7 +149,7 @@ export const ShowCampaignLogsPopup = ({
         <div className="flex justify-end">
           <i className="fi fi-br-circle-xmark" onClick={() => onClose()}></i>
         </div>
-        <div className="flex justify-between p-4 border">
+        <div className="flex justify-between p-4">
           <div>
             <h1 className="font-semibold text-[16px] text-[#0E212E] leading-[19.36px]">
               Log Report
@@ -346,35 +159,38 @@ export const ShowCampaignLogsPopup = ({
               {logs?.campaign?.name}
             </h1>
           </div>
-          {!loading && logs?.logs?.length > 0 && (
-            <DownLoadCampaignLogReport
-              campaignLog={logs?.logs}
-              campaign={logs?.campaign}
-            />
+          {!loading && logs?.length > 0 && (
+       
+            <button
+              title="s"
+              className="border border-1 py-2 px-4 rounded-lg bg-blue text-[#FFFFFF] hover:bg-[#129BFF] w-1/4 text-center"
+              onClick={() => {
+                if (isDownLoad != campaignData?.campaignId)
+                  downloadLogs(campaignData?.campaignId);
+                else
+                  message.warning(
+                    "Please wait..., data has start fetching"
+                  );
+              }}
+            >
+              <i className="fi fi-sr-file-download pr-4"></i>
+              Download Logs
+            </button>
           )}
         </div>
-        <div className="flex items-center justify-center py-8 border">
-          <CalendarScaleSlider
-            days={calculateDaysPlayed(
-              campaignDetails?.startDate,
-              campaignDetails?.endDate
-            )}
-            daysPlayed={
-              calculateDaysPlayed(
-                campaignDetails?.startDate,
-                campaignDetails?.endDate
-              ) === 0
-                ? 1
-                : calculateDaysPlayed(
-                  campaignDetails?.startDate,
-                    campaignDetails?.endDate
-                  )
-            }
+        <div>
+          <CalenderScaleStepper
+            setCurrentDay={setCurrentDay}
+            setCurrentWeek={setCurrentWeek}
+            currentDay={currentDay}
+            currentWeek={currentWeek}
+            allDates={allDates}
+            setCurrentDate={setCurrentDate}
+            campaignData={campaignData}
           />
         </div>
-
         {loading ? (
-          <div className="py-4">
+          <div className="pt-12">
             <Skeleton active paragraph={{ rows: 12 }} />
           </div>
         ) : logs?.length > 0 ? (
@@ -385,36 +201,83 @@ export const ShowCampaignLogsPopup = ({
               </h1>
             </div>
             <div className="mx-auto p-6">
-              {Object.entries(newCombinedData?.hrWiseLogs).map(([date, hours]: any) => (
-                <div key={date} className="flex mb-6 w-full">
-                  <div className="p-2 border flex justify-center items-center h-[50vh]">
-                    <h2 className="text-xl font-bold text-gray-700 mb-2">{date}</h2>
+              <div className="grid grid-cols-12">
+                <div className="col-span-1 p-2 border flex justify-center items-center">
+                  <h2 className="text-sm font-bold text-gray-700 " >{"Date"}</h2>
+                </div>
+                <div className="col-span-11 grid grid-cols-12">
+                  <div className="col-span-3 p-2 border flex justify-center items-center">
+                    <h2 className="text-sm font-semibold text-gray-600">
+                      {"Hour"}
+                    </h2>
                   </div>
-                  <div className="h-[50vh] border overflow-scroll no-scrollbar">
-                    {Object.entries(hours).map(([hour, entries]: any) => (
-                      <div key={hour} className="flex">
-                        <div className="p-2 border flex justify-center items-center">
-                          <h3 className="text-lg font-semibold text-gray-600 mb-2">
+                  <div className="col-span-6 grid grid-cols-12 border">
+                    <div className="col-span-3 py-2 flex items-center justify-center">
+                      <h2 className="text-sm font-semibold text-gray-600">
+                        {"Time"}
+                      </h2>
+                    </div>
+                    <div className="col-span-4 py-2 flex items-center justify-center">
+                      <h2 className="text-sm font-semibold text-gray-600">
+                        {"Creative"}
+                      </h2>
+                    </div>
+                    <div className="col-span-3 py-2 flex items-center justify-center">
+                      <h2 className="text-sm font-semibold text-gray-600">
+                        {"Brand"}
+                      </h2>
+                    </div>
+                    <div className="col-span-2 py-2 flex justify-center">
+                      <i className="fi fi-br-wifi text-[#22C55E] flex items-center justify-center"></i>
+                    </div>
+                  </div>
+                  <div className="col-span-3 grid grid-cols-3 border">
+                    <div className="col-span-1 py-2 border flex items-center justify-center">
+                      <h2 className="text-sm font-semibold text-gray-600">
+                        {"Delivered"}
+                      </h2>
+                    </div>
+                    <div className="col-span-1 py-2 border flex items-center justify-center">
+                      <h2 className="text-sm font-semibold text-gray-600">
+                        {"Promised"}
+                      </h2>
+                    </div>
+                    <div className="col-span-1 py-2 px-4 border flex items-center justify-center">
+                      <h2 className="text-sm font-semibold text-gray-600">
+                        {"Av. Loop Time"}
+                      </h2>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {Object.entries(newCombinedData?.hrWiseLogs).map(([date, hours]: any) => (
+                <div key={date} className="grid grid-cols-12 mb-6 w-full">
+                  <div className="col-span-1 p-2 border flex justify-center items-center h-[50vh]">
+                    <h2 className="text-xl font-bold text-gray-700" >{date}</h2>
+                  </div>
+                  <div className="col-span-11 h-[50vh] overflow-scroll no-scrollbar">
+                    {Object.keys(hours).sort((a, b) => Number(a) - Number(b)).map((key) => [key, hours[key]]).map(([hour, entries]: any) => (
+                      <div key={hour} className="grid grid-cols-12">
+                        <div className="col-span-3 p-2 border flex justify-center items-center">
+                          <h3 className="text-md font-semibold text-gray-600">
                             {transformToAmPm(`${hour}:00:00`)} to {transformToAmPm(`${hour}:59:59`)}
                           </h3>  
                         </div>
-                        
-                        <div className="overflow-scroll no-scrollbar h-auto border">
+                        <div className="col-span-6 overflow-scroll no-scrollbar h-auto">
                           <table className="min-w-full bg-white">
-                            
                             <tbody>
                               {entries.map((entry: any, index: any) => (
                                 <tr
                                   key={index}
-                                  className="border-b hover:bg-gray-50 text-gray-700"
+                                  className="grid grid-cols-12 border hover:bg-gray-50 text-gray-700 p-1"
                                 >
-                                  <td className="py-2 px-4 border">{new Date(entry.logTime).toLocaleTimeString()}</td>
-                                  <td className="py-2 px-4 border">
+                                  <td className="col-span-3 py-2 flex items-center justify-center">{new Date(entry.logTime).toLocaleTimeString()}</td>
+                                  <td className="col-span-4 py-2 flex items-center justify-center">
                                     {entry.campaignName}
                                   </td>
-                                  <td className="py-2 px-4 border">{entry.brandName}</td>
+                                  <td className="col-span-3 py-2 flex items-center justify-center">{entry.brandName}</td>
                                   <td
-                                    className={`py-2 px-4 border ${
+                                    className={`col-span-2 py-2 flex items-center justify-center ${
                                       entry.screenStatus === "online"
                                         ? "text-green-600"
                                         : "text-red-600"
@@ -427,8 +290,8 @@ export const ShowCampaignLogsPopup = ({
                             </tbody>
                           </table>
                         </div>
-                        <div className="h-auto grid grid-cols-3">
-                          <div className="col-span-1 flex justify-center items-center gap-2 p-2">
+                        <div className="col-span-3 h-auto grid grid-cols-3">
+                          <div className="col-span-1 border flex justify-center items-center gap-2 p-2">
                             <h1 className={(entries.length/(17 * campaignDetails?.sov)) >= 1 ? "text-[#2A892D]" : "text-[#CC0000]"}>
                               {entries.length}
                             </h1>
@@ -439,8 +302,8 @@ export const ShowCampaignLogsPopup = ({
                           <div className="col-span-1 border flex justify-center items-center p-2">
                             {17 * campaignDetails?.sov}
                           </div>
-                          <div className="col-span-1 flex justify-center items-center p-2">
-                            {calculateAvgTimeGap(entries)}
+                          <div className="col-span-1 border flex justify-center items-center p-2">
+                            {calculateAvgTimeGap(entries) === "N/A" ? "--" : calculateAvgTimeGap(entries)}
                           </div>
                         </div>
                       </div>
@@ -449,79 +312,11 @@ export const ShowCampaignLogsPopup = ({
                 </div>
               ))}
             </div>
-            {/* <div className="overflow-scroll scrollbar-minimal h-[50vh]">
-              <table className="auto w-full border border-gray-300 shadow-md rounded-lg">
-                <thead className="bg-gray-200 text-left">
-                  <tr>
-                    <th className="border p-1">Days</th>
-                    <th className="border p-1">Date</th>
-                    <th className="border p-1">Time</th>
-                    <th className="border p-1">Creative Name</th>
-                    <th className="border p-1">Status</th>
-                    <th className="border p-1">Delivered</th>
-                    <th className="border p-1">Promised</th>
-                    <th className="border p-1">Avg Log Time</th>
-                  </tr>
-                </thead>
-                <tbody className="text-sm">
-                  {Object.keys(newData).map((date: string, i) => {
-                    const records = newData[date];
-
-                    return records.map((data: DataRow, j: number) => (
-                      <tr key={`${date}-${j}`} className="hover:bg-gray-100">
-                        {j === 0 && (
-                          <td
-                            className="border p-1 font-semibold text-center"
-                            rowSpan={records.length}
-                          >
-                            {i + 1}
-                          </td>
-                        )}
-                        <td className="border p-1">{date}</td>
-                        <td className="border p-1">{data.time}</td>
-                        <td className="border p-1">{data.creativeName}</td>
-                        <td
-                          className={`border p-1 ${
-                            data.status === "online"
-                              ? `text-[#59A237]`
-                              : `text-[#5B7180]`
-                          }`}
-                        >
-                          {data.status}
-                        </td>
-                        {j === 0 && (
-                          <td
-                            className="border p-1 font-semibold text-center"
-                            rowSpan={records.length}
-                          >
-                            {newCombinedData.combinedData?.delivered}
-                          </td>
-                        )}
-                        {j === 0 && (
-                          <td
-                            className="border p-1 font-semibold text-center"
-                            rowSpan={records.length}
-                          >
-                            {newCombinedData.combinedData?.promised}
-                          </td>
-                        )}
-                        {j === 0 && (
-                          <td
-                            className="border p-1 font-semibold text-center"
-                            rowSpan={records.length}
-                          >
-                            {newCombinedData.combinedData?.averageLogTIme}
-                          </td>
-                        )}
-                      </tr>
-                    ));
-                  })}
-                </tbody>
-              </table>
-            </div> */}
           </div>
         ) : (
-          <NoDataView />
+          <div className="flex justify-center items-center pt-12">
+            <NoDataView />
+          </div>
         )}
       </div>
     </div>

@@ -11,6 +11,7 @@ import { ShowMonitoringPicsPopup } from "../../components/popup/ShowMonitoringPi
 import {
   calculateDaysPlayed,
   convertIntoDateAndTime,
+  formatDateForLogs,
   getTimeDifferenceInMin,
 } from "../../utils/dateAndTimeUtils";
 import { message, Tooltip } from "antd";
@@ -44,6 +45,10 @@ export const CampaignDashboardTable = ({
   const [screenName, setscreenName] = useState<any>(null);
   const [currentIndex, setCurrentIndex] = useState<any>(null);
   const [campaignData, setCampaignData] = useState<any>({});
+
+  const [currentWeek, setCurrentWeek] = useState<any>(1);
+  const [currentDay, setCurrentDay] = useState<any>(1);
+  const [currentDate, setCurrentDate] = useState<any>(formatDateForLogs(new Date()).apiDate);
   const campaignLogsGet = useSelector((state: any) => state.campaignLogsGet);
   const {
     loading: loadingLogs,
@@ -51,7 +56,8 @@ export const CampaignDashboardTable = ({
     data: logs,
   } = campaignLogsGet;
 
-  useEffect(() => {}, [dispatch]);
+  useEffect(() => {
+  }, []);
 
   const onClose = () => {
     setOpenLogsPopup(false);
@@ -181,6 +187,22 @@ export const CampaignDashboardTable = ({
     } else return "Close";
   };
 
+
+  const getAllDates = ({startDate, endDate }: any) => {
+    const dates = [];
+    let currentDate = new Date(startDate);
+    const lastDate = new Date(endDate);
+  
+    while (currentDate <= lastDate) {
+      dates.push(currentDate.toISOString().split("T")[0]); // Format as YYYY-MM-DD
+      currentDate.setDate(currentDate.getDate() + 1); // Move to next day
+    }
+  
+    return dates;
+  }
+
+  const allDates: any = getAllDates({ startDate: campaignDetails?.startDate, endDate: campaignDetails?.endDate });
+
   return (
     <div>
       <ShowMonitoringPicsPopup
@@ -197,6 +219,15 @@ export const CampaignDashboardTable = ({
         onClose={onClose}
         campaignData={campaignData}
         campaignDetails={campaignDetails}
+        setCurrentDay={setCurrentDay}
+        setCurrentWeek={setCurrentWeek}
+        currentDay={currentDay}
+        currentWeek={currentWeek}
+        allDates={allDates}
+        setCurrentDate={setCurrentDate}
+        currentDate={currentDate}
+        isDownLoad={isDownLoad}
+        downloadLogs={downloadLogs}
       />
       <table className="table-auto w-full">
         <thead className="bg-[#F7F7F7] rounded-[6px] w-full flex justify-between items-center">
@@ -404,14 +435,7 @@ export const CampaignDashboardTable = ({
                       <i
                         className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}
                         onClick={() => {
-                          dispatch(
-                            GetCampaignLogsAction({
-                              campaignId: screenLevelData[data]?.campaignId,
-                              // date: formatDateForLogs(campaignDetails.startDate)
-                              date: "13/03/2025"
-
-                            })
-                          );
+          
                           setscreenName(screenLevelData[data]?.screenName);
                           setCampaignData(screenLevelData[data]);
                           setOpenLogsPopup(true);
