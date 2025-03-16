@@ -117,7 +117,7 @@ const Routers: React.FC = () => {
         <Route
           path={MY_CAMPAIGNS_LIST}
           element={
-            <AppDashBoardLayout className="bg-[#D3D3D350] pt-16">
+            <AppDashBoardLayout className="bg-[#D3D3D320] pt-16">
               <MyCampaignsListPage />
             </AppDashBoardLayout>
           }
@@ -125,7 +125,7 @@ const Routers: React.FC = () => {
         <Route
           path={MY_REQUESTS_LIST}
           element={
-            <AppDashBoardLayout className="bg-[#D3D3D350] pt-16">
+            <AppDashBoardLayout className="bg-[#D3D3D320] pt-16">
               <MyRequestsListPage />
             </AppDashBoardLayout>
           }
@@ -158,7 +158,7 @@ const Routers: React.FC = () => {
         <Route
           path={MY_PLANS_LIST}
           element={
-            <AppDashBoardLayout className="bg-[#D3D3D350] pt-16">
+            <AppDashBoardLayout className="bg-[#D3D3D320] pt-16">
               <MyPlansListPage />
             </AppDashBoardLayout>
           }

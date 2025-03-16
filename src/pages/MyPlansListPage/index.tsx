@@ -61,10 +61,10 @@ export const MyPlansListPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full bg-gray-100 p-4">
+    <div className="w-full h-full p-4">
       {/* Header */}
       <div className="flex items-center gap-2 border-b pb-2">
-        <i className="fi fi-sr-megaphone text-blue-500 text-xl"></i>
+        <i className="fi fi-sr-megaphone text-[#3F3CBB80] text-[14px] flex items-center justify-center"></i>
         <h1 className="text-lg font-semibold text-primaryText">
           My Plans List
         </h1>
@@ -80,7 +80,7 @@ export const MyPlansListPage: React.FC = () => {
       </div>
 
       {/* Campaign List */}
-      <div className="mt-4 h-[70vh] overflow-y-auto no-scrollbar rounded-lg">
+      <div className="mt-4 h-[80vh] overflow-y-auto no-scrollbar rounded-lg">
         {loading ? (
           <LoadingScreen />
         ) : filteredCampaigns?.length === 0 ? (

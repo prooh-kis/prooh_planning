@@ -6,14 +6,17 @@ import { generateColorFromAlphabet } from "../../utils/colorUtils";
 import clsx from "clsx";
 
 export const CampaignsListModel = ({ data }: any) => {
+  const getBgColors = (index: any) => {
+    const colors = ["bg-[#EF444450]", "bg-[#F59E0B50]", "bg-[#EAB30850]", "bg-[#22C55E50]", "bg-[#06B6D450]", "bg-[#3B82F650]", "bg-[#6366F150]", "bg-[#8B5CF650]", "bg-[#78DCCA50]", "bg-[#FF77E950]", "bg-[#3AB7BF50]", "bg-[#3F3CBB50]", "bg-[#22C55E50]", "bg-[#06B6D450]", "bg-[#3B82F650]", "bg-[#6366F150]", "bg-[#EF444450]", "bg-[#F59E0B50]" ];
+    return colors[index];
+  }
+
   return (
     <div className="flex items-center justify-between w-full rounded-[12px] bg-white p-4 my-2">
       <div className="flex items-top gap-4">
         <div
           className={clsx(
-            `rounded-[12px] flex justify-center items-center w-24 border border-[#D7D7D750] bg-[${
-              // generateColorFromAlphabet(data?.brandName?.split("")[0], 0) ||
-              "#F6F658"
+            `rounded-[12px] flex justify-center items-center w-24 border border-[#D7D7D750] ${getBgColors(data?.brandName?.split(" ")[0]?.split("").length)}
             }]`
           )}
         >
