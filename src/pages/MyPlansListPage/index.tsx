@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 
-import { getMyCreateCampaignsListForPlan } from "../../actions/campaignAction";
+import { addDetailsToCreateCampaign, getMyCreateCampaignsListForPlan } from "../../actions/campaignAction";
 import { NoDataView } from "../../components/molecules/NoDataView";
 import { SearchInputField } from "../../components";
 import { CampaignsListModel } from "../../components/molecules/CampaignsListModel";
@@ -25,6 +25,10 @@ export const MyPlansListPage: React.FC = () => {
     data: campaignsList,
   } = useSelector((state: any) => state.myCreateCampaignsListForPlanGet);
 
+  const { success, data: campaignDetails } = useSelector(
+    (state: any) => state.detailsToCreateCampaignAdd
+  );
+
   useEffect(() => {
     if (!userInfo) return navigate("/auth");
 
@@ -36,7 +40,14 @@ export const MyPlansListPage: React.FC = () => {
     if (userInfo?.userRole === CAMPAIGN_PLANNER) {
       dispatch(getMyCreateCampaignsListForPlan({ id: userInfo._id }));
     }
-  }, [dispatch, navigate, userInfo]);
+
+    if (success) {
+      const pageName = getCampaignPageNameFromCampaignType(campaignDetails?.campaignType);
+      navigate(`/${pageName}/${campaignDetails._id}/view`, {
+        state: { from: "planlist" }
+      });
+    }
+  }, [dispatch, navigate, userInfo, success, campaignDetails]);
 
   const filteredCampaigns = campaignsList?.filter(
     (campaign: any) =>
@@ -45,8 +56,8 @@ export const MyPlansListPage: React.FC = () => {
   );
 
   const handleCampaignClick = (data: any) => {
-    const pageName = getCampaignPageNameFromCampaignType(data?.campaignType);
-    navigate(`/${pageName}/${data._id}`);
+    dispatch(addDetailsToCreateCampaign({ id: data?._id }));
+
   };
 
   return (

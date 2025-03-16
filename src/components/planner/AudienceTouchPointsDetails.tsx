@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
@@ -51,6 +51,7 @@ export const AudienceTouchPointsDetails = ({
 }: EnterAudienceTouchpointDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
+  const { pathname } = useLocation();
 
   const [locked, setLocked] = useState<any>({
     cohorts: false,
@@ -279,29 +280,31 @@ export const AudienceTouchPointsDetails = ({
   };
 
   const handleSaveAndContinue = () => {
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "Audience And TouchPoint Page",
-        id: campaignId,
-        markets: Object.keys(screensAudiences)?.filter((c: any) => c !== "id"),
-        cohorts: selectedAudiences,
-        touchPoints: selectedTouchPoints,
-        gender: getSelectedGender(),
-        screensSelectedCount: screensCost?.screensSelectedCount,
-        impressionSelectedCount: screensCost?.impressionSelectedCount,
-        budgetSelected: screensCost?.budgetSelected,
-        cpmSelected: screensCost?.cpmSelected,
-        pricePerSlotSelectedCount: screensCost?.pricePerSlotSelected,
-        citiesSelectedCount: screensCost?.citiesSelectedCount,
-        cities,
-        zones,
-      })
-    );
-
-    saveDataOnLocalStorage(COST_SUMMARY, {
-      [campaignId]: [selectedScreensData, totalScreensData],
-    });
-    setPageSuccess(false);
+    if (!pathname.split("/").includes("view")) {
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Audience And TouchPoint Page",
+          id: campaignId,
+          markets: Object.keys(screensAudiences)?.filter((c: any) => c !== "id"),
+          cohorts: selectedAudiences,
+          touchPoints: selectedTouchPoints,
+          gender: getSelectedGender(),
+          screensSelectedCount: screensCost?.screensSelectedCount,
+          impressionSelectedCount: screensCost?.impressionSelectedCount,
+          budgetSelected: screensCost?.budgetSelected,
+          cpmSelected: screensCost?.cpmSelected,
+          pricePerSlotSelectedCount: screensCost?.pricePerSlotSelected,
+          citiesSelectedCount: screensCost?.citiesSelectedCount,
+          cities,
+          zones,
+        })
+      );
+  
+      saveDataOnLocalStorage(COST_SUMMARY, {
+        [campaignId]: [selectedScreensData, totalScreensData],
+      });
+      setPageSuccess(false);
+    }
     setCurrentStep(step + 1);
   };
 

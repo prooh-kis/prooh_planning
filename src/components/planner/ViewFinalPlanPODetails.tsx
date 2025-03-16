@@ -312,24 +312,26 @@ export const ViewFinalPlanPODetails = ({
   };
 
   const handleSaveAndContinue = async () => {
-    let imageArr: string[] = [];
-    for (let data of confirmationImageFiles) {
-      if (data.awsURL) {
-        imageArr.push(data.awsURL);
-        console.log("no need to save again");
-      } else {
-        let url = await getAWSUrl(data);
-        imageArr.push(url);
+    if (!pathname.split("/").includes("view")) {
+      let imageArr: string[] = [];
+      for (let data of confirmationImageFiles) {
+        if (data.awsURL) {
+          imageArr.push(data.awsURL);
+          console.log("no need to save again");
+        } else {
+          let url = await getAWSUrl(data);
+          imageArr.push(url);
+        }
       }
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "View Final Plan Page",
+          id: pathname.split("/").splice(-1)[0],
+          clientApprovalImgs: imageArr,
+        })
+      );
+      setPageSuccess(false);
     }
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "View Final Plan Page",
-        id: pathname.split("/").splice(-1)[0],
-        clientApprovalImgs: imageArr,
-      })
-    );
-    setPageSuccess(false);
     setCurrentStep(step + 1);
   };
 

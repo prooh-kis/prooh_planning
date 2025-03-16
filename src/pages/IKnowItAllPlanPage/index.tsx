@@ -28,7 +28,7 @@ import { iKnowItAllPlanData } from "../../data";
 
 export const IKnowItAllPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation();
   const campaignId: any = pathname.split("/")[2] || null;
   const [pageSuccess, setPageSuccess] = useState<any>(false);
   const [currentStep, setCurrentStep] = useState<number>(
@@ -44,7 +44,11 @@ export const IKnowItAllPlanPage: React.FC = () => {
 
   useEffect(() => {
     if (success && campaignDetails) {
-      const newStep =
+      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+
+      const newStep = state?.from === "dashboard" ? 1 :
+        pathname.split("/").includes("view") ? 1 :
+        pathname.split("/").includes("edit") ? 1 :
         (iKnowItAllPlanData.find(
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0);
@@ -54,10 +58,9 @@ export const IKnowItAllPlanPage: React.FC = () => {
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
-  }, [success, campaignDetails, campaignId]);
+  }, [success, campaignDetails, campaignId, state, pathname, dispatch]);
 
   useEffect(() => {
-    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
     if (campaignId) dispatch(addDetailsToCreateCampaign({ id: campaignId }));
   }, [dispatch, campaignId]);
 

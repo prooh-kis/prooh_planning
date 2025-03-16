@@ -144,14 +144,17 @@ export const IKnowItAllScreenSummaryDetails = ({
   };
 
   const handleSaveAndContinue = async () => {
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "Select Screens Page",
-        id: pathname.split("/").splice(-1)[0],
-        screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-      })
-    );
-    setPageSuccess(false);
+    if (!pathname.split("/").includes("view")) {
+
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Select Screens Page",
+          id: pathname.split("/").splice(-1)[0],
+          screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+        })
+      );
+      setPageSuccess(false);
+    }
     setCurrentStep(step + 1);
   };
 

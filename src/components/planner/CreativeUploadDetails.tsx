@@ -466,69 +466,74 @@ export const CreativeUploadDetails = ({
   };
 
   const handleSaveAndContinue = async () => {
-    if (validate()) {
-      setIsLoading(true);
-      let requestBody: any = [];
-      let sss = creativeUploadData;
-      for (let city in sss) {
-        for (let data of creativeUploadData[city]) {
-          let standardDayTimeCreatives: any = [];
-          let standardNightTimeCreatives: any = [];
-          let triggerCreatives: any = [];
+    if (!pathname.split("/").includes("view")) {
+      
+      if (validate()) {
+        setIsLoading(true);
+        let requestBody: any = [];
+        let sss = creativeUploadData;
+        for (let city in sss) {
+          for (let data of creativeUploadData[city]) {
+            let standardDayTimeCreatives: any = [];
+            let standardNightTimeCreatives: any = [];
+            let triggerCreatives: any = [];
 
-          if (data?.standardDayTimeCreatives) {
-            for (let file of data?.standardDayTimeCreatives) {
-              let myData = await returnRequiredValue(file);
-              file.awsURL = myData?.url;
-              file.url = myData?.url;
-              standardDayTimeCreatives.push(myData);
+            if (data?.standardDayTimeCreatives) {
+              for (let file of data?.standardDayTimeCreatives) {
+                let myData = await returnRequiredValue(file);
+                file.awsURL = myData?.url;
+                file.url = myData?.url;
+                standardDayTimeCreatives.push(myData);
+              }
             }
-          }
 
-          if (data?.standardNightTimeCreatives) {
-            for (let file of data?.standardNightTimeCreatives) {
-              let myData = await returnRequiredValue(file);
-              file.awsURL = myData?.url;
-              file.url = myData?.url;
-              standardNightTimeCreatives.push(myData);
+            if (data?.standardNightTimeCreatives) {
+              for (let file of data?.standardNightTimeCreatives) {
+                let myData = await returnRequiredValue(file);
+                file.awsURL = myData?.url;
+                file.url = myData?.url;
+                standardNightTimeCreatives.push(myData);
+              }
             }
-          }
-          if (data?.triggerCreatives) {
-            for (let file of data?.triggerCreatives) {
-              let myData = await returnRequiredValue(file);
-              file.awsURL = myData?.url;
-              file.url = myData?.url;
-              triggerCreatives.push(myData);
+            if (data?.triggerCreatives) {
+              for (let file of data?.triggerCreatives) {
+                let myData = await returnRequiredValue(file);
+                file.awsURL = myData?.url;
+                file.url = myData?.url;
+                triggerCreatives.push(myData);
+              }
             }
-          }
 
-          requestBody.push({
-            city: city,
-            screenResolution: data?.screenResolution,
-            count: data?.count,
-            screenIds: data?.screenIds,
-            creativeDuration: data?.creativeDuration,
-            standardDayTimeCreatives: standardDayTimeCreatives,
-            standardNightTimeCreatives: standardNightTimeCreatives,
-            triggerCreatives: triggerCreatives,
-          });
+            requestBody.push({
+              city: city,
+              screenResolution: data?.screenResolution,
+              count: data?.count,
+              screenIds: data?.screenIds,
+              creativeDuration: data?.creativeDuration,
+              standardDayTimeCreatives: standardDayTimeCreatives,
+              standardNightTimeCreatives: standardNightTimeCreatives,
+              triggerCreatives: triggerCreatives,
+            });
+          }
         }
+        saveDataOnLocalStorage(CAMPAIGN_CREATIVES, { [campaignId]: sss });
+        dispatch(
+          addDetailsToCreateCampaign({
+            pageName: "Upload Creative Page",
+            id: pathname.split("/").splice(-1)[0],
+            creatives: requestBody,
+          })
+        );
+        setTimeout(() => {
+          setPageSuccess(false);
+          setCurrentStep(step + 1);
+        }, 1000);
+        setCallToSendChangeStatus(true);
+      } else {
+        message.error("Please upload creatives for each row and foreach city");
       }
-      saveDataOnLocalStorage(CAMPAIGN_CREATIVES, { [campaignId]: sss });
-      dispatch(
-        addDetailsToCreateCampaign({
-          pageName: "Upload Creative Page",
-          id: pathname.split("/").splice(-1)[0],
-          creatives: requestBody,
-        })
-      );
-      setTimeout(() => {
-        setPageSuccess(false);
-        setCurrentStep(step + 1);
-      }, 1000);
-      setCallToSendChangeStatus(true);
     } else {
-      message.error("Please upload creatives for each row and foreach city");
+     setCurrentStep(step+1) 
     }
   };
 

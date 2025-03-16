@@ -27,7 +27,7 @@ import { triggerBasePlanData } from "../../data";
 
 export const TriggerBasedPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation();
   const campaignId: any = pathname.split("/")[2] || null;
   const [pageSuccess, setPageSuccess] = useState<boolean>(false);
 
@@ -42,7 +42,11 @@ export const TriggerBasedPlanPage: React.FC = () => {
 
   useEffect(() => {
     if (success && campaignDetails) {
-      const newStep =
+      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+
+      const newStep = state?.from === "dashboard" ? 1 :
+        pathname.split("/").includes("view") ? 1 :
+        pathname.split("/").includes("edit") ? 1 :
         triggerBasePlanData.find(
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0;
@@ -50,11 +54,9 @@ export const TriggerBasedPlanPage: React.FC = () => {
       setCurrentStep(newStep);
       saveDataOnLocalStorage(CURRENT_STEP, { [campaignId ?? ""]: newStep });
     }
-  }, [success, campaignDetails, campaignId]);
+  }, [success, campaignDetails, campaignId, state, pathname, dispatch]);
 
   useEffect(() => {
-    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-
     if (campaignId) {
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }

@@ -180,7 +180,7 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          path={"/regularplan/:id?"}
+          path={"/regularplan/:id?/:type?"}
           element={
             <AppDashBoardLayout>
               <RegularPlanPage />
@@ -188,7 +188,7 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          path={"/specialdayplan/:id?"}
+          path={"/specialdayplan/:id?/:type?"}
           element={
             <AppDashBoardLayout>
               <SpecialDayPlanPage />
@@ -196,7 +196,7 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          path={"/triggerbasedplan/:id?"}
+          path={"/triggerbasedplan/:id?/:type?"}
           element={
             <AppDashBoardLayout>
               <TriggerBasedPlanPage />
@@ -204,7 +204,7 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          path={"/storebasedplan/:id?"}
+          path={"/storebasedplan/:id?/:type?"}
           element={
             <AppDashBoardLayout>
               <StoreBasedPlanPage />
@@ -212,7 +212,7 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          path={"/iknowitallplan/:id?"}
+          path={"/iknowitallplan/:id?/:type?"}
           element={
             <AppDashBoardLayout>
               <IKnowItAllPlanPage />

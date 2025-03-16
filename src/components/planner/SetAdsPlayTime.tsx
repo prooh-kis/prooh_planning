@@ -113,14 +113,17 @@ export const SetAdsPlayTime = ({
 
   const handleSaveAndContinue = async (e: any) => {
     e.preventDefault();
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "Set Ad Play time Page",
-        id: pathname.split("/").splice(-1)[0],
-        touchPointWiseDetails: data,
-      })
-    );
-    setPageSuccess(false);
+
+    if (!pathname.split("/").includes("view")) {
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Set Ad Play time Page",
+          id: pathname.split("/").splice(-1)[0],
+          touchPointWiseDetails: data,
+        })
+      );
+      setPageSuccess(false);
+    }
     setCurrentStep(step + 1);
   };
 

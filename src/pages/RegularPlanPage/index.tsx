@@ -28,8 +28,11 @@ import { regularPlanData } from "../../data";
 export const RegularPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const location = useLocation();
+
   const { pathname } = location;
   const campaignId: any = pathname.split("/")[2] || null;
+  const campaignTo: any = pathname.split("/")[3] || null;
+
   const [pageSuccess, setPageSuccess] = useState<boolean>(false);
 
   const [currentStep, setCurrentStep] = useState<number>(
@@ -44,20 +47,24 @@ export const RegularPlanPage: React.FC = () => {
   // Fix: Ensure campaignId is always a string when used as an object key
   useEffect(() => {
     if (success && campaignDetails) {
-      const newStep =
+      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+
+      const newStep = location?.state?.from === "dashboard" ? 1 :
+        pathname.split("/").includes("view") ? 1 :
+        pathname.split("/").includes("edit") ? 1 :
         (regularPlanData.find(
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0);
+
       setCurrentStep(newStep);
       const currStep = {
         [campaignId]: newStep,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
-  }, [success, campaignDetails, campaignId]);
+  }, [success, campaignDetails, campaignId, location, pathname, dispatch]);
 
   useEffect(() => {
-    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
     if (campaignId) dispatch(addDetailsToCreateCampaign({ id: campaignId }));
   }, [dispatch, campaignId]);
 

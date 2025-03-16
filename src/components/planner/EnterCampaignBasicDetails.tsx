@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { PrimaryInput } from "../atoms/PrimaryInput";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CalendarInput } from "../atoms/CalendarInput";
 import { getEndDateFromStartDateAndDuration } from "../../utils/dateAndTimeUtils";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
@@ -35,10 +35,10 @@ export const EnterCampaignBasicDetails = ({
   userInfo,
   campaignId,
   campaignType,
-  path,
 }: EnterCampaignBasicDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
+  const { pathname } = useLocation();
 
   const [campaignName, setCampaignName] = useState<any>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || ""
@@ -98,7 +98,7 @@ export const EnterCampaignBasicDetails = ({
     data: clientAgencyNamesList,
   } = allClientAgencyNamesListGet;
 
-  const handleAddNewClient = (value: string) => {
+  const handleAddNewClient = useCallback((value: string) => {
     if (
       !clientAgencyNamesList?.find(
         (data: any) => data.clientAgencyName === value
@@ -108,7 +108,7 @@ export const EnterCampaignBasicDetails = ({
         addClientAgencyDetails({ clientAgencyName: value?.toUpperCase() })
       );
     }
-  };
+  },[dispatch, clientAgencyNamesList]);
 
   const validateForm = () => {
     if (campaignName.length === 0) {
@@ -144,45 +144,34 @@ export const EnterCampaignBasicDetails = ({
   );
 
   const saveCampaignDetailsOnLocalStorage = useCallback(() => {
-    updateEndDateBasedOnDuration(duration);
-    handleAddNewClient(clientName);
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "Basic Details Page",
-        name: campaignName,
-        brandName: brandName,
-        campaignType: campaignType,
-        clientName: clientName,
-        industry: industry,
-        startDate: new Date(startDate).toISOString(),
-        endDate: new Date(endDate).toISOString(),
-        duration: duration,
-        campaignPlannerId: userInfo?._id,
-        campaignPlannerName: userInfo?.name,
-        campaignPlannerEmail: userInfo?.email,
-        campaignManagerId: userInfo?.primaryUserId,
-        campaignManagerEmail: userInfo?.primaryUserEmail,
-        sov: sov,
-      })
-    );
-  }, [
-    updateEndDateBasedOnDuration,
-    dispatch,
-    campaignName,
-    brandName,
-    campaignType,
-    duration,
-    clientName,
-    industry,
-    startDate,
-    endDate,
-    userInfo?._id,
-    userInfo?.name,
-    userInfo?.email,
-    userInfo?.primaryUserId,
-    userInfo?.primaryUserEmail,
-    sov,
-  ]);
+    if (!pathname.split("/").includes("view")) {
+      updateEndDateBasedOnDuration(duration);
+      handleAddNewClient(clientName);
+      dispatch(
+        addDetailsToCreateCampaign({
+          id: campaignId,
+          pageName: "Basic Details Page",
+          name: campaignName,
+          brandName: brandName,
+          campaignType: campaignType,
+          clientName: clientName,
+          industry: industry,
+          startDate: new Date(startDate).toISOString(),
+          endDate: new Date(endDate).toISOString(),
+          duration: duration,
+          campaignPlannerId: userInfo?._id,
+          campaignPlannerName: userInfo?.name,
+          campaignPlannerEmail: userInfo?.email,
+          campaignManagerId: userInfo?.primaryUserId,
+          campaignManagerEmail: userInfo?.primaryUserEmail,
+          sov: sov,
+        })
+      );
+    } else {
+      setCurrentStep(step+1);
+    }
+    
+  }, [pathname, updateEndDateBasedOnDuration, duration, handleAddNewClient, clientName, dispatch, campaignId, campaignName, brandName, campaignType, industry, startDate, endDate, userInfo?._id, userInfo?.name, userInfo?.email, userInfo?.primaryUserId, userInfo?.primaryUserEmail, sov, setCurrentStep, step]);
 
   useEffect(() => {
     if (errorAddDetails) {
@@ -190,19 +179,13 @@ export const EnterCampaignBasicDetails = ({
     }
 
     if (successAddDetails) {
-      navigate(`/${path}/${addDetails?._id}`);
-      setCurrentStep(step + 1);
+      // navigate(`/${path}/${addDetails?._id}`);
+      setCurrentStep(1);
     }
   }, [
-    navigate,
-    step,
-    setCurrentStep,
-    successAddDetails,
     errorAddDetails,
-    addDetails,
-    path,
-    dispatch,
-    campaignId,
+    successAddDetails,
+    setCurrentStep
   ]);
 
   useEffect(() => {
@@ -218,7 +201,7 @@ export const EnterCampaignBasicDetails = ({
 
   return (
     <div className="w-full">
-      <div className="">
+      <div className="pt-8">
         <h1 className="text-[24px] text-primaryText font-semibold">
           Add Basic Details
         </h1>

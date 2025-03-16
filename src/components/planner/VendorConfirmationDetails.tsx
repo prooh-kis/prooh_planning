@@ -271,23 +271,27 @@ export const VendorConfirmationDetails = ({
   };
 
   const handleSaveAndContinue = async () => {
-    if (isDisabled) {
-      message.error(
-        "You will be redirected to campaign dashboard, once the campaign has started. Please wait..."
-      );
-    } else {
-      let imageArr: string[] = [];
-      for (let data of files) {
-        let url = await getAWSUrl(data);
-        imageArr.push(url);
+    if (!pathname.split("/").includes("view")) {
+      if (isDisabled) {
+        message.error(
+          "You will be redirected to campaign dashboard, once the campaign has started. Please wait..."
+        );
+      } else {
+        let imageArr: string[] = [];
+        for (let data of files) {
+          let url = await getAWSUrl(data);
+          imageArr.push(url);
+        }
+        dispatch(
+          addDetailsToCreateCampaign({
+            pageName: "Vendor Confirmation Page",
+            id: campaignId,
+            vendorApprovalImgs: imageArr, // return url array
+          })
+        );
+        navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignId}`);
       }
-      dispatch(
-        addDetailsToCreateCampaign({
-          pageName: "Vendor Confirmation Page",
-          id: campaignId,
-          vendorApprovalImgs: imageArr, // return url array
-        })
-      );
+    } else {
       navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignId}`);
     }
   };

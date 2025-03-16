@@ -308,7 +308,7 @@ export const CampaignDashboard = ({
                 navigate(
                   `/${getCampaignPageNameFromCampaignType(
                     campaignDetails?.campaignType
-                  )}/${campaignDetails._id}`
+                  )}/${campaignDetails._id}/edit`, { state: { from: "dashboard" } } 
                 )
               }
             >

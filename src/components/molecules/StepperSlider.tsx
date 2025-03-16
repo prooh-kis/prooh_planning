@@ -31,6 +31,7 @@ export const StepperSlider = ({
   // Function to handle step marker click
   const handleStepClick = (step: number) => {
     if (
+      !pathname.split("/").includes("view") &&
       campaignId &&
       getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] >= step + 1
     ) {

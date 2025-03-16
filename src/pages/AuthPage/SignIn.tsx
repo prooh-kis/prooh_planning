@@ -109,7 +109,7 @@ export const SignIn: React.FC = () => {
                   type="checkbox"
                   onClick={rememberMe}
                   id="rememberMe"
-                  checked
+                  defaultChecked
                 />
                 <label className="text-sm" htmlFor="rememberMe">
                   Remember me

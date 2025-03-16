@@ -68,29 +68,31 @@ export const IKnowItAllPlanSummaryTable = ({
   };
 
   const handleSaveAndContinue = async () => {
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "Screen Summary Page",
-        id: pathname.split("/").splice(-1)[0],
-        totalScreens:
-          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
-        totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-          campaignId
-        ]?.total?.totalImpression,
-        totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-          campaignId
-        ]?.total?.totalReach,
-        totalCampaignBudget: getDataFromLocalStorage(
-          SCREEN_SUMMARY_TABLE_DATA
-        )?.[campaignId]?.total?.totalCampaignBudget,
-        totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-          campaignId
-        ]?.total?.totalCpm,
-        duration:
-          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
-      })
-    );
-    setPageSuccess(false);
+    if (!pathname.split("/").includes("view")) {
+
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Screen Summary Page",
+          id: pathname.split("/").splice(-1)[0],
+          totalScreens:
+            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
+          totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+            campaignId
+          ]?.total?.totalImpression,
+          totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+            campaignId
+          ]?.total?.totalReach,
+          totalCampaignBudget: getDataFromLocalStorage(
+            SCREEN_SUMMARY_TABLE_DATA
+          )?.[campaignId]?.total?.totalCampaignBudget,
+          totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+            campaignId
+          ]?.total?.totalCpm,
+          duration:
+            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
+        })
+      );
+    }
     setCurrentStep(step + 1);
   };
 
