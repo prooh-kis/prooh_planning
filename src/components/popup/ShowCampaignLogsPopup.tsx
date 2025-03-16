@@ -187,6 +187,7 @@ export const ShowCampaignLogsPopup = ({
             allDates={allDates}
             setCurrentDate={setCurrentDate}
             campaignData={campaignData}
+            loading={loading}
           />
         </div>
         {loading ? (

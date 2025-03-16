@@ -66,10 +66,10 @@ export const DrawnMapPolygon = ({
         type="button"
         className="flex items-center justify-between"
         onClick={() => {
-          setOpen((prev: any) => ({
-            ...prev,
-            polygon: !prev.polygon,
-          }));
+          // setOpen((prev: any) => ({
+          //   ...prev,
+          //   polygon: !prev.polygon,
+          // }));
         }}
       >
         <div className="flex justify-start gap-2 items-center py-2">

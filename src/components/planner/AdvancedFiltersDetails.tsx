@@ -217,23 +217,23 @@ export const AdvanceFiltersDetails = ({
               radius: circleRadius,
             },
           ],
-          // routes: routes?.map((route: any) => {
-          //   return {
-          //     origin: route.origin,
-          //     destination: route.destination,
-          //     radius: routeRadius,
-          //   };
-          // }),
-          // poiLists: pois,
-          // polygons: polygons?.map((poly: any) => {
-          //   return {
-          //     id: poly.id,
-          //     type: poly.type,
-          //     properties: poly.properties,
-          //     geometry: poly.geometry,
-          //     screens: poly.screens,
-          //   };
-          // }),
+          routes: routes?.map((route: any) => {
+            return {
+              origin: route.origin,
+              destination: route.destination,
+              radius: routeRadius,
+            };
+          }),
+          poiLists: [],
+          polygons: polygons?.map((poly: any) => {
+            return {
+              id: poly.id,
+              type: poly.type,
+              properties: poly.properties,
+              geometry: poly.geometry,
+              screens: poly.screens,
+            };
+          }),
         },
       })
     );
@@ -264,6 +264,10 @@ export const AdvanceFiltersDetails = ({
               </div>
               {allScreens?.length > 0 && (
                 <LocationProximity
+                  setCircleRadius={setCircleRadius}
+                  circleRadius={circleRadius}
+                  setRouteRadius={setRouteRadius}
+                  routeRadius={routeRadius}
                   userLocation={userLocation}
                   setUserLocation={setUserLocation}
                   allScreens={allScreens}
@@ -276,13 +280,11 @@ export const AdvanceFiltersDetails = ({
                   setCircleData={setCircleData}
                   setExcelFilteredScreens={setExcelFilteredScreens}
                   excelFilteredScreens={excelFilteredScreens}
-                  circleRadius={circleRadius}
                   routes={routes}
                   routeOrigin={routeOrigin}
                   setRouteOrigin={setRouteOrigin}
                   routeDestination={routeDestination}
                   setRouteDestination={setRouteDestination}
-                  routeRadius={routeRadius}
                   setRoutes={setRoutes}
                   setRouteFilteredScreens={setRouteFilteredScreens}
                   routeFilteredScreens={routeFilteredScreens}
@@ -312,7 +314,7 @@ export const AdvanceFiltersDetails = ({
                   heatmap={advanceFilterData?.heatmap}
                   data={circleData}
                   circleRadius={circleRadius}
-                  setCircleRadius={setCircleRadius}
+                  routeRadius={routeRadius}
                   routes={routes}
                   setRoutes={setRoutes}
                   routeFilteredScreens={routeFilteredScreens}

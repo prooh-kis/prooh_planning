@@ -55,7 +55,7 @@ export function GoogleMapWithGeometry(props: any) {
   const [poiGeojson, setPoiGeojson] =
     useState<POIGeojson>();
 
-  async function loadEarthquakeGeojson(heatmap: any[]): Promise<POIGeojson> {
+  async function loadPoiGeojson(heatmap: any[]): Promise<POIGeojson> {
     return Promise.resolve({
       type: "FeatureCollection",
       crs: {
@@ -67,7 +67,7 @@ export function GoogleMapWithGeometry(props: any) {
   }
 
   useEffect(() => {
-    loadEarthquakeGeojson(props?.heatmap).then(data => setPoiGeojson(data));
+    loadPoiGeojson(props?.heatmap).then(data => setPoiGeojson(data));
   }, [props?.heatmap]);
 
   const getSingleScreenData = async (screenId: any) => {
@@ -140,7 +140,6 @@ export function GoogleMapWithGeometry(props: any) {
       </div>
       <div className="absolute z-10 bottom-2 right-1">
         <ToggleSwitch
-          
           value={heatmapOn}
           action={() => setHeatMapOn(!heatmapOn)}
         />
@@ -160,7 +159,7 @@ export function GoogleMapWithGeometry(props: any) {
             key={i}
             radius={props?.circleRadius}
             center={coor}
-            onRadiusChanged={props?.setCircleRadius}
+            // onRadiusChanged={props?.setCircleRadius}
             strokeColor={'#22C55E'}
             strokeOpacity={1}
             strokeWeight={3}
@@ -175,7 +174,7 @@ export function GoogleMapWithGeometry(props: any) {
             key={i}
             radius={props?.circleRadius}
             center={coor}
-            onRadiusChanged={props?.setCircleRadius}
+            // onRadiusChanged={props?.setCircleRadius}
             strokeColor={'#F59E0B'}
             strokeOpacity={1}
             strokeWeight={3}
@@ -191,7 +190,7 @@ export function GoogleMapWithGeometry(props: any) {
           allRoutes={props?.routes}
           setAllRoutes={props?.setRoutes}
           allScreens={props?.allScreens}
-          routeFilteredScreens={props?.routeFilteredScreens}
+          routeRadius={props?.routeRadius}
           setRouteFilteredScreens={props?.setRouteFilteredScreens}
           handleFinalSelectedScreens={props?.handleFinalSelectedScreens}
         />
@@ -250,7 +249,6 @@ export function GoogleMapWithGeometry(props: any) {
             </div>
           </InfoWindow>
         )}
-
       </Map>
     </div>
   );
