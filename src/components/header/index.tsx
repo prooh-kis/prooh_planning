@@ -28,10 +28,10 @@ export const Header: React.FC = () => {
   const BASE_URL = `${window.location.origin}`;
 
   const navLink = [
-    { title: "Home", path: BASE_URL },
-    { title: "Advertisers", path: `${BASE_URL}${ADVERTISERS_PAGE}` },
-    { title: "Media Owner", path: `${BASE_URL}${MEDIA_OWNER_PAGE}` },
-    { title: "Research", path: "https://prooh-dmp.vercel.app" },
+    { title: "Home", path: "/" },
+    { title: "Advertisers", path: `${ADVERTISERS_PAGE}` },
+    { title: "Media Owner", path: `${MEDIA_OWNER_PAGE}` },
+    { title: "Research", path: `${"https://prooh-dmp.vercel.app"}` },
   ];
 
   useEffect(() => {
@@ -72,7 +72,13 @@ export const Header: React.FC = () => {
             <button
               key={item.title}
               type="button"
-              onClick={() => window.open(item.path)}
+              onClick={() => {
+                if (item.title === "Research") {
+                  window.open(`${item.path}`);
+                } else {
+                  navigate(`${item.path}`);
+                }
+              }}
               className={`text-sm lg:text-base ${
                 location.pathname === item.path
                   ? "font-semibold text-[#0094FF] border-b-2 border-[#129BFF] py-5"
@@ -113,7 +119,7 @@ export const Header: React.FC = () => {
           </button>
           {/* Mobile Menu Icon */}
           <div className="md:hidden">
-            <button onClick={handleMenuToggle} className="focus:outline-none">
+            <button title="toggl" type="submit" onClick={handleMenuToggle} className="focus:outline-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -141,7 +147,11 @@ export const Header: React.FC = () => {
                   <li key={item.title} className="border-b">
                     <button
                       onClick={() => {
-                        window.open(item.path);
+                        if (item.title === "Research") {
+                          window.open(`${item.path}`);
+                        } else {
+                          navigate(`${item.path}`);
+                        }
                         setIsMenuOpen(false);
                       }}
                       className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100"

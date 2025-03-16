@@ -137,7 +137,7 @@ export const SignIn: React.FC = () => {
                     {`Don't have an account?`}
                   </h1>
                   <h1
-                    className="items-center text-sm text-[#129BFF] underline underline-offset-2  font-bold text-[#555555]"
+                    className=" cursor-pointer items-center text-sm text-[#129BFF] underline underline-offset-2  font-bold"
                     onClick={() => navigate(SIGN_UP)}
                   >
                     Register Now

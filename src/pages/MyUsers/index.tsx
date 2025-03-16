@@ -77,9 +77,9 @@ export const MyUsers = (props: any) => {
   return (
     <div className="w-full h-full">
       {open && <AddUserDetails open={open} onClose={toggleOpen}/>}
-      <div className="flex justify-between border rounded p-4 w-full bg-white">
+      <div className="flex flex-row justify-between border rounded p-4 w-full bg-white">
         <h1 className="text-[16px] font-semibold">Users</h1>
-        <div className="flex items-center mt-1 w-96 flex gap-4">
+        <div className="flex items-center w-50">
           <PrimaryButton
             action={toggleOpen}
             title="Add user"
@@ -87,40 +87,80 @@ export const MyUsers = (props: any) => {
             height="h-8"
             width="w-32"
             textSize="text-[16px] font-semibold"
-            reverse={true}
           />
         </div>
       </div>
 
-      <div className="w-full mt-1">
-        <table className="auto w-full">
-          <thead>
-            <tr className="bg-[#129BFF] text-[#FFFFFF]">
-              <th className="border py-2">Sl. No</th>
-              <th className="border ">Name</th>
-              <th className="border ">Email</th>
-              <th className="border ">User Role</th>
-              <th className="border ">Actions</th>
+      <div className="w-full h-[85vh] overflow-scroll mt-1">
+        <table className="w-full ">
+          <thead className="bg-[#EBF6FF]">
+            <tr>
+              <th className="py-2 px-1">
+                <div className="flex items-center justify-center gap-1 truncate text-[12px] text-[#129BFF]">
+                  Sl No.
+                </div>
+              </th>
+              <th className="py-2 px-1">
+                <div className="flex items-center justify-start gap-1 truncate text-[12px] text-[#129BFF]">
+                  User Name
+                </div>
+              </th>
+              <th className="py-2 px-1">
+                <div className="flex items-center justify-start gap-1 truncate text-[12px] text-[#129BFF]">
+                  User Role
+                </div>
+              </th>
+              <th className="py-2 px-1">
+                <div className="flex items-center justify-start gap-1 truncate text-[12px] text-[#129BFF]">
+                  User Email
+                </div>
+              </th>
+              {userInfo?.userRole != CAMPAIGN_MANAGER ? null : 
+                <th className="py-2 px-1">
+                  <div className="flex items-center justify-center gap-1 truncate text-[12px] text-[#129BFF]">
+                    Action
+                  </div>
+                </th>
+              }
             </tr>
           </thead>
-          <tbody className="overflow-auto mt-4">
-            {users?.map((user: any, i: any) => (
-              <tr className="bg-white hover:bg-gray-200" key={i}>
-                <td className="border  pl-4 py-1">{i + 1}</td>
-                <td className="border  pl-4">{user?.name}</td>
-                <td className="border pl-4">{user.email}</td>
-                <td className="border  pl-4">{user?.userRole}</td>
-                <td className="border  flex justify-center">
-                  {user.userRole === CAMPAIGN_PLANNER ? (
-                    <i
-                      className="fi fi-rs-trash text-red-500"
-                      title="delete user"
-                      onClick={() => handleDeleteUser(user?._id)}
-                    ></i>
-                  ) : null}
-                </td>
-              </tr>
-            ))}
+          <tbody className="bg-white">
+            {users?.filter((u: any) => u._id != userInfo?._id)
+              ?.map((s: any, i: number) => (
+                <tr key={i} className="border-b hover:bg-gray-200">
+                  <td className="py-2 px-1">
+                    <div className="flex items-center justify-center gap-1 truncate text-[12px] text-[#129BFF]">
+                      {i+1}
+                    </div>
+                  </td>
+                  <td className="py-2 px-1">
+                    <div className="flex items-center justify-start gap-1 truncate text-[12px] text-[]">
+                      {s.name}
+                    </div>
+                  </td>
+                  <td className="py-2 px-1">
+                    <div className="flex items-center justify-start gap-1 truncate text-[12px] text-[]">
+                      {s.userRole}
+                    </div>
+                  </td>
+                  <td className="py-2 px-1">
+                    <div className="flex items-center justify-start gap-1 truncate text-[12px] text-[]">
+                      {s.email}
+                    </div>
+                  </td>
+                  {userInfo?._id == s._id && userInfo?.userRole == CAMPAIGN_MANAGER ? null : 
+                    <td className="py-2 px-1">
+                      <div className="flex items-center justify-center gap-1 truncate text-[12px] text-[]">
+                        <i
+                          className="fi fi-rs-trash text-red-500"
+                          title="delete user"
+                          onClick={() => handleDeleteUser(s?._id)}
+                        ></i>
+                      </div>
+                    </td>
+                  }
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
