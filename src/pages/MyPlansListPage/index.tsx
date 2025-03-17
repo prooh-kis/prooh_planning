@@ -2,15 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
-
-import { addDetailsToCreateCampaign, getMyCreateCampaignsListForPlan } from "../../actions/campaignAction";
+import { getMyCreateCampaignsListForPlan } from "../../actions/campaignAction";
 import { NoDataView } from "../../components/molecules/NoDataView";
 import { SearchInputField } from "../../components";
-import { CampaignsListModel } from "../../components/molecules/CampaignsListModel";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-
 import { CAMPAIGN_PLANNER, SCREEN_OWNER } from "../../constants/userConstants";
 import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
+import { CampaignCardForPlan } from "../../components/molecules/CampaignCardForPlan";
 
 export const MyPlansListPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -40,7 +38,6 @@ export const MyPlansListPage: React.FC = () => {
     if (userInfo?.userRole === CAMPAIGN_PLANNER) {
       dispatch(getMyCreateCampaignsListForPlan({ id: userInfo._id }));
     }
-
   }, [dispatch, navigate, userInfo, campaignDetails]);
 
   const filteredCampaigns = campaignsList?.filter(
@@ -52,9 +49,15 @@ export const MyPlansListPage: React.FC = () => {
   const handleCampaignClick = (data: any) => {
     const pageName = getCampaignPageNameFromCampaignType(data?.campaignType);
     navigate(`/${pageName}/${data._id}/view`, {
-      state: { from: "planlist" }
+      state: { from: "planlist" },
     });
+  };
 
+  const handleEdit = (data: any) => {
+    const pageName = getCampaignPageNameFromCampaignType(data?.campaignType);
+    navigate(`/${pageName}/${data._id}/edit`, {
+      state: { from: "planlist" },
+    });
   };
 
   return (
@@ -87,9 +90,9 @@ export const MyPlansListPage: React.FC = () => {
             <div
               key={data._id}
               className="cursor-pointer"
-              onClick={() => handleCampaignClick(data)}
+              onDoubleClick={() => handleCampaignClick(data)}
             >
-              <CampaignsListModel data={data} />
+              <CampaignCardForPlan data={data} handleEdit={handleEdit} />
             </div>
           ))
         )}
