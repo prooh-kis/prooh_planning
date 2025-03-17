@@ -180,7 +180,7 @@ export const StepperSlider = ({
                     ${
                       i <= step - 1
                         ? "bg-primaryButton"
-                        : "border border-primaryButton bg-gray-200"
+                        : "border bg-gray-200"
                     }
                   `}
                 >

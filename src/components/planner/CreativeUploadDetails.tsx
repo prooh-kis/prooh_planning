@@ -78,7 +78,7 @@ export const CreativeUploadDetails = ({
   const [currentTab, setCurrentTab] = useState<any>("1");
   const [currentPlayTimeCreative, setCurrentPlayTimeCreative] =
     useState<string>("1");
-  const [file, setFIle] = useState<any>(null);
+  const [file, setFile] = useState<any>(null);
   const [currentCity, setCurrentCity] = useState<string>("");
   const [currentScreen, setCurrentScreen] = useState<number>(0);
   const [selectFileType, setSelectFileType] = useState("video");
@@ -159,7 +159,6 @@ export const CreativeUploadDetails = ({
   };
 
   const transformData = (data: any[]): TransformedData => {
-    // console.log("transformData :", data);
     const result: TransformedData = {};
     if (data.map((s: any) => s?.city)[0] === "") {
       message.error(
@@ -271,15 +270,14 @@ export const CreativeUploadDetails = ({
         creativeDuration = await getVideoDurationFromVideoURL(fileURL);
       }
 
-      const ff = {
+      setFile({
         file: file,
         url: fileURL,
         fileType: file.type,
         fileSize: file.size,
         creativeDuration: Number(creativeDuration),
         awsURL: "",
-      };
-      setFIle(ff);
+      });
     }
   };
 
@@ -304,7 +302,7 @@ export const CreativeUploadDetails = ({
         currentScreen
       ].triggerCreatives.filter((file: any) => file.url !== url);
     }
-    setFIle(null);
+    setFile(null);
     setCreativeUploadData(filterUniqueResolutions(myData));
     setIsDeleted((pre: boolean) => !pre);
   };
@@ -365,8 +363,6 @@ export const CreativeUploadDetails = ({
     let arr = Object.keys(data || {});
 
     let result = arr?.map((city: string, index: number) => {
-      // console.log(getCreativeCountCityWise(data, city));
-      // console.log(getScreenCountCityWise(data, city));
       return {
         id: `${index + 1}`,
         label: city,
@@ -414,14 +410,11 @@ export const CreativeUploadDetails = ({
   };
 
   const returnRequiredValue = async (file: any) => {
-    let url = "";
+    let url = file?.awsURL || "";
     // stop again saving same creatives again and again when we came from future.
-    if (file?.awsURL === "") {
+    if (!url) {
       console.log("awsURL not preset!");
       url = await getAWSUrl(file);
-    } else {
-      console.log("no need to save again and again");
-      url = file.awsURL;
     }
     return {
       url: url,
@@ -463,7 +456,6 @@ export const CreativeUploadDetails = ({
 
   const handleSaveAndContinue = async () => {
     if (!pathname.split("/").includes("view")) {
-      
       if (validate()) {
         setIsLoading(true);
         let requestBody: any = [];
@@ -473,9 +465,14 @@ export const CreativeUploadDetails = ({
             let standardDayTimeCreatives: any = [];
             let standardNightTimeCreatives: any = [];
             let triggerCreatives: any = [];
+            let creativeDuration = 10;
 
             if (data?.standardDayTimeCreatives) {
               for (let file of data?.standardDayTimeCreatives) {
+                creativeDuration =
+                  creativeDuration < file?.creativeDuration
+                    ? file?.creativeDuration
+                    : creativeDuration;
                 let myData = await returnRequiredValue(file);
                 file.awsURL = myData?.url;
                 file.url = myData?.url;
@@ -485,6 +482,10 @@ export const CreativeUploadDetails = ({
 
             if (data?.standardNightTimeCreatives) {
               for (let file of data?.standardNightTimeCreatives) {
+                creativeDuration =
+                  creativeDuration < file?.creativeDuration
+                    ? file?.creativeDuration
+                    : creativeDuration;
                 let myData = await returnRequiredValue(file);
                 file.awsURL = myData?.url;
                 file.url = myData?.url;
@@ -493,6 +494,10 @@ export const CreativeUploadDetails = ({
             }
             if (data?.triggerCreatives) {
               for (let file of data?.triggerCreatives) {
+                creativeDuration =
+                  creativeDuration < file?.creativeDuration
+                    ? file?.creativeDuration
+                    : creativeDuration;
                 let myData = await returnRequiredValue(file);
                 file.awsURL = myData?.url;
                 file.url = myData?.url;
@@ -505,7 +510,7 @@ export const CreativeUploadDetails = ({
               screenResolution: data?.screenResolution,
               count: data?.count,
               screenIds: data?.screenIds,
-              creativeDuration: data?.creativeDuration,
+              creativeDuration: creativeDuration,
               standardDayTimeCreatives: standardDayTimeCreatives,
               standardNightTimeCreatives: standardNightTimeCreatives,
               triggerCreatives: triggerCreatives,
@@ -528,8 +533,10 @@ export const CreativeUploadDetails = ({
       } else {
         message.error("Please upload creatives for each row and foreach city");
       }
+    } else {
+      setCurrentStep(step + 1);
     }
-    setCurrentStep(step+1) 
+    setCurrentStep(step + 1);
   };
 
   const handleSaveFile = () => {
@@ -567,7 +574,7 @@ export const CreativeUploadDetails = ({
           myData[currentCity][currentScreen].triggerCreatives.push(file);
         }
       }
-      setFIle(null);
+      setFile(null);
       setCreativeUploadData(filterUniqueResolutions(myData));
       handleNextStep(myData);
 
@@ -716,7 +723,7 @@ export const CreativeUploadDetails = ({
                           handleAddNewFile={handleAddNewFile}
                           file={file}
                           handleSaveFile={handleSaveFile}
-                          removeFile={() => setFIle(null)}
+                          removeFile={() => setFile(null)}
                         />
                       </>
                     ) : (

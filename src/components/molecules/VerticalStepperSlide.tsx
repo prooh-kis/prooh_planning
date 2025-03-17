@@ -1,88 +1,67 @@
 import { Tooltip } from "antd";
-import React, { useState } from "react";
+import React from "react";
 
 interface StepSliderProps {
   steps: number;
   step: number;
-  setStep?: any;
-  setTrigger?: any;
-  trigger?: any;
-  stepLabels?: any;
+  setStep: (step: number) => void;
+  setTrigger: (trigger: { triggerType: string }) => void;
 }
 
 export const VerticalStepperSlider: React.FC<StepSliderProps> = ({
-  setStep,
   steps,
   step,
+  setStep,
   setTrigger,
-  trigger,
 }) => {
-  // Example labels for each step
   const stepLabels = [
-    {
-      label: "Conditional To Weather Situations",
-      value: "weather",
-    },
-    {
-      label: "Empty Slots",
-      value: "empty",
-    },
-    {
-      label: "Conditional To Sporting Events",
-      value: "sport",
-    },
+    { label: "Conditional To Weather Situations", value: "weather" },
+    { label: "Empty Slots", value: "empty" },
+    { label: "Conditional To Sporting Events", value: "sport" },
   ];
 
-  // Function to handle step marker click
-  const handleStepClick = (step: number) => {
-    if (step !== 3) {
-      setStep(step);
-      const triggerType: any = {};
-      triggerType["triggerType"] = stepLabels[step - 1].value;
-      setTrigger(triggerType);
-    }
+  const handleStepClick = (selectedStep: number) => {
+    if (selectedStep === 3) return; // Step 3 is disabled
+    setStep(selectedStep);
+    setTrigger({ triggerType: stepLabels[selectedStep - 1].value });
   };
 
   return (
-    <div className="h-full py-0 px-5 flex flex-col w-full">
-      {/* Step Line */}
-      <div className="relative flex flex-col">
-        <div className="flex flex-col justify-between items-center relative z-10 h-full gap-4">
-          {Array.from({ length: steps }, (_, i) => (
+    <div className="flex flex-col w-full px-5 py-0">
+      {stepLabels.map((stepItem, index) => {
+        const isActive = index + 1 === step;
+        return (
+          <div
+            key={index}
+            className={`flex items-center gap-3 cursor-pointer py-2 transition-all duration-300 
+              ${isActive ? "text-[#166235] font-semibold" : "text-gray-500"}`}
+            onClick={() => handleStepClick(index + 1)}
+          >
+            {/* Outer Circle (1px border) */}
             <div
-              key={i}
-              className="relative flex justify-start items-center gap-4 w-full cursor-pointer"
-              onClick={() => handleStepClick(i + 1)}
+              className={`w-5 h-5 flex items-center justify-center border rounded-full transition-all duration-300
+                ${isActive ? "border-[#166235]" : "border-gray-400"}
+              `}
             >
-              {/* The clickable circle for each step */}
-              <div
-                className={`transition-all duration-500 rounded-full flex items-center ${
-                  i + 1 === step
-                    ? "h-4 w-4 bg-[#FFFFFF] border-2 border-[#166235] ml-[-2px]" // Active step circle
-                    : "h-3 w-3 bg-gray-100 border border-gray-100" // Inactive step circle
-                }`}
-              ></div>
-
-              {/* Step label */}
-              <Tooltip
-                title={
-                  i + 1 === 3
-                    ? "Sporting events based triggers coming soon..."
-                    : `Click to select "${stepLabels[i]?.label}" trigger`
-                }
-              >
-                <span
-                  className={`px-2 ${
-                    i + 1 === step ? "text-[#166235]" : "text-gray-400"
-                  } text-[14px] truncate`}
-                >
-                  {stepLabels[i]?.label}
-                </span>
-              </Tooltip>
+              {/* Inner Filled Circle */}
+              {isActive && (
+                <div className="w-3 h-3 bg-[#166235] rounded-full"></div>
+              )}
             </div>
-          ))}
-        </div>
-      </div>
+
+            {/* Step Label with Tooltip */}
+            <Tooltip
+              title={
+                index + 1 === 3
+                  ? "Sporting events based triggers coming soon..."
+                  : `Click to select "${stepItem.label}" trigger`
+              }
+            >
+              <span className="truncate text-[14px]">{stepItem.label}</span>
+            </Tooltip>
+          </div>
+        );
+      })}
     </div>
   );
 };

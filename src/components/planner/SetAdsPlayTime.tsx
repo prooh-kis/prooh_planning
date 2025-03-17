@@ -206,7 +206,7 @@ export const SetAdsPlayTime = ({
             your final bill will include the cost of all the additional slots,
             at the same cost that your slots were booked.
           </h1>
-          <div className="">
+          <div className="mt-4">
             <CustomTabWithSelectAll
               currentTab={currentTab}
               setCurrentTab={setCurrentTab}

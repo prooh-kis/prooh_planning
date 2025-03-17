@@ -213,7 +213,7 @@ export const TriggerDetails = ({
 
   const handleSaveAndContinue = () => {
     if (pathname?.split("/").includes("view")) {
-      setCurrentStep(step+1);
+      setCurrentStep(step + 1);
     } else {
       if (isDisabled) {
         message.error(
@@ -230,7 +230,6 @@ export const TriggerDetails = ({
         // setCurrentStep(step + 1);
       }
     }
-    
   };
 
   const handleSkipTriggerSelection = () => {
@@ -363,7 +362,6 @@ export const TriggerDetails = ({
                 setStep={setCurrentStep1}
                 steps={3}
                 setTrigger={setSelectedTrigger}
-                trigger={selectedTrigger}
               />
             </div>
             <p className="p-2 text-[14px] text-[#AF0D0D]">
