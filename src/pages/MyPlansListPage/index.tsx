@@ -80,7 +80,7 @@ export const MyPlansListPage: React.FC = () => {
       </div>
 
       {/* Campaign List */}
-      <div className="mt-2 h-[80vh] overflow-y-auto no-scrollbar rounded-lg">
+      <div className="mt-2 h-[80vh] overflow-y-auto no-scrollbar rounded-lg flex flex-col gap-4">
         {loading ? (
           <LoadingScreen />
         ) : filteredCampaigns?.length === 0 ? (

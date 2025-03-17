@@ -156,7 +156,7 @@ export const MyCampaignsListPage: React.FC = () => {
         ) : filteredCampaigns?.length === 0 ? (
           <NoDataView />
         ) : (
-          <div className="overflow-y-scroll no-scrollbar h-[80vh] my-1 rounded-[12px]">
+          <div className="mt-2 h-[75vh] overflow-y-auto no-scrollbar rounded-lg flex flex-col gap-4">
             {filteredCampaigns?.map((data: any, i: any) => (
               <div
                 key={i}

@@ -6,7 +6,11 @@ import { FirstCharForBrandName } from "./FirstCharForBrandName";
 
 export const CampaignsListModel = ({ data }: any) => {
   return (
-    <div className="flex items-center justify-between w-full rounded-[12px] bg-white p-4 my-2">
+    <div
+      className="flex items-center justify-between w-full rounded-[12px] bg-white p-4 
+      transition-all duration-50 ease-in-out transform hover:shadow-lg hover:-translate-y-1"
+    >
+      {" "}
       <div className="flex items-top gap-4">
         <FirstCharForBrandName brandName={data.brandName} />
         <div>

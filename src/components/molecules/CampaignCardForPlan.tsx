@@ -7,7 +7,10 @@ import { FirstCharForBrandName } from "./FirstCharForBrandName";
 
 export const CampaignCardForPlan = ({ data, handleEdit }: any) => {
   return (
-    <div className="flex items-center justify-between w-full rounded-[12px] bg-white p-4 my-2">
+    <div
+      className="flex items-center justify-between w-full rounded-[12px] bg-white p-4
+      transition-all duration-50 ease-in-out transform hover:shadow-lg hover:-translate-y-1"
+    >
       <div className="flex items-top gap-4">
         <FirstCharForBrandName brandName={data.brandName} />
 
@@ -16,7 +19,7 @@ export const CampaignCardForPlan = ({ data, handleEdit }: any) => {
             <h1 className="text-[16px] text-[#092A41]">{data?.name}</h1>
             <Tooltip title="Edit Campaign">
               <i
-                className="fi fi-sr-pencil text-[12px] hover:text-[#129BFF]"
+                className="fi fi-sr-pencil text-[12px] hover:text-[#129BFF] cursor-pointer"
                 onClick={() => handleEdit(data)}
               ></i>
             </Tooltip>
