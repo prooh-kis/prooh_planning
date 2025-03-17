@@ -2,28 +2,13 @@ import {
   convertDataTimeToLocale,
   getCampaignEndingStatus,
 } from "../../utils/dateAndTimeUtils";
-import { generateColorFromAlphabet } from "../../utils/colorUtils";
-import clsx from "clsx";
+import { FirstCharForBrandName } from "./FirstCharForBrandName";
 
 export const CampaignsListModel = ({ data }: any) => {
-  const getBgColors = (index: any) => {
-    const colors = ["bg-[#EF444450]", "bg-[#F59E0B50]", "bg-[#EAB30850]", "bg-[#22C55E50]", "bg-[#06B6D450]", "bg-[#3B82F650]", "bg-[#6366F150]", "bg-[#8B5CF650]", "bg-[#78DCCA50]", "bg-[#FF77E950]", "bg-[#3AB7BF50]", "bg-[#3F3CBB50]", "bg-[#22C55E50]", "bg-[#06B6D450]", "bg-[#3B82F650]", "bg-[#6366F150]", "bg-[#EF444450]", "bg-[#F59E0B50]" ];
-    return colors[index];
-  }
-
   return (
     <div className="flex items-center justify-between w-full rounded-[12px] bg-white p-4 my-2">
       <div className="flex items-top gap-4">
-        <div
-          className={clsx(
-            `rounded-[12px] flex justify-center items-center w-24 border border-[#D7D7D750] ${getBgColors(data?.brandName?.split(" ")[0]?.split("").length)}
-            }]`
-          )}
-        >
-          <h1 className="text-[40px] text-gray-400 font-black">
-            {data?.brandName?.split("")[0]}
-          </h1>
-        </div>
+        <FirstCharForBrandName brandName={data.brandName} />
         <div>
           <h1 className="text-[16px] text-[#092A41]">{data?.name}</h1>
           <div className="flex gap-2 items-center my-1">
@@ -49,11 +34,6 @@ export const CampaignsListModel = ({ data }: any) => {
           <h1 className="text-[12px] text-[#276F41] font-semibold">
             On {data?.screenIds?.length} Screens
           </h1>
-
-          {/* <div className="flex items-center mt-1">
-            <h1 className="text-[12px] font-semibold">Status-15</h1>
-            <h1 className="text-[12px] text-[#68879C]">/45 Screens Approved</h1>
-          </div> */}
         </div>
       </div>
       <div className="flex flex-col gap-2">
