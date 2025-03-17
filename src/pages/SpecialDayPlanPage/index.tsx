@@ -26,6 +26,7 @@ import { specialDayPlanData } from "../../data";
 
 export const SpecialDayPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
+  const steps = 8;
   const { pathname, state } = useLocation();
   const campaignId: any = pathname.split("/")[2] || null;
   const [pageSuccess, setPageSuccess] = useState<boolean>(false);
@@ -50,9 +51,9 @@ export const SpecialDayPlanPage: React.FC = () => {
         specialDayPlanData.find(
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0;
-      setCurrentStep(newStep);
+      setCurrentStep(newStep == steps - 1 ? newStep : newStep + 1);
       const currStep = {
-        [campaignId]: newStep,
+        [campaignId]: newStep == steps - 1 ? newStep : newStep + 1,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
@@ -153,7 +154,7 @@ export const SpecialDayPlanPage: React.FC = () => {
           step={currentStep}
           setStep={setCurrentStep}
           setPageSuccess={setPageSuccess}
-          steps={8}
+          steps={steps}
         />
       </div>
       {/* Step Content */}

@@ -14,6 +14,7 @@ import {
 } from "../../actions/clientAgencyAction";
 import { SuggestionInput } from "../../components/atoms/SuggestionInput";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -145,6 +146,7 @@ export const EnterCampaignBasicDetails = ({
 
   const saveCampaignDetailsOnLocalStorage = useCallback(() => {
     if (!pathname.split("/").includes("view")) {
+      console.log("asdads")
       updateEndDateBasedOnDuration(duration);
       handleAddNewClient(clientName);
       dispatch(
@@ -167,9 +169,8 @@ export const EnterCampaignBasicDetails = ({
           sov: sov,
         })
       );
-    } else {
-      setCurrentStep(step+1);
     }
+    setCurrentStep(step+1);
     
   }, [pathname, updateEndDateBasedOnDuration, duration, handleAddNewClient, clientName, dispatch, campaignId, campaignName, brandName, campaignType, industry, startDate, endDate, userInfo?._id, userInfo?.name, userInfo?.email, userInfo?.primaryUserId, userInfo?.primaryUserEmail, sov, setCurrentStep, step]);
 
@@ -180,12 +181,16 @@ export const EnterCampaignBasicDetails = ({
 
     if (successAddDetails) {
       // navigate(`/${path}/${addDetails?._id}`);
-      setCurrentStep(1);
+      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+
+      setCurrentStep(step);
     }
   }, [
+    dispatch,
     errorAddDetails,
     successAddDetails,
-    setCurrentStep
+    setCurrentStep,
+    step
   ]);
 
   useEffect(() => {

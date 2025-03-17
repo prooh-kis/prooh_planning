@@ -27,6 +27,7 @@ import { regularPlanData } from "../../data";
 
 export const RegularPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
+  const steps = 9;
   const location = useLocation();
 
   const { pathname } = location;
@@ -56,9 +57,9 @@ export const RegularPlanPage: React.FC = () => {
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0);
 
-      setCurrentStep(newStep);
+      setCurrentStep(newStep == steps - 1 ? newStep : newStep + 1);
       const currStep = {
-        [campaignId]: newStep,
+        [campaignId]: newStep == steps - 1 ? newStep : newStep + 1,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
@@ -90,7 +91,7 @@ export const RegularPlanPage: React.FC = () => {
           step={currentStep}
           setStep={setCurrentStep}
           setPageSuccess={setPageSuccess}
-          steps={9}
+          steps={steps}
         />
       </div>
       <div className="w-full flex-grow flex justify-center items-start overflow-auto p-4">

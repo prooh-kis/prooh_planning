@@ -88,16 +88,16 @@ export const SignUp: React.FC = () => {
                       transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
               {/* <i className="fi fi-br-plan-strategy text-[#50C878] text-[120px]" /> */}
               <img src={planner} alt={"PLANNER"} className="w-80 h-auto mb-4" />
-              <h2 className="text-[24px] text-[#3B82F6] font-semibold">{"CAMPAIGN PLANNER"}</h2>
-              <p className="text-gray-600 mt-2 text-[12px]">{"Click here if you are a campaign planner and you want to plan a campaign"}</p>
+              <h2 className="font-custom text-[24px] text-[#3B82F6] font-semibold">{"CAMPAIGN PLANNER"}</h2>
+              <p className="font-custom text-gray-600 mt-2 text-[12px]">{"Click here if you are a campaign planner and you want to plan a campaign"}</p>
             </div>
             <div onClick={() => setUserType(CAMPAIGN_MANAGER)}  className="cursor-pointer bg-white shadow-lg rounded-2xl p-6 w-100 flex flex-col items-center text-center 
                       transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
               {/* <i className="fi fi-br-lead-management text-[#8B5CF6] text-[120px]" /> */}
               <img src={manager} alt={"MANAGER"} className="w-80 h-auto mb-4" />
 
-              <h2 className="text-[24px] text-[#EF444490] font-semibold">{"CAMPAIGN MANAGER"}</h2>
-              <p className="text-gray-600 mt-2 text-[12px]">{"Click here if you are a campaign manager and you want to monitor your campaigns"}</p>
+              <h2 className="font-custom text-[24px] text-[#EF444490] font-semibold">{"CAMPAIGN MANAGER"}</h2>
+              <p className="font-custom text-gray-600 mt-2 text-[12px]">{"Click here if you are a campaign manager and you want to monitor your campaigns"}</p>
             </div>
           </div>
           </div>

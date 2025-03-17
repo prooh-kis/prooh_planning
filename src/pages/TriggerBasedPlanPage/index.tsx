@@ -27,6 +27,7 @@ import { triggerBasePlanData } from "../../data";
 
 export const TriggerBasedPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
+  const steps = 9;
   const { pathname, state } = useLocation();
   const campaignId: any = pathname.split("/")[2] || null;
   const [pageSuccess, setPageSuccess] = useState<boolean>(false);
@@ -51,8 +52,8 @@ export const TriggerBasedPlanPage: React.FC = () => {
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0;
 
-      setCurrentStep(newStep);
-      saveDataOnLocalStorage(CURRENT_STEP, { [campaignId ?? ""]: newStep });
+      setCurrentStep(newStep == steps - 1 ? newStep : newStep + 1);
+      saveDataOnLocalStorage(CURRENT_STEP, { [campaignId ?? ""]: newStep == steps - 1 ? newStep : newStep + 1 });
     }
   }, [success, campaignDetails, campaignId, state, pathname, dispatch]);
 
