@@ -102,7 +102,7 @@ export const CampaignTemplates: React.FC = () => {
                   className={`bg-[${allPlansData[selectedCard].color}] rounded-full h-12 w-12 flex items-center justify-center`}
                 >
                   <i
-                    className={`${allPlansData[selectedCard].icon} text-[24px] text-white`}
+                    className={`${allPlansData[selectedCard].icon} text-[24px] text-white flex items-center justify-center`}
                   />
                 </span>
                 <h1 className="font-custom text-[24px] font-semibold py-4 border-b">

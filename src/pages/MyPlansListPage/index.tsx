@@ -41,13 +41,7 @@ export const MyPlansListPage: React.FC = () => {
       dispatch(getMyCreateCampaignsListForPlan({ id: userInfo._id }));
     }
 
-    if (success) {
-      const pageName = getCampaignPageNameFromCampaignType(campaignDetails?.campaignType);
-      navigate(`/${pageName}/${campaignDetails._id}/view`, {
-        state: { from: "planlist" }
-      });
-    }
-  }, [dispatch, navigate, userInfo, success, campaignDetails]);
+  }, [dispatch, navigate, userInfo, campaignDetails]);
 
   const filteredCampaigns = campaignsList?.filter(
     (campaign: any) =>
@@ -56,7 +50,10 @@ export const MyPlansListPage: React.FC = () => {
   );
 
   const handleCampaignClick = (data: any) => {
-    dispatch(addDetailsToCreateCampaign({ id: data?._id }));
+    const pageName = getCampaignPageNameFromCampaignType(data?.campaignType);
+    navigate(`/${pageName}/${data._id}/view`, {
+      state: { from: "planlist" }
+    });
 
   };
 

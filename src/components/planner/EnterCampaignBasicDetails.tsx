@@ -180,9 +180,9 @@ export const EnterCampaignBasicDetails = ({
       message.error(errorAddDetails);
     }
 
-    if (successAddDetails) {
+    if (successAddDetails && !pathname.split("/").includes("view") && !pathname.split("/").includes("edit")) {
       navigate(`/${path}/${addDetails?._id}`);
-      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+      // dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
 
       setCurrentStep(step+1);
     }
@@ -194,6 +194,7 @@ export const EnterCampaignBasicDetails = ({
     setCurrentStep,
     step,
     path,
+    pathname,
     addDetails
   ]);
 
