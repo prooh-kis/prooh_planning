@@ -3,7 +3,6 @@ import { StepperSlider } from "../../components/molecules/StepperSlider";
 import {
   CreativeUploadDetails,
   EnterCampaignBasicDetails,
-  ScreenSummaryDetails,
   ViewFinalPlanPODetails,
   VendorConfirmationDetails,
   SetAdsPlayTime,
@@ -20,7 +19,6 @@ import { useLocation } from "react-router-dom";
 import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
-  ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
   CAMPAIGN_PLAN_TYPE_STORE,
 } from "../../constants/campaignConstants";
 import { storeBasePlanData } from "../../data";
@@ -46,8 +44,6 @@ export const StoreBasedPlanPage: React.FC = () => {
   // Fix: Ensure campaignId is always a string when used as an object key
   useEffect(() => {
     if (success && campaignDetails) {
-      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-
       const newStep = state?.from === "dashboard" ? 1 :
         pathname.split("/").includes("view") ? 1 :
         pathname.split("/").includes("edit") ? 1 :

@@ -20,7 +20,6 @@ import { useLocation } from "react-router-dom";
 import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
-  ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
   CAMPAIGN_PLAN_TYPE_REGULAR,
 } from "../../constants/campaignConstants";
 import { regularPlanData } from "../../data";
@@ -48,8 +47,6 @@ export const RegularPlanPage: React.FC = () => {
   // Fix: Ensure campaignId is always a string when used as an object key
   useEffect(() => {
     if (success && campaignDetails) {
-      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-
       const newStep = location?.state?.from === "dashboard" ? 1 :
         pathname.split("/").includes("view") ? 1 :
         pathname.split("/").includes("edit") ? 1 :

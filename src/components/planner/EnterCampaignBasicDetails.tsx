@@ -36,6 +36,7 @@ export const EnterCampaignBasicDetails = ({
   userInfo,
   campaignId,
   campaignType,
+  path,
 }: EnterCampaignBasicDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -170,9 +171,9 @@ export const EnterCampaignBasicDetails = ({
         })
       );
     }
-    setCurrentStep(step+1);
+    // setCurrentStep(step+1);
     
-  }, [pathname, updateEndDateBasedOnDuration, duration, handleAddNewClient, clientName, dispatch, campaignId, campaignName, brandName, campaignType, industry, startDate, endDate, userInfo?._id, userInfo?.name, userInfo?.email, userInfo?.primaryUserId, userInfo?.primaryUserEmail, sov, setCurrentStep, step]);
+  }, [pathname, updateEndDateBasedOnDuration, duration, handleAddNewClient, clientName, dispatch, campaignId, campaignName, brandName, campaignType, industry, startDate, endDate, userInfo, sov]);
 
   useEffect(() => {
     if (errorAddDetails) {
@@ -180,17 +181,20 @@ export const EnterCampaignBasicDetails = ({
     }
 
     if (successAddDetails) {
-      // navigate(`/${path}/${addDetails?._id}`);
+      navigate(`/${path}/${addDetails?._id}`);
       dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
 
-      setCurrentStep(step);
+      setCurrentStep(step+1);
     }
   }, [
+    navigate,
     dispatch,
     errorAddDetails,
     successAddDetails,
     setCurrentStep,
-    step
+    step,
+    path,
+    addDetails
   ]);
 
   useEffect(() => {

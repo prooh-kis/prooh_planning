@@ -15,11 +15,9 @@ import {
 import { useLocation } from "react-router-dom";
 import {
   CURRENT_STEP,
-  FULL_CAMPAIGN_PLAN,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
-  ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
   CAMPAIGN_PLAN_TYPE_KNOW,
 } from "../../constants/campaignConstants";
 import { IKnowItAllPlanSummaryTable } from "../../components/planner/IKnowItAllPlanSummaryTable";

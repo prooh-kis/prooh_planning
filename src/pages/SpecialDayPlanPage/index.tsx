@@ -17,11 +17,9 @@ import {
 import { useLocation } from "react-router-dom";
 import {
   CURRENT_STEP,
-  FULL_CAMPAIGN_PLAN,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { SpecialDay } from "../../components/planner/SpecialDay";
-import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { specialDayPlanData } from "../../data";
 
 export const SpecialDayPlanPage: React.FC = () => {
@@ -43,8 +41,6 @@ export const SpecialDayPlanPage: React.FC = () => {
   // Fix: Ensure campaignId is always a string when used as an object key
   useEffect(() => {
     if (success && campaignDetails) {
-      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-
       const newStep = state?.from === "dashboard" ? 1 :
         pathname.split("/").includes("view") ? 1 :
         pathname.split("/").includes("edit") ? 1 :
