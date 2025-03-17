@@ -110,7 +110,7 @@ export const CalenderScaleStepper = ({
                   <Tooltip title={week}>
                     <div className="relative mt-[-32px] w-full">
                       <div
-                        className={`flex w-full gap-2 ${
+                        className={`flex w-full gap-2 font-custom text-[12px] ${
                           i <= currentWeek - 1
                             ? "text-primaryButton"
                             : "text-[#D6D2D2]"
@@ -124,7 +124,7 @@ export const CalenderScaleStepper = ({
                 {/* Adjust label positioning: left-aligned for first step, centered otherwise, right-aligned for last step */}
                 {i === currentWeek - 1 && (
                   <div
-                    className={`absolute top-full mt-2 text-primaryButton text-[14px] font-medium whitespace-nowrap
+                    className={`font-custom  absolute top-full mt-2 text-primaryButton text-[12px] font-medium whitespace-nowrap
                       ${
                         i === 0
                           ? "left-0"
@@ -174,7 +174,7 @@ export const CalenderScaleStepper = ({
                   <Tooltip title={Object.values(weeks)[currentWeek-1][1][i]}>
                     <div className="relative mt-[-32px] w-full">
                       <div
-                        className={`flex w-full gap-2 -ml-[8px] ${
+                        className={`font-custom flex w-full gap-2 -ml-[8px] text-[12px] ${
                           i <= currentDay - 1
                             ? "text-primaryButton"
                             : "text-[#D6D2D2]"
@@ -199,7 +199,7 @@ export const CalenderScaleStepper = ({
                 >
                   <div className={`relative -left-8`}>
                     {i === currentDay - 1 && (
-                      <h1 className="text-[14px] text-primaryButton font-medium whitespace-nowrap">
+                      <h1 className="font-custom text-[12px] text-primaryButton font-medium whitespace-nowrap">
                         {Object.values(weeks)[currentWeek-1][1][currentDay - 1]}
                       </h1>
                     )}
@@ -209,7 +209,7 @@ export const CalenderScaleStepper = ({
                     `}>
                     {campaignData?.slotsPlayedPerDay
                           ?.filter((data: any) => formatDateForLogs(new Date(data.date)).apiDate === formatDateForLogs(new Date(Object.values(weeks)[currentWeek-1][1][i])).apiDate).length > 0 && (
-                      <h1 className={`text-[12px] 
+                      <h1 className={`font-custom text-[12px] 
                         ${
                           (campaignData?.slotsPlayedPerDay
                           ?.filter((data: any) => formatDateForLogs(new Date(data.date)).apiDate === formatDateForLogs(new Date(Object.values(weeks)[currentWeek-1][1][i])).apiDate)[0]?.countPromised / 

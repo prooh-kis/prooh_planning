@@ -141,10 +141,10 @@ export const ShowCampaignLogsPopup = ({
     return null;
   }
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 ">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 mt-16">
       <div
         className="bg-[#FFFFFF] p-4 rounded-lg shadow-lg w-full max-w-full relative overflow-auto max-h-auto "
-        style={{ height: "80vh", width: "95vw" }}
+        style={{ height: "90vh", width: "95vw" }}
       >
         <div className="flex justify-end">
           <i className="fi fi-br-circle-xmark" onClick={() => onClose()}></i>
@@ -163,7 +163,7 @@ export const ShowCampaignLogsPopup = ({
        
             <button
               title="s"
-              className="border border-1 py-2 px-4 rounded-lg bg-blue text-[#FFFFFF] hover:bg-[#129BFF] w-1/4 text-center"
+              className="border border-1 py-2 px-4 rounded-lg bg-blue text-[#FFFFFF] font-custom font-semibold hover:bg-[#129BFF] text-center"
               onClick={() => {
                 if (isDownLoad != campaignData?.campaignId)
                   downloadLogs(campaignData?.campaignId);
