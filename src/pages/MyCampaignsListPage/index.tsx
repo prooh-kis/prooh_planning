@@ -143,22 +143,20 @@ export const MyCampaignsListPage: React.FC = () => {
         />
       </div>
 
-      <div className="w-full p-2">
-        <div className="grid grid-cols-8 gap-2">
-          <div className="col-span-5">
-            <SearchInputField
-              value={searchQuery}
-              onChange={setSearchQuery}
-              placeholder="Search Campaign by campaign name or brand"
-            />
-          </div>
-        </div>
+      <div className="mt-2 w-full">
+        <SearchInputField
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search by campaign name or brand"
+        />
+      </div>
+      <div className="w-full mt-2">
         {loading ? (
           <LoadingScreen />
         ) : filteredCampaigns?.length === 0 ? (
           <NoDataView />
         ) : (
-          <div className="overflow-y-scroll scrollbar-minimal h-[80vh] my-1 rounded-[12px] pr-2">
+          <div className="overflow-y-scroll no-scrollbar h-[80vh] my-1 rounded-[12px]">
             {filteredCampaigns?.map((data: any, i: any) => (
               <div
                 key={i}

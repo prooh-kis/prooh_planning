@@ -57,8 +57,6 @@ export const Footer = ({
     };
   });
 
-  console.log("footerData : ", footerData , pageName);
-
   const planningPageFooterDataGet = useSelector(
     (state: any) => state.planningPageFooterDataGet
   );

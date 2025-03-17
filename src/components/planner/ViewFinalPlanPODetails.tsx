@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getFinalPlanPOTableData,
   getPlanningPageFooterData,
+  getScreenSummaryPlanTableData,
 } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
@@ -442,18 +443,24 @@ export const ViewFinalPlanPODetails = ({
     if (!successAddCampaignDetails) return;
     setPageSuccess(true);
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-  }, [successAddCampaignDetails]);
+  }, [dispatch, setPageSuccess, successAddCampaignDetails]);
 
   useEffect(() => {
     if (!pageSuccess) return;
     dispatch(getFinalPlanPOTableData(poInput));
+    dispatch(
+      getScreenSummaryPlanTableData({
+        id: campaignId,
+        screenIds: poInput.screenIds,
+      })
+    );
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
         pageName: "View Final Plan Page",
       })
     );
-  }, [pageSuccess, poInput, campaignId]);
+  }, [dispatch, pageSuccess, poInput, campaignId]);
 
   useEffect(() => {
     if (!poTableData) return;

@@ -50,9 +50,9 @@ export const StoreBasedPlanPage: React.FC = () => {
         storeBasePlanData.find(
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0;
-      setCurrentStep(newStep == steps - 1 ? newStep : newStep + 1);
+      setCurrentStep(newStep >= steps ? newStep : newStep + 1);
       const currStep = {
-        [campaignId]: newStep == steps - 1 ? newStep : newStep + 1,
+        [campaignId]: newStep >= steps ? newStep : newStep + 1,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }

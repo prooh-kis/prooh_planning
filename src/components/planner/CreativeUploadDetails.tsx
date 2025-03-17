@@ -123,8 +123,6 @@ export const CreativeUploadDetails = ({
 
   const mergeCreativeWithScreenData = (creatives: any, screenData: any) => {
     const combinedData: any = {};
-    console.log("creatives : ", creatives);
-    console.log("screenData : ", screenData);
 
     for (const city in screenData) {
       if (!combinedData[city]) {
@@ -138,8 +136,6 @@ export const CreativeUploadDetails = ({
             screen.screenIds.includes(id)
           )
         );
-        console.log("screen : ", screen);
-        console.log("creativeData : ", creativeData);
 
         if (creativeData) {
           // If creative exists, merge it with the screen
@@ -532,9 +528,8 @@ export const CreativeUploadDetails = ({
       } else {
         message.error("Please upload creatives for each row and foreach city");
       }
-    } else {
-     setCurrentStep(step+1) 
     }
+    setCurrentStep(step+1) 
   };
 
   const handleSaveFile = () => {

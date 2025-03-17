@@ -272,11 +272,7 @@ export const VendorConfirmationDetails = ({
 
   const handleSaveAndContinue = async () => {
     if (!pathname.split("/").includes("view")) {
-      if (isDisabled) {
-        message.error(
-          "You will be redirected to campaign dashboard, once the campaign has started. Please wait..."
-        );
-      } else {
+
         let imageArr: string[] = [];
         for (let data of files) {
           let url = await getAWSUrl(data);
@@ -289,8 +285,14 @@ export const VendorConfirmationDetails = ({
             vendorApprovalImgs: imageArr, // return url array
           })
         );
-        navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignId}`);
-      }
+        
+        if (isDisabled) {
+          message.error(
+            "You will be redirected to campaign dashboard, once the campaign has started. Please wait..."
+          );
+        } else {
+          navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignId}`);
+        }
     } else {
       navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignId}`);
     }
@@ -300,8 +302,9 @@ export const VendorConfirmationDetails = ({
     if (!successAddCampaignDetails) return;
     setPageSuccess(true);
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-  }, [successAddCampaignDetails]);
+  }, [dispatch, successAddCampaignDetails, setPageSuccess]);
 
+  console.log("page success", pageSuccess);
   useEffect(() => {
     if (!pageSuccess) return;
 

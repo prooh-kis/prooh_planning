@@ -49,8 +49,8 @@ export const TriggerBasedPlanPage: React.FC = () => {
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0;
 
-      setCurrentStep(newStep == steps - 1 ? newStep : newStep + 1);
-      saveDataOnLocalStorage(CURRENT_STEP, { [campaignId ?? ""]: newStep == steps - 1 ? newStep : newStep + 1 });
+      setCurrentStep(newStep >= steps ? newStep : newStep + 1);
+      saveDataOnLocalStorage(CURRENT_STEP, { [campaignId ?? ""]: newStep >= steps ? newStep : newStep + 1 });
     }
   }, [success, campaignDetails, campaignId, state, pathname, dispatch]);
 
