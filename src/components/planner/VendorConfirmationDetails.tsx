@@ -143,7 +143,7 @@ export const VendorConfirmationDetails = ({
     formData.append(
       "message",
       `
-      <div style='max-width: 720px; margin: auto; padding: 16px; background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;'>
+        <div style='max-width: 720px; margin: auto; padding: 16px; background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;'>
           <a href={https://plan.prooh.ai/campaignDetails/${campaignId}}>View Dashboard</a>
         </div>
       `
@@ -165,10 +165,12 @@ export const VendorConfirmationDetails = ({
       const approvalUrl = `https://prooh.vinciis.in/api/v2/campaigns/approveCampaignScreenVendor?ids=${encodeURIComponent(
         approvalIds
       )}`;
-
+      const viewUrl = `https://plan.prooh.ai/myPlansList`;
       const emailContent = `
-        <div style='max-width: 600px; margin: auto; padding: 16px; background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;'>
-          <table style='width: 100%; border-collapse: collapse; margin-bottom: 16px;'>
+        <div style='max-width: 600px; margin: auto; padding: 16px; background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);'>
+          <h1 style='font-size: 40px; font-weight: bold; text-align: center;'>Congratulations!!!</h1>
+          <h1 style='font-size: 20px; font-weight: regular; text-align: left;'>Now approve campaigns for your screens, increase your revenue and relax...</h1>
+          <table style='width: 100%; border-collapse: collapse; margin-bottom: 16px; border-radius: 4px; overflow: hidden;'>
             <thead>
               <tr style='background-color: #007BFF; color: white;'>
                 <th style='padding: 8px; text-align: left;'>Screen Name</th>
@@ -212,11 +214,19 @@ export const VendorConfirmationDetails = ({
                 )}
             </tbody>
           </table>
-          <div>
-            <a href='${approvalUrl}'
-              style='display: inline-block; background-color: #007BFF; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;'>
-              See Details
-            </a>
+          <div style='display: flex; gap: 8px; justify-content: center;'>
+            <div style='margin: 0 8px 0 0'>
+              <a href='${viewUrl}'
+                style='display: inline-block; background-color: #007BFF; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;'>
+                See Details
+              </a>
+            </div>
+            <div style='margin: 0 0 0 8px'>
+              <a href='${approvalUrl}'
+                style='display: inline-block; background-color: #D7D7D760; color: black; padding: 12px 24px; text-decoration: none; border-radius: 4px;'>
+                Approve All
+              </a>
+            </div>
           </div>
         </div>
       `;
@@ -304,7 +314,6 @@ export const VendorConfirmationDetails = ({
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
   }, [dispatch, successAddCampaignDetails, setPageSuccess]);
 
-  console.log("page success", pageSuccess);
   useEffect(() => {
     if (!pageSuccess) return;
 

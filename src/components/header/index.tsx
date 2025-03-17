@@ -11,6 +11,7 @@ import {
   MEDIA_OWNER_PAGE,
   SIGN_UP,
 } from "../../routes/routes";
+import { CAMPAIGN_MANAGER, CAMPAIGN_PLANNER } from "../../constants/userConstants";
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -96,9 +97,9 @@ export const Header: React.FC = () => {
         <div className="flex items-center space-x-2 pr-4">
           <img src={userImage} alt="User" className="w-10 h-10 rounded-full" />
           <div className="truncate">
-            <h3 className="text-lg font-semibold">{userInfo.name}</h3>
-            <p className="text-xs font-semibold text-gray-700">
-              {userInfo.userRole}
+            <h3 className="font-custom text-lg font-semibold">{userInfo.name}</h3>
+            <p className="font-custom text-xs font-bold text-gray-700">
+              {userInfo.userRole === CAMPAIGN_PLANNER ? "PLANNER" : userInfo.userRole === CAMPAIGN_MANAGER ? "MANAGER" : userInfo?.userRole}
             </p>
           </div>
           <Menu userInfo={userInfo} />
