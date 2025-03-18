@@ -20,6 +20,8 @@ import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
   CAMPAIGN_PLAN_TYPE_STORE,
+  EDIT_CAMPAIGN,
+  VIEW_CAMPAIGN,
 } from "../../constants/campaignConstants";
 import { storeBasePlanData } from "../../data";
 
@@ -44,9 +46,8 @@ export const StoreBasedPlanPage: React.FC = () => {
   // Fix: Ensure campaignId is always a string when used as an object key
   useEffect(() => {
     if (success && campaignDetails) {
-      const newStep = state?.from === "dashboard" ? 1 :
-        pathname.split("/").includes("view") ? 1 :
-        pathname.split("/").includes("edit") ? 1 :
+      const newStep = pathname.split("/").includes("view") && state?.from === VIEW_CAMPAIGN ? 1 :
+      pathname.split("/").includes("edit") && state?.from === EDIT_CAMPAIGN ? 1 :
         storeBasePlanData.find(
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0;

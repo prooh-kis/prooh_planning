@@ -119,7 +119,7 @@ export const RouteProximity = ({
               type={"number"}
               placeholder={`${routeRadius/1000}`}
               value={routeRadius/1000}
-              onClick={(e: any) => {
+              onChange={(e: any) => {
                 if (e === 0) {
                   setRouteRadius(1000)
                 } else {

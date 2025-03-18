@@ -132,6 +132,22 @@ export const AdvanceFiltersDetails = ({
     }
   };
 
+  const handleReload = () => {
+    dispatch(
+      getScreenDataForAdvanceFilters({
+        id: campId,
+        touchPoints: pathname?.split("/").includes("storebasedplan")
+          ? ALL_TOUCHPOINTS
+          : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.touchPoints,
+      })
+    );
+  };
+
+  useEffect(() => {
+    handleReload();
+  }, []);
+
+
   useEffect(() => {
     if (errorAdvanceFilterData) {
       alert("Your system is having some issue, please refresh the page...");
@@ -149,53 +165,35 @@ export const AdvanceFiltersDetails = ({
       { enableHighAccuracy: true }
     );
 
-    if (advanceFilterData && advanceFilterData?.screens?.length == 0) {
-      message.error(
-        "You have got Zero screen, please change your previous selection"
-      );
-    }
-  }, [errorAdvanceFilterData, advanceFilterData]);
+  }, [errorAdvanceFilterData]);
 
   useEffect(() => {
     if (!pageSuccess) return;
     dispatch(
       getPlanningPageFooterData({
-        id: campaignId,
+        id: campId,
         pageName: "Advance Filter Page",
       })
     );
-  }, [dispatch, campId, pathname, pageSuccess]);
-
-  useEffect(() => {
-    if (!successAddCampaignDetails) return;
     dispatch({
       type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
     });
     setPageSuccess(true);
-  }, [successAddCampaignDetails]);
-
-  const handleReload = () => {
-    dispatch(
-      getScreenDataForAdvanceFilters({
-        id: campId,
-        touchPoints: pathname?.split("/").includes("storebasedplan")
-          ? ALL_TOUCHPOINTS
-          : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.touchPoints,
-      })
-    );
-  };
-
-  useEffect(() => {
-    handleReload();
-  }, []);
+  }, [dispatch, campId, pathname, pageSuccess, setPageSuccess]);
 
   useEffect(() => {
     if (advanceFilterData && finalSelectedScreens?.length === 0) {
-      setAllScreens(advanceFilterData?.screens);
-      setFinalSelectedScreens(advanceFilterData?.screens);
-      saveDataOnLocalStorage(SELECTED_SCREENS_ID, {
-        [campId]: advanceFilterData?.screens,
-      });
+      if (advanceFilterData?.screens?.length == 0) {
+        message.error(
+          "You have got Zero screen, please change your previous selection"
+        );
+      } else {
+        setAllScreens(advanceFilterData?.screens);
+        setFinalSelectedScreens(advanceFilterData?.screens);
+        saveDataOnLocalStorage(SELECTED_SCREENS_ID, {
+          [campId]: advanceFilterData?.screens,
+        });
+      }
     }
   }, [advanceFilterData, campId, finalSelectedScreens]);
 

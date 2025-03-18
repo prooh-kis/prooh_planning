@@ -172,7 +172,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                 <input
                   type="checkbox"
                   title="1"
-                  checked={true}
+                  defaultChecked={true}
                   onChange={() => toggleState(state)}
                   className="w-4 h-4 truncate"
                   disabled={true}

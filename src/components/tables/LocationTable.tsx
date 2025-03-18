@@ -73,9 +73,9 @@ export const LocationTable = ({
         <tr className="grid grid-cols-12 w-full h-[40px] px-2">
           <th className="col-span-9 flex items-center px-1 gap-2">
             <div className="flex gap-2 items-center px-1">
-              <Tooltip title="Choose your target audience gender wise in the given locations">
+              {/* <Tooltip title="Choose your target audience gender wise in the given locations">
                 <i className="fi fi-sr-land-layer-location flex items-center lg:text-[14px] text-[12px] text-[#21394F]"></i>
-              </Tooltip>
+              </Tooltip> */}
               <h1 className="lg:text-[14px] text-[12px] text-[#21394F]">
                 Locations
               </h1>

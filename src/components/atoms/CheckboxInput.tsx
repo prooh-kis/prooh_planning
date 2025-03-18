@@ -36,7 +36,7 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({
 
       {showIcon ? (
         <span className={`col-span-11`}>
-          <Tooltip title={label}>
+          <Tooltip title={`${label ? label: "Checkbox"}`}>
             <i
               className={`${icon} pl-2 flex justify-start items-center text-[${
                 color ? color : "#21394F"

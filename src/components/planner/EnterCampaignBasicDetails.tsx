@@ -54,24 +54,19 @@ export const EnterCampaignBasicDetails = ({
   const [industry, setIndustry] = useState<any>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.industry || ""
   );
-  const [startDate, setStartDate] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-      ? new Date(
-          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startDate
-        )
-          ?.toISOString()
-          ?.slice(0, 16)
-      : ""
-  );
-  const [endDate, setEndDate] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-      ? new Date(
-          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate
-        )
-          ?.toISOString()
-          ?.slice(0, 16)
-      : ""
-  );
+  const [startDate, setStartDate] = useState<any>(() => {
+    const localDate = new Date(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startDate);
+    const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+
+    return getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] ? utcDate.toISOString().slice(0, 16) : "";
+  });
+
+  const [endDate, setEndDate] = useState<any>(() => {
+    const localDate = new Date(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate);
+    const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+
+    return getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] ? utcDate.toISOString().slice(0, 16) : "";
+  });
 
   const [duration, setDuration] = useState<any>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || ""
@@ -147,7 +142,6 @@ export const EnterCampaignBasicDetails = ({
 
   const saveCampaignDetailsOnLocalStorage = useCallback(() => {
     if (!pathname.split("/").includes("view")) {
-      console.log("asdads")
       updateEndDateBasedOnDuration(duration);
       handleAddNewClient(clientName);
       dispatch(
@@ -170,10 +164,11 @@ export const EnterCampaignBasicDetails = ({
           sov: sov,
         })
       );
+    } else {
+      setCurrentStep(step+1);
     }
-    // setCurrentStep(step+1);
     
-  }, [pathname, updateEndDateBasedOnDuration, duration, handleAddNewClient, clientName, dispatch, campaignId, campaignName, brandName, campaignType, industry, startDate, endDate, userInfo, sov]);
+  }, [step, setCurrentStep, pathname, updateEndDateBasedOnDuration, duration, handleAddNewClient, clientName, dispatch, campaignId, campaignName, brandName, campaignType, industry, startDate, endDate, userInfo, sov]);
 
   useEffect(() => {
     if (errorAddDetails) {

@@ -104,3 +104,6 @@ export const CAMPAIGN_STATUS_PAUSE = "Pause"; // pause by screen owner
 export const CAMPAIGN_STATUS_REJECTED = "Rejected"; // pause by screen owner
 export const CAMPAIGN_STATUS_COMPLETED = "Completed"; // endDate >= current date
 export const CAMPAIGN_STATUS_HOLD = "Hold"; //
+
+export const EDIT_CAMPAIGN = "edit";
+export const VIEW_CAMPAIGN = "view";

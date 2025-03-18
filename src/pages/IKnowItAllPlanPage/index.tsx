@@ -19,6 +19,8 @@ import {
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
   CAMPAIGN_PLAN_TYPE_KNOW,
+  EDIT_CAMPAIGN,
+  VIEW_CAMPAIGN,
 } from "../../constants/campaignConstants";
 import { IKnowItAllPlanSummaryTable } from "../../components/planner/IKnowItAllPlanSummaryTable";
 import { IKnowItAllScreenSummaryDetails } from "../../components/planner/IKnowItAllScreenSummaryDetails";
@@ -44,9 +46,8 @@ export const IKnowItAllPlanPage: React.FC = () => {
   useEffect(() => {
     if (success && campaignDetails) {
 
-      const newStep = state?.from === "dashboard" ? 1 :
-        pathname.split("/").includes("view") ? 1 :
-        pathname.split("/").includes("edit") ? 1 :
+      const newStep = pathname.split("/").includes("view") && state?.from === VIEW_CAMPAIGN ? 1 :
+      pathname.split("/").includes("edit") && state?.from === EDIT_CAMPAIGN ? 1 :
         (iKnowItAllPlanData.find(
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0);

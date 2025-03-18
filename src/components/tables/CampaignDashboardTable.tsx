@@ -48,7 +48,7 @@ export const CampaignDashboardTable = ({
 
   const [currentWeek, setCurrentWeek] = useState<any>(1);
   const [currentDay, setCurrentDay] = useState<any>(1);
-  const [currentDate, setCurrentDate] = useState<any>(formatDateForLogs(new Date()).apiDate);
+  const [currentDate, setCurrentDate] = useState<any>(new Date().toUTCString());
   const campaignLogsGet = useSelector((state: any) => state.campaignLogsGet);
   const {
     loading: loadingLogs,
@@ -72,6 +72,7 @@ export const CampaignDashboardTable = ({
       const { data } = await axios.get(
         `${analyticsV1}/downloadAllCampaignLogs?campaignId=${campaignId}`
       );
+      console.log("data", data);
       await downloadExcel({
         campaign: data?.campaign,
         campaignLog: data?.logs,
@@ -175,9 +176,9 @@ export const CampaignDashboardTable = ({
   const getScreenClassName = (lastActive: any) => {
     if (lastActive) {
       if (getTimeDifferenceInMin(lastActive) < 15)
-        return "border w-4 h-4 bg-[#348730] rounded-full justify-end";
-      else return "border w-4 h-4 bg-[#ffec33] rounded-full justify-end";
-    } else return "border w-4 h-4 bg-[#ff3333] rounded-full justify-end";
+        return "border w-4 h-2 bg-[#348730] rounded-full justify-end";
+      else return "border w-4 h-2 bg-[#ffec33] rounded-full justify-end";
+    } else return "border w-4 h-2 bg-[#ff3333] rounded-full justify-end";
   };
 
   const getScreenStatus = (lastActive: any) => {

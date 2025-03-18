@@ -21,6 +21,8 @@ import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
   CAMPAIGN_PLAN_TYPE_TRIGGER,
+  EDIT_CAMPAIGN,
+  VIEW_CAMPAIGN,
 } from "../../constants/campaignConstants";
 import { triggerBasePlanData } from "../../data";
 
@@ -42,9 +44,8 @@ export const TriggerBasedPlanPage: React.FC = () => {
 
   useEffect(() => {
     if (success && campaignDetails) {
-      const newStep = state?.from === "dashboard" ? 1 :
-        pathname.split("/").includes("view") ? 1 :
-        pathname.split("/").includes("edit") ? 1 :
+      const newStep = pathname.split("/").includes("view") && state?.from === VIEW_CAMPAIGN ? 1 :
+      pathname.split("/").includes("edit") && state?.from === EDIT_CAMPAIGN ? 1 :
         triggerBasePlanData.find(
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0;

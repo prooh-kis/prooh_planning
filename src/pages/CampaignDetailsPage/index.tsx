@@ -21,9 +21,10 @@ import {
   CAMPAIGN_STATUS_PAUSE,
   CAMPAIGN_STATUS_CHANGE_RESET,
   EDIT_ALL_SUB_CAMPAIGNS_RESET,
+  EDIT_CAMPAIGN_CREATIVE_END_DATE_RESET,
+  EDIT_CAMPAIGN
 } from "../../constants/campaignConstants";
 import { getCreativesMediaAction } from "../../actions/creativeAction";
-import { EDIT_CAMPAIGN_CREATIVE_END_DATE_RESET } from "../../constants/campaignConstants";
 import {
   EditCampaignCreationAndItsSubCampaigns,
   EditCreativeEndDatePopup,
@@ -31,12 +32,6 @@ import {
   NoDataView,
   PrimaryButton,
 } from "../../components";
-import {
-  saveDataOnLocalStorage,
-} from "../../utils/localStorageUtils";
-import {
-  CAMPAIGN_CREATION_STATUS,
-} from "../../constants/localStorageConstants";
 import { ShowMediaFile } from "../../components/molecules/ShowMediaFIle";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import { creativeTypeTab } from "../../constants/tabDataConstant";
@@ -361,7 +356,11 @@ export const CampaignDetailsPage: React.FC = () => {
                             navigate(
                               `/${getCampaignPageNameFromCampaignType(
                                 campaignCreated?.campaignType
-                              )}/${campaignCreated._id}`
+                              )}/${campaignCreated._id}/edit`, {
+                                state: {
+                                  from: EDIT_CAMPAIGN
+                                }
+                              }
                             )
                           }}
                         ></i>

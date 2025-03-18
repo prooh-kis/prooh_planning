@@ -23,7 +23,6 @@ const SectionHeader: React.FC<{ iconClass: string; title: string }> = ({
     <h1 className="text-[14px] text-[#0E212E] leading-[16.94px] truncate">
       {title}
     </h1>
-    <i className="fi fi-br-info text-[#BCBCBC] text-[14px] flex items-center justify-center"></i>
   </div>
 );
 

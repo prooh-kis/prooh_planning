@@ -14,6 +14,8 @@ import { BillingAndInvoice } from "./BillingAndInvoice";
 import { GET_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyConstants";
 import { useDispatch } from "react-redux";
 import { DashBoardMenu } from "./DashBoardMenu";
+import { Tooltip } from "antd";
+import { EDIT_CAMPAIGN } from "../../constants/campaignConstants";
 
 export const CampaignDashboard = ({
   campaignDetails,
@@ -308,7 +310,7 @@ export const CampaignDashboard = ({
                 navigate(
                   `/${getCampaignPageNameFromCampaignType(
                     campaignDetails?.campaignType
-                  )}/${campaignDetails._id}/edit`, { state: { from: "dashboard" } } 
+                  )}/${campaignDetails._id}/edit`, { state: { from: EDIT_CAMPAIGN } } 
                 )
               }
             >
@@ -353,7 +355,9 @@ export const CampaignDashboard = ({
                 <h1 className="lg:text-[14px] md:text-[12px] leading-[16.96px]truncate">
                   Campaign Duration
                 </h1>
-                <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                <Tooltip title="Number of days campaign needs to run">
+                  <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                </Tooltip>
               </div>
               <div className="relative pt-8 pb-4 px-2">
                 <CalendarScaleSlider
@@ -384,7 +388,9 @@ export const CampaignDashboard = ({
                   <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
                     Audience Impressions
                   </h1>
-                  <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                  <Tooltip title="Total audience impressions delivered">
+                    <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                  </Tooltip>
                 </div>
                 <div className="grid grid-cols-3 gap-2 ">
                   <div className="col-span-1">
@@ -416,7 +422,9 @@ export const CampaignDashboard = ({
                   <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
                     Audience Type Wise Impressions
                   </h1>
-                  <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                  <Tooltip title="Total audience impressions delivered category wise">
+                    <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                  </Tooltip>
                 </div>
                 <div className="p-2">
                   <DashboardImpressionDetailsTable
@@ -435,7 +443,9 @@ export const CampaignDashboard = ({
                   <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
                     Screen Performance
                   </h1>
-                  <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                  <Tooltip title="Screen perfomance delivered">
+                    <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                  </Tooltip>
                 </div>
                 <div className="grid grid-cols-3 gap-2 p-2 ">
                   <div className="col-span-1">
@@ -469,7 +479,9 @@ export const CampaignDashboard = ({
                     <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
                       Day Wise Screen Performance
                     </h1>
-                    <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                    <Tooltip title="Screen perfomance delivered day wise">
+                      <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                    </Tooltip>
                   </div>
                   <div className="flex items-center gap-2 px-4 py-1">
                     <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
@@ -520,7 +532,9 @@ export const CampaignDashboard = ({
                   <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
                     Spot Delivery
                   </h1>
-                  <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                  <Tooltip title="Number of spots delivered for the campaign">
+                    <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                  </Tooltip>
                 </div>
                 <div className="grid grid-cols-3 gap-2 p-2">
                   <div className="col-span-1">
@@ -551,7 +565,9 @@ export const CampaignDashboard = ({
                     <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
                       Day Wise Spot Delivered
                     </h1>
-                    <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                    <Tooltip title="Day wise number of spots delivered for campaign">
+                      <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                    </Tooltip>
                   </div>
                   <div className="flex items-center gap-2 px-4 py-1">
                     <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
@@ -603,7 +619,9 @@ export const CampaignDashboard = ({
                   <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
                     Cost Consumed
                   </h1>
-                  <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                  <Tooltip title="Total cost consumed for the delivery of campaign">
+                    <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                  </Tooltip>
                 </div>
                 <div className="grid grid-cols-3 p-2">
                   <div className="col-span-1">
@@ -633,7 +651,9 @@ export const CampaignDashboard = ({
                   <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
                     Day Wise Cost Consumed
                   </h1>
-                  <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                  <Tooltip title="Day wise total cost consumed ">
+                    <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                  </Tooltip>
                 </div>
                 <div className="p-2">
                   <DashboardBarChart

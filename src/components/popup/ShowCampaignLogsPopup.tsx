@@ -117,13 +117,16 @@ export const ShowCampaignLogsPopup = ({
   };
 
   useEffect(() => {
-    dispatch(
-      GetCampaignLogsAction({
-        campaignId: campaignData?.campaignId,
-        date: formatDateForLogs(new Date(currentDate))?.apiDate,
-        // date: "13/03/2025"
-      })
-    );
+    if (campaignData?.campaignId) {
+      dispatch(
+        GetCampaignLogsAction({
+          campaignId: campaignData?.campaignId,
+          date: formatDateForLogs(currentDate)?.apiDate,
+          // date: "13/03/2025"
+        })
+      );
+    }
+
   },[dispatch, campaignData, currentDate]);
 
   useEffect(() => {

@@ -9,6 +9,7 @@ import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { CAMPAIGN_PLANNER, SCREEN_OWNER } from "../../constants/userConstants";
 import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
 import { CampaignCardForPlan } from "../../components/molecules/CampaignCardForPlan";
+import { EDIT_CAMPAIGN, VIEW_CAMPAIGN } from "../../constants/campaignConstants";
 
 export const MyPlansListPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -49,14 +50,14 @@ export const MyPlansListPage: React.FC = () => {
   const handleCampaignClick = (data: any) => {
     const pageName = getCampaignPageNameFromCampaignType(data?.campaignType);
     navigate(`/${pageName}/${data._id}/view`, {
-      state: { from: "planlist" },
+      state: { from: VIEW_CAMPAIGN },
     });
   };
 
   const handleEdit = (data: any) => {
     const pageName = getCampaignPageNameFromCampaignType(data?.campaignType);
     navigate(`/${pageName}/${data._id}/edit`, {
-      state: { from: "planlist" },
+      state: { from: EDIT_CAMPAIGN },
     });
   };
 

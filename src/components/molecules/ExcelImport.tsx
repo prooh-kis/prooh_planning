@@ -244,9 +244,9 @@ export function ExcelImport({
             <input
               className="w-[24px] h-6"
               type={"number"}
-              placeholder={`${circleRadius/1000}`}
-              value={circleRadius/1000}
-              onClick={(e: any) => {
+              placeholder={`${circleRadius ? circleRadius/1000 : 1}`}
+              value={circleRadius ? circleRadius/1000 : 1}
+              onChange={(e: any) => {
                 if (e === 0) {
                   setCircleRadius(1000)
                 } else {
@@ -277,6 +277,7 @@ export function ExcelImport({
               ref={hiddenFileInput}
               style={{ display: "none" }} // Make the file input element invisible
               multiple={false}
+              defaultValue={""}
               onChange={handleFileUpload}
             />
             <p className="text-sm text-primaryButton pr-2">Upload</p>

@@ -16,7 +16,6 @@ export const CalendarInput = ({
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate());
   const formattedYesterday = yesterday.toISOString().split("T")[0];
-
   return (
     <div className="w-full">
       <input
