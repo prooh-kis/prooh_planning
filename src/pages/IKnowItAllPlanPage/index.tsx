@@ -51,7 +51,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0);
 
-        console.log(newStep, steps)
+        // console.log(newStep, steps)
       setCurrentStep(newStep >= steps ? newStep : newStep + 1);
       const currStep = {
         [campaignId]: newStep >= steps ? newStep : newStep + 1,
