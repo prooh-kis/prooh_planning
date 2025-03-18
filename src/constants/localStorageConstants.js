@@ -12,6 +12,11 @@ export const ALL_NETWORK_LIST = "ALL_NETWORK_LIST";
 export const ALL_BRAND_LIST = "ALL_BRAND_LIST";
 export const ALL_PACKAGE_LIST = "ALL_PACKAGE_LIST";
 
+// campaign page
+export const CAMPAIGN_CREATION_STATUS = "campaignCreationStatus";
+export const UPLOAD_CREATIVE_SCREEN_DATA = "uploadCreativeScreenData";
+export const ALL_CAMPAIGNS_LIST = "allCampaignsList";
+
 // used for planning page
 
 export const LANDING_PAGE_DATA = "landingPageData";

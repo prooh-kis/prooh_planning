@@ -50,6 +50,8 @@ import { AppDashBoardLayout } from "../layout/AppDashBoardLayout";
 
 import { PlayLiveUrl } from "../pages/PageNotFound/PlayLiveUrl";
 import { MyCreativesPage } from "../pages/MyCreativesPage";
+import { CampaignsPage } from "../pages/CampaignsPage";
+import { CampaignDetailsPage } from "../pages/CampaignDetailsPage";
 
 const Routers: React.FC = () => {
   return (
@@ -118,7 +120,15 @@ const Routers: React.FC = () => {
           path={MY_CAMPAIGNS_LIST}
           element={
             <AppDashBoardLayout className="bg-[#D3D3D350] pt-16">
-              <MyCampaignsListPage />
+              <CampaignsPage />
+            </AppDashBoardLayout>
+          }
+        />
+        <Route
+          path={"/campaignDetails/:id?"}
+          element={
+            <AppDashBoardLayout className="bg-[#D3D3D350] pt-16">
+              <CampaignDetailsPage />
             </AppDashBoardLayout>
           }
         />
@@ -172,7 +182,7 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          path={"/campaignDetails/:id?"}
+          path={"/campaignDashboard/:id?"}
           element={
             <PublicRoute layout={HomePageLayout}>
               <CampaignDashboardPage />

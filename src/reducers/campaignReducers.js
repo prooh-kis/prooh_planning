@@ -34,8 +34,31 @@ import {
   GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_REQUEST,
   GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_SUCCESS,
   GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_ERROR,
+  GET_ALL_CAMPAIGNS_DATA_REQUEST,
+  GET_ALL_CAMPAIGNS_DATA_SUCCESS,
+  GET_ALL_CAMPAIGNS_DATA_FAIL,
+  GET_ALL_CAMPAIGNS_DATA_RESET,
+  GET_CAMPAIGN_DATA_REQUEST,
+  GET_CAMPAIGN_DATA_SUCCESS,
+  GET_CAMPAIGN_DATA_FAIL,
+  GET_CAMPAIGN_CREATION_SCREENS_DATA_REQUEST,
+  GET_CAMPAIGN_CREATION_SCREENS_DATA_SUCCESS,
+  GET_CAMPAIGN_CREATION_SCREENS_DATA_FAIL,
+  GET_CAMPAIGN_CREATION_SCREENS_DATA_RESET,
+  CAMPAIGN_STATUS_CHANGE_REQUEST,
+  CAMPAIGN_STATUS_CHANGE_SUCCESS,
+  CAMPAIGN_STATUS_CHANGE_FAIL,
+  CAMPAIGN_STATUS_CHANGE_RESET,
+  EDIT_ALL_SUB_CAMPAIGNS_REQUEST,
+  EDIT_ALL_SUB_CAMPAIGNS_SUCCESS,
+  EDIT_ALL_SUB_CAMPAIGNS_FAIL,
+  EDIT_ALL_SUB_CAMPAIGNS_RESET,
+  EDIT_CAMPAIGN_CREATIVE_END_DATE_REQUEST,
+  EDIT_CAMPAIGN_CREATIVE_END_DATE_SUCCESS,
+  EDIT_CAMPAIGN_CREATIVE_END_DATE_FAIL,
+  EDIT_CAMPAIGN_CREATIVE_END_DATE_RESET,
 } from "../constants/campaignConstants";
-import { FULL_CAMPAIGN_PLAN } from "../constants/localStorageConstants";
+import { ALL_CAMPAIGNS_LIST, FULL_CAMPAIGN_PLAN } from "../constants/localStorageConstants";
 
 export function detailsToCreateCampaignAddReducer(state = [], action) {
   switch (action.type) {
@@ -274,3 +297,96 @@ export function campaignMonitoringPicsGetReducer(state = [], action) {
   }
 }
 
+export function allCampaignsDataGetReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_ALL_CAMPAIGNS_DATA_REQUEST:
+      return { loading: true };
+    case GET_ALL_CAMPAIGNS_DATA_SUCCESS:
+      const d = {
+        list: action.payload,
+      };
+      saveDataOnLocalStorage(ALL_CAMPAIGNS_LIST, d);
+      return { ...state, loading: false, success: true, data: action.payload };
+    case GET_ALL_CAMPAIGNS_DATA_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case GET_ALL_CAMPAIGNS_DATA_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function campaignDetailsGetReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_CAMPAIGN_DATA_REQUEST:
+      return { loading: true };
+    case GET_CAMPAIGN_DATA_SUCCESS:
+      return { ...state, loading: false, success: true, data: action.payload };
+    case GET_CAMPAIGN_DATA_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case GET_ALL_CAMPAIGNS_DATA_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function campaignCreationScreensDetailsGetReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_CAMPAIGN_CREATION_SCREENS_DATA_REQUEST:
+      return { loading: true };
+    case GET_CAMPAIGN_CREATION_SCREENS_DATA_SUCCESS:
+      return { ...state, loading: false, success: true, data: action.payload };
+    case GET_CAMPAIGN_CREATION_SCREENS_DATA_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case GET_CAMPAIGN_CREATION_SCREENS_DATA_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function campaignStatusChangeReducer(state = {}, action) {
+  switch (action.type) {
+    case CAMPAIGN_STATUS_CHANGE_REQUEST:
+      return { loading: true };
+    case CAMPAIGN_STATUS_CHANGE_SUCCESS:
+      return { ...state, loading: false, success: true, data: action.payload };
+    case CAMPAIGN_STATUS_CHANGE_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case CAMPAIGN_STATUS_CHANGE_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function editAllSubCampaignsReducer(state = {}, action) {
+  switch (action.type) {
+    case EDIT_ALL_SUB_CAMPAIGNS_REQUEST:
+      return { loading: true };
+    case EDIT_ALL_SUB_CAMPAIGNS_SUCCESS:
+      return { ...state, loading: false, success: true, data: action.payload };
+    case EDIT_ALL_SUB_CAMPAIGNS_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case EDIT_ALL_SUB_CAMPAIGNS_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function editCampaignCreativeEndDateReducer(state = {}, action) {
+  switch (action.type) {
+    case EDIT_CAMPAIGN_CREATIVE_END_DATE_REQUEST:
+      return { loading: true };
+    case EDIT_CAMPAIGN_CREATIVE_END_DATE_SUCCESS:
+      return { loading: false, success: true, data: action.payload };
+    case EDIT_CAMPAIGN_CREATIVE_END_DATE_FAIL:
+      return { loading: false, error: action.payload };
+    case EDIT_CAMPAIGN_CREATIVE_END_DATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+}

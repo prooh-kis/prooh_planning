@@ -51,10 +51,6 @@ export const MASTER_USER_ROLE = "master";
 export const USER_ROLE_PRIMARY = "primary";
 export const USER_ROLE_SECONDARY = "secondary";
 
-export const CAMPAIGN_PLANNER = "campaignPlanner"
-export const CAMPAIGN_MANAGER = "campaignManager"
-export const SCREEN_OWNER = "screenOwner"
-
 export const SEND_EMAIL_FOR_CONFIRMATION_REQUEST =
   "SEND_EMAIL_FOR_CONFIRMATION_REQUEST";
 export const SEND_EMAIL_FOR_CONFIRMATION_SUCCESS =
@@ -73,9 +69,25 @@ export const SEND_EMAIL_FOR_VENDOR_CONFIRMATION_ERROR =
 export const SEND_EMAIL_FOR_VENDOR_CONFIRMATION_RESET =
   "SEND_EMAIL_FOR_VENDOR_CONFIRMATION_RESET";
 
+
+export const CAMPAIGN_PLANNER = "campaignPlanner"
+export const CAMPAIGN_MANAGER = "campaignManager"
+export const SCREEN_ADMIN = "screenAdmin"
+export const SCREEN_OWNER = "screenOwner"
+export const SCREEN_MANAGER = "screenManager"
+
+export const CAMPAIGN_STATUS_CHANGED_TO_ACTIVE_PLANNING_PAGE = "campaignStatusChangedToActivePLanningPage"
+export const CAMPAIGN_STATUS_CHANGED_TO_PAUSED_PLANNING_PAGE = "campaignStatusChangedToPausedPlanningPage"
+export const CAMPAIGN_STATUS_CHANGED_TO_DELETED_PLANNING_PAGE = "campaignStatusChangedToDeletedPlanningPage"
+export const CAMPAIGN_CHANGE_DATE_AND_CREATIVE_PLANNING_PAGE = "campaignChangeDateAndCreativePlanningPage"
+
 export const USERS_GET_PLANNING_PAGE = "usersGetPlanningPage";
 export const USERS_DELETE_PLANNING_PAGE = "usersDeletePlanningPage";
 export const USERS_ADD_PLANNING_PAGE = "usersAddPlanningPage";
 
-export const CREATIVE_GET_CMS = "creativeGetCms"
-export const CREATIVE_ADD_CMS = "creativeAddCms"
+export const CREATIVE_GET_PLANNING_PAGE = "creativeGetPlanningPage"
+export const CREATIVE_ADD_PLANNING_PAGE = "creativeAddPlanningPage"
+
+export const CAMPAIGN_CREATION_EDIT_END_DATE_PLANNING_PAGE = "campaignCreationEditEndDatePlanningPage"
+export const CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE = "campaignCreationGetAllCampaignDataPlanningPage"
+export const CAMPAIGN_CREATION_GET_CAMPAIGN_DETAILS_PLANNING_PAGE = "campaignCreationGetCampaignDetailsPlanningPage"

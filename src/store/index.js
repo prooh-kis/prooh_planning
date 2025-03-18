@@ -45,6 +45,12 @@ import {
   campaignLogsGetReducer,
   campaignMonitoringPicsGetReducer,
   myCreateCampaignsListForPlanGetReducer,
+  allCampaignsDataGetReducer,
+  campaignDetailsGetReducer,
+  campaignCreationScreensDetailsGetReducer,
+  editAllSubCampaignsReducer,
+  campaignStatusChangeReducer,
+  editCampaignCreativeEndDateReducer,
 } from "../reducers/campaignReducers";
 import {
   cricketMatchesListGetReducer,
@@ -101,6 +107,12 @@ const store = configureStore({
     tableDataSetAdPlayTimeStore: tableDataSetAdPlayTimeReducer,
 
     // campaign
+    allCampaignsDataGet: allCampaignsDataGetReducer,
+    campaignDetailsGet: campaignDetailsGetReducer,
+    campaignCreatedScreensDetailsGet: campaignCreationScreensDetailsGetReducer,
+    editAllSubCampaigns: editAllSubCampaignsReducer,
+    campaignStatusChange: campaignStatusChangeReducer,
+    changeCampaignCreativeEndDate: editCampaignCreativeEndDateReducer,
     detailsToCreateCampaignAdd: detailsToCreateCampaignAddReducer,
     myCreateCampaignsListGet: myCreateCampaignsListGetReducer,
     myCreateCampaignsListForPlanGet: myCreateCampaignsListForPlanGetReducer,

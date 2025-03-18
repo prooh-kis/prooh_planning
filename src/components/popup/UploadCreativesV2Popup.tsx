@@ -25,7 +25,7 @@ import {
   ALL_BRAND_LIST,
   ALL_PACKAGE_LIST,
 } from "../../constants/localStorageConstants";
-import { CREATIVE_ADD_CMS } from "../../constants/userConstants";
+import { CREATIVE_ADD_PLANNING_PAGE } from "../../constants/userConstants";
 
 interface UploadCreativesV2PopupProps {
   onClose?: any;
@@ -215,7 +215,7 @@ export function UploadCreativesV2Popup({
           brand: brandName?.toUpperCase(),
           network: network?.toUpperCase(),
           creatives: myData,
-          event : CREATIVE_ADD_CMS
+          event : CREATIVE_ADD_PLANNING_PAGE
         })
       );
     } catch (error) {

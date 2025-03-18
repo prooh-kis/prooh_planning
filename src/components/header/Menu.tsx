@@ -40,10 +40,10 @@ export const Menu = (props: any) => {
       label: "Plans",
       path: MY_PLANS_LIST,
     },
-    // {
-    //   label: "Creatives",
-    //   path: MY_CREATIVES,
-    // }
+    {
+      label: "Creatives",
+      path: MY_CREATIVES,
+    }
   ];
 
   const managerArray = [

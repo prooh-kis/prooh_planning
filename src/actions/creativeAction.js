@@ -12,7 +12,7 @@ import {
 } from "../constants/creativeConstants";
 
 import { screenV2, creativeV2 } from "../constants/urlConstant";
-import { CREATIVE_GET_CMS } from "../constants/userConstants";
+import { CREATIVE_GET_PLANNING_PAGE } from "../constants/userConstants";
 
 export const uploadCreativesMediaAction =
   (requestBody) => async (dispatch, getState) => {
@@ -58,7 +58,7 @@ export const getCreativesMediaAction =
           `${creativeV2}/getCreatives`,
           { userId },
           {
-            params: { event: CREATIVE_GET_CMS },
+            params: { event: CREATIVE_GET_PLANNING_PAGE },
             headers: { Authorization: `Bearer ${userInfo.token}` },
           }
         );
