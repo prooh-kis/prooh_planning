@@ -323,13 +323,6 @@ export const AdvanceFiltersDetails = ({
                   routeFilteredScreens={routeFilteredScreens}
                   setRouteFilteredScreens={setRouteFilteredScreens}
                   handleFinalSelectedScreens={handleFinalSelectedScreens}
-                  // handleSelectFromMap={handleSelectFromMap}
-                  // handleAddManualSelection={
-                  //   handleAddManualSelectedScreenIntoFinalSelectedScreens
-                  // }
-                  // onPolygonComplete={(screens: any) =>
-                  //   handleFinalSelectedScreens({ type: "add", screens })
-                  // }
                   setPolygons={setPolygons}
                   polygons={polygons}
                   setPolygonFilteredScreens={setPolygonFilteredScreens}

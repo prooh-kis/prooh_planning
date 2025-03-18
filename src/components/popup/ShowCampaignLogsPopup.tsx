@@ -1,4 +1,4 @@
-import { message, Skeleton } from "antd";
+import { message, Skeleton, Tooltip } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   calculateDaysPlayed,
@@ -94,25 +94,26 @@ export const ShowCampaignLogsPopup = ({
 
   const calculateAvgTimeGap = (entries: any) => {
     if (entries.length < 2) return "N/A"; // Not enough data to calculate gap
-  
+
     // Sort entries by time
     const sortedEntries = [...entries].sort((a, b) => a.sortTime - b.sortTime);
-  
+
     // Compute total time gap
     let totalGap = 0;
     for (let i = 1; i < sortedEntries.length; i++) {
-      totalGap += sortedEntries[i].sortTime - sortedEntries[i - 1].sortTime;
+        totalGap += sortedEntries[i].sortTime - sortedEntries[i - 1].sortTime;
     }
-  
+
     // Calculate average gap in milliseconds
     const avgGapMs = totalGap / (sortedEntries.length - 1);
-  
-    // Convert to minutes or seconds
-    if (avgGapMs < 60000) {
-      return (avgGapMs / 1000).toFixed(2) + " sec"; // Less than 1 min → Show in seconds
-    } else {
-      return (avgGapMs / 60000).toFixed(2) + " min"; // 1 min or more → Show in minutes
-    }
+
+    // Convert to minutes and seconds
+    const minutes = Math.floor(avgGapMs / 60000);
+    const seconds = ((avgGapMs % 60000) / 1000).toFixed(0);
+
+    return minutes > 0 
+        ? `${minutes} m ${seconds} sec` 
+        : `${seconds} sec`;
   };
 
   useEffect(() => {
@@ -252,65 +253,76 @@ export const ShowCampaignLogsPopup = ({
                 </div>
               </div>
               {Object.entries(newCombinedData?.hrWiseLogs).map(([date, hours]: any) => (
-                <div key={date} className="grid grid-cols-12 mb-6 w-full">
-                  <div className="col-span-1 p-2 border flex justify-center items-center h-[50vh]">
-                    <h2 className="text-xl font-bold text-gray-700" >{date}</h2>
-                  </div>
-                  <div className="col-span-11 h-[50vh] overflow-scroll no-scrollbar">
-                    {Object.keys(hours).sort((a, b) => Number(a) - Number(b)).map((key) => [key, hours[key]]).map(([hour, entries]: any) => (
-                      <div key={hour} className="grid grid-cols-12">
-                        <div className="col-span-3 p-2 border flex justify-center items-center">
-                          <h3 className="text-md font-semibold text-gray-600">
-                            {transformToAmPm(`${hour}:00:00`)} to {transformToAmPm(`${hour}:59:59`)}
-                          </h3>  
-                        </div>
-                        <div className="col-span-6 overflow-scroll no-scrollbar h-auto">
-                          <table className="min-w-full bg-white">
-                            <tbody>
-                              {entries.map((entry: any, index: any) => (
-                                <tr
-                                  key={index}
-                                  className="grid grid-cols-12 border hover:bg-gray-50 text-gray-700 p-1"
-                                >
-                                  <td className="col-span-3 py-2 flex items-center justify-center">{new Date(entry.logTime).toLocaleTimeString()}</td>
-                                  <td className="col-span-4 py-2 flex items-center justify-center">
-                                    {entry.campaignName}
-                                  </td>
-                                  <td className="col-span-3 py-2 flex items-center justify-center">{entry.brandName}</td>
-                                  <td
-                                    className={`col-span-2 py-2 flex items-center justify-center ${
-                                      entry.screenStatus === "online"
-                                        ? "text-green-600"
-                                        : "text-red-600"
-                                    }`}
+                <div key={date}>
+                  {formatDateForLogs(`${date} 00:00:00 GMT`).apiDate !== formatDateForLogs(`${currentDate} 00:00:00 GMT`).apiDate && (
+                    <div className="flex items-center gap-2 py-2">
+                      <h1 className="font-custom text-[16px]">Logs from previous day being saved on this day</h1>
+                      <Tooltip title="If the screen is switched of without saving the last logs on the server, the date is saved next day when the device is online after being started again...">
+                        <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                      </Tooltip>
+                    </div>
+                  )}
+                  <div className="grid grid-cols-12 mb-6 w-full border-b">
+                    <div className="col-span-1 p-2 border flex justify-center items-center h-[50vh]">
+                      <h2 className="text-xl font-bold text-gray-700" >{date}</h2>
+                    </div>
+                    <div className="col-span-11 h-[50vh] overflow-scroll no-scrollbar">
+                      {Object.keys(hours).sort((a, b) => Number(a) - Number(b)).map((key) => [key, hours[key]]).map(([hour, entries]: any) => (
+                        <div key={hour} className="grid grid-cols-12">
+                          <div className="col-span-3 p-2 border flex justify-center items-center">
+                            <h3 className="text-md font-semibold text-gray-600 truncate">
+                              {transformToAmPm(`${hour}:00:00`)} to {transformToAmPm(`${hour}:59:59`)}
+                            </h3>  
+                          </div>
+                          <div className="col-span-6 overflow-scroll no-scrollbar h-auto">
+                            <table className="min-w-full bg-white">
+                              <tbody>
+                                {entries.map((entry: any, index: any) => (
+                                  <tr
+                                    key={index}
+                                    className="grid grid-cols-12 border hover:bg-gray-50 text-gray-700 p-1"
                                   >
-                                    {entry.screenStatus}
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
+                                    <td className="col-span-3 py-2 flex items-center justify-center">{new Date(entry.logTime).toLocaleTimeString()}</td>
+                                    <td className="col-span-4 py-2 flex items-center justify-center">
+                                      {entry.campaignName}
+                                    </td>
+                                    <td className="col-span-3 py-2 flex items-center justify-center">{entry.brandName}</td>
+                                    <td
+                                      className={`col-span-2 py-2 flex items-center justify-center ${
+                                        entry.screenStatus === "online"
+                                          ? "text-green-600"
+                                          : "text-red-600"
+                                      }`}
+                                    >
+                                      {entry.screenStatus}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                          <div className="col-span-3 h-auto grid grid-cols-3">
+                            <div className="col-span-1 border flex justify-center items-center gap-2 p-2">
+                              <h1 className={(entries.length/(17 * campaignDetails?.sov)) >= 1 ? "text-[#2A892D]" : "text-[#CC0000]"}>
+                                {entries.length}
+                              </h1>
+                              <p className={(entries.length/(17 * campaignDetails?.sov)) >= 1 ? "text-[#2A892D] text-sm" : "text-[#CC0000] text-sm"}>
+                                {(entries.length/(17 * campaignDetails?.sov)) > 1 ? `(+${Number(((entries.length/(17 * campaignDetails?.sov))*100)).toFixed(0)}%)` : (entries.length/(17 * campaignDetails?.sov)) < 1 ? `(-${Number(100 - ((entries.length/(17 * campaignDetails?.sov)) * 100)).toFixed(0)}%)` : `✔`}
+                              </p>
+                            </div>
+                            <div className="col-span-1 border flex justify-center items-center p-2">
+                              {17 * campaignDetails?.sov}
+                            </div>
+                            <div className="col-span-1 border flex justify-center items-center p-2">
+                              {calculateAvgTimeGap(entries) === "N/A" ? "--" : calculateAvgTimeGap(entries)}
+                            </div>
+                          </div>
                         </div>
-                        <div className="col-span-3 h-auto grid grid-cols-3">
-                          <div className="col-span-1 border flex justify-center items-center gap-2 p-2">
-                            <h1 className={(entries.length/(17 * campaignDetails?.sov)) >= 1 ? "text-[#2A892D]" : "text-[#CC0000]"}>
-                              {entries.length}
-                            </h1>
-                            <p className={(entries.length/(17 * campaignDetails?.sov)) >= 1 ? "text-[#2A892D] text-sm" : "text-[#CC0000] text-sm"}>
-                              {(entries.length/(17 * campaignDetails?.sov)) > 1 ? `(+${Number(((entries.length/(17 * campaignDetails?.sov))*100)).toFixed(0)}%)` : (entries.length/(17 * campaignDetails?.sov)) < 1 ? `(-${Number(100 - ((entries.length/(17 * campaignDetails?.sov)) * 100)).toFixed(0)}%)` : `✔`}
-                            </p>
-                          </div>
-                          <div className="col-span-1 border flex justify-center items-center p-2">
-                            {17 * campaignDetails?.sov}
-                          </div>
-                          <div className="col-span-1 border flex justify-center items-center p-2">
-                            {calculateAvgTimeGap(entries) === "N/A" ? "--" : calculateAvgTimeGap(entries)}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
+
               ))}
             </div>
           </div>
