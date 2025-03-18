@@ -202,23 +202,28 @@ export const RegularCohortComparisonDetails = ({
             <Footer
               handleBack={() => setCurrentStep(step - 1)}
               handleSave={() => {
-                if (isDisabled) {
-                  message.error("Please confirm screen selection");
+                if (!pathname.split("/").includes("view")) {
+                  if (isDisabled) {
+                    message.error("Please confirm screen selection");
+                  } else {
+                    dispatch(
+                      addDetailsToCreateCampaign({
+                        pageName: "Compare Plan Page",
+                        id: pathname.split("/").pop(),
+                        regularTouchPointWiseSlotDetails:
+                          priceData?.regular?.touchPointData,
+                        cohortTouchPointWiseSlotDetails:
+                          priceData?.cohort?.touchPointData,
+                        selectedType: selectedBuyingOption,
+                        tableData: priceData?.[selectedBuyingOption]?.tableData,
+                      })
+                    );
+                    setCurrentStep(step + 1);
+                  }
                 } else {
-                  dispatch(
-                    addDetailsToCreateCampaign({
-                      pageName: "Compare Plan Page",
-                      id: pathname.split("/").pop(),
-                      regularTouchPointWiseSlotDetails:
-                        priceData?.regular?.touchPointData,
-                      cohortTouchPointWiseSlotDetails:
-                        priceData?.cohort?.touchPointData,
-                      selectedType: selectedBuyingOption,
-                      tableData: priceData?.[selectedBuyingOption]?.tableData,
-                    })
-                  );
                   setCurrentStep(step + 1);
                 }
+                
               }}
               disabled={
                 priceData?.regular?.tableData?.impressionPerDay === 0 ||

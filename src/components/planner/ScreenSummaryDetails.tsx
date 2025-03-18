@@ -237,11 +237,16 @@ export const ScreenSummaryDetails = ({
   }, [dispatch, campaignId, screenSummaryData, screensBuyingCount]);
 
   const handleSave = () => {
-    if (currentTab === "1") {
-      setCurrentTab("2");
+    if (!pathname.split("/").includes("view")) {
+      if (currentTab === "1") {
+        setCurrentTab("2");
+      } else {
+        handleSaveAndContinue();
+      }
     } else {
-      handleSaveAndContinue();
+      setCurrentStep(step+1);
     }
+    
   };
 
   return (

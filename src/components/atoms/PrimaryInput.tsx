@@ -26,9 +26,8 @@ export const PrimaryInput = ({
   inputType,
 }: PrimaryInputProps) => {
   const navigate = useNavigate();
-
   return (
-    <div className="relative w-full">
+    <div className="flex justify-center items-center">
       {prefix}
       <input
         disabled={disabled}

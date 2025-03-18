@@ -144,13 +144,16 @@ export const StoreBaseScreenSummaryDetails = ({
   };
 
   const handleSaveAndContinue = async () => {
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "Select Screens Page",
-        id: pathname.split("/").splice(-1)[0],
-        screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-      })
-    );
+    if (!pathname.split("/").includes("view")) {
+
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Select Screens Page",
+          id: pathname.split("/").splice(-1)[0],
+          screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+        })
+      );
+    }
     setCurrentStep(step + 1);
   };
 

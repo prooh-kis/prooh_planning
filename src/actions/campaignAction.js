@@ -222,31 +222,31 @@ export const changeCampaignStatusAfterCreativeUpload =
     };
 
 export const changeCampaignStatusAfterVendorApproval =
-  ({ ids }) =>
-    async (dispatch, getState) => {
-      dispatch({
-        type: CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_REQUEST,
-        payload: { ids },
+  ({ approvedIds, disapprovedIds }) =>
+  async (dispatch, getState) => {
+    dispatch({
+      type: CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_REQUEST,
+      payload: { approvedIds, disapprovedIds },
+    });
+    try {
+      const { data } = await axios.post(`${url}/approveCampaignScreenVendor`, {
+        approvedIds, disapprovedIds
       });
-      try {
-        const { data } = await axios.post(`${url}/approveCampaignScreenVendor`, {
-          ids,
-        });
-        dispatch({
-          type: CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_SUCCESS,
-          payload: data,
-        });
-      } catch (error) {
-        dispatch({
-          type: CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_ERROR,
-          payload: {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-          },
-        });
-      }
-    };
+      dispatch({
+        type: CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
 export const changeCampaignDuration = (input) => async (dispatch, getState) => {
   dispatch({

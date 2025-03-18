@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import * as turf from "@turf/turf";
 
 
-export function Directions({ allRoutes, setAllRoutes, allScreens, routeFilteredScreens, setRouteFilteredScreens, handleFinalSelectedScreens }: any) {
+export function Directions({ allRoutes, setAllRoutes, allScreens, routeRadius, setRouteFilteredScreens, handleFinalSelectedScreens }: any) {
 
   const map = useMap();
   const routesLibrary = useMapsLibrary("routes");
@@ -151,7 +151,7 @@ export function Directions({ allRoutes, setAllRoutes, allScreens, routeFilteredS
     
               if (mainRoute.length > 0) {
                 const lineString = turf.lineString(mainRoute.map(({ lat, lng }: any) => [lng, lat]));
-                const buffered = turf.buffer(lineString, 1, { units: "kilometers" });
+                const buffered = turf.buffer(lineString, routeRadius/1000, { units: "kilometers" });
     
                 if (buffered?.geometry?.coordinates) {
                   const bufferPolygonCoords = buffered.geometry.coordinates[0]?.map(

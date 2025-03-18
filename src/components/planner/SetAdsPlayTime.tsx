@@ -113,14 +113,17 @@ export const SetAdsPlayTime = ({
 
   const handleSaveAndContinue = async (e: any) => {
     e.preventDefault();
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "Set Ad Play time Page",
-        id: pathname.split("/").splice(-1)[0],
-        touchPointWiseDetails: data,
-      })
-    );
-    setPageSuccess(false);
+
+    if (!pathname.split("/").includes("view")) {
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Set Ad Play time Page",
+          id: pathname.split("/").splice(-1)[0],
+          touchPointWiseDetails: data,
+        })
+      );
+      setPageSuccess(false);
+    }
     setCurrentStep(step + 1);
   };
 
@@ -203,7 +206,7 @@ export const SetAdsPlayTime = ({
             your final bill will include the cost of all the additional slots,
             at the same cost that your slots were booked.
           </h1>
-          <div className="">
+          <div className="mt-4">
             <CustomTabWithSelectAll
               currentTab={currentTab}
               setCurrentTab={setCurrentTab}

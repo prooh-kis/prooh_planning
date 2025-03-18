@@ -135,7 +135,7 @@ const Routers: React.FC = () => {
         <Route
           path={MY_REQUESTS_LIST}
           element={
-            <AppDashBoardLayout className="bg-[#D3D3D350] pt-16">
+            <AppDashBoardLayout className="bg-[#D3D3D320] pt-16">
               <MyRequestsListPage />
             </AppDashBoardLayout>
           }
@@ -168,7 +168,7 @@ const Routers: React.FC = () => {
         <Route
           path={MY_PLANS_LIST}
           element={
-            <AppDashBoardLayout className="bg-[#D3D3D350] pt-16">
+            <AppDashBoardLayout className="bg-[#D3D3D320] pt-16">
               <MyPlansListPage />
             </AppDashBoardLayout>
           }
@@ -190,7 +190,7 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          path={"/regularplan/:id?"}
+          path={"/regularplan/:id?/:type?"}
           element={
             <AppDashBoardLayout>
               <RegularPlanPage />
@@ -198,7 +198,7 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          path={"/specialdayplan/:id?"}
+          path={"/specialdayplan/:id?/:type?"}
           element={
             <AppDashBoardLayout>
               <SpecialDayPlanPage />
@@ -206,7 +206,7 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          path={"/triggerbasedplan/:id?"}
+          path={"/triggerbasedplan/:id?/:type?"}
           element={
             <AppDashBoardLayout>
               <TriggerBasedPlanPage />
@@ -214,7 +214,7 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          path={"/storebasedplan/:id?"}
+          path={"/storebasedplan/:id?/:type?"}
           element={
             <AppDashBoardLayout>
               <StoreBasedPlanPage />
@@ -222,7 +222,7 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          path={"/iknowitallplan/:id?"}
+          path={"/iknowitallplan/:id?/:type?"}
           element={
             <AppDashBoardLayout>
               <IKnowItAllPlanPage />

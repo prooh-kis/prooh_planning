@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getFinalPlanPOTableData,
   getPlanningPageFooterData,
+  getScreenSummaryPlanTableData,
 } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
@@ -312,24 +313,26 @@ export const ViewFinalPlanPODetails = ({
   };
 
   const handleSaveAndContinue = async () => {
-    let imageArr: string[] = [];
-    for (let data of confirmationImageFiles) {
-      if (data.awsURL) {
-        imageArr.push(data.awsURL);
-        console.log("no need to save again");
-      } else {
-        let url = await getAWSUrl(data);
-        imageArr.push(url);
+    if (!pathname.split("/").includes("view")) {
+      let imageArr: string[] = [];
+      for (let data of confirmationImageFiles) {
+        if (data.awsURL) {
+          imageArr.push(data.awsURL);
+          console.log("no need to save again");
+        } else {
+          let url = await getAWSUrl(data);
+          imageArr.push(url);
+        }
       }
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "View Final Plan Page",
+          id: pathname.split("/").splice(-1)[0],
+          clientApprovalImgs: imageArr,
+        })
+      );
+      setPageSuccess(false);
     }
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "View Final Plan Page",
-        id: pathname.split("/").splice(-1)[0],
-        clientApprovalImgs: imageArr,
-      })
-    );
-    setPageSuccess(false);
     setCurrentStep(step + 1);
   };
 
@@ -440,18 +443,24 @@ export const ViewFinalPlanPODetails = ({
     if (!successAddCampaignDetails) return;
     setPageSuccess(true);
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-  }, [successAddCampaignDetails]);
+  }, [dispatch, setPageSuccess, successAddCampaignDetails]);
 
   useEffect(() => {
     if (!pageSuccess) return;
     dispatch(getFinalPlanPOTableData(poInput));
+    dispatch(
+      getScreenSummaryPlanTableData({
+        id: campaignId,
+        screenIds: poInput.screenIds,
+      })
+    );
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
         pageName: "View Final Plan Page",
       })
     );
-  }, [pageSuccess, poInput, campaignId]);
+  }, [dispatch, pageSuccess, poInput, campaignId]);
 
   useEffect(() => {
     if (!poTableData) return;

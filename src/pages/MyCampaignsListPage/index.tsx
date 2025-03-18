@@ -127,9 +127,9 @@ export const MyCampaignsListPage: React.FC = () => {
 
   return (
     <div className="w-full p-4">
-      <div className="flex justify-between border-b">
+      <div className="flex justify-between border-b pb-2">
         <div className="flex gap-2 items-center">
-          <i className="fi fi-sr-megaphone flex items-center text-[#129BFF]"></i>
+          <i className="fi fi-sr-megaphone flex items-center justify-center text-[14px] text-[#129BFF]"></i>
           <h1 className="text-[18px] text-primaryText font-semibold">
             My Campaign Plans
           </h1>
@@ -143,22 +143,20 @@ export const MyCampaignsListPage: React.FC = () => {
         />
       </div>
 
-      <div className="w-full p-2">
-        <div className="grid grid-cols-8 gap-2">
-          <div className="col-span-5">
-            <SearchInputField
-              value={searchQuery}
-              onChange={setSearchQuery}
-              placeholder="Search Campaign by campaign name or brand"
-            />
-          </div>
-        </div>
+      <div className="mt-2 w-full">
+        <SearchInputField
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search by campaign name or brand"
+        />
+      </div>
+      <div className="w-full mt-2">
         {loading ? (
           <LoadingScreen />
         ) : filteredCampaigns?.length === 0 ? (
           <NoDataView />
         ) : (
-          <div className="overflow-y-scroll scrollbar-minimal h-[75vh] my-1 rounded-[12px] pr-2">
+          <div className="mt-2 h-[75vh] overflow-y-auto no-scrollbar rounded-lg flex flex-col gap-4">
             {filteredCampaigns?.map((data: any, i: any) => (
               <div
                 key={i}

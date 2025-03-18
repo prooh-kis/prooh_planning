@@ -38,13 +38,13 @@ const Cart: React.FC<CartProps> = ({ plan, handleCardClick, selectedCard }) => {
         style={{ backgroundColor: isSelected ? "#ffffff" : plan.color }}
       >
         <i
-          className={`${plan.icon} flex items-center justify-center ${
+          className={`${plan.icon} text-[16px] flex items-center justify-center ${
             isSelected ? "text-primaryButton" : "text-white"
           }`}
         />
       </span>
       <h1
-        className={`text-[14px] font-custom ${
+        className={`text-[16px] font-custom ${
           isSelected ? "text-white font-bold" : "font-semibold"
         }`}
       >
@@ -73,13 +73,13 @@ export const CampaignTemplates: React.FC = () => {
   };
 
   return (
-    <div className="py-2 pt-16 px-8 flex items-center justify-center w-full h-full bg-gray-50">
-      <div className="border border-transparent rounded-lg w-full h-full">
+    <div className="py-2 pt-16 px-16 flex items-center justify-center w-full h-full bg-gray-50">
+      <div className="border border-transparent rounded-lg w-full h-full pt-8">
         <div className="flex flex-col items-start p-2">
           <h1 className="font-custom text-[24px] font-bold text-primaryText">
             Select Your Campaign Type
           </h1>
-          <p className="text-[14px] text-secondaryText">
+          <p className="text-[12px] text-secondaryText py-2">
             Choose any one of the following and start planning your campaign
             instantly
           </p>
@@ -99,13 +99,13 @@ export const CampaignTemplates: React.FC = () => {
             <div className="flex flex-col h-full justify-between">
               <div>
                 <span
-                  className={`bg-[${allPlansData[selectedCard].color}] rounded-full h-12 w-12 flex items-center justify-center`}
+                  className={`bg-[${allPlansData[selectedCard].color}] rounded-full h-16 w-16 flex items-center justify-center`}
                 >
                   <i
-                    className={`${allPlansData[selectedCard].icon} text-[24px] text-white`}
+                    className={`${allPlansData[selectedCard].icon} text-[28px] text-white flex items-center justify-center`}
                   />
                 </span>
-                <h1 className="font-custom text-[24px] font-semibold py-4 border-b">
+                <h1 className="font-custom text-[28px] font-semibold py-4 border-b">
                   {allPlansData[selectedCard].label}
                 </h1>
                 <p className="font-custom text-[14px] text-gray-500 my-4">

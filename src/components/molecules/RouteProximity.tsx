@@ -13,6 +13,7 @@ interface RouteProximityProps {
   userLocation?: any;
   setUserLocation?: any;
   routeRadius?: any;
+  setRouteRadius?: any;
   routes?: any;
   routeOrigin?: any;
   setRouteOrigin?: any;
@@ -30,6 +31,7 @@ export const RouteProximity = ({
   userLocation,
   setUserLocation,
   routeRadius,
+  setRouteRadius,
   routes,
   routeOrigin,
   setRouteOrigin,
@@ -83,30 +85,54 @@ export const RouteProximity = ({
 
   return (
     <div className="py-4 border-b border-gray-100">
-      <button type="button" className="flex items-center justify-between"
+      <button type="button" className="flex w-full items-center justify-between"
         onClick={() => {
-          setOpen((prev: any) => ({
-            ...prev,
-            route: !prev.route,
-          }))
+          // setOpen((prev: any) => ({
+          //   ...prev,
+          //   route: !prev.route,
+          // }))
         }}
       >
-        <div className="flex justify-start gap-2 items-center py-2">
-          <h1 className="lg:text-[16px] text-[14px] text-gray-500 truncate">2. Choose your desired routes </h1>
-          <Tooltip
-              title="Enter the origin and destination of your desired routes and select all the screens in proximity of your desired routes"
-              >
-            <i className="fi fi-rs-info pr-1 lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
-          </Tooltip>
-          <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({routeFilteredScreens?.length} sites)</h1>
+        <div className="flex justify-between w-full">
+          <div className="flex justify-start">
+            <div className="flex justify-start gap-2 items-center py-2">
+              <h1 className="lg:text-[16px] text-[14px] text-gray-500 truncate">2. Choose your desired routes </h1>
+              <Tooltip
+                  title="Enter the origin and destination of your desired routes and select all the screens in proximity of your desired routes"
+                  >
+                <i className="fi fi-rs-info pr-1 lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
+              </Tooltip>
+              <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({routeFilteredScreens?.length} sites)</h1>
+            </div>
+            <div className="flex items-center justify-center">
+              {open["route"] ? (
+                <i className="fi fi-sr-caret-up text-[#EF4444] flex items-center"></i>
+              ) : (
+                <i className="fi fi-sr-caret-down text-[#22C55E] flex items-center"></i>
+              )}
+            </div>
+          </div>
+          <div className="flex justify-end items-center">
+            <i className="fi fi-bs-circle text-[10px] text-[#22C55E] pr-2 flex items-center justify-center"></i>
+            <input
+              className="w-[24px] h-6"
+              type={"number"}
+              placeholder={`${routeRadius/1000}`}
+              value={routeRadius/1000}
+              onClick={(e: any) => {
+                if (e === 0) {
+                  setRouteRadius(1000)
+                } else {
+                  setRouteRadius(e.target.value * 1000);
+                }
+              }}
+              
+            />
+            <h1 className="lg:text-[14px] text-[12px] pl-1">km</h1>
+          </div>
         </div>
-        <div className="flex items-center justify-center">
-          {open["route"] ? (
-            <i className="fi fi-sr-caret-up text-[#EF4444] flex items-center"></i>
-          ) : (
-            <i className="fi fi-sr-caret-down text-[#22C55E] flex items-center"></i>
-          )}
-        </div>
+        
+        
       </button>
 
       {open["route"] && (

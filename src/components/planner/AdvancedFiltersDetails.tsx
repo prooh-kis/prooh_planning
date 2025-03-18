@@ -200,44 +200,47 @@ export const AdvanceFiltersDetails = ({
   }, [advanceFilterData, campId, finalSelectedScreens]);
 
   const handleSaveAndContinue = () => {
-    if (isDisabled) {
-      message.error("Please  confirm screen selection");
-      return;
+    if (!pathname.split("/").includes("view")) {
+      if (isDisabled) {
+        message.error("Please  confirm screen selection");
+        return;
+      }
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Advance Filter Page",
+          id: pathname.split("/").splice(-1)[0],
+          screenIds: finalSelectedScreens.map((s: any) => s._id),
+          advanceFilterData: {
+            stores: [
+              {
+                brands: dataBrand,
+                comp: dataComp,
+                radius: circleRadius,
+              },
+            ],
+            routes: routes?.map((route: any) => {
+              return {
+                origin: route.origin,
+                destination: route.destination,
+                radius: routeRadius,
+              };
+            }),
+            poiLists: [],
+            polygons: polygons?.map((poly: any) => {
+              return {
+                id: poly.id,
+                type: poly.type,
+                properties: poly.properties,
+                geometry: poly.geometry,
+                screens: poly.screens,
+              };
+            }),
+          },
+        })
+      );
+      setPageSuccess(false);
     }
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "Advance Filter Page",
-        id: pathname.split("/").splice(-1)[0],
-        screenIds: finalSelectedScreens.map((s: any) => s._id),
-        advanceFilterData: {
-          stores: [
-            {
-              brands: dataBrand,
-              comp: dataComp,
-              radius: circleRadius,
-            },
-          ],
-          // routes: routes?.map((route: any) => {
-          //   return {
-          //     origin: route.origin,
-          //     destination: route.destination,
-          //     radius: routeRadius,
-          //   };
-          // }),
-          // poiLists: pois,
-          // polygons: polygons?.map((poly: any) => {
-          //   return {
-          //     id: poly.id,
-          //     type: poly.type,
-          //     properties: poly.properties,
-          //     geometry: poly.geometry,
-          //     screens: poly.screens,
-          //   };
-          // }),
-        },
-      })
-    );
-    setPageSuccess(false);
+    
     setCurrentStep(step + 1);
   };
 
@@ -264,6 +267,10 @@ export const AdvanceFiltersDetails = ({
               </div>
               {allScreens?.length > 0 && (
                 <LocationProximity
+                  setCircleRadius={setCircleRadius}
+                  circleRadius={circleRadius}
+                  setRouteRadius={setRouteRadius}
+                  routeRadius={routeRadius}
                   userLocation={userLocation}
                   setUserLocation={setUserLocation}
                   allScreens={allScreens}
@@ -276,13 +283,11 @@ export const AdvanceFiltersDetails = ({
                   setCircleData={setCircleData}
                   setExcelFilteredScreens={setExcelFilteredScreens}
                   excelFilteredScreens={excelFilteredScreens}
-                  circleRadius={circleRadius}
                   routes={routes}
                   routeOrigin={routeOrigin}
                   setRouteOrigin={setRouteOrigin}
                   routeDestination={routeDestination}
                   setRouteDestination={setRouteDestination}
-                  routeRadius={routeRadius}
                   setRoutes={setRoutes}
                   setRouteFilteredScreens={setRouteFilteredScreens}
                   routeFilteredScreens={routeFilteredScreens}
@@ -312,19 +317,12 @@ export const AdvanceFiltersDetails = ({
                   heatmap={advanceFilterData?.heatmap}
                   data={circleData}
                   circleRadius={circleRadius}
-                  setCircleRadius={setCircleRadius}
+                  routeRadius={routeRadius}
                   routes={routes}
                   setRoutes={setRoutes}
                   routeFilteredScreens={routeFilteredScreens}
                   setRouteFilteredScreens={setRouteFilteredScreens}
                   handleFinalSelectedScreens={handleFinalSelectedScreens}
-                  // handleSelectFromMap={handleSelectFromMap}
-                  // handleAddManualSelection={
-                  //   handleAddManualSelectedScreenIntoFinalSelectedScreens
-                  // }
-                  // onPolygonComplete={(screens: any) =>
-                  //   handleFinalSelectedScreens({ type: "add", screens })
-                  // }
                   setPolygons={setPolygons}
                   polygons={polygons}
                   setPolygonFilteredScreens={setPolygonFilteredScreens}

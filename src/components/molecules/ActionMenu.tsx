@@ -19,7 +19,7 @@ export const ActionMenu = ({ ids }: any) => {
       <div className="dropdown-content">
         <div
           onClick={() => {
-            dispatch(changeCampaignStatusAfterVendorApproval({ ids: ids }));
+            // dispatch(changeCampaignStatusAfterVendorApproval({ ids: ids }));
           }}
           className="flex flex-row gap-4 items-center py-2 px-4 hover:bg-[#129BFF] hover:text-[#FFFFFF]"
         >
@@ -30,7 +30,7 @@ export const ActionMenu = ({ ids }: any) => {
         </div>
         <div
           onClick={() => {
-            dispatch(changeCampaignStatusAfterVendorApproval({ ids: ids }));
+            // dispatch(changeCampaignStatusAfterVendorApproval({ ids: ids }));
           }}
           className="flex flex-row gap-4 items-center py-2 px-4 hover:bg-[#129BFF] hover:text-[#FFFFFF]"
         >

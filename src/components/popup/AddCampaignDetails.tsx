@@ -11,6 +11,7 @@ import {
 } from "../../actions/clientAgencyAction";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
 import { SuggestionInput } from "../../components/atoms/SuggestionInput";
+import { useLocation } from "react-router-dom";
 
 const allIndex = [1, 2, 3, 6].map((data: any) => {
   return {
@@ -35,6 +36,7 @@ export const AddCampaignDetails = ({
   duration,
 }: any) => {
   const dispatch = useDispatch<any>();
+  const { pathname } = useLocation();
   const [campaignName, setCampaignName] = useState<any>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || ""
   );
@@ -90,26 +92,31 @@ export const AddCampaignDetails = ({
   };
 
   const saveCampaignDetailsOnLocalStorage = () => {
-    if (validateForm()) {
-      handleAddNewClient(clientName);
-      handleSaveData({
-        pageName: "Basic Details Page",
-        name: campaignName,
-        brandName: brandName,
-        campaignType: router,
-        clientName: clientName,
-        industry: industry,
-        startDate: startDate,
-        endDate: endDate,
-        duration: duration,
-        campaignPlannerId: userInfo?._id,
-        campaignPlannerName: userInfo?.name,
-        campaignPlannerEmail: userInfo?.email,
-        campaignManagerId: userInfo?.primaryUserId,
-        campaignManagerEmail: userInfo?.primaryUserEmail,
-        sov: sov,
-      });
+    if (!pathname.split("/").includes("view")) {
+      if (validateForm()) {
+        handleAddNewClient(clientName);
+        handleSaveData({
+          pageName: "Basic Details Page",
+          name: campaignName,
+          brandName: brandName,
+          campaignType: router,
+          clientName: clientName,
+          industry: industry,
+          startDate: startDate,
+          endDate: endDate,
+          duration: duration,
+          campaignPlannerId: userInfo?._id,
+          campaignPlannerName: userInfo?.name,
+          campaignPlannerEmail: userInfo?.email,
+          campaignManagerId: userInfo?.primaryUserId,
+          campaignManagerEmail: userInfo?.primaryUserEmail,
+          sov: sov,
+        });
+      }
+    } else {
+      setCurrentStep(2)
     }
+    
   };
 
   useEffect(() => {

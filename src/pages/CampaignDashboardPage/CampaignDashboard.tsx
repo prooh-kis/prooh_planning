@@ -206,7 +206,7 @@ export const CampaignDashboard = ({
   };
 
   return (
-    <div className="w-full h-full pt-10 flex flex-col gap-2 bg-gray-100">
+    <div className="w-full h-full pt-10 flex flex-col gap-2 bg-[#D3D3D320]">
       <BillingAndInvoice
         open={openInvoice}
         onClose={() => {
@@ -308,7 +308,7 @@ export const CampaignDashboard = ({
                 navigate(
                   `/${getCampaignPageNameFromCampaignType(
                     campaignDetails?.campaignType
-                  )}/${campaignDetails._id}`
+                  )}/${campaignDetails._id}/edit`, { state: { from: "dashboard" } } 
                 )
               }
             >

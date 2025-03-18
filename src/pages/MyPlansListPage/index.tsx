@@ -2,15 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
-
 import { getMyCreateCampaignsListForPlan } from "../../actions/campaignAction";
 import { NoDataView } from "../../components/molecules/NoDataView";
 import { SearchInputField } from "../../components";
-import { CampaignsListModel } from "../../components/molecules/CampaignsListModel";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-
 import { CAMPAIGN_PLANNER, SCREEN_OWNER } from "../../constants/userConstants";
 import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
+import { CampaignCardForPlan } from "../../components/molecules/CampaignCardForPlan";
 
 export const MyPlansListPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -25,6 +23,10 @@ export const MyPlansListPage: React.FC = () => {
     data: campaignsList,
   } = useSelector((state: any) => state.myCreateCampaignsListForPlanGet);
 
+  const { success, data: campaignDetails } = useSelector(
+    (state: any) => state.detailsToCreateCampaignAdd
+  );
+
   useEffect(() => {
     if (!userInfo) return navigate("/auth");
 
@@ -36,7 +38,7 @@ export const MyPlansListPage: React.FC = () => {
     if (userInfo?.userRole === CAMPAIGN_PLANNER) {
       dispatch(getMyCreateCampaignsListForPlan({ id: userInfo._id }));
     }
-  }, [dispatch, navigate, userInfo]);
+  }, [dispatch, navigate, userInfo, campaignDetails]);
 
   const filteredCampaigns = campaignsList?.filter(
     (campaign: any) =>
@@ -46,21 +48,30 @@ export const MyPlansListPage: React.FC = () => {
 
   const handleCampaignClick = (data: any) => {
     const pageName = getCampaignPageNameFromCampaignType(data?.campaignType);
-    navigate(`/${pageName}/${data._id}`);
+    navigate(`/${pageName}/${data._id}/view`, {
+      state: { from: "planlist" },
+    });
+  };
+
+  const handleEdit = (data: any) => {
+    const pageName = getCampaignPageNameFromCampaignType(data?.campaignType);
+    navigate(`/${pageName}/${data._id}/edit`, {
+      state: { from: "planlist" },
+    });
   };
 
   return (
-    <div className="w-full h-full bg-gray-100 p-4">
+    <div className="w-full h-full p-4">
       {/* Header */}
       <div className="flex items-center gap-2 border-b pb-2">
-        <i className="fi fi-sr-megaphone text-blue-500 text-xl"></i>
+        <i className="fi fi-sr-megaphone text-[#3F3CBB80] text-[14px] flex items-center justify-center"></i>
         <h1 className="text-lg font-semibold text-primaryText">
           My Plans List
         </h1>
       </div>
 
       {/* Search Input */}
-      <div className="mt-4">
+      <div className="mt-4 w-full">
         <SearchInputField
           value={searchQuery}
           onChange={setSearchQuery}
@@ -69,7 +80,7 @@ export const MyPlansListPage: React.FC = () => {
       </div>
 
       {/* Campaign List */}
-      <div className="mt-4 h-[70vh] overflow-y-auto no-scrollbar rounded-lg">
+      <div className="mt-2 h-[80vh] overflow-y-auto no-scrollbar rounded-lg flex flex-col gap-4">
         {loading ? (
           <LoadingScreen />
         ) : filteredCampaigns?.length === 0 ? (
@@ -79,9 +90,9 @@ export const MyPlansListPage: React.FC = () => {
             <div
               key={data._id}
               className="cursor-pointer"
-              onClick={() => handleCampaignClick(data)}
+              onDoubleClick={() => handleCampaignClick(data)}
             >
-              <CampaignsListModel data={data} />
+              <CampaignCardForPlan data={data} handleEdit={handleEdit} />
             </div>
           ))
         )}

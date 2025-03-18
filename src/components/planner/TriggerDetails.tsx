@@ -212,19 +212,23 @@ export const TriggerDetails = ({
   ]);
 
   const handleSaveAndContinue = () => {
-    if (isDisabled) {
-      message.error(
-        "Please confirm budget for your selected trigger or skip this step"
-      );
+    if (pathname?.split("/").includes("view")) {
+      setCurrentStep(step + 1);
     } else {
-      dispatch(
-        addDetailsToCreateCampaign({
-          pageName: "Add Triggers Page",
-          id: pathname.split("/").splice(-1)[0],
-          triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
-        })
-      );
-      // setCurrentStep(step + 1);
+      if (isDisabled) {
+        message.error(
+          "Please confirm budget for your selected trigger or skip this step"
+        );
+      } else {
+        dispatch(
+          addDetailsToCreateCampaign({
+            pageName: "Add Triggers Page",
+            id: pathname.split("/").splice(-1)[0],
+            triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
+          })
+        );
+        // setCurrentStep(step + 1);
+      }
     }
   };
 
@@ -358,7 +362,6 @@ export const TriggerDetails = ({
                 setStep={setCurrentStep1}
                 steps={3}
                 setTrigger={setSelectedTrigger}
-                trigger={selectedTrigger}
               />
             </div>
             <p className="p-2 text-[14px] text-[#AF0D0D]">

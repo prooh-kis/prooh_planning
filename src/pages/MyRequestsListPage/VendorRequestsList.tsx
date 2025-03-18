@@ -1,33 +1,10 @@
-import { NoDataView, TabWithoutIcon } from "../../components/index";
+import { NoDataView } from "../../components/index";
 import React, { useEffect, useState } from "react";
-import {
-  MyRequestsListTable,
-  VendorConfirmationBasicTable,
-  VendorConfirmationStatusTable,
-} from "../../components/tables";
-import { useDispatch } from "react-redux";
-import { changeCampaignStatusAfterVendorApproval } from "../../actions/campaignAction";
-import { useSelector } from "react-redux";
-import { message } from "antd";
 
-const allTabs = [
-  {
-    id: "1",
-    label: "All",
-  },
-  {
-    id: "2",
-    label: "Approved",
-  },
-  {
-    id: "3",
-    label: "Pending",
-  },
-  {
-    id: "4",
-    label: "Rejected",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { changeCampaignStatusAfterVendorApproval } from "../../actions/campaignAction";
+import { message } from "antd";
+import { MyRequestsListTable, VendorConfirmationBasicTable, VendorConfirmationStatusTable } from "../../components/tables";
 
 export const VendorsRequestsList = ({
   requestsList,
@@ -35,7 +12,6 @@ export const VendorsRequestsList = ({
   campaignsList,
 }: any) => {
   const dispatch = useDispatch<any>();
-  const [currentTab, setCurrentTab] = useState<any>("1");
   const [showDetails, setShowDetails] = useState<any>({
     show: false,
     data: {},
@@ -83,24 +59,6 @@ export const VendorsRequestsList = ({
 
   return (
     <div className="w-full">
-      <div className="flex justify-between py-2">
-        <TabWithoutIcon
-          currentTab={currentTab}
-          setCurrentTab={setCurrentTab}
-          tabData={allTabs}
-        />
-        <div
-          className="flex items-center"
-          onClick={() =>
-            setShowDetails({
-              show: !showDetails.show,
-              data: {},
-            })
-          }
-        >
-          <h1 className="text-[16px] text-[#129BFF]">Back</h1>
-        </div>
-      </div>
       {requestsList?.length === 0 ? (
         <NoDataView />
       ) : (
@@ -112,7 +70,23 @@ export const VendorsRequestsList = ({
               showDetails={showDetails}
             />
           ) : (
-            <div className="">
+            <div className="px-2 bg-white">
+              <div className="flex justify-between py-2">
+                <div className="px-2">
+                  <h1 className="font-semibold">Requeset Details</h1>
+                </div>
+                <div
+                  className="flex items-center pr-2"
+                  onClick={() =>
+                    setShowDetails({
+                      show: !showDetails.show,
+                      data: {},
+                    })
+                  }
+                >
+                  <h1 className="text-[16px] text-[#129BFF]">Back</h1>
+                </div>
+              </div>
               <VendorConfirmationBasicTable
                 vendorConfirmationData={showDetails?.data}
               />
@@ -123,28 +97,11 @@ export const VendorsRequestsList = ({
                     Screens Selected (
                     {showDetails?.data?.screenIds?.length || 0})
                   </h1>
-
-                  {showDetails?.data?.screenNames?.length > 0 ? (
-                    <ul className="space-y-2">
-                      {showDetails?.data?.screenNames?.map(
-                        (item: any, index: number) => (
-                          <li
-                            key={index}
-                            className="p-2 bg-gray-100 rounded-md shadow-sm"
-                          >
-                            {typeof item === "object"
-                              ? JSON.stringify(item)
-                              : item}
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  ) : (
-                    <p className="text-gray-500">No screens selected.</p>
-                  )}
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-4 pr-2">
                   <button
+                    title="approve"
+                    type="submit"
                     disabled={loadingVendorApprovalStatus}
                     className={`${
                       loadingVendorApprovalStatus
@@ -154,25 +111,40 @@ export const VendorsRequestsList = ({
                     onClick={() => {
                       dispatch(
                         changeCampaignStatusAfterVendorApproval({
-                          ids: selectedCampaignIds,
+                          approvedIds: selectedCampaignIds,
+                          disapprovedIds: campaignsList.map((campaign: any) => campaign._id)?.filter((id: any) => !selectedCampaignIds.includes(id))
                         })
                       );
                     }}
                   >
                     Approve Campaign
                   </button>
-                  <button className="bg-gray-300 text-[#FFFFFF] font-custom rounded-[9px] text-[14px] sm:text-[16px] font-bold hover:bg-[#129BFF90] hover:text-[#FFFFFF] w-[163px] h-[40px]">
-                    Reset
+                  <button title="reject" type="submit" className="bg-gray-300 text-[#FFFFFF] font-custom rounded-[9px] text-[14px] sm:text-[16px] font-bold hover:bg-[#129BFF90] hover:text-[#FFFFFF] w-[163px] h-[40px]"
+                    disabled={loadingVendorApprovalStatus}
+                    onClick={() => {
+                      dispatch(
+                        changeCampaignStatusAfterVendorApproval({
+                          approvedIds: campaignsList.map((campaign: any) => campaign._id)?.filter((id: any) => !selectedCampaignIds.includes(id))                          ,
+                          disapprovedIds: selectedCampaignIds
+                        })
+                      );
+                    }}
+                  >
+                    Reject Campaign
                   </button>
                 </div>
               </div>
-              <VendorConfirmationStatusTable
-                userInfo={userInfo}
-                statusTableData={showDetails?.data}
-                selectedCampaignIds={selectedCampaignIds}
-                setSelectedCampaignIds={setSelectedCampaignIds}
-                campaignsList={campaignsList}
-              />
+              
+              {showDetails?.data && (
+                <VendorConfirmationStatusTable
+                  userInfo={userInfo}
+                  statusTableData={showDetails?.data}
+                  selectedCampaignIds={selectedCampaignIds}
+                  setSelectedCampaignIds={setSelectedCampaignIds}
+                  campaignsList={campaignsList}
+                />
+              )}
+             
             </div>
           )}
         </div>

@@ -9,6 +9,10 @@ import { POIProximity } from "./POIProximity";
 import { useState } from "react";
 
 interface LocationProximityProps {
+  setCircleRadius?: any;
+  circleRadius?: any;
+  setRouteRadius?: any;
+  routeRadius?: any;
   userLocation?: any;
   setUserLocation?: any;
   routes?: any;
@@ -16,7 +20,6 @@ interface LocationProximityProps {
   setRouteOrigin?: any;
   routeDestination?: any;
   setRouteDestination?: any;
-  routeRadius?: any;
   setDataBrand?: any;
   setDataComp?: any;
   dataBrand?: any;
@@ -26,7 +29,6 @@ interface LocationProximityProps {
   finalSelectedScreens?: any;
   setExcelFilteredScreens?: any;
   excelFilteredScreens?: any;
-  circleRadius?: any;
   handleRouteSetup?: any;
   handleRemoveRoute?: any;
   handleFinalSelectedScreens?: any;
@@ -54,29 +56,23 @@ export const LocationProximity = ({
   setRouteOrigin,
   routeDestination,
   setRouteDestination,
-  routeRadius,
   setDataBrand,
   setDataComp,
-  dataBrand,
-  dataComp,
   setCircleData,
   allScreens,
   finalSelectedScreens,
   setExcelFilteredScreens,
   excelFilteredScreens,
-  circleRadius,
   handleFinalSelectedScreens,
   setDraw,
   polygons,
   setPolygons,
   polygonFilteredScreens,
   routeFilteredScreens,
-  pois,
-  selectedPOIs,
-  setSelectedPOIs,
-  setPOIFilteredScreens,
-  selectedScreensFromMap,
-  handleSelectFromMap,
+  setCircleRadius,
+  circleRadius,
+  setRouteRadius,
+  routeRadius,
   handleConfirmScreensSelections,
   setRouteFilteredScreens,
   setRoutes,
@@ -102,14 +98,16 @@ export const LocationProximity = ({
           allScreens={allScreens}
           setExcelFilteredScreens={setExcelFilteredScreens}
           excelFilteredScreens={excelFilteredScreens}
-          circleRadius={circleRadius}
           type={["brand", "comp"]}
           handleFinalSelectedScreens={handleFinalSelectedScreens}
+          setCircleRadius={setCircleRadius}
+          circleRadius={circleRadius}
         />
         <RouteProximity
           open={open}
           setOpen={setOpen}
           routeRadius={routeRadius}
+          setRouteRadius={setRouteRadius}
           userLocation={userLocation}
           setUserLocation={userLocation}
           routeFilteredScreens={routeFilteredScreens}
