@@ -12,9 +12,6 @@ import { getPlanningPageFooterData } from "../../actions/screenAction";
 import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
 import {
   FOOTER_DATA,
-  FULL_CAMPAIGN_PLAN,
-  SELECTED_AUDIENCE_TOUCHPOINTS,
-  TOTAL_SCREEN_COST_DATA,
 } from "../../constants/localStorageConstants";
 
 export const Footer = ({
@@ -23,9 +20,9 @@ export const Footer = ({
   isDisabled = false,
   campaignId,
   loadingCost,
-  screensCost,
   pageName,
   successAddCampaignDetails,
+  mainTitle
 }: any) => {
   // console.log("loadingCost : ", loadingCost);
   const dispatch = useDispatch<any>();
@@ -73,7 +70,7 @@ export const Footer = ({
     }
   }, [dispatch, campaignId, pageName, successAddCampaignDetails]);
   return (
-    <div className="py-4 z-10 flex justify-between">
+    <div className="py-2 z-10 flex justify-between">
       <div className="flex w-full justify-start items-center gap-4">
         {totalScreensData && (
           <div className="flex">
@@ -162,7 +159,7 @@ export const Footer = ({
             onClick={handleSave}
             disabled={isDisabled || loadingCost}
           >
-            {loading || loadingCost ? "Please Wait...." : "Save and Continue"}
+            {loading || loadingCost ? "Please Wait...." : mainTitle}
           </button>
         </div>
       )}

@@ -11,6 +11,7 @@ interface WeatherSegmentProps {
   setRainType?: any;
   aqi?: any;
   setAqi?: any;
+  setTriggerSelected?: any;
 }
 
 export const WeatherSegment = ({
@@ -23,9 +24,10 @@ export const WeatherSegment = ({
   currentTab,
   aqi,
   setAqi,
+  setTriggerSelected
 }: WeatherSegmentProps) => {
   return (
-    <div className="pt-4">
+    <div className="">
       {currentTab === 1 ? (
         <div className="border-b p-2">
           <div className="flex gap-2 items-center">
@@ -46,6 +48,7 @@ export const WeatherSegment = ({
                 onChange={() => {
                   setMinVal(0);
                   setMaxVal(10);
+                  setTriggerSelected(true);
                 }}
               />
               <p className="text-[14px] text-[#5BB8F7]">Freezing</p>  
@@ -58,6 +61,7 @@ export const WeatherSegment = ({
                 onChange={() => {
                   setMinVal(10);
                   setMaxVal(20);
+                  setTriggerSelected(true);
                 }}
               />
               <p className="text-[14px] text-[#1D9EF7]">Cold</p>
@@ -70,6 +74,7 @@ export const WeatherSegment = ({
                 onChange={() => {
                   setMinVal(20);
                   setMaxVal(30);
+                  setTriggerSelected(true);
                 }}
               />
               <p className="text-[14px] text-[#348655]">Pleasant</p>
@@ -82,6 +87,7 @@ export const WeatherSegment = ({
                 onChange={() => {
                   setMinVal(30);
                   setMaxVal(42);
+                  setTriggerSelected(true);
                 }}
               />
               <p className="text-[14px] text-[#F79D5B]">Hot</p>
@@ -94,6 +100,7 @@ export const WeatherSegment = ({
                 onChange={() => {
                   setMinVal(42);
                   setMaxVal(50);
+                  setTriggerSelected(true);
                 }}
               />
               <p className="text-[14px] text-[#C63A3A]">Burning</p>
@@ -116,7 +123,10 @@ export const WeatherSegment = ({
                 title="Cloudy"
                 value="cloudy"
                 isChecked={rainType === "cloudy" ? true : false}
-                onChange={() => setRainType("cloudy")}
+                onChange={() => {
+                  setRainType("cloudy");
+                  setTriggerSelected(true);
+                }}
               />
               <i className="fi fi-tr-smog text-[14px] text-[#5BB8F7]"></i>
             </div>
@@ -125,7 +135,10 @@ export const WeatherSegment = ({
                 title="Drizzle"
                 value="drizzle"
                 isChecked={rainType === "drizzel" ? true : false}
-                onChange={() => setRainType("drizzel")}
+                onChange={() => {
+                  setRainType("drizzel");
+                  setTriggerSelected(true);
+                }}
               />
               <i className="fi fi-tr-cloud-drizzle text-[14px] text-[#5BB8F7]"></i>
             </div>
@@ -134,7 +147,10 @@ export const WeatherSegment = ({
                 title="Heavy"
                 value="heavy"
                 isChecked={rainType === "heavy" ? true : false}
-                onChange={() => setRainType("heavy")}
+                onChange={() => {
+                  setRainType("heavy");
+                  setTriggerSelected(true);
+                }}
               />
               <i className="fi fi-tr-cloud-showers-heavy text-[14px] text-[#5BB8F7]"></i>
             </div>
@@ -143,7 +159,10 @@ export const WeatherSegment = ({
                 title="Storm"
                 value="storm"
                 isChecked={rainType === "storm" ? true : false}
-                onChange={() => setRainType("storm")}
+                onChange={() => {
+                  setRainType("storm");
+                  setTriggerSelected(true);
+                }}
               />
               <i className="fi fi-tr-thunderstorm text-[14px] text-[#5BB8F7]"></i>
             </div>
@@ -152,7 +171,10 @@ export const WeatherSegment = ({
                 title="Stopped"
                 value="stopped"
                 isChecked={rainType === "stopped" ? true : false}
-                onChange={() => setRainType("stopped")}
+                onChange={() => {
+                  setRainType("stopped");
+                  setTriggerSelected(true);
+                }}
               />
               <i className="fi fi-rr-cloud-disabled text-[14px] text-[#5BB8F7]"></i>
             </div>
@@ -178,6 +200,7 @@ export const WeatherSegment = ({
                   setMaxVal(0);
                   setMaxVal(50);
                   setAqi("good");
+                  setTriggerSelected(true);
                 }}
               />
               <p className="text-[14px] text-[#348655]">0-50</p>  
@@ -191,6 +214,7 @@ export const WeatherSegment = ({
                   setMaxVal(51);
                   setMaxVal(100);
                   setAqi("moderate");
+                  setTriggerSelected(true);
                 }}
               />
               <p className="text-[14px] text-[#1D9EF7]">51-100</p>
@@ -204,6 +228,7 @@ export const WeatherSegment = ({
                   setMaxVal(101);
                   setMaxVal(200);
                   setAqi("poor");
+                  setTriggerSelected(true);
                 }}
               />
               <p className="text-[14px] text-[#5BB8F7]">101-200</p>
@@ -217,6 +242,7 @@ export const WeatherSegment = ({
                   setMaxVal(201);
                   setMaxVal(350);
                   setAqi("unhealthy");
+                  setTriggerSelected(true);
                 }}
               />
               <p className="text-[14px] text-[#F79D5B]">201-350</p>
@@ -230,6 +256,7 @@ export const WeatherSegment = ({
                   setMaxVal(351);
                   setMaxVal(500);
                   setAqi("hazardous");
+                  setTriggerSelected(true);
                 }}
               />
               <p className="text-[14px] text-[#C63A3A]">351-500</p>

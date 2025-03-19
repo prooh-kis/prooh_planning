@@ -18,6 +18,7 @@ interface SportsSegmentProps {
   condition?: any;
   setCondition?: any
   campaignId?: any;
+  setTriggerSelected?: any;
 }
 export const SportsSegment = ({
   campaignId,
@@ -28,7 +29,9 @@ export const SportsSegment = ({
   player,
   setPlayer,
   condition,
-  setCondition
+  setCondition,
+  setTriggerSelected,
+
 }: SportsSegmentProps) => {
   const dispatch = useDispatch<any>();
 

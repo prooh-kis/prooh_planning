@@ -82,8 +82,8 @@ export const RegularPlanPage: React.FC = () => {
   const StepComponent = stepComponents[currentStep] || null;
 
   return (
-    <div className="w-full min-h-screen flex flex-col">
-      <div className="w-full">
+    <div className="w-full">
+      <div className="w-full h-auto">
         <StepperSlider
           campaignId={campaignId}
           step={currentStep}
@@ -92,7 +92,7 @@ export const RegularPlanPage: React.FC = () => {
           steps={steps}
         />
       </div>
-      <div className="w-full flex-grow flex justify-center items-start overflow-auto p-4">
+      <div className="w-full h-[75vh] p-4">
         {StepComponent && (
           <StepComponent
             setCurrentStep={setCurrentStep}

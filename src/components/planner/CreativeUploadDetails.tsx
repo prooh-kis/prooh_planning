@@ -106,12 +106,11 @@ export const CreativeUploadDetails = ({
       type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
     });
     setPageSuccess(true);
-  }, [successAddCampaignDetails]);
+  }, [dispatch, setPageSuccess, successAddCampaignDetails]);
 
   useEffect(() => {
     if (!pageSuccess) return;
-    const campaignIdFromPath = pathname?.split("/").splice(-1)[0];
-    dispatch(getScreenDataUploadCreativeData({ id: campaignIdFromPath }));
+    dispatch(getScreenDataUploadCreativeData({ id: campaignId }));
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
@@ -119,7 +118,7 @@ export const CreativeUploadDetails = ({
       })
     );
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-  }, [dispatch, pathname, campaignId, pageSuccess]);
+  }, [dispatch, campaignId, pageSuccess]);
 
   const mergeCreativeWithScreenData = (creatives: any, screenData: any) => {
     const combinedData: any = {};
@@ -521,7 +520,7 @@ export const CreativeUploadDetails = ({
         dispatch(
           addDetailsToCreateCampaign({
             pageName: "Upload Creative Page",
-            id: pathname.split("/").splice(-1)[0],
+            id: campaignId,
             creatives: requestBody,
           })
         );
@@ -630,17 +629,15 @@ export const CreativeUploadDetails = ({
 
               {/* Table Header */}
               <div className="mr-48 w-full">
-                <div className="grid grid-cols-12 bg-[#129BFF] py-2 mt-4 items-center text-[16px]">
-                  <div className="col-span-3 flex">
-                    <h1 className="w-24 text-center text-[#FFFFFF] font-semibold ">
-                      Screens
-                    </h1>
-                    <h1 className="w-24 text-center text-[#FFFFFF] font-semibold ">
-                      Duration
-                    </h1>
-                    <h1 className="w-48 text-center text-[#FFFFFF] font-semibold">
-                      Screen Dimension
-                    </h1>
+                <div className="grid grid-cols-12 bg-[#129BFF] border py-2 mt-4 items-center text-[16px]">
+                  <div className="col-span-3 ">
+                    <div className="flex">
+                      {["Screens", "Duration", "Dimension"]?.map((d: any, i: any) => (
+                        <h1 key={i} className="w-24 text-center text-[#FFFFFF] font-semibold">
+                          {d}
+                        </h1>
+                      ))}
+                    </div>
                   </div>
                   <h1 className="w-full text-center text-[#FFFFFF] font-semibold col-span-9">
                     Upload creatives
@@ -662,12 +659,12 @@ export const CreativeUploadDetails = ({
                           }
                           className={`${
                             index === currentScreen
-                              ? "bg-[#aed6f1]  border border-[#000000]"
+                              ? "bg-[#aed6f1]  border"
                               : isCreativeUploaded(index)
                               ? "bg-[#abebc6]"
                               : !isCreativeUploaded(index)
-                              ? "bg-[#E8F3FF]"
-                              : "bg-[#E8F3FF]"
+                              ? "bg-[#FFFFFF]"
+                              : "bg-[#FFFFFF]"
                           } hover:bg-[#e5e7eb]`}
                           onClick={() => setCurrentScreen(index)}
                         >
@@ -789,6 +786,7 @@ export const CreativeUploadDetails = ({
               {/* Footer */}
               <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
                 <Footer
+                  mainTitle={"Continue"}
                   handleBack={() => setCurrentStep(step - 1)}
                   campaignId={campaignId}
                   handleSave={handleSaveAndContinue}

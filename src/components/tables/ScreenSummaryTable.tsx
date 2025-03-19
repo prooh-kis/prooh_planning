@@ -271,8 +271,8 @@ export const ScreenSummaryTable = ({
                 }}
               >
                 <div
-                  className="grid grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))] gap-0"
-                  style={{ width: "calc(8rem * 8)" }}
+                  className="grid grid-cols-[repeat(auto-fit,minmax(4rem,0.5fr))] gap-0"
+                  style={{ width: "calc(4rem * 8)" }}
                 >
                   {Object.keys(cityZones[currentCity])?.map(
                     (d: any, i: any) => (
@@ -338,8 +338,8 @@ export const ScreenSummaryTable = ({
                           }}
                         >
                           <div
-                            className="grid grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))] gap-0"
-                            style={{ width: "calc(8rem * 8)" }}
+                            className="grid grid-cols-[repeat(auto-fit,minmax(4rem,0.5fr))] gap-0"
+                            style={{ width: "calc(4rem * 8)" }}
                           >
                             {Object.keys(cityZones?.[currentCity])?.map(
                               (zone: any, k: any) => (

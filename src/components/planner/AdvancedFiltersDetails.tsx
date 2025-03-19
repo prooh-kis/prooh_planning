@@ -21,16 +21,14 @@ import {
 import { ALL_TOUCHPOINTS } from "../../constants/helperConstants";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { getUniqueScreens } from "../../utils/screenRanking";
-import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-import { LinearBar } from "../../components/molecules/linearbar";
 
 interface AdvanceFiltersDetailsProps {
   step?: any;
   setCurrentStep?: any;
   loading?: boolean;
   error?: any;
-  campaignId?: string;
+  campaignId?: any;
   successAddCampaignDetails?: any;
   pageSuccess?: boolean;
   setPageSuccess?: any;
@@ -46,7 +44,7 @@ export const AdvanceFiltersDetails = ({
 }: AdvanceFiltersDetailsProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
-  const campId = campaignId ? campaignId : pathname?.split("/")?.splice(-1)[0];
+  // const campaignId = campaignId ? campaignId : pathname?.split("/")?.splice(-1)[0];
 
   const [isDisabled, setIsDisabled] = useState<any>(true);
   const [allScreens, setAllScreens] = useState<any>([]);
@@ -62,20 +60,20 @@ export const AdvanceFiltersDetails = ({
   const [polygonFilteredScreens, setPolygonFilteredScreens] = useState<any>([]);
 
   const [dataBrand, setDataBrand] = useState<any[]>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.advanceFilterData
       ?.stores?.[0]?.brands || []
   );
   const [dataComp, setDataComp] = useState<any[]>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.advanceFilterData
       ?.stores?.[0]?.comp || []
   );
   const [circleRadius, setCircleRadius] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.advanceFilterData
       ?.stores?.[0]?.radius || 1000 // in meters
   );
   const [circleData, setCircleData] = useState<any>({});
   const [routes, setRoutes] = useState<any[]>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.advanceFilterData
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.advanceFilterData
       ?.routes || []
   );
   const [routeOrigin, setRouteOrigin] = useState<any>([]);
@@ -105,7 +103,7 @@ export const AdvanceFiltersDetails = ({
       ];
       const uniqueScreens = getUniqueScreens([{ screens }]);
       setFinalSelectedScreens(uniqueScreens);
-      saveDataOnLocalStorage(SELECTED_SCREENS_ID, { [campId]: uniqueScreens });
+      saveDataOnLocalStorage(SELECTED_SCREENS_ID, { [campaignId]: uniqueScreens });
     } else if (type === "remove") {
       const uniqueScreens = getUniqueScreens([{ screens }]);
 
@@ -115,7 +113,7 @@ export const AdvanceFiltersDetails = ({
         )
       );
       saveDataOnLocalStorage(SELECTED_SCREENS_ID, {
-        [campId]: finalSelectedScreens.filter(
+        [campaignId]: finalSelectedScreens.filter(
           (fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)
         ),
       });
@@ -135,10 +133,10 @@ export const AdvanceFiltersDetails = ({
   const handleReload = () => {
     dispatch(
       getScreenDataForAdvanceFilters({
-        id: campId,
+        id: campaignId,
         touchPoints: pathname?.split("/").includes("storebasedplan")
           ? ALL_TOUCHPOINTS
-          : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campId]?.touchPoints,
+          : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints,
       })
     );
   };
@@ -171,7 +169,7 @@ export const AdvanceFiltersDetails = ({
     if (!pageSuccess) return;
     dispatch(
       getPlanningPageFooterData({
-        id: campId,
+        id: campaignId,
         pageName: "Advance Filter Page",
       })
     );
@@ -179,7 +177,7 @@ export const AdvanceFiltersDetails = ({
       type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
     });
     setPageSuccess(true);
-  }, [dispatch, campId, pathname, pageSuccess, setPageSuccess]);
+  }, [dispatch, campaignId, pathname, pageSuccess, setPageSuccess]);
 
   useEffect(() => {
     if (advanceFilterData && finalSelectedScreens?.length === 0) {
@@ -191,11 +189,11 @@ export const AdvanceFiltersDetails = ({
         setAllScreens(advanceFilterData?.screens);
         setFinalSelectedScreens(advanceFilterData?.screens);
         saveDataOnLocalStorage(SELECTED_SCREENS_ID, {
-          [campId]: advanceFilterData?.screens,
+          [campaignId]: advanceFilterData?.screens,
         });
       }
     }
-  }, [advanceFilterData, campId, finalSelectedScreens]);
+  }, [advanceFilterData, campaignId, finalSelectedScreens]);
 
   const handleSaveAndContinue = () => {
     if (!pathname.split("/").includes("view")) {
@@ -206,7 +204,7 @@ export const AdvanceFiltersDetails = ({
       dispatch(
         addDetailsToCreateCampaign({
           pageName: "Advance Filter Page",
-          id: pathname.split("/").splice(-1)[0],
+          id: campaignId,
           screenIds: finalSelectedScreens.map((s: any) => s._id),
           advanceFilterData: {
             stores: [
@@ -330,6 +328,7 @@ export const AdvanceFiltersDetails = ({
           </div>
           <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF] z-10">
             <Footer
+              mainTitle={isDisabled ? "Check to Confirm" : "Continue"}
               handleBack={() => {
                 setCurrentStep(step - 1);
               }}

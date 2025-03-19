@@ -86,7 +86,7 @@ export const LocationProximity = ({
 
   return (
     <div className="h-auto">
-      <div className="h-[60vh] lg:h-[60vh] overflow-scroll scrollbar-minimal">
+      <div className="h-[55vh] lg:h-[55vh] overflow-scroll scrollbar-minimal">
         <ExcelImport
           open={open}
           setOpen={setOpen}
@@ -175,7 +175,7 @@ export const LocationProximity = ({
           {allScreens?.length} Sites
         </p>
       </div>
-      <div className="flex items-center mx-[-1px] pt-1">
+      <div className="flex items-center pt-4">
         <CheckboxInput
           label={
             <>

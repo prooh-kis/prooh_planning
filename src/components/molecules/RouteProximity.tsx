@@ -209,7 +209,7 @@ export const RouteProximity = ({
               <p className="text-sm text-[#9f9f9f]">Added Route</p>
               <p className="text-sm text-[#9f9f9f]">{routes.length}</p>
             </div>
-            <div className="overflow-scroll h-44 mb-1 border rounded">
+            <div className="overflow-scroll h-40 mb-1 border rounded">
               {routes?.map((route: any, index: any) => (
                 <div key={index} className={`
                     ${

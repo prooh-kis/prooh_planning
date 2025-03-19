@@ -33,7 +33,10 @@ export const AppDashBoardLayout: React.FC<AppDashBoardLayoutProps> = ({
   return (
     <div className="min-h-screen min-w-full overflow-auto no-scrollbar ">
       <Header />
-      <div className={`h-[100vh] w-full px-8 ${className}`}>{children}</div>
+      <div className={`w-full px-8 ${className}`}>{children}</div>
+      <div className="h-[5vh]">
+{/*  */}
+      </div>
     </div>
   );
 };

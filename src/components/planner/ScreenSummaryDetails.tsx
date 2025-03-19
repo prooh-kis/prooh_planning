@@ -225,7 +225,7 @@ export const ScreenSummaryDetails = ({
       type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
     });
     setPageSuccess(true);
-  }, [successAddCampaignDetails]);
+  }, [dispatch, setPageSuccess, successAddCampaignDetails]);
 
   useEffect(() => {
     if (screenSummaryData || screensBuyingCount) {
@@ -283,7 +283,7 @@ export const ScreenSummaryDetails = ({
             </div>
           )}
 
-          <div className="pb-10">
+          <div className="pb-2">
             {currentTab === "1" ? (
               <div className="w-full">
                 <div className="py-2 grid grid-cols-12 flex justify-between">
@@ -461,6 +461,7 @@ export const ScreenSummaryDetails = ({
           </div>
           <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
             <Footer
+              mainTitle="Continue"
               handleBack={() => {
                 setCurrentStep(step - 1);
               }}

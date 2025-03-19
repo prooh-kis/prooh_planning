@@ -60,6 +60,8 @@ export const ViewFinalPlanPODetails = ({
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
+  const [skipEmailConfirmation, setSkipEmailConfirmation] = useState<any>(false);
+
   const [confirmationImageFiles, setConfirmationImageFiles] = useState<any>([]);
   const [toEmail, setToEmail] = useState<any>("");
   const [cc, setCC] = useState<any>(userInfo?.email);
@@ -71,7 +73,7 @@ export const ViewFinalPlanPODetails = ({
 
   const [poInput, setPoInput] = useState<any>({
     pageName: "View Final Plan Page",
-    id: pathname.split("/").splice(-1)[0],
+    id: campaignId,
     name: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name,
     brandName:
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName,
@@ -314,24 +316,30 @@ export const ViewFinalPlanPODetails = ({
 
   const handleSaveAndContinue = async () => {
     if (!pathname.split("/").includes("view")) {
-      let imageArr: string[] = [];
-      for (let data of confirmationImageFiles) {
-        if (data.awsURL) {
-          imageArr.push(data.awsURL);
-          console.log("no need to save again");
-        } else {
-          let url = await getAWSUrl(data);
-          imageArr.push(url);
+      if (!skipEmailConfirmation) {
+        message.info("Please skip the email confirmation or upload an email confirmation screenshot to continue")
+      } else {
+        let imageArr: string[] = [];
+        for (let data of confirmationImageFiles) {
+          if (data.awsURL) {
+            imageArr.push(data.awsURL);
+            console.log("no need to save again");
+          } else {
+            let url = await getAWSUrl(data);
+            imageArr.push(url);
+          }
         }
+
+        dispatch(
+          addDetailsToCreateCampaign({
+            pageName: "View Final Plan Page",
+            id: campaignId,
+            clientApprovalImgs: imageArr,
+          })
+        );
+        setPageSuccess(false);
       }
-      dispatch(
-        addDetailsToCreateCampaign({
-          pageName: "View Final Plan Page",
-          id: pathname.split("/").splice(-1)[0],
-          clientApprovalImgs: imageArr,
-        })
-      );
-      setPageSuccess(false);
+
     }
     setCurrentStep(step + 1);
   };
@@ -376,6 +384,12 @@ export const ViewFinalPlanPODetails = ({
       })
     );
   };
+
+  useEffect(() => {
+    if (!poTableData) return;
+    setPageLoading(false);
+  }, [poTableData]);
+
 
   useEffect(() => {
     if (errorApply) {
@@ -437,7 +451,7 @@ export const ViewFinalPlanPODetails = ({
         };
       })
     );
-  }, []);
+  }, [dispatch, campaignId]);
 
   useEffect(() => {
     if (!successAddCampaignDetails) return;
@@ -461,11 +475,6 @@ export const ViewFinalPlanPODetails = ({
       })
     );
   }, [dispatch, pageSuccess, poInput, campaignId]);
-
-  useEffect(() => {
-    if (!poTableData) return;
-    setPageLoading(false);
-  }, [poTableData]);
 
   // Handle success email sending
   useEffect(() => {
@@ -648,11 +657,14 @@ export const ViewFinalPlanPODetails = ({
                 files={confirmationImageFiles}
                 handleAddNewFile={handleAddNewFile}
                 removeImage={removeImage}
+                setSkipEmailConfirmation={setSkipEmailConfirmation}
+                skipEmailConfirmation={skipEmailConfirmation}
               />
             </div>
           </div>
           <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
             <Footer
+              mainTitle={!skipEmailConfirmation ? "Confirm to Continue" : "Continue"}
               handleBack={() => {
                 setCurrentStep(step - 1);
               }}

@@ -51,7 +51,7 @@ export const RegularCohortComparisonDetails = ({
   );
 
   const [selectedBuyingOption, setSelectedBuyingOption] =
-    useState<string>("regular");
+    useState<string>("");
 
   const {
     loading: loadingPriceData,
@@ -92,7 +92,7 @@ export const RegularCohortComparisonDetails = ({
     if (!successAddCampaignDetails) return;
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
     setPageSuccess(true);
-  }, [successAddCampaignDetails]);
+  }, [dispatch, setPageSuccess, successAddCampaignDetails]);
 
   const handleRegularVsCohortSelection = (type: string) => {
     console.log("type : ", type);
@@ -199,17 +199,18 @@ export const RegularCohortComparisonDetails = ({
           </div>
 
           <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
-            <Footer
+            <Footer 
+              mainTitle={isDisabled ? "Choose to Confirm" : "Continue"}
               handleBack={() => setCurrentStep(step - 1)}
               handleSave={() => {
                 if (!pathname.split("/").includes("view")) {
                   if (isDisabled) {
-                    message.error("Please confirm screen selection");
+                    message.error("Please confirm your selection");
                   } else {
                     dispatch(
                       addDetailsToCreateCampaign({
                         pageName: "Compare Plan Page",
-                        id: pathname.split("/").pop(),
+                        id: campaignId,
                         regularTouchPointWiseSlotDetails:
                           priceData?.regular?.touchPointData,
                         cohortTouchPointWiseSlotDetails:

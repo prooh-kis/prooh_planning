@@ -1,9 +1,10 @@
 import { RadioInput } from "../../components/atoms/RadioInput"
 
 export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setSelectedBudget, setSelectedSOV }: any) => {
+  console.log(selectedBudget);
   return (
-    <div className="rounded-md p-2">
-      <div className="pt-4">
+    <div className="rounded-md px-2">
+      <div className="pt-2">
         <h1>Allow open budget to occupy slot space in a loop</h1>
         <div className="flex justify-start gap-4 py-2">
           <RadioInput
@@ -36,14 +37,14 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
         </div>
       </div>
       {selectedSOV === 1 && (
-        <div className="pt-4">
+        <div className="pt-2">
           <h1 className="text-[12px] text-gray-400">
             No additional cost is required for single SOV, please continue
           </h1>
         </div>
       )}
       {selectedSOV !== 1 && (
-        <div className="pt-4">
+        <div className="pt-2">
           <h1>Kindly approve maximum budget for this trigger</h1>
           <div className="flex justify-start gap-4 py-2">
             <div className="flex gap-1 items-center">

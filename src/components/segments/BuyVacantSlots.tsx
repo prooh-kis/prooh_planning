@@ -4,8 +4,9 @@ import { RadioInput } from "../../components/atoms/RadioInput";
 interface BuyVacantSlotsProps {
   condition?: any;
   setCondition?: any;
+  setTriggerSelected?: any;
 }
-export const BuyVacantSlots = ({condition, setCondition}: BuyVacantSlotsProps) => {
+export const BuyVacantSlots = ({condition, setCondition, setTriggerSelected}: BuyVacantSlotsProps) => {
 
   const times = [
     {
@@ -32,7 +33,10 @@ export const BuyVacantSlots = ({condition, setCondition}: BuyVacantSlotsProps) =
             title={t.label}
             value={t.value}
             isChecked={condition === t.value ? true : false}
-            onChange={() => setCondition(t.value)}
+            onChange={() => {
+              setCondition(t.value);
+              setTriggerSelected(true);
+            }}
           />
         </div>
 

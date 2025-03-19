@@ -2,7 +2,6 @@ import { WeatherSegment } from "../../components/segments/WeatherSegment";
 import { TabWithIcon } from "../molecules/TabWithIcon";
 import { VerticalStepperSlider } from "../../components/molecules/VerticalStepperSlide";
 import { useCallback, useEffect, useState } from "react";
-import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { SportsSegment } from "../../components/segments/SportsSegment";
 import { BuyVacantSlots } from "../../components/segments/BuyVacantSlots";
 import { OpenBudgetSegment } from "../../components/segments/OpenBudgetSegment";
@@ -15,7 +14,6 @@ import {
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import {
-  COST_SUMMARY,
   FULL_CAMPAIGN_PLAN,
   SELECTED_TRIGGER,
 } from "../../constants/localStorageConstants";
@@ -50,6 +48,7 @@ export const TriggerDetails = ({
 
   const [isDisabled, setIsDisabled] = useState<any>(true);
   const [disableApply, setDisableApply] = useState<any>(true);
+  const [triggerSelected, setTriggerSelected] = useState<any>(false);
 
   const [selectedTrigger, setSelectedTrigger] = useState<any>({
     triggerType: "weather",
@@ -209,6 +208,7 @@ export const TriggerDetails = ({
     maxVal,
     rainType,
     aqi,
+    campaignId
   ]);
 
   const handleSaveAndContinue = () => {
@@ -223,11 +223,11 @@ export const TriggerDetails = ({
         dispatch(
           addDetailsToCreateCampaign({
             pageName: "Add Triggers Page",
-            id: pathname.split("/").splice(-1)[0],
+            id: campaignId,
             triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
           })
         );
-        // setCurrentStep(step + 1);
+        setCurrentStep(step + 1);
       }
     }
   };
@@ -255,7 +255,11 @@ export const TriggerDetails = ({
 
   // setting initial value  when page reload or came from future
   useEffect(() => {
+    
     const trigger = getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId];
+    if (trigger) {
+      setTriggerSelected(true);
+    }
     if (trigger?.weatherTriggers?.length > 0) {
       setSelectedTrigger({
         triggerType: "weather",
@@ -265,7 +269,7 @@ export const TriggerDetails = ({
       setRainType(trigger?.weatherTriggers[0]?.rainType || "0");
       setAqi(trigger?.weatherTriggers[0]?.aqi || "");
       setSelectedSOV(trigger?.weatherTriggers[0]?.openBudgetSovPercent || null);
-      setSelectedBudget(trigger?.weatherTriggers[0]?.budget || null);
+      setSelectedBudget(Number(trigger?.weatherTriggers[0]?.budget).toFixed(0) || null);
       setMaxVal(trigger?.weatherTriggers[0]?.maxVal || 0);
       setSelectedTimeOptions(trigger?.weatherTriggers[0]?.period || 300);
     } else if (trigger?.sportsTriggers?.length > 0) {
@@ -277,7 +281,7 @@ export const TriggerDetails = ({
       setSelectedMatchId(trigger?.sportsTriggers[0]?.matchId || "");
       setCondition(trigger?.sportsTriggers[0]?.condition || "");
       setSelectedSOV(trigger?.sportsTriggers[0]?.openBudgetSovPercent || null);
-      setSelectedBudget(trigger?.sportsTriggers[0]?.budget || null);
+      setSelectedBudget(Number(trigger?.sportsTriggers[0]?.budget).toFixed(0) || null);
       setSelectedTimeOptions(trigger?.sportsTriggers[0]?.period || 300);
     } else if (trigger?.vacantSlots?.length > 0) {
       setSelectedTrigger({
@@ -285,10 +289,11 @@ export const TriggerDetails = ({
       });
       setCondition(trigger?.sportsTriggers[0]?.condition || "");
       setSelectedSOV(trigger?.sportsTriggers[0]?.openBudgetSovPercent || null);
-      setSelectedBudget(trigger?.sportsTriggers[0]?.budget || null);
+      setSelectedBudget(Number(trigger?.sportsTriggers[0]?.budget).toFixed(0) || null);
       setSelectedTimeOptions(trigger?.sportsTriggers[0]?.period || 300);
     }
-  }, []);
+    console.log(trigger);
+  }, [campaignId]);
 
   useEffect(() => {
     if (selectedTrigger) {
@@ -306,10 +311,10 @@ export const TriggerDetails = ({
         pageName: "Add Triggers Page",
       })
     );
-  }, [dispatch]);
+  }, [dispatch, campaignId]);
   return (
     <div className="w-full">
-      <div>
+      <div className="pb-2">
         <h1 className="text-[24px] text-primaryText font-semibold">
           Add Triggers
         </h1>
@@ -340,7 +345,7 @@ export const TriggerDetails = ({
           </div>
         ) : (
           <div className="flex items-center justify-between">
-            <p className="text-[14px] text-secondaryText py-2">
+            <p className="text-[14px] text-secondaryText py-1">
               Choose any one of your desired triggers for contextual targeting
               of you target audiences
             </p>
@@ -353,10 +358,10 @@ export const TriggerDetails = ({
           </div>
         )}
       </div>
-      <div className="grid grid-cols-12 gap-4">
+      <div className="grid grid-cols-12 gap-4 w-full">
         {!pathname?.split("/").includes("triggerbasedplan") && (
           <div className="col-span-4 border rounded py-5 flex flex-col justify-between">
-            <div className="h-1/2">
+            <div className="">
               <VerticalStepperSlider
                 step={currentStep1}
                 setStep={setCurrentStep1}
@@ -372,7 +377,6 @@ export const TriggerDetails = ({
             </p>
           </div>
         )}
-
         <div
           className={`${
             pathname?.split("/")?.includes("triggerbasedplan")
@@ -400,7 +404,7 @@ export const TriggerDetails = ({
                   </p>
                 </div>
               </div>
-              <div className="py-2">
+              <div className="py-1">
                 <TabWithIcon
                   trigger={true}
                   currentTab={currentTab}
@@ -419,6 +423,7 @@ export const TriggerDetails = ({
                 currentTab={currentTab}
                 aqi={aqi}
                 setAqi={setAqi}
+                setTriggerSelected={setTriggerSelected}
               />
             </div>
           ) : currentStep1 === 3 ? (
@@ -452,6 +457,7 @@ export const TriggerDetails = ({
                   setPlayer={setPlayer}
                   condition={condition}
                   setCondition={setCondition}
+                  setTriggerSelected={setTriggerSelected}
                 />
               </div>
             </div>
@@ -480,10 +486,18 @@ export const TriggerDetails = ({
               <BuyVacantSlots
                 condition={condition}
                 setCondition={setCondition}
+                setTriggerSelected={setTriggerSelected}
               />
             </div>
           )}
-          <div className="" onClick={() => setDisableApply(false)}>
+          <div className="" onClick={() => {
+              if (triggerSelected) {
+                setDisableApply(false);
+              } else {
+                message.info("Please select a trigger first to continue or skip...")
+              }
+            }}
+          >
             <OpenBudgetSegment
               totalCost={
                 getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
@@ -497,27 +511,38 @@ export const TriggerDetails = ({
           </div>
 
           <div className="flex justify-between items-center px-2">
-            <div className="flex items-center gap-4">
-              <p className="text-[12px] text-[#969696]">
-                Click here to change the time period for the trigger
-              </p>
-              <DropdownInput
-                height={"8"}
-                width={"20"}
-                placeHolder={"Set Time"}
-                selectedOption={selectedTimeOptions}
-                setSelectedOption={setSelectedTimeOptions}
-                options={(currentStep1 === 1
-                  ? timeOptionsWeatherTrigger
-                  : timeOptionSportsTrigger
-                )?.map((m: any) => {
-                  return {
-                    label: m.label,
-                    value: m.value,
-                  };
-                })}
-              />
+            <div>
+              <div className="flex items-center gap-4 pb-1">
+                <p className="text-[12px] text-[#969696]">
+                  Click here to change the time period for the trigger
+                </p>
+                <DropdownInput
+                  height={"8"}
+                  width={"20"}
+                  placeHolder={"Set Time"}
+                  selectedOption={selectedTimeOptions}
+                  setSelectedOption={setSelectedTimeOptions}
+                  options={(currentStep1 === 1
+                    ? timeOptionsWeatherTrigger
+                    : timeOptionSportsTrigger
+                  )?.map((m: any) => {
+                    return {
+                      label: m.label,
+                      value: m.value,
+                    };
+                  })}
+                />
+              </div>
+              <h1 className="text-[14px] text-[#969696]">
+                Kindly re-confirm the additional budget of
+                <span className="font-bold">
+                  {" "}
+                  &#8377;{formatNumber(Number(selectedBudget).toFixed(0))}{" "}
+                </span>
+                for your campaign triggers
+              </h1>
             </div>
+
             {!disableApply && (
               <PrimaryButton
                 height="h-10"
@@ -528,6 +553,7 @@ export const TriggerDetails = ({
                 textSize="text-[14px]"
                 action={() => {
                   handleSelectTrigger();
+                  setIsDisabled(!isDisabled);
                   message.success(
                     "Trigger applied, please confirm and proceed..."
                   );
@@ -536,6 +562,7 @@ export const TriggerDetails = ({
             )}
           </div>
         </div>
+
         {pathname?.split("/").includes("triggerbasedplan") && (
           <div className="col-span-6 h-full">
             <QuickSummaryReciept
@@ -547,26 +574,10 @@ export const TriggerDetails = ({
           </div>
         )}
       </div>
-      <div className="flex gap-4 py-5">
-        <CheckboxInput
-          label={
-            <>
-              Kindly re-confirm the additional budget of
-              <span className="font-bold">
-                {" "}
-                &#8377;{formatNumber(Number(selectedBudget))}{" "}
-              </span>
-              for your campaign triggers
-            </>
-          }
-          disabled={disableApply}
-          onChange={() => {
-            setIsDisabled(!isDisabled);
-          }}
-        />
-      </div>
-      <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
+
+      <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF] z-10">
         <Footer
+          mainTitle={isDisabled ? "Select to Confirm" : "Continue"}
           handleBack={() => {
             setCurrentStep(step - 1);
           }}

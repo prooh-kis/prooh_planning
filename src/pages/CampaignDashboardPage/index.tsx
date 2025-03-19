@@ -34,11 +34,11 @@ export const CampaignDashboardPage: React.FC = () => {
     dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     dispatch(getCampaignDashboardData({ id: campaignId }));
 
-    const interval = setInterval(() => {
-      dispatch(getCampaignDashboardData({ id: campaignId })); // Refresh data every 5 seconds
-    }, 600000);
+    // const interval = setInterval(() => {
+    //   dispatch(getCampaignDashboardData({ id: campaignId })); // Refresh data every 5 seconds
+    // }, 600000);
   
-    return () => clearInterval(interval); 
+    // return () => clearInterval(interval); 
   }, [dispatch, campaignId]);
   return (
     <div className="w-full h-full">
