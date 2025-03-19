@@ -47,6 +47,7 @@ export function PlanSummaryTable({
         ? getSelectedScreenIdsFromAllCities(screensBuyingCount)
         : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds;
 
+    console.log(screenIds);
     if (
       !loading &&
       !data &&

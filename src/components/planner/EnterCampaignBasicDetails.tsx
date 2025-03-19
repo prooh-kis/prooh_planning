@@ -14,7 +14,6 @@ import {
 } from "../../actions/clientAgencyAction";
 import { SuggestionInput } from "../../components/atoms/SuggestionInput";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
-import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -75,6 +74,8 @@ export const EnterCampaignBasicDetails = ({
   const [sov, setSov] = useState<number>(
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.sov || 1
   );
+
+  const [enterDuration, setEnterDuration] = useState<any>(true);
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -197,11 +198,20 @@ export const EnterCampaignBasicDetails = ({
     dispatch(getAllClientAgencyNames());
   }, [dispatch]);
 
-  const handleStartDateChange = (value: any) => {
-    if (new Date() > new Date(value)) {
-      message.error("start date must be greater then today data and time!");
-      setStartDate("");
-    } else setStartDate(value);
+  const handleDateChange = (value: any, type: any) => {
+    if (type === "start") {
+      if (new Date() > new Date(value)) {
+        message.error("start date must be greater then today data and time!");
+        setStartDate("");
+      } else setStartDate(value);
+    } 
+    if (type === "end") {
+      if (new Date() > new Date(value)) {
+        message.error("start date must be greater then today data and time!");
+        setEndDate("");
+      } else setEndDate(value);
+    }
+
   };
 
   return (
@@ -299,31 +309,55 @@ export const EnterCampaignBasicDetails = ({
           <CalendarInput
             placeholder="Start Date"
             value={startDate}
-            action={handleStartDateChange}
+            action={(e: any) => handleDateChange(e, "start")}
             disabled={false}
             minDate={new Date()}
           />
         </div>
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">
-              Duration (Days)
-            </label>
-            <Tooltip title="Enter total duration of campaigns in days">
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
+        {enterDuration ? (
+          <div className="col-span-1 py-1">
+            <div className="block flex justify-between gap-2 items-center mb-2">
+              <label className="block text-secondaryText text-[14px]">
+                Duration (Days)
+              </label>
+              <Tooltip title="Enter total duration of campaigns in days">
+                <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+              </Tooltip>
+            </div>
+            <PrimaryInput
+              inputType="number"
+              placeholder="30"
+              value={duration}
+              // disabled={startDate === ""}
+              action={(e: any) => {
+                if (startDate === "") {
+                  message.error("Please select start date first!");
+                  return;
+                }
+                setDuration(e);
+                updateEndDateBasedOnDuration(e);
+              }}
+            />
           </div>
-          <PrimaryInput
-            inputType="number"
-            placeholder="30"
-            value={duration}
-            disabled={startDate === ""}
-            action={(e: any) => {
-              setDuration(e);
-              updateEndDateBasedOnDuration(e);
-            }}
-          />
-        </div>
+        ) : (
+          <div className="col-span-1 py-1">
+            <div className="block flex justify-between gap-2 items-center mb-2">
+              <label className="block text-secondaryText text-[14px]">
+                End Date
+              </label>
+              <Tooltip title="Select Date from when the campaign is to be started">
+                <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+              </Tooltip>
+            </div>
+            <CalendarInput
+              placeholder="End Date"
+              value={endDate}
+              action={(e: any) => handleDateChange(e, "end")}
+              disabled={false}
+              minDate={new Date()}
+            />
+          </div>
+        )}
       </div>
       <div className="grid grid-cols-3 gap-8 pt-2">
         <div className="col-span-1 py-1">
@@ -352,10 +386,10 @@ export const EnterCampaignBasicDetails = ({
         </h1>
       )}
 
-      <div className="flex py-4">
+      <div className="flex py-8">
         <button
           type="submit"
-          className="border border-1 py-2 px-8 text-[16px]  font-semibold rounded-md bg-[#00A0FA] text-[#FFFFFF] hover:bg-[#D7D7D7] hover:text-black truncate font-custom h-12 w-48"
+          className="border border-1 py-2 px-8 text-[16px] font-semibold rounded-md bg-[#00A0FA] text-[#FFFFFF] hover:bg-[#D7D7D7] hover:text-black truncate font-custom h-12 w-48"
           title="Save and go next"
           onClick={() => {
             if (validateForm()) {

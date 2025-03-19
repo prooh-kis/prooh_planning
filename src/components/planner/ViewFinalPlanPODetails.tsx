@@ -340,8 +340,9 @@ export const ViewFinalPlanPODetails = ({
         setPageSuccess(false);
       }
 
+    } else {
+      setCurrentStep(step + 1);
     }
-    setCurrentStep(step + 1);
   };
 
   const countScreensByResolutionAndCity = (data: any) => {

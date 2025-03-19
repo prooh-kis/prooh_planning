@@ -19,9 +19,7 @@ export function TabWithIcon({
 }: Props) {
   return (
     <div
-      className={`flex ${
-        trigger ? "justify-between" : "gap-2"
-      } items-center border-b-2 border-gray-100`}
+      className={`flex justify-around items-center border-b-2 border-gray-100`}
     >
       {tabData?.map((tab: TabInterface, index: any) => (
         <div
@@ -29,9 +27,7 @@ export function TabWithIcon({
           onClick={() => setCurrentTab(tab.id)}
           className={
             currentTab === tab.id
-              ? `px-1 w-48 flex ${
-                  trigger ? "gap-2" : "gap-4"
-                } text-primaryButton items-center text-[14px] border-b-2 border-primaryButton py-2`
+              ? `px-1 w-48 flex gap-2 text-primaryButton items-center text-[14px] border-b-2 border-primaryButton py-2`
               : `px-1 w-48 flex gap-2 text-gray-500 items-center text-[14px] py-2`
           }
         >
@@ -44,7 +40,7 @@ export function TabWithIcon({
             />
           )}
           {tab.icon}
-          <h1 className="text text-center flex items-center cursor-pointer">
+          <h1 className="text text-center flex items-center cursor-pointer truncate">
             {tab.label}
           </h1>
         </div>

@@ -1,6 +1,6 @@
 import { TabWithoutIcon } from "../molecules/TabWithoutIcon";
 import { TabWithIcon } from "../molecules/TabWithIcon";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { screenSummaryTabData } from "../../utils/hardCoddedData";
 import { ScreenSummaryTable } from "../tables/ScreenSummaryTable";
 import { ViewPlanPic } from "../segments/ViewPlanPic";
@@ -27,6 +27,7 @@ import { Loading } from "../../components/Loading";
 import { Tooltip } from "antd";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET } from "../../constants/screenConstants";
 
 interface ScreenSummaryDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -120,7 +121,7 @@ export const ScreenSummaryDetails = ({
     }
   };
 
-  const getTabValue = (dataScreenSummary: any) => {
+  const getTabValue = useCallback((dataScreenSummary: any) => {
     if (
       dataScreenSummary &&
       getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] &&
@@ -159,7 +160,7 @@ export const ScreenSummaryDetails = ({
         };
       });
     } else return [];
-  };
+  },[campaignId]);
 
   const refreshScreenSummary = () => {
     dispatch(
@@ -170,39 +171,13 @@ export const ScreenSummaryDetails = ({
     );
   };
 
-  const handleSaveAndContinue = async () => {
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "Screen Summary Page",
-        id: pathname.split("/").splice(-1)[0],
-        totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-        totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-          campaignId
-        ]?.total?.totalImpression,
-        totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-          campaignId
-        ]?.total?.totalReach,
-        totalCampaignBudget: getDataFromLocalStorage(
-          SCREEN_SUMMARY_TABLE_DATA
-        )?.[campaignId]?.total?.totalCampaignBudget,
-        totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-          campaignId
-        ]?.total?.totalCpm,
-        duration:
-          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
-      })
-    );
-    // }
-    setCurrentStep(step + 1);
-  };
+  useEffect(() => {
+    if (!successAddCampaignDetails) return;
+    setPageSuccess(true);
+  }, [setPageSuccess, successAddCampaignDetails]);
 
   useEffect(() => {
     if (!pageSuccess) return;
-
-    dispatch({
-      type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
-    });
-
     dispatch(
       getScreenSummaryData({
         id: campaignId,
@@ -210,22 +185,20 @@ export const ScreenSummaryDetails = ({
           ?.selectedType,
       })
     );
-
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
         pageName: "Screen Summary Page",
       })
     );
-  }, [campaignId, dispatch, pageSuccess]);
-
-  useEffect(() => {
-    if (!successAddCampaignDetails) return;
     dispatch({
       type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
     });
-    setPageSuccess(true);
-  }, [dispatch, setPageSuccess, successAddCampaignDetails]);
+    dispatch({
+      type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET,
+    });
+  
+  }, [campaignId, dispatch, pageSuccess]);
 
   useEffect(() => {
     if (screenSummaryData || screensBuyingCount) {
@@ -234,19 +207,60 @@ export const ScreenSummaryDetails = ({
       });
       setCityTabData(getTabValue(screenSummaryData));
     }
-  }, [dispatch, campaignId, screenSummaryData, screensBuyingCount]);
+  }, [dispatch, campaignId, getTabValue, screenSummaryData, screensBuyingCount]);
 
   const handleSave = () => {
     if (!pathname.split("/").includes("view")) {
       if (currentTab === "1") {
+        // dispatch(
+        //   addDetailsToCreateCampaign({
+        //     pageName: "Screen Summary Page",
+        //     id: campaignId,
+        //     totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+        //     totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+        //       campaignId
+        //     ]?.total?.totalImpression,
+        //     totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+        //       campaignId
+        //     ]?.total?.totalReach,
+        //     totalCampaignBudget: getDataFromLocalStorage(
+        //       SCREEN_SUMMARY_TABLE_DATA
+        //     )?.[campaignId]?.total?.totalCampaignBudget,
+        //     totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+        //       campaignId
+        //     ]?.total?.totalCpm,
+        //     duration:
+        //       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
+        //   })
+        // );
         setCurrentTab("2");
       } else {
-        handleSaveAndContinue();
+        dispatch(
+          addDetailsToCreateCampaign({
+            pageName: "Screen Summary Page",
+            id: campaignId,
+            totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+            totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+              campaignId
+            ]?.total?.totalImpression,
+            totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+              campaignId
+            ]?.total?.totalReach,
+            totalCampaignBudget: getDataFromLocalStorage(
+              SCREEN_SUMMARY_TABLE_DATA
+            )?.[campaignId]?.total?.totalCampaignBudget,
+            totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+              campaignId
+            ]?.total?.totalCpm,
+            duration:
+              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
+          })
+        );
+        setCurrentStep(step+1);
       }
     } else {
       setCurrentStep(step+1);
     }
-    
   };
 
   return (

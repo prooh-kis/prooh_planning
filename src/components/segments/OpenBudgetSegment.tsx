@@ -1,7 +1,6 @@
 import { RadioInput } from "../../components/atoms/RadioInput"
 
 export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setSelectedBudget, setSelectedSOV }: any) => {
-  console.log(selectedBudget);
   return (
     <div className="rounded-md px-2">
       <div className="pt-2">
@@ -13,7 +12,7 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
             isChecked={selectedSOV === 1 ? true : false}
             onChange={() => {
               setSelectedSOV(1);
-              setSelectedBudget(`${0.01 * totalCost}`);
+              setSelectedBudget(`${Number(0.01 * totalCost).toFixed(0)}`);
             }}
           />
           <RadioInput
@@ -22,7 +21,7 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
             isChecked={selectedSOV === 3 ? true : false}
             onChange={() => {
               setSelectedSOV(3);
-              setSelectedBudget(`${0.01 * totalCost}`);
+              setSelectedBudget(`${Number(0.01 * totalCost).toFixed(0)}`);
             }}
           />
           <RadioInput
@@ -31,7 +30,7 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
             isChecked={selectedSOV === 6 ? true : false}
             onChange={() => {
               setSelectedSOV(6);
-              setSelectedBudget(`${0.01 * totalCost}`);
+              setSelectedBudget(`${Number(0.01 * totalCost).toFixed(0)}`);
             }}
           />
         </div>
@@ -51,8 +50,8 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
               <RadioInput
                 title="1%"
                 value={"1"}
-                isChecked={selectedBudget === `${0.01 * totalCost}` ? true : false}
-                onChange={() => setSelectedBudget(`${0.01 * totalCost}`)}
+                isChecked={Number(selectedBudget).toFixed(0) === `${Number(0.01 * totalCost).toFixed(0)}` ? true : false}
+                onChange={() => setSelectedBudget(`${Number(0.01 * totalCost).toFixed(0)}`)}
               />
               <p className="text-[12px] text-gray-500">
                 (&#8377;{(0.01 * totalCost).toFixed(0)})
@@ -62,8 +61,8 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
               <RadioInput
                 title="2%"
                 value={"2"}
-                isChecked={selectedBudget === `${0.02 * totalCost}`? true : false}
-                onChange={() => setSelectedBudget(`${0.02 * totalCost}`)}
+                isChecked={Number(selectedBudget).toFixed(0) === `${Number(0.02 * totalCost).toFixed(0)}`? true : false}
+                onChange={() => setSelectedBudget(`${Number(0.02 * totalCost).toFixed(0)}`)}
               />
               <p className="text-[12px] text-gray-500">
                 (&#8377;{(0.02 * totalCost).toFixed(0)})
@@ -73,8 +72,8 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
               <RadioInput
                 title="3%"
                 value={"3"}
-                isChecked={selectedBudget === `${0.03 * totalCost}` ? true : false}
-                onChange={() => setSelectedBudget(`${0.03 * totalCost}`)}
+                isChecked={Number(selectedBudget).toFixed(0) === `${Number(0.03 * totalCost).toFixed(0)}` ? true : false}
+                onChange={() => setSelectedBudget(`${Number(0.03 * totalCost).toFixed(0)}`)}
               />
               <p className="text-[12px] text-gray-500">
                 (&#8377;{(0.03 * totalCost).toFixed(0)})

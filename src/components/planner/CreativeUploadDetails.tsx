@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import { TabWithIcon } from "../../components/molecules/TabWithIcon";
 import { playCreativeTime } from "../../utils/hardCoddedData";
@@ -358,7 +358,7 @@ export const CreativeUploadDetails = ({
     }, 0);
   };
 
-  const handleSetInitialData = (data: any) => {
+  const handleSetInitialData = useCallback((data: any) => {
     let arr = Object.keys(data || {});
 
     let result = arr?.map((city: string, index: number) => {
@@ -376,7 +376,7 @@ export const CreativeUploadDetails = ({
     setCitiesCreative(result);
     let city = result?.find((data: any) => data.id == "1")?.label || "";
     setCurrentCity(city);
-  };
+  },[]);
 
   const handleNextStep = (data: any) => {
     let arr = Object.keys(data || {});
@@ -603,7 +603,7 @@ export const CreativeUploadDetails = ({
     handleSetInitialData(combinedData);
     setCreativeUploadData(filterUniqueResolutions(combinedData));
     setPageLoading(false);
-  }, [campaignId, errorScreeData, screenData]);
+  }, [campaignId, errorScreeData, handleSetInitialData, screenData]);
 
   return (
     <div className="w-full">
@@ -632,16 +632,19 @@ export const CreativeUploadDetails = ({
                 <div className="grid grid-cols-12 bg-[#129BFF] border py-2 mt-4 items-center text-[16px]">
                   <div className="col-span-3 ">
                     <div className="flex">
-                      {["Screens", "Duration", "Dimension"]?.map((d: any, i: any) => (
+                      {["Screens", "Duration", "Ratio"]?.map((d: any, i: any) => (
                         <h1 key={i} className="w-24 text-center text-[#FFFFFF] font-semibold">
                           {d}
                         </h1>
                       ))}
                     </div>
                   </div>
-                  <h1 className="w-full text-center text-[#FFFFFF] font-semibold col-span-9">
-                    Upload creatives
-                  </h1>
+                  <div className="col-span-9">
+                    <h1 className="w-full text-center text-[#FFFFFF] font-semibold col-span-9">
+                      Upload creatives
+                    </h1>
+                  </div>
+
                 </div>
 
                 {/* Creative Upload Section */}
@@ -659,13 +662,13 @@ export const CreativeUploadDetails = ({
                           }
                           className={`${
                             index === currentScreen
-                              ? "bg-[#aed6f1]  border"
+                              ? "bg-[#aed6f150]"
                               : isCreativeUploaded(index)
-                              ? "bg-[#abebc6]"
+                              ? "bg-[#abebc650]"
                               : !isCreativeUploaded(index)
                               ? "bg-[#FFFFFF]"
                               : "bg-[#FFFFFF]"
-                          } hover:bg-[#e5e7eb]`}
+                          } hover:bg-[#e5e7eb50]`}
                           onClick={() => setCurrentScreen(index)}
                         >
                           <div className="flex">
@@ -676,7 +679,7 @@ export const CreativeUploadDetails = ({
                             ].map((item, i) => (
                               <h1
                                 key={i}
-                                className="border-b border-1 p-2 w-24 text-center"
+                                className="p-2 w-24 text-center"
                               >
                                 {item}
                               </h1>
@@ -688,7 +691,7 @@ export const CreativeUploadDetails = ({
                   </div>
 
                   {/* Creative Type Selection */}
-                  <div className="border-b border-1 px-2 py-1 col-span-1">
+                  <div className="border-b border-1 px-2 py-1 col-span-1 truncate">
                     <Radio.Group
                       onChange={handleSetCreativeType}
                       value={creativeType}
@@ -696,10 +699,10 @@ export const CreativeUploadDetails = ({
                     >
                       <Space direction="vertical">
                         {!pathname?.split("/").includes("triggerbasedplan") && (
-                          <Radio value="Standard">Standard</Radio>
+                          <Radio value="Standard"><p className="truncate">Standard</p></Radio>
                         )}
                         {isTriggerAvailable() && (
-                          <Radio value="Trigger">Trigger</Radio>
+                          <Radio value="Trigger"><p className="truncate">Trigger</p></Radio>
                         )}
                       </Space>
                     </Radio.Group>
@@ -708,7 +711,7 @@ export const CreativeUploadDetails = ({
                   {/* File Upload Section */}
                   <div className="border border-1 p-2 col-span-4 h-[55vh]">
                     {creativeType === "Standard" ? (
-                      <>
+                      <div className="w-full">
                         <TabWithIcon
                           tabData={playCreativeTime}
                           currentTab={currentPlayTimeCreative}
@@ -722,7 +725,7 @@ export const CreativeUploadDetails = ({
                           handleSaveFile={handleSaveFile}
                           removeFile={() => setFile(null)}
                         />
-                      </>
+                      </div>
                     ) : (
                       <UploadCreativeForTriggerCampaign
                         handleSelectFileType={handleSelectFileType}
@@ -786,7 +789,7 @@ export const CreativeUploadDetails = ({
               {/* Footer */}
               <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
                 <Footer
-                  mainTitle={"Continue"}
+                  mainTitle={validate() ? "Continue" : "Upload and Continue"}
                   handleBack={() => setCurrentStep(step - 1)}
                   campaignId={campaignId}
                   handleSave={handleSaveAndContinue}

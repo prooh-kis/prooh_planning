@@ -255,10 +255,10 @@ export const TriggerDetails = ({
 
   // setting initial value  when page reload or came from future
   useEffect(() => {
-    
     const trigger = getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId];
     if (trigger) {
       setTriggerSelected(true);
+      setIsDisabled(false);
     }
     if (trigger?.weatherTriggers?.length > 0) {
       setSelectedTrigger({
@@ -398,7 +398,11 @@ export const TriggerDetails = ({
                     <p className="text-[14px]">Choose your weather condition</p>
                   </div>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center cursor-pointer"
+                  onClick={() => {
+                    message.info("Coming soon, stay tuned...")
+                  }}
+                >
                   <p className="text-[12px] text-primaryButton underline">
                     View use cases
                   </p>

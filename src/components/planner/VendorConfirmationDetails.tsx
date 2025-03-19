@@ -70,7 +70,7 @@ export const VendorConfirmationDetails = ({
 
   const [vendorInput, setVendorInput] = useState<any>({
     pageName: "View Final Plan Page",
-    id: pathname.split("/").splice(-1)[0],
+    id: campaignId,
     name: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || "",
     brandName:
       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName ||

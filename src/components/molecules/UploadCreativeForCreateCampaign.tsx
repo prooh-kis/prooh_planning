@@ -22,6 +22,7 @@ export const UploadCreativeForStandardCampaign = ({
         <Radio value={"video"}>Video</Radio>
         <Radio value={"image"}>Image</Radio>
       </Radio.Group>
+      <div className="h-4"></div>
       <FileUploadButton
         handleFile={handleAddNewFile}
         width={"full"}

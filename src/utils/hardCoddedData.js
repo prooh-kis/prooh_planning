@@ -31,12 +31,12 @@ export const AdsPlayTimeTabData = [
 
 export const playCreativeTime = [
   {
-    icon: <i className="fi fi-rr-settings"></i>,
+    icon: <i className="fi fi-br-brightness text-[#EAB308] flex items-center justify-center"></i>,
     label: "Day Time Creative",
     id: "1",
   },
   {
-    icon: <i className="fi fi-rr-settings"></i>,
+    icon: <i className="fi fi-sr-moon-stars text-[#8B5CF6] flex items-center justify-center"></i>,
     label: "Night Time Creative",
     id: "2",
   },

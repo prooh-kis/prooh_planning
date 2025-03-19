@@ -30,6 +30,7 @@ import {
   GET_SCREEN_SUMMARY_DATA_SUCCESS,
   GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_ERROR,
   GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_REQUEST,
+  GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET,
   GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_SUCCESS,
   GET_SCREENS_COST_DATA_ERROR,
   GET_SCREENS_COST_DATA_REQUEST,
@@ -282,6 +283,11 @@ export function screenSummaryPlanTableDataGetReducer(state = [], action) {
       return {
         loading: false,
         error: action.payload,
+      };
+    case GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET:
+      return {
+        loading: false,
+        error: {},
       };
     default:
       return state;
