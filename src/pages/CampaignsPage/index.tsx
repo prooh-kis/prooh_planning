@@ -81,7 +81,8 @@ export const CampaignsPage: React.FC = () => {
         targetDivRef.current.scrollTop.toString()
       );
     }
-    navigate(`/campaignDetails/${id}`);
+    // navigate(`/campaignDetails/${id}`);
+    navigate(`/campaignDashboard/${id}`);
   };
 
   useEffect(() => {
