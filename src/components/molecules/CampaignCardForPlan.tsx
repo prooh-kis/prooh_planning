@@ -15,11 +15,11 @@ export const CampaignCardForPlan = ({ data, handleEdit }: any) => {
         <FirstCharForBrandName brandName={data.brandName} />
 
         <div>
-          <div className="flex gap-8 items-center">
+          <div className="flex gap-4 items-center">
             <h1 className="text-[16px] text-[#092A41]">{data?.name}</h1>
             <Tooltip title="Edit Campaign">
               <i
-                className="fi fi-sr-pencil text-[12px] hover:text-[#129BFF] cursor-pointer"
+                className="fi fi-rr-file-edit flex items-center justify-center text-[12px] hover:text-[#129BFF] cursor-pointer"
                 onClick={() => handleEdit(data)}
               ></i>
             </Tooltip>

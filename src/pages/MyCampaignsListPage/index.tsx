@@ -1,174 +1,180 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { CampaignListView } from "../../components/molecules/CampaignListView";
+import { Loading } from "../../components/Loading";
+import { getAllCampaignsDetailsAction } from "../../actions/campaignAction";
+import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import {
-  getMyCreateCampaignsList,
-  getMyCreateCampaignsManagerRequestsList,
-  getMyCreateCampaignsVendorRequestsList,
-} from "../../actions/campaignAction";
-import {
-  CAMPAIGN_MANAGER,
-  CAMPAIGN_PLANNER,
-  SCREEN_OWNER,
-} from "../../constants/userConstants";
-import { SearchInputField, TabWithoutIcon } from "../../components/index";
-
+  NoDataView,
+  ReloadButton,
+  SearchInputField,
+} from "../../components/index";
+import { campaignCreationTypeTabs } from "../../constants/tabDataConstant";
+import { CAMPAIGN_STATUS_ACTIVE } from "../../constants/campaignConstants";
+import { CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE } from "../../constants/userConstants";
 import { CampaignsListModel } from "../../components/molecules/CampaignsListModel";
-import { NoDataView } from "../../components/molecules/NoDataView";
-import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-
-const allTabs = [
-  {
-    id: "1",
-    label: "Active",
-  },
-  {
-    id: "2",
-    label: "Completed",
-  },
-];
 
 export const MyCampaignsListPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState<any>("");
   const targetDivRef = useRef<HTMLDivElement>(null);
+
   const [currentTab, setCurrentTab] = useState<any>("1");
+  const [searchQuery, setSearchQuery] = useState<any>("");
+  const [selectedCard, setSelectedCard] = useState<any>(null);
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-  const myCreateCampaignsListGet = useSelector(
-    (state: any) => state.myCreateCampaignsListGet
+  const allCampaignsDataGet = useSelector(
+    (state: any) => state.allCampaignsDataGet
   );
-  const {
-    loading: loadingCampaignsList,
-    error: errorCampaignsList,
-    data: campaignsList,
-  } = myCreateCampaignsListGet;
-
-  const myCreateCampaignsVendorRequestsListGet = useSelector(
-    (state: any) => state.myCreateCampaignsVendorRequestsListGet
-  );
-  const {
-    loading: loadingVendorList,
-    error: errorVendorList,
-    data: vendorCampaignsList,
-  } = myCreateCampaignsVendorRequestsListGet;
-
-  const myCreateCampaignsManagerRequestsListGet = useSelector(
-    (state: any) => state.myCreateCampaignsManagerRequestsListGet
-  );
-  const {
-    loading: loadingManagerRequestsList,
-    error: errorManagerRequestsList,
-    data: clientRequestsList,
-  } = myCreateCampaignsManagerRequestsListGet;
-
-  const loading =
-    loadingManagerRequestsList || loadingVendorList || loadingCampaignsList;
+  const { loading, error, data: allCampaigns } = allCampaignsDataGet;
 
   useEffect(() => {
-    if (
-      userInfo?.userRole === CAMPAIGN_PLANNER ||
-      userInfo?.userRole === CAMPAIGN_MANAGER
-    ) {
-      if (currentTab === "1") {
-        dispatch(
-          getMyCreateCampaignsList({ id: userInfo?._id, type: "Active" })
-        );
-      }
-      if (currentTab === "2") {
-        dispatch(
-          getMyCreateCampaignsList({ id: userInfo?._id, type: "Completed" })
-        );
-      }
-    }
-  }, [userInfo, currentTab]);
-
-  useEffect(() => {
-    if (!userInfo) {
-      navigate("/login");
-    }
-
-    if (userInfo?.isMaster) {
+    if (userInfo && !userInfo?.isMaster) {
+      // message.error("Not a screen owner!!!");
+    } else if (!allCampaigns) {
       dispatch(
-        getMyCreateCampaignsVendorRequestsList({
-          id: userInfo?._id,
-          status: "Active",
+        getAllCampaignsDetailsAction({
+          userId: userInfo?._id,
+          status: CAMPAIGN_STATUS_ACTIVE,
+          event : CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE
         })
       );
     }
-    if (userInfo?.userRole === SCREEN_OWNER) {
-      dispatch(
-        getMyCreateCampaignsManagerRequestsList({
-          id: userInfo?._id,
-          type: "complete",
-        })
+  }, [dispatch, userInfo]);
+
+
+  const handleCardClick = (id: any) => {
+    setSelectedCard(id);
+  };
+
+  const handleGetCampaignByStatus = useCallback((status: any) => {
+    setCurrentTab(status);
+    dispatch(
+      getAllCampaignsDetailsAction({
+        userId: userInfo?._id,
+        status: campaignCreationTypeTabs?.filter(
+          (tab: any) => tab.id === status
+        )[0]?.value,
+        event : CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE
+      })
+    );
+  },[dispatch, userInfo]);
+
+  const reset = () => {
+    dispatch(
+      getAllCampaignsDetailsAction({
+        userId: userInfo?._id,
+        status: CAMPAIGN_STATUS_ACTIVE,
+        event : CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE
+      })
+    );
+  };
+
+  const handleDoubleClick = (id: string) => {
+    // Save the current scroll position
+    if (targetDivRef.current) {
+      sessionStorage.setItem(
+        "campaignsScrollPosition",
+        targetDivRef.current.scrollTop.toString()
       );
     }
-  }, [dispatch, navigate, userInfo]);
+    // navigate(`/campaignDetails/${id}`);
+    navigate(`/campaignDashboard/${id}`);
+  };
 
-  const campaignList =
-    userInfo?.userRole === CAMPAIGN_PLANNER ||
-    userInfo?.userRole === CAMPAIGN_MANAGER
-      ? campaignsList
-      : userInfo?.isBrand && userInfo?.userRole === SCREEN_OWNER
-      ? clientRequestsList
-      : userInfo?.isMaster
-      ? vendorCampaignsList?.campaigns
-      : [];
-
-  const filteredCampaigns = campaignList?.filter(
-    (campaign: any) =>
-      campaign?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      campaign?.brandName?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
+  useEffect(() => {
+    handleGetCampaignByStatus(currentTab);
+    // Restore scroll position when coming back to this page
+    const savedScrollPosition =
+      sessionStorage.getItem("campaignsScrollPosition") || "0";
+    if (targetDivRef.current) {
+      targetDivRef.current.scrollTop = parseInt(savedScrollPosition, 10);
+    }
+  }, [currentTab, handleGetCampaignByStatus]);
   return (
-    <div className="w-full p-4">
-      <div className="flex justify-between border-b pb-2">
-        <div className="flex gap-2 items-center">
-          <i className="fi fi-sr-megaphone flex items-center justify-center text-[14px] text-[#129BFF]"></i>
-          <h1 className="text-[18px] text-primaryText font-semibold">
-            My Campaign Plans
-          </h1>
+    <div className="w-full">
+      <div className="bg-white w-auto rounded-[4px] mr-2">
+        <div className="flex justify-between pr-8 border-b">
+          <div className="flex gap-4 items-center p-4 ">
+            <i className="fi fi-sr-megaphone flex items-center justify-center text-[#8B5CF680]"></i>
+            <h1 className="text-[16px] font-semibold">
+              My Campaigns{" "}
+              <span className="text-[14px] text-[#68879C] ">
+                (
+                {
+                  allCampaigns?.filter(
+                    (campaign: any) =>
+                      campaign?.campaignName
+                        ?.toLowerCase()
+                        .includes(searchQuery) ||
+                      campaign?.brandName?.toLowerCase().includes(searchQuery) ||
+                      campaign?.campaignName
+                        ?.toUpperCase()
+                        .includes(searchQuery) ||
+                      campaign?.brandName?.toUpperCase().includes(searchQuery)
+                  )?.length
+                }
+                )
+              </span>
+            </h1>
+            <ReloadButton onClick={reset} />
+          </div>
+          <div className="flex items-center mt-1 w-96">
+            <SearchInputField
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search Campaign by campaign name or brand"
+            />
+          </div>
+        </div>
+
+        <div className="mt-1 px-4">
+          <TabWithoutIcon
+            currentTab={currentTab}
+            setCurrentTab={handleGetCampaignByStatus}
+            tabData={campaignCreationTypeTabs}
+          />
         </div>
       </div>
-      <div className="px-2">
-        <TabWithoutIcon
-          currentTab={currentTab}
-          setCurrentTab={setCurrentTab}
-          tabData={allTabs}
-        />
-      </div>
-
-      <div className="mt-2 w-full">
-        <SearchInputField
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Search by campaign name or brand"
-        />
-      </div>
-      <div className="w-full mt-2">
-        {loading ? (
-          <LoadingScreen />
-        ) : filteredCampaigns?.length === 0 ? (
-          <NoDataView />
-        ) : (
-          <div className="mt-2 h-[75vh] overflow-y-auto no-scrollbar rounded-lg flex flex-col gap-4">
-            {filteredCampaigns?.map((data: any, i: any) => (
-              <div
-                key={i}
+      {loading ? (
+        <div className="w-full">
+          <Loading />
+        </div>
+      ) : (
+        <div className="mt-1">
+          {allCampaigns?.length === 0 && (
+            <div className="pt-4">
+              <NoDataView />
+            </div>
+          )}
+          <div
+            className="h-[80vh] overflow-y-auto scrollbar-minimal mt-1 mr-2 rounded-lg flex flex-col gap-4"
+            ref={targetDivRef}
+          >
+            {allCampaigns
+              ?.filter(
+                (campaign: any) =>
+                  campaign?.campaignName?.toLowerCase().includes(searchQuery) ||
+                  campaign?.brandName?.toLowerCase().includes(searchQuery) ||
+                  campaign?.campaignName?.toUpperCase().includes(searchQuery) ||
+                  campaign?.brandName?.toUpperCase().includes(searchQuery)
+              )
+              ?.map((data: any, index: any) => (
+                <div
+                key={index}
                 className="pointer-cursor"
-                onClick={() => navigate(`/campaignDetails/${data._id}`)}
+                onClick={() => navigate(`/campaignDashboard/${data._id}`)}
               >
                 <CampaignsListModel data={data} />
               </div>
-            ))}
+              ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

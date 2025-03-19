@@ -40,7 +40,7 @@ export const FirstCharForBrandName = ({
         getBgColors(bgColorIndex) // ✅ Uses ASCII-based indexing for better color distribution
       )}
     >
-      <h1 className="text-[40px] text-gray-400 font-black">
+      <h1 className="text-[40px] text-white font-black">
         {brandName?.charAt(0)}
       </h1>
     </div>

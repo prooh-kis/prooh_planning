@@ -307,11 +307,12 @@ export const CampaignDashboard = ({
             <div
               className="col-span-1 border border-gray-300 rounded-lg px-2 flex justify-center items-center h-[32px]"
               onClick={() =>
-                navigate(
-                  `/${getCampaignPageNameFromCampaignType(
-                    campaignDetails?.campaignType
-                  )}/${campaignDetails._id}/edit`, { state: { from: EDIT_CAMPAIGN } } 
-                )
+                // navigate(
+                //   `/${getCampaignPageNameFromCampaignType(
+                //     campaignDetails?.campaignType
+                //   )}/${campaignDetails._id}/edit`, { state: { from: EDIT_CAMPAIGN } } 
+                // )
+                navigate(`/campaignDetails/${campaignDetails?._id}`)
               }
             >
               <i className="fi fi-tr-file-edit text-[14px] flex items-center justify-center"></i>

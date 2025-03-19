@@ -376,7 +376,7 @@ export const EnterCampaignBasicDetails = ({
         </div>
       </div>
       {endDate !== "" && startDate !== "" && duration && (
-        <h1 className="text-[12px] pt-4 text-[#129BFF]">
+        <h1 className="text-[14px] pt-4 text-[#129BFF]">
           Note: Your campaign will be billed from{" "}
           {new Date(startDate).toLocaleDateString()} to{" "}
           {new Date(

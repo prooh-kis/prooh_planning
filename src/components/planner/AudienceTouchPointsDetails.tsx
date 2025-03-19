@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   getDataFromLocalStorage,
@@ -15,7 +15,6 @@ import {
 } from "../../actions/screenAction";
 import {
   AUDIENCE_DATA,
-  COST_SUMMARY,
   FULL_CAMPAIGN_PLAN,
   SELECTED_AUDIENCE_TOUCHPOINTS,
   TOTAL_SCREEN_COST_DATA,
@@ -106,7 +105,7 @@ export const AudienceTouchPointsDetails = ({
     data: screensCost,
   } = screensCostDataGet;
 
-  const getMatchedData = (myData: any) => {
+  const getMatchedData = useCallback((myData: any) => {
     const { id, ...marketData } = myData;
     setMarkets(marketData);
 
@@ -148,7 +147,7 @@ export const AudienceTouchPointsDetails = ({
     setSelectedGender(selectedGender);
 
     return { audiencesData, touchPointsData };
-  };
+  },[campaignId, selectedGender]);
 
   const setCostData = (myData: any) => {
     setTotalScreensData(myData);
@@ -195,25 +194,25 @@ export const AudienceTouchPointsDetails = ({
         pageName: "Audience And TouchPoint Page",
       })
     );
-
-    dispatch(
-      getScreenDataForAdvanceFilters({
-        id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
-        touchPoints: selectedTouchPoints,
-      })
-    );
-  }, [dispatch, pageSuccess]);
-
-  useEffect(() => {
-    if (!successAddCampaignDetails) return;
     dispatch({
       type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
     });
+  }, [dispatch, pageSuccess, campaignId]);
+
+  useEffect(() => {
+    if (!successAddCampaignDetails) return;
+
     setPageSuccess(true);
-  }, [successAddCampaignDetails]);
+  }, [setPageSuccess, successAddCampaignDetails]);
 
   useEffect(() => {
     if (screensCost) {
+      dispatch(
+        getScreenDataForAdvanceFilters({
+          id: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?._id,
+          touchPoints: selectedTouchPoints,
+        })
+      );
       saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, {
         [campaignId]: screensCost,
       });
@@ -234,7 +233,7 @@ export const AudienceTouchPointsDetails = ({
         },
       });
     }
-  }, [screensCost]);
+  }, [dispatch, screensCost, campaignId, selectedAudiences, selectedGender, selectedTouchPoints]);
 
   useEffect(() => {
     if (screensAudiences) {
@@ -248,7 +247,7 @@ export const AudienceTouchPointsDetails = ({
     setCostData(
       getDataFromLocalStorage(TOTAL_SCREEN_COST_DATA)?.[campaignId] || {}
     );
-  }, [screensAudiences]);
+  }, [screensAudiences, campaignId, getMatchedData]);
 
   const handleSelection = (input: any) => {
     dispatch(
@@ -299,13 +298,13 @@ export const AudienceTouchPointsDetails = ({
           zones,
         })
       );
-  
-      saveDataOnLocalStorage(COST_SUMMARY, {
-        [campaignId]: [selectedScreensData, totalScreensData],
-      });
       setPageSuccess(false);
+      setCurrentStep(step + 1);
+
+    } else {
+      setPageSuccess(true);
+      setCurrentStep(step + 1);
     }
-    setCurrentStep(step + 1);
   };
 
   return (

@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { useLocation } from "react-router-dom";
 import { Tooltip } from "antd";
-import { ADD_DETAILS_TO_CREATE_CAMPAIGN_SUCCESS } from "../../constants/campaignConstants";
 
 interface StepSliderProps {
   steps: number;

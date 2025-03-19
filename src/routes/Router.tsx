@@ -50,7 +50,6 @@ import { AppDashBoardLayout } from "../layout/AppDashBoardLayout";
 
 import { PlayLiveUrl } from "../pages/PageNotFound/PlayLiveUrl";
 import { MyCreativesPage } from "../pages/MyCreativesPage";
-import { CampaignsPage } from "../pages/CampaignsPage";
 import { CampaignDetailsPage } from "../pages/CampaignDetailsPage";
 
 const Routers: React.FC = () => {
@@ -117,29 +116,14 @@ const Routers: React.FC = () => {
           }
         />
         <Route
-          path={MY_CAMPAIGNS_LIST}
-          element={
-            <AppDashBoardLayout className="bg-[#D3D3D350] pt-16">
-              <CampaignsPage />
-            </AppDashBoardLayout>
-          }
-        />
-        <Route
           path={"/campaignDetails/:id?"}
           element={
-            <AppDashBoardLayout className="bg-[#D3D3D350] pt-16">
+            <AppDashBoardLayout className="bg-[#D3D3D310] pt-16">
               <CampaignDetailsPage />
             </AppDashBoardLayout>
           }
         />
-        <Route
-          path={MY_REQUESTS_LIST}
-          element={
-            <AppDashBoardLayout className="bg-[#D3D3D320] pt-16">
-              <MyRequestsListPage />
-            </AppDashBoardLayout>
-          }
-        />
+ 
         {/* <Route
           path={PLAY_CAMPAIGN}
           element={
@@ -165,10 +149,27 @@ const Routers: React.FC = () => {
             </PublicRoute>
           }
         />
+
+        <Route
+          path={MY_CAMPAIGNS_LIST}
+          element={
+            <AppDashBoardLayout className="bg-[#D1D1D110] pt-16">
+              <MyCampaignsListPage />
+            </AppDashBoardLayout>
+          }
+        />
+        <Route
+          path={MY_REQUESTS_LIST}
+          element={
+            <AppDashBoardLayout className="bg-[#D1D1D110] pt-16">
+              <MyRequestsListPage />
+            </AppDashBoardLayout>
+          }
+        />
         <Route
           path={MY_PLANS_LIST}
           element={
-            <AppDashBoardLayout className="bg-[#D3D3D320] pt-16">
+            <AppDashBoardLayout className="bg-[#D1D1D110] pt-16">
               <MyPlansListPage />
             </AppDashBoardLayout>
           }

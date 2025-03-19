@@ -17,7 +17,7 @@ import {
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
-import { CURRENT_STEP } from "../../constants/localStorageConstants";
+import { CURRENT_STEP, FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
   CAMPAIGN_PLAN_TYPE_REGULAR,
@@ -55,6 +55,7 @@ export const RegularPlanPage: React.FC = () => {
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0);
 
+      
       setCurrentStep(newStep >= steps ? newStep : newStep + 1);
       const currStep = {
         [campaignId]: newStep >= steps ? newStep : newStep + 1,

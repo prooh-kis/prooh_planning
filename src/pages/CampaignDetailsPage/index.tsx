@@ -280,7 +280,7 @@ export const CampaignDetailsPage: React.FC = () => {
   }
 
   return (
-    <div className="w-full grid grid-cols-12 gap-1">
+    <div className="w-full grid grid-cols-12 gap-1 pt-2">
       {openCreativeEndDateChangePopup && (
         <EditCreativeEndDatePopup
           onClose={() => setOpenCreativeEndDateChangePopup(false)}
@@ -306,9 +306,9 @@ export const CampaignDetailsPage: React.FC = () => {
           <Loading />
         </div>
       ) : (
-        <div className="col-span-8">
+        <div className="col-span-8 ">
           <div className="w-full border rounded py-4 bg-white">
-            <div className="flex justify-between pb-2 mx-1 border-b">
+            <div className="flex justify-between pb-4 mx-1 border-b">
               <div className="flex items-center gap-4">
                 <i
                   className="fi fi-sr-angle-small-left text-[#7C8E9B] flex items-center"
@@ -336,96 +336,59 @@ export const CampaignDetailsPage: React.FC = () => {
                   </h1>
                 </div>
               </div>
-              {(
-                <div className="flex flex-col px-4 justify-center">
-                  {loadingStatusChange ? (
-                    <Skeleton active paragraph={{ rows: 1 }} />
-                  ) : (
-                    <div className=" flex h-auto gap-4">
-                      <Tooltip title="View Campaign Dashboard">
-                        <i
-                          className="fi fi-rr-document text-gray-500"
-                          onClick={() => openCampaignDashboard()}
-                        ></i>
-                      </Tooltip>
-                      <Tooltip title="Edit Campaign">
-                        <i
-                          className="fi fi-ss-pen-circle text-gray-500"
-                          title="Edit Creatives"
-                          onClick={() => {
-                            navigate(
-                              `/${getCampaignPageNameFromCampaignType(
-                                campaignCreated?.campaignType
-                              )}/${campaignCreated._id}/edit`, {
-                                state: {
-                                  from: EDIT_CAMPAIGN
-                                }
+              <div className="flex flex-col px-4 justify-center">
+                {loadingStatusChange ? (
+                  <Skeleton active paragraph={{ rows: 1 }} />
+                ) : (
+                  <div className=" flex h-auto gap-4">
+                    
+                    <Tooltip title="Edit Campaign">
+                      <i
+                        className="fi fi-ss-pen-circle text-gray-500"
+                        title="Edit Creatives"
+                        onClick={() => {
+                          navigate(
+                            `/${getCampaignPageNameFromCampaignType(
+                              campaignCreated?.campaignType
+                            )}/${campaignCreated._id}/edit`, {
+                              state: {
+                                from: EDIT_CAMPAIGN
                               }
-                            )
-                          }}
-                        ></i>
-                      </Tooltip>
-                      <Tooltip title="Edit end date for all screens">
-                        <i
-                          className="fi fi-sr-file-edit text-gray-500"
-                          title="Edit End Date"
-                          onClick={() =>
-                            setOpenCreateCampaignEndDateChangePopup(
-                              !openCreateCampaignEndDateChangePopup
-                            )
-                          }
-                        ></i>
-                      </Tooltip>
-                      <Tooltip title="Pause for all screens">
-                        <i
-                          className="fi fi-ss-pause-circle text-gray-500"
-                          title="Pause All"
-                          onClick={() =>
-                            handleChangeStatusAll(
-                              CAMPAIGN_STATUS_PAUSE,
-                              CAMPAIGN_STATUS_CHANGED_TO_PAUSED_PLANNING_PAGE
-                            )
-                          }
-                        ></i>
-                      </Tooltip>
-                      <Tooltip title="Activate for all screens">
-                        <i
-                          className="fi fi-sr-play-circle text-gray-500"
-                          title="Active All"
-                          onClick={() =>
-                            handleChangeStatusAll(
-                              CAMPAIGN_STATUS_ACTIVE,
-                              CAMPAIGN_STATUS_CHANGED_TO_ACTIVE_PLANNING_PAGE
-                            )
-                          }
-                        ></i>
-                      </Tooltip>
-                      <Tooltip title="Delete for all screens">
-                        <i
-                          className="fi fi-sr-trash text-gray-500"
-                          title="Delete All"
-                          onClick={() =>
-                            handleChangeStatusAll(
-                              CAMPAIGN_STATUS_DELETED,
-                              CAMPAIGN_STATUS_CHANGED_TO_DELETED_PLANNING_PAGE
-                            )
-                          }
-                        ></i>
-                      </Tooltip>
-                    </div>
-                  )}
-                  <h1
-                    className={`text-[12px] ${getCampaignEndingStatus(
-                      campaignCreated?.endDate
-                    ).includes("Already")
-                      ? "text-[#EF4444]"
-                      : "text-[#22C55E]"
-                      }`}
-                  >
-                    {getCampaignEndingStatus(campaignCreated?.endDate)}
-                  </h1>
-                </div>
-              )}
+                            }
+                          )
+                        }}
+                      ></i>
+                    </Tooltip>
+                    <Tooltip title="Edit end date for all screens">
+                      <i
+                        className="fi fi-sr-calendar-lines-pen text-gray-500"
+                        title="Edit End Date"
+                        onClick={() =>
+                          setOpenCreateCampaignEndDateChangePopup(
+                            !openCreateCampaignEndDateChangePopup
+                          )
+                        }
+                      ></i>
+                    </Tooltip>
+                    <Tooltip title="View Campaign Dashboard">
+                      <i
+                        className="fi fi-sr-dashboard text-gray-500"
+                        onClick={() => openCampaignDashboard()}
+                      ></i>
+                    </Tooltip>
+                  </div>
+                )}
+                <h1
+                  className={`text-[12px] ${getCampaignEndingStatus(
+                    campaignCreated?.endDate
+                  ).includes("Already")
+                    ? "text-[#EF4444]"
+                    : "text-[#22C55E]"
+                    }`}
+                >
+                  {getCampaignEndingStatus(campaignCreated?.endDate)}
+                </h1>
+              </div>
             </div>
             <h1 className="px-9 text-[#092A41] text-[15px] font-normal mt-2">
               Basic Details
@@ -460,14 +423,14 @@ export const CampaignDetailsPage: React.FC = () => {
                 reverse={true}
               />
             </div>
-            <div className="border-b">
+            <div className="border-b mb-1">
               <TabWithoutIcon
                 currentTab={currentTab}
                 setCurrentTab={setCurrentTab}
                 tabData={creativeTypeTab}
               />
             </div>
-            <div className="h-[40vh] overflow-y-auto no-scrollbar pr-2">
+            <div className="h-[50vh] rounded overflow-y-auto no-scrollbar py-2">
               {campaignCreated?.creatives?.map((c: any, i: any) => (
                 <div key={i}>
                   {c?.[currentTab]?.length > 0 && (
@@ -505,20 +468,66 @@ export const CampaignDetailsPage: React.FC = () => {
           </div>
         </div>
       )}
-      {loading ? (
+      {loading || loadingScreens ? (
         <div className="col-span-4">
           <Loading />
         </div>
       ) : (
-        <div className="col-span-4 border rounded bg-white p-4">
-          <h1 className="text-[16px] font-semibold p-1 py-2">
-            Screens Play{" "}
-            <span className="text-[14px]">
-              ({campaignCreated?.screens?.length || 0})
-            </span>
-          </h1>
-
-          <div className="my-2 ">
+        <div className="col-span-4 border rounded bg-white p-2 h-full">
+          <div className="flex justify-between">
+            <h1 className="text-[16px] font-semibold px-1 py-2">
+              Screens Play{" "}
+              <span className="text-[14px]">
+                ({campaignCreated?.screens?.length || 0})
+              </span>
+            </h1>
+            <div className="flex flex-col px-1 justify-center">
+              {loadingStatusChange ? (
+                <Skeleton active paragraph={{ rows: 1 }} />
+              ) : (
+                <div className="py-2 flex items-center justify-center h-auto gap-4">
+                  <Tooltip title="Pause for all screens">
+                    <i
+                      className="fi fi-ss-pause-circle text-gray-500"
+                      title="Pause All"
+                      onClick={() =>
+                        handleChangeStatusAll(
+                          CAMPAIGN_STATUS_PAUSE,
+                          CAMPAIGN_STATUS_CHANGED_TO_PAUSED_PLANNING_PAGE
+                        )
+                      }
+                    ></i>
+                  </Tooltip>
+                  <Tooltip title="Activate for all screens">
+                    <i
+                      className="fi fi-sr-play-circle text-gray-500"
+                      title="Active All"
+                      onClick={() =>
+                        handleChangeStatusAll(
+                          CAMPAIGN_STATUS_ACTIVE,
+                          CAMPAIGN_STATUS_CHANGED_TO_ACTIVE_PLANNING_PAGE
+                        )
+                      }
+                    ></i>
+                  </Tooltip>
+                  <Tooltip title="Delete for all screens">
+                    <i
+                      className="fi fi-sr-trash text-gray-500"
+                      title="Delete All"
+                      onClick={() =>
+                        handleChangeStatusAll(
+                          CAMPAIGN_STATUS_DELETED,
+                          CAMPAIGN_STATUS_CHANGED_TO_DELETED_PLANNING_PAGE
+                        )
+                      }
+                    ></i>
+                  </Tooltip>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          <div className="py-4 ">
             <SearchInputField
               placeholder="Search screens by name"
               height="h-8"
@@ -526,35 +535,31 @@ export const CampaignDetailsPage: React.FC = () => {
               onChange={setSearchQuery}
             />
           </div>
-          {loadingScreens ? (
-            <Loading />
-          ) : (
-            <div className="h-[79vh] overflow-y-auto no-scrollbar py-2  flex flex-col gap-4">
-              {campaigns?.length === 0 && <NoDataView />}
-              {campaigns?.map((camp: any, k: any) => (
-                <div
-                  key={k}
-                  className="p-0 m-0"
-                  onClick={() => handelSelectScreen(camp?._id)}
-                >
-                  <ScreenListMonitoringView
-                    handleChangeCampaignStatus={handleChangeCampaignStatus}
-                    campaignCreated={campaignCreated}
-                    setOpenCreativeEndDateChangePopup={
-                      setOpenCreativeEndDateChangePopup
-                    }
-                    screen={screens?.find(
-                      (screen: any) => screen?.screenId == camp?.screenId
-                    )}
-                    campaign={camp}
-                    noImages={false}
-                    showOption={true}
-                    handleGetCampaignLog={handleShowLogReport}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+          <div className="h-[70vh] overflow-y-auto no-scrollbar py-1 flex flex-col gap-2">
+            {campaigns?.length === 0 && <NoDataView />}
+            {campaigns?.map((camp: any, k: any) => (
+              <div
+                key={k}
+                className="p-0 m-0"
+                onClick={() => handelSelectScreen(camp?._id)}
+              >
+                <ScreenListMonitoringView
+                  handleChangeCampaignStatus={handleChangeCampaignStatus}
+                  campaignCreated={campaignCreated}
+                  setOpenCreativeEndDateChangePopup={
+                    setOpenCreativeEndDateChangePopup
+                  }
+                  screen={screens?.find(
+                    (screen: any) => screen?.screenId == camp?.screenId
+                  )}
+                  campaign={camp}
+                  noImages={false}
+                  showOption={true}
+                  handleGetCampaignLog={handleShowLogReport}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

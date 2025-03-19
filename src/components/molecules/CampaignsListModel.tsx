@@ -14,7 +14,7 @@ export const CampaignsListModel = ({ data }: any) => {
       <div className="flex items-top gap-4">
         <FirstCharForBrandName brandName={data.brandName} />
         <div>
-          <h1 className="text-[16px] text-[#092A41]">{data?.name}</h1>
+          <h1 className="text-[16px] text-[#092A41]">{data?.name || data?.campaignName}</h1>
           <div className="flex gap-2 items-center my-1">
             <div className="bg-[#FF5D2710] px-2 py-1 rounded-[8px]">
               <h1 className="text-[#FF5D27] text-[12px] truncate">
@@ -36,7 +36,7 @@ export const CampaignsListModel = ({ data }: any) => {
             &#8377;{data?.totalCampaignBudget?.toFixed(0)}
           </h1>
           <h1 className="text-[12px] text-[#276F41] font-semibold">
-            On {data?.screenIds?.length} Screens
+            On {data?.screenIds?.length || data?.screens?.length} Screens
           </h1>
         </div>
       </div>
