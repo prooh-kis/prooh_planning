@@ -8,6 +8,7 @@ import {
   GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS,
   GET_CAMPAIGN_DASHBOARD_DATA_ERROR,
   GET_CAMPAIGN_DASHBOARD_DATA_REQUEST,
+  GET_CAMPAIGN_DASHBOARD_DATA_RESET,
   GET_CAMPAIGN_DASHBOARD_DATA_SUCCESS,
   GET_FINAL_PLAN_PO_DATA_ERROR,
   GET_FINAL_PLAN_PO_DATA_REQUEST,
@@ -392,6 +393,8 @@ export function campaignDashboardDataGetReducer(state = {}, action) {
         loading: false,
         error: action.payload,
       };
+    case GET_CAMPAIGN_DASHBOARD_DATA_RESET:
+      return {};
     default:
       return state;
   }

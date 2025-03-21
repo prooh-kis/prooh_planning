@@ -45,6 +45,7 @@ import {
 } from "../../constants/userConstants";
 import { ScreenListMonitoringView } from "../../components/molecules/ScreenListMonitoringView";
 import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
+import { GET_CAMPAIGN_DASHBOARD_DATA_RESET } from "../../constants/screenConstants";
 
 export const CampaignDetailsPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -195,6 +196,7 @@ export const CampaignDetailsPage: React.FC = () => {
   }, [dispatch, successStatusChange, errorStatusChange, successChange]);
 
   useEffect(() => {
+    dispatch({ type: GET_CAMPAIGN_DASHBOARD_DATA_RESET });
     dispatch(getCampaignDetailsAction({ campaignId: campaignId, event: CAMPAIGN_CREATION_GET_CAMPAIGN_DETAILS_PLANNING_PAGE }));
     dispatch(getCreativesMediaAction({ userId: userInfo?._id }));
   }, [campaignId, dispatch, userInfo]);

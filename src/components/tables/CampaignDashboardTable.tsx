@@ -2,16 +2,12 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { formatNumber } from "../../utils/formatValue";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  GetCampaignLogsAction,
-  GetCampaignMonitoringPicsAction,
-} from "../../actions/campaignAction";
+import { GetCampaignMonitoringPicsAction } from "../../actions/campaignAction";
 import { ShowCampaignLogsPopup } from "../../components/popup/ShowCampaignLogsPopup";
 import { ShowMonitoringPicsPopup } from "../../components/popup/ShowMonitoringPics";
 import {
   calculateDaysPlayed,
   convertIntoDateAndTime,
-  formatDateForLogs,
   getTimeDifferenceInMin,
 } from "../../utils/dateAndTimeUtils";
 import { message, Tooltip } from "antd";
@@ -195,9 +191,9 @@ export const CampaignDashboardTable = ({
   const getScreenClassName = (lastActive: any) => {
     if (lastActive) {
       if (getTimeDifferenceInMin(lastActive) < 15)
-        return "border w-4 h-2 bg-[#348730] rounded-full justify-end";
-      else return "border w-4 h-2 bg-[#ffec33] rounded-full justify-end";
-    } else return "border w-4 h-2 bg-[#ff3333] rounded-full justify-end";
+        return "border w-4 h-4 bg-[#348730] rounded-full justify-end";
+      else return "border w-4 h-4 bg-[#ffec33] rounded-full justify-end";
+    } else return "border w-4 h-4 bg-[#ff3333] rounded-full justify-end";
   };
 
   const getScreenStatus = (lastActive: any) => {
@@ -308,11 +304,9 @@ export const CampaignDashboardTable = ({
             <th className="w-full flex items-center justify-center">
               <h1 className="text-[14px] ">Delivery</h1>
             </th>
+
             <th className="w-full flex items-center justify-center">
-              <h1 className="text-[14px] ">Monitoring</h1>
-            </th>
-            <th className="w-full flex items-center justify-center">
-              <h1 className="text-[14px] ">Logs</h1>
+              <h1 className="text-[14px] ">Action</h1>
             </th>
           </tr>
         </thead>
@@ -336,7 +330,7 @@ export const CampaignDashboardTable = ({
                   <td className="w-full flex items-center justify-center">
                     <p className="text-[12px]">{index + 1}</p>
                   </td>
-                  <td className="w-full flex items-center justify-center gap-2 truncate">
+                  <td className="w-full flex items-center justify-start gap-2 truncate">
                     <Tooltip
                       title={`${getScreenStatus(
                         screenLevelData?.[data]?.lastActive
@@ -463,24 +457,24 @@ export const CampaignDashboardTable = ({
                       </p>
                     </div>
                   </td>
-                  <td
-                    className="w-full flex items-center justify-center"
-                    onClick={() => {
-                      dispatch(
-                        GetCampaignMonitoringPicsAction({
-                          campaignId: screenLevelData[data]?.campaignId,
-                          screenId: data,
-                          date: campaignDetails.startDate,
-                        })
-                      );
-                      setScreenId(data);
-                      setOpenMonitoringPicsPopup(true);
-                    }}
-                  >
-                    <i className="fi fi-sr-picture text-[12px] text-[#129BFF]"></i>
-                  </td>
                   <td className="w-full flex items-center justify-center">
                     <div className="flex gap-4">
+                      <Tooltip title="View Monitoring Pics">
+                        <i
+                          className="fi fi-sr-picture text-[12px] text-[#129BFF]"
+                          onClick={() => {
+                            dispatch(
+                              GetCampaignMonitoringPicsAction({
+                                campaignId: screenLevelData[data]?.campaignId,
+                                screenId: data,
+                                date: campaignDetails.startDate,
+                              })
+                            );
+                            setScreenId(data);
+                            setOpenMonitoringPicsPopup(true);
+                          }}
+                        ></i>
+                      </Tooltip>
                       <Tooltip title="View Logs">
                         <i
                           className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}

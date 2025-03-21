@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { CampaignListView } from "../../components/molecules/CampaignListView";
 import { Loading } from "../../components/Loading";
 import { getAllCampaignsDetailsAction } from "../../actions/campaignAction";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
@@ -14,6 +13,7 @@ import { campaignCreationTypeTabs } from "../../constants/tabDataConstant";
 import { CAMPAIGN_STATUS_ACTIVE } from "../../constants/campaignConstants";
 import { CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE } from "../../constants/userConstants";
 import { CampaignsListModel } from "../../components/molecules/CampaignsListModel";
+import { GET_CAMPAIGN_DASHBOARD_DATA_RESET } from "../../constants/screenConstants";
 
 export const MyCampaignsListPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -40,36 +40,39 @@ export const MyCampaignsListPage: React.FC = () => {
         getAllCampaignsDetailsAction({
           userId: userInfo?._id,
           status: CAMPAIGN_STATUS_ACTIVE,
-          event : CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE
+          event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
         })
       );
     }
+    dispatch({ type: GET_CAMPAIGN_DASHBOARD_DATA_RESET });
   }, [dispatch, userInfo]);
-
 
   const handleCardClick = (id: any) => {
     setSelectedCard(id);
   };
 
-  const handleGetCampaignByStatus = useCallback((status: any) => {
-    setCurrentTab(status);
-    dispatch(
-      getAllCampaignsDetailsAction({
-        userId: userInfo?._id,
-        status: campaignCreationTypeTabs?.filter(
-          (tab: any) => tab.id === status
-        )[0]?.value,
-        event : CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE
-      })
-    );
-  },[dispatch, userInfo]);
+  const handleGetCampaignByStatus = useCallback(
+    (status: any) => {
+      setCurrentTab(status);
+      dispatch(
+        getAllCampaignsDetailsAction({
+          userId: userInfo?._id,
+          status: campaignCreationTypeTabs?.filter(
+            (tab: any) => tab.id === status
+          )[0]?.value,
+          event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
+        })
+      );
+    },
+    [dispatch, userInfo]
+  );
 
   const reset = () => {
     dispatch(
       getAllCampaignsDetailsAction({
         userId: userInfo?._id,
         status: CAMPAIGN_STATUS_ACTIVE,
-        event : CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE
+        event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
       })
     );
   };
@@ -95,6 +98,7 @@ export const MyCampaignsListPage: React.FC = () => {
       targetDivRef.current.scrollTop = parseInt(savedScrollPosition, 10);
     }
   }, [currentTab, handleGetCampaignByStatus]);
+
   return (
     <div className="w-full">
       <div className="bg-white w-auto rounded-[4px] mr-2">
@@ -111,7 +115,9 @@ export const MyCampaignsListPage: React.FC = () => {
                       campaign?.campaignName
                         ?.toLowerCase()
                         .includes(searchQuery) ||
-                      campaign?.brandName?.toLowerCase().includes(searchQuery) ||
+                      campaign?.brandName
+                        ?.toLowerCase()
+                        .includes(searchQuery) ||
                       campaign?.campaignName
                         ?.toUpperCase()
                         .includes(searchQuery) ||
@@ -165,12 +171,12 @@ export const MyCampaignsListPage: React.FC = () => {
               )
               ?.map((data: any, index: any) => (
                 <div
-                key={index}
-                className="pointer-cursor"
-                onClick={() => navigate(`/campaignDashboard/${data._id}`)}
-              >
-                <CampaignsListModel data={data} />
-              </div>
+                  key={index}
+                  className="pointer-cursor"
+                  onClick={() => navigate(`/campaignDashboard/${data._id}`)}
+                >
+                  <CampaignsListModel data={data} />
+                </div>
               ))}
           </div>
         </div>

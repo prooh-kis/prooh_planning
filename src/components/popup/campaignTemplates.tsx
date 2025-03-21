@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 import { allPlansData } from "../../data";
 import { PrimaryButton } from "../../components/atoms/PrimaryButton";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_REQUEST } from "../../constants/campaignConstants";
+import { useDispatch } from "react-redux";
 
 interface Plan {
   id: number;
@@ -38,7 +40,9 @@ const Cart: React.FC<CartProps> = ({ plan, handleCardClick, selectedCard }) => {
         style={{ backgroundColor: isSelected ? "#ffffff" : plan.color }}
       >
         <i
-          className={`${plan.icon} text-[16px] flex items-center justify-center ${
+          className={`${
+            plan.icon
+          } text-[16px] flex items-center justify-center ${
             isSelected ? "text-primaryButton" : "text-white"
           }`}
         />
@@ -57,9 +61,11 @@ const Cart: React.FC<CartProps> = ({ plan, handleCardClick, selectedCard }) => {
 export const CampaignTemplates: React.FC = () => {
   const navigate = useNavigate();
   const [selectedCard, setSelectedCard] = useState<number>(0);
+  const dispatch = useDispatch<any>();
 
   useEffect(() => {
     removeAllKeyFromLocalStorage();
+    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_REQUEST });
   }, []);
 
   const handleCardClick = (id: number) => {
