@@ -57,7 +57,27 @@ export const CampaignDashboardTable = ({
   } = campaignLogsGet;
 
   useEffect(() => {
-  }, []);
+    if (campaignDetails?.startDate && campaignDetails?.endDate) {
+      const start = new Date(campaignDetails.startDate);
+      const today = new Date();
+
+      // Ensure today is within the campaign duration
+      if (today < start) {
+        setCurrentDay(1);
+        setCurrentWeek(1);
+      } else {
+        const daysPassed =
+          Math.floor(
+            (today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
+          ) + 1; // Adding 1 to start from day 1, not 0
+
+        setCurrentDay(daysPassed % 7);
+        setCurrentWeek(Math.ceil(daysPassed / 7)); // Week starts from 1
+      }
+
+      setCurrentDate(today.toUTCString());
+    }
+  }, [campaignDetails]);
 
   const onClose = () => {
     setOpenLogsPopup(false);
@@ -188,21 +208,23 @@ export const CampaignDashboardTable = ({
     } else return "Close";
   };
 
-
-  const getAllDates = ({startDate, endDate }: any) => {
+  const getAllDates = ({ startDate, endDate }: any) => {
     const dates = [];
     let currentDate = new Date(startDate);
     const lastDate = new Date(endDate);
-  
+
     while (currentDate <= lastDate) {
       dates.push(currentDate.toISOString().split("T")[0]); // Format as YYYY-MM-DD
       currentDate.setDate(currentDate.getDate() + 1); // Move to next day
     }
-  
-    return dates;
-  }
 
-  const allDates: any = getAllDates({ startDate: campaignDetails?.startDate, endDate: campaignDetails?.endDate });
+    return dates;
+  };
+
+  const allDates: any = getAllDates({
+    startDate: campaignDetails?.startDate,
+    endDate: campaignDetails?.endDate,
+  });
 
   return (
     <div>
@@ -436,7 +458,6 @@ export const CampaignDashboardTable = ({
                       <i
                         className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}
                         onClick={() => {
-          
                           setscreenName(screenLevelData[data]?.screenName);
                           setCampaignData(screenLevelData[data]);
                           setOpenLogsPopup(true);
