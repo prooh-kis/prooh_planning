@@ -10,7 +10,11 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signout } from "../../actions/userAction";
 import { useState } from "react";
-import { CAMPAIGN_MANAGER, CAMPAIGN_PLANNER, SCREEN_OWNER } from "../../constants/userConstants";
+import {
+  CAMPAIGN_MANAGER,
+  CAMPAIGN_PLANNER,
+  SCREEN_OWNER,
+} from "../../constants/userConstants";
 
 export const Menu = (props: any) => {
   const { userInfo } = props;
@@ -33,6 +37,10 @@ export const Menu = (props: any) => {
   // todo remove comment
   const plannerArray = [
     {
+      label: "Create New Plan",
+      path: "/",
+    },
+    {
       label: "Campaigns",
       path: MY_CAMPAIGNS_LIST,
     },
@@ -43,7 +51,7 @@ export const Menu = (props: any) => {
     {
       label: "Creatives",
       path: MY_CREATIVES,
-    }
+    },
   ];
 
   const managerArray = [
@@ -53,9 +61,9 @@ export const Menu = (props: any) => {
     },
     {
       label: "Users",
-      path: USERS
-    }
-  ]
+      path: USERS,
+    },
+  ];
 
   const ownerArray = [
     {

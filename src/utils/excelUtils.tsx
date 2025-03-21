@@ -303,7 +303,7 @@ export const downloadExcel = ({ campaign, campaignLog }: any) => {
       {
         v: "Media",
         s: {
-          font: { bold: true, sz: 16 },
+          font: { bold: true, sz: 20 },
           fill: { fgColor: { rgb: "#C7C8CC" } },
         },
       },
@@ -314,34 +314,6 @@ export const downloadExcel = ({ campaign, campaignLog }: any) => {
           fill: { fgColor: { rgb: "#C7C8CC" } },
         },
       },
-      // {
-      //   v: "Screen Mac",
-      //   s: {
-      //     font: { bold: true, sz: 16 },
-      //     fill: { fgColor: { rgb: "#C7C8CC" } },
-      //   },
-      // },
-      // {
-      //   v: "Screen DeviceId",
-      //   s: {
-      //     font: { bold: true, sz: 16 },
-      //     fill: { fgColor: { rgb: "#C7C8CC" } },
-      //   },
-      // },
-      // {
-      //   v: "Screen Ip",
-      //   s: {
-      //     font: { bold: true, sz: 16 },
-      //     fill: { fgColor: { rgb: "#C7C8CC" } },
-      //   },
-      // },
-      // {
-      //   v: "Screen Display",
-      //   s: {
-      //     font: { bold: true, sz: 16 },
-      //     fill: { fgColor: { rgb: "#C7C8CC" } },
-      //   },
-      // },
     ],
     [],
     ...campaignLog?.map((campaign: any, index: number) =>

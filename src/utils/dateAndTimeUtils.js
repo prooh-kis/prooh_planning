@@ -11,17 +11,23 @@ export function getNumberOfDaysBetweenTwoDates(date1, date2) {
   return Math.round(time_difference / (1000 * 60 * 60 * 24));
 }
 
+export function getCampaignDurationFromStartAndEndDate(date1, date2) {
+  date1 = new Date(date1);
+  date2 = new Date(date2);
+  date2.setHours(23, 59, 59, 999);
+
+  // Calculate the difference in milliseconds
+  const time_difference = date2.getTime() - date1.getTime();
+
+  // Convert to days, rounding up to count partial days as full days
+  return Math.ceil(time_difference / (1000 * 60 * 60 * 24));
+}
+
 export function getEndDateFromStartDateAndDuration(startDate, duration) {
   const start = new Date(startDate);
 
-  // Ensure the date part remains unchanged
-  const endDate = new Date(
-    start.getFullYear(),
-    start.getMonth(),
-    start.getDate()
-  );
-
-  // Add duration days
+  // Clone start date and add duration days
+  const endDate = new Date(start);
   endDate.setDate(endDate.getDate() + (duration - 1));
 
   // Set time to 23:59:59.999
@@ -156,25 +162,27 @@ export function getCampaignEndingStatus(endDate) {
     : `Ends In : ${getNumberOfDaysBetweenTwoDates(new Date(), endDate)} days`;
 }
 
-
 export function formatDateForLogs(isoDate) {
   const date = new Date(`${isoDate}`);
-  const day = String(date.getUTCDate()).padStart(2, '0');
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Months are zero-based
   const year = date.getUTCFullYear();
-  return {apiDate: `${day}/${month}/${year}`, logDate: date.toDateString()};
+  return { apiDate: `${day}/${month}/${year}`, logDate: date.toDateString() };
 }
 
 export function transformToAmPm(time) {
-    let [hour, minute, second] = time.split(':');
-    hour = Number(hour);
-    const period = hour >= 12 ? 'PM' : 'AM';
-    if (hour === 0) {
-        hour = 12;
-    } else if (hour > 12) {
-        hour -= 12;
-    }
-    const formattedTime = `${String(hour).padStart(2, '0')}:${minute}:${second} ${period}`;
-  
-    return formattedTime;
+  let [hour, minute, second] = time.split(":");
+  hour = Number(hour);
+  const period = hour >= 12 ? "PM" : "AM";
+  if (hour === 0) {
+    hour = 12;
+  } else if (hour > 12) {
+    hour -= 12;
+  }
+  const formattedTime = `${String(hour).padStart(
+    2,
+    "0"
+  )}:${minute}:${second} ${period}`;
+
+  return formattedTime;
 }

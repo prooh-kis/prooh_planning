@@ -75,7 +75,7 @@ export const CampaignDashboardTable = ({
         setCurrentWeek(Math.ceil(daysPassed / 7)); // Week starts from 1
       }
 
-      setCurrentDate(today.toUTCString());
+      // setCurrentDate(today.toUTCString());
     }
   }, [campaignDetails]);
 
@@ -92,7 +92,6 @@ export const CampaignDashboardTable = ({
       const { data } = await axios.get(
         `${analyticsV1}/downloadAllCampaignLogs?campaignId=${campaignId}`
       );
-      console.log("data", data);
       await downloadExcel({
         campaign: data?.campaign,
         campaignLog: data?.logs,
@@ -225,6 +224,33 @@ export const CampaignDashboardTable = ({
     startDate: campaignDetails?.startDate,
     endDate: campaignDetails?.endDate,
   });
+
+  const downloadFileFromUrl = (fileUrl: string, fileName: string) => {
+    if (!fileUrl) {
+      message.error("You can download logs from tomorrow");
+      return;
+    }
+
+    const campaignEndDate = campaignDetails?.endDate
+      ? new Date(campaignDetails.endDate)
+      : null;
+
+    if (campaignEndDate && new Date() > campaignEndDate) {
+      message.info("Downloading all logs, please wait for some time...");
+    } else {
+      message.info(
+        "Logs till yesterday will be downloaded as the campaign is still live today..."
+      );
+    }
+
+    // Create a hidden <a> tag and trigger the download
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div>
@@ -455,29 +481,38 @@ export const CampaignDashboardTable = ({
                   </td>
                   <td className="w-full flex items-center justify-center">
                     <div className="flex gap-4">
-                      <i
-                        className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}
-                        onClick={() => {
-                          setscreenName(screenLevelData[data]?.screenName);
-                          setCampaignData(screenLevelData[data]);
-                          setOpenLogsPopup(true);
-                        }}
-                      ></i>
-                      <i
-                        className={`fi fi-sr-download text-[12px] text-[#129BFF] ${
-                          isDownLoad == screenLevelData[data]?.campaignId
-                            ? "text-gray-400"
-                            : "text-[#129BFF]"
-                        }`}
-                        onClick={() => {
-                          if (isDownLoad != screenLevelData[data]?.campaignId)
-                            downloadLogs(screenLevelData[data]?.campaignId);
-                          else
-                            message.warning(
-                              "Please wait..., data has start fetching"
+                      <Tooltip title="View Logs">
+                        <i
+                          className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}
+                          onClick={() => {
+                            setscreenName(screenLevelData[data]?.screenName);
+                            setCampaignData(screenLevelData[data]);
+                            setOpenLogsPopup(true);
+                          }}
+                        ></i>
+                      </Tooltip>
+                      <Tooltip title="Download logs in one click">
+                        <i
+                          className={`fi fi-sr-download text-[12px] text-[#129BFF] ${
+                            isDownLoad == screenLevelData[data]?.campaignId
+                              ? "text-gray-400"
+                              : "text-[#129BFF]"
+                          }`}
+                          onClick={() => {
+                            downloadFileFromUrl(
+                              screenLevelData[data].logUrl,
+                              `${screenLevelData[data]?.screenName}`
                             );
-                        }}
-                      ></i>
+                            // if (isDownLoad != screenLevelData[data]?.campaignId)
+                            //   downloadLogs(screenLevelData[data]?.campaignId);
+                            // else
+                            //   message.warning(
+                            //     "Please wait..., data has start fetching"
+                            //   );
+                          }}
+                        ></i>
+                      </Tooltip>
+
                       <i
                         className="fi fi-rs-chart-histogram text-[12px] text-[#129BFF]"
                         title="Analytic"

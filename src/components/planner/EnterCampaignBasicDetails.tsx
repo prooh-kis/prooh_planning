@@ -2,7 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { PrimaryInput } from "../atoms/PrimaryInput";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CalendarInput } from "../atoms/CalendarInput";
-import { getEndDateFromStartDateAndDuration } from "../../utils/dateAndTimeUtils";
+import {
+  getCampaignDurationFromStartAndEndDate,
+  getEndDateFromStartDateAndDuration,
+} from "../../utils/dateAndTimeUtils";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { message, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
@@ -54,17 +57,29 @@ export const EnterCampaignBasicDetails = ({
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.industry || ""
   );
   const [startDate, setStartDate] = useState<any>(() => {
-    const localDate = new Date(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startDate);
-    const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+    const localDate = new Date(
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startDate
+    );
+    const utcDate = new Date(
+      localDate.getTime() - localDate.getTimezoneOffset() * 60000
+    );
 
-    return getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] ? utcDate.toISOString().slice(0, 16) : "";
+    return getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+      ? utcDate.toISOString().slice(0, 16)
+      : "";
   });
 
   const [endDate, setEndDate] = useState<any>(() => {
-    const localDate = new Date(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate);
-    const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+    const localDate = new Date(
+      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate
+    );
+    const utcDate = new Date(
+      localDate.getTime() - localDate.getTimezoneOffset() * 60000
+    );
 
-    return getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] ? utcDate.toISOString().slice(0, 16) : "";
+    return getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+      ? utcDate.toISOString().slice(0, 16)
+      : "";
   });
 
   const [duration, setDuration] = useState<any>(
@@ -96,17 +111,20 @@ export const EnterCampaignBasicDetails = ({
     data: clientAgencyNamesList,
   } = allClientAgencyNamesListGet;
 
-  const handleAddNewClient = useCallback((value: string) => {
-    if (
-      !clientAgencyNamesList?.find(
-        (data: any) => data.clientAgencyName === value
-      )
-    ) {
-      dispatch(
-        addClientAgencyDetails({ clientAgencyName: value?.toUpperCase() })
-      );
-    }
-  },[dispatch, clientAgencyNamesList]);
+  const handleAddNewClient = useCallback(
+    (value: string) => {
+      if (
+        !clientAgencyNamesList?.find(
+          (data: any) => data.clientAgencyName === value
+        )
+      ) {
+        dispatch(
+          addClientAgencyDetails({ clientAgencyName: value?.toUpperCase() })
+        );
+      }
+    },
+    [dispatch, clientAgencyNamesList]
+  );
 
   const validateForm = () => {
     if (campaignName.length === 0) {
@@ -133,7 +151,14 @@ export const EnterCampaignBasicDetails = ({
           startDate,
           newDuration
         );
-        setEndDate(new Date(endDate1).toISOString());
+
+        // Convert to YYYY-MM-DDTHH:mm format in local timezone
+        const formattedEndDate = new Date(endDate1)
+          .toLocaleString("en-CA", { timeZone: "Asia/Kolkata", hour12: false })
+          .replace(", ", "T")
+          .slice(0, 16); // Keep only "YYYY-MM-DDTHH:mm"
+
+        setEndDate(formattedEndDate);
       } else {
         message.error("Please enter a start date first");
       }
@@ -166,21 +191,42 @@ export const EnterCampaignBasicDetails = ({
         })
       );
     } else {
-      setCurrentStep(step+1);
+      setCurrentStep(step + 1);
     }
-    
-  }, [step, setCurrentStep, pathname, updateEndDateBasedOnDuration, duration, handleAddNewClient, clientName, dispatch, campaignId, campaignName, brandName, campaignType, industry, startDate, endDate, userInfo, sov]);
+  }, [
+    step,
+    setCurrentStep,
+    pathname,
+    updateEndDateBasedOnDuration,
+    duration,
+    handleAddNewClient,
+    clientName,
+    dispatch,
+    campaignId,
+    campaignName,
+    brandName,
+    campaignType,
+    industry,
+    startDate,
+    endDate,
+    userInfo,
+    sov,
+  ]);
 
   useEffect(() => {
     if (errorAddDetails) {
       message.error(errorAddDetails);
     }
 
-    if (successAddDetails && !pathname.split("/").includes("view") && !pathname.split("/").includes("edit")) {
+    if (
+      successAddDetails &&
+      !pathname.split("/").includes("view") &&
+      !pathname.split("/").includes("edit")
+    ) {
       navigate(`/${path}/${addDetails?._id}`);
       // dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
 
-      setCurrentStep(step+1);
+      setCurrentStep(step + 1);
     }
   }, [
     navigate,
@@ -191,27 +237,39 @@ export const EnterCampaignBasicDetails = ({
     step,
     path,
     pathname,
-    addDetails
+    addDetails,
   ]);
 
   useEffect(() => {
     dispatch(getAllClientAgencyNames());
   }, [dispatch]);
-
   const handleDateChange = (value: any, type: any) => {
     if (type === "start") {
       if (new Date() > new Date(value)) {
-        message.error("start date must be greater then today data and time!");
+        message.error("Start date must be greater than today!");
         setStartDate("");
-      } else setStartDate(value);
-    } 
-    if (type === "end") {
-      if (new Date() > new Date(value)) {
-        message.error("start date must be greater then today data and time!");
-        setEndDate("");
-      } else setEndDate(value);
+      } else {
+        setStartDate(value);
+        if (duration) {
+          const endDate1 = getEndDateFromStartDateAndDuration(value, duration);
+          setEndDate(new Date(endDate1).toISOString());
+        }
+      }
     }
 
+    if (type === "end") {
+      if (new Date(startDate) > new Date(value)) {
+        message.error("End date must be greater than start date!");
+        setEndDate("");
+      } else {
+        setEndDate(value);
+        const calculatedDuration = getCampaignDurationFromStartAndEndDate(
+          startDate,
+          value
+        );
+        setDuration(calculatedDuration);
+      }
+    }
   };
 
   return (
@@ -314,50 +372,30 @@ export const EnterCampaignBasicDetails = ({
             minDate={new Date()}
           />
         </div>
-        {enterDuration ? (
-          <div className="col-span-1 py-1">
-            <div className="block flex justify-between gap-2 items-center mb-2">
-              <label className="block text-secondaryText text-[14px]">
-                Duration (Days)
-              </label>
-              <Tooltip title="Enter total duration of campaigns in days">
-                <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-              </Tooltip>
-            </div>
-            <PrimaryInput
-              inputType="number"
-              placeholder="30"
-              value={duration}
-              // disabled={startDate === ""}
-              action={(e: any) => {
-                if (startDate === "") {
-                  message.error("Please select start date first!");
-                  return;
-                }
-                setDuration(e);
-                updateEndDateBasedOnDuration(e);
-              }}
-            />
+
+        <div className="col-span-1 py-1">
+          <div className="block flex justify-between gap-2 items-center mb-2">
+            <label className="block text-secondaryText text-[14px]">
+              End Date
+            </label>
+            <Tooltip title="Select Date from when the campaign is to be started">
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+            </Tooltip>
           </div>
-        ) : (
-          <div className="col-span-1 py-1">
-            <div className="block flex justify-between gap-2 items-center mb-2">
-              <label className="block text-secondaryText text-[14px]">
-                End Date
-              </label>
-              <Tooltip title="Select Date from when the campaign is to be started">
-                <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-              </Tooltip>
-            </div>
-            <CalendarInput
-              placeholder="End Date"
-              value={endDate}
-              action={(e: any) => handleDateChange(e, "end")}
-              disabled={false}
-              minDate={new Date()}
-            />
-          </div>
-        )}
+          <CalendarInput
+            placeholder="End Date"
+            value={endDate}
+            action={(e: any) => {
+              if (startDate === "") {
+                message.error("Please select start date first!");
+                return;
+              }
+              handleDateChange(e, "end");
+            }}
+            disabled={false}
+            minDate={new Date()}
+          />
+        </div>
       </div>
       <div className="grid grid-cols-3 gap-8 pt-2">
         <div className="col-span-1 py-1">
@@ -374,17 +412,31 @@ export const EnterCampaignBasicDetails = ({
             setSelectedOption={setSov}
           />
         </div>
+        <div className="col-span-1 py-1">
+          <div className="block flex justify-between gap-2 items-center mb-2">
+            <label className="block text-secondaryText text-[14px]">
+              Duration (Days)
+            </label>
+            <Tooltip title="Enter total duration of campaigns in days">
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+            </Tooltip>
+          </div>
+          <PrimaryInput
+            inputType="number"
+            placeholder="30"
+            value={duration}
+            // disabled={startDate === ""}
+            action={(value: any) => {
+              if (startDate === "") {
+                message.error("Please select start date first!");
+                return;
+              }
+              setDuration(value);
+              updateEndDateBasedOnDuration(value);
+            }}
+          />
+        </div>
       </div>
-      {endDate !== "" && startDate !== "" && duration && (
-        <h1 className="text-[14px] pt-4 text-[#129BFF]">
-          Note: Your campaign will be billed from{" "}
-          {new Date(startDate).toLocaleDateString()} to{" "}
-          {new Date(
-            getEndDateFromStartDateAndDuration(startDate, duration)
-          ).toLocaleDateString()}
-          ...
-        </h1>
-      )}
 
       <div className="flex py-8">
         <button
