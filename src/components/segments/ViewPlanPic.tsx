@@ -2,6 +2,7 @@ import { ScreenDataModel } from "../../components/popup/ScreenDataModel";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { formatNumber } from "../../utils/formatValue";
 import React, { useCallback, useEffect, useState } from "react";
+import { ScreenFilters } from "./ScreenFilters";
 
 function Screen({
   screens,
@@ -77,34 +78,25 @@ function Screen({
   );
 }
 
+
 export function ViewPlanPic({
   screensBuyingCount,
   setScreensBuyingCount,
-  refreshScreenSummary,
+  listView,
   screenTypes,
   currentSummaryTab,
   setCurrentCity,
   priceFilter,
   cityZones,
   cityTP,
+  zoneFilters,
+  tpFilters,
+  stFilters,
+  setZoneFilters,
+  setTpFilters,
+  setStFilters,
 }: any) {
-  const [zoneFilters, setZoneFilters] = useState<any>(
-    Object.keys(
-      cityZones[Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]]
-    )
-  );
-  const [tpFilters, setTpFilters] = useState<any>(
-    Object.keys(
-      cityTP[Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]]
-    )
-  );
-  const [stFilters, setStFilters] = useState<any>(
-    Object.keys(
-      screenTypes[
-        Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]
-      ]
-    )
-  );
+
 
   const filteredScreensData = useCallback(() => {
     // console.log(Object.keys(screens)[Number(currentSummaryTab) - 1])
@@ -249,93 +241,21 @@ export function ViewPlanPic({
   ]);
 
   return (
-    <div className="grid grid-cols-12 gap-8 py-2">
-      <div className="col-span-3 border rounded-[12px] p-3 overflow-y-auto">
-        <div className="flex justify-between items-center">
-          <h1 className="text-[16px]">Filters</h1>
-          {/* <p className="text-[12px]">Clear All</p> */}
-        </div>
-        <div className="py-2">
-          <h1 className="font-semibold">Zone</h1>
-          {Object.keys(
-            cityZones[
-              Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]
-            ]
-          )?.map((zone: any, i: any) => (
-            <div key={i} className="flex items-center justify-between p-2">
-              <CheckboxInput
-                label={zone}
-                checked={zoneFilters?.includes(zone)}
-                onChange={(checked) => {
-                  handleFilterSelection({ type: "zone", value: zone, checked });
-                }}
-              />
-              <p className="text-[14px]">
-                (
-                {
-                  filteredScreensData()?.allResult?.filter(
-                    (s: any) => s.location.zoneOrRegion === zone
-                  )?.length
-                }
-                )
-              </p>
-            </div>
-          ))}
-        </div>
-        <div className="py-2">
-          <h1 className="font-semibold">Touchpoint</h1>
-          {Object.keys(
-            cityTP[
-              Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]
-            ]
-          )?.map((tp: any, j: any) => (
-            <div key={j} className="flex items-center justify-between p-2">
-              <CheckboxInput
-                label={tp}
-                checked={tpFilters?.includes(tp)}
-                onChange={(checked) =>
-                  handleFilterSelection({ type: "tp", value: tp, checked })
-                }
-              />
-              <p className="text-[14px]">
-                (
-                {
-                  filteredScreensData()?.allResult?.filter(
-                    (s: any) => s.location.touchPoint === tp
-                  )?.length
-                }
-                )
-              </p>
-            </div>
-          ))}
-        </div>
-        <div className="py-2">
-          <h1 className="font-semibold">Screen Type</h1>
-          {Object.keys(
-            screenTypes[
-              Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]
-            ]
-          )?.map((st: any, k: any) => (
-            <div key={k} className="flex items-center justify-between p-2">
-              <CheckboxInput
-                label={st}
-                checked={stFilters?.includes(st)}
-                onChange={(checked) =>
-                  handleFilterSelection({ type: "st", value: st, checked })
-                }
-              />
-              <p className="text-[14px]">
-                (
-                {
-                  filteredScreensData()?.allResult?.filter(
-                    (s: any) => s.screenType === st
-                  )?.length
-                }
-                )
-              </p>
-            </div>
-          ))}
-        </div>
+    <div className="grid grid-cols-12 gap-8 pt-2 mb-16">
+      <div className="col-span-3 border rounded-[12px] h-[60vh] p-3 overflow-y-auto">
+        <ScreenFilters
+          cityZones={cityZones}
+          cityTP={cityTP}
+          screenTypes={screenTypes}
+          zoneFilters={zoneFilters}
+          tpFilters={tpFilters}
+          stFilters={stFilters}
+          handleFilterSelection={handleFilterSelection}
+          filteredScreensData={filteredScreensData}
+          screensBuyingCount={screensBuyingCount}
+          currentSummaryTab={currentSummaryTab}
+          listView={listView}
+        />
       </div>
       <div className="col-span-9 rounded grid grid-cols-12 flex flex-wrap gap-4 overflow-scroll no-scrollbar h-[60vh]">
         {filteredScreensData()

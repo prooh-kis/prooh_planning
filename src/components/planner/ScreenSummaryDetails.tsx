@@ -1,6 +1,6 @@
 import { TabWithoutIcon } from "../molecules/TabWithoutIcon";
 import { TabWithIcon } from "../molecules/TabWithIcon";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { screenSummaryTabData } from "../../utils/hardCoddedData";
 import { ScreenSummaryTable } from "../tables/ScreenSummaryTable";
 import { ViewPlanPic } from "../segments/ViewPlanPic";
@@ -28,6 +28,7 @@ import { Tooltip } from "antd";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET } from "../../constants/screenConstants";
+import { ScreenFilters } from "../../components/segments/ScreenFilters";
 
 interface ScreenSummaryDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -72,11 +73,16 @@ export const ScreenSummaryDetails = ({
   const [cityTP, setCityTP] = useState<any>({});
   const [screenTypes, setScreenTypes] = useState<any>({});
 
+  const [isOpen, setIsOpen] = useState<any>(false)
   const [screensBuyingCount, setScreensBuyingCount] = useState(() => {
     return (
       getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] ?? {}
     );
   });
+
+  const [zoneFilters, setZoneFilters] = useState<any>([]);
+  const [tpFilters, setTpFilters] = useState<any>([]);
+  const [stFilters, setStFilters] = useState<any>([]);
 
   const screenSummaryDataGet = useSelector(
     (state: any) => state.screenSummaryDataGet
@@ -95,6 +101,19 @@ export const ScreenSummaryDetails = ({
     error: errorScreenSummaryPlanTable,
     data: screenSummaryPlanTableData,
   } = screenSummaryPlanTableDataGet;
+
+  // screen filter screen summary
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const getSelectedScreenIdsFromAllCities = (citiesData: any) => {
     let activeScreenIds: any = [];
@@ -299,131 +318,38 @@ export const ScreenSummaryDetails = ({
                       )}
                   </div>
                   <div className="col-span-4 flex items-center justify-end gap-2 truncate">
-                    {/* <div className="">
-                      <button
-                        className="text-white text-[12px] px-4 py-1 rounded-full bg-primaryButton"
-                        title="filter"
-                        type="button"
-                        onClick={() => {
-                          console.log(filteredScreensData())
-                          setIsOpen((prev) => !prev);
-                        }}
-                      >
-                        Filter
-                      </button>
+                    {isOpen && (
+                      <div ref={dropdownRef}>
+                        <ScreenFilters
+                          currentSummaryTab={currentSummaryTab}
+                          cityZones={cityZones}
+                          cityTP={cityTP}
+                          screenTypes={screenTypes}
+                          zoneFilters={zoneFilters}
+                          tpFilters={tpFilters}
+                          stFilters={stFilters}
+                          handleFilterSelection={() => {}}
+                          filteredScreensData={() => {}}
+                          screensBuyingCount={screensBuyingCount}
+                          filterType={""}
+                          setIsOpen={setIsOpen}
+                          listView={listView}
+                        />
+                      </div>
+                    )}
+                    <button
+                      className="text-white text-[12px] px-4 py-1 rounded-full bg-primaryButton"
+                      title="filter"
+                      type="button"
+                      onClick={() => {
+                        // console.log(filteredScreensData())
+                        setIsOpen((prev: any) => !prev);
+                      }}
+                    >
+                      Filter
+                    </button>
 
-                      {isOpen && (
-                        <div
-                          ref={dropdownRef}
-                          className="absolute right-12 w-[40vw] rounded-[8px] bg-white shadow-lg mt-2 z-50 border border-[#D3D3D320]"
-                        >
-                          <div className="flex justify-between items-center border-b p-4">
-                            <h1 className="font-semibold text-[14px]">Screen List</h1>
-                            <button title="close" type="button" onClick={() => setIsOpen(false)}>
-                              <i className="fi fi-br-cross-small flex justify-center items-center"></i>
-                            </button>
-                          </div>
-                          <div className="p-4 grid grid-cols-12">
-                            <div className="col-span-4 bg-[#D3D3D310] rounded-[8px] p-2">
-                              <div className="flex items-center gap-2">
-                                <CheckboxInput
-                                  label={`Touchpoints `}
-                                  checked={filterType === "Touchpoints"}
-                                  onChange={() => {
-                                    setFilterType("Touchpoints");
-                                  }}
-                                />
-                                <p className="text-[14px]">({Object.keys(cityTP?.[Object.keys(screensBuyingCount)?.[Number(currentSummaryTab) - 1]])?.length})</p>
-                              </div>
-                              <div className="pt-1 mb-1 border-b border-[#D3D3D350]" />
-                              <div className="flex items-center gap-2">
-                                <CheckboxInput
-                                  label="Screen Type"
-                                  checked={filterType === "Screen Type"}
-                                  onChange={() => {
-                                    setFilterType("Screen Type");
-                                  }}
-                                />
-                                <p className="text-[14px]">({Object.keys(screenTypes?.[Object.keys(screensBuyingCount)?.[Number(currentSummaryTab) - 1]])?.length})</p>
-                              </div>
-                              <div className="pt-1 mb-1 border-b border-[#D3D3D350]" />
-                              <div className="flex items-center gap-2">
-                                <CheckboxInput
-                                  label="Zones"
-                                  checked={filterType === "Zones"}
-                                  onChange={() => {
-                                    setFilterType("Zones");
-                                  }}
-                                />
-                                <p className="text-[14px]">({Object.keys(cityZones?.[Object.keys(screensBuyingCount)?.[Number(currentSummaryTab) - 1]])?.length})</p>
-                              </div>
-                              <div className="pt-1 mb-1 border-b border-[#D3D3D350]" />
-                            </div>
-                            {filterType === "Screen Type" ? (
-                              <div className="col-span-8 p-2">
-                                {screenTypes && Object.keys(screenTypes?.[Object.keys(screensBuyingCount)?.[Number(currentSummaryTab) - 1]])?.map((st: any, i: any) => (
-                                  <div key={i}>
-                                    <div className="flex items-center gap-2">
-                                      <CheckboxInput
-                                        label={st}
-                                        checked={stFilters?.includes(st)}
-                                        onChange={(checked) =>
-                                          handleFilterSelection({ type: "st", value: st, checked })
-                                        }
-                                      />
-                                      <p className="text-[14px]">
-                                        ({filteredScreensData()?.allResult?.filter((s: any) => s?.screenType === st)?.length})
-                                      </p>
-                                    </div>
-                                    <div className="pt-1 mb-1 border-b border-[#D3D3D350]" />
-                                  </div>
-                                ))}
-                              </div>
-                            ) : filterType === "Zones" ? (
-                              <div className="col-span-8 p-2">
-                                {cityZones && Object.keys(cityZones?.[Object.keys(screensBuyingCount)?.[Number(currentSummaryTab) - 1]])?.map((zone: any, i: any) => (
-                                  <div key={i}>
-                                    <div className="flex items-center gap-2">
-                                      <CheckboxInput
-                                        label={zone}
-                                        checked={zoneFilters?.includes(zone)}
-                                        onChange={(checked) => {
-                                          handleFilterSelection({ type: "zone", value: zone, checked });
-                                        }}
-                                      />
-                                      <p className="text-[14px]">
-                                        ({filteredScreensData()?.allResult?.filter((s: any) => s?.location?.zoneOrRegion === zone)?.length})
-                                      </p>
-                                    </div>
-                                    <div className="pt-1 mb-1 border-b border-[#D3D3D350]" />
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              <div className="col-span-8 p-2">
-                                {cityTP && Object.keys(cityTP?.[Object.keys(screensBuyingCount)?.[Number(currentSummaryTab) - 1]])?.map((tp: any, i: any) => (
-                                  <div key={i}>
-                                    <div className="flex items-center gap-2">
-                                      <CheckboxInput
-                                        label={tp}
-                                        checked={tpFilters?.includes(tp)}
-                                        onChange={(checked) =>
-                                          handleFilterSelection({ type: "tp", value: tp, checked })
-                                        }
-                                      />
-                                      <p className="text-[14px]">
-                                        ({filteredScreensData()?.allResult?.filter((s: any) => s?.location?.touchPoint === tp)?.length})
-                                      </p>
-                                    </div>
-                                    <div className="pt-1 mb-1 border-b border-[#D3D3D350]" />
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div> */}
+                  
                     {/* <Tooltip title="Single click to select the filter and Double click to deselect the filter">
                       <div
                         className={`truncate px-1 border ${
