@@ -9,7 +9,6 @@ export {
 } from "./AuthPage/index";
 
 export { MyCampaignsListPage } from "./MyCampaignsListPage";
-export { MyRequestsListPage } from "./MyRequestsListPage";
 export { MyPlansListPage } from "./MyPlansListPage";
 
 export { CampaignDashboardPage } from "./CampaignDashboardPage";

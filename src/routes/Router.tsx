@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { CampaignTemplates, HomePageLayout } from "../components";
+import { HomePageLayout } from "../components";
 
 import {
   ForgetPassword,
@@ -10,7 +10,6 @@ import {
   UpdatePassword,
   VerifyEmail,
   MyCampaignsListPage,
-  MyRequestsListPage,
   CampaignDashboardPage,
   MyPlansListPage,
   SpecialDayPlanPage,
@@ -27,22 +26,18 @@ import {
 import { PrivateRoute } from "./PrivateRoute";
 import {
   AUTH,
-  CAMPAIGN_DETAILS_PAGE,
   FORGET_PASSWORD,
   HOME,
   ADVERTISERS_PAGE,
   MEDIA_OWNER_PAGE,
   MY_CAMPAIGNS_LIST,
   MY_PLANS_LIST,
-  MY_REQUESTS_LIST,
   PLAY_LIVE_URL,
-  REGULARPLAN,
   SIGN_UP,
   UPDATE_PASSWORD,
   USERS,
   VERIFY_EMAIL,
   MY_CREATIVES,
-  PLAY_CAMPAIGN,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 import { PublicRoute } from "../layout/PublicRoute";
@@ -123,15 +118,6 @@ const Routers: React.FC = () => {
             </AppDashBoardLayout>
           }
         />
- 
-        {/* <Route
-          path={PLAY_CAMPAIGN}
-          element={
-            <AppDashBoardLayout className="bg-gray-50 pt-16">
-              <CampaignTemplates />
-            </AppDashBoardLayout>
-          }
-        /> */}
         <Route
           path={MEDIA_OWNER_PAGE}
           element={
@@ -155,14 +141,6 @@ const Routers: React.FC = () => {
           element={
             <AppDashBoardLayout className="bg-[#D1D1D110] pt-16">
               <MyCampaignsListPage />
-            </AppDashBoardLayout>
-          }
-        />
-        <Route
-          path={MY_REQUESTS_LIST}
-          element={
-            <AppDashBoardLayout className="bg-[#D1D1D110] pt-16">
-              <MyRequestsListPage />
             </AppDashBoardLayout>
           }
         />
