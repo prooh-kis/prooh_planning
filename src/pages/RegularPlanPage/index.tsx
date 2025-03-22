@@ -16,8 +16,8 @@ import {
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
-import { useLocation } from "react-router-dom";
-import { CURRENT_STEP, FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
+import { useLocation, useNavigate } from "react-router-dom";
+import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
   CAMPAIGN_PLAN_TYPE_REGULAR,
@@ -30,6 +30,7 @@ export const RegularPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const steps = 9;
   const location = useLocation();
+  const navigate = useNavigate();
 
   const { pathname } = location;
   const campaignId: any = pathname.split("/")[2] || null;
@@ -55,7 +56,6 @@ export const RegularPlanPage: React.FC = () => {
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0);
 
-      
       setCurrentStep(newStep >= steps ? newStep : newStep + 1);
       const currStep = {
         [campaignId]: newStep >= steps ? newStep : newStep + 1,
@@ -65,8 +65,9 @@ export const RegularPlanPage: React.FC = () => {
   }, [success, campaignDetails, campaignId, location, pathname, dispatch]);
 
   useEffect(() => {
+    navigate(location.pathname, { replace: true, state: {} });
     if (campaignId) dispatch(addDetailsToCreateCampaign({ id: campaignId }));
-  }, [dispatch, campaignId]);
+  }, [navigate, dispatch, campaignId]);
 
   const stepComponents: Record<number, React.FC<any>> = {
     1: EnterCampaignBasicDetails,
@@ -83,7 +84,7 @@ export const RegularPlanPage: React.FC = () => {
   const StepComponent = stepComponents[currentStep] || null;
 
   return (
-    <div className="w-full">
+    <div className="w-full font-custom">
       <div className="w-full h-auto">
         <StepperSlider
           campaignId={campaignId}

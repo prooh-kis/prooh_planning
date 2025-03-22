@@ -12,7 +12,7 @@ interface Props {
   setCurrentTab: any;
 }
 
-export function TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
+export function  TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
 
   return (
     <div className="inline-flex items-center gap-4 w-fit">
@@ -31,7 +31,7 @@ export function TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
           <h1
             className={
               currentTab === tab.id
-                ? "text-primaryButton font-bold truncate pr-2"
+                ? "text-primaryButton font-semibold truncate pr-2"
                 : "text-gray-500 truncate pr-2"
             }
           >

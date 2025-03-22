@@ -142,9 +142,9 @@ export const IKnowItAllPlanPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full">
       {/* Stepper Slider */}
-      <div className="w-full">
+      <div className="w-full h-auto">
         <StepperSlider
           campaignId={campaignId}
           step={currentStep}
@@ -155,7 +155,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
       </div>
 
       {/* Step Content */}
-      <div className="w-full h-full flex justify-center items-top">
+      <div className="w-full h-[75vh] p-4">
         {stepComponents[currentStep] || null}
       </div>
     </div>

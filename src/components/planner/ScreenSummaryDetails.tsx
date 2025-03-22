@@ -212,27 +212,6 @@ export const ScreenSummaryDetails = ({
   const handleSave = () => {
     if (!pathname.split("/").includes("view")) {
       if (currentTab === "1") {
-        // dispatch(
-        //   addDetailsToCreateCampaign({
-        //     pageName: "Screen Summary Page",
-        //     id: campaignId,
-        //     totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-        //     totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-        //       campaignId
-        //     ]?.total?.totalImpression,
-        //     totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-        //       campaignId
-        //     ]?.total?.totalReach,
-        //     totalCampaignBudget: getDataFromLocalStorage(
-        //       SCREEN_SUMMARY_TABLE_DATA
-        //     )?.[campaignId]?.total?.totalCampaignBudget,
-        //     totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-        //       campaignId
-        //     ]?.total?.totalCpm,
-        //     duration:
-        //       getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
-        //   })
-        // );
         setCurrentTab("2");
       } else {
         dispatch(
@@ -292,6 +271,7 @@ export const ScreenSummaryDetails = ({
                   currentTab={currentTab}
                   setCurrentTab={setCurrentTab}
                   tabData={screenSummaryTabData}
+                  justify="justify-start"
                 />
               )}
             </div>
@@ -318,8 +298,133 @@ export const ScreenSummaryDetails = ({
                         />
                       )}
                   </div>
-                  <div className="col-span-4 flex justify-end gap-2 truncate">
-                    <Tooltip title="Single click to select the filter and Double click to deselect the filter">
+                  <div className="col-span-4 flex items-center justify-end gap-2 truncate">
+                    {/* <div className="">
+                      <button
+                        className="text-white text-[12px] px-4 py-1 rounded-full bg-primaryButton"
+                        title="filter"
+                        type="button"
+                        onClick={() => {
+                          console.log(filteredScreensData())
+                          setIsOpen((prev) => !prev);
+                        }}
+                      >
+                        Filter
+                      </button>
+
+                      {isOpen && (
+                        <div
+                          ref={dropdownRef}
+                          className="absolute right-12 w-[40vw] rounded-[8px] bg-white shadow-lg mt-2 z-50 border border-[#D3D3D320]"
+                        >
+                          <div className="flex justify-between items-center border-b p-4">
+                            <h1 className="font-semibold text-[14px]">Screen List</h1>
+                            <button title="close" type="button" onClick={() => setIsOpen(false)}>
+                              <i className="fi fi-br-cross-small flex justify-center items-center"></i>
+                            </button>
+                          </div>
+                          <div className="p-4 grid grid-cols-12">
+                            <div className="col-span-4 bg-[#D3D3D310] rounded-[8px] p-2">
+                              <div className="flex items-center gap-2">
+                                <CheckboxInput
+                                  label={`Touchpoints `}
+                                  checked={filterType === "Touchpoints"}
+                                  onChange={() => {
+                                    setFilterType("Touchpoints");
+                                  }}
+                                />
+                                <p className="text-[14px]">({Object.keys(cityTP?.[Object.keys(screensBuyingCount)?.[Number(currentSummaryTab) - 1]])?.length})</p>
+                              </div>
+                              <div className="pt-1 mb-1 border-b border-[#D3D3D350]" />
+                              <div className="flex items-center gap-2">
+                                <CheckboxInput
+                                  label="Screen Type"
+                                  checked={filterType === "Screen Type"}
+                                  onChange={() => {
+                                    setFilterType("Screen Type");
+                                  }}
+                                />
+                                <p className="text-[14px]">({Object.keys(screenTypes?.[Object.keys(screensBuyingCount)?.[Number(currentSummaryTab) - 1]])?.length})</p>
+                              </div>
+                              <div className="pt-1 mb-1 border-b border-[#D3D3D350]" />
+                              <div className="flex items-center gap-2">
+                                <CheckboxInput
+                                  label="Zones"
+                                  checked={filterType === "Zones"}
+                                  onChange={() => {
+                                    setFilterType("Zones");
+                                  }}
+                                />
+                                <p className="text-[14px]">({Object.keys(cityZones?.[Object.keys(screensBuyingCount)?.[Number(currentSummaryTab) - 1]])?.length})</p>
+                              </div>
+                              <div className="pt-1 mb-1 border-b border-[#D3D3D350]" />
+                            </div>
+                            {filterType === "Screen Type" ? (
+                              <div className="col-span-8 p-2">
+                                {screenTypes && Object.keys(screenTypes?.[Object.keys(screensBuyingCount)?.[Number(currentSummaryTab) - 1]])?.map((st: any, i: any) => (
+                                  <div key={i}>
+                                    <div className="flex items-center gap-2">
+                                      <CheckboxInput
+                                        label={st}
+                                        checked={stFilters?.includes(st)}
+                                        onChange={(checked) =>
+                                          handleFilterSelection({ type: "st", value: st, checked })
+                                        }
+                                      />
+                                      <p className="text-[14px]">
+                                        ({filteredScreensData()?.allResult?.filter((s: any) => s?.screenType === st)?.length})
+                                      </p>
+                                    </div>
+                                    <div className="pt-1 mb-1 border-b border-[#D3D3D350]" />
+                                  </div>
+                                ))}
+                              </div>
+                            ) : filterType === "Zones" ? (
+                              <div className="col-span-8 p-2">
+                                {cityZones && Object.keys(cityZones?.[Object.keys(screensBuyingCount)?.[Number(currentSummaryTab) - 1]])?.map((zone: any, i: any) => (
+                                  <div key={i}>
+                                    <div className="flex items-center gap-2">
+                                      <CheckboxInput
+                                        label={zone}
+                                        checked={zoneFilters?.includes(zone)}
+                                        onChange={(checked) => {
+                                          handleFilterSelection({ type: "zone", value: zone, checked });
+                                        }}
+                                      />
+                                      <p className="text-[14px]">
+                                        ({filteredScreensData()?.allResult?.filter((s: any) => s?.location?.zoneOrRegion === zone)?.length})
+                                      </p>
+                                    </div>
+                                    <div className="pt-1 mb-1 border-b border-[#D3D3D350]" />
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="col-span-8 p-2">
+                                {cityTP && Object.keys(cityTP?.[Object.keys(screensBuyingCount)?.[Number(currentSummaryTab) - 1]])?.map((tp: any, i: any) => (
+                                  <div key={i}>
+                                    <div className="flex items-center gap-2">
+                                      <CheckboxInput
+                                        label={tp}
+                                        checked={tpFilters?.includes(tp)}
+                                        onChange={(checked) =>
+                                          handleFilterSelection({ type: "tp", value: tp, checked })
+                                        }
+                                      />
+                                      <p className="text-[14px]">
+                                        ({filteredScreensData()?.allResult?.filter((s: any) => s?.location?.touchPoint === tp)?.length})
+                                      </p>
+                                    </div>
+                                    <div className="pt-1 mb-1 border-b border-[#D3D3D350]" />
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div> */}
+                    {/* <Tooltip title="Single click to select the filter and Double click to deselect the filter">
                       <div
                         className={`truncate px-1 border ${
                           priceFilter.min === 1 && priceFilter.max === 100
@@ -371,10 +476,10 @@ export const ScreenSummaryDetails = ({
                           &#8377;101 - &#8377;300
                         </p>
                       </div>
-                    </Tooltip>
+                    </Tooltip> */}
                     <Tooltip title="Click to see the list view">
                       <div
-                        className={`truncate px-1 border rounded flex items-center gap-1 ${
+                        className={`truncate p-1 h-6 border rounded flex items-center gap-1 ${
                           listView && "border-primaryButton"
                         }`}
                         onClick={() => setListView(true)}
@@ -384,18 +489,11 @@ export const ScreenSummaryDetails = ({
                         text-[12px]
                         ${listView && "text-primaryButton"}`}
                         ></i>
-                        <p
-                          className={`${
-                            listView && "text-primaryButton"
-                          } text-[12px] truncate`}
-                        >
-                          List View
-                        </p>
                       </div>
                     </Tooltip>
                     <Tooltip title="Click to see the grid view">
                       <div
-                        className={`truncate px-1 border rounded flex items-center gap-1 ${
+                        className={`truncate p-1 h-6 border rounded flex items-center gap-1 ${
                           !listView && "border-primaryButton"
                         }`}
                         onClick={() => setListView(false)}
@@ -405,13 +503,6 @@ export const ScreenSummaryDetails = ({
                         text-[12px]
                         ${!listView && "text-primaryButton"}`}
                         ></i>
-                        <p
-                          className={`${
-                            !listView && "text-primaryButton"
-                          } text-[12px] truncate`}
-                        >
-                          Grid View
-                        </p>
                       </div>
                     </Tooltip>
                   </div>

@@ -249,9 +249,14 @@ export const AdvanceFiltersDetails = ({
           <div className="w-full h-full grid grid-cols-2 gap-4">
             <div className="col-span-1 h-full pr-4">
               <div className="flex justify-between items-center">
-                <h1 className="lg:text-[24px] md:text-[18px] text-primaryText font-semibold truncate">
-                  Store & Route Proximity
-                </h1>
+                <div>
+                  <h1 className="lg:text-[24px] md:text-[18px] text-primaryText font-semibold truncate">
+                    Store & Route Proximity
+                  </h1>
+                  <p className="text-[14px] text-secondaryText">
+                    Apply filters to optimise your media plan
+                  </p>
+                </div>
                 <div className="flex mt-3 items-top justify-end gap-2">
                   <Tooltip title="Click to refresh the map data">
                     <i

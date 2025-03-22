@@ -70,7 +70,7 @@ export const Footer = ({
     }
   }, [dispatch, campaignId, pageName, successAddCampaignDetails]);
   return (
-    <div className="py-2 z-10 flex justify-between">
+    <div className="py-2 z-10 flex justify-between px-4">
       <div className="flex w-full justify-start items-center gap-4">
         {totalScreensData && (
           <div className="flex">

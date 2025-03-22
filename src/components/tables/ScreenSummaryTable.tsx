@@ -271,8 +271,8 @@ export const ScreenSummaryTable = ({
                 }}
               >
                 <div
-                  className="grid grid-cols-[repeat(auto-fit,minmax(4rem,0.5fr))] gap-0"
-                  style={{ width: "calc(4rem * 8)" }}
+                  className={`grid ${Object.keys(cityZones[currentCity]).length > 3 ? "grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))]" : "grid-cols-[repeat(auto-fit,minmax(4rem,0.5fr))]"} gap-0`}
+                  style={{ width: Object.keys(cityZones[currentCity]).length > 3 ? "calc(8rem * 8)" : "calc(4rem * 8)"}}
                 >
                   {Object.keys(cityZones[currentCity])?.map(
                     (d: any, i: any) => (
@@ -338,8 +338,8 @@ export const ScreenSummaryTable = ({
                           }}
                         >
                           <div
-                            className="grid grid-cols-[repeat(auto-fit,minmax(4rem,0.5fr))] gap-0"
-                            style={{ width: "calc(4rem * 8)" }}
+                            className={`grid ${Object.keys(cityZones[currentCity]).length > 3 ? "grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))]" : "grid-cols-[repeat(auto-fit,minmax(4rem,0.5fr))]"} gap-0`}
+                            style={{ width: Object.keys(cityZones[currentCity]).length > 3 ? "calc(8rem * 8)" : "calc(4rem * 8)"}}
                           >
                             {Object.keys(cityZones?.[currentCity])?.map(
                               (zone: any, k: any) => (
@@ -357,7 +357,7 @@ export const ScreenSummaryTable = ({
                                     ?.map((screen: any, m: any) => (
                                       <div
                                         key={m}
-                                        className="flex gap-4 justify-between py-2 px-4 border-b truncate"
+                                        className={`flex gap-4 justify-between py-2 px-4 ${m == 0 ? "" : "border-t"}  truncate`}
                                       >
                                         <ScreenDataModel
                                           listView={listView}
