@@ -21,10 +21,11 @@ import {
   FULL_CAMPAIGN_PLAN,
   SCREEN_SUMMARY_SELECTION,
   SCREEN_SUMMARY_TABLE_DATA,
+  SCREEN_TYPE_TOGGLE_SELECTION,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { Loading } from "../../components/Loading";
-import { Tooltip } from "antd";
+import { message, Tooltip } from "antd";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET } from "../../constants/screenConstants";
@@ -73,6 +74,10 @@ export const ScreenSummaryDetails = ({
   const [cityTP, setCityTP] = useState<any>({});
   const [screenTypes, setScreenTypes] = useState<any>({});
 
+  const [screenTypeToggle, setScreenTypeToggle] = useState<any>(
+    getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[campaignId]
+  );
+
   const [isOpen, setIsOpen] = useState<any>(false)
   const [screensBuyingCount, setScreensBuyingCount] = useState(() => {
     return (
@@ -80,6 +85,7 @@ export const ScreenSummaryDetails = ({
     );
   });
 
+  const [filterType, setFilterType] = useState<any>("Touchpoints");
   const [zoneFilters, setZoneFilters] = useState<any>([]);
   const [tpFilters, setTpFilters] = useState<any>([]);
   const [stFilters, setStFilters] = useState<any>([]);
@@ -261,6 +267,205 @@ export const ScreenSummaryDetails = ({
     }
   };
 
+  const filteredScreensData = useCallback(() => {
+    // console.log(Object.keys(screens)[Number(currentSummaryTab) - 1])
+    let allResult: any;
+    let result = Object.values(
+      screensBuyingCount[
+        Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]
+      ]
+    )?.map((f: any) => f.data);
+
+    allResult = result;
+    // Filter by zone if zoneFilters has values
+    if (zoneFilters.length > 0) {
+      result = result?.filter((s: any) =>
+        zoneFilters.includes(s.location.zoneOrRegion)
+      );
+      // console.log(result, "zone");
+    }
+
+    // Filter by touch point if tpFilters has values
+    if (tpFilters.length > 0) {
+      result = result?.filter((s: any) =>
+        tpFilters.includes(s.location.touchPoint)
+      );
+      // console.log(result, "tp");
+    }
+
+    // Filter by screen type if stFilters has values
+    if (stFilters.length > 0) {
+      result = result?.filter((s: any) => stFilters.includes(s.screenType));
+      // console.log(result, "st");
+    }
+    return { result, allResult };
+  }, [
+    screensBuyingCount,
+    zoneFilters,
+    tpFilters,
+    stFilters,
+    currentSummaryTab,
+  ]);
+
+
+  const handleScreenClick = useCallback(
+    ({ screen, city, statusRes, suppressMessage = false }: any) => {
+      
+      const screenId = screen._id;
+      // const networkType = screen.networkType;
+      const networkType = "";
+
+      
+      // Create a deep clone to avoid modifying the original state directly
+      const updatedScreensBuyingCount = { ...screensBuyingCount };
+
+      const currentCityScreens = updatedScreensBuyingCount[city] || {};
+
+      if (networkType !== "") {
+
+        // change network type in db then implement
+        let newStatus;
+        if (statusRes !== undefined) {
+          newStatus = statusRes;
+        } else if (currentCityScreens[screenId]) {
+          newStatus = !currentCityScreens[screenId].status;
+        }
+
+        for (const id in currentCityScreens) {
+          if (currentCityScreens[id].data.networkType === networkType) {
+            currentCityScreens[id] = {
+              ...currentCityScreens[id],
+              status: newStatus,
+            }
+          }
+        }
+        if (!suppressMessage) {
+          message.info(`You are ${newStatus === true ? "selecting" : "deselecting"} a screen from ${networkType}. Any action applicable to any one screen of any network will be applicable on all the screens of the same network.`)
+        }
+      } else {
+        // Toggle the status of the selected screen
+        if (statusRes === undefined && currentCityScreens[screenId]) {
+          currentCityScreens[screenId].status =
+            !currentCityScreens[screenId].status;
+        } else {
+          currentCityScreens[screenId] = {
+            status: statusRes,
+            data: screen,
+          };
+        }
+      }
+
+      // Update the specific city's screens in screensBuyingCount while preserving other cities
+      updatedScreensBuyingCount[city] = currentCityScreens;
+
+      // Save the updated state
+      setScreensBuyingCount(updatedScreensBuyingCount);
+      // alert(`You are ${newStatus ? "selecting" : "deselecting"} screen in ${networkType} network, all the screens`)
+      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
+        [campaignId]: updatedScreensBuyingCount,
+      });
+      // refreshScreenSummary();
+    },
+    [screensBuyingCount, setScreensBuyingCount, campaignId]
+  );
+
+  const handleScreenTypeClick = ({
+    screenType,
+    myData,
+    city,
+    touchpoint,
+    statusNow,
+    zone,
+  }: any) => {
+    // const updatedScreens = { ...screensBuyingCount[currentCity] };
+    const screens: any = [];
+
+    const stToggle = { ...screenTypeToggle };
+
+    if (zone !== "") {
+      myData[zone]?.map((s: any) => {
+        screens.push(s);
+      });
+    } else {
+      for (const zone in myData) {
+        myData[zone]?.map((s: any) => {
+          screens.push(s);
+        });
+      }
+    }
+
+    // Get current status for all screens in the type
+    const allSelected = screens.every(
+      (s: any) => screensBuyingCount[currentCity]?.[s._id]?.status
+    );
+
+    stToggle[city][touchpoint][screenType] = !allSelected;
+    // console.log(stToggle[city][touchpoint][screenType]);
+    // Toggle screen type status based on current status
+    setScreenTypeToggle(stToggle);
+    saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, {
+      [campaignId]: stToggle,
+    });
+    const networkMessageTracker = new Set<string>();
+
+    screens.forEach((s: any) => {
+      const shouldShowMessage = s.network !== "" && !networkMessageTracker.has(s.networkType);
+      handleScreenClick({
+        screen: s,
+        city,
+        touchpoint,
+        statusRes: !allSelected,
+        suppressMessage: !shouldShowMessage,
+      }); // Update individual screen status
+      if (shouldShowMessage) {
+        networkMessageTracker.add(s.networkType);
+      }
+    });
+
+    // Update the screens buying count and save
+    setScreensBuyingCount({ ...screensBuyingCount });
+    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
+      [campaignId]: { ...screensBuyingCount },
+    });
+  };
+
+  const handleFilterSelection = ({ type, value, checked }: any) => {
+
+    if (type === "zone") {
+      if (checked) {
+        setZoneFilters((prev: any) => {
+          return [...prev, value];
+        });
+      } else {
+        setZoneFilters((prev: any) => {
+          return prev.filter((item: any) => item !== value);
+        });
+      }
+    }
+    if (type === "tp") {
+      if (checked) {
+        setTpFilters((prev: any) => {
+          return [...prev, value];
+        });
+      } else {
+        setTpFilters((prev: any) => {
+          return prev.filter((item: any) => item !== value);
+        });
+      }
+    }
+    if (type === "st") {
+      if (checked) {
+        setStFilters((prev: any) => {
+          return [...prev, value];
+        });
+      } else {
+        setStFilters((prev: any) => {
+          return prev.filter((item: any) => item !== value);
+        });
+      }
+    }
+  };
+
   return (
     <div className="w-full">
       {errorScreenSummary && (
@@ -280,7 +485,6 @@ export const ScreenSummaryDetails = ({
             You can further optimized your plan by deselecting locations in the
             screen summary
           </h1>
-
           {pathname.split("/").includes("storebasedplan") ? (
             <></>
           ) : (
@@ -295,7 +499,6 @@ export const ScreenSummaryDetails = ({
               )}
             </div>
           )}
-
           <div className="pb-2">
             {currentTab === "1" ? (
               <div className="w-full">
@@ -306,16 +509,13 @@ export const ScreenSummaryDetails = ({
                         <div className="h-[32px] bg-[#D7D7D750] rounded-b dark:bg-[#D7D7D7] w-full"></div>
                       </div>
                     )}
-
-                    {!loadingScreenSummary &&
-                      screenSummaryData &&
-                      cityTabData?.length !== 0 && (
-                        <TabWithoutIcon
-                          currentTab={currentSummaryTab}
-                          setCurrentTab={handleSelectCurrentTab}
-                          tabData={cityTabData}
-                        />
-                      )}
+                    {!loadingScreenSummary && screenSummaryData && cityTabData?.length !== 0 && (
+                      <TabWithoutIcon
+                        currentTab={currentSummaryTab}
+                        setCurrentTab={handleSelectCurrentTab}
+                        tabData={cityTabData}
+                      />
+                    )}
                   </div>
                   <div className="col-span-4 flex items-center justify-end gap-2 truncate">
                     {isOpen && (
@@ -328,81 +528,33 @@ export const ScreenSummaryDetails = ({
                           zoneFilters={zoneFilters}
                           tpFilters={tpFilters}
                           stFilters={stFilters}
-                          handleFilterSelection={() => {}}
-                          filteredScreensData={() => {}}
+                          handleFilterSelection={handleFilterSelection}
+                          filteredScreensData={filteredScreensData}
                           screensBuyingCount={screensBuyingCount}
-                          filterType={""}
+                          filterType={filterType}
+                          setFilterType={setFilterType}
                           setIsOpen={setIsOpen}
                           listView={listView}
+                          setCurrentCity={setCurrentCity}
+                          setZoneFilters={setZoneFilters}
+                          setTpFilters={setTpFilters}
+                          setStFilters={setStFilters}
                         />
                       </div>
                     )}
-                    <button
-                      className="text-white text-[12px] px-4 py-1 rounded-full bg-primaryButton"
-                      title="filter"
-                      type="button"
-                      onClick={() => {
-                        // console.log(filteredScreensData())
-                        setIsOpen((prev: any) => !prev);
-                      }}
-                    >
-                      Filter
-                    </button>
-
-                  
-                    {/* <Tooltip title="Single click to select the filter and Double click to deselect the filter">
-                      <div
-                        className={`truncate px-1 border ${
-                          priceFilter.min === 1 && priceFilter.max === 100
-                            ? "border-[#129BFF]"
-                            : ""
-                        } rounded flex items-center gap-1`}
+                    {listView && (
+                      <button
+                        className="text-white text-[12px] px-4 py-1 rounded-full bg-primaryButton"
+                        title="filter"
+                        type="button"
                         onClick={() => {
-                          setPriceFilter({
-                            min: 1,
-                            max: 100,
-                          });
-                        }}
-                        onDoubleClick={() => {
-                          setPriceFilter({
-                            min: 1,
-                            max: 300,
-                          });
+                          // console.log(filteredScreensData())
+                          setIsOpen((prev: any) => !prev);
                         }}
                       >
-                        <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
-                        <p className="text-[12px] truncate">
-                          &#8377;1 - &#8377;100
-                        </p>
-                      </div>
-                    </Tooltip>
-                    <Tooltip title="Single click to select the filter and Double click to deselect the filter">
-                      <div
-                        className={`truncate px-1 border ${
-                          priceFilter.min === 100 && priceFilter.max === 300
-                            ? "border-[#129BFF]"
-                            : ""
-                        } rounded flex items-center gap-1`}
-                        onClick={() => {
-                          setPriceFilter({
-                            min: 100,
-                            max: 300,
-                          });
-                        }}
-                        onDoubleClick={() => {
-                          setPriceFilter({
-                            min: 1,
-                            max: 300,
-                          });
-                        }}
-                      >
-                        <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
-                        <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
-                        <p className="text-[12px] truncate">
-                          &#8377;101 - &#8377;300
-                        </p>
-                      </div>
-                    </Tooltip> */}
+                        Filter
+                      </button>
+                    )}
                     <Tooltip title="Click to see the list view">
                       <div
                         className={`truncate p-1 h-6 border rounded flex items-center gap-1 ${
@@ -451,20 +603,53 @@ export const ScreenSummaryDetails = ({
                     priceFilter={priceFilter}
                     campaignId={campaignId}
                     listView={listView}
+                    screenTypeToggle={screenTypeToggle}
+                    setScreenTypeToggle={setScreenTypeToggle}
+                    handleScreenTypeClick={handleScreenTypeClick}
+                    handleScreenClick={handleScreenClick}
                   />
                 ) : (
-                  <ViewPlanPic
-                    currentSummaryTab={currentSummaryTab}
-                    screensBuyingCount={screensBuyingCount}
-                    setScreensBuyingCount={setScreensBuyingCount}
-                    refreshScreenSummary={refreshScreenSummary}
-                    cityZones={cityZones}
-                    cityTP={cityTP}
-                    screenTypes={screenTypes}
-                    setCurrentCity={setCurrentCity}
-                    priceFilter={priceFilter}
-                    listView={listView}
-                  />
+                  <div className="grid grid-cols-12 gap-8 pt-2 mb-16">
+                    <div className="col-span-3 border rounded-[12px] h-[60vh] p-3 overflow-y-auto">
+                      <ScreenFilters
+                        cityZones={cityZones}
+                        cityTP={cityTP}
+                        screenTypes={screenTypes}
+                        zoneFilters={zoneFilters}
+                        tpFilters={tpFilters}
+                        stFilters={stFilters}
+                        handleFilterSelection={handleFilterSelection}
+                        filteredScreensData={filteredScreensData}
+                        screensBuyingCount={screensBuyingCount}
+                        currentSummaryTab={currentSummaryTab}
+                        listView={listView}
+                        setCurrentCity={setCurrentCity}
+                        setZoneFilters={setZoneFilters}
+                        setTpFilters={setTpFilters}
+                        setStFilters={setStFilters}
+                        filterType={filterType}
+                        setFilterType={setFilterType}
+                      />
+                    </div>
+                    <div className="col-span-9 rounded grid grid-cols-12 flex flex-wrap gap-4 overflow-scroll no-scrollbar h-[60vh]">
+                      {filteredScreensData()
+                        ?.result?.filter((sc: any) => {
+                          return (
+                            sc.pricePerSlot >= priceFilter?.min &&
+                            sc.pricePerSlot <= priceFilter?.max
+                          );
+                        })
+                        ?.map((screen: any, index: any) => (
+                          <div key={index} className="col-span-3">
+                            <ViewPlanPic
+                              screen={screen}
+                              screens={screensBuyingCount}
+                              currentSummaryTab={currentSummaryTab}
+                            />
+                          </div>
+                        ))}
+                    </div>
+                  </div>
                 )}
               </div>
             ) : (
@@ -478,9 +663,7 @@ export const ScreenSummaryDetails = ({
                     loading={loadingScreenSummaryPlanTable}
                     error={errorScreenSummaryPlanTable}
                     data={screenSummaryPlanTableData}
-                    getSelectedScreenIdsFromAllCities={
-                      getSelectedScreenIdsFromAllCities
-                    }
+                    getSelectedScreenIdsFromAllCities={getSelectedScreenIdsFromAllCities}
                     campaignId={campaignId}
                     screensBuyingCount={screensBuyingCount}
                     pathname={pathname}

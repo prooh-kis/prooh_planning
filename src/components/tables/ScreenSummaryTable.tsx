@@ -23,14 +23,15 @@ export const ScreenSummaryTable = ({
   setCityTP,
   cityTP,
   setScreenTypes,
-  refreshScreenSummary,
   priceFilter,
   campaignId,
   listView,
+  screenTypeToggle,
+  setScreenTypeToggle,
+  handleScreenClick,
+  handleScreenTypeClick,
 }: any) => {
-  const [screenTypeToggle, setScreenTypeToggle] = useState<any>(
-    getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[campaignId]
-  );
+
 
   const handleData = useCallback(
     (myData: any) => {
@@ -86,7 +87,7 @@ export const ScreenSummaryTable = ({
         }
       }
 
-      setCurrentCity(Object.keys(data)[Number(currentSummaryTab) - 1]);
+      setCurrentCity(Object.keys(myData)[Number(currentSummaryTab) - 1]);
       setCityZones(zones);
       setCityTP(tps);
       setScreenTypes(types);
@@ -113,135 +114,20 @@ export const ScreenSummaryTable = ({
     [
       campaignId,
       currentSummaryTab,
-      data,
       setCityTP,
       setCityZones,
       setCurrentCity,
       setScreenTypes,
       setScreensBuyingCount,
+      setScreenTypeToggle
     ]
   );
-
-  const handleScreenClick = useCallback(
-    ({ screen, city, statusRes, suppressMessage = false }: any) => {
-      
-      const screenId = screen._id;
-      // const networkType = screen.networkType;
-      const networkType = "";
-
-      
-      // Create a deep clone to avoid modifying the original state directly
-      const updatedScreensBuyingCount = { ...screensBuyingCount };
-
-      const currentCityScreens = updatedScreensBuyingCount[city] || {};
-
-      if (networkType !== "") {
-
-        // change network type in db then implement
-        let newStatus;
-        if (statusRes !== undefined) {
-          newStatus = statusRes;
-        } else if (currentCityScreens[screenId]) {
-          newStatus = !currentCityScreens[screenId].status;
-        }
-
-        for (const id in currentCityScreens) {
-          if (currentCityScreens[id].data.networkType === networkType) {
-            currentCityScreens[id] = {
-              ...currentCityScreens[id],
-              status: newStatus,
-            }
-          }
-        }
-        if (!suppressMessage) {
-          message.info(`You are ${newStatus === true ? "selecting" : "deselecting"} a screen from ${networkType}. Any action applicable to any one screen of any network will be applicable on all the screens of the same network.`)
-        }
-      } else {
-        // Toggle the status of the selected screen
-        if (statusRes === undefined && currentCityScreens[screenId]) {
-          currentCityScreens[screenId].status =
-            !currentCityScreens[screenId].status;
-        } else {
-          currentCityScreens[screenId] = {
-            status: statusRes,
-            data: screen,
-          };
-        }
-      }
-
-      // Update the specific city's screens in screensBuyingCount while preserving other cities
-      updatedScreensBuyingCount[city] = currentCityScreens;
-
-      // Save the updated state
-      setScreensBuyingCount(updatedScreensBuyingCount);
-      // alert(`You are ${newStatus ? "selecting" : "deselecting"} screen in ${networkType} network, all the screens`)
-      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
-        [campaignId]: updatedScreensBuyingCount,
-      });
-      // refreshScreenSummary();
-    },
-    [screensBuyingCount, setScreensBuyingCount, campaignId]
-  );
-
-  const handleScreenTypeClick = ({
-    screenType,
-    myData,
-    city,
-    touchpoint,
-    statusNow,
-  }: any) => {
-    // const updatedScreens = { ...screensBuyingCount[currentCity] };
-    const screens: any = [];
-
-    const stToggle = { ...screenTypeToggle };
-
-    for (const zone in myData) {
-      myData[zone]?.map((s: any) => {
-        screens.push(s);
-      });
-    }
-
-    // Get current status for all screens in the type
-    const allSelected = screens.every(
-      (s: any) => screensBuyingCount[currentCity]?.[s._id]?.status
-    );
-
-    stToggle[city][touchpoint][screenType] = !allSelected;
-    // console.log(stToggle[city][touchpoint][screenType]);
-    // Toggle screen type status based on current status
-    setScreenTypeToggle(stToggle);
-    saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, {
-      [campaignId]: stToggle,
-    });
-    const networkMessageTracker = new Set<string>();
-
-    screens.forEach((s: any) => {
-      const shouldShowMessage = s.network !== "" && !networkMessageTracker.has(s.networkType);
-      handleScreenClick({
-        screen: s,
-        city,
-        touchpoint,
-        statusRes: !allSelected,
-        suppressMessage: !shouldShowMessage,
-      }); // Update individual screen status
-      if (shouldShowMessage) {
-        networkMessageTracker.add(s.networkType);
-      }
-    });
-
-    // Update the screens buying count and save
-    setScreensBuyingCount({ ...screensBuyingCount });
-    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
-      [campaignId]: { ...screensBuyingCount },
-    });
-  };
-
+  
   useEffect(() => {
     if (data !== undefined) {
       handleData(data);
     }
   }, [data, handleData]);
-
 
   return (
     <div className="h-full">
@@ -259,7 +145,7 @@ export const ScreenSummaryTable = ({
                 Screen Type
               </h1>
             </div>
-            <div className="py-2 col-span-8">
+            <div className="col-span-8">
               <div
                 id="scroll-container"
                 className="overflow-x-auto no-scrollbar sync-scroll-row"
@@ -280,7 +166,7 @@ export const ScreenSummaryTable = ({
                         className="col-span-1 border-x min-w-[2rem]"
                         key={i}
                       >
-                        <h1 className="md:text-[16px] sm:text-[14px] font-bold flex justify-center truncate">
+                        <h1 className="md:text-[16px] sm:text-[14px] py-2 font-bold flex justify-center truncate">
                           {d?.split(" ")?.splice(0, 3)?.join(" ")}
                         </h1>
                       </div>
@@ -314,6 +200,7 @@ export const ScreenSummaryTable = ({
                                   myData: data[currentCity][tp][st],
                                   city: currentCity,
                                   touchpoint: tp,
+                                  zone: "",
                                   statusNow:
                                     screenTypeToggle?.[currentCity]?.[tp]?.[st],
                                 });
