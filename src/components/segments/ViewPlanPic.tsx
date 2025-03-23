@@ -8,43 +8,8 @@ export function ViewPlanPic({
   screens,
   screen,
   currentSummaryTab,
-  screensBuyingCount,
-  setScreensBuyingCount,
+  handleScreenClick,
 }: any) {
-
-
-  const handleScreenClick = useCallback(
-    ({ screen, city, statusRes }: any) => {
-      const screenId = screen._id;
-
-      // Create a deep clone to avoid modifying the original state directly
-      const updatedScreensBuyingCount = { ...screensBuyingCount };
-
-      const currentCityScreens = updatedScreensBuyingCount[city] || {};
-
-      // Toggle the status of the selected screen
-      if (statusRes === undefined && currentCityScreens[screenId]) {
-        currentCityScreens[screenId].status =
-          !currentCityScreens[screenId].status;
-      } else {
-        currentCityScreens[screenId] = {
-          status: statusRes,
-          data: screen,
-        };
-      }
-
-      // Update the specific city's screens in screensBuyingCount while preserving other cities
-      updatedScreensBuyingCount[city] = currentCityScreens;
-
-      // Save the updated state
-      setScreensBuyingCount(updatedScreensBuyingCount);
-
-      // refreshScreenSummary();
-    },
-    [screensBuyingCount, setScreensBuyingCount]
-  );
-
-
   return (
     <div
       className={`hover:shadow-md rounded-md ${

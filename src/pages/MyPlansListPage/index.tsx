@@ -10,6 +10,7 @@ import { CAMPAIGN_PLANNER, SCREEN_OWNER } from "../../constants/userConstants";
 import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
 import { CampaignCardForPlan } from "../../components/molecules/CampaignCardForPlan";
 import { EDIT_CAMPAIGN, VIEW_CAMPAIGN } from "../../constants/campaignConstants";
+import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 
 export const MyPlansListPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -37,6 +38,7 @@ export const MyPlansListPage: React.FC = () => {
     }
 
     if (userInfo?.userRole === CAMPAIGN_PLANNER) {
+      removeAllKeyFromLocalStorage();
       dispatch(getMyCreateCampaignsListForPlan({ id: userInfo._id }));
     }
   }, [dispatch, navigate, userInfo, campaignDetails]);

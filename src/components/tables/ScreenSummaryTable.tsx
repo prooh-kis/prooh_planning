@@ -9,7 +9,7 @@ import {
   SCREEN_SUMMARY_SELECTION,
   SCREEN_TYPE_TOGGLE_SELECTION,
 } from "../../constants/localStorageConstants";
-import { message, Tooltip } from "antd";
+import { Tooltip } from "antd";
 
 export const ScreenSummaryTable = ({
   data,
@@ -23,7 +23,6 @@ export const ScreenSummaryTable = ({
   setCityTP,
   cityTP,
   setScreenTypes,
-  priceFilter,
   campaignId,
   listView,
   screenTypeToggle,
@@ -31,7 +30,6 @@ export const ScreenSummaryTable = ({
   handleScreenClick,
   handleScreenTypeClick,
 }: any) => {
-
 
   const handleData = useCallback(
     (myData: any) => {
@@ -41,9 +39,6 @@ export const ScreenSummaryTable = ({
       const types: any = {};
       const stToggle: any = {};
 
-      if (!getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]) {
-
-      }
       for (const city in myData) {
         zones[city] = {};
         tps[city] = {};
@@ -72,13 +67,14 @@ export const ScreenSummaryTable = ({
                 types[city][st].push(
                   myData[city][tp][st][zone][screen]?.screenName
                 );
-                let screenId = myData[city][tp][st][zone][screen]?._id
+                let screenId = myData[city][tp][st][zone][screen]?._id;
+                let localScreenData = getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]?.[city]?.[screenId];
+                let localCampaign = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId];
                 screens[city][`${myData[city][tp][st][zone][screen]?._id}`] = {
-                  status: getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]?.[city]?.[screenId] ? 
-                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]?.[city]?.[screenId].status : 
-                    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds?.length > 0 &&
-                    !getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds.includes(myData[city][tp][st][zone][screen]?._id) ?
-                    false : true, // Set all screens as selected by default
+                  status: 
+                    localScreenData ? localScreenData.status : 
+                    localCampaign?.screenIds?.length > 0 && !localCampaign?.screenIds.includes(screenId) ? false :
+                    true,
                   data: myData[city][tp][st][zone][screen],
                 };
               }
@@ -86,30 +82,31 @@ export const ScreenSummaryTable = ({
           }
         }
       }
-
       setCurrentCity(Object.keys(myData)[Number(currentSummaryTab) - 1]);
       setCityZones(zones);
       setCityTP(tps);
       setScreenTypes(types);
-      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
-        [campaignId]: screens,
-      });
+
       if (
         !getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] ||
         Object.keys(
           getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
         )?.length === 0
       ) {
+        saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, {
+          [campaignId]: stToggle,
+        });
+        setScreenTypeToggle(stToggle);
+        saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
+          [campaignId]: screens,
+        });
         setScreensBuyingCount(screens);
       } else {
         setScreensBuyingCount(
           getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
         );
       }
-      setScreenTypeToggle(stToggle);
-      saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, {
-        [campaignId]: stToggle,
-      });
+
     },
     [
       campaignId,
@@ -119,7 +116,7 @@ export const ScreenSummaryTable = ({
       setCurrentCity,
       setScreenTypes,
       setScreensBuyingCount,
-      setScreenTypeToggle
+      setScreenTypeToggle,
     ]
   );
   
@@ -134,7 +131,7 @@ export const ScreenSummaryTable = ({
       
       {currentCity && data && Object.keys(cityZones).length > 0 && (
         <div className="w-full h-full border-b">
-          <div className="bg-[#D0D0D0] grid grid-cols-12 flex items-center">
+          <div className="bg-[#D0D0D0] grid grid-cols-12 flex items-center rounded-t">
             <div className="py-2 col-span-2">
               <h1 className="text-[16px] font-bold flex justify-center">
                 Touchpoints
@@ -176,10 +173,10 @@ export const ScreenSummaryTable = ({
               </div>
             </div>
           </div>
-          <div className="overflow-y-auto scrollbar-minimal h-[50vh] pb-10">
+          <div className="overflow-y-auto scrollbar-minimal h-[50vh] pb-10 ">
             {Object.keys(data?.[currentCity] || {})?.map((tp: any, i: any) => (
-              <div key={i} className="grid grid-cols-12">
-                <div className="border-b border-l col-span-2 py-2 px-4 border-r truncate">
+              <div key={i} className="grid grid-cols-12 ">
+                <div className="rounded-bl border-b border-l col-span-2 py-2 px-4 border-r truncate">
                   <Tooltip title={tp}>
                     <h1 className="text-[14px] truncate">{tp}</h1>
                   </Tooltip>
@@ -187,8 +184,8 @@ export const ScreenSummaryTable = ({
                 <div className="col-span-10">
                   {Object.keys(cityTP?.[currentCity]?.[tp])?.map(
                     (st: any, j: any) => (
-                      <div key={j} className="grid grid-cols-10 border-b border-r">
-                        <div className="col-span-2 py-2 px-4 border-r">
+                      <div key={j} className="rounded-br grid grid-cols-10 border-b border-r">
+                        <div className="cursor-pointer col-span-2 py-2 px-4 border-r">
                           <div className="flex justify-between items-center">
                             <Tooltip title={`${st}`}>
                               <h1 className="text-[14px] truncate">{st}</h1>
@@ -232,19 +229,19 @@ export const ScreenSummaryTable = ({
                               (zone: any, k: any) => (
                                 <div
                                   key={k}
-                                  className="col-span-1 border-r min-w-[2rem] truncate"
+                                  className="cursor-pointer col-span-1 border-r min-w-[2rem] truncate"
                                 >
                                   {data?.[currentCity]?.[tp]?.[st]?.[zone]
-                                    ?.filter((sc: any) => {
-                                      return (
-                                        sc.pricePerSlot >= priceFilter?.min &&
-                                        sc.pricePerSlot <= priceFilter?.max
-                                      );
-                                    })
+                                    // ?.filter((sc: any) => {
+                                    //   return (
+                                    //     sc.pricePerSlot >= priceFilter?.min &&
+                                    //     sc.pricePerSlot <= priceFilter?.max
+                                    //   );
+                                    // })
                                     ?.map((screen: any, m: any) => (
                                       <div
                                         key={m}
-                                        className={`flex gap-4 justify-between py-2 px-4 ${m == 0 ? "" : "border-t"}  truncate`}
+                                        className={`cursor-pointer flex gap-4 justify-between py-2 px-4 ${m == 0 ? "" : "border-t"}  truncate`}
                                       >
                                         <ScreenDataModel
                                           listView={listView}

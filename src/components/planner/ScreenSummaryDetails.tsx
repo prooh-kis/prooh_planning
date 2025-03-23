@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getPlanningPageFooterData,
   getScreenSummaryData,
-  getScreenSummaryPlanTableData,
 } from "../../actions/screenAction";
 import {
   getDataFromLocalStorage,
@@ -53,63 +52,34 @@ export const ScreenSummaryDetails = ({
   const { pathname } = useLocation();
 
   const [currentTab, setCurrentTab] = useState<string>("1");
-
-  const [currentSummaryTab, setCurrentSummaryTab] = useState<any>("1");
+  const [currentSummaryTab, setCurrentSummaryTab] = useState<string>("1");
   const [currentCity, setCurrentCity] = useState<string>("");
-  const [citiesCreative, setCitiesCreative] = useState<any>([]);
-  const [cityTabData, setCityTabData] = useState<any>([]);
-
-  const [priceFilter, setPriceFilter] = useState<any>({
-    min: 1,
-    max: 300,
-  });
-
-  const regularVsCohort =
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType;
-
+  const [cityTabData, setCityTabData] = useState<any[]>([]);
   const [showSummary, setShowSummary] = useState<any>(null);
-
-  const [listView, setListView] = useState<any>(true);
+  const [listView, setListView] = useState<boolean>(true);
   const [cityZones, setCityZones] = useState<any>({});
   const [cityTP, setCityTP] = useState<any>({});
   const [screenTypes, setScreenTypes] = useState<any>({});
+  const [screenTypeToggle, setScreenTypeToggle] = useState<any>(getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[campaignId]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [screensBuyingCount, setScreensBuyingCount] = useState<any>(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] ?? {});
+  const [filterType, setFilterType] = useState<string>("Touchpoints");
+  const [zoneFilters, setZoneFilters] = useState<any[]>([]);
+  const [tpFilters, setTpFilters] = useState<any[]>([]);
+  const [stFilters, setStFilters] = useState<any[]>([]);
 
-  const [screenTypeToggle, setScreenTypeToggle] = useState<any>(
-    getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[campaignId]
-  );
+  const screenSummaryDataGet = useSelector((state: any) => state.screenSummaryDataGet);
+  const { loading: loadingScreenSummary, error: errorScreenSummary, data: screenSummaryData } = screenSummaryDataGet;
 
-  const [isOpen, setIsOpen] = useState<any>(false)
-  const [screensBuyingCount, setScreensBuyingCount] = useState(() => {
-    return (
-      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] ?? {}
-    );
-  });
+  const screenSummaryPlanTableDataGet = useSelector((state: any) => state.screenSummaryPlanTableDataGet);
+  const { loading: loadingScreenSummaryPlanTable, error: errorScreenSummaryPlanTable, data: screenSummaryPlanTableData } = screenSummaryPlanTableDataGet;
 
-  const [filterType, setFilterType] = useState<any>("Touchpoints");
-  const [zoneFilters, setZoneFilters] = useState<any>([]);
-  const [tpFilters, setTpFilters] = useState<any>([]);
-  const [stFilters, setStFilters] = useState<any>([]);
-
-  const screenSummaryDataGet = useSelector(
-    (state: any) => state.screenSummaryDataGet
-  );
-  const {
-    loading: loadingScreenSummary,
-    error: errorScreenSummary,
-    data: screenSummaryData,
-  } = screenSummaryDataGet;
-
-  const screenSummaryPlanTableDataGet = useSelector(
-    (state: any) => state.screenSummaryPlanTableDataGet
-  );
-  const {
-    loading: loadingScreenSummaryPlanTable,
-    error: errorScreenSummaryPlanTable,
-    data: screenSummaryPlanTableData,
-  } = screenSummaryPlanTableDataGet;
-
-  // screen filter screen summary
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const regularVsCohort =
+  getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType;
+
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -121,29 +91,14 @@ export const ScreenSummaryDetails = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const getSelectedScreenIdsFromAllCities = (citiesData: any) => {
-    let activeScreenIds: any = [];
-
+  const getSelectedScreenIdsFromAllCities = (citiesData: any = {}) => {
+    let activeScreenIds: any[] = [];
     for (const city in citiesData) {
-      const screens = citiesData[city];
-      const activeScreens = Object.keys(screens).filter(
-        (screenId) => screens[screenId].status === true
-      );
+      const screens = citiesData[city] ?? {};
+      const activeScreens = Object.keys(screens).filter((screenId) => screens[screenId]?.status === true);
       activeScreenIds = activeScreenIds.concat(activeScreens);
     }
-
     return activeScreenIds;
-  };
-
-  const handleSelectCurrentTab = (id: string) => {
-    setCurrentSummaryTab(id);
-
-    const city = citiesCreative?.find((data: any) => data.id === id)?.label;
-    if (city) {
-      setCurrentCity(city);
-    } else {
-      setCurrentCity(currentCity);
-    }
   };
 
   const getTabValue = useCallback((dataScreenSummary: any) => {
@@ -187,15 +142,6 @@ export const ScreenSummaryDetails = ({
     } else return [];
   },[campaignId]);
 
-  const refreshScreenSummary = () => {
-    dispatch(
-      getScreenSummaryPlanTableData({
-        id: campaignId,
-        screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-      })
-    );
-  };
-
   useEffect(() => {
     if (!successAddCampaignDetails) return;
     setPageSuccess(true);
@@ -203,266 +149,197 @@ export const ScreenSummaryDetails = ({
 
   useEffect(() => {
     if (!pageSuccess) return;
-    dispatch(
-      getScreenSummaryData({
-        id: campaignId,
-        type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-          ?.selectedType,
-      })
-    );
-    dispatch(
-      getPlanningPageFooterData({
-        id: campaignId,
-        pageName: "Screen Summary Page",
-      })
-    );
-    dispatch({
-      type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
-    });
-    dispatch({
-      type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET,
-    });
-  
+    dispatch(getScreenSummaryData({ id: campaignId, type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType }));
+    dispatch(getPlanningPageFooterData({ id: campaignId, pageName: "Screen Summary Page" }));
+    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+    dispatch({ type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET });
   }, [campaignId, dispatch, pageSuccess]);
 
   useEffect(() => {
     if (screenSummaryData || screensBuyingCount) {
-      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
-        [campaignId]: screensBuyingCount,
-      });
+      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: screensBuyingCount });
       setCityTabData(getTabValue(screenSummaryData));
+      const selectedCity = Object.keys(screensBuyingCount ?? {})[Number(currentSummaryTab) - 1];
+      setCurrentCity(selectedCity);
+      setZoneFilters(Object.keys(cityZones[selectedCity] ?? {}));
+      setTpFilters(Object.keys(cityTP[selectedCity] ?? {}));
+      // console.log(Object.keys(screenTypes[selectedCity]) ?? {});
+      setStFilters(Object.keys(screenTypes[selectedCity] ?? {}));
     }
-  }, [dispatch, campaignId, getTabValue, screenSummaryData, screensBuyingCount]);
+  }, [dispatch, campaignId, getTabValue, screenSummaryData, screensBuyingCount, currentSummaryTab, cityZones, cityTP, screenTypes]);
+
+  // Function to re-evaluate the filter state based on screen statuses
+  const reEvaluateFilters = () => {
+    const updatedZoneFilters: any[] = [];
+    const updatedTpFilters: any[] = [];
+    const updatedStFilters: any[] = [];
+  
+    // Iterate through all screens in the current city
+    Object.values(screensBuyingCount[currentCity] || {}).forEach((screen: any) => {
+      const screenType = screen.data.screenType || "";
+
+      const { zoneOrRegion, touchPoint } = screen.data.location || {};
+      // If the screen is selected, add its zone, touchpoint, and screenType to the filters
+      if (screen.status) {
+        if (zoneOrRegion && !updatedZoneFilters.includes(zoneOrRegion)) {
+          updatedZoneFilters.push(zoneOrRegion);
+        }
+        if (touchPoint && !updatedTpFilters.includes(touchPoint)) {
+          updatedTpFilters.push(touchPoint);
+        }
+        if (screenType && !updatedStFilters.includes(screenType)) {
+          updatedStFilters.push(screenType);
+        }
+      }
+    });
+  
+    // Update the filter states
+    setZoneFilters(updatedZoneFilters);
+    setTpFilters(updatedTpFilters);
+    setStFilters(updatedStFilters);
+  };
+
+  useEffect(() => {
+    reEvaluateFilters();
+  }, [screensBuyingCount, currentCity]);
 
   const handleSave = () => {
     if (!pathname.split("/").includes("view")) {
       if (currentTab === "1") {
         setCurrentTab("2");
       } else {
-        dispatch(
-          addDetailsToCreateCampaign({
-            pageName: "Screen Summary Page",
-            id: campaignId,
-            totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-            totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-              campaignId
-            ]?.total?.totalImpression,
-            totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-              campaignId
-            ]?.total?.totalReach,
-            totalCampaignBudget: getDataFromLocalStorage(
-              SCREEN_SUMMARY_TABLE_DATA
-            )?.[campaignId]?.total?.totalCampaignBudget,
-            totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
-              campaignId
-            ]?.total?.totalCpm,
-            duration:
-              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
-          })
-        );
-        setCurrentStep(step+1);
+        dispatch(addDetailsToCreateCampaign({
+          pageName: "Screen Summary Page",
+          id: campaignId,
+          totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+          totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalImpression,
+          totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalReach,
+          totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalCampaignBudget,
+          totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalCpm,
+          duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
+        }));
+        setCurrentStep(step + 1);
       }
     } else {
-      setCurrentStep(step+1);
+      setCurrentStep(step + 1);
     }
   };
 
   const filteredScreensData = useCallback(() => {
-    // console.log(Object.keys(screens)[Number(currentSummaryTab) - 1])
-    let allResult: any;
-    let result = Object.values(
-      screensBuyingCount[
-        Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]
-      ]
-    )?.map((f: any) => f.data);
+    if (!screensBuyingCount || !Object.keys(screensBuyingCount).length) return { result: [], allResult: [] };
 
-    allResult = result;
-    // Filter by zone if zoneFilters has values
+    let selectedCityScreens = screensBuyingCount[Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]] ?? {};
+    let result = Object.values(selectedCityScreens)?.map((f: any) => f.data);
+
+    let allResult = result;
     if (zoneFilters.length > 0) {
-      result = result?.filter((s: any) =>
-        zoneFilters.includes(s.location.zoneOrRegion)
-      );
-      // console.log(result, "zone");
+      result = result?.filter((s: any) => zoneFilters.includes(s.location?.zoneOrRegion ?? ""));
     }
-
-    // Filter by touch point if tpFilters has values
     if (tpFilters.length > 0) {
-      result = result?.filter((s: any) =>
-        tpFilters.includes(s.location.touchPoint)
-      );
-      // console.log(result, "tp");
+      result = result?.filter((s: any) => tpFilters.includes(s.location?.touchPoint ?? ""));
     }
-
-    // Filter by screen type if stFilters has values
     if (stFilters.length > 0) {
-      result = result?.filter((s: any) => stFilters.includes(s.screenType));
-      // console.log(result, "st");
+      result = result?.filter((s: any) => stFilters.includes(s.screenType ?? ""));
     }
     return { result, allResult };
-  }, [
-    screensBuyingCount,
-    zoneFilters,
-    tpFilters,
-    stFilters,
-    currentSummaryTab,
-  ]);
+  }, [screensBuyingCount, zoneFilters, tpFilters, stFilters, currentSummaryTab]);
 
+  const handleScreenClick = ({ screen, city, statusRes, suppressMessage = false }: any) => {
+    const screenId = screen._id;
+    const networkType = ""; // Assuming networkType is not used for now
 
-  const handleScreenClick = useCallback(
-    ({ screen, city, statusRes, suppressMessage = false }: any) => {
-      
-      const screenId = screen._id;
-      // const networkType = screen.networkType;
-      const networkType = "";
+    const updatedScreensBuyingCount = { ...screensBuyingCount };
+    const currentCityScreens = updatedScreensBuyingCount[city] || {};
 
-      
-      // Create a deep clone to avoid modifying the original state directly
-      const updatedScreensBuyingCount = { ...screensBuyingCount };
-
-      const currentCityScreens = updatedScreensBuyingCount[city] || {};
-
-      if (networkType !== "") {
-
-        // change network type in db then implement
-        let newStatus;
-        if (statusRes !== undefined) {
-          newStatus = statusRes;
-        } else if (currentCityScreens[screenId]) {
-          newStatus = !currentCityScreens[screenId].status;
-        }
-
-        for (const id in currentCityScreens) {
-          if (currentCityScreens[id].data.networkType === networkType) {
-            currentCityScreens[id] = {
-              ...currentCityScreens[id],
-              status: newStatus,
-            }
-          }
-        }
-        if (!suppressMessage) {
-          message.info(`You are ${newStatus === true ? "selecting" : "deselecting"} a screen from ${networkType}. Any action applicable to any one screen of any network will be applicable on all the screens of the same network.`)
-        }
-      } else {
-        // Toggle the status of the selected screen
-        if (statusRes === undefined && currentCityScreens[screenId]) {
-          currentCityScreens[screenId].status =
-            !currentCityScreens[screenId].status;
-        } else {
-          currentCityScreens[screenId] = {
-            status: statusRes,
-            data: screen,
-          };
+    if (networkType !== "") {
+      let newStatus = statusRes !== undefined ? statusRes : !currentCityScreens[screenId]?.status;
+      for (const id in currentCityScreens) {
+        if (currentCityScreens[id].data.networkType === networkType) {
+          currentCityScreens[id] = { ...currentCityScreens[id], status: newStatus };
         }
       }
+      if (!suppressMessage) {
+        message.info(`You are ${newStatus ? "selecting" : "deselecting"} a screen from ${networkType}. Any action applicable to any one screen of any network will be applicable on all the screens of the same network.`);
+      }
+    } else {
+      if (statusRes === undefined && currentCityScreens[screenId]) {
+        currentCityScreens[screenId].status = !currentCityScreens[screenId].status;
+      } else {
+        currentCityScreens[screenId] = { status: statusRes, data: screen };
+      }
+    }
 
-      // Update the specific city's screens in screensBuyingCount while preserving other cities
-      updatedScreensBuyingCount[city] = currentCityScreens;
+    updatedScreensBuyingCount[city] = currentCityScreens;
+    setScreensBuyingCount(updatedScreensBuyingCount);
+    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: updatedScreensBuyingCount });
+  };
 
-      // Save the updated state
-      setScreensBuyingCount(updatedScreensBuyingCount);
-      // alert(`You are ${newStatus ? "selecting" : "deselecting"} screen in ${networkType} network, all the screens`)
-      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
-        [campaignId]: updatedScreensBuyingCount,
-      });
-      // refreshScreenSummary();
-    },
-    [screensBuyingCount, setScreensBuyingCount, campaignId]
-  );
-
-  const handleScreenTypeClick = ({
-    screenType,
-    myData,
-    city,
-    touchpoint,
-    statusNow,
-    zone,
-  }: any) => {
-    // const updatedScreens = { ...screensBuyingCount[currentCity] };
-    const screens: any = [];
-
+  const handleScreenTypeClick = ({ screenType, myData, city, touchpoint, statusNow, zone }: any) => {
+    const screens: any[] = [];
     const stToggle = { ...screenTypeToggle };
 
     if (zone !== "") {
-      myData[zone]?.map((s: any) => {
-        screens.push(s);
-      });
+      myData[zone]?.forEach((s: any) => screens.push(s));
     } else {
       for (const zone in myData) {
-        myData[zone]?.map((s: any) => {
-          screens.push(s);
-        });
+        myData[zone]?.forEach((s: any) => screens.push(s));
       }
     }
 
-    // Get current status for all screens in the type
-    const allSelected = screens.every(
-      (s: any) => screensBuyingCount[currentCity]?.[s._id]?.status
-    );
-
+    const allSelected = screens.every((s: any) => screensBuyingCount[currentCity]?.[s._id]?.status);
     stToggle[city][touchpoint][screenType] = !allSelected;
-    // console.log(stToggle[city][touchpoint][screenType]);
-    // Toggle screen type status based on current status
+    saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, { [campaignId]: stToggle });
     setScreenTypeToggle(stToggle);
-    saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, {
-      [campaignId]: stToggle,
-    });
-    const networkMessageTracker = new Set<string>();
 
+    const networkMessageTracker = new Set<string>();
     screens.forEach((s: any) => {
       const shouldShowMessage = s.network !== "" && !networkMessageTracker.has(s.networkType);
-      handleScreenClick({
-        screen: s,
-        city,
-        touchpoint,
-        statusRes: !allSelected,
-        suppressMessage: !shouldShowMessage,
-      }); // Update individual screen status
+      handleScreenClick({ screen: s, city, touchpoint, statusRes: !allSelected, suppressMessage: !shouldShowMessage });
       if (shouldShowMessage) {
         networkMessageTracker.add(s.networkType);
       }
     });
-
-    // Update the screens buying count and save
-    setScreensBuyingCount({ ...screensBuyingCount });
-    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
-      [campaignId]: { ...screensBuyingCount },
-    });
   };
 
   const handleFilterSelection = ({ type, value, checked }: any) => {
-
+    // Update the filter state (zoneFilters, tpFilters, or stFilters)
     if (type === "zone") {
-      if (checked) {
-        setZoneFilters((prev: any) => {
-          return [...prev, value];
-        });
-      } else {
-        setZoneFilters((prev: any) => {
-          return prev.filter((item: any) => item !== value);
-        });
-      }
+      setZoneFilters((prev: any[]) => (checked ? [...prev, value] : prev.filter((item: any) => item !== value)));
     }
     if (type === "tp") {
-      if (checked) {
-        setTpFilters((prev: any) => {
-          return [...prev, value];
-        });
-      } else {
-        setTpFilters((prev: any) => {
-          return prev.filter((item: any) => item !== value);
-        });
-      }
+      setTpFilters((prev: any[]) => (checked ? [...prev, value] : prev.filter((item: any) => item !== value)));
     }
     if (type === "st") {
-      if (checked) {
-        setStFilters((prev: any) => {
-          return [...prev, value];
+      setStFilters((prev: any[]) => (checked ? [...prev, value] : prev.filter((item: any) => item !== value)));
+    }
+
+    // Call handleScreenTypeClick to update the status of all screens within the filter
+    if (type === "zone" || type === "tp" || type === "st") {
+      const filterValue = value;
+
+      // Find all screens that match the filter
+      const filteredScreens = Object.values(screensBuyingCount[currentCity] || {}).filter((screen: any) => {
+        if (type === "zone") {
+          return screen.data.location?.zoneOrRegion === filterValue;
+        } else if (type === "tp") {
+          return screen.data.location?.touchPoint === filterValue;
+        } else if (type === "st") {
+          return screen.data.screenType === filterValue;
+        }
+        return false;
+      });
+
+      // Update the status of all filtered screens
+      filteredScreens.forEach((screen: any) => {
+        handleScreenClick({
+          screen: screen.data,
+          city: currentCity,
+          statusRes: checked, // Set status to true if checked, false if unchecked
+          suppressMessage: true, // Suppress messages to avoid spamming
         });
-      } else {
-        setStFilters((prev: any) => {
-          return prev.filter((item: any) => item !== value);
-        });
-      }
+      });
+      // After updating screen statuses, re-evaluate the filter state
+      reEvaluateFilters();
     }
   };
 
@@ -512,7 +389,7 @@ export const ScreenSummaryDetails = ({
                     {!loadingScreenSummary && screenSummaryData && cityTabData?.length !== 0 && (
                       <TabWithoutIcon
                         currentTab={currentSummaryTab}
-                        setCurrentTab={handleSelectCurrentTab}
+                        setCurrentTab={setCurrentSummaryTab}
                         tabData={cityTabData}
                       />
                     )}
@@ -557,7 +434,7 @@ export const ScreenSummaryDetails = ({
                     )}
                     <Tooltip title="Click to see the list view">
                       <div
-                        className={`truncate p-1 h-6 border rounded flex items-center gap-1 ${
+                        className={`cursor-pointer truncate p-1 h-6 border rounded flex items-center gap-1 ${
                           listView && "border-primaryButton"
                         }`}
                         onClick={() => setListView(true)}
@@ -571,7 +448,7 @@ export const ScreenSummaryDetails = ({
                     </Tooltip>
                     <Tooltip title="Click to see the grid view">
                       <div
-                        className={`truncate p-1 h-6 border rounded flex items-center gap-1 ${
+                        className={`cursor-pointer truncate p-1 h-6 border rounded flex items-center gap-1 ${
                           !listView && "border-primaryButton"
                         }`}
                         onClick={() => setListView(false)}
@@ -599,8 +476,6 @@ export const ScreenSummaryDetails = ({
                     setCityTP={setCityTP}
                     cityTP={cityTP}
                     setScreenTypes={setScreenTypes}
-                    refreshScreenSummary={refreshScreenSummary}
-                    priceFilter={priceFilter}
                     campaignId={campaignId}
                     listView={listView}
                     screenTypeToggle={screenTypeToggle}
@@ -632,19 +507,20 @@ export const ScreenSummaryDetails = ({
                       />
                     </div>
                     <div className="col-span-9 rounded grid grid-cols-12 flex flex-wrap gap-4 overflow-scroll no-scrollbar h-[60vh]">
-                      {filteredScreensData()
-                        ?.result?.filter((sc: any) => {
-                          return (
-                            sc.pricePerSlot >= priceFilter?.min &&
-                            sc.pricePerSlot <= priceFilter?.max
-                          );
-                        })
+                      {filteredScreensData()?.result
+                        // ?.filter((sc: any) => {
+                        //   return (
+                        //     sc.pricePerSlot >= priceFilter?.min &&
+                        //     sc.pricePerSlot <= priceFilter?.max
+                        //   );
+                        // })
                         ?.map((screen: any, index: any) => (
                           <div key={index} className="col-span-3">
                             <ViewPlanPic
                               screen={screen}
                               screens={screensBuyingCount}
                               currentSummaryTab={currentSummaryTab}
+                              handleScreenClick={handleScreenClick}
                             />
                           </div>
                         ))}

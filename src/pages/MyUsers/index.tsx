@@ -2,21 +2,17 @@ import { useNavigate } from "react-router-dom";
 import { AUTH } from "../../routes/routes";
 import {
   CAMPAIGN_MANAGER,
-  CAMPAIGN_PLANNER,
-  MASTER_USER_ROLE,
   USER_DELETE_RESET,
-  USER_ROLE_PRIMARY,
-  USER_ROLE_SECONDARY,
   USERS_DELETE_PLANNING_PAGE,
   USERS_GET_PLANNING_PAGE,
 } from "../../constants/userConstants";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { deleteUser, getUserList } from "../../actions/userAction";
 import { message } from "antd";
 import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import { AddUserDetails } from "../../components/popup/AddUserDetails";
+import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 
 export const MyUsers = (props: any) => {
   const navigate = useNavigate();
@@ -72,6 +68,7 @@ export const MyUsers = (props: any) => {
         }));
       }
     }
+    removeAllKeyFromLocalStorage();
   }, [userInfo]);
 
   return (

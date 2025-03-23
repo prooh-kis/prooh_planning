@@ -8,10 +8,6 @@ export const ScreenFilters = ({
   zoneFilters,
   tpFilters,
   stFilters,
-  setCurrentCity,
-  setZoneFilters,
-  setTpFilters,
-  setStFilters,
   handleFilterSelection,
   filteredScreensData,
   screensBuyingCount,
@@ -21,19 +17,7 @@ export const ScreenFilters = ({
   setIsOpen,
   listView,
 }: any) => {
-  console.log(screensBuyingCount);
 
-  useEffect(() => {
-    const selectedCity = Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1];
-    setCurrentCity(selectedCity);
-
-    setZoneFilters(Object.keys(cityZones[Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]]));
-    setTpFilters(Object.keys(cityTP[Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]]));
-    setStFilters(Object.keys(screenTypes[Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]]));
-  }, [cityTP, cityZones, currentSummaryTab, screenTypes, screensBuyingCount, setCurrentCity, setStFilters, setTpFilters, setZoneFilters]);
-  
-  // console.log(Object.keys(cityZones[Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]]))
-  console.log(cityZones);
   return (
     <div className="">
       {listView ? (
@@ -128,9 +112,10 @@ export const ScreenFilters = ({
                         <CheckboxInput
                           label={tp}
                           checked={tpFilters?.includes(tp)}
-                          onChange={(checked) =>
+                          onChange={(checked) => {
+                            console.log(tpFilters);
                             handleFilterSelection({ type: "tp", value: tp, checked })
-                          }
+                          }}
                         />
                         <p className="text-[14px]">
                           ({filteredScreensData()?.allResult?.filter((s: any) => s?.location?.touchPoint === tp)?.length})

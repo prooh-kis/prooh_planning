@@ -68,35 +68,20 @@ export const VendorConfirmationDetails = ({
 
   const [selectedCampaignIds, setSelectedCampaignIds] = useState<any>([]);
 
+  // Initialize vendorInput with fallback values
   const [vendorInput, setVendorInput] = useState<any>({
     pageName: "View Final Plan Page",
     id: campaignId,
-    name: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || "",
-    brandName:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName ||
-      "",
-    clientName:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.clientName ||
-      "",
-    campaignType:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.campaignType ||
-      "",
-    startDate:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startData ||
-      "",
-    endDate:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate || "",
-    duration:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30,
-    selectedType:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType ||
-      "",
-    screenIds:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds ||
-      [],
-    triggers:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.triggers || [],
-    // totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)["total"].totalCampaignBudget,
+    name: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || "N/A",
+    brandName: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName || "N/A",
+    clientName: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.clientName || "N/A",
+    campaignType: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.campaignType || "N/A",
+    startDate: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startDate || "N/A",
+    endDate: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate || "N/A",
+    duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30,
+    selectedType: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType || "N/A",
+    screenIds: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds || [],
+    triggers: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.triggers || [],
   });
 
   const vendorConfirmationDetailsGet = useSelector(
@@ -153,8 +138,13 @@ export const VendorConfirmationDetails = ({
   };
 
   const sendEmailToAll = () => {
+    if (!statusTableData) {
+      console.error("statusTableData is not available");
+      return;
+    }
+
     const screenOwnerEmails = Array.from(
-      new Set(statusTableData?.map((s: any) => s.screenVendorEmail))
+      new Set(statusTableData.map((s: any) => s.screenVendorEmail))
     );
 
     screenOwnerEmails?.forEach((email: any) => {
@@ -277,32 +267,28 @@ export const VendorConfirmationDetails = ({
       return aws?.awsURL;
     } catch (error: any) {
       message.error(error);
+      throw new Error("Failed to get AWS URL");
     }
   };
 
   const handleSaveAndContinue = async () => {
-    if (!pathname.split("/").includes("view")) {
+    let imageArr: string[] = [];
+    for (let data of files) {
+      let url = await getAWSUrl(data);
+      imageArr.push(url);
+    }
+    dispatch(
+      addDetailsToCreateCampaign({
+        pageName: "Vendor Confirmation Page",
+        id: campaignId,
+        vendorApprovalImgs: imageArr, // return url array
+      })
+    );
 
-        let imageArr: string[] = [];
-        for (let data of files) {
-          let url = await getAWSUrl(data);
-          imageArr.push(url);
-        }
-        dispatch(
-          addDetailsToCreateCampaign({
-            pageName: "Vendor Confirmation Page",
-            id: campaignId,
-            vendorApprovalImgs: imageArr, // return url array
-          })
-        );
-        
-        if (isDisabled) {
-          message.error(
-            "You will be redirected to campaign dashboard, once the campaign has started. Please wait..."
-          );
-        } else {
-          navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignId}`);
-        }
+    if (isDisabled) {
+      message.error(
+        "You will be redirected to campaign dashboard, once the campaign has started. Please wait..."
+      );
     } else {
       navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignId}`);
     }
@@ -315,21 +301,22 @@ export const VendorConfirmationDetails = ({
   }, [dispatch, successAddCampaignDetails, setPageSuccess]);
 
   useEffect(() => {
-    if (!pageSuccess) return;
-
-    dispatch(
-      getVendorConfirmationStatusTableDetails({
-        id: campaignId,
-      })
-    );
-    dispatch(getVendorConfirmationDetails(vendorInput));
-    dispatch(
-      getPlanningPageFooterData({
-        id: campaignId,
-        pageName: "Vendor Confirmation Page",
-      })
-    );
-  }, [pageSuccess, dispatch, campaignId, vendorInput]);
+    if (!successAddCampaignDetails && !pageSuccess) {
+      // Fetch data even if pageSuccess is false initially
+      dispatch(
+        getVendorConfirmationStatusTableDetails({
+          id: campaignId,
+        })
+      );
+      dispatch(getVendorConfirmationDetails(vendorInput));
+      dispatch(
+        getPlanningPageFooterData({
+          id: campaignId,
+          pageName: "Vendor Confirmation Page",
+        })
+      );
+    }
+  }, [dispatch, campaignId, vendorInput, successAddCampaignDetails, pageSuccess]);
 
   const handleOpenStatusModel = () => {
     setOpen((pre: boolean) => !open);
@@ -352,8 +339,6 @@ export const VendorConfirmationDetails = ({
               "Pause",
               "Deleted",
             ].includes(c.status)
-
-          // c.status === "Pending"
         ).length || 0,
       "Third Party": 0,
     },
@@ -379,7 +364,6 @@ export const VendorConfirmationDetails = ({
               "Pause",
               "Deleted",
             ].includes(c.status)
-          // c.status !== "Pending"
         )?.length || 0,
       "Third Party": 0,
     },
@@ -471,13 +455,11 @@ export const VendorConfirmationDetails = ({
                       (c: any) =>
                         c.status !==
                         CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED
-                      // c.status !== "Pending"
                     )
                     ?.filter(
                       (c: any) =>
                         c.status !==
                         CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
-                      // c.status !== "Pending"
                     ).length,
                   statusTableData?.filter(
                     (c: any) =>
@@ -530,6 +512,7 @@ export const VendorConfirmationDetails = ({
             onDoubleClick={() => setIsDisabled(!isDisabled)}
           >
             <Footer
+              mainTitle="See Dashboard"
               handleBack={() => {
                 setCurrentStep(step - 1);
               }}

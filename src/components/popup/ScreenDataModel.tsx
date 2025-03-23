@@ -37,7 +37,6 @@ export function ScreenDataModel({
 }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<any>("1");
-  const [currentDayTab, setCurrentDayTab] = useState<any>("1");
 
   const [allDays, setAllDays] = useState<any>([
     {
@@ -370,8 +369,8 @@ export function ScreenDataModel({
               type="submit"
               className={
                 !isAdded
-                  ? "w-full border border-1 py-2 px-4 rounded-md hover:bg-[#129BFF] hover:text-[#FFFFFF] text-lg"
-                  : "w-full border border-1 py-2 px-4 rounded-md hover:bg-red-400 hover:text-[#FFFFFF] text-lg"
+                  ? "w-full border border-1 py-2 px-4 bg-primaryButton rounded-md hover:bg-[#D3D3D3] text-[#FFFFFF] text-lg"
+                  : "w-full border border-1 py-2 px-4 bg-[#EF4444] rounded-md hover:bg-[#D3D3D3] text-[#FFFFFF] text-lg"
               }
             >
               {isAdded ? "Remove Screen" : "Add this screen"}

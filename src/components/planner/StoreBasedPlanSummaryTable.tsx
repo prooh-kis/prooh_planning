@@ -172,6 +172,7 @@ export const StoreBasedPlanSummaryTable = ({
 
           <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
             <Footer
+              mainTitle="Continue"
               handleBack={() => {
                 setCurrentStep(step - 1);
               }}

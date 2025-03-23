@@ -10,7 +10,7 @@ import { UploadCreativesV2Popup } from "../../components/popup/UploadCreativesV2
 import { ShowMediaFile } from "../../components/molecules/ShowMediaFIle";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
-import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { getDataFromLocalStorage, removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 import { ALL_BRAND_LIST } from "../../constants/localStorageConstants";
 import { NoDataView, SearchInputField } from "../../components";
 
@@ -112,6 +112,7 @@ export const MyCreativesPage: React.FC = () => {
   };
 
   useEffect(() => {
+    removeAllKeyFromLocalStorage();
     dispatch(getCreativesMediaAction({ userId: userInfo?._id }));
   }, [dispatch, userInfo]);
 

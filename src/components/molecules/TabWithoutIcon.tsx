@@ -15,7 +15,7 @@ interface Props {
 export function  TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
 
   return (
-    <div className="inline-flex items-center gap-4 w-fit">
+    <div className="inline-flex items-center gap-4 w-fit cursor-pointer">
       {tabData?.map((tab: TabInterface, index: any) => (
         <div
           key={index}
@@ -24,7 +24,7 @@ export function  TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
           }}
           className={
             currentTab === tab.id
-              ? "flex gap-4 items-center text-[16px] border-b-2 border-primaryButton py-2  pr-2"
+              ? "flex gap-4 items-center text-[16px] border-b-2 border-primaryButton py-2 pr-2"
               : "flex gap-2 items-center text-[16px] py-2 pr-2 border-b-2 border-white"
           }
         >

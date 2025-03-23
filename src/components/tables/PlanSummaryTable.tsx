@@ -47,7 +47,6 @@ export function PlanSummaryTable({
         ? getSelectedScreenIdsFromAllCities(screensBuyingCount)
         : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds;
 
-    console.log(screenIds);
     if (
       !loading &&
       !data &&
@@ -91,14 +90,7 @@ export function PlanSummaryTable({
         "No screens selected yet, please select screens to proceed..."
       );
     }
-  }, [
-    campaignId,
-    screensBuyingCount,
-    successAddCampaignDetails,
-    priceData,
-    dispatch,
-    setCurrentStep,
-  ]);
+  }, [campaignId, screensBuyingCount, successAddCampaignDetails, priceData, dispatch, setCurrentStep, getSelectedScreenIdsFromAllCities, loading, data, regularVsCohort]);
 
   return (
     <div className="w-full max-h-[60vh] overflow-scroll no-scrollbar ">

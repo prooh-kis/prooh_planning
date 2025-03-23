@@ -5,6 +5,7 @@ import { getCampaignDashboardData } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
+import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 
 export const CampaignDashboardPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -31,14 +32,15 @@ export const CampaignDashboardPage: React.FC = () => {
   } = campaignDashboardDataGet;
 
   useEffect(() => {
+    removeAllKeyFromLocalStorage();
     dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     dispatch(getCampaignDashboardData({ id: campaignId }));
 
-    // const interval = setInterval(() => {
-    //   dispatch(getCampaignDashboardData({ id: campaignId })); // Refresh data every 5 seconds
-    // }, 600000);
+    const interval = setInterval(() => {
+      dispatch(getCampaignDashboardData({ id: campaignId })); // Refresh data every 5 seconds
+    }, 600000);
   
-    // return () => clearInterval(interval); 
+    return () => clearInterval(interval); 
   }, [dispatch, campaignId]);
   return (
     <div className="w-full h-full">
