@@ -6,7 +6,7 @@ import {
   MY_REQUESTS_LIST,
   USERS,
 } from "../../routes/routes";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signout } from "../../actions/userAction";
 import { useState } from "react";
@@ -15,16 +15,22 @@ import {
   CAMPAIGN_PLANNER,
   SCREEN_OWNER,
 } from "../../constants/userConstants";
+import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
+import { CAMPAIGN_PLAN_TYPE_KNOW, CAMPAIGN_PLAN_TYPE_REGULAR, CAMPAIGN_PLAN_TYPE_STORE, CAMPAIGN_PLAN_TYPE_TOPICAL } from "../../constants/campaignConstants";
 
 export const Menu = (props: any) => {
   const { userInfo } = props;
 
+  const { pathname } = useLocation();
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggleDropdown = () => {
+    if ([CAMPAIGN_PLAN_TYPE_KNOW, CAMPAIGN_PLAN_TYPE_REGULAR, CAMPAIGN_PLAN_TYPE_STORE, CAMPAIGN_PLAN_TYPE_TOPICAL, CAMPAIGN_PLAN_TYPE_REGULAR]?.filter((plan: any) => !pathname.includes(plan)).length === 0) {
+      removeAllKeyFromLocalStorage();
+    }
     setIsOpen(!isOpen);
   };
 
