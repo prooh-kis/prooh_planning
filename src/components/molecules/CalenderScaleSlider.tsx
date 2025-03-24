@@ -93,7 +93,7 @@ export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({
                                 && "bg-[#22C55E] animate-ping"
                    
                             }`}
-                          ></div>
+                          />
                           </div>
                         </div>
                       );
@@ -102,7 +102,7 @@ export const CalendarScaleSlider: React.FC<CalendarScaleSliderProps> = ({
                 </div>
               ) : (
                 // If it's not the played week, collapse it into a single circle
-                <div className="flex flex-col items-center w-20">
+                <div className="flex flex-col mr-2 items-center w-20">
                   <div className="text-[12px] text-gray-400">
                     Week {weekIndex + 1}
                   </div>
