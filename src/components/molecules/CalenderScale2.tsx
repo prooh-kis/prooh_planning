@@ -98,7 +98,7 @@ export const CalenderScaleStepper = ({
         <div className="flex-1 h-1 bg-gray-200 relative mx-4">
           <div className="absolute inset-x-0 flex justify-between">
             <div
-              className="absolute h-1 inset-x-0 bg-primaryButton transition-all duration-500"
+              className="absolute h-1 inset-x-0 bg-primaryButton rounded transition-all duration-500"
               style={{
                 width: `${
                   Number((currentWeek - 1) / (weeks.length - 1)) * 100
@@ -125,8 +125,10 @@ export const CalenderScaleStepper = ({
                 <div
                   className={`relative w-4 h-4 rounded-full -mt-1.5 flex flex-col items-center
                     ${
-                      i <= currentWeek - 1
+                      i < currentWeek - 1
                         ? "bg-primaryButton"
+                        : i == currentWeek - 1 
+                        ? "bg-[#22C55E]"
                         : "border border-primaryButton bg-gray-200"
                     }
                   `}
@@ -144,7 +146,17 @@ export const CalenderScaleStepper = ({
                       </div>
                     </div>
                   </Tooltip>
+                  <div
+                    className={`absolute w-4 h-4 rounded-full flex flex-col items-center
+                      ${
+                        i == currentWeek - 1 
+                          && "bg-[#22C55E] animate-ping"
+                          
+                      }
+                    `}
+                  />
                 </div>
+  
                 {/* Adjust label positioning: left-aligned for first step, centered otherwise, right-aligned for last step */}
                 {i === currentWeek - 1 && (
                   <div
@@ -170,7 +182,7 @@ export const CalenderScaleStepper = ({
         <div className="flex-1 h-1 bg-gray-200 relative mx-4">
           <div className="absolute inset-x-0 flex justify-between">
             <div
-              className="absolute h-1 inset-x-0 bg-primaryButton transition-all duration-500"
+              className="absolute h-1 inset-x-0 bg-primaryButton rounded transition-all duration-500"
               style={{
                 width: `${
                   (Number(currentDay - 1) /
@@ -200,87 +212,40 @@ export const CalenderScaleStepper = ({
                 <div
                   className={`relative w-4 h-4 rounded-full -mt-1.5 flex flex-col items-center
                     ${
-                      i <= currentDay - 1
+                      i < currentDay - 1
                         ? "bg-primaryButton"
+                        : i == currentDay - 1
+                        ? "bg-[#22C55E]"
                         : "border border-primaryButton bg-gray-200"
                     }
                   `}
                 >
+                  {/* Ping animation for the selected day */}
+                  <div
+                    className={`absolute w-4 h-4 rounded-full flex flex-col items-center
+                      ${i == currentDay - 1 && "bg-[#22C55E] animate-ping"}
+                    `}
+                  />
+
                   {/* Showing date on top */}
                   <Tooltip title={Object.values(weeks)[currentWeek - 1][1][i]}>
                     <div className="relative mt-[-32px] w-full">
                       <div
                         className={`font-custom flex w-full gap-2 -ml-[8px] text-[12px] ${
-                          i <= currentDay - 1
-                            ? "text-primaryButton"
-                            : "text-[#D6D2D2]"
+                          i <= currentDay - 1 ? "text-primaryButton" : "text-[#D6D2D2]"
                         }`}
                       >
-                        {Object.values(weeks)
-                          [currentWeek - 1][1][i].split("-")
+                        {Object.values(weeks)[currentWeek - 1][1][i]
+                          .split("-")
                           .splice(1, 2)
                           .join("/")}
                       </div>
                     </div>
                   </Tooltip>
                 </div>
-                <div
-                  className={`absolute top-full mt-2 flex items-center w-full
-                      ${
-                        i === 0 && i === currentDay - 1
-                          ? "left-8"
-                          : i === 0
-                          ? "left-0"
-                          : i + 1 ===
-                              Object.values(weeks)[currentWeek - 1][1].length &&
-                            i === currentDay - 1
-                          ? "right-12"
-                          : "left-1/2 transform -translate-x-1/2"
-                      }
-                  `}
-                >
-                  {/* showing date if days === today */}
-                  <div className={`relative -left-8`}>
-                    {i === currentDay - 1 && (
-                      <h1 className="font-custom text-[12px] text-primaryButton font-medium whitespace-nowrap">
-                        Today
-                      </h1>
-                    )}
-                  </div>
-                  {/* showing Calculated value in % */}
-                  <div
-                    className={`relative
-                    ${i === currentDay - 1 ? "-left-6" : ""}
-                    `}
-                  >
-                    {campaignData?.slotsPlayedPerDay?.filter(
-                      (data: any) =>
-                        formatDateForLogs(new Date(data.date)).apiDate ===
-                        formatDateForLogs(
-                          new Date(Object.values(weeks)[currentWeek - 1][1][i])
-                        ).apiDate
-                    ).length > 0 && (
-                      <h1
-                        className={`font-custom text-[12px] 
-                        ${
-                          getValueDateWise("countPromised", i) /
-                            getValueDateWise("count", i) <
-                          1
-                            ? "text-[#EF4444]"
-                            : "text-[#22C55E]"
-                        }
-                        `}
-                      >
-                        {getPercentageValue(
-                          getValueDateWise("count", i),
-                          getValueDateWise("countPromised", i)
-                        )}
-                      </h1>
-                    )}
-                  </div>
-                </div>
               </div>
             ))}
+
           </div>
         </div>
       </div>
