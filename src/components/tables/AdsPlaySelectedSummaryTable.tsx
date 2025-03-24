@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 interface TimeData {
   percentage: number;
@@ -18,7 +18,8 @@ interface DayWiseData {
 }
 interface Props {
   currentTab: keyof DayWiseData;
-  bottomTableData: BottomTableData;
+  bottomTableData?: BottomTableData;
+  totals?: any;
 }
 
 interface BottomTableData {
@@ -51,61 +52,40 @@ interface BottomTableData {
 }
 
 export const AdsPlaySelectedSummaryTable = ({
-  currentTab,
   resultData,
-  bottomTableData,
+  totals,
 }: any) => {
   const getUpto2Decimal = (value: any) => {
     return `${Number(value)?.toFixed(2)}%`;
   };
   return (
-    <div className="w-full border-r border-b">
-      {/* header of the table */}
-      <div className="flex w-full align-center bg-[#DEDEDE] text-[#2B2B2B] text-[14px] py-2">
+    <div className="w-full">
+      <div className="flex rounded-t w-full align-center bg-[#DEDEDE] text-[#2B2B2B] text-[14px] py-2">
         <h1 className="w-full text-center "></h1>
-        <h1 className="w-full text-center "> TouchPoint</h1>
-        <h1 className="w-full text-center "> Screen</h1>
-        <h1 className="w-full text-center "> T1 (Morning)</h1>
-        <h1 className="w-full text-center "> T2 (Afternoon)</h1>
-        <h1 className="w-full text-center "> T3 (Evening)</h1>
-        <h1 className="w-full text-center "> T4 (Night)</h1>
+        <h1 className="w-full text-center "> Touchpoint </h1>
+        <h1 className="w-full text-center "> Screen </h1>
+        <h1 className="w-full text-center "> Morning </h1>
+        <h1 className="w-full text-center "> Afternoon </h1>
+        <h1 className="w-full text-center "> Evening </h1>
+        <h1 className="w-full text-center "> Night </h1>
       </div>
-      <div className="flex w-full align-center py-2 text-[14px]">
+      <div className="flex w-full align-center py-2 text-[14px] border">
         <h1 className="w-full text-center ">Selected</h1>
-        <h1 className="w-full text-center ">{resultData ? Object.keys(resultData)?.length : 0}</h1>
-        <h1 className="w-full text-center ">{resultData ? resultData?.reduce((total: any, touchPoint: any) => total + touchPoint?.screenData?.length, 0) : 0}</h1>
-        <h1 className="w-full text-center ">
-          {getUpto2Decimal(bottomTableData?.selected?.morning)}
-        </h1>
-        <h1 className="w-full text-center ">
-          {" "}
-          {getUpto2Decimal(bottomTableData?.selected?.afternoon)}
-        </h1>
-        <h1 className="w-full text-center ">
-          {" "}
-          {getUpto2Decimal(bottomTableData?.selected?.evening)}
-        </h1>
-        <h1 className="w-full text-center ">
-          {" "}
-          {getUpto2Decimal(bottomTableData?.selected?.night)}
-        </h1>
+        <h1 className="w-full text-center ">{resultData?.length || 0}</h1>
+        <h1 className="w-full text-center ">{totals.totalScreens || 0}</h1>
+        <h1 className="w-full text-center ">{getUpto2Decimal(totals.selected.morning)}</h1>
+        <h1 className="w-full text-center ">{getUpto2Decimal(totals.selected.afternoon)}</h1>
+        <h1 className="w-full text-center ">{getUpto2Decimal(totals.selected.evening)}</h1>
+        <h1 className="w-full text-center ">{getUpto2Decimal(totals.selected.night)}</h1>
       </div>
-      <div className="flex w-full align-center bg-[#E8F6FF] text-[#1297E2] py-2 text-[14px] ">
+      <div className="rounded-b flex w-full align-center border-b border-x bg-[#E8F6FF] text-[#1297E2] py-2 text-[14px]">
         <h1 className="w-full text-center ">Total</h1>
-        <h1 className="w-full text-center ">{resultData ? Object.keys(resultData)?.length : 0}</h1>
-        <h1 className="w-full text-center ">{resultData ? resultData?.reduce((total: any, touchPoint: any) => total + touchPoint.screenData.length, 0) : 0}</h1>
-        <h1 className="w-full text-center ">
-          {getUpto2Decimal(bottomTableData?.selected?.morning)}
-        </h1>
-        <h1 className="w-full text-center ">
-          {getUpto2Decimal(bottomTableData?.selected?.afternoon)}
-        </h1>
-        <h1 className="w-full text-center ">
-          {getUpto2Decimal(bottomTableData?.selected?.evening)}
-        </h1>
-        <h1 className="w-full text-center ">
-          {getUpto2Decimal(bottomTableData?.selected?.night)}
-        </h1>
+        <h1 className="w-full text-center ">{resultData?.length || 0}</h1>
+        <h1 className="w-full text-center ">{resultData?.reduce((total: any, touchPoint: any) => total + touchPoint.screenData.length, 0) || 0}</h1>
+        <h1 className="w-full text-center ">100.00%</h1>
+        <h1 className="w-full text-center ">100.00%</h1>
+        <h1 className="w-full text-center ">100.00%</h1>
+        <h1 className="w-full text-center ">100.00%</h1>
       </div>
     </div>
   );

@@ -101,7 +101,7 @@ export function ScreenDataModel({
             </h1>
           </div>
           <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-6">
+            <div className="col-span-6 ">
               <CarouselImageView images={screen.images} />
             </div>
             <div className="col-span-6">

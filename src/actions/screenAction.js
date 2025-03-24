@@ -262,7 +262,7 @@ export const getScreenSummaryData =
     };
 
 export const getScreenSummaryDataIKnowItAll =
-  ({ id}) =>
+  ({ id }) =>
     async (dispatch, getState) => {
       dispatch({
         type: GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_REQUEST,

@@ -10,6 +10,7 @@ import {
   SCREEN_TYPE_TOGGLE_SELECTION,
 } from "../../constants/localStorageConstants";
 import { Tooltip } from "antd";
+import { CAMPAIGN_PLAN_TYPE_KNOW } from "../../constants/campaignConstants";
 
 export const ScreenSummaryTable = ({
   data,
@@ -73,12 +74,10 @@ export const ScreenSummaryTable = ({
                 let localCampaign =
                   getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId];
                 screens[city][`${myData[city][tp][st][zone][screen]?._id}`] = {
-                  status: localScreenData
-                    ? localScreenData.status
-                    : localCampaign?.screenIds?.length > 0 &&
-                      !localCampaign?.screenIds.includes(screenId)
-                    ? false
-                    : true,
+                  status: localScreenData ? localScreenData.status : 
+                    localCampaign?.screenIds?.length > 0 && !localCampaign?.screenIds.includes(screenId) ? false :
+                    localCampaign?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW ? false :
+                    true,
                   data: myData[city][tp][st][zone][screen],
                 };
               }
@@ -156,17 +155,8 @@ export const ScreenSummaryTable = ({
                 }}
               >
                 <div
-                  className={`grid ${
-                    Object.keys(cityZones[currentCity]).length > 3
-                      ? "grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))]"
-                      : "grid-cols-[repeat(auto-fit,minmax(4rem,0.5fr))]"
-                  } gap-0`}
-                  style={{
-                    width:
-                      Object.keys(cityZones[currentCity]).length > 3
-                        ? "calc(8rem * 8)"
-                        : "calc(4rem * 8)",
-                  }}
+                  className={`grid ${Object.keys(cityZones[currentCity]).length > 3 ? "grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))]" : "grid-cols-[repeat(auto-fit,minmax(6rem,0.5fr))]"} gap-0`}
+                  style={{ width: Object.keys(cityZones[currentCity]).length > 3 ? "calc(8rem * 8)" : "calc(6rem * 8)"}}
                 >
                   {Object.keys(cityZones[currentCity])?.map(
                     (d: any, i: any) => (
@@ -190,7 +180,7 @@ export const ScreenSummaryTable = ({
                   </Tooltip>
                 </div>
                 <div className="col-span-10">
-                  {Object.keys(cityTP?.[currentCity]?.[tp])?.map(
+                  {Object.keys(cityTP?.[currentCity]?.[tp] || {})?.map(
                     (st: any, j: any) => (
                       <div
                         key={j}
@@ -235,17 +225,8 @@ export const ScreenSummaryTable = ({
                           }}
                         >
                           <div
-                            className={`grid ${
-                              Object.keys(cityZones[currentCity]).length > 3
-                                ? "grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))]"
-                                : "grid-cols-[repeat(auto-fit,minmax(4rem,0.5fr))]"
-                            } gap-0`}
-                            style={{
-                              width:
-                                Object.keys(cityZones[currentCity]).length > 3
-                                  ? "calc(8rem * 8)"
-                                  : "calc(4rem * 8)",
-                            }}
+                            className={`grid ${Object.keys(cityZones[currentCity]).length > 3 ? "grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))]" : "grid-cols-[repeat(auto-fit,minmax(6rem,0.5fr))]"} gap-0`}
+                            style={{ width: Object.keys(cityZones[currentCity]).length > 3 ? "calc(8rem * 8)" : "calc(6rem * 8)"}}
                           >
                             {Object.keys(cityZones?.[currentCity])?.map(
                               (zone: any, k: any) => (
