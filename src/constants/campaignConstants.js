@@ -107,3 +107,5 @@ export const CAMPAIGN_STATUS_HOLD = "Hold"; //
 
 export const EDIT_CAMPAIGN = "edit";
 export const VIEW_CAMPAIGN = "view";
+
+export const EXCEL_DATA_TARGET_STORES = "ExcelDataTargetStores"

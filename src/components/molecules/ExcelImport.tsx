@@ -4,6 +4,8 @@ import { getDistance } from "geolib";
 import { ExcelExport } from "./ExcelExport";
 import { Tooltip } from "antd";
 import { PrimaryInput } from "../../components/atoms/PrimaryInput";
+import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
+import { EXCEL_DATA_TARGET_STORES } from "../../constants/campaignConstants";
 
 interface ExcelImportProps {
   open: any;
@@ -102,8 +104,10 @@ export function ExcelImport({
     ); // in meters
     return distance <= radius;
   };
- 
+
   const handleGetExcelData = useCallback((data: any) => {
+    if (data == null)
+      return
     const brandCoordinates = data.brand
       .map((x: any) => x.filter((y: any) => /^[+-]?\d+(\.\d+)?$/.test(y)))
       .filter((d: any) => d.length === 2);
@@ -111,10 +115,6 @@ export function ExcelImport({
     const compCoordinates = data.comp
       .map((x: any) => x.filter((y: any) => /^[+-]?\d+(\.\d+)?$/.test(y)))
       .filter((d: any) => d.length === 2);
-
-    // const coordinates = data
-    //   .map((x: any) => x.filter((y: any) => /^[+-]?\d+(\.\d+)?$/.test(y)))
-    //   .filter((d: any) => d.length === 2);
 
     if (validateGioData(data.brand) && validateGioData(data.comp)) {
       if (type.includes("brand")) {
@@ -125,9 +125,9 @@ export function ExcelImport({
       }
 
       const coordinatesWithScreensData: any = [];
+
       for (const coordinate of brandCoordinates) {
         const center = coordinate;
-
         let x = allScreens.filter((l: any) =>
           withinRadius(
             center,
@@ -135,14 +135,14 @@ export function ExcelImport({
               l.location.geographicalLocation.longitude,
               l.location.geographicalLocation.latitude,
             ],
-            circleRadius
+            circleRadius // 🔴 Ensure latest value
           )
         );
-        coordinatesWithScreensData.push({ screens: x, coordinate: coordinate });
+        coordinatesWithScreensData.push({ screens: x, coordinate });
       }
+
       for (const coordinate of compCoordinates) {
         const center = coordinate;
-
         let x = allScreens.filter((l: any) =>
           withinRadius(
             center,
@@ -153,10 +153,10 @@ export function ExcelImport({
             circleRadius
           )
         );
-        coordinatesWithScreensData.push({ screens: x, coordinate: coordinate });
+        coordinatesWithScreensData.push({ screens: x, coordinate });
       }
-      const filtered: any = getUniqueScreens(coordinatesWithScreensData);
-      const newFiltered: any = excelFilteredScreens;
+
+      const filtered = getUniqueScreens(coordinatesWithScreensData);
 
       if (type.includes("brand")) {
         setBrandScreens(filtered);
@@ -164,26 +164,54 @@ export function ExcelImport({
       if (type.includes("comp")) {
         setCompScreens(filtered);
       }
-      filtered?.forEach((f: any) => {
-        if (!newFiltered.map((nf: any) => nf._id).includes(f._id)) {
-          newFiltered.push(f);
-        }
-        return newFiltered;
+
+      setExcelFilteredScreens((prevFilteredScreens: any) => {
+        // Extract all valid screen IDs from the new filtered list
+        const newScreenIds = filtered.map((f: any) => f._id);
+
+        // Remove screens that are no longer in range
+        const updatedScreens = prevFilteredScreens.filter((screen: any) =>
+          newScreenIds.includes(screen._id)
+        );
+
+        // Add new screens that are not already present
+        filtered.forEach((f: any) => {
+          if (!updatedScreens.map((nf: any) => nf._id).includes(f._id)) {
+            updatedScreens.push(f);
+          }
+        });
+
+        return updatedScreens;
       });
 
-      setExcelFilteredScreens(newFiltered);
       handleFinalSelectedScreens({
         type: "add",
-        screens: newFiltered,
+        screens: filtered,
       });
-      let dataCircle: any = {};
-      dataCircle["brand"] = brandCoordinates;
-      dataCircle["comp"] = compCoordinates;
-      setCircleData(dataCircle);
+
+      setCircleData((prev: any) => ({
+        ...prev,
+        brand: brandCoordinates,
+        comp: compCoordinates,
+      }));
     } else {
       alert("Something went wrong, please send us correct data");
     }
-  },[allScreens, circleRadius, excelFilteredScreens, handleFinalSelectedScreens, setCircleData, setDataBrand, setDataComp, setExcelFilteredScreens, type]);
+  }, [
+    allScreens,
+    handleFinalSelectedScreens,
+    setCircleData,
+    setDataBrand,
+    setDataComp,
+    setExcelFilteredScreens,
+    type,
+    circleRadius, // ✅ Ensure this is included in dependencies
+  ]);
+
+  // 🔴 Ensure data updates when `circleRadius` changes
+  useEffect(() => {
+    handleGetExcelData(getDataFromLocalStorage(EXCEL_DATA_TARGET_STORES)); // Pass the correct Excel data here
+  }, [circleRadius]);
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -191,7 +219,7 @@ export function ExcelImport({
     if (file) {
       try {
         const data = await readExcelFile(file);
-        // console.log(data);
+        saveDataOnLocalStorage(EXCEL_DATA_TARGET_STORES, data)
         handleGetExcelData(data);
       } catch (error) {
         console.error("Error reading Excel file:", error);
@@ -213,11 +241,11 @@ export function ExcelImport({
           <div className="flex justify-start">
             <div className="flex justify-start gap-2 items-center py-2">
               <h1 className="lg:text-[16px] text-[14px] text-gray-500">
-                1. Choose your target stores 
+                1. Choose your target stores
               </h1>
               <Tooltip
-                  title="Download the sample excel sheet to edit it with the details of your desired stores and select screens in proximity of your desired locations"
-                  >
+                title="Download the sample excel sheet to edit it with the details of your desired stores and select screens in proximity of your desired locations"
+              >
                 <i className="fi fi-rs-info pr-1 lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
               </Tooltip>
               <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({excelFilteredScreens.length} sites)</h1>
@@ -230,7 +258,7 @@ export function ExcelImport({
               )}
             </div>
           </div>
-          
+
           <div className="flex justify-end items-center">
             <i className="fi fi-bs-circle text-[10px] text-[#22C55E] pr-2"></i>
             {/* <PrimaryInput
@@ -242,24 +270,25 @@ export function ExcelImport({
               action={setCircleRadius}
             /> */}
             <input
-              className="w-[24px] h-6"
-              type={"number"}
-              placeholder={`${circleRadius ? circleRadius/1000 : 1}`}
-              value={circleRadius ? circleRadius/1000 : 1}
-              onChange={(e: any) => {
-                if (e === 0) {
-                  setCircleRadius(1000)
+              className="w-[36px] h-6 text-center"
+              type="number"
+              placeholder={circleRadius ? (circleRadius / 1000).toString() : "1"}
+              value={circleRadius ? circleRadius / 1000 : ""}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const newValue = parseFloat(e.target.value) || 0; // Convert to number
+                if (newValue === 0) {
+                  setCircleRadius(1000);
                 } else {
-                  setCircleRadius(e.target.value * 1000);
+                  setCircleRadius(newValue * 1000);
                 }
               }}
             />
             <h1 className="lg:text-[14px] text-[12px] pl-1">km</h1>
           </div>
         </div>
-        
+
       </button>
-      
+
       {open["excel"] && (
         <div className="w-full">
           <div
@@ -292,10 +321,10 @@ export function ExcelImport({
                   </div>
                   <p className="lg:text-[14ps] text-[12px] text-blue truncate">({excelFilteredScreens.length} matching locations found)</p>
                 </div>
-        
+
               )}
             </div>
-            
+
             <ExcelExport
               fileName="store_location_coordinates"
             />

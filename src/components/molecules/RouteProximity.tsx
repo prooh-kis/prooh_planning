@@ -48,18 +48,23 @@ export const RouteProximity = ({
     const colors = ["#540b0e", "#e09f3e", "#073b4c", "#0f4c5c", "#ef476f"];
     return colors[index % 5];
   }
-
   const handleRouteSetup = async (originData: any, destinationData: any) => {
-    let route: any = {};
-    route["origin"] = originData[0];
-    route["destination"] = destinationData[0];
-    route["selectedScreens"] = [];
-    route["id"] = routes?.length + 1;
+    let newRoute: any = {};
+    newRoute["origin"] = originData[0];
+    newRoute["destination"] = destinationData[0];
+    newRoute["selectedScreens"] = [];
+    newRoute["id"] = routes?.length + 1;
 
-    if (routes.includes(route)) {
-    } else {
-      routes.push(route);
+    var addRoute = 0
+    for (const route of routes) {
+      if (route.origin === newRoute.origin && route.destination === newRoute.destination) {
+        addRoute = 1
+      }
     }
+
+    if (addRoute === 0 && newRoute.origin != null && newRoute.destination != null)
+      routes.push(newRoute)
+
     setRoutes([...routes]);
   };
 
@@ -83,6 +88,11 @@ export const RouteProximity = ({
     setRoutes(arr);
   };
 
+  useEffect(() => {
+    handleRouteSetup(routeOrigin, routeDestination);
+  }, [routeRadius]);
+
+
   return (
     <div className="py-4 border-b border-gray-100">
       <button type="button" className="flex w-full items-center justify-between"
@@ -98,8 +108,8 @@ export const RouteProximity = ({
             <div className="flex justify-start gap-2 items-center py-2">
               <h1 className="lg:text-[16px] text-[14px] text-gray-500 truncate">2. Choose your desired routes </h1>
               <Tooltip
-                  title="Enter the origin and destination of your desired routes and select all the screens in proximity of your desired routes"
-                  >
+                title="Enter the origin and destination of your desired routes and select all the screens in proximity of your desired routes"
+              >
                 <i className="fi fi-rs-info pr-1 lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
               </Tooltip>
               <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({routeFilteredScreens?.length} sites)</h1>
@@ -115,24 +125,20 @@ export const RouteProximity = ({
           <div className="flex justify-end items-center">
             <i className="fi fi-bs-circle text-[10px] text-[#22C55E] pr-2 flex items-center justify-center"></i>
             <input
-              className="w-[24px] h-6"
-              type={"number"}
-              placeholder={`${routeRadius/1000}`}
-              value={routeRadius/1000}
-              onChange={(e: any) => {
-                if (e === 0) {
-                  setRouteRadius(1000)
-                } else {
-                  setRouteRadius(e.target.value * 1000);
-                }
+              className="w-[36px] h-6 text-center"
+              type="number"
+              placeholder={`${routeRadius / 1000}`}
+              value={routeRadius / 1000}
+              onChange={(e) => {
+                const newValue = Number(e.target.value);
+                setRouteRadius(() => (newValue === 0 ? 1000 : newValue * 1000));
               }}
-              
             />
             <h1 className="lg:text-[14px] text-[12px] pl-1">km</h1>
           </div>
         </div>
-        
-        
+
+
       </button>
 
       {open["route"] && (
@@ -150,7 +156,7 @@ export const RouteProximity = ({
                 }
                 reset={routeOrigin.length === 0 ? true : false}
               /> */}
-              <MapSearchInput 
+              <MapSearchInput
                 setUserLocation={setUserLocation}
                 userLocation={userLocation}
                 handleClick={(e: any) => setRouteOrigin(e)}
@@ -174,7 +180,7 @@ export const RouteProximity = ({
                 }
                 reset={routeDestination.length === 0 ? true : false}
               /> */}
-            <MapSearchInput 
+              <MapSearchInput
                 setUserLocation={setUserLocation}
                 userLocation={userLocation}
                 handleClick={(e: any) => setRouteDestination(e)}
@@ -212,14 +218,13 @@ export const RouteProximity = ({
             <div className="overflow-scroll h-40 mb-1 border rounded">
               {routes?.map((route: any, index: any) => (
                 <div key={index} className={`
-                    ${
-                      index === 0 ? "bg-[#540b0e20]" : 
-                      index === 1 ? "bg-[#e09f3e20]" : 
-                      index === 2 ? "bg-[#073b4c20]" : 
-                      index === 3 ? "bg-[#0f4c5c20]" : 
-                      index === 4 ? "bg-[#ef476f20]" : 
-                      "bg-[#F6F6F6]"
-                    }
+                    ${index === 0 ? "bg-[#540b0e20]" :
+                    index === 1 ? "bg-[#e09f3e20]" :
+                      index === 2 ? "bg-[#073b4c20]" :
+                        index === 3 ? "bg-[#0f4c5c20]" :
+                          index === 4 ? "bg-[#ef476f20]" :
+                            "bg-[#F6F6F6]"
+                  }
                     p-2 my-1 rounded
                   `}
                   onClick={() => {
@@ -237,7 +242,7 @@ export const RouteProximity = ({
                           {route?.destination?.place_name?.split(",")[0]}
                         </span>
                         <span className="px-2 text-blue">
-                        ({route?.selectedScreens?.length})
+                          ({route?.selectedScreens?.length})
                         </span>
                       </p>
                       <i className="fi fi-sr-cross-small text-gray-700 flex items-center" onClick={() => handleRemoveRoute(route?.id)}></i>
@@ -263,7 +268,7 @@ export const RouteProximity = ({
                       </div>
                     </div>
                   )}
-                  
+
                 </div>
               ))}
             </div>
