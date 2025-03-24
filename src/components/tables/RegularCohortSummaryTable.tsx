@@ -66,7 +66,7 @@ export const RegularCohortSummaryTable = ({
           <i className="fi fi-rs-info flex items-center text-[#9A9A9A] lg:text-[12px] md:text-[10px]"></i>
         </Tooltip>
       </div>
-      <div className="flex justify-between border-b my-2">
+      <div className="flex justify-between border-b-2 my-2">
         <div className="flex gap-10">
           {Object.keys(days)?.map((d: any, i: any) => (
             <div
@@ -74,11 +74,17 @@ export const RegularCohortSummaryTable = ({
               onClick={() => {
                 setDay(d);
               }}
-              className={`py-1 px-1 ${
-                day === d && "border-b border-primaryButton"
+              className={`py-2 px-1 ${
+                day === d && "border-b-2 border-primaryButton"
               }`}
             >
-              <h1 className="lg:text-[14px] text-[12px]">{days[d]}</h1>
+              <h1
+                className={`lg:text-[14px] text-[12px] ${
+                  day === d && `text-[#129BFF] font-semibold`
+                }`}
+              >
+                {days[d]}
+              </h1>
             </div>
           ))}
         </div>

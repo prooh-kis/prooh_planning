@@ -30,7 +30,6 @@ export const ScreenSummaryTable = ({
   handleScreenClick,
   handleScreenTypeClick,
 }: any) => {
-
   const handleData = useCallback(
     (myData: any) => {
       const zones: any = {};
@@ -53,7 +52,7 @@ export const ScreenSummaryTable = ({
             types[city][st] = [];
             stToggle[city][tp][st] =
               getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[
-              campaignId
+                campaignId
               ]?.[city]?.[tp]?.[st] || true;
             for (const zone in myData[city][tp][st]) {
               zones[city][zone] = [];
@@ -68,13 +67,18 @@ export const ScreenSummaryTable = ({
                   myData[city][tp][st][zone][screen]?.screenName
                 );
                 let screenId = myData[city][tp][st][zone][screen]?._id;
-                let localScreenData = getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]?.[city]?.[screenId];
-                let localCampaign = getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId];
+                let localScreenData = getDataFromLocalStorage(
+                  SCREEN_SUMMARY_SELECTION
+                )?.[campaignId]?.[city]?.[screenId];
+                let localCampaign =
+                  getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId];
                 screens[city][`${myData[city][tp][st][zone][screen]?._id}`] = {
-                  status: 
-                    localScreenData ? localScreenData.status : 
-                    localCampaign?.screenIds?.length > 0 && !localCampaign?.screenIds.includes(screenId) ? false :
-                    true,
+                  status: localScreenData
+                    ? localScreenData.status
+                    : localCampaign?.screenIds?.length > 0 &&
+                      !localCampaign?.screenIds.includes(screenId)
+                    ? false
+                    : true,
                   data: myData[city][tp][st][zone][screen],
                 };
               }
@@ -106,7 +110,6 @@ export const ScreenSummaryTable = ({
           getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
         );
       }
-
     },
     [
       campaignId,
@@ -119,7 +122,7 @@ export const ScreenSummaryTable = ({
       setScreenTypeToggle,
     ]
   );
-  
+
   useEffect(() => {
     if (data !== undefined) {
       handleData(data);
@@ -128,10 +131,9 @@ export const ScreenSummaryTable = ({
 
   return (
     <div className="h-full">
-      
       {currentCity && data && Object.keys(cityZones).length > 0 && (
         <div className="w-full h-full border-b">
-          <div className="bg-[#D0D0D0] grid grid-cols-12 flex items-center rounded-t">
+          <div className="bg-[#f7f7f7] grid grid-cols-12 flex items-center rounded-t text-[#6f7f8e]">
             <div className="py-2 col-span-2">
               <h1 className="text-[16px] font-bold flex justify-center">
                 Touchpoints
@@ -154,15 +156,21 @@ export const ScreenSummaryTable = ({
                 }}
               >
                 <div
-                  className={`grid ${Object.keys(cityZones[currentCity]).length > 3 ? "grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))]" : "grid-cols-[repeat(auto-fit,minmax(4rem,0.5fr))]"} gap-0`}
-                  style={{ width: Object.keys(cityZones[currentCity]).length > 3 ? "calc(8rem * 8)" : "calc(4rem * 8)"}}
+                  className={`grid ${
+                    Object.keys(cityZones[currentCity]).length > 3
+                      ? "grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))]"
+                      : "grid-cols-[repeat(auto-fit,minmax(4rem,0.5fr))]"
+                  } gap-0`}
+                  style={{
+                    width:
+                      Object.keys(cityZones[currentCity]).length > 3
+                        ? "calc(8rem * 8)"
+                        : "calc(4rem * 8)",
+                  }}
                 >
                   {Object.keys(cityZones[currentCity])?.map(
                     (d: any, i: any) => (
-                      <div
-                        className="col-span-1 border-x min-w-[2rem]"
-                        key={i}
-                      >
+                      <div className="col-span-1 border-x min-w-[2rem]" key={i}>
                         <h1 className="md:text-[16px] sm:text-[14px] py-2 font-bold flex justify-center truncate">
                           {d?.split(" ")?.splice(0, 3)?.join(" ")}
                         </h1>
@@ -184,7 +192,10 @@ export const ScreenSummaryTable = ({
                 <div className="col-span-10">
                   {Object.keys(cityTP?.[currentCity]?.[tp])?.map(
                     (st: any, j: any) => (
-                      <div key={j} className="rounded-br grid grid-cols-10 border-b border-r">
+                      <div
+                        key={j}
+                        className="rounded-br grid grid-cols-10 border-b border-r"
+                      >
                         <div className="cursor-pointer col-span-2 py-2 px-4 border-r">
                           <div className="flex justify-between items-center">
                             <Tooltip title={`${st}`}>
@@ -204,15 +215,17 @@ export const ScreenSummaryTable = ({
                               }}
                             >
                               <i
-                                className={`fi ${screenTypeToggle?.[currentCity]?.[tp]?.[st]
+                                className={`fi ${
+                                  screenTypeToggle?.[currentCity]?.[tp]?.[st]
                                     ? "fi-br-check text-[#358E0B]"
                                     : "fi-br-cross text-[#FF0808]"
-                                  } flex items-center text-[12px]`}
+                                } flex items-center text-[12px]`}
                               ></i>
                             </div>
                           </div>
                         </div>
-                        <div className="col-span-8 overflow-x-auto no-scrollbar sync-scroll"
+                        <div
+                          className="col-span-8 overflow-x-auto no-scrollbar sync-scroll"
                           id="scroll-container-row"
                           onScroll={(e) => {
                             const scrollLeft = e.currentTarget.scrollLeft;
@@ -222,8 +235,17 @@ export const ScreenSummaryTable = ({
                           }}
                         >
                           <div
-                            className={`grid ${Object.keys(cityZones[currentCity]).length > 3 ? "grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))]" : "grid-cols-[repeat(auto-fit,minmax(4rem,0.5fr))]"} gap-0`}
-                            style={{ width: Object.keys(cityZones[currentCity]).length > 3 ? "calc(8rem * 8)" : "calc(4rem * 8)"}}
+                            className={`grid ${
+                              Object.keys(cityZones[currentCity]).length > 3
+                                ? "grid-cols-[repeat(auto-fit,minmax(8rem,0.5fr))]"
+                                : "grid-cols-[repeat(auto-fit,minmax(4rem,0.5fr))]"
+                            } gap-0`}
+                            style={{
+                              width:
+                                Object.keys(cityZones[currentCity]).length > 3
+                                  ? "calc(8rem * 8)"
+                                  : "calc(4rem * 8)",
+                            }}
                           >
                             {Object.keys(cityZones?.[currentCity])?.map(
                               (zone: any, k: any) => (
@@ -241,7 +263,9 @@ export const ScreenSummaryTable = ({
                                     ?.map((screen: any, m: any) => (
                                       <div
                                         key={m}
-                                        className={`cursor-pointer flex gap-4 justify-between py-2 px-4 ${m == 0 ? "" : "border-t"}  truncate`}
+                                        className={`cursor-pointer flex gap-4 justify-between py-2 px-4 ${
+                                          m == 0 ? "" : "border-t"
+                                        }  truncate`}
                                       >
                                         <ScreenDataModel
                                           listView={listView}

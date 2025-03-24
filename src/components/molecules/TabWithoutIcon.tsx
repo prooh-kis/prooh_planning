@@ -12,10 +12,9 @@ interface Props {
   setCurrentTab: any;
 }
 
-export function  TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
-
+export function TabWithoutIcon({ tabData, currentTab, setCurrentTab }: any) {
   return (
-    <div className="inline-flex items-center gap-4 w-fit cursor-pointer">
+    <div className="inline-flex items-center gap-8 w-fit cursor-pointer border-b-2">
       {tabData?.map((tab: TabInterface, index: any) => (
         <div
           key={index}

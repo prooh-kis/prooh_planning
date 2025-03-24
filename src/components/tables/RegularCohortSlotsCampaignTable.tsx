@@ -19,7 +19,7 @@ export const RegularCohortSlotsCampaignTable = ({
     <table className="w-full">
       <thead
         className={`border rounded-t
-          bg-${type === "regular" ? "[#F7F7F7]" : "[#DFE8FF]"}
+          ${type === "regular" ? "bg-[#F7F7F7]" : "bg-[#DFE8FF]"}
         flex justify-between items-center w-full`}
       >
         <tr className="flex justify-between w-full h-[40px]">
@@ -42,7 +42,7 @@ export const RegularCohortSlotsCampaignTable = ({
             </h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2 border-r">
-            <h1 className="text-[14px] text-[#21394F]">Price/Slot</h1>
+            <h1 className="text-[14px] text-[#21394F]">Avg. Price/Slot</h1>
           </th>
           <th className="flex w-full items-center justify-center gap-2 border-r">
             <h1 className="text-[14px] text-[#21394F]">Total Cost</h1>
@@ -92,7 +92,7 @@ export const RegularCohortSlotsCampaignTable = ({
           </td>
           <td className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
-              &#8377;{priceData?.tableData?.pricePerSlot?.toFixed(0)}
+              &#8377; {priceData?.tableData?.pricePerSlot?.toFixed(2)}
             </h1>
           </td>
           <td className="flex w-full items-center justify-center gap-2">
@@ -127,7 +127,11 @@ export const RegularCohortSlotsCampaignTable = ({
             }}
           >
             <h1 className="font-normal">
-              <i className="fi fi-sr-eye text-[14px] text-blue "></i>
+              <i
+                className={`fi fi-sr-eye text-[14px] hover:text-[#129BFF] ${
+                  showSummary === type ? "text-[#129BFF]" : "text-[#B9B9B9]"
+                }`}
+              ></i>
             </h1>
           </td>
         </tr>

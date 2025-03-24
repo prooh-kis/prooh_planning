@@ -376,7 +376,7 @@ export const CreativeUploadDetails = ({
     setCitiesCreative(result);
     let city = result?.find((data: any) => data.id == "1")?.label || "";
     setCurrentCity(city);
-  },[]);
+  }, []);
 
   const handleNextStep = (data: any) => {
     let arr = Object.keys(data || {});
@@ -535,7 +535,6 @@ export const CreativeUploadDetails = ({
     } else {
       setCurrentStep(step + 1);
     }
-    setCurrentStep(step + 1);
   };
 
   const handleSaveFile = () => {
@@ -632,11 +631,16 @@ export const CreativeUploadDetails = ({
                 <div className="grid grid-cols-12 bg-[#129BFF] border py-2 mt-4 items-center text-[16px]">
                   <div className="col-span-3 ">
                     <div className="flex">
-                      {["Screens", "Duration", "Ratio"]?.map((d: any, i: any) => (
-                        <h1 key={i} className="w-24 text-center text-[#FFFFFF] font-semibold">
-                          {d}
-                        </h1>
-                      ))}
+                      {["Screens", "Duration", "Ratio"]?.map(
+                        (d: any, i: any) => (
+                          <h1
+                            key={i}
+                            className="w-24 text-center text-[#FFFFFF] font-semibold"
+                          >
+                            {d}
+                          </h1>
+                        )
+                      )}
                     </div>
                   </div>
                   <div className="col-span-9">
@@ -644,7 +648,6 @@ export const CreativeUploadDetails = ({
                       Upload creatives
                     </h1>
                   </div>
-
                 </div>
 
                 {/* Creative Upload Section */}
@@ -677,10 +680,7 @@ export const CreativeUploadDetails = ({
                               singleData?.creativeDuration,
                               singleData?.screenResolution,
                             ].map((item, i) => (
-                              <h1
-                                key={i}
-                                className="p-2 w-24 text-center"
-                              >
+                              <h1 key={i} className="p-2 w-24 text-center">
                                 {item}
                               </h1>
                             ))}
@@ -699,10 +699,14 @@ export const CreativeUploadDetails = ({
                     >
                       <Space direction="vertical">
                         {!pathname?.split("/").includes("triggerbasedplan") && (
-                          <Radio value="Standard"><p className="truncate">Standard</p></Radio>
+                          <Radio value="Standard">
+                            <p className="truncate">Standard</p>
+                          </Radio>
                         )}
                         {isTriggerAvailable() && (
-                          <Radio value="Trigger"><p className="truncate">Trigger</p></Radio>
+                          <Radio value="Trigger">
+                            <p className="truncate">Trigger</p>
+                          </Radio>
                         )}
                       </Space>
                     </Radio.Group>
