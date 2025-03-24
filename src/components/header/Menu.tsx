@@ -28,7 +28,14 @@ export const Menu = (props: any) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggleDropdown = () => {
-    if ([CAMPAIGN_PLAN_TYPE_KNOW, CAMPAIGN_PLAN_TYPE_REGULAR, CAMPAIGN_PLAN_TYPE_STORE, CAMPAIGN_PLAN_TYPE_TOPICAL, CAMPAIGN_PLAN_TYPE_REGULAR]?.filter((plan: any) => !pathname.includes(plan)).length === 0) {
+    if ([
+        CAMPAIGN_PLAN_TYPE_KNOW,
+        CAMPAIGN_PLAN_TYPE_REGULAR,
+        CAMPAIGN_PLAN_TYPE_STORE,
+        CAMPAIGN_PLAN_TYPE_TOPICAL,
+        CAMPAIGN_PLAN_TYPE_REGULAR
+      ]?.filter((plan: any) => !pathname.includes(plan)).length === 0
+    ){
       removeAllKeyFromLocalStorage();
     }
     setIsOpen(!isOpen);

@@ -15,7 +15,6 @@ import { GET_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyCon
 import { useDispatch } from "react-redux";
 import { DashBoardMenu } from "./DashBoardMenu";
 import { Tooltip } from "antd";
-import { EDIT_CAMPAIGN } from "../../constants/campaignConstants";
 
 export const CampaignDashboard = ({
   campaignDetails,

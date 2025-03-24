@@ -28,7 +28,7 @@ export const MultiColorLinearBar2: React.FC<MultiColorLinearBar2Props> = ({
             className="group absolute top-0 left-0 h-full bg-[#FF0000]"
             style={{ width: `${Math.min(expectedPercentage, 100)}%` }}
           >
-            <span className="absolute hidden group-hover:inline-block bg-gray-700 text-[#FFFFFF] text-[12px] rounded px-2 py-1 -top-7 right-0 z-10">
+            <span className="absolute hidden group-hover:inline-block bg-gray-700 text-[#FFFFFF] text-[12px] rounded-full px-2 py-1 -top-7 right-0 z-10">
               {`${expectedPercentage.toFixed(2)}%`}
             </span>
           </div>
@@ -36,7 +36,7 @@ export const MultiColorLinearBar2: React.FC<MultiColorLinearBar2Props> = ({
           {/* Delivered Bar (Blue) - Stacks over Promised */}
 
           <div
-            className="group absolute top-0 left-0 h-full bg-[#00B7FF]"
+            className="group absolute top-0 left-0 h-full bg-[#00B7FF] rounded-full"
             style={{ width: `${Math.min(deliveredPercentage, 100)}%` }}
           >
             {/* <span
