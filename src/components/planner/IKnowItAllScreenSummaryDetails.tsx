@@ -206,7 +206,7 @@ export const IKnowItAllScreenSummaryDetails = ({
     if (!pathname.split("/").includes("view")) {
   
       dispatch(addDetailsToCreateCampaign({
-        pageName: "Add Screens Page",
+        pageName: "Select Screens Page",
         id: campaignId,
         totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
         totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalImpression,
