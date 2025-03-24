@@ -225,7 +225,6 @@ export const EnterCampaignBasicDetails = ({
     ) {
       navigate(`/${path}/${addDetails?._id}`);
       // dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-
       setCurrentStep(step + 1);
     }
   }, [

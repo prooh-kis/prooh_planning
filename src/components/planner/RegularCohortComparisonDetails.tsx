@@ -50,8 +50,7 @@ export const RegularCohortComparisonDetails = ({
     getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30
   );
 
-  const [selectedBuyingOption, setSelectedBuyingOption] =
-    useState<string>("");
+  const [selectedBuyingOption, setSelectedBuyingOption] = useState<string>("");
 
   const {
     loading: loadingPriceData,
@@ -181,7 +180,7 @@ export const RegularCohortComparisonDetails = ({
                 <i className="fi fi-rs-info sm:text-[14px] md:text-[12px] text-gray-400 flex justify-center items-center"></i>
               </Tooltip>
             </div>
-            <div className="flex gap-4 pt-1">
+            <div className="flex gap-8 mt-4">
               {["regular", "cohort"].map((type) => (
                 <RadioInput
                   key={type}
@@ -199,7 +198,7 @@ export const RegularCohortComparisonDetails = ({
           </div>
 
           <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
-            <Footer 
+            <Footer
               mainTitle={isDisabled ? "Choose to Confirm" : "Continue"}
               handleBack={() => setCurrentStep(step - 1)}
               handleSave={() => {
@@ -224,7 +223,6 @@ export const RegularCohortComparisonDetails = ({
                 } else {
                   setCurrentStep(step + 1);
                 }
-                
               }}
               disabled={
                 priceData?.regular?.tableData?.impressionPerDay === 0 ||

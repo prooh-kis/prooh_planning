@@ -28,18 +28,18 @@ const MyCarousel = ({ images, showThumbnails = true }: Props) => {
         className="rounded-md"
       >
         {images.map((image, index) => (
-          <div key={index}>
+          <div key={index} className="h-[40vh]">
             {image.endsWith(".mp4") ? (
               <video
                 src={image}
-                className="h-auto w-full object-cover rounded-md"
+                className="h-full w-full object-cover rounded-md"
                 controls
               />
             ) : (
               <img
                 src={image}
                 alt={`carousel-img-${index}`}
-                className="h-auto w-full object-cover rounded-md"
+                className="h-full w-full object-cover rounded-md"
               />
             )}
           </div>

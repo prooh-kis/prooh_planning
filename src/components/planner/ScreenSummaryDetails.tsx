@@ -60,29 +60,47 @@ export const ScreenSummaryDetails = ({
   const [cityZones, setCityZones] = useState<any>({});
   const [cityTP, setCityTP] = useState<any>({});
   const [screenTypes, setScreenTypes] = useState<any>({});
-  const [screenTypeToggle, setScreenTypeToggle] = useState<any>(getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[campaignId]);
+  const [screenTypeToggle, setScreenTypeToggle] = useState<any>(
+    getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[campaignId]
+  );
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [screensBuyingCount, setScreensBuyingCount] = useState<any>(getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] ?? {});
+  const [screensBuyingCount, setScreensBuyingCount] = useState<any>(
+    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] ?? {}
+  );
   const [filterType, setFilterType] = useState<string>("Touchpoints");
   const [zoneFilters, setZoneFilters] = useState<any[]>([]);
   const [tpFilters, setTpFilters] = useState<any[]>([]);
   const [stFilters, setStFilters] = useState<any[]>([]);
 
-  const screenSummaryDataGet = useSelector((state: any) => state.screenSummaryDataGet);
-  const { loading: loadingScreenSummary, error: errorScreenSummary, data: screenSummaryData } = screenSummaryDataGet;
+  const screenSummaryDataGet = useSelector(
+    (state: any) => state.screenSummaryDataGet
+  );
+  const {
+    loading: loadingScreenSummary,
+    error: errorScreenSummary,
+    data: screenSummaryData,
+  } = screenSummaryDataGet;
 
-  const screenSummaryPlanTableDataGet = useSelector((state: any) => state.screenSummaryPlanTableDataGet);
-  const { loading: loadingScreenSummaryPlanTable, error: errorScreenSummaryPlanTable, data: screenSummaryPlanTableData } = screenSummaryPlanTableDataGet;
+  const screenSummaryPlanTableDataGet = useSelector(
+    (state: any) => state.screenSummaryPlanTableDataGet
+  );
+  const {
+    loading: loadingScreenSummaryPlanTable,
+    error: errorScreenSummaryPlanTable,
+    data: screenSummaryPlanTableData,
+  } = screenSummaryPlanTableDataGet;
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const regularVsCohort =
-  getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType;
-
+    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -95,52 +113,59 @@ export const ScreenSummaryDetails = ({
     let activeScreenIds: any[] = [];
     for (const city in citiesData) {
       const screens = citiesData[city] ?? {};
-      const activeScreens = Object.keys(screens).filter((screenId) => screens[screenId]?.status === true);
+      const activeScreens = Object.keys(screens).filter(
+        (screenId) => screens[screenId]?.status === true
+      );
       activeScreenIds = activeScreenIds.concat(activeScreens);
     }
     return activeScreenIds;
   };
 
-  const getTabValue = useCallback((dataScreenSummary: any) => {
-    if (
-      dataScreenSummary &&
-      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] &&
-      Object.keys(
-        getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
-      )?.length !== 0
-    ) {
-      return Object.keys(
-        getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
-      )?.map((s: any, index: any) => {
-        return {
-          id: `${index + 1}`,
-          label: s,
-          params:
-            getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !==
-              null ||
-            getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] !==
-              undefined
-              ? [
-                  Object.values(
-                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
-                      campaignId
-                    ]?.[s]
-                  )
-                    ?.map((f: any) => f.status)
-                    ?.filter((s: any) => s === true)?.length,
-                  Object.values(
-                    getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
-                      campaignId
-                    ]?.[s]
-                  )
-                    ?.map((f: any) => f.status)
-                    ?.filter((s: any) => s === false)?.length,
-                ]
-              : [0, 0],
-        };
-      });
-    } else return [];
-  },[campaignId]);
+  const getTabValue = useCallback(
+    (dataScreenSummary: any) => {
+      if (
+        dataScreenSummary &&
+        getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId] &&
+        Object.keys(
+          getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
+        )?.length !== 0
+      ) {
+        return Object.keys(
+          getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]
+        )?.map((s: any, index: any) => {
+          return {
+            id: `${index + 1}`,
+            label: s,
+            params:
+              getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
+                campaignId
+              ] !== null ||
+              getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
+                campaignId
+              ] !== undefined
+                ? [
+                    Object.values(
+                      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
+                        campaignId
+                      ]?.[s]
+                    )
+                      ?.map((f: any) => f.status)
+                      ?.filter((s: any) => s === true)?.length,
+                    Object.values(
+                      getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[
+                        campaignId
+                      ]?.[s]
+                    )
+                      ?.map((f: any) => f.status)
+                      ?.filter((s: any) => s === false)?.length,
+                  ]
+                : [0, 0],
+          };
+        });
+      } else return [];
+    },
+    [campaignId]
+  );
 
   useEffect(() => {
     if (!successAddCampaignDetails) return;
@@ -149,50 +174,77 @@ export const ScreenSummaryDetails = ({
 
   useEffect(() => {
     if (!pageSuccess) return;
-    dispatch(getScreenSummaryData({ id: campaignId, type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType }));
-    dispatch(getPlanningPageFooterData({ id: campaignId, pageName: "Screen Summary Page" }));
+    dispatch(
+      getScreenSummaryData({
+        id: campaignId,
+        type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+          ?.selectedType,
+      })
+    );
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "Screen Summary Page",
+      })
+    );
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
     dispatch({ type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET });
   }, [campaignId, dispatch, pageSuccess]);
 
   useEffect(() => {
     if (screenSummaryData || screensBuyingCount) {
-      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: screensBuyingCount });
+      saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
+        [campaignId]: screensBuyingCount,
+      });
       setCityTabData(getTabValue(screenSummaryData));
-      const selectedCity = Object.keys(screensBuyingCount ?? {})[Number(currentSummaryTab) - 1];
+      const selectedCity = Object.keys(screensBuyingCount ?? {})[
+        Number(currentSummaryTab) - 1
+      ];
       setCurrentCity(selectedCity);
       setZoneFilters(Object.keys(cityZones[selectedCity] ?? {}));
       setTpFilters(Object.keys(cityTP[selectedCity] ?? {}));
       // console.log(Object.keys(screenTypes[selectedCity]) ?? {});
       setStFilters(Object.keys(screenTypes[selectedCity] ?? {}));
     }
-  }, [dispatch, campaignId, getTabValue, screenSummaryData, screensBuyingCount, currentSummaryTab, cityZones, cityTP, screenTypes]);
+  }, [
+    dispatch,
+    campaignId,
+    getTabValue,
+    screenSummaryData,
+    screensBuyingCount,
+    currentSummaryTab,
+    cityZones,
+    cityTP,
+    screenTypes,
+  ]);
 
   // Function to re-evaluate the filter state based on screen statuses
   const reEvaluateFilters = () => {
     const updatedZoneFilters: any[] = [];
     const updatedTpFilters: any[] = [];
     const updatedStFilters: any[] = [];
-  
-    // Iterate through all screens in the current city
-    Object.values(screensBuyingCount[currentCity] || {}).forEach((screen: any) => {
-      const screenType = screen.data.screenType || "";
 
-      const { zoneOrRegion, touchPoint } = screen.data.location || {};
-      // If the screen is selected, add its zone, touchpoint, and screenType to the filters
-      if (screen.status) {
-        if (zoneOrRegion && !updatedZoneFilters.includes(zoneOrRegion)) {
-          updatedZoneFilters.push(zoneOrRegion);
-        }
-        if (touchPoint && !updatedTpFilters.includes(touchPoint)) {
-          updatedTpFilters.push(touchPoint);
-        }
-        if (screenType && !updatedStFilters.includes(screenType)) {
-          updatedStFilters.push(screenType);
+    // Iterate through all screens in the current city
+    Object.values(screensBuyingCount[currentCity] || {}).forEach(
+      (screen: any) => {
+        const screenType = screen.data.screenType || "";
+
+        const { zoneOrRegion, touchPoint } = screen.data.location || {};
+        // If the screen is selected, add its zone, touchpoint, and screenType to the filters
+        if (screen.status) {
+          if (zoneOrRegion && !updatedZoneFilters.includes(zoneOrRegion)) {
+            updatedZoneFilters.push(zoneOrRegion);
+          }
+          if (touchPoint && !updatedTpFilters.includes(touchPoint)) {
+            updatedTpFilters.push(touchPoint);
+          }
+          if (screenType && !updatedStFilters.includes(screenType)) {
+            updatedStFilters.push(screenType);
+          }
         }
       }
-    });
-  
+    );
+
     // Update the filter states
     setZoneFilters(updatedZoneFilters);
     setTpFilters(updatedTpFilters);
@@ -208,16 +260,28 @@ export const ScreenSummaryDetails = ({
       if (currentTab === "1") {
         setCurrentTab("2");
       } else {
-        dispatch(addDetailsToCreateCampaign({
-          pageName: "Screen Summary Page",
-          id: campaignId,
-          totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-          totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalImpression,
-          totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalReach,
-          totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalCampaignBudget,
-          totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalCpm,
-          duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
-        }));
+        dispatch(
+          addDetailsToCreateCampaign({
+            pageName: "Screen Summary Page",
+            id: campaignId,
+            totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
+            totalImpression: getDataFromLocalStorage(
+              SCREEN_SUMMARY_TABLE_DATA
+            )?.[campaignId]?.total?.totalImpression,
+            totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+              campaignId
+            ]?.total?.totalReach,
+            totalCampaignBudget: getDataFromLocalStorage(
+              SCREEN_SUMMARY_TABLE_DATA
+            )?.[campaignId]?.total?.totalCampaignBudget,
+            totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
+              campaignId
+            ]?.total?.totalCpm,
+            duration:
+              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+                ?.duration,
+          })
+        );
         setCurrentStep(step + 1);
       }
     } else {
@@ -226,25 +290,46 @@ export const ScreenSummaryDetails = ({
   };
 
   const filteredScreensData = useCallback(() => {
-    if (!screensBuyingCount || !Object.keys(screensBuyingCount).length) return { result: [], allResult: [] };
+    if (!screensBuyingCount || !Object.keys(screensBuyingCount).length)
+      return { result: [], allResult: [] };
 
-    let selectedCityScreens = screensBuyingCount[Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]] ?? {};
+    let selectedCityScreens =
+      screensBuyingCount[
+        Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]
+      ] ?? {};
     let result = Object.values(selectedCityScreens)?.map((f: any) => f.data);
 
     let allResult = result;
     if (zoneFilters.length > 0) {
-      result = result?.filter((s: any) => zoneFilters.includes(s.location?.zoneOrRegion ?? ""));
+      result = result?.filter((s: any) =>
+        zoneFilters.includes(s.location?.zoneOrRegion ?? "")
+      );
     }
     if (tpFilters.length > 0) {
-      result = result?.filter((s: any) => tpFilters.includes(s.location?.touchPoint ?? ""));
+      result = result?.filter((s: any) =>
+        tpFilters.includes(s.location?.touchPoint ?? "")
+      );
     }
     if (stFilters.length > 0) {
-      result = result?.filter((s: any) => stFilters.includes(s.screenType ?? ""));
+      result = result?.filter((s: any) =>
+        stFilters.includes(s.screenType ?? "")
+      );
     }
     return { result, allResult };
-  }, [screensBuyingCount, zoneFilters, tpFilters, stFilters, currentSummaryTab]);
+  }, [
+    screensBuyingCount,
+    zoneFilters,
+    tpFilters,
+    stFilters,
+    currentSummaryTab,
+  ]);
 
-  const handleScreenClick = ({ screen, city, statusRes, suppressMessage = false }: any) => {
+  const handleScreenClick = ({
+    screen,
+    city,
+    statusRes,
+    suppressMessage = false,
+  }: any) => {
     const screenId = screen._id;
     const networkType = ""; // Assuming networkType is not used for now
 
@@ -252,18 +337,29 @@ export const ScreenSummaryDetails = ({
     const currentCityScreens = updatedScreensBuyingCount[city] || {};
 
     if (networkType !== "") {
-      let newStatus = statusRes !== undefined ? statusRes : !currentCityScreens[screenId]?.status;
+      let newStatus =
+        statusRes !== undefined
+          ? statusRes
+          : !currentCityScreens[screenId]?.status;
       for (const id in currentCityScreens) {
         if (currentCityScreens[id].data.networkType === networkType) {
-          currentCityScreens[id] = { ...currentCityScreens[id], status: newStatus };
+          currentCityScreens[id] = {
+            ...currentCityScreens[id],
+            status: newStatus,
+          };
         }
       }
       if (!suppressMessage) {
-        message.info(`You are ${newStatus ? "selecting" : "deselecting"} a screen from ${networkType}. Any action applicable to any one screen of any network will be applicable on all the screens of the same network.`);
+        message.info(
+          `You are ${
+            newStatus ? "selecting" : "deselecting"
+          } a screen from ${networkType}. Any action applicable to any one screen of any network will be applicable on all the screens of the same network.`
+        );
       }
     } else {
       if (statusRes === undefined && currentCityScreens[screenId]) {
-        currentCityScreens[screenId].status = !currentCityScreens[screenId].status;
+        currentCityScreens[screenId].status =
+          !currentCityScreens[screenId].status;
       } else {
         currentCityScreens[screenId] = { status: statusRes, data: screen };
       }
@@ -271,10 +367,19 @@ export const ScreenSummaryDetails = ({
 
     updatedScreensBuyingCount[city] = currentCityScreens;
     setScreensBuyingCount(updatedScreensBuyingCount);
-    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: updatedScreensBuyingCount });
+    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
+      [campaignId]: updatedScreensBuyingCount,
+    });
   };
 
-  const handleScreenTypeClick = ({ screenType, myData, city, touchpoint, statusNow, zone }: any) => {
+  const handleScreenTypeClick = ({
+    screenType,
+    myData,
+    city,
+    touchpoint,
+    statusNow,
+    zone,
+  }: any) => {
     const screens: any[] = [];
     const stToggle = { ...screenTypeToggle };
 
@@ -286,15 +391,26 @@ export const ScreenSummaryDetails = ({
       }
     }
 
-    const allSelected = screens.every((s: any) => screensBuyingCount[currentCity]?.[s._id]?.status);
+    const allSelected = screens.every(
+      (s: any) => screensBuyingCount[currentCity]?.[s._id]?.status
+    );
     stToggle[city][touchpoint][screenType] = !allSelected;
-    saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, { [campaignId]: stToggle });
+    saveDataOnLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION, {
+      [campaignId]: stToggle,
+    });
     setScreenTypeToggle(stToggle);
 
     const networkMessageTracker = new Set<string>();
     screens.forEach((s: any) => {
-      const shouldShowMessage = s.network !== "" && !networkMessageTracker.has(s.networkType);
-      handleScreenClick({ screen: s, city, touchpoint, statusRes: !allSelected, suppressMessage: !shouldShowMessage });
+      const shouldShowMessage =
+        s.network !== "" && !networkMessageTracker.has(s.networkType);
+      handleScreenClick({
+        screen: s,
+        city,
+        touchpoint,
+        statusRes: !allSelected,
+        suppressMessage: !shouldShowMessage,
+      });
       if (shouldShowMessage) {
         networkMessageTracker.add(s.networkType);
       }
@@ -304,13 +420,19 @@ export const ScreenSummaryDetails = ({
   const handleFilterSelection = ({ type, value, checked }: any) => {
     // Update the filter state (zoneFilters, tpFilters, or stFilters)
     if (type === "zone") {
-      setZoneFilters((prev: any[]) => (checked ? [...prev, value] : prev.filter((item: any) => item !== value)));
+      setZoneFilters((prev: any[]) =>
+        checked ? [...prev, value] : prev.filter((item: any) => item !== value)
+      );
     }
     if (type === "tp") {
-      setTpFilters((prev: any[]) => (checked ? [...prev, value] : prev.filter((item: any) => item !== value)));
+      setTpFilters((prev: any[]) =>
+        checked ? [...prev, value] : prev.filter((item: any) => item !== value)
+      );
     }
     if (type === "st") {
-      setStFilters((prev: any[]) => (checked ? [...prev, value] : prev.filter((item: any) => item !== value)));
+      setStFilters((prev: any[]) =>
+        checked ? [...prev, value] : prev.filter((item: any) => item !== value)
+      );
     }
 
     // Call handleScreenTypeClick to update the status of all screens within the filter
@@ -318,7 +440,9 @@ export const ScreenSummaryDetails = ({
       const filterValue = value;
 
       // Find all screens that match the filter
-      const filteredScreens = Object.values(screensBuyingCount[currentCity] || {}).filter((screen: any) => {
+      const filteredScreens = Object.values(
+        screensBuyingCount[currentCity] || {}
+      ).filter((screen: any) => {
         if (type === "zone") {
           return screen.data.location?.zoneOrRegion === filterValue;
         } else if (type === "tp") {
@@ -354,18 +478,20 @@ export const ScreenSummaryDetails = ({
         <LoadingScreen />
       ) : (
         <div className="w-full">
-          <h1 className="text-3xl ">
-            Screens summary as per “
-            {regularVsCohort === "cohort" ? "COHORT" : "REGULAR"}” selection{" "}
+          <h1 className="text-[24px] text-primaryText font-semibold">
+            Screens summary{" "}
+            <span className="text-[#6f7fbe]">
+              ({regularVsCohort === "cohort" ? "Cohort" : "Regular"} Plan )
+            </span>
           </h1>
-          <h1 className="text-sm text-gray-500 ">
+          <h1 className="text-[14px] text-gray-500 treading-[29px] ">
             You can further optimized your plan by deselecting locations in the
             screen summary
           </h1>
           {pathname.split("/").includes("storebasedplan") ? (
             <></>
           ) : (
-            <div className="mt-2">
+            <div className="mt-4">
               {screenSummaryData && (
                 <TabWithIcon
                   currentTab={currentTab}
@@ -386,13 +512,15 @@ export const ScreenSummaryDetails = ({
                         <div className="h-[32px] bg-[#D7D7D750] rounded-b dark:bg-[#D7D7D7] w-full"></div>
                       </div>
                     )}
-                    {!loadingScreenSummary && screenSummaryData && cityTabData?.length !== 0 && (
-                      <TabWithoutIcon
-                        currentTab={currentSummaryTab}
-                        setCurrentTab={setCurrentSummaryTab}
-                        tabData={cityTabData}
-                      />
-                    )}
+                    {!loadingScreenSummary &&
+                      screenSummaryData &&
+                      cityTabData?.length !== 0 && (
+                        <TabWithoutIcon
+                          currentTab={currentSummaryTab}
+                          setCurrentTab={setCurrentSummaryTab}
+                          tabData={cityTabData}
+                        />
+                      )}
                   </div>
                   <div className="col-span-4 flex items-center justify-end gap-2 truncate">
                     {isOpen && (
@@ -507,8 +635,8 @@ export const ScreenSummaryDetails = ({
                       />
                     </div>
                     <div className="col-span-9 rounded grid grid-cols-12 flex flex-wrap gap-4 overflow-scroll no-scrollbar h-[60vh]">
-                      {filteredScreensData()?.result
-                        // ?.filter((sc: any) => {
+                      {filteredScreensData()
+                        ?.result // ?.filter((sc: any) => {
                         //   return (
                         //     sc.pricePerSlot >= priceFilter?.min &&
                         //     sc.pricePerSlot <= priceFilter?.max
@@ -539,7 +667,9 @@ export const ScreenSummaryDetails = ({
                     loading={loadingScreenSummaryPlanTable}
                     error={errorScreenSummaryPlanTable}
                     data={screenSummaryPlanTableData}
-                    getSelectedScreenIdsFromAllCities={getSelectedScreenIdsFromAllCities}
+                    getSelectedScreenIdsFromAllCities={
+                      getSelectedScreenIdsFromAllCities
+                    }
                     campaignId={campaignId}
                     screensBuyingCount={screensBuyingCount}
                     pathname={pathname}

@@ -32,36 +32,36 @@ export const LocationTable = ({
     if (type === "Male") {
       if (checked && !selectedGender.includes("Male")) {
         setSelectedGender([...selectedGender, "Male"]);
-        handleSelection({
-          type: "gender",
-          data: [...selectedGender, "Male"],
-        });
+        // handleSelection({
+        //   type: "gender",
+        //   data: [...selectedGender, "Male"],
+        // });
       } else {
         const gender = selectedGender?.filter(
           (gender: any) => gender !== "Male"
         );
         setSelectedGender(gender);
-        handleSelection({
-          type: "gender",
-          data: gender,
-        });
+        // handleSelection({
+        //   type: "gender",
+        //   data: gender,
+        // });
       }
     } else if (type === "Female") {
       if (checked && !selectedGender.includes("Female")) {
         setSelectedGender([...selectedGender, "Female"]);
-        handleSelection({
-          type: "gender",
-          data: [...selectedGender, "Female"],
-        });
+        // handleSelection({
+        //   type: "gender",
+        //   data: [...selectedGender, "Female"],
+        // });
       } else {
         const gender = selectedGender?.filter(
           (gender: any) => gender !== "Female"
         );
         setSelectedGender(gender);
-        handleSelection({
-          type: "gender",
-          data: gender,
-        });
+        // handleSelection({
+        //   type: "gender",
+        //   data: gender,
+        // });
       }
     }
     return { checked };

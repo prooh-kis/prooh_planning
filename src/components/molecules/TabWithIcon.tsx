@@ -17,11 +17,13 @@ export function TabWithIcon({
   tabData,
   currentTab,
   setCurrentTab,
-  justify
+  justify,
 }: Props) {
   return (
     <div
-      className={`flex ${justify ? "justify-start" : "justify-around"} items-center border-b-2 border-gray-100`}
+      className={`flex ${
+        justify ? "justify-start" : "justify-around"
+      } items-center border-b-2 border-gray-100 gap-8`}
     >
       {tabData?.map((tab: TabInterface, index: any) => (
         <div
@@ -29,8 +31,8 @@ export function TabWithIcon({
           onClick={() => setCurrentTab(tab.id)}
           className={
             currentTab === tab.id
-              ? `px-1 w-48 flex gap-2 text-primaryButton font-semibold items-center text-[14px] border-b-2 border-primaryButton py-2`
-              : `px-1 w-48 flex gap-2 text-gray-500 items-center text-[14px] py-2`
+              ? `px-1  flex gap-2 text-primaryButton font-semibold items-center text-[16px] border-b-2 border-primaryButton py-2`
+              : `px-1 flex gap-2 text-gray-500 items-center text-[14px] py-2`
           }
         >
           {trigger && (

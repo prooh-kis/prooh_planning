@@ -416,7 +416,7 @@ export const TriggerDetails = ({
                   tabData={weatherTabData()}
                 />
               </div>
-
+              
               <WeatherSegment
                 minVal={minVal}
                 setMinVal={setMinVal}

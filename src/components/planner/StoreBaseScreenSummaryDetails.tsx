@@ -4,11 +4,11 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { screenSummaryTabData } from "../../utils/hardCoddedData";
 import { ScreenSummaryTable } from "../tables/ScreenSummaryTable";
 import { ViewPlanPic } from "../segments/ViewPlanPic";
-import { PlanSummaryTable } from "../tables/PlanSummaryTable";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPlanningPageFooterData,
   getScreenSummaryData,
+  getScreenSummaryDataIKnowItAll,
 } from "../../actions/screenAction";
 import {
   getDataFromLocalStorage,
@@ -19,7 +19,6 @@ import { Footer } from "../../components/footer";
 import {
   FULL_CAMPAIGN_PLAN,
   SCREEN_SUMMARY_SELECTION,
-  SCREEN_SUMMARY_TABLE_DATA,
   SCREEN_TYPE_TOGGLE_SELECTION,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
@@ -67,8 +66,8 @@ export const StoreBaseScreenSummaryDetails = ({
   const [tpFilters, setTpFilters] = useState<any[]>([]);
   const [stFilters, setStFilters] = useState<any[]>([]);
 
-  const screenSummaryDataGet = useSelector((state: any) => state.screenSummaryDataGet);
-  const { loading: loadingScreenSummary, error: errorScreenSummary, data: screenSummaryData } = screenSummaryDataGet;
+  const screenSummaryDataIKnowItAllGet = useSelector((state: any) => state.screenSummaryDataIKnowItAllGet);
+  const { loading: loadingScreenSummary, error: errorScreenSummary, data: screenSummaryData } = screenSummaryDataIKnowItAllGet;
 
   const screenSummaryPlanTableDataGet = useSelector((state: any) => state.screenSummaryPlanTableDataGet);
   const { loading: loadingScreenSummaryPlanTable, error: errorScreenSummaryPlanTable, data: screenSummaryPlanTableData } = screenSummaryPlanTableDataGet;
@@ -148,7 +147,7 @@ export const StoreBaseScreenSummaryDetails = ({
 
   useEffect(() => {
     if (!pageSuccess) return;
-    dispatch(getScreenSummaryData({ id: campaignId, type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType }));
+    dispatch(getScreenSummaryDataIKnowItAll({ id: campaignId }));
     dispatch(getPlanningPageFooterData({ id: campaignId, pageName: "Screen Summary Page" }));
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
     dispatch({ type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET });
@@ -208,12 +207,7 @@ export const StoreBaseScreenSummaryDetails = ({
       dispatch(addDetailsToCreateCampaign({
         pageName: "Select Screens Page",
         id: campaignId,
-        totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-        totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalImpression,
-        totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalReach,
-        totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalCampaignBudget,
-        totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalCpm,
-        duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
+        screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
       }));
       setCurrentStep(step + 1);
     } else {

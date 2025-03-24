@@ -1,14 +1,11 @@
 import { TabWithoutIcon } from "../molecules/TabWithoutIcon";
-import { TabWithIcon } from "../molecules/TabWithIcon";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { screenSummaryTabData } from "../../utils/hardCoddedData";
 import { ScreenSummaryTable } from "../tables/ScreenSummaryTable";
 import { ViewPlanPic } from "../segments/ViewPlanPic";
-import { PlanSummaryTable } from "../tables/PlanSummaryTable";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPlanningPageFooterData,
-  getScreenSummaryData,
+  getScreenSummaryDataIKnowItAll,
 } from "../../actions/screenAction";
 import {
   getDataFromLocalStorage,
@@ -19,7 +16,6 @@ import { Footer } from "../../components/footer";
 import {
   FULL_CAMPAIGN_PLAN,
   SCREEN_SUMMARY_SELECTION,
-  SCREEN_SUMMARY_TABLE_DATA,
   SCREEN_TYPE_TOGGLE_SELECTION,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
@@ -54,7 +50,6 @@ export const IKnowItAllScreenSummaryDetails = ({
   const [currentSummaryTab, setCurrentSummaryTab] = useState<string>("1");
   const [currentCity, setCurrentCity] = useState<string>("");
   const [cityTabData, setCityTabData] = useState<any[]>([]);
-  const [showSummary, setShowSummary] = useState<any>(null);
   const [listView, setListView] = useState<boolean>(true);
   const [cityZones, setCityZones] = useState<any>({});
   const [cityTP, setCityTP] = useState<any>({});
@@ -67,8 +62,8 @@ export const IKnowItAllScreenSummaryDetails = ({
   const [tpFilters, setTpFilters] = useState<any[]>([]);
   const [stFilters, setStFilters] = useState<any[]>([]);
 
-  const screenSummaryDataGet = useSelector((state: any) => state.screenSummaryDataGet);
-  const { loading: loadingScreenSummary, error: errorScreenSummary, data: screenSummaryData } = screenSummaryDataGet;
+  const screenSummaryDataIKnowItAllGet = useSelector((state: any) => state.screenSummaryDataIKnowItAllGet);
+  const { loading: loadingScreenSummary, error: errorScreenSummary, data: screenSummaryData } = screenSummaryDataIKnowItAllGet;
 
   const screenSummaryPlanTableDataGet = useSelector((state: any) => state.screenSummaryPlanTableDataGet);
   const { loading: loadingScreenSummaryPlanTable, error: errorScreenSummaryPlanTable, data: screenSummaryPlanTableData } = screenSummaryPlanTableDataGet;
@@ -143,15 +138,15 @@ export const IKnowItAllScreenSummaryDetails = ({
 
   useEffect(() => {
     if (!successAddCampaignDetails) return;
+    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+    dispatch({ type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET });
     setPageSuccess(true);
-  }, [setPageSuccess, successAddCampaignDetails]);
+  }, [dispatch, setPageSuccess, successAddCampaignDetails]);
 
   useEffect(() => {
     if (!pageSuccess) return;
-    dispatch(getScreenSummaryData({ id: campaignId, type: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType }));
-    dispatch(getPlanningPageFooterData({ id: campaignId, pageName: "Screen Summary Page" }));
-    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-    dispatch({ type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET });
+    dispatch(getScreenSummaryDataIKnowItAll({ id: campaignId }));
+    dispatch(getPlanningPageFooterData({ id: campaignId, pageName: "Select Screens Page" }));
   }, [campaignId, dispatch, pageSuccess]);
 
   useEffect(() => {
@@ -162,7 +157,6 @@ export const IKnowItAllScreenSummaryDetails = ({
       setCurrentCity(selectedCity);
       setZoneFilters(Object.keys(cityZones[selectedCity] ?? {}));
       setTpFilters(Object.keys(cityTP[selectedCity] ?? {}));
-      // console.log(Object.keys(screenTypes[selectedCity]) ?? {});
       setStFilters(Object.keys(screenTypes[selectedCity] ?? {}));
     }
   }, [dispatch, campaignId, getTabValue, screenSummaryData, screensBuyingCount, currentSummaryTab, cityZones, cityTP, screenTypes]);
@@ -208,12 +202,7 @@ export const IKnowItAllScreenSummaryDetails = ({
       dispatch(addDetailsToCreateCampaign({
         pageName: "Select Screens Page",
         id: campaignId,
-        totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-        totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalImpression,
-        totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalReach,
-        totalCampaignBudget: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalCampaignBudget,
-        totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[campaignId]?.total?.totalCpm,
-        duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
+        screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),
       }));
       setCurrentStep(step + 1);
     } else {

@@ -311,7 +311,7 @@ export const CampaignDetailsPage: React.FC = () => {
         </div>
       ) : (
         <div className="col-span-8 ">
-          <div className="w-full border rounded py-4 bg-white">
+          <div className="w-full border border-gray-100 rounded py-4 bg-white">
             <div className="flex justify-between pb-4 mx-1 border-b">
               <div className="flex items-center gap-4">
                 <i
@@ -412,7 +412,7 @@ export const CampaignDetailsPage: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="border rounded my-1 p-4 bg-white">
+          <div className="border border-gray-100 rounded my-1 p-4 bg-white">
             <div className="flex justify-between">
               <h1 className="text-[#092A41] text-[16px] font-semibold mt-2 px-1">
                 Campaign Creatives
@@ -477,7 +477,7 @@ export const CampaignDetailsPage: React.FC = () => {
           <Loading />
         </div>
       ) : (
-        <div className="col-span-4 border rounded bg-white p-2 h-full">
+        <div className="col-span-4 border border-gray-100 rounded bg-white p-2 h-full">
           <div className="flex justify-between">
             <h1 className="text-[16px] font-semibold px-1 py-2">
               Screens Play{" "}
