@@ -1,3 +1,4 @@
+import { EXCEL_DATA_TARGET_STORES } from "../constants/campaignConstants";
 import { ADVANCE_FILTER_SCREENS_MAP_DATA, AUDIENCE_DATA, CAMPAIGN, CAMPAIGN_CREATIVES, COST_SUMMARY, CURRENT_STEP, FOOTER_DATA, FULL_CAMPAIGN_PLAN, REGULAR_VS_COHORT_PRICE_DATA, SCREEN_SUMMARY_DATA, SCREEN_SUMMARY_SELECTION, SCREEN_SUMMARY_TABLE_DATA, SCREEN_TYPE_TOGGLE_SELECTION, SELECTED_AUDIENCE_TOUCHPOINTS, SELECTED_SCREENS_ID, SELECTED_TRIGGER, TOTAL_SCREEN_COST_DATA } from "../constants/localStorageConstants";
 
 export const saveDataOnLocalStorage = (key: string, value: any) => {
@@ -47,6 +48,7 @@ export const removeAllKeyFromLocalStorage = () => {
     CAMPAIGN_CREATIVES,
     FULL_CAMPAIGN_PLAN,
     FOOTER_DATA,
+    EXCEL_DATA_TARGET_STORES,
   ];
   for (let key of keys) {
     window.localStorage.removeItem(key);
