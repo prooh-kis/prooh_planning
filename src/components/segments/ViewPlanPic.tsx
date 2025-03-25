@@ -12,11 +12,11 @@ export function ViewPlanPic({
 }: any) {
   return (
     <div
-      className={`hover:shadow-md rounded-md ${
+      className={`p-4 hover:shadow-md rounded-md ${
         screens[Object.keys(screens)[Number(currentSummaryTab) - 1]][screen._id]
           .status === false
           ? "border border-red-300"
-          : ""
+          : "border border-[#E3E3E3]"
       }`}
     >
       <img src={screen?.images[0]} alt="" className="h-36 w-full rounded-md" />
@@ -37,21 +37,21 @@ export function ViewPlanPic({
           }
         />
         {/* <h1 className="text-[14px] font-bold truncate ">{screen?.screenName}</h1> */}
-        <h1 className="text-[12px] truncate">
+        <h1 className="text-[12px] truncate py-1">
           {screen.location.city}, {screen.location.touchPoint}
         </h1>
         <h1 className="text-[12px]">
           {formatNumber(screen.impressionPerMonth)} Impressions/Month
         </h1>
-        <div className="flex justify-between">
+        <div className="flex justify-between pt-1">
           <div className="flex gap-1">
-            <h1 className="text-[12px] font-semibold">
+            <h1 className="text-[14px] font-semibold">
               &#8377;{screen.pricePerSlot} / Slot
             </h1>
             {screen.pricePerSlot > 100 && (
-              <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
+              <i className="fi fi-sr-star flex items-center text-[14px] text-[#F1BC00]"></i>
             )}
-            <i className="fi fi-sr-star flex items-center text-[12px] text-[#F1BC00]"></i>
+            <i className="fi fi-sr-star flex items-center text-[14px] text-[#F1BC00]"></i>
           </div>
           <div
             className="flex items-center"
@@ -67,9 +67,9 @@ export function ViewPlanPic({
             {screens[Object.keys(screens)[Number(currentSummaryTab) - 1]][
               screen._id
             ].status === true ? (
-              <i className="fi-ss-minus-circle flex items-center text-[12px] text-[#FF0808]"></i>
+              <i className="fi-ss-minus-circle flex items-center text-[18px] text-[#FF0808]"></i>
             ) : (
-              <i className="fi fi-sr-add flex items-center text-[12px] text-[#358E0B]"></i>
+              <i className="fi fi-sr-add flex items-center text-[18px] text-[#358E0B]"></i>
             )}
           </div>
         </div>
