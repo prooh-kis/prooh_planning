@@ -70,6 +70,8 @@ export const IKnowItAllPlanSummaryTable = ({
   const handleSaveAndContinue = async () => {
     if (!pathname.split("/").includes("view")) {
 
+      console.log(getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId])
+
       dispatch(
         addDetailsToCreateCampaign({
           pageName: "Screen Summary Page",
@@ -78,13 +80,13 @@ export const IKnowItAllPlanSummaryTable = ({
             getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
           totalImpression: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
             campaignId
-          ]?.total?.totalImpression,
+          ]?.total?.totalImpression * getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.sov,
           totalReach: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
             campaignId
           ]?.total?.totalReach,
           totalCampaignBudget: getDataFromLocalStorage(
             SCREEN_SUMMARY_TABLE_DATA
-          )?.[campaignId]?.total?.totalCampaignBudget,
+          )?.[campaignId]?.total?.totalCampaignBudget * getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.sov,
           totalCpm: getDataFromLocalStorage(SCREEN_SUMMARY_TABLE_DATA)?.[
             campaignId
           ]?.total?.totalCpm,
