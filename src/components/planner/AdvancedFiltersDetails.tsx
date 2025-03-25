@@ -37,7 +37,7 @@ interface AdvanceFiltersDetailsProps {
 export const AdvanceFiltersDetails = ({
   step,
   setCurrentStep,
-  pageSuccess,
+  pageSuccess = false,
   setPageSuccess,
   campaignId,
   successAddCampaignDetails,
@@ -181,7 +181,7 @@ export const AdvanceFiltersDetails = ({
 
   useEffect(() => {
     if (advanceFilterData && finalSelectedScreens?.length === 0) {
-      if (advanceFilterData?.screens?.length == 0) {
+      if (pageSuccess && advanceFilterData?.screens?.length == 0) {
         message.error(
           "You have got Zero screen, please change your previous selection"
         );
@@ -295,12 +295,6 @@ export const AdvanceFiltersDetails = ({
                   polygons={polygons}
                   setPolygons={setPolygons}
                   polygonFilteredScreens={polygonFilteredScreens}
-                  // pois={pois}
-                  // selectedPOIs={selectedPOIs}
-                  // setSelectedPOIs={setSelectedPOIs}
-                  // setPOIFilteredScreens={setPOIFilteredScreens}
-                  // selectedScreensFromMap={selectedScreensFromMap}
-                  // handleSelectFromMap={handleSelectFromMap}
                   handleConfirmScreensSelections={
                     handleConfirmScreensSelections
                   }

@@ -210,6 +210,7 @@ export function ExcelImport({
 
   // 🔴 Ensure data updates when `circleRadius` changes
   useEffect(() => {
+    window.localStorage.removeItem(EXCEL_DATA_TARGET_STORES);
     handleGetExcelData(getDataFromLocalStorage(EXCEL_DATA_TARGET_STORES)); // Pass the correct Excel data here
   }, [circleRadius]);
 

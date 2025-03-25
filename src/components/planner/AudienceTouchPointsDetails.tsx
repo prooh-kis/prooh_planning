@@ -45,7 +45,7 @@ export const AudienceTouchPointsDetails = ({
   touchpointRef,
   campaignId,
   successAddCampaignDetails,
-  pageSuccess,
+  pageSuccess=false,
   setPageSuccess,
 }: EnterAudienceTouchpointDetailsProps) => {
   const navigate = useNavigate();
@@ -326,9 +326,7 @@ export const AudienceTouchPointsDetails = ({
             <div ref={marketRef} className="col-span-2 flex justify-center">
               <LocationTable
                 loading={loadingAudiences || loadingCost}
-                markets={markets}
                 handleSelection={handleSelection}
-                selectedMarkets={selectedMarket}
                 selectedGender={selectedGender}
                 setSelectedGender={setSelectedGender}
                 data={screensAudiences || {}}

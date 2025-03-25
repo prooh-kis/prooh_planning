@@ -103,7 +103,7 @@ export function MapSearchInput(props: any) {
           onClick={() => handleSuggestionClick(suggestion)}
           onMouseEnter={() => {
             setHighlightedIndex(index);
-            setQuery(suggestion.description);
+            // setQuery(suggestion.description);
           }}
           onMouseDown={() => handleSuggestionClick(suggestion)}
           className={
@@ -118,11 +118,11 @@ export function MapSearchInput(props: any) {
     </ul>
   );
 
-  useEffect(() => {
-    if (highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
-      setQuery(suggestions[highlightedIndex].description);
-    }
-  }, [highlightedIndex, suggestions]);
+  // useEffect(() => {
+  //   if (highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
+  //     setQuery(suggestions[highlightedIndex].description);
+  //   }
+  // }, [highlightedIndex, suggestions]);
 
   useEffect(() => {
     if (props?.reset) {

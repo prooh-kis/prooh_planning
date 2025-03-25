@@ -5,9 +5,6 @@ import { Loading } from "../../components/Loading";
 import { StateCityZoneCheckboxTree } from "../molecules/StateCityZoneCheckboxTree";
 
 interface LocationTableProps {
-  markets?: any;
-  selectedMarkets?: any;
-  setSelectedMarkets?: any;
   selectedGender?: any;
   setSelectedGender?: any;
   loading?: any;
@@ -17,11 +14,7 @@ interface LocationTableProps {
   setSelectedZone: any;
 }
 export const LocationTable = ({
-  markets,
   loading,
-  selectedMarkets,
-  setSelectedMarkets,
-  handleSelection,
   selectedGender,
   setSelectedGender,
   data,
