@@ -301,7 +301,7 @@ export const ShowCampaignLogsPopup = ({
                                           ).toLocaleTimeString()}
                                         </td>
                                         <td className="col-span-4 py-2 flex items-center justify-center">
-                                          {entry.campaignName}
+                                          {entry.mediaId.split("_")[1]}
                                         </td>
                                         <td className="col-span-3 py-2 flex items-center justify-center">
                                           {entry.brandName}
