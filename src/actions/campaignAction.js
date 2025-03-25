@@ -53,6 +53,7 @@ import {
   EDIT_CAMPAIGN_CREATIVE_END_DATE_SUCCESS,
   EDIT_CAMPAIGN_CREATIVE_END_DATE_FAIL,
 } from "../constants/campaignConstants";
+import { removeAllKeyFromLocalStorage } from "../utils/localStorageUtils";
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/campaigns`;
 const url2 = `${process.env.REACT_APP_PROOH_SERVER}/api/v1/analytics`;
 
@@ -65,6 +66,7 @@ export const addDetailsToCreateCampaign =
     });
     try {
       const { data } = await axios.post(`${url}/addDataForCampaign`, input);
+      removeAllKeyFromLocalStorage();
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_SUCCESS,
         payload: data,

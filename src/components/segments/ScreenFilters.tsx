@@ -230,7 +230,10 @@ export const ScreenFilters = ({
                 Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]
               ]
             )?.map((zone: any, i: any) => (
-              <div key={i} className="flex items-center justify-between py-1">
+              <div
+                key={i}
+                className="flex items-center justify-between py-1 text-[14px]"
+              >
                 <CheckboxInput
                   label={zone}
                   checked={zoneFilters?.includes(zone)}
@@ -242,7 +245,7 @@ export const ScreenFilters = ({
                     });
                   }}
                 />
-                <p className="text-[18px]">
+                <h1 className="">
                   (
                   {
                     filteredScreensData()?.allResult?.filter(
@@ -250,7 +253,7 @@ export const ScreenFilters = ({
                     )?.length
                   }
                   )
-                </p>
+                </h1>
               </div>
             ))}
           </div>
@@ -261,7 +264,10 @@ export const ScreenFilters = ({
                 Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]
               ]
             )?.map((tp: any, j: any) => (
-              <div key={j} className="flex items-center justify-between py-1">
+              <div
+                key={j}
+                className="flex items-center justify-between py-1 text-[14px]"
+              >
                 <CheckboxInput
                   label={tp}
                   checked={tpFilters?.includes(tp)}
@@ -269,7 +275,7 @@ export const ScreenFilters = ({
                     handleFilterSelection({ type: "tp", value: tp, checked })
                   }
                 />
-                <p className="text-[18px]">
+                <h1 className="">
                   (
                   {
                     filteredScreensData()?.allResult?.filter(
@@ -277,7 +283,7 @@ export const ScreenFilters = ({
                     )?.length
                   }
                   )
-                </p>
+                </h1>
               </div>
             ))}
           </div>
@@ -288,7 +294,10 @@ export const ScreenFilters = ({
                 Object.keys(screensBuyingCount)[Number(currentSummaryTab) - 1]
               ]
             )?.map((st: any, k: any) => (
-              <div key={k} className="flex items-center justify-between py-1">
+              <div
+                key={k}
+                className="flex items-center justify-between py-1 text-[14px]"
+              >
                 <CheckboxInput
                   label={st}
                   checked={stFilters?.includes(st)}
@@ -296,7 +305,7 @@ export const ScreenFilters = ({
                     handleFilterSelection({ type: "st", value: st, checked })
                   }
                 />
-                <p className="text-[18px]">
+                <h1 className="">
                   (
                   {
                     filteredScreensData()?.allResult?.filter(
@@ -304,7 +313,7 @@ export const ScreenFilters = ({
                     )?.length
                   }
                   )
-                </p>
+                </h1>
               </div>
             ))}
           </div>

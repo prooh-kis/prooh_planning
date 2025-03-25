@@ -370,6 +370,7 @@ export const ScreenSummaryDetails = ({
     saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
       [campaignId]: updatedScreensBuyingCount,
     });
+    dispatch({ type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET })
   };
 
   const handleScreenTypeClick = ({
@@ -549,7 +550,8 @@ export const ScreenSummaryDetails = ({
                     )}
                     {listView && (
                       <button
-                        className="text-white text-[12px] px-4 py-1 rounded-full bg-primaryButton"
+                        className={`text-white text-[12px] px-4 py-1 rounded-full hover:bg-primaryButton
+                          ${isOpen ? "bg-primaryButton " : "bg-gray-400 "}`}
                         title="filter"
                         type="button"
                         onClick={() => {
@@ -570,24 +572,23 @@ export const ScreenSummaryDetails = ({
                         <i
                           className={`fi fi-rr-table-list flex items-center
                         text-[12px]
-                        ${listView && "text-primaryButton"}`}
+                        ${listView ? "text-primaryButton" : "text-[#B9B9B9]"}`}
                         ></i>
                       </div>
                     </Tooltip>
-                    <Tooltip title="Click to see the grid view">
-                      <div
-                        className={`cursor-pointer truncate p-1 h-6 border rounded flex items-center gap-1 ${
-                          !listView && "border-primaryButton"
-                        }`}
-                        onClick={() => setListView(false)}
-                      >
-                        <i
-                          className={`fi fi-sr-apps flex items-center
-                        text-[12px]
-                        ${!listView && "text-primaryButton"}`}
-                        ></i>
-                      </div>
-                    </Tooltip>
+                    <div
+                      className={`cursor-pointer truncate p-1 h-6 border rounded flex items-center gap-1 ${
+                        !listView && "border-primaryButton"
+                      }`}
+                      onClick={() => setListView(false)}
+                      title="Click to see the grid view"
+                    >
+                      <i
+                        className={`fi fi-sr-apps flex items-center
+                        text-[12px] 
+                        ${!listView ? "text-primaryButton" : "text-[#B9B9B9]"}`}
+                      ></i>
+                    </div>
                   </div>
                 </div>
                 {loadingScreenSummary && <Loading />}
@@ -613,7 +614,7 @@ export const ScreenSummaryDetails = ({
                   />
                 ) : (
                   <div className="grid grid-cols-12 gap-8 pt-2 mb-16">
-                    <div className="col-span-3 border rounded-[12px] h-[60vh] p-3 overflow-y-auto">
+                    <div className="col-span-3 border rounded-[12px] h-[60vh] p-4 overflow-y-auto scrollbar-minimal">
                       <ScreenFilters
                         cityZones={cityZones}
                         cityTP={cityTP}
@@ -634,7 +635,7 @@ export const ScreenSummaryDetails = ({
                         setFilterType={setFilterType}
                       />
                     </div>
-                    <div className="col-span-9 rounded grid grid-cols-12 flex flex-wrap gap-4 overflow-scroll no-scrollbar h-[60vh]">
+                    <div className="col-span-9 rounded grid grid-cols-12 flex flex-wrap gap-8 overflow-scroll no-scrollbar h-[60vh]">
                       {filteredScreensData()
                         ?.result // ?.filter((sc: any) => {
                         //   return (
