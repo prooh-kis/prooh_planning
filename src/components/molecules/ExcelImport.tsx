@@ -208,9 +208,11 @@ export function ExcelImport({
     circleRadius, // ✅ Ensure this is included in dependencies
   ]);
 
-  // 🔴 Ensure data updates when `circleRadius` changes
   useEffect(() => {
     window.localStorage.removeItem(EXCEL_DATA_TARGET_STORES);
+  }, []);
+
+  useEffect(() => {
     handleGetExcelData(getDataFromLocalStorage(EXCEL_DATA_TARGET_STORES)); // Pass the correct Excel data here
   }, [circleRadius]);
 

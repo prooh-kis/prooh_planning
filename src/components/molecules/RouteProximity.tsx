@@ -124,7 +124,7 @@ export const RouteProximity = ({
           </div>
           <div className="flex justify-end items-center">
             <i className="fi fi-bs-circle text-[10px] text-[#22C55E] pr-2 flex items-center justify-center"></i>
-            <input
+            {/* <input
               className="w-[36px] h-6 text-center"
               type="number"
               placeholder={`${routeRadius / 1000}`}
@@ -133,8 +133,11 @@ export const RouteProximity = ({
                 const newValue = Number(e.target.value);
                 setRouteRadius(() => (newValue === 0 ? 1000 : newValue * 1000));
               }}
-            />
-            <h1 className="lg:text-[14px] text-[12px] pl-1">km</h1>
+            /> */}
+            <Tooltip
+              title="Route Radius is fixed as 1 km">
+              <h1 className="lg:text-[14px] text-[12px] pl-1">1 km</h1>
+            </Tooltip>
           </div>
         </div>
 
