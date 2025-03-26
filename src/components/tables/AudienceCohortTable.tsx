@@ -26,10 +26,8 @@ export const AudienceCohortTable = ({
   setLocked,
   showIconHighlight,
 }: AudiencesProps) => {
-  const [clicked, setClicked] = useState<any>(false);
 
   const handleCheckClick = ({ cohort, checked }: any) => {
-    setClicked(false);
     if (checked && !selectedAudiences.includes(cohort)) {
       setSelectedAudiences([...selectedAudiences, cohort]);
       // handleSelection({
@@ -47,21 +45,6 @@ export const AudienceCohortTable = ({
       // });
     }
   };
-
-  const handleConfirmClick = () => {
-    handleSelection({
-      type: "cohorts",
-      data: selectedAudiences,
-    });
-  };
-
-  useEffect(() => {
-    const lockedData = {
-      cohorts: clicked,
-      touchPoints: clicked,
-    };
-    setLocked(lockedData);
-  }, [clicked, setLocked]);
 
   return (
     <table className="w-full">

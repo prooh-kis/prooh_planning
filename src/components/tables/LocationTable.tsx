@@ -9,9 +9,9 @@ interface LocationTableProps {
   setSelectedGender?: any;
   loading?: any;
   handleSelection?: any;
-  data: any;
-  setSelectedCity: any;
-  setSelectedZone: any;
+  data?: any;
+  setSelectedCity?: any;
+  setSelectedZone?: any;
 }
 export const LocationTable = ({
   loading,

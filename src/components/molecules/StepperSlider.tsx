@@ -1,6 +1,6 @@
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { signout } from "../../actions/userAction";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { useLocation } from "react-router-dom";
@@ -28,19 +28,21 @@ export const StepperSlider = ({
   const { userInfo } = auth;
 
   // Function to handle step marker click
-  const handleStepClick = (step: number) => {
+  const handleStepClick = React.useCallback((clickedStep: number) => {
+    if (clickedStep + 1 === step) return; // prevent unnecessary updates
+    
     if (
       !pathname.split("/").includes("view") &&
       campaignId &&
-      getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] >= step + 1
+      getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] >= clickedStep + 1
     ) {
-      setPageSuccess(true);
-      setStep(step + 1);
+      setStep(clickedStep + 1);
     }
-  };
+  }, [pathname, campaignId, setStep, step]);
 
   // Example Flaticon SVG URLs (replace these with actual SVG URLs or import local SVGs)
-  const icons = pathname.split("/").includes("iknowitallplan")
+  const icons: any = useMemo(() => {
+    return pathname.split("/").includes("iknowitallplan")
     ? [
         <i key={1} className="fi fi-sr-megaphone text-[14px]"></i>, // Example icon for step 1
         <i key={2} className="fi fi-br-settings-sliders text-[14px]"></i>, // Example icon for step 3
@@ -95,9 +97,11 @@ export const StepperSlider = ({
         <i key={8} className="fi fi-sr-cloud-upload-alt text-[14px]"></i>, // Example icon for step 8
         <i key={9} className="fi fi-sr-dashboard-monitor text-[14px]"></i>, // Example icon for step 9
       ];
+    },[pathname]);
 
   // Example labels for each step
-  const stepLabels = pathname.split("/").includes("iknowitallplan")
+  const stepLabels: any = useMemo(() => {
+   return pathname.split("/").includes("iknowitallplan")
     ? [
         "Basic Details",
         "Select Screens",
@@ -152,6 +156,7 @@ export const StepperSlider = ({
         "Creative Upload",
         "Vendor Confirmation",
       ];
+  },[pathname]);
 
   useEffect(() => {
     if (!userInfo) {
@@ -169,51 +174,54 @@ export const StepperSlider = ({
               style={{ width: `${(Number(step - 1) / (steps - 1)) * 100}%` }}
             />
             {[...Array(steps)].map((_, i) => (
-              <div
-                key={i}
-                onClick={() => handleStepClick(i)}
-                className="relative flex flex-col items-center"
-              >
+              icons[i] && stepLabels[i] ? (
                 <div
-                  className={`relative w-4 h-4 rounded-full -mt-1.5 flex flex-col items-center
-                    ${
-                      i <= step - 1
-                        ? "bg-primaryButton"
-                        : "border bg-gray-200"
-                    }
-                  `}
+                  key={i}
+                  onClick={() => handleStepClick(i)}
+                  className="relative flex flex-col items-center cursor-pointer"
                 >
-                  <Tooltip title={stepLabels[i]}>
-                    <div className="relative mt-[-32px] w-full">
-                      <div
-                        className={`flex w-full gap-2 ${
-                          i + 1 <= step
-                            ? "text-primaryButton"
-                            : "text-[#D6D2D2]"
-                        }`}
-                      >
-                        {icons[i]}
-                      </div>
-                    </div>
-                  </Tooltip>
-                </div>
-                {/* Adjust label positioning: left-aligned for first step, centered otherwise, right-aligned for last step */}
-                {i + 1 === step && (
                   <div
-                    className={`absolute top-full mt-2 text-primaryButton text-[14px] font-medium whitespace-nowrap
+                    className={`relative w-4 h-4 rounded-full -mt-1.5 flex flex-col items-center
                       ${
-                        i === 0
-                          ? "left-0"
-                          : i + 1 === steps
-                          ? "right-0"
-                          : "left-1/2 transform -translate-x-1/2"
+                        i <= step - 1
+                          ? "bg-primaryButton"
+                          : "border bg-gray-200"
                       }
                     `}
                   >
-                    {stepLabels[step - 1]}
+                    <Tooltip title={stepLabels[i] ?? "Step " + (i + 1)}>
+                      <div className="relative mt-[-32px] w-full">
+                        <div
+                          className={`flex w-full gap-2 ${
+                            i + 1 <= step
+                              ? "text-primaryButton"
+                              : "text-[#D6D2D2]"
+                          }`}
+                        >
+                          {icons[i] ?? <i className="fi fi-sr-question text-[14px]"></i>}
+                        </div>
+                      </div>
+                    </Tooltip>
                   </div>
-                )}
-              </div>
+                  {/* Adjust label positioning: left-aligned for first step, centered otherwise, right-aligned for last step */}
+                  {i + 1 === step && (
+                    <div
+                      className={`absolute top-full mt-2 text-primaryButton text-[14px] font-medium whitespace-nowrap
+                        ${
+                          i === 0
+                            ? "left-0"
+                            : i + 1 === steps
+                            ? "right-0"
+                            : "left-1/2 transform -translate-x-1/2"
+                        }
+                      `}
+                    >
+                      {stepLabels[step - 1]}
+                    </div>
+                  )}
+                </div>
+              ) : null
+              
             ))}
           </div>
         </div>

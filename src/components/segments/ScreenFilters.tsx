@@ -128,7 +128,7 @@ export const ScreenFilters = ({
                         <p className="text-[14px]">
                           (
                           {
-                            filteredScreensData()?.allResult?.filter(
+                            filteredScreensData?.allResult?.filter(
                               (s: any) => s?.screenType === st
                             )?.length
                           }
@@ -165,7 +165,7 @@ export const ScreenFilters = ({
                         <p className="text-[14px]">
                           (
                           {
-                            filteredScreensData()?.allResult?.filter(
+                            filteredScreensData?.allResult?.filter(
                               (s: any) => s?.location?.zoneOrRegion === zone
                             )?.length
                           }
@@ -192,7 +192,6 @@ export const ScreenFilters = ({
                           label={tp}
                           checked={tpFilters?.includes(tp)}
                           onChange={(checked) => {
-                            console.log(tpFilters);
                             handleFilterSelection({
                               type: "tp",
                               value: tp,
@@ -203,7 +202,7 @@ export const ScreenFilters = ({
                         <p className="text-[14px]">
                           (
                           {
-                            filteredScreensData()?.allResult?.filter(
+                            filteredScreensData?.allResult?.filter(
                               (s: any) => s?.location?.touchPoint === tp
                             )?.length
                           }
@@ -248,7 +247,7 @@ export const ScreenFilters = ({
                 <h1 className="">
                   (
                   {
-                    filteredScreensData()?.allResult?.filter(
+                    filteredScreensData?.allResult?.filter(
                       (s: any) => s.location.zoneOrRegion === zone
                     )?.length
                   }
@@ -278,7 +277,7 @@ export const ScreenFilters = ({
                 <h1 className="">
                   (
                   {
-                    filteredScreensData()?.allResult?.filter(
+                    filteredScreensData?.allResult?.filter(
                       (s: any) => s.location.touchPoint === tp
                     )?.length
                   }
@@ -308,7 +307,7 @@ export const ScreenFilters = ({
                 <h1 className="">
                   (
                   {
-                    filteredScreensData()?.allResult?.filter(
+                    filteredScreensData?.allResult?.filter(
                       (s: any) => s.screenType === st
                     )?.length
                   }

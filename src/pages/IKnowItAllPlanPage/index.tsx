@@ -1,50 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
 import {
-  CreativeUploadDetails,
-  EnterCampaignBasicDetails,
-  ViewFinalPlanPODetails,
+  // CreativeUploadDetails,
+  // EnterCampaignBasicDetails,
+  // ViewFinalPlanPODetails,
   VendorConfirmationDetails,
-  SetAdsPlayTime,
+  // SetAdsPlayTime,
 } from "../../components/planner";
+import { EnterCampaignBasicDetails } from "./EnterCampaignBasicDetails";
+import { IKnowItAllScreenSummaryDetails } from "./IKnowItAllScreenSummaryDetails";
+import { SetAdsPlayTime } from "./SetAdsPlayTime";
+import { IKnowItAllPlanSummaryTable } from "./IKnowItAllPlanSummaryTable";
+import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
+import { CreativeUpload } from "./CreativeUpload";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   CURRENT_STEP,
 } from "../../constants/localStorageConstants";
-import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { getCampaignCreationsDetails } from "../../actions/campaignAction";
 import {
   CAMPAIGN_PLAN_TYPE_KNOW,
   EDIT_CAMPAIGN,
   VIEW_CAMPAIGN,
 } from "../../constants/campaignConstants";
-import { IKnowItAllPlanSummaryTable } from "../../components/planner/IKnowItAllPlanSummaryTable";
-import { IKnowItAllScreenSummaryDetails } from "../../components/planner/IKnowItAllScreenSummaryDetails";
+// import { IKnowItAllPlanSummaryTable } from "../../components/planner/IKnowItAllPlanSummaryTable";
+// import { IKnowItAllScreenSummaryDetails } from "../../components/planner/IKnowItAllScreenSummaryDetails";
 import { iKnowItAllPlanData } from "../../data";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 export const IKnowItAllPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const steps = 7;
   const { pathname, state } = useLocation();
+  const navigate = useNavigate();
+
   const campaignId: any = pathname.split("/")[2] || null;
-  const [pageSuccess, setPageSuccess] = useState<any>(false);
   const [currentStep, setCurrentStep] = useState<number>(
     campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] ?? 1 : 1
   );
 
   const { userInfo } = useSelector((state: any) => state.auth);
-  const {
-    loading,
-    success,
-    data: campaignDetails,
-  } = useSelector((state: any) => state.detailsToCreateCampaignAdd);
-
+  const { loading: loadingCampaignDetails, data: campaignDetails } = useSelector(
+    (state: any) => state.campaignCreationsDetailsGet
+  );
   useEffect(() => {
-    if (success && campaignDetails) {
+    if (campaignDetails && campaignId) {
 
       const newStep = pathname.split("/").includes("view") && state?.from === VIEW_CAMPAIGN ? 1 :
       pathname.split("/").includes("edit") && state?.from === EDIT_CAMPAIGN ? 1 :
@@ -52,95 +58,33 @@ export const IKnowItAllPlanPage: React.FC = () => {
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0);
 
-      setCurrentStep(newStep >= steps ? newStep : newStep + 1);
+      setCurrentStep(newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep);
       const currStep = {
-        [campaignId]: newStep >= steps ? newStep : newStep + 1,
+        [campaignId]: newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
-  }, [success, campaignDetails, campaignId, state, pathname, dispatch]);
+  }, [campaignDetails, campaignId, state, pathname, dispatch]);
 
   useEffect(() => {
+    navigate(pathname, { replace: true, state: {} });
 
     if (campaignId) {
-      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
+      dispatch(getCampaignCreationsDetails({ id: campaignId }));
     };
-  }, [dispatch, campaignId]);
+  }, [dispatch, navigate, pathname, campaignId]);
 
-  const stepComponents: { [key: number]: React.ReactNode } = {
-    1: (
-      <EnterCampaignBasicDetails
-        setCurrentStep={setCurrentStep}
-        step={currentStep}
-        userInfo={userInfo}
-        campaignId={campaignId}
-        campaignType={CAMPAIGN_PLAN_TYPE_KNOW}
-        path="iknowitallplan"
-      />
-    ),
-    2: (
-      <IKnowItAllScreenSummaryDetails
-        setCurrentStep={setCurrentStep}
-        step={currentStep}
-        campaignId={campaignId}
-        successAddCampaignDetails={success}
-        setPageSuccess={setPageSuccess}
-        pageSuccess={pageSuccess}
-      />
-    ),
-    3: (
-      <SetAdsPlayTime
-        setCurrentStep={setCurrentStep}
-        step={currentStep}
-        campaignId={campaignId}
-        successAddCampaignDetails={success}
-        loading={loading}
-        setPageSuccess={setPageSuccess}
-        pageSuccess={pageSuccess}
-      />
-    ),
-    4: (
-      <IKnowItAllPlanSummaryTable
-        setCurrentStep={setCurrentStep}
-        step={currentStep}
-        campaignId={campaignId}
-        successAddCampaignDetails={success}
-        setPageSuccess={setPageSuccess}
-        pageSuccess={pageSuccess}
-      />
-    ),
-    5: (
-      <ViewFinalPlanPODetails
-        setCurrentStep={setCurrentStep}
-        step={currentStep}
-        campaignId={campaignId}
-        successAddCampaignDetails={success}
-        setPageSuccess={setPageSuccess}
-        pageSuccess={pageSuccess}
-      />
-    ),
-    6: (
-      <CreativeUploadDetails
-        setCurrentStep={setCurrentStep}
-        step={currentStep}
-        campaignId={campaignId}
-        successAddCampaignDetails={success}
-        setPageSuccess={setPageSuccess}
-        pageSuccess={pageSuccess}
-      />
-    ),
-    7: (
-      <VendorConfirmationDetails
-        setCurrentStep={setCurrentStep}
-        step={currentStep}
-        campaignId={campaignId}
-        userInfo={userInfo}
-        successAddCampaignDetails={success}
-        setPageSuccess={setPageSuccess}
-        pageSuccess={pageSuccess}
-      />
-    ),
-  };
+  const stepComponents: Record<number, React.FC<any>> = {
+    1: EnterCampaignBasicDetails,
+    2: IKnowItAllScreenSummaryDetails,
+    3: SetAdsPlayTime,
+    4: IKnowItAllPlanSummaryTable,
+    5: ViewFinalPlanPODetails,
+    6: CreativeUpload,
+    7: VendorConfirmationDetails,
+  }
+
+  const StepComponent = stepComponents[currentStep] || null;
 
   return (
     <div className="w-full">
@@ -151,14 +95,23 @@ export const IKnowItAllPlanPage: React.FC = () => {
           step={currentStep}
           setStep={setCurrentStep}
           steps={steps}
-          setPageSuccess={setPageSuccess}
         />
       </div>
-
-      {/* Step Content */}
-      <div className="w-full h-[75vh] p-4">
-        {stepComponents[currentStep] || null}
-      </div>
+      {loadingCampaignDetails ? (
+        <LoadingScreen />
+      ) : (
+        <div className="w-full h-[75vh] p-4">
+          <StepComponent
+            setCurrentStep={setCurrentStep}
+            step={currentStep}
+            campaignId={campaignId}
+            userInfo={userInfo}
+            campaignType={CAMPAIGN_PLAN_TYPE_KNOW}
+            path="iknowitallplan"
+            campaignDetails={campaignDetails}
+          />
+        </div>
+      )}
     </div>
   );
 };

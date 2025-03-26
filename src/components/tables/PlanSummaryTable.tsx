@@ -56,8 +56,12 @@ export function PlanSummaryTable({
       dispatch(getScreenSummaryPlanTableData({ id: campaignId, screenIds }));
     }
 
-    if (!priceData) {
-      if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW) {
+    if (
+      !priceData
+    ) {
+      if (getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
+          ?.campaignType === CAMPAIGN_PLAN_TYPE_KNOW
+      ) {
         dispatch(getTableDataScreenWiseAdPlayTime({ id: campaignId }));
       } else {
         dispatch(
@@ -103,7 +107,11 @@ export function PlanSummaryTable({
             ) : (
               <RegularCohortSlotsCampaignTable
                 type={regularVsCohort}
-                priceData={priceData?.[`${regularVsCohort}`]}
+                priceData={
+                  getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[
+                    campaignId
+                  ]?.[`${regularVsCohort}`]
+                }
                 setShowSummary={setShowSummary}
                 showSummary={showSummary}
                 loading={loadingPriceData}
@@ -113,7 +121,10 @@ export function PlanSummaryTable({
             {showSummary === regularVsCohort && (
               <RegularCohortSummaryTable
                 type={regularVsCohort}
-                touchPointData={priceData?.[`${regularVsCohort}`]?.touchPointData
+                touchPointData={
+                  getDataFromLocalStorage(REGULAR_VS_COHORT_PRICE_DATA)?.[
+                    campaignId
+                  ]?.[`${regularVsCohort}`]?.touchPointData
                 }
               />
             )}

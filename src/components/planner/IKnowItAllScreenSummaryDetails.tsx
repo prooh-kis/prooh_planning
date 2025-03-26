@@ -257,6 +257,7 @@ export const IKnowItAllScreenSummaryDetails = ({
     updatedScreensBuyingCount[city] = currentCityScreens;
     setScreensBuyingCount(updatedScreensBuyingCount);
     saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, { [campaignId]: updatedScreensBuyingCount });
+    dispatch({ type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET })
   };
 
   const handleScreenTypeClick = ({ screenType, myData, city, touchpoint, statusNow, zone }: any) => {

@@ -52,11 +52,38 @@ import {
   EDIT_CAMPAIGN_CREATIVE_END_DATE_REQUEST,
   EDIT_CAMPAIGN_CREATIVE_END_DATE_SUCCESS,
   EDIT_CAMPAIGN_CREATIVE_END_DATE_FAIL,
+  GET_CAMPAIGN_CREATIONS_DETAILS_REQUEST,
+  GET_CAMPAIGN_CREATIONS_DETAILS_SUCCESS,
+  GET_CAMPAIGN_CREATIONS_DETAILS_ERROR,
 } from "../constants/campaignConstants";
 import { removeAllKeyFromLocalStorage } from "../utils/localStorageUtils";
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/campaigns`;
 const url2 = `${process.env.REACT_APP_PROOH_SERVER}/api/v1/analytics`;
 
+
+export const getCampaignCreationsDetails = ({id}) => async (dispatch, getState) => {
+  dispatch({
+    type: GET_CAMPAIGN_CREATIONS_DETAILS_REQUEST,
+    payload: {id},
+  });
+
+  try {
+    const { data } = await axios.get(`${url}/campaignDetailsByCampaignCreationId?id=${id}`);
+    dispatch({
+      type: GET_CAMPAIGN_CREATIONS_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_CAMPAIGN_CREATIONS_DETAILS_ERROR,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    });
+  }
+}
 
 export const addDetailsToCreateCampaign =
   (input) => async (dispatch, getState) => {
@@ -65,8 +92,9 @@ export const addDetailsToCreateCampaign =
       payload: input,
     });
     try {
-      const { data } = await axios.post(`${url}/addDataForCampaign`, input);
       removeAllKeyFromLocalStorage();
+
+      const { data } = await axios.post(`${url}/addDataForCampaign`, input);
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_SUCCESS,
         payload: data,

@@ -24,10 +24,8 @@ export const TouchpointTable = ({
   locked,
   setLocked,
 }: TouchPointsProps) => {
-  const [clicked, setClicked] = useState<any>(false);
 
   const handleCheckClick = ({ touchPoint, checked }: any) => {
-    setClicked(false);
     if (checked && !selectedTouchPoints.includes(touchPoint)) {
       setSelectedTouchPoints([...selectedTouchPoints, touchPoint]);
     } else {
@@ -37,21 +35,6 @@ export const TouchpointTable = ({
       setSelectedTouchPoints(aud);
     }
   };
-
-  const handleConfirmClick = () => {
-    handleSelection({
-      type: "touchPoints",
-      data: selectedTouchPoints,
-    });
-  };
-
-  useEffect(() => {
-    const lockedData = {
-      cohorts: clicked,
-      touchPoints: clicked,
-    };
-    setLocked(lockedData);
-  }, [clicked, setLocked]);
 
   return (
     <table className="w-full">

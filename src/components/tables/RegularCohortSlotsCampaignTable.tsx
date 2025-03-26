@@ -59,11 +59,11 @@ export const RegularCohortSlotsCampaignTable = ({
         </tr>
       </thead>
       <tbody className="overflow-scroll">
-        {/* {loading || priceData?.tableData?.impressionPerDay === 0 || !priceData?.tableData?.totalSlotsPerDay ?(
+        {loading || priceData?.tableData?.impressionPerDay === 0 || !priceData?.tableData?.totalSlotsPerDay ?(
           <tr className="flex border rounded-b justify-between w-full h-[45px] animate-pulse">
             <td className="h-[45px] bg-gray-200 rounded-b dark:bg-gray-700 w-full"></td>
           </tr>
-        ) : ( */}
+        ) : (
         <tr className="flex justify-between border rounded-b w-full h-[45px]">
           <td className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F]">
@@ -135,7 +135,7 @@ export const RegularCohortSlotsCampaignTable = ({
             </h1>
           </td>
         </tr>
-        {/* )} */}
+        )}
       </tbody>
     </table>
   );

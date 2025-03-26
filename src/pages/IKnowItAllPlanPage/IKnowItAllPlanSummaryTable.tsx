@@ -1,0 +1,157 @@
+import React, { useEffect, useState } from "react";
+import { PlanSummaryTable } from "./PlanSummaryTable";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getPlanningPageFooterData,
+  getScreenSummaryPlanTableData,
+} from "../../actions/screenAction";
+import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { useLocation } from "react-router-dom";
+import { Footer } from "../../components/footer";
+import {
+  FULL_CAMPAIGN_PLAN,
+  SCREEN_SUMMARY_SELECTION,
+  SCREEN_SUMMARY_TABLE_DATA,
+} from "../../constants/localStorageConstants";
+import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { message } from "antd";
+
+interface ScreenSummaryDetailsProps {
+  setCurrentStep: (step: number) => void;
+  step: number;
+  campaignId?: any;
+  regularVsCohortSuccessStatus?: any;
+  campaignDetails?: any;
+}
+
+export const IKnowItAllPlanSummaryTable = ({
+  setCurrentStep,
+  step,
+  campaignId,
+  campaignDetails
+}: ScreenSummaryDetailsProps) => {
+  const dispatch = useDispatch<any>();
+  const { pathname } = useLocation();
+
+  const regularVsCohort = campaignDetails?.selectedType;
+
+  const detailsToCreateCampaignAdd = useSelector(
+    (state: any) => state.detailsToCreateCampaignAdd
+  );
+  const {
+    loading: loadingAddDetails,
+    error: errorAddDetails,
+    success: successAddDetails,
+  } = detailsToCreateCampaignAdd;
+  
+  const screenSummaryPlanTableDataGet = useSelector(
+    (state: any) => state.screenSummaryPlanTableDataGet
+  );
+  const {
+    loading: loadingScreenSummaryPlanTable,
+    error: errorScreenSummaryPlanTable,
+    data: screenSummaryPlanTableData,
+  } = screenSummaryPlanTableDataGet;
+
+
+  const handleSaveAndContinue = async () => {
+    if (!pathname.split("/").includes("view")) {
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Screen Summary Page",
+          id: campaignDetails?._id,
+          totalScreens: campaignDetails?.screenIds,
+          totalImpression: screenSummaryPlanTableData?.total?.totalImpression,
+          totalReach: screenSummaryPlanTableData?.total?.totalReach,
+          totalCampaignBudget: screenSummaryPlanTableData?.total?.totalCampaignBudget,
+          totalCpm: screenSummaryPlanTableData?.total?.totalCpm,
+          duration: campaignDetails?.duration,
+        })
+      );
+    }
+  };
+
+
+  useEffect(() => {
+    if (!campaignDetails) return;
+    if (errorAddDetails) {
+      message.error("Error in add campaign details...")
+    }
+
+    // if (errorScreenSummaryPlanTable) {
+    //   message.error("Error in getting plan table data...")
+    // }
+    dispatch(
+      getScreenSummaryPlanTableData({
+        id: campaignId,
+        screenIds: campaignDetails?.screenIds,
+      })
+    );
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "Screen Summary Page",
+      })
+    );
+
+  }, [campaignId, dispatch, campaignDetails, errorAddDetails, errorScreenSummaryPlanTable]);
+
+  useEffect(() => {
+    if (successAddDetails) {
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
+      setCurrentStep(step+1);
+    }
+  },[successAddDetails, step, setCurrentStep, dispatch]);
+
+  return (
+    <div className="w-full">
+      {loadingScreenSummaryPlanTable ? (
+        <LoadingScreen />
+      ) : errorScreenSummaryPlanTable ? (
+        <div className="p-4 bg-red-300 text-[#FFFFFF] ">
+          Something went wrong! please refresh the page...
+        </div>
+      ) : (
+        <div className="w-full">
+          <h1 className="text-3xl ">
+            Screens summary as per “
+            {regularVsCohort === "cohort" ? "COHORT" : "REGULAR"}” selection{" "}
+          </h1>
+          <h1 className="text-sm text-gray-500 ">
+            You can further optimized your plan by deselecting locations in the
+            screen summary
+          </h1>
+
+          <div className="pb-10">
+            <div className="w-full">
+              <PlanSummaryTable
+                screenSummaryPlanTableData={screenSummaryPlanTableData}
+                loadingScreenSummaryPlanTable={loadingScreenSummaryPlanTable}
+              />
+            </div>
+          </div>
+
+          <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
+            <Footer
+              mainTitle="Continue"
+              handleBack={() => {
+                setCurrentStep(step - 1);
+              }}
+              handleSave={() => {
+                handleSaveAndContinue();
+              }}
+              campaignId={campaignId}
+              pageName={`Screen Summary Page`}
+              loadingCost={loadingAddDetails || loadingScreenSummaryPlanTable}
+              successCampaignDetails={successAddDetails}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

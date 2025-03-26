@@ -21,7 +21,7 @@ export const Footer = ({
   campaignId,
   loadingCost,
   pageName,
-  successAddCampaignDetails,
+  successCampaignDetails,
   mainTitle
 }: any) => {
   // console.log("loadingCost : ", loadingCost);
@@ -60,7 +60,7 @@ export const Footer = ({
   const { loading, error, data: totalScreensData } = planningPageFooterDataGet;
 
   useEffect(() => {
-    if (successAddCampaignDetails) {
+    if (successCampaignDetails) {
       dispatch(
         getPlanningPageFooterData({
           id: campaignId,
@@ -68,7 +68,7 @@ export const Footer = ({
         })
       );
     }
-  }, [dispatch, campaignId, pageName, successAddCampaignDetails]);
+  }, [dispatch, campaignId, pageName, successCampaignDetails]);
   return (
     <div className="py-2 z-10 flex justify-between px-4">
       <div className="flex w-full justify-start items-center gap-4">
@@ -83,7 +83,7 @@ export const Footer = ({
         )}
 
         {loading ? (
-          <div className="animate-pulse flex w-full justify-start">
+          <div className="animate-pulse flex w-full justify-start truncate">
             <div className="w-full">
               <p className="text-[14px] font-semibold">
                 Please wait while we calculate the cost of your desired plan...
@@ -94,7 +94,7 @@ export const Footer = ({
             </div>
           </div>
         ) : (
-          <div className="flex justify-between items-center gap-4">
+          <div className="flex justify-between items-center gap-4 truncate">
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">Cities</h1>
               <h1 className="text-[14px] font-semibold">

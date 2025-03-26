@@ -45,9 +45,9 @@ export const CostSummaryTable1 = ({
             <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">
               Duration
             </h1>
-            <ChangeCampaignDuration
+            {/* <ChangeCampaignDuration
               campaignId={Object.keys(getCurrentStep || {})?.[0]}
-            />
+            /> */}
           </th>
           <th className="flex w-full items-center justify-center gap-2">
             <h1 className="lg:text-[14px] md:text-[12px] text-[#21394F]">

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 import { allPlansData } from "../../data";
 import { PrimaryButton } from "../../components/atoms/PrimaryButton";
-import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET, GET_CAMPAIGN_CREATIONS_DETAILS_RESET } from "../../constants/campaignConstants";
 import { useDispatch } from "react-redux";
 
 interface Plan {
@@ -66,15 +66,14 @@ export const CampaignTemplates: React.FC = () => {
   useEffect(() => {
     removeAllKeyFromLocalStorage();
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-  }, []);
+    dispatch({ type: GET_CAMPAIGN_CREATIONS_DETAILS_RESET });
+  }, [dispatch]);
 
   const handleCardClick = (id: number) => {
-    removeAllKeyFromLocalStorage();
     setSelectedCard(id);
   };
 
   const handleContinue = () => {
-    removeAllKeyFromLocalStorage();
     navigate(allPlansData[selectedCard]?.link || "/");
   };
 

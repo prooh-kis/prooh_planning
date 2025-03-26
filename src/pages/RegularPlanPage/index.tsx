@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
 import {
-  AdvanceFiltersDetails,
-  AudienceTouchPointsDetails,
-  RegularCohortComparisonDetails,
-  CreativeUploadDetails,
-  EnterCampaignBasicDetails,
-  ScreenSummaryDetails,
-  TriggerDetails,
-  ViewFinalPlanPODetails,
+  // AdvanceFiltersDetails,
+  // AudienceTouchPointsDetails,
+  // RegularCohortComparisonDetails,
+  // CreativeUploadDetails,
+  // EnterCampaignBasicDetails,
+  // ScreenSummaryDetails,
+  // TriggerDetails,
+  // ViewFinalPlanPODetails,
   VendorConfirmationDetails,
 } from "../../components/planner";
+
+import {
+  EnterCampaignBasicDetails,
+} from "./EnterCampaignBasicDetails";
+import { AudienceTouchPointsDetails } from "./AudienceTouchPointsDetails";
+import { AdvanceFiltersDetails } from "./AdvancedFiltersDetails";
+import { RegularCohortComparisonDetails } from "./RegularCohortComparisonDetails";
+import { ScreenSummaryDetails } from "./ScreenSummaryDetails";
+import { TriggerDetails } from "./TriggerDetails";
+import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
+import { CreativeUpload } from "./CreativeUpload";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   getDataFromLocalStorage,
@@ -18,14 +30,15 @@ import {
 } from "../../utils/localStorageUtils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CURRENT_STEP } from "../../constants/localStorageConstants";
-import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { getCampaignCreationsDetails } from "../../actions/campaignAction";
 import {
   CAMPAIGN_PLAN_TYPE_REGULAR,
   EDIT_CAMPAIGN,
   VIEW_CAMPAIGN,
 } from "../../constants/campaignConstants";
 import { regularPlanData } from "../../data";
-import { CreativeUpload } from "../../components/planner/CreativeUpload";
+
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 export const RegularPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -35,45 +48,40 @@ export const RegularPlanPage: React.FC = () => {
 
   const { pathname } = location;
   const campaignId: any = pathname.split("/")[2] || null;
-  const campaignTo: any = pathname.split("/")[3] || null;
 
-  const [pageSuccess, setPageSuccess] = useState<boolean>(false);
 
   const [currentStep, setCurrentStep] = useState<number>(
     campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] || 1 : 1
   );
 
   const { userInfo } = useSelector((state: any) => state.auth);
-  const { success, data: campaignDetails } = useSelector(
-    (state: any) => state.detailsToCreateCampaignAdd
+  
+  const { loading: loadingCampaignDetails, data: campaignDetails } = useSelector(
+    (state: any) => state.campaignCreationsDetailsGet
   );
-
   // Fix: Ensure campaignId is always a string when used as an object key
   useEffect(() => {
-    if (success && campaignDetails) {
-      const newStep =
-        pathname.split("/").includes("view") &&
-        location?.state?.from === VIEW_CAMPAIGN
-          ? 1
-          : pathname.split("/").includes("edit") &&
-            location?.state?.from === EDIT_CAMPAIGN
-          ? 1
-          : regularPlanData.find(
-              (page: any) => page.value === campaignDetails.currentPage
-            )?.id || 0;
+    if (campaignDetails) {
+      const newStep = location.pathname.split("/").includes("view") && location?.state?.from === VIEW_CAMPAIGN ? 1 :
+        location.pathname.split("/").includes("edit") && location?.state?.from === EDIT_CAMPAIGN ? 1 :
+        (regularPlanData.find(
+          (page: any) => page.value === campaignDetails.currentPage
+        )?.id || 0);
 
-      setCurrentStep(newStep >= steps ? newStep : newStep + 1);
+      setCurrentStep(newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep);
       const currStep = {
-        [campaignId]: newStep >= steps ? newStep : newStep + 1,
+        [campaignId]: newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
-  }, [success, campaignDetails, campaignId, location, pathname, dispatch]);
+
+  }, [campaignDetails, campaignId, dispatch, location.pathname, location?.state?.from]);
 
   useEffect(() => {
     navigate(location.pathname, { replace: true, state: {} });
-    if (campaignId) dispatch(addDetailsToCreateCampaign({ id: campaignId }));
-  }, [navigate, dispatch, campaignId]);
+
+    if (campaignId) dispatch(getCampaignCreationsDetails({ id: campaignId }));
+  }, [navigate, location.pathname, dispatch, campaignId]);
 
   const stepComponents: Record<number, React.FC<any>> = {
     1: EnterCampaignBasicDetails,
@@ -96,25 +104,26 @@ export const RegularPlanPage: React.FC = () => {
           campaignId={campaignId}
           step={currentStep}
           setStep={setCurrentStep}
-          setPageSuccess={setPageSuccess}
           steps={steps}
         />
       </div>
-      <div className="w-full h-[75vh] p-4">
-        {StepComponent && (
-          <StepComponent
-            setCurrentStep={setCurrentStep}
-            step={currentStep}
-            campaignId={campaignId}
-            userInfo={userInfo}
-            successAddCampaignDetails={success}
-            campaignType={CAMPAIGN_PLAN_TYPE_REGULAR}
-            path="regularplan"
-            setPageSuccess={setPageSuccess}
-            pageSuccess={pageSuccess}
-          />
-        )}
-      </div>
+      {loadingCampaignDetails ? (
+        <LoadingScreen />
+      ) : (
+        <div className="w-full h-[75vh] p-4">
+          {StepComponent && campaignDetails && (
+            <StepComponent
+              setCurrentStep={setCurrentStep}
+              step={currentStep}
+              campaignId={campaignId}
+              userInfo={userInfo}
+              campaignType={CAMPAIGN_PLAN_TYPE_REGULAR}
+              path="regularplan"
+              campaignDetails={campaignDetails}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -57,18 +57,45 @@ import {
   EDIT_CAMPAIGN_CREATIVE_END_DATE_SUCCESS,
   EDIT_CAMPAIGN_CREATIVE_END_DATE_FAIL,
   EDIT_CAMPAIGN_CREATIVE_END_DATE_RESET,
+  GET_CAMPAIGN_CREATIONS_DETAILS_REQUEST,
+  GET_CAMPAIGN_CREATIONS_DETAILS_SUCCESS,
+  GET_CAMPAIGN_CREATIONS_DETAILS_ERROR,
+  GET_CAMPAIGN_CREATIONS_DETAILS_RESET,
 } from "../constants/campaignConstants";
 import { ALL_CAMPAIGNS_LIST, FULL_CAMPAIGN_PLAN } from "../constants/localStorageConstants";
 
-export function detailsToCreateCampaignAddReducer(state = [], action) {
+export function campaignCreationsDetailsGetReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_CAMPAIGN_CREATIONS_DETAILS_REQUEST:
+      return { loading: true };
+    case GET_CAMPAIGN_CREATIONS_DETAILS_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        data: action.payload,
+      };
+    case GET_CAMPAIGN_CREATIONS_DETAILS_ERROR:
+      return {
+        loading: false,
+        success: false,
+        error: action.payload,
+      }
+    case GET_CAMPAIGN_CREATIONS_DETAILS_RESET:
+      return {}
+    default:
+      return state;
+  }
+}
+export function detailsToCreateCampaignAddReducer(state = {}, action) {
   switch (action.type) {
     case ADD_DETAILS_TO_CREATE_CAMPAIGN_REQUEST:
       return { loading: true };
     case ADD_DETAILS_TO_CREATE_CAMPAIGN_SUCCESS:
-      const campaign = action.payload;
-      const saveData = {};
-      saveData[campaign._id] = campaign;
-      saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, saveData);
+      // const campaign = action.payload;
+      // const saveData = {};
+      // saveData[campaign._id] = campaign;
+      // console.log(saveData);
+      // saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, saveData);
       return {
         loading: false,
         success: true,
