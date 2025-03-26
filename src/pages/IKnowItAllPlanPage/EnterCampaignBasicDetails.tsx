@@ -252,29 +252,10 @@ export const EnterCampaignBasicDetails = ({
         message.error("Start date must be greater than today!");
         setStartDate("");
       } else {
-        setStartDate(() => {
-          const localDate = new Date(value);
-          const utcDate = new Date(
-            localDate.getTime() - localDate.getTimezoneOffset() * 60000
-          );
-      
-          return campaignDetails
-            ? utcDate.toISOString().slice(0, 16)
-            : "";
-        });
-        
+        setStartDate(value);
         if (duration) {
           const endDate1 = getEndDateFromStartDateAndDuration(value, duration);
-          setEndDate(() => {
-            const localDate = new Date(endDate1);
-            const utcDate = new Date(
-              localDate.getTime() - localDate.getTimezoneOffset() * 60000
-            );
-        
-            return campaignDetails
-              ? utcDate.toISOString().slice(0, 16)
-              : "";
-          });
+          setEndDate(new Date(endDate1).toISOString());
         }
       }
     }
@@ -284,16 +265,7 @@ export const EnterCampaignBasicDetails = ({
         message.error("End date must be greater than start date!");
         setEndDate("");
       } else {
-        setEndDate(() => {
-          const localDate = new Date(value);
-          const utcDate = new Date(
-            localDate.getTime() - localDate.getTimezoneOffset() * 60000
-          );
-      
-          return campaignDetails
-            ? utcDate.toISOString().slice(0, 16)
-            : "";
-        });
+        setEndDate(value);
         const calculatedDuration = getCampaignDurationFromStartAndEndDate(
           startDate,
           value
@@ -302,6 +274,7 @@ export const EnterCampaignBasicDetails = ({
       }
     }
   };
+
 
   return (
     <div className="w-full">
