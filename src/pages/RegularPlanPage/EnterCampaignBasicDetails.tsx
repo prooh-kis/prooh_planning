@@ -44,7 +44,6 @@ export const EnterCampaignBasicDetails = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
-  
   const [campaignName, setCampaignName] = useState<any>(campaignDetails?.name || "");
   const [brandName, setBrandName] = useState<any>(campaignDetails?.brandName || "");
   const [clientName, setClientName] = useState<any>(campaignDetails?.clientName || "");
