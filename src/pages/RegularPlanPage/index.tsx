@@ -9,7 +9,7 @@ import {
   // ScreenSummaryDetails,
   // TriggerDetails,
   // ViewFinalPlanPODetails,
-  VendorConfirmationDetails,
+  // VendorConfirmationDetails,
 } from "../../components/planner";
 
 import {
@@ -22,6 +22,7 @@ import { ScreenSummaryDetails } from "./ScreenSummaryDetails";
 import { TriggerDetails } from "./TriggerDetails";
 import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
 import { CreativeUpload } from "./CreativeUpload";
+import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
