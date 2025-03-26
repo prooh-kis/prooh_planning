@@ -24,6 +24,7 @@ import {
   VIEW_CAMPAIGN,
 } from "../../constants/campaignConstants";
 import { storeBasePlanData } from "../../data";
+import { CreativeUpload } from "../../pages/RegularPlanPage/CreativeUpload";
 
 export const StoreBasedPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -126,13 +127,10 @@ export const StoreBasedPlanPage: React.FC = () => {
       />
     ),
     7: (
-      <CreativeUploadDetails
+      <CreativeUpload
         setCurrentStep={setCurrentStep}
         step={currentStep}
         campaignId={campaignId}
-        successAddCampaignDetails={success}
-        setPageSuccess={setPageSuccess}
-        pageSuccess={pageSuccess}
       />
     ),
     8: (

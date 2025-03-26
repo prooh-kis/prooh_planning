@@ -22,6 +22,7 @@ import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { SpecialDay } from "../../components/planner/SpecialDay";
 import { specialDayPlanData } from "../../data";
 import { EDIT_CAMPAIGN, VIEW_CAMPAIGN } from "../../constants/campaignConstants";
+import { CreativeUpload } from "../../pages/RegularPlanPage/CreativeUpload";
 
 export const SpecialDayPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -119,13 +120,10 @@ export const SpecialDayPlanPage: React.FC = () => {
       />
     ),
     7: (
-      <CreativeUploadDetails
+      <CreativeUpload
         setCurrentStep={setCurrentStep}
         step={currentStep}
         campaignId={campaignId}
-        successAddCampaignDetails={success}
-        setPageSuccess={setPageSuccess}
-        pageSuccess={pageSuccess}
       />
     ),
     8: (
