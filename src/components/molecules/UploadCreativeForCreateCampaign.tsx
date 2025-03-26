@@ -1,7 +1,4 @@
-import { ConformationModel } from "../../components/popup/ConformationModel";
 import { FileUploadButton } from "../../components/FileUploadButton";
-import { ImageContainer, VideoContainer } from "./ShowMyFile";
-import { Radio } from "antd";
 
 export const UploadCreativeForStandardCampaign = ({
   handleSelectFileType,
@@ -14,50 +11,11 @@ export const UploadCreativeForStandardCampaign = ({
   return (
     <div className="p-4 max-h-[60vh] overflow-scroll no-scrollbar">
       <h1 className="py-2">Upload creative</h1>
-      <Radio.Group
-        onChange={handleSelectFileType}
-        value={selectFileType}
-        className="py-2"
-      >
-        <Radio value={"video"}>Video</Radio>
-        <Radio value={"image"}>Image</Radio>
-      </Radio.Group>
-      <div className="h-4"></div>
       <FileUploadButton
         handleFile={handleAddNewFile}
         width={"full"}
         fileType={selectFileType}
       />
-      <div className="pt-4">
-        {file ? (
-          selectFileType === "image" ? (
-            <ImageContainer
-              url={file?.url}
-              className=" rounded-lg"
-              height="230px"
-              width="full"
-              removeFile={removeFile}
-            />
-          ) : (
-            <VideoContainer
-              url={file?.url}
-              className="rounded-lg"
-              height="230px"
-              width="full"
-              removeFile={removeFile}
-            />
-          )
-        ) : null}
-      </div>
-      {file && (
-        <ConformationModel
-          handleConfirm={(value: boolean) => {
-            if (value) {
-              handleSaveFile();
-            }
-          }}
-        />
-      )}
     </div>
   );
 };
@@ -69,7 +27,7 @@ const triggerText = [
   "When it's hot outside",
   "When it's burning outside",
   "When it's cloudy outside",
-  "When it's drizzeling outside",
+  "When it's drizzling outside",
   "When it's raining heavily outside",
   "When it's stormy outside",
   "When rain is stopped",
@@ -91,7 +49,10 @@ export const UploadCreativeForTriggerCampaign = ({
 }: any) => {
   return (
     <div className="p-4 max-h-[50vh] overflow-scroll no-scrollbar">
-      <h1 className="font-semibold">{triggerType}</h1>
+      <h1 className="py-2">
+        Upload creative <span className="font-semibold">({triggerType})</span>
+      </h1>
+
       {triggerType === "Weather Trigger" && (
         <div>
           <h1 className="pt-4 font-semibold">
@@ -148,48 +109,11 @@ export const UploadCreativeForTriggerCampaign = ({
         </div>
       )}
 
-      <h1 className="pt-2 font-semibold">Upload creative</h1>
-      <Radio.Group
-        onChange={handleSelectFileType}
-        value={selectFileType}
-        className=""
-      >
-        <Radio value={"video"}>Video</Radio>
-        <Radio value={"image"}>Image</Radio>
-      </Radio.Group>
       <FileUploadButton
         handleFile={handleAddNewFile}
         width={"full"}
         fileType={selectFileType}
       />
-      <div className="pt-4">
-        {file ? (
-          selectFileType === "image" ? (
-            <ImageContainer
-              url={file?.url}
-              className=" rounded-lg"
-              height="207px"
-              width="383px"
-            />
-          ) : (
-            <VideoContainer
-              url={file?.url}
-              className=" rounded-lg"
-              height="207px"
-              width="383px"
-            />
-          )
-        ) : null}
-      </div>
-      {file && (
-        <ConformationModel
-          handleConfirm={(value: boolean) => {
-            if (value) {
-              handleSaveFile();
-            }
-          }}
-        />
-      )}
     </div>
   );
 };

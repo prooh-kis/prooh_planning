@@ -1,7 +1,7 @@
 import React, { useRef, ChangeEvent } from "react";
 
 interface FileUploaderProps {
-  handleFile: (file: File) => void;
+  handleFile: (files: any) => void;
   width: string;
   fileType: string;
 }
@@ -18,7 +18,7 @@ export const FileUploadButton: React.FC<FileUploaderProps> = ({
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const fileUploaded = event.target.files?.[0];
+    const fileUploaded = event.target.files;
     if (fileUploaded) handleFile(fileUploaded);
     event.target.value = "";
   };
@@ -54,7 +54,7 @@ export const FileUploadButton: React.FC<FileUploaderProps> = ({
         onChange={handleChange}
         ref={hiddenFileInput}
         style={{ display: "none" }} // Make the file input element invisible
-        multiple={false}
+        multiple={true}
         content="video/mp4"
       />
     </div>

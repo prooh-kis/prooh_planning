@@ -351,9 +351,15 @@ export const getScreenDataUploadCreativeData =
         payload: { id },
       });
       try {
-        const { data } = await axios.post(`${url}/screenDataUploadCreativePage`, {
-          id,
-        });
+        // const { data } = await axios.post(`${url}/screenDataUploadCreativePage`, {
+        //   id,
+        // });
+           const { data } = await axios.post(
+             `${url}/screenDataUploadCreativePageNew`,
+             {
+               id,
+             }
+           );
         dispatch({
           type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_SUCCESS,
           payload: data,

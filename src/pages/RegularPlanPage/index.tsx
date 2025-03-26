@@ -25,6 +25,7 @@ import {
   VIEW_CAMPAIGN,
 } from "../../constants/campaignConstants";
 import { regularPlanData } from "../../data";
+import { CreativeUpload } from "../../components/planner/CreativeUpload";
 
 export const RegularPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -50,11 +51,16 @@ export const RegularPlanPage: React.FC = () => {
   // Fix: Ensure campaignId is always a string when used as an object key
   useEffect(() => {
     if (success && campaignDetails) {
-      const newStep = pathname.split("/").includes("view") && location?.state?.from === VIEW_CAMPAIGN ? 1 :
-        pathname.split("/").includes("edit") && location?.state?.from === EDIT_CAMPAIGN ? 1 :
-        (regularPlanData.find(
-          (page: any) => page.value === campaignDetails.currentPage
-        )?.id || 0);
+      const newStep =
+        pathname.split("/").includes("view") &&
+        location?.state?.from === VIEW_CAMPAIGN
+          ? 1
+          : pathname.split("/").includes("edit") &&
+            location?.state?.from === EDIT_CAMPAIGN
+          ? 1
+          : regularPlanData.find(
+              (page: any) => page.value === campaignDetails.currentPage
+            )?.id || 0;
 
       setCurrentStep(newStep >= steps ? newStep : newStep + 1);
       const currStep = {
@@ -77,7 +83,7 @@ export const RegularPlanPage: React.FC = () => {
     5: ScreenSummaryDetails,
     6: TriggerDetails,
     7: ViewFinalPlanPODetails,
-    8: CreativeUploadDetails,
+    8: CreativeUpload,
     9: VendorConfirmationDetails,
   };
 
