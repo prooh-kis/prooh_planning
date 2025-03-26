@@ -94,7 +94,6 @@ export const RegularPlanPage: React.FC = () => {
     8: CreativeUpload,
     9: VendorConfirmationDetails,
   };
-
   const StepComponent = stepComponents[currentStep] || null;
 
   return (
@@ -111,7 +110,6 @@ export const RegularPlanPage: React.FC = () => {
         <LoadingScreen />
       ) : (
         <div className="w-full h-[75vh] p-4">
-          {StepComponent && campaignDetails && (
             <StepComponent
               setCurrentStep={setCurrentStep}
               step={currentStep}
@@ -121,7 +119,6 @@ export const RegularPlanPage: React.FC = () => {
               path="regularplan"
               campaignDetails={campaignDetails}
             />
-          )}
         </div>
       )}
     </div>
