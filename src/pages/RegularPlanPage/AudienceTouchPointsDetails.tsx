@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AudienceCohortTable, LocationTable, TouchpointTable } from "../../components/tables";
+import {
+  AudienceCohortTable,
+  LocationTable,
+  TouchpointTable,
+} from "../../components/tables";
 import { useDispatch, useSelector } from "react-redux";
 import { Footer } from "../../components/footer";
 import {
@@ -13,6 +17,7 @@ import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { message } from "antd";
+import { saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 
 interface EnterAudienceTouchpointDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -26,7 +31,7 @@ export const AudienceTouchPointsDetails = ({
   setCurrentStep,
   step,
   campaignId,
-  campaignDetails
+  campaignDetails,
 }: EnterAudienceTouchpointDetailsProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -35,14 +40,17 @@ export const AudienceTouchPointsDetails = ({
   const [markets, setMarkets] = useState<any>({});
   const [audiences, setAudiences] = useState<any>({});
   const [touchPoints, setTouchPoints] = useState<any>({});
-  const [zones, setSelectedZone] = useState<string[]>([]);
-  const [cities, setSelectedCity] = useState<string[]>([]);
+  const [zones, setSelectedZone] = useState<string[]>(
+    campaignDetails?.zones || []
+  );
+  const [cities, setSelectedCity] = useState<string[]>(
+    campaignDetails?.cities || []
+  );
 
   const [selectedGender, setSelectedGender] = useState<any>(
     campaignDetails?.gender === "Male"
       ? ["Male"]
-      : campaignDetails?.gender ===
-        "Female"
+      : campaignDetails?.gender === "Female"
       ? ["Female"]
       : ["Male", "Female"]
   );
@@ -72,52 +80,63 @@ export const AudienceTouchPointsDetails = ({
     data: screensAudiences,
   } = screensAudiencesDataGet;
 
-  const getMatchedData = useCallback((myData: any) => {
-    const { id, ...marketData } = myData;
-    setMarkets(marketData);
+  const getMatchedData = useCallback(
+    (myData: any) => {
+      const { id, ...marketData } = myData;
+      setMarkets(marketData);
 
-    let audiencesData: any = {};
-    for (const market in myData) {
-      for (const audience in myData[market]["audience"]) {
-        audiencesData[audience] =
-          myData[market]["audience"][audience]["Total"].toFixed(2);
+      let audiencesData: any = {};
+      for (const market in myData) {
+        for (const audience in myData[market]["audience"]) {
+          audiencesData[audience] =
+            myData[market]["audience"][audience]["Total"].toFixed(2);
+        }
       }
-    }
-    setAudiences(audiencesData);
-    setSelectedAudiences(
-      campaignDetails?.cohorts
-        .length !== 0
-        ? campaignDetails?.cohorts
-        : Object.keys(audiencesData)
-    );
-    let touchPointsData: any = {};
-    for (const market in myData) {
-      for (const touchPoint in myData[market]["touchPoint"]) {
-        touchPointsData[touchPoint] = {
-          Screen: myData[market]["touchPoint"][touchPoint].screenPercent,
-          Female:
-            myData[market]["touchPoint"][touchPoint].femaleAudiencePercent,
-          Male: myData[market]["touchPoint"][touchPoint].maleAudiencePercent,
-          Audience: myData[market]["touchPoint"][touchPoint].audiencePercent,
-        };
+      setAudiences(audiencesData);
+      setSelectedAudiences(
+        campaignDetails?.cohorts.length !== 0
+          ? campaignDetails?.cohorts
+          : Object.keys(audiencesData)
+      );
+      let touchPointsData: any = {};
+      for (const market in myData) {
+        for (const touchPoint in myData[market]["touchPoint"]) {
+          touchPointsData[touchPoint] = {
+            Screen: myData[market]["touchPoint"][touchPoint].screenPercent,
+            Female:
+              myData[market]["touchPoint"][touchPoint].femaleAudiencePercent,
+            Male: myData[market]["touchPoint"][touchPoint].maleAudiencePercent,
+            Audience: myData[market]["touchPoint"][touchPoint].audiencePercent,
+          };
+        }
       }
-    }
 
-    setTouchPoints(touchPointsData);
-    setSelectedTouchPoints(
-      campaignDetails?.touchPoints
-        .length !== 0
-        ? campaignDetails?.touchPoints
-        : Object.keys(touchPointsData)
-    );
+      setTouchPoints(touchPointsData);
+      setSelectedTouchPoints(
+        campaignDetails?.touchPoints.length !== 0
+          ? campaignDetails?.touchPoints
+          : Object.keys(touchPointsData)
+      );
 
-    setSelectedGender(selectedGender);
+      setSelectedGender(selectedGender);
 
-    return { audiencesData, touchPointsData };
-  },[campaignDetails?.cohorts, campaignDetails?.touchPoints, selectedGender]);
+      return { audiencesData, touchPointsData };
+    },
+    [campaignDetails?.cohorts, campaignDetails?.touchPoints, selectedGender]
+  );
 
   useEffect(() => {
     if (!campaignDetails) return;
+
+    const data = [
+      ...(campaignDetails?.markets || []),
+      ...(campaignDetails?.cities || []),
+      ...(campaignDetails?.zones || []),
+    ].reduce((acc: Record<string, boolean>, item: string) => {
+      acc[item] = true;
+      return acc;
+    }, {});
+    saveDataOnLocalStorage("STATE_CITY_ZONE", data);
 
     if (errorAudiences) {
       message.error("Error in fetching audience data");
@@ -141,15 +160,14 @@ export const AudienceTouchPointsDetails = ({
     );
   }, [campaignId, campaignDetails, dispatch, errorAudiences, errorAddDetails]);
 
-
   useEffect(() => {
     if (successAddDetails) {
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
-      setCurrentStep(step+1);
+      setCurrentStep(step + 1);
     }
-  },[dispatch,successAddDetails, step, setCurrentStep]);
+  }, [dispatch, successAddDetails, step, setCurrentStep]);
 
   useEffect(() => {
     if (screensAudiences) {
@@ -164,8 +182,7 @@ export const AudienceTouchPointsDetails = ({
         cohorts: input.type === "cohorts" ? input.data : selectedAudiences,
         touchPoints:
           input.type === "touchPoints" ? input.data : selectedTouchPoints,
-        duration:
-          campaignDetails?.duration,
+        duration: campaignDetails?.duration,
         gender:
           input.type === "gender"
             ? input.data
@@ -184,7 +201,7 @@ export const AudienceTouchPointsDetails = ({
       : selectedGender.length === 1 && selectedGender.includes("Female")
       ? "Female"
       : "both";
-  },[selectedGender]);
+  }, [selectedGender]);
 
   const handleSaveAndContinue = useCallback(() => {
     if (!pathname.split("/").includes("view")) {
@@ -192,7 +209,9 @@ export const AudienceTouchPointsDetails = ({
         addDetailsToCreateCampaign({
           pageName: "Audience And TouchPoint Page",
           id: campaignId,
-          markets: Object.keys(screensAudiences)?.filter((c: any) => c !== "id"),
+          markets: Object.keys(screensAudiences)?.filter(
+            (c: any) => c !== "id"
+          ),
           cohorts: selectedAudiences,
           touchPoints: selectedTouchPoints,
           gender: getSelectedGender(),
@@ -201,7 +220,17 @@ export const AudienceTouchPointsDetails = ({
         })
       );
     }
-  },[pathname, dispatch, campaignId, screensAudiences, selectedAudiences, selectedTouchPoints, getSelectedGender, cities, zones]);
+  }, [
+    pathname,
+    dispatch,
+    campaignId,
+    screensAudiences,
+    selectedAudiences,
+    selectedTouchPoints,
+    getSelectedGender,
+    cities,
+    zones,
+  ]);
 
   return (
     <>
