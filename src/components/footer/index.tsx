@@ -1,82 +1,24 @@
-import {
-  getAllLocalStorageData,
-  getDataFromLocalStorage,
-  saveDataOnLocalStorage,
-} from "../../utils/localStorageUtils";
+
 import { ScreenSummaryModel } from "../../components/popup/ScreenSummaryModel";
-import React, { useEffect, useState } from "react";
 import { formatNumber } from "../../utils/formatValue";
-import { Loading } from "../../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
-import { getPlanningPageFooterData } from "../../actions/screenAction";
 import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
-import {
-  FOOTER_DATA,
-} from "../../constants/localStorageConstants";
+
 
 export const Footer = ({
   handleSave,
   handleBack,
   isDisabled = false,
-  campaignId,
   loadingCost,
   pageName,
-  successCampaignDetails,
   mainTitle
 }: any) => {
-  // console.log("loadingCost : ", loadingCost);
-  const dispatch = useDispatch<any>();
-
-  const [footerData, setFooterData] = useState<any>({});
 
   const planningPageFooterDataGet = useSelector(
     (state: any) => state.planningPageFooterDataGet
   );
   const { loading, error, data: totalScreensData } = planningPageFooterDataGet;
 
-  useEffect(() => {
-    setFooterData(() => {
-      const localStorageData =
-        getDataFromLocalStorage(FOOTER_DATA)?.finalSummaryStepWise || [];
-      const filteredData = localStorageData.filter(
-        (data: any) => data.step === pageName
-      );
-
-      if (filteredData.length > 0) {
-        return filteredData[filteredData?.length - 1];
-      }
-
-      if (localStorageData.length > 0) {
-        return localStorageData[localStorageData?.length - 1];
-      }
-
-      // Default fallback object
-      return {
-        totalScreens: 0,
-        totalTouchPoints: 0,
-        totalImpression: 0,
-        totalCampaignBudget: 0,
-        totalCpm: 0,
-        pricePerSlot: 0,
-        totalCities: 0,
-      };
-    })
-  }, [footerData])
-
-  useEffect(() => {
-    if (successCampaignDetails) {
-      dispatch(
-        getPlanningPageFooterData({
-          id: campaignId,
-          pageName: pageName,
-        })
-      );
-    }
-
-    if ( totalScreensData )
-      setFooterData(totalScreensData)
-
-  }, [dispatch, campaignId, pageName, successCampaignDetails , totalScreensData]);
   return (
     <div className="py-2 z-10 flex justify-between px-4">
       <div className="flex w-full justify-start items-center gap-4">
@@ -106,25 +48,25 @@ export const Footer = ({
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">Cities</h1>
               <h1 className="text-[14px] font-semibold">
-                {footerData?.totalCities}
+                {totalScreensData?.finalSummaryStepWise?.[totalScreensData?.finalSummaryStepWise.length - 1]?.totalCities}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">Screens</h1>
               <h1 className="text-[14px] font-semibold">
-                {footerData?.totalScreens}
+                {totalScreensData?.finalSummaryStepWise?.[totalScreensData?.finalSummaryStepWise.length - 1]?.totalScreens}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">Touchpoints</h1>
               <h1 className="text-[14px] font-semibold">
-                {footerData?.totalTouchPoints}
+                {totalScreensData?.finalSummaryStepWise?.[totalScreensData?.finalSummaryStepWise.length - 1]?.totalTouchPoints}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">Impressions</h1>
               <h1 className="text-[14px] font-semibold">
-                {formatNumber(footerData?.totalImpression?.toFixed(0) || 0)}
+                {formatNumber(totalScreensData?.finalSummaryStepWise?.[totalScreensData?.finalSummaryStepWise.length - 1]?.totalImpression?.toFixed(0) || 0)}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">
@@ -132,19 +74,19 @@ export const Footer = ({
               <h1 className="text-[14px] font-semibold">
                 {" "}
                 &#8377;
-                {formatNumber(footerData?.totalCampaignBudget?.toFixed(0) || 0)}
+                {formatNumber(totalScreensData?.finalSummaryStepWise?.[totalScreensData?.finalSummaryStepWise.length - 1]?.totalCampaignBudget?.toFixed(0) || 0)}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">CPM</h1>
               <h1 className="text-[14px] font-semibold">
-                &#8377;{footerData?.totalCpm?.toFixed(2) || 0}
+                &#8377;{totalScreensData?.finalSummaryStepWise?.[totalScreensData?.finalSummaryStepWise.length - 1]?.totalCpm?.toFixed(2) || 0}
               </h1>
             </div>
             <div className="flex gap-2 truncate items-center">
               <h1 className="text-[12px] truncate">Price Per Slot</h1>
               <h1 className="text-[14px] font-semibold">
-                &#8377;{footerData?.pricePerSlot?.toFixed(0) || 0}
+                &#8377;{totalScreensData?.finalSummaryStepWise?.[totalScreensData?.finalSummaryStepWise.length - 1]?.pricePerSlot?.toFixed(0) || 0}
               </h1>
             </div>
           </div>

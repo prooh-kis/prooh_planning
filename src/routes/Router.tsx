@@ -155,7 +155,7 @@ const Routers: React.FC = () => {
         <Route
           path={MY_CREATIVES}
           element={
-            <AppDashBoardLayout>
+            <AppDashBoardLayout className="bg-[#D1D1D110] pt-20">
               <MyCreativesPage />
             </AppDashBoardLayout>
           }

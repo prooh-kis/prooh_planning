@@ -10,7 +10,10 @@ import { UploadCreativesV2Popup } from "../../components/popup/UploadCreativesV2
 import { ShowMediaFile } from "../../components/molecules/ShowMediaFIle";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
-import { getDataFromLocalStorage, removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
+import {
+  getDataFromLocalStorage,
+  removeAllKeyFromLocalStorage,
+} from "../../utils/localStorageUtils";
 import { ALL_BRAND_LIST } from "../../constants/localStorageConstants";
 import { NoDataView, SearchInputField } from "../../components";
 
@@ -111,6 +114,10 @@ export const MyCreativesPage: React.FC = () => {
     }
   };
 
+  const filterBrandList = Object.keys(creatives || {})?.filter(
+    (brand: string) => brand.toLowerCase()?.includes(searchQuery?.toLowerCase())
+  );
+
   useEffect(() => {
     removeAllKeyFromLocalStorage();
     dispatch(getCreativesMediaAction({ userId: userInfo?._id }));
@@ -125,8 +132,8 @@ export const MyCreativesPage: React.FC = () => {
 
   return (
     <div className="w-full h-full ">
-      <div className="p-8 bg-white">
-        <h1 className="text-[16px] font-bold">Creative Bucket</h1>
+      <div className="bg-white">
+        <h1 className="text-[20px] font-bold">Creative Bucket</h1>
       </div>
       <div className="w-full ">
         <UploadCreativesV2Popup
@@ -143,8 +150,8 @@ export const MyCreativesPage: React.FC = () => {
         />
 
         <div className="grid grid-cols-12 gap-1 py-1">
-          <div className="col-span-3 bg-white px-4">
-            <div className="flex justify-between items-center py-4">
+          <div className="col-span-3 bg-white px-4 border rounded-lg">
+            <div className="flex justify-between items-center py-2">
               <h1 className="text-[14px] font-semibold">Brand</h1>
               <button
                 onClick={() => handleOpenCreateCreativePopup("New")}
@@ -159,50 +166,39 @@ export const MyCreativesPage: React.FC = () => {
               value={searchQuery}
               onChange={setSearchQuery}
             />
-
-            <div className="h-[75vh] py-2 ">
-              {loadingCreatives ? (
-                <Loading />
-              ) : (
-                <div className="h-[70vh] overflow-y-auto scrollbar-minimal  ">
-                  {creatives &&
-                    Object.keys(creatives)
-                      ?.filter((brand: string) =>
-                        brand
-                          .toLowerCase()
-                          ?.includes(searchQuery?.toLowerCase())
-                      )
-                      ?.map((brand: any, i: any) => (
-                        <div
-                          className={
-                            brand === brandName
-                              ? "flex gap-4 items-center p-2 border-b text-[#129BFF]"
-                              : "flex gap-4 items-center p-2 border-b hover:text-[#129BFF] text-primaryText"
-                          }
-                          key={i}
-                          onClick={() => {
-                            setBrandName(brand);
-                            setNetwork(creatives[brand][0].network);
-                            setCreativesMedia(creatives[brand][0]);
-                          }}
-                        >
-                          <i className="fi fi-sr-folder-open flex items-center text-[#F1BC00] "></i>
-                          <h1 className="text-[12px] font-semibold">{brand}</h1>
-                        </div>
-                      ))}
-                </div>
-              )}
-            </div>
+            {/*Brand List  */}
+            {loadingCreatives ? (
+              <Loading />
+            ) : (
+              <div className="h-[70vh] overflow-y-auto scrollbar-minimal mt-4">
+                {filterBrandList &&
+                  filterBrandList?.map((brand: any, i: any) => (
+                    <div
+                      className={
+                        brand === brandName
+                          ? "flex gap-4 items-center p-2 border-b text-[#129BFF]"
+                          : "flex gap-4 items-center p-2 border-b hover:text-[#129BFF] text-primaryText"
+                      }
+                      key={i}
+                      onClick={() => {
+                        setBrandName(brand);
+                        setNetwork(creatives[brand][0].network);
+                        setCreativesMedia(creatives[brand][0]);
+                      }}
+                    >
+                      <i className="fi fi-sr-folder-open flex items-center text-[#F1BC00] "></i>
+                      <h1 className="text-[12px] font-semibold">{brand}</h1>
+                    </div>
+                  ))}
+              </div>
+            )}
           </div>
-          <div className="col-span-9 bg-white px-4">
+          {/* brand wise creatives */}
+          <div className="col-span-9 bg-white px-4 border rounded-lg">
             {brandName && (
               <div className="p-2">
                 <div className="border-b py-1 pb-4 flex items-center justify-between pr-8">
                   <div className="flex gap-1 items-center py-1">
-                    {/* <i
-                    className="fi fi-sr-angle-small-left text-[#7C8E9B] px-1 flex items-center"
-                    onClick={() =>{}}
-                  ></i> */}
                     <h1 className="text-[14px] font-semibold">{brandName}</h1>
                   </div>
                   <button

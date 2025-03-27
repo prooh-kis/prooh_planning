@@ -4,10 +4,6 @@ import { TabWithIcon } from "../../components/molecules/TabWithIcon";
 import { Checkbox, message, Select, Tooltip } from "antd";
 import type { CheckboxProps } from "antd";
 import { ViewMediaForUploadCreatives } from "../../components/molecules/ViewMediaForUploadCreatives";
-import {
-  UploadCreativeForStandardCampaign,
-  UploadCreativeForTriggerCampaign,
-} from "../../components/molecules/UploadCreativeForCreateCampaign";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getPlanningPageFooterData,
@@ -15,7 +11,6 @@ import {
 } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
 import { Footer } from "../../components/footer";
-import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
   getDataFromLocalStorage,
@@ -23,13 +18,13 @@ import {
 } from "../../utils/localStorageUtils";
 import {
   CAMPAIGN_CREATIVES,
-  FULL_CAMPAIGN_PLAN,
   SELECTED_TRIGGER,
 } from "../../constants/localStorageConstants";
-import { getVideoDurationFromVideoURL } from "../../utils/fileUtils";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import SearchInputField from "../../components/molecules/SearchInputField";
+import { UploadCreativesFromBucketPopup } from "../../components/popup/UploadCreativesFromBucketPopup";
+import { getCreativesMediaAction } from "../../actions/creativeAction";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -39,7 +34,6 @@ interface CreativeUploadDetailsProps {
 }
 
 interface Creative {
-  file: File;
   url: string;
   fileType: string;
   fileSize: number;
@@ -75,15 +69,21 @@ export const CreativeUpload = ({
   const [currentCity, setCurrentCity] = useState("");
   const [currentScreen, setCurrentScreen] = useState("");
   const [currentScreens, setCurrentScreens] = useState<string[]>([]);
-  const [selectFileType, setSelectFileType] = useState("video");
   const [creativeType, setCreativeType] = useState("Standard");
   const [creativeUploadData, setCreativeUploadData] = useState<TransformedData>(
     {}
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [playCreativeTime, setPlayCreativeTime] = useState<any[]>([]);
-  const [citiesCreative, setCitiesCreative] = useState<any[]>([]);
+  const [viewPlayCreativeTime, setViewPlayCreativeTime] = useState<any[]>([]);
+  const [viewCreativeType, setViewCreativeType] = useState("0");
 
+  const [citiesCreative, setCitiesCreative] = useState<any[]>([]);
+  const [isBucketPopupOpen, setIsBucketPopupOpen] = useState<boolean>(false);
+  const [mediaFiles, setMediaFiles] = useState<any[]>([]);
+
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -97,7 +97,11 @@ export const CreativeUpload = ({
   const screenDataUploadCreative = useSelector(
     (state: any) => state.screenDataUploadCreative
   );
-  const { error: errorScreeData, loading: loadingScreenData, data: screenData } = screenDataUploadCreative;
+  const {
+    error: errorScreeData,
+    loading: loadingScreenData,
+    data: screenData,
+  } = screenDataUploadCreative;
 
   useEffect(() => {
     if (!campaignDetails) return;
@@ -108,7 +112,7 @@ export const CreativeUpload = ({
         pageName: "Upload Creative Page",
       })
     );
-    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
+    dispatch(getCreativesMediaAction({ userId: userInfo?._id }));
   }, [dispatch, campaignId, campaignDetails]);
 
   const mergeCreativeWithScreenData = (
@@ -156,7 +160,6 @@ export const CreativeUpload = ({
       }
 
       const transformCreative = (creative: any) => ({
-        file: {},
         url: creative?.url,
         fileType: creative?.type,
         fileSize: creative?.size,
@@ -283,29 +286,6 @@ export const CreativeUpload = ({
     setCurrentCity(result[0]?.label || "");
   }, []);
 
-  const getAWSUrl = async (data: Creative) => {
-    try {
-      const aws = await getAWSUrlToUploadFile(
-        data.fileType,
-        data.file.name.split(".")[0]
-      );
-      await saveFileOnAWS(aws.url, data.file);
-      return aws.awsURL;
-    } catch (error: any) {
-      message.error(error.message);
-      return "";
-    }
-  };
-
-  const returnRequiredValue = async (file: Creative) => {
-    const url = file.awsURL || (await getAWSUrl(file));
-    return {
-      url,
-      size: file.fileSize,
-      type: file.fileType,
-    };
-  };
-
   const validate = () => {
     return Object.values(creativeUploadData).every((cityScreens) =>
       cityScreens.every(
@@ -344,8 +324,11 @@ export const CreativeUpload = ({
         const processCreatives = async (creatives: Creative[]) => {
           const processed = [];
           for (const file of creatives) {
-            const myData = await returnRequiredValue(file);
-            processed.push(myData);
+            processed.push({
+              url: file.awsURL,
+              size: file.fileSize,
+              type: file.fileType,
+            });
           }
           return processed;
         };
@@ -391,10 +374,6 @@ export const CreativeUpload = ({
         creatives: requestBody,
       })
     );
-
-    setTimeout(() => {
-      setCurrentStep(step + 1);
-    }, 1000);
   };
 
   const handleSaveFiles = (files: Creative[], screenId: string) => {
@@ -441,36 +420,28 @@ export const CreativeUpload = ({
     });
   };
 
-  const handleAddNewFile = async (files: File[] | FileList) => {
-    if (!currentScreens?.length) {
-      message.error("No Screens selected!, Please select screens first");
+  const handleAddNewFile = async () => {
+    if (!mediaFiles?.length) {
+      message.error("No creative selected!, Please select creative first");
       return;
     }
-    const fileArray = Array.from(files || []);
-    if (fileArray.length === 0) return;
 
-    const processFile = async (file: File) => {
-      const fileURL = URL.createObjectURL(file);
-      const creativeDuration = file.type.startsWith("video")
-        ? Number(await getVideoDurationFromVideoURL(fileURL))
-        : 10;
-
+    const processFile = mediaFiles.map((file: any) => {
       return {
-        file,
-        url: fileURL,
-        fileType: file.type,
-        fileSize: file.size,
-        creativeDuration,
-        awsURL: "",
+        url: file.awsURL,
+        fileType: file.creativeType,
+        fileSize: file.fileSize,
+        creativeDuration: file.duration,
+        awsURL: file.awsURL,
       };
-    };
-
-    const processedFiles = await Promise.all(fileArray.map(processFile));
+    });
 
     currentScreens.forEach((screenId) => {
-      handleSaveFiles(processedFiles, screenId);
+      handleSaveFiles(processFile, screenId);
     });
     setCurrentScreens([]);
+    setMediaFiles([]);
+    setIsBucketPopupOpen(false);
   };
 
   const handleSetValue = () => {
@@ -478,6 +449,16 @@ export const CreativeUpload = ({
       { icon: "", label: "Regular", id: "Standard" },
       ...(isTriggerAvailable()
         ? [{ icon: "", label: "Trigger", id: "Trigger" }]
+        : []),
+    ]);
+
+    setViewPlayCreativeTime([
+      { icon: "", label: "All", id: "0" },
+      { icon: "", label: "Day", id: "1" },
+      { icon: "", label: "Night", id: "2" },
+
+      ...(isTriggerAvailable()
+        ? [{ icon: "", label: "Trigger", id: "3" }]
         : []),
     ]);
   };
@@ -489,10 +470,16 @@ export const CreativeUpload = ({
 
     if (!screen) return [];
 
-    return creativeType === "Standard"
-      ? currentPlayTimeCreative === "1"
-        ? screen.standardDayTimeCreatives
-        : screen.standardNightTimeCreatives
+    return viewCreativeType === "0"
+      ? [
+          ...screen.standardDayTimeCreatives,
+          ...screen.standardNightTimeCreatives,
+          ...screen.triggerCreatives,
+        ]
+      : viewCreativeType === "1"
+      ? screen.standardDayTimeCreatives
+      : viewCreativeType === "2"
+      ? screen.standardNightTimeCreatives
       : screen.triggerCreatives;
   };
 
@@ -525,11 +512,13 @@ export const CreativeUpload = ({
     if (errorScreeData) {
       message.error(errorScreeData);
     }
+    if (errorAddDetails) {
+      message.error("error in adding campaign details...");
+    }
     if (!screenData) return;
 
     handleSetValue();
-    const storedCampaignData =
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId];
+    const storedCampaignData = campaignDetails;
     const storedCreatives = storedCampaignData?.creatives;
     const storedTriggers = storedCampaignData?.triggers;
 
@@ -545,12 +534,44 @@ export const CreativeUpload = ({
     handleSetInitialData(combinedData);
     setCreativeUploadData(combinedData);
     setPageLoading(false);
-  }, [campaignId, errorScreeData, handleSetInitialData, screenData]);
+  }, [
+    campaignId,
+    errorScreeData,
+    errorAddDetails,
+    handleSetInitialData,
+    screenData,
+  ]);
+
+  useEffect(() => {
+    if (successAddDetails) {
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
+      setCurrentStep(step + 1);
+    }
+  }, [successAddDetails, step, setCurrentStep, dispatch]);
 
   if (pageLoading) return <LoadingScreen />;
 
+  const closePopup = () => {
+    setIsBucketPopupOpen(false);
+    setCurrentScreens([]);
+  };
+
   return (
     <div className="w-full">
+      {isBucketPopupOpen && (
+        <UploadCreativesFromBucketPopup
+          onClose={closePopup}
+          selectedScreens={screenData?.[currentCity].filter((screen: any) =>
+            currentScreens.includes(screen?.screenIds[0])
+          )}
+          mediaFiles={mediaFiles}
+          setMediaFiles={setMediaFiles}
+          brandName={campaignDetails?.brandName}
+          handleSaveCreative={handleAddNewFile}
+        />
+      )}
       <div className="mx-auto">
         <h1 className="text-2xl font-semibold">Upload Creative</h1>
         <h2 className="text-sm text-gray-500">
@@ -627,9 +648,9 @@ export const CreativeUpload = ({
                             ? "bg-[#129BFF80]"
                             : ""
                         }`}
-                        onClick={() =>
-                          setCurrentScreen(singleData.screenIds[0])
-                        }
+                        onClick={() => {
+                          setCurrentScreen(singleData.screenIds[0]);
+                        }}
                       >
                         <div className="flex text-[13px]">
                           {[
@@ -700,55 +721,31 @@ export const CreativeUpload = ({
                       value={currentPlayTimeCreative}
                       onChange={setCurrentPlayTimeCreative}
                     />
-                    <Select
-                      options={[
-                        { label: "Video", value: "video" },
-                        { label: "Image", value: "image" },
-                      ]}
-                      style={{ width: "150px" }}
-                      value={selectFileType}
-                      onChange={setSelectFileType}
-                    />
                   </div>
-                  {creativeType === "Standard" ? (
-                    <UploadCreativeForStandardCampaign
-                      selectFileType={selectFileType}
-                      handleAddNewFile={handleAddNewFile}
-                    />
-                  ) : (
-                    <UploadCreativeForTriggerCampaign
-                      selectFileType={selectFileType}
-                      handleAddNewFile={handleAddNewFile}
-                      triggerData={
-                        getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                          ?.weatherTriggers ||
-                        getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                          ?.sportsTriggers ||
-                        getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                          ?.vacantSlots ||
-                        {}
-                      }
-                      triggerType={
-                        getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId]
-                          ?.weatherTriggers?.[0]?.type
-                          ? "Weather Trigger"
-                          : getDataFromLocalStorage(SELECTED_TRIGGER)?.[
-                              campaignId
-                            ]?.sportsTriggers?.[0]?.sport
-                          ? "Sports Trigger"
-                          : "Fill Vacancy Trigger"
-                      }
-                    />
+                  {currentScreens?.length > 0 && (
+                    <div>
+                      <h1 className="py-2">Upload creative</h1>
+                      <button
+                        onClick={() =>
+                          setIsBucketPopupOpen((pre: boolean) => !pre)
+                        }
+                        className={
+                          "border border-dashed border-2 border-[#129BFF] text-[#129BFF] rounded-2xl  bg-[#F4F9FF] py-1 w-full"
+                        }
+                      >
+                        + Upload
+                      </button>
+                    </div>
                   )}
                 </div>
                 <div className="w-[60%] p-4">
-                  <h1 className="font-semibold">
-                    {creativeType === "Standard"
-                      ? currentPlayTimeCreative === "1"
-                        ? "Day Time Creative"
-                        : "Night Time Creative"
-                      : "Trigger Creative"}
-                  </h1>
+                  <TabWithIcon
+                    tabData={viewPlayCreativeTime}
+                    currentTab={viewCreativeType}
+                    setCurrentTab={setViewCreativeType}
+                    justify={true}
+                  />
+
                   <ViewMediaForUploadCreatives
                     files={getFileListToView()}
                     removeFile={removeFile}
@@ -765,10 +762,7 @@ export const CreativeUpload = ({
             campaignId={campaignId}
             handleSave={handleSaveAndContinue}
             loadingCost={loadingAddDetails || loadingScreenData}
-            isDisabled={loadingScreenData}
-            totalScreensData={
-              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-            }
+            isDisabled={loadingAddDetails || loadingScreenData}
             pageName="Upload Creative Page"
             successCampaignDetails={successAddDetails}
           />
