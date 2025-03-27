@@ -1,8 +1,10 @@
+import { NoDataView } from "./NoDataView";
 import { ImageContainer, VideoContainer } from "./ShowMyFile";
 
 export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
   return (
     <div className="pt-4">
+      {files?.length === 0 && <NoDataView />}
       {files?.length > 0 && (
         <div key={files[0]?.url}>
           {files[0].fileType?.split("/")[0] === "image" ? (
