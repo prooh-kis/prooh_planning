@@ -99,6 +99,10 @@ export const addDetailsToCreateCampaign =
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_SUCCESS,
         payload: data,
       });
+      dispatch({
+        type: GET_CAMPAIGN_CREATIONS_DETAILS_SUCCESS,
+        payload: data,
+      });
     } catch (error) {
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_ERROR,

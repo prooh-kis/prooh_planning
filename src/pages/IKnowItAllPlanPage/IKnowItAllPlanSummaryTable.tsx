@@ -8,7 +8,7 @@ import {
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
 import { Footer } from "../../components/footer";
-import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { addDetailsToCreateCampaign, getCampaignCreationsDetails } from "../../actions/campaignAction";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { message } from "antd";
@@ -38,6 +38,7 @@ export const IKnowItAllPlanSummaryTable = ({
   const {
     loading: loadingAddDetails,
     error: errorAddDetails,
+    data: addCampaignData,
     success: successAddDetails,
   } = detailsToCreateCampaignAdd;
   
@@ -57,7 +58,7 @@ export const IKnowItAllPlanSummaryTable = ({
         addDetailsToCreateCampaign({
           pageName: "Screen Summary Page",
           id: campaignDetails?._id,
-          totalScreens: campaignDetails?.screenIds,
+          totalScreens: addCampaignData?.screenIds,
           totalImpression: dataToUse?.total?.totalImpression,
           totalReach: dataToUse?.total?.totalReach,
           totalCampaignBudget: dataToUse?.total?.totalCampaignBudget,

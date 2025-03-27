@@ -69,9 +69,9 @@ export const RegularPlanPage: React.FC = () => {
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0);
 
-      setCurrentStep(newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep);
+      setCurrentStep(newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1);
       const currStep = {
-        [campaignId]: newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep,
+        [campaignId]: newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }

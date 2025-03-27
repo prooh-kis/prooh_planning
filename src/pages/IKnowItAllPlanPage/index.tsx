@@ -4,7 +4,7 @@ import {
   // CreativeUploadDetails,
   // EnterCampaignBasicDetails,
   // ViewFinalPlanPODetails,
-  VendorConfirmationDetails,
+  // VendorConfirmationDetails,
   // SetAdsPlayTime,
 } from "../../components/planner";
 import { EnterCampaignBasicDetails } from "./EnterCampaignBasicDetails";
@@ -13,6 +13,7 @@ import { SetAdsPlayTime } from "./SetAdsPlayTime";
 import { IKnowItAllPlanSummaryTable } from "./IKnowItAllPlanSummaryTable";
 import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
 import { CreativeUpload } from "./CreativeUpload";
+import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -40,15 +41,23 @@ export const IKnowItAllPlanPage: React.FC = () => {
   const { pathname, state } = useLocation();
   const navigate = useNavigate();
 
+  const [campaignDetails, setCampaingDetails] = useState<any>(null);
   const campaignId: any = pathname.split("/")[2] || null;
   const [currentStep, setCurrentStep] = useState<number>(
     campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] ?? 1 : 1
   );
 
   const { userInfo } = useSelector((state: any) => state.auth);
-  const { loading: loadingCampaignDetails, data: campaignDetails } = useSelector(
+  const { loading: loadingCampaignDetails, data: campaignData } = useSelector(
     (state: any) => state.campaignCreationsDetailsGet
   );
+
+  useEffect(() => {
+    if (campaignData) {
+      setCampaingDetails(campaignData)
+    }
+  },[campaignData]);
+
   useEffect(() => {
     if (campaignDetails && campaignId) {
 
@@ -58,9 +67,9 @@ export const IKnowItAllPlanPage: React.FC = () => {
           (page: any) => page.value === campaignDetails.currentPage
         )?.id || 0);
 
-      setCurrentStep(newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep);
+      setCurrentStep(newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1);
       const currStep = {
-        [campaignId]: newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep,
+        [campaignId]: newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
