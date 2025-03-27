@@ -1,3 +1,4 @@
+import { Tooltip } from "antd";
 import {
   convertDataTimeToLocale,
   convertDateIntoDateMonthYear,
@@ -13,18 +14,18 @@ export const VendorConfirmationBasicTable = ({
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-1">
           <div className="grid grid-cols-2 ">
-            <div className="border py-1 px-4 bg-[#F7F7F7] rounded-tl">
+            <div className="border py-1 px-4 bg-[#F7F7F7] rounded-tl truncate">
               <h1 className="text-[14px]">Campaign Name</h1>
             </div>
-            <div className="border py-1 px-4 rounded-tr">
+            <div className="border py-1 px-4 rounded-tr truncate">
               <h1 className="text-[14px]">{vendorConfirmationData?.name}</h1>
             </div>
           </div>
           <div className="grid grid-cols-2">
-            <div className="border py-1 px-4 bg-[#F7F7F7]">
+            <div className="border py-1 px-4 bg-[#F7F7F7] truncate">
               <h1 className="text-[14px]">Total Cost</h1>
             </div>
-            <div className="border py-1 px-4">
+            <div className="border py-1 px-4 truncate">
               <h1 className="text-[14px]">
                 &#8377;
                 {formatNumber(
@@ -34,20 +35,20 @@ export const VendorConfirmationBasicTable = ({
             </div>
           </div>
           <div className="grid grid-cols-2">
-            <div className="border py-1 px-4 bg-[#F7F7F7]">
+            <div className="border py-1 px-4 bg-[#F7F7F7] truncate">
               <h1 className="text-[14px]">Campaign Type</h1>
             </div>
-            <div className="border py-1 px-4">
+            <div className="border py-1 px-4 truncate">
               <h1 className="text-[14px]">
                 {vendorConfirmationData?.campaignType}
               </h1>
             </div>
           </div>
           <div className="grid grid-cols-2">
-            <div className="border py-1 px-4 bg-[#F7F7F7]">
+            <div className="border py-1 px-4 bg-[#F7F7F7] truncate">
               <h1 className="text-[14px]">Trigger</h1>
             </div>
-            <div className="border py-1 px-4">
+            <div className="border py-1 px-4 truncate">
               <h1 className="text-[14px]">
                 {vendorConfirmationData?.trigger === "weatherTriggers"
                   ? "Weather Trigger"
@@ -60,20 +61,20 @@ export const VendorConfirmationBasicTable = ({
             </div>
           </div>
           <div className="grid grid-cols-2">
-            <div className="border py-1 px-4 bg-[#F7F7F7] rounded-bl">
+            <div className="border py-1 px-4 bg-[#F7F7F7] rounded-bl truncate">
               <h1 className="text-[14px]">Plan No.</h1>
             </div>
-            <div className="border py-1 px-4 rounded-br">
+            <div className="border py-1 px-4 rounded-br truncate">
               <h1 className="text-[14px]">24/10/12-332-04</h1>
             </div>
           </div>
         </div>
         <div className="col-span-1">
           <div className="grid grid-cols-2">
-            <div className="border py-1 px-4 bg-[#F7F7F7] rounded-tl">
+            <div className="border py-1 px-4 bg-[#F7F7F7] rounded-tl truncate">
               <h1 className="text-[14px]">Start Date</h1>
             </div>
-            <div className="border py-1 px-4 truncate rounded-tr">
+            <div className="border py-1 px-4 truncate rounded-tr truncate">
               <h1 className="text-[14px]">
                 {convertDateIntoDateMonthYear(
                   vendorConfirmationData?.startDate
@@ -82,40 +83,43 @@ export const VendorConfirmationBasicTable = ({
             </div>
           </div>
           <div className="grid grid-cols-2">
-            <div className="border py-1 px-4 bg-[#F7F7F7]">
+            <div className="border py-1 px-4 bg-[#F7F7F7] truncate">
               <h1 className="text-[14px]">End Date</h1>
             </div>
-            <div className="border py-1 px-4 truncate">
+            <div className="border py-1 px-4 truncate truncate">
               <h1 className="text-[14px]">
                 {convertDateIntoDateMonthYear(vendorConfirmationData?.endDate)}
               </h1>
             </div>
           </div>
           <div className="grid grid-cols-2">
-            <div className="border py-1 px-4 bg-[#F7F7F7]">
+            <div className="border py-1 px-4 bg-[#F7F7F7] truncate">
               <h1 className="text-[14px]">Duration</h1>
             </div>
-            <div className="border py-1 px-4">
+            <div className="border py-1 px-4 truncate">
               <h1 className="text-[14px]">
                 {vendorConfirmationData?.duration}
               </h1>
             </div>
           </div>
           <div className="grid grid-cols-2">
-            <div className="border py-1 px-4 bg-[#F7F7F7]">
+            <div className="border py-1 px-4 bg-[#F7F7F7] truncate">
               <h1 className="text-[14px]">Client Name</h1>
             </div>
-            <div className="border py-1 px-4">
-              <h1 className="text-[14px]">
-                {vendorConfirmationData?.clientName}
-              </h1>
+            <div className="border py-1 px-4 truncate">
+              <Tooltip title={vendorConfirmationData?.clientName}>
+                <h1 className="text-[14px] truncate">
+                  {vendorConfirmationData?.clientName}
+                </h1>
+              </Tooltip>
+
             </div>
           </div>
           <div className="grid grid-cols-2">
-            <div className="border py-1 px-4 bg-[#F7F7F7] rounded-bl">
+            <div className="border py-1 px-4 bg-[#F7F7F7] rounded-bl truncate">
               <h1 className="text-[14px]">Brand Name</h1>
             </div>
-            <div className="border py-1 px-4 rounded-br">
+            <div className="border py-1 px-4 rounded-br truncate">
               <h1 className="text-[14px]">
                 {vendorConfirmationData?.brandName}
               </h1>

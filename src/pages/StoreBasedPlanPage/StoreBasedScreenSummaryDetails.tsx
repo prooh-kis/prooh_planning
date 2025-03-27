@@ -23,7 +23,7 @@ import { screenSummaryTabData } from "../../utils/hardCoddedData";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { TabWithIcon, TabWithoutIcon, ViewPlanPic } from "../../components";
 import { ScreenFilters } from "../../components/segments/ScreenFilters";
-import { ScreenSummaryTableIKnowItAll } from "./ScreenSummaryTableIKnowItAll";
+import { ScreenSummaryTableStoreBased } from "./ScreenSummaryTableStoreBased";
 import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import { SCREEN_SUMMARY_SELECTION, SCREEN_TYPE_TOGGLE_SELECTION } from "../../constants/localStorageConstants";
 
@@ -35,7 +35,7 @@ interface ScreenSummaryDetailsProps {
   campaignDetails?: any;
 }
 
-export const IKnowItAllScreenSummaryDetails = ({
+export const StoreBasedScreenSummaryDetails = ({
   setCurrentStep,
   step,
   campaignId,
@@ -358,7 +358,7 @@ export const IKnowItAllScreenSummaryDetails = ({
           </div>
           
           {listView ? (
-            <ScreenSummaryTableIKnowItAll
+            <ScreenSummaryTableStoreBased
               listView={true}
               data={memoizedScreenData}
               currentCity={currentCity}

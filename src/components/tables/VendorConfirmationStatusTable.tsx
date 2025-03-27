@@ -18,26 +18,26 @@ export const VendorConfirmationStatusTable = ({
     creatives: {},
   });
 
-  const handleRowCheckboxChange = (e: boolean, campaignId: string) => {
-    let updatedIds = [...selectedCampaignIds];
-    if (e) {
-      // Add campaignId if row checkbox is checked
-      updatedIds = [...selectedCampaignIds, campaignId];
-    } else {
-      // Remove campaignId if row checkbox is unchecked
-      updatedIds = updatedIds.filter((id) => id !== campaignId);
-    }
-    setSelectedCampaignIds(updatedIds); // Update the state with the new selection
-  };
+  // const handleRowCheckboxChange = (e: boolean, campaignId: string) => {
+  //   let updatedIds = [...selectedCampaignIds];
+  //   if (e) {
+  //     // Add campaignId if row checkbox is checked
+  //     updatedIds = [...selectedCampaignIds, campaignId];
+  //   } else {
+  //     // Remove campaignId if row checkbox is unchecked
+  //     updatedIds = updatedIds.filter((id) => id !== campaignId);
+  //   }
+  //   setSelectedCampaignIds(updatedIds); // Update the state with the new selection
+  // };
 
-  useEffect(() => {
-    var campaignIds : any = []
-    for ( const campaign of campaignsList ){
-      if ( campaign.campaignCreationId === statusTableData._id )
-        campaignIds.push(campaign._id.toString())
-    }
-    setSelectedCampaignIds(campaignIds);
-  }, [campaignsList, setSelectedCampaignIds, statusTableData]);
+  // useEffect(() => {
+  //   var campaignIds : any = []
+  //   for ( const campaign of campaignsList ){
+  //     if ( campaign.campaignCreationId === statusTableData._id )
+  //       campaignIds.push(campaign._id.toString())
+  //   }
+  //   setSelectedCampaignIds(campaignIds);
+  // }, [ setSelectedCampaignIds, statusTableData]);
   return (
     <div className="w-full">
       <ShowMediaPopup
@@ -141,8 +141,10 @@ export const VendorConfirmationStatusTable = ({
                 <td className="p-2 col-span-2 truncate flex justify-around items-center">
                   <h1 className="text-[14px] truncate">{status.screenName}</h1>
                 </td>
-                <td className="py-2 col-span-2 flex justify-around items-center">
-                  <h1 className="text-[14px]">{status.touchPoint}</h1>
+                <td className="py-2 col-span-2 flex justify-around items-center truncate">
+                  <Tooltip title={status.touchPoint}>
+                    <h1 className="text-[14px] truncate">{status.touchPoint}</h1>
+                  </Tooltip>
                 </td>
                 <td className="py-2 col-span-2 flex justify-around items-center">
                   <h1 className="text-[14px]">
@@ -172,54 +174,77 @@ export const VendorConfirmationStatusTable = ({
                     <i className="fi fi-sr-photo-video text-[20px] text-violet flex justify-center"></i>
                   </div>
                 </td>
-                <td className="py-2 col-span-2 flex justify-around items-center">
-                  <h1
-                    className={`text-[14px] ${
-                      status.status === "PleaRequestBudgetSent"
-                        ? "text-[#129BFF]"
+                <td className="py-2 col-span-2 flex justify-around items-center truncate">
+                  <Tooltip title={status.status === "PleaRequestBudgetSent"
+                        ? "Budget Approval Pending"
                         : status.status === "PleaRequestBudgetAccepted"
-                        ? "text-[#129BFF]"
+                        ? "Budget Approved"
                         : status.status === "PleaRequestBudgetRejected"
-                        ? "text-[#129BFF]"
+                        ? "Budget Rejected"
                         : status.status === "PleaRequestScreenApprovalSent"
-                        ? "text-[#129BFF]"
+                        ? "Screen Approval Pending"
                         : status.status === "PleaRequestScreenApprovalAccepted"
-                        ? "text-[#129BFF]"
+                        ? "Screen Approved"
                         : status.status === "PleaRequestScreenApprovalRejected"
-                        ? "text-[#129BFF]"
+                        ? "Screen Rejected"
                         : status.status === "PleaRequestFinalApprovalSent"
-                        ? "text-[#129BFF]"
+                        ? "Final Aprroval Pending"
                         : status.status === "PleaRequestFinalApprovalAccepted"
-                        ? "text-[#129BFF]"
+                        ? "Final Approved"
                         : status.status === "PleaRequestFinalApprovalRejected"
-                        ? "text-[#129BFF]"
+                        ? "Final Rejected"
                         : status.status === "Pending"
-                        ? "text-[#129BFF]"
-                        : ""
-                    }`}
-                  >
-                    {status.status === "PleaRequestBudgetSent"
-                      ? "Budget Approval Pending"
-                      : status.status === "PleaRequestBudgetAccepted"
-                      ? "Budget Approved"
-                      : status.status === "PleaRequestBudgetRejected"
-                      ? "Budget Rejected"
-                      : status.status === "PleaRequestScreenApprovalSent"
-                      ? "Screen Approval Pending"
-                      : status.status === "PleaRequestScreenApprovalAccepted"
-                      ? "Screen Approved"
-                      : status.status === "PleaRequestScreenApprovalRejected"
-                      ? "Screen Rejected"
-                      : status.status === "PleaRequestFinalApprovalSent"
-                      ? "Final Aprroval Pending"
-                      : status.status === "PleaRequestFinalApprovalAccepted"
-                      ? "Final Approved"
-                      : status.status === "PleaRequestFinalApprovalRejected"
-                      ? "Final Rejected"
-                      : status.status === "Pending"
-                      ? "Approved"
-                      : "Approved"}
-                  </h1>
+                        ? "Approved"
+                        : "Approved"}>
+                    <h1
+                      className={`text-[14px] truncate ${
+                        status.status === "PleaRequestBudgetSent"
+                          ? "text-[#129BFF]"
+                          : status.status === "PleaRequestBudgetAccepted"
+                          ? "text-[#129BFF]"
+                          : status.status === "PleaRequestBudgetRejected"
+                          ? "text-[#129BFF]"
+                          : status.status === "PleaRequestScreenApprovalSent"
+                          ? "text-[#129BFF]"
+                          : status.status === "PleaRequestScreenApprovalAccepted"
+                          ? "text-[#129BFF]"
+                          : status.status === "PleaRequestScreenApprovalRejected"
+                          ? "text-[#129BFF]"
+                          : status.status === "PleaRequestFinalApprovalSent"
+                          ? "text-[#129BFF]"
+                          : status.status === "PleaRequestFinalApprovalAccepted"
+                          ? "text-[#129BFF]"
+                          : status.status === "PleaRequestFinalApprovalRejected"
+                          ? "text-[#129BFF]"
+                          : status.status === "Pending"
+                          ? "text-[#129BFF]"
+                          : ""
+                      }`}
+                    >
+                      {status.status === "PleaRequestBudgetSent"
+                        ? "Budget Approval Pending"
+                        : status.status === "PleaRequestBudgetAccepted"
+                        ? "Budget Approved"
+                        : status.status === "PleaRequestBudgetRejected"
+                        ? "Budget Rejected"
+                        : status.status === "PleaRequestScreenApprovalSent"
+                        ? "Screen Approval Pending"
+                        : status.status === "PleaRequestScreenApprovalAccepted"
+                        ? "Screen Approved"
+                        : status.status === "PleaRequestScreenApprovalRejected"
+                        ? "Screen Rejected"
+                        : status.status === "PleaRequestFinalApprovalSent"
+                        ? "Final Aprroval Pending"
+                        : status.status === "PleaRequestFinalApprovalAccepted"
+                        ? "Final Approved"
+                        : status.status === "PleaRequestFinalApprovalRejected"
+                        ? "Final Rejected"
+                        : status.status === "Pending"
+                        ? "Approved"
+                        : "Approved"}
+                    </h1>
+                  </Tooltip>
+         
                 </td>
               </tr>
             ))}
