@@ -9,8 +9,6 @@ import {
   getVendorConfirmationDetails,
   getVendorConfirmationStatusTableDetails,
 } from "../../actions/screenAction";
-import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
-import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import {
   VendorConfirmationBasicTable,
   VendorConfirmationStatusTable,
@@ -308,7 +306,7 @@ export const VendorConfirmationDetails = ({
         pageName: "Vendor Confirmation Page",
       })
     );
-  }, [dispatch, campaignId, vendorInput, campaignDetails]);
+  }, [campaignDetails, campaignId, dispatch]);
 
   useEffect(() => {
     if (successAddDetails) {
@@ -318,12 +316,6 @@ export const VendorConfirmationDetails = ({
       setCurrentStep(step+1);
     }
   },[successAddDetails, step, setCurrentStep, dispatch]);
-
-  // useEffect(() => {
-  //   if (vendorConfirmationData) {
-  //     setVendorInput()
-  //   }
-  // },[vendorConfirmationData, campaignDetails, campaignId]);
 
 
   const handleOpenStatusModel = () => {

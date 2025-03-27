@@ -26,7 +26,7 @@ interface ScreenSummaryTableProps {
   setScreensBuyingCount?: any;
 }
 
-export const ScreenSummaryTableIKnowItAll = ({
+export const ScreenSummaryTableStoreBased = ({
   data,
   currentCity,
   screensBuyingCount,
@@ -67,7 +67,7 @@ export const ScreenSummaryTableIKnowItAll = ({
           types[city][st] = [];
           
           stToggle[city][tp][st] = 
-            getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[campaignId]?.[city]?.[tp]?.[st] ?? false;
+            getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[campaignId]?.[city]?.[tp]?.[st] ?? true;
           
           setScreenTypeToggle((prev: any) => ({
             ...prev,

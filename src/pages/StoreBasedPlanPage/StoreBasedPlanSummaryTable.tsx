@@ -21,7 +21,7 @@ interface ScreenSummaryDetailsProps {
   campaignDetails?: any;
 }
 
-export const IKnowItAllPlanSummaryTable = ({
+export const StoreBasedPlanSummaryTable = ({
   setCurrentStep,
   step,
   campaignId,
@@ -38,7 +38,6 @@ export const IKnowItAllPlanSummaryTable = ({
   const {
     loading: loadingAddDetails,
     error: errorAddDetails,
-    data: addCampaignData,
     success: successAddDetails,
   } = detailsToCreateCampaignAdd;
   

@@ -49,6 +49,7 @@ export const removeAllKeyFromLocalStorage = () => {
     FULL_CAMPAIGN_PLAN,
     FOOTER_DATA,
     EXCEL_DATA_TARGET_STORES,
+    "STATE_CITY_ZONE"
   ];
   for (let key of keys) {
     window.localStorage.removeItem(key);
