@@ -8,12 +8,7 @@ import {
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { useLocation } from "react-router-dom";
 import { Footer } from "../../components/footer";
-import {
-  FULL_CAMPAIGN_PLAN,
-  SCREEN_SUMMARY_SELECTION,
-  SCREEN_SUMMARY_TABLE_DATA,
-} from "../../constants/localStorageConstants";
-import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { addDetailsToCreateCampaign, getCampaignCreationsDetails } from "../../actions/campaignAction";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { message } from "antd";
@@ -35,7 +30,7 @@ export const IKnowItAllPlanSummaryTable = ({
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
 
-  const regularVsCohort = campaignDetails?.selectedType;
+  const [dataToUse, setDataToUse] = useState<any>(null);
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -43,6 +38,7 @@ export const IKnowItAllPlanSummaryTable = ({
   const {
     loading: loadingAddDetails,
     error: errorAddDetails,
+    data: addCampaignData,
     success: successAddDetails,
   } = detailsToCreateCampaignAdd;
   
@@ -62,27 +58,38 @@ export const IKnowItAllPlanSummaryTable = ({
         addDetailsToCreateCampaign({
           pageName: "Screen Summary Page",
           id: campaignDetails?._id,
-          totalScreens: campaignDetails?.screenIds,
-          totalImpression: screenSummaryPlanTableData?.total?.totalImpression,
-          totalReach: screenSummaryPlanTableData?.total?.totalReach,
-          totalCampaignBudget: screenSummaryPlanTableData?.total?.totalCampaignBudget,
-          totalCpm: screenSummaryPlanTableData?.total?.totalCpm,
+          totalScreens: addCampaignData?.screenIds,
+          totalImpression: dataToUse?.total?.totalImpression,
+          totalReach: dataToUse?.total?.totalReach,
+          totalCampaignBudget: dataToUse?.total?.totalCampaignBudget,
+          totalCpm: dataToUse?.total?.totalCpm,
           duration: campaignDetails?.duration,
         })
       );
     }
   };
 
+  useEffect(() => {
+    if (successAddDetails) {
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
+      setCurrentStep(step+1);
+    }
+  },[successAddDetails, step, setCurrentStep, dispatch]);
 
   useEffect(() => {
-    if (!campaignDetails) return;
     if (errorAddDetails) {
       message.error("Error in add campaign details...")
     }
 
-    // if (errorScreenSummaryPlanTable) {
-    //   message.error("Error in getting plan table data...")
-    // }
+    if (errorScreenSummaryPlanTable) {
+      message.error("Error in getting plan table data...")
+    }
+  },[ errorAddDetails, errorScreenSummaryPlanTable]);
+
+  useEffect(() => {
+    if (!campaignDetails) return;
     dispatch(
       getScreenSummaryPlanTableData({
         id: campaignId,
@@ -95,17 +102,13 @@ export const IKnowItAllPlanSummaryTable = ({
         pageName: "Screen Summary Page",
       })
     );
-
-  }, [campaignId, dispatch, campaignDetails, errorAddDetails, errorScreenSummaryPlanTable]);
+  }, [campaignId, dispatch, campaignDetails]);
 
   useEffect(() => {
-    if (successAddDetails) {
-      dispatch({
-        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
-      });
-      setCurrentStep(step+1);
+    if (screenSummaryPlanTableData) {
+      setDataToUse(screenSummaryPlanTableData);
     }
-  },[successAddDetails, step, setCurrentStep, dispatch]);
+  },[screenSummaryPlanTableData]);
 
   return (
     <div className="w-full">
@@ -118,8 +121,7 @@ export const IKnowItAllPlanSummaryTable = ({
       ) : (
         <div className="w-full">
           <h1 className="text-3xl ">
-            Screens summary as per “
-            {regularVsCohort === "cohort" ? "COHORT" : "REGULAR"}” selection{" "}
+            Plan Summary
           </h1>
           <h1 className="text-sm text-gray-500 ">
             You can further optimized your plan by deselecting locations in the
@@ -129,7 +131,7 @@ export const IKnowItAllPlanSummaryTable = ({
           <div className="pb-10">
             <div className="w-full">
               <PlanSummaryTable
-                screenSummaryPlanTableData={screenSummaryPlanTableData}
+                screenSummaryPlanTableData={dataToUse}
                 loadingScreenSummaryPlanTable={loadingScreenSummaryPlanTable}
               />
             </div>

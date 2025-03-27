@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
-import { ActionMenu } from "../../components/molecules/ActionMenu";
-import { CheckboxInput } from "../atoms/CheckboxInput";
 import { Tooltip } from "antd";
 import { ShowMediaPopup } from "../../components/popup/ShowMediaPopup";
 
 export const VendorConfirmationStatusTable = ({
-  campaignId,
   userInfo,
   statusTableData,
   selectedCampaignIds,
@@ -40,7 +37,7 @@ export const VendorConfirmationStatusTable = ({
         campaignIds.push(campaign._id.toString())
     }
     setSelectedCampaignIds(campaignIds);
-  }, [setSelectedCampaignIds, statusTableData]);
+  }, [campaignsList, setSelectedCampaignIds, statusTableData]);
   return (
     <div className="w-full">
       <ShowMediaPopup
@@ -54,7 +51,7 @@ export const VendorConfirmationStatusTable = ({
       <table className="w-full">
         <thead className="w-full flex">
           {userInfo?.userRole === "campaignPlanner" && (
-            <tr className="bg-[#D6EEFF] w-full grid grid-cols-12">
+            <tr className="bg-[#D6EEFF] w-full grid grid-cols-12 rounded-t">
               <th className="py-2 col-span-1 flex justify-around">
                 <h1 className="text-[14px] px-2">S.N.</h1>
               </th>
@@ -108,7 +105,7 @@ export const VendorConfirmationStatusTable = ({
             statusTableData?.map((status: any, i: any) => (
               <tr
                 key={i}
-                className={`border w-full grid grid-cols-12
+                className={`border w-full grid grid-cols-12 rounded-b
               ${status.status === "PleaRequestBudgetSent" && "bg-purple-50"}
               ${status.status === "PleaRequestBudgetAccepted" && "bg-purple-50"}
               ${status.status === "PleaRequestBudgetRejected" && "bg-purple-50"}

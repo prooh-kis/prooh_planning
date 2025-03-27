@@ -10,7 +10,9 @@ import { Footer } from "../../components/footer";
 // Actions & Constants
 import { 
   getPlanningPageFooterData, 
-  getScreenSummaryData 
+  getRegularVsCohortPriceData, 
+  getScreenSummaryData, 
+  getScreenSummaryPlanTableData
 } from "../../actions/screenAction";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { 
@@ -78,6 +80,17 @@ export const ScreenSummaryDetails = ({
     error: errorScreenSummary,
     data: screenSummaryData,
   } = useSelector((state: any) => state.screenSummaryDataGet);
+
+  const { loading: loadingPriceData, data: priceData, error: errorPriceData } = useSelector(
+    (state: any) => state.regularVsCohortPriceDataGet
+  );
+
+  const {
+    loading: loadingScreenSummaryPlanTable,
+    error: errorScreenSummaryPlanTable,
+    data: screenSummaryPlanTableData,
+  } = useSelector((state: any) => state.screenSummaryPlanTableDataGet);
+
 
 
   // Memoized values
@@ -155,6 +168,7 @@ export const ScreenSummaryDetails = ({
     setTimeout(reEvaluateFilters, 0);
   }, [reEvaluateFilters]);
 
+
   const handleSave = useCallback(() => {
     if (!isViewPage) {
       if (getSelectedScreenIdsFromAllCities(screensBuyingCount)?.length === 0) {
@@ -171,28 +185,17 @@ export const ScreenSummaryDetails = ({
           pageName: "Screen Summary Page",
           id: campaignId,
           totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
-          totalImpression: screenSummaryTableData[campaignId]?.total?.totalImpression,
-          totalReach: screenSummaryTableData[campaignId]?.total?.totalReach,
-          totalCampaignBudget: screenSummaryTableData[campaignId]?.total?.totalCampaignBudget,
-          totalCpm: screenSummaryTableData[campaignId]?.total?.totalCpm,
+          totalImpression: screenSummaryPlanTableData?.total?.totalImpression,
+          totalReach: screenSummaryPlanTableData?.total?.totalReach,
+          totalCampaignBudget: screenSummaryPlanTableData?.total?.totalCampaignBudget,
+          totalCpm: screenSummaryPlanTableData?.total?.totalCpm,
           duration: campaignDetails?.duration,
         }));
       }
     } else {
       setCurrentStep(step + 1);
     }
-  }, [
-    isViewPage,
-    currentTab,
-    dispatch,
-    campaignId,
-    getSelectedScreenIdsFromAllCities,
-    screensBuyingCount,
-    screenSummaryTableData,
-    campaignDetails,
-    step,
-    setCurrentStep
-  ]);
+  }, [isViewPage, getSelectedScreenIdsFromAllCities, screensBuyingCount, currentTab, dispatch, campaignId, screenSummaryPlanTableData?.total?.totalImpression, screenSummaryPlanTableData?.total?.totalReach, screenSummaryPlanTableData?.total?.totalCampaignBudget, screenSummaryPlanTableData?.total?.totalCpm, campaignDetails?.duration, setCurrentStep, step]);
 
   // Effects
   useEffect(() => {
@@ -210,12 +213,39 @@ export const ScreenSummaryDetails = ({
       id: campaignId,
       type: campaignDetails?.selectedType,
     }));
-    
+ 
     dispatch(getPlanningPageFooterData({
       id: campaignId,
       pageName: "Screen Summary Page",
     }));
   }, [campaignId, campaignDetails, errorAddDetails, errorScreenSummary, dispatch]);
+
+  useEffect(() => {
+    if (errorScreenSummaryPlanTable) {
+      message.error("Error in fetching plan summary data for selected screens...")
+    }
+    if (errorPriceData) {
+      message.error("Error in fetching audience wise pricing data...")
+    }
+
+    if (currentTab == "2") {
+
+      const screenIds = getSelectedScreenIdsFromAllCities(screensBuyingCount);
+      dispatch(getScreenSummaryPlanTableData({ id: campaignDetails?._id, screenIds }));
+      
+      if (!priceData) {
+        dispatch(getRegularVsCohortPriceData({
+          id: campaignDetails?._id,
+          screenIds,
+          cohorts: campaignDetails?.cohorts,
+          gender: campaignDetails?.gender,
+          duration: campaignDetails?.duration,
+        }));
+      }
+    }
+
+
+  },[campaignDetails, currentTab, dispatch, errorPriceData, errorScreenSummaryPlanTable, getSelectedScreenIdsFromAllCities, priceData, screensBuyingCount]);
 
   useEffect(() => {
     if (successAddDetails) {
@@ -472,9 +502,10 @@ export const ScreenSummaryDetails = ({
         ) : (
           <PlanSummaryTable
             regularVsCohort={regularVsCohort}
-            getSelectedScreenIdsFromAllCities={getSelectedScreenIdsFromAllCities}
-            screensBuyingCount={screensBuyingCount}
-            campaignDetails={campaignDetails}
+            loadingScreenSummaryPlanTable={loadingScreenSummaryPlanTable}
+            loadingPriceData={loadingPriceData}
+            priceData={priceData}
+            screenSummaryPlanTableData={screenSummaryPlanTableData}
           />
         )}
       </div>

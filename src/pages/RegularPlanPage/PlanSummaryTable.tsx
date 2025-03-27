@@ -17,55 +17,20 @@ import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 interface PlanSummaryTableProps {
   regularVsCohort: string;
-  getSelectedScreenIdsFromAllCities: (data: any) => string[];
-  screensBuyingCount: any;
-  campaignDetails: any;
+  loadingScreenSummaryPlanTable: any;
+  loadingPriceData: any;
+  priceData: any;
+  screenSummaryPlanTableData?: any;
 }
 
 export function PlanSummaryTable({
   regularVsCohort,
-  getSelectedScreenIdsFromAllCities,
-  screensBuyingCount,
-  campaignDetails,
+  loadingScreenSummaryPlanTable,
+  loadingPriceData,
+  priceData,
+  screenSummaryPlanTableData,
 }: PlanSummaryTableProps) {
-  const dispatch = useDispatch<any>();
   const [showSummary, setShowSummary] = useState<any>(false);
-  const { loading: loadingPriceData, data: priceData, error: errorPriceData } = useSelector(
-    (state: any) => state.regularVsCohortPriceDataGet
-  );
-
-  const {
-    loading: loadingScreenSummaryPlanTable,
-    error: errorScreenSummaryPlanTable,
-    data: screenSummaryPlanTableData,
-  } = useSelector((state: any) => state.screenSummaryPlanTableDataGet);
-
-
-  useEffect(() => {
-
-    if (errorScreenSummaryPlanTable) {
-      message.error("Error in fetching plan summary data for selected screens...")
-    }
-    if (errorPriceData) {
-      message.error("Error in fetching audience wise pricing data...")
-    }
-    if (campaignDetails && screensBuyingCount && Object.keys(screensBuyingCount).length > 0) {
-      const screenIds = getSelectedScreenIdsFromAllCities(screensBuyingCount);
-      dispatch(getScreenSummaryPlanTableData({ id: campaignDetails?._id, screenIds }));
-      
-      if (!priceData) {
-        dispatch(getRegularVsCohortPriceData({
-          id: campaignDetails?._id,
-          screenIds,
-          cohorts: campaignDetails?.cohorts,
-          gender: campaignDetails?.gender,
-          duration: campaignDetails?.duration,
-        }));
-      }
-    } else {
-      message.info("No screens selected yet, please select screens to proceed...");
-    }
-  }, [campaignDetails, dispatch, errorPriceData, errorScreenSummaryPlanTable, getSelectedScreenIdsFromAllCities, priceData, screensBuyingCount]);
 
   const renderTableRow = (item: any, key: string, isTotal = false) => (
     <tr key={key} className="py-1 text-[14px] border border-1">

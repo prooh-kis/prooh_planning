@@ -108,7 +108,6 @@ export const CreativeUpload = ({
         pageName: "Upload Creative Page",
       })
     );
-    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
   }, [dispatch, campaignId, campaignDetails]);
 
   const mergeCreativeWithScreenData = (
@@ -391,10 +390,6 @@ export const CreativeUpload = ({
         creatives: requestBody,
       })
     );
-
-    setTimeout(() => {
-      setCurrentStep(step + 1);
-    }, 1000);
   };
 
   const handleSaveFiles = (files: Creative[], screenId: string) => {
@@ -473,14 +468,14 @@ export const CreativeUpload = ({
     setCurrentScreens([]);
   };
 
-  const handleSetValue = () => {
+  const handleSetValue = useCallback(() => {
     setPlayCreativeTime([
       { icon: "", label: "Regular", id: "Standard" },
       ...(isTriggerAvailable()
         ? [{ icon: "", label: "Trigger", id: "Trigger" }]
         : []),
     ]);
-  };
+  },[isTriggerAvailable]);
 
   const getFileListToView = () => {
     const screen = creativeUploadData[currentCity]?.find((screen) =>
@@ -525,11 +520,13 @@ export const CreativeUpload = ({
     if (errorScreeData) {
       message.error(errorScreeData);
     }
+    if (errorAddDetails) {
+      message.error("error in adding campaign details...")
+    }
     if (!screenData) return;
 
     handleSetValue();
-    const storedCampaignData =
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId];
+    const storedCampaignData = campaignDetails;
     const storedCreatives = storedCampaignData?.creatives;
     const storedTriggers = storedCampaignData?.triggers;
 
@@ -545,7 +542,16 @@ export const CreativeUpload = ({
     handleSetInitialData(combinedData);
     setCreativeUploadData(combinedData);
     setPageLoading(false);
-  }, [campaignId, errorScreeData, handleSetInitialData, screenData]);
+  }, [campaignDetails, campaignId, errorAddDetails, errorScreeData, handleSetInitialData, handleSetValue, screenData]);
+
+  useEffect(() => {
+    if (successAddDetails) {
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
+      setCurrentStep(step+1);
+    }
+  },[successAddDetails, step, setCurrentStep, dispatch]);
 
   if (pageLoading) return <LoadingScreen />;
 
@@ -765,10 +771,7 @@ export const CreativeUpload = ({
             campaignId={campaignId}
             handleSave={handleSaveAndContinue}
             loadingCost={loadingAddDetails || loadingScreenData}
-            isDisabled={loadingScreenData}
-            totalScreensData={
-              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-            }
+            isDisabled={loadingAddDetails || loadingScreenData}
             pageName="Upload Creative Page"
             successCampaignDetails={successAddDetails}
           />
