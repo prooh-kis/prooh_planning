@@ -27,37 +27,41 @@ export const Footer = ({
   // console.log("loadingCost : ", loadingCost);
   const dispatch = useDispatch<any>();
 
-  const [footerData, setFooterData] = useState(() => {
-    const localStorageData =
-      getDataFromLocalStorage(FOOTER_DATA)?.finalSummaryStepWise || [];
-    const filteredData = localStorageData.filter(
-      (data: any) => data.step === pageName
-    );
-
-    if (filteredData.length > 0) {
-      return filteredData[filteredData?.length - 1];
-    }
-
-    if (localStorageData.length > 0) {
-      return localStorageData[localStorageData?.length - 1];
-    }
-
-    // Default fallback object
-    return {
-      totalScreens: 0,
-      totalTouchPoints: 0,
-      totalImpression: 0,
-      totalCampaignBudget: 0,
-      totalCpm: 0,
-      pricePerSlot: 0,
-      totalCities: 0,
-    };
-  });
+  const [footerData, setFooterData] = useState<any>({});
 
   const planningPageFooterDataGet = useSelector(
     (state: any) => state.planningPageFooterDataGet
   );
   const { loading, error, data: totalScreensData } = planningPageFooterDataGet;
+
+  useEffect(() => {
+    setFooterData(() => {
+      const localStorageData =
+        getDataFromLocalStorage(FOOTER_DATA)?.finalSummaryStepWise || [];
+      const filteredData = localStorageData.filter(
+        (data: any) => data.step === pageName
+      );
+
+      if (filteredData.length > 0) {
+        return filteredData[filteredData?.length - 1];
+      }
+
+      if (localStorageData.length > 0) {
+        return localStorageData[localStorageData?.length - 1];
+      }
+
+      // Default fallback object
+      return {
+        totalScreens: 0,
+        totalTouchPoints: 0,
+        totalImpression: 0,
+        totalCampaignBudget: 0,
+        totalCpm: 0,
+        pricePerSlot: 0,
+        totalCities: 0,
+      };
+    })
+  }, [footerData])
 
   useEffect(() => {
     if (successCampaignDetails) {
@@ -68,7 +72,11 @@ export const Footer = ({
         })
       );
     }
-  }, [dispatch, campaignId, pageName, successCampaignDetails]);
+
+    if ( totalScreensData )
+      setFooterData(totalScreensData)
+
+  }, [dispatch, campaignId, pageName, successCampaignDetails , totalScreensData]);
   return (
     <div className="py-2 z-10 flex justify-between px-4">
       <div className="flex w-full justify-start items-center gap-4">
