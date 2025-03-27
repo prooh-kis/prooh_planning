@@ -96,7 +96,6 @@ export const StoreBasedPlanPage: React.FC = () => {
 
   const StepComponent = stepComponents[currentStep] || null;
 
-
   return (
     <div className="w-full">
       {/* Stepper Slider */}

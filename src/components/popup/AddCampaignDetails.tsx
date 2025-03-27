@@ -11,7 +11,8 @@ import {
 } from "../../actions/clientAgencyAction";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
 import { SuggestionInput } from "../../components/atoms/SuggestionInput";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 
 const allIndex = [1, 2, 3, 6].map((data: any) => {
   return {
@@ -22,37 +23,31 @@ const allIndex = [1, 2, 3, 6].map((data: any) => {
 
 export const AddCampaignDetails = ({
   handleCancel,
+  step,
   open,
   userInfo,
   campaignId,
   router,
   setCurrentStep,
-  startDate1,
+  campaignDetails,
   campaignDuration = 1,
   handleSaveData,
   selectedSpacialDay,
   startDate,
   endDate,
   duration,
+  path,
 }: any) => {
   const dispatch = useDispatch<any>();
+  const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [campaignName, setCampaignName] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || ""
+  const [campaignName, setCampaignName] = useState<any>(campaignDetails?.name || ""
   );
-  const [brandName, setBrandName] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName || ""
-  );
-  const [clientName, setClientName] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.clientName || ""
-  );
-  const [industry, setIndustry] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.industry || ""
-  );
+  const [brandName, setBrandName] = useState<any>(campaignDetails?.brandName || "");
+  const [clientName, setClientName] = useState<any>(campaignDetails?.clientName || "");
+  const [industry, setIndustry] = useState<any>(campaignDetails?.industry || "");
 
-  const [sov, setSov] = useState<number>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.sov || 1
-  );
+  const [sov, setSov] = useState<number>(campaignDetails?.sov || 1);
   const allClientAgencyNamesListGet = useSelector(
     (state: any) => state.allClientAgencyNamesListGet
   );
@@ -61,6 +56,16 @@ export const AddCampaignDetails = ({
     error: errorClientAgencyNames,
     data: clientAgencyNamesList,
   } = allClientAgencyNamesListGet;
+
+  const detailsToCreateCampaignAdd = useSelector(
+    (state: any) => state.detailsToCreateCampaignAdd
+  );
+  const {
+    loading: loadingAddDetails,
+    error: errorAddDetails,
+    success: successAddDetails,
+    data: addDetails,
+  } = detailsToCreateCampaignAdd;
 
   const handleAddNewClient = (value: string) => {
     if (
@@ -120,9 +125,35 @@ export const AddCampaignDetails = ({
   };
 
   useEffect(() => {
+    if (errorAddDetails) {
+      message.error(errorAddDetails);
+    }
+
+    if (successAddDetails && !pathname.split("/").includes("view") && !pathname.split("/").includes("edit")) {
+      console.log(addDetails);
+      navigate(`/${path}/${addDetails?._id}`);
+      setCurrentStep(step + 1);
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });  
+    }
+
+  }, [addDetails?._id, dispatch, errorAddDetails, navigate, path, pathname, setCurrentStep, step, successAddDetails]);
+
+
+  useEffect(() => {
     dispatch(getAllClientAgencyNames());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (campaignDetails) {
+      setCampaignName(campaignDetails?.name);
+      setBrandName(campaignDetails?.brandName);
+      setClientName(campaignDetails?.clientName);
+      setIndustry(campaignDetails?.industry);
+      setSov(campaignDetails?.sov);
+    }
+  },[campaignDetails]);
   return (
     <Modal
       closable={true}
