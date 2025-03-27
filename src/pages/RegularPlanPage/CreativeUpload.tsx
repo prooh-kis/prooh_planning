@@ -468,14 +468,14 @@ export const CreativeUpload = ({
     setCurrentScreens([]);
   };
 
-  const handleSetValue = useCallback(() => {
+  const handleSetValue = () => {
     setPlayCreativeTime([
       { icon: "", label: "Regular", id: "Standard" },
       ...(isTriggerAvailable()
         ? [{ icon: "", label: "Trigger", id: "Trigger" }]
         : []),
     ]);
-  },[isTriggerAvailable]);
+  };
 
   const getFileListToView = () => {
     const screen = creativeUploadData[currentCity]?.find((screen) =>
@@ -542,7 +542,7 @@ export const CreativeUpload = ({
     handleSetInitialData(combinedData);
     setCreativeUploadData(combinedData);
     setPageLoading(false);
-  }, [campaignDetails, campaignId, errorAddDetails, errorScreeData, handleSetInitialData, handleSetValue, screenData]);
+  }, [campaignId, errorScreeData, errorAddDetails, handleSetInitialData, screenData]);
 
   useEffect(() => {
     if (successAddDetails) {
