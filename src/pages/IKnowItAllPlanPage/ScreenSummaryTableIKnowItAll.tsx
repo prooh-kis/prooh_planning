@@ -67,7 +67,7 @@ export const ScreenSummaryTableIKnowItAll = ({
           types[city][st] = [];
           
           stToggle[city][tp][st] = 
-            getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[campaignId]?.[city]?.[tp]?.[st] ?? true;
+            getDataFromLocalStorage(SCREEN_TYPE_TOGGLE_SELECTION)?.[campaignId]?.[city]?.[tp]?.[st] ?? false;
           
           setScreenTypeToggle((prev: any) => ({
             ...prev,
@@ -95,7 +95,9 @@ export const ScreenSummaryTableIKnowItAll = ({
               screens[city][screenId] = {
                 status: localScreenData ? localScreenData.status : 
                   localCampaign?.screenIds?.length > 0 && !localCampaign?.screenIds.includes(screenId) ? false :
-                  true,
+                  localCampaign?.currentPage === "Basic Details Page" ? false :
+                  localCampaign?.screenIds?.length > 0 && localCampaign?.screenIds.includes(screenId) ? true :
+                  false,
                 data: screen
               };
             });

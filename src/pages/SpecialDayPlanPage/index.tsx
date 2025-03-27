@@ -38,6 +38,7 @@ export const SpecialDayPlanPage: React.FC = () => {
   const { success, data: campaignDetails } = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
   );
+  
 
   // Fix: Ensure campaignId is always a string when used as an object key
   useEffect(() => {
@@ -154,6 +155,7 @@ export const SpecialDayPlanPage: React.FC = () => {
         />
       </div>
       {/* Step Content */}
+      
       <div className="w-full h-full flex justify-center items-top">
         {stepComponents[currentStep] || null}
       </div>

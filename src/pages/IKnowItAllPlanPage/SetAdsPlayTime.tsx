@@ -215,7 +215,7 @@ export const SetAdsPlayTime = ({
       dispatch(
         addDetailsToCreateCampaign({
           pageName: "Set Ad Play time Page",
-          id: pathname.split("/").splice(-1)[0],
+          id: campaignId,
           touchPointWiseDetails: data,
         })
       );

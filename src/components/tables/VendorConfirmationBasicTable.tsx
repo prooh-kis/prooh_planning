@@ -12,11 +12,11 @@ export const VendorConfirmationBasicTable = ({
     <div className="w-full py-1">
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-1">
-          <div className="grid grid-cols-2">
-            <div className="border py-1 px-4 bg-[#F7F7F7]">
+          <div className="grid grid-cols-2 ">
+            <div className="border py-1 px-4 bg-[#F7F7F7] rounded-tl">
               <h1 className="text-[14px]">Campaign Name</h1>
             </div>
-            <div className="border py-1 px-4">
+            <div className="border py-1 px-4 rounded-tr">
               <h1 className="text-[14px]">{vendorConfirmationData?.name}</h1>
             </div>
           </div>
@@ -60,20 +60,20 @@ export const VendorConfirmationBasicTable = ({
             </div>
           </div>
           <div className="grid grid-cols-2">
-            <div className="border py-1 px-4 bg-[#F7F7F7]">
+            <div className="border py-1 px-4 bg-[#F7F7F7] rounded-bl">
               <h1 className="text-[14px]">Plan No.</h1>
             </div>
-            <div className="border py-1 px-4">
+            <div className="border py-1 px-4 rounded-br">
               <h1 className="text-[14px]">24/10/12-332-04</h1>
             </div>
           </div>
         </div>
         <div className="col-span-1">
           <div className="grid grid-cols-2">
-            <div className="border py-1 px-4 bg-[#F7F7F7]">
+            <div className="border py-1 px-4 bg-[#F7F7F7] rounded-tl">
               <h1 className="text-[14px]">Start Date</h1>
             </div>
-            <div className="border py-1 px-4 truncate">
+            <div className="border py-1 px-4 truncate rounded-tr">
               <h1 className="text-[14px]">
                 {convertDateIntoDateMonthYear(
                   vendorConfirmationData?.startDate
@@ -112,10 +112,10 @@ export const VendorConfirmationBasicTable = ({
             </div>
           </div>
           <div className="grid grid-cols-2">
-            <div className="border py-1 px-4 bg-[#F7F7F7]">
+            <div className="border py-1 px-4 bg-[#F7F7F7] rounded-bl">
               <h1 className="text-[14px]">Brand Name</h1>
             </div>
-            <div className="border py-1 px-4">
+            <div className="border py-1 px-4 rounded-br">
               <h1 className="text-[14px]">
                 {vendorConfirmationData?.brandName}
               </h1>
