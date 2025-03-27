@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 interface DrawPolygonProps {
   polygons: any;
-  setPolygons: (polygons: google.maps.Polygon[]) => void;
+  setPolygons: any;
   allScreens: Screen[];
   setPolygonScreens: any;
   handleFinalSelectedScreens?: any;
@@ -27,12 +27,31 @@ export function DrawPolygon({ handleFinalSelectedScreens, polygons, setPolygons,
     return screensInsidePolygons;
   };
 
+
+  const attachPolygonListeners = (polygon: google.maps.Polygon) => {
+    const path = polygon.getPath();
+
+    const updatePolygons = () => {
+      setPolygons((prevPolygons: any) =>
+        prevPolygons.map((p: any) => (p === polygon ? polygon : p))
+      );
+      const screensInsidePolygons = getScreensInsidePolygons(polygons);
+      handleFinalSelectedScreens({ screens: screensInsidePolygons, type: "add" });
+      setPolygonScreens(screensInsidePolygons);
+    };
+
+    google.maps.event.addListener(path, "set_at", updatePolygons); // When a vertex is moved
+    google.maps.event.addListener(path, "insert_at", updatePolygons); // When a new vertex is added
+    google.maps.event.addListener(path, "remove_at", updatePolygons); // When a vertex is deleted
+  };
+
+
   // Effect to update polygon screens when polygons change
   useEffect(() => {
     if (!window.google || !window.google.maps.geometry) return;
 
     const screensInsidePolygons = getScreensInsidePolygons(polygons);
-    handleFinalSelectedScreens({screens: screensInsidePolygons, type: "add"});
+    handleFinalSelectedScreens({ screens: screensInsidePolygons, type: "add" });
     setPolygonScreens(screensInsidePolygons);
   }, [polygons, allScreens, setPolygonScreens]);
 
@@ -63,6 +82,7 @@ export function DrawPolygon({ handleFinalSelectedScreens, polygons, setPolygons,
     google.maps.event.addListener(drawingManager, "polygoncomplete", (polygon: google.maps.Polygon) => {
       // Add the new polygon to the polygons array
       setPolygons([...polygons, polygon]);
+      attachPolygonListeners(polygon);
 
       // Click to select the polygon
       google.maps.event.addListener(polygon, "click", () => {
@@ -77,6 +97,16 @@ export function DrawPolygon({ handleFinalSelectedScreens, polygons, setPolygons,
       drawingManager.setMap(null);
     };
   }, [map, polygons, setPolygons]);
+
+
+  useEffect(() => {
+    if (!map || !window.google) return;
+
+    polygons.forEach((polygon: any) => {
+      polygon.setMap(map);
+      attachPolygonListeners(polygon);
+    });
+  }, [polygons, map]);
 
   // Effect to re-render polygons when the `polygons` array changes
   useEffect(() => {
@@ -104,7 +134,7 @@ export function DrawPolygon({ handleFinalSelectedScreens, polygons, setPolygons,
     selectedPolygon.setMap(null); // Remove from map
     setPolygons(polygons.filter((p: any) => p !== selectedPolygon)); // Remove from state
     const screensInsidePolygonsToRemove = getScreensInsidePolygons(polygons.filter((p: any) => p === selectedPolygon));
-    handleFinalSelectedScreens({screens: screensInsidePolygonsToRemove, type: "remove"});
+    handleFinalSelectedScreens({ screens: screensInsidePolygonsToRemove, type: "remove" });
 
     setSelectedPolygon(null);
   };
@@ -118,9 +148,8 @@ export function DrawPolygon({ handleFinalSelectedScreens, polygons, setPolygons,
           type="button"
           title="delete"
           onClick={handleDeleteSelected}
-          className={`p-1 rounded-md shadow-md transition ${
-            selectedPolygon ? "bg-gray-100 text-white hover:bg-white" : "bg-white cursor-not-allowed"
-          }`}
+          className={`p-1 rounded-md shadow-md transition ${selectedPolygon ? "bg-gray-100 text-white hover:bg-white" : "bg-white cursor-not-allowed"
+            }`}
           disabled={!selectedPolygon}
         >
           <i className="fi fi-ss-trash text-gray-700 flex items-center justify-center"></i>
