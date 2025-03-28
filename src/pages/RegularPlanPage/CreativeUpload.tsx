@@ -451,22 +451,34 @@ export const CreativeUpload = ({
   };
 
   const handleSetValue = () => {
-    setPlayCreativeTime([
-      { icon: "", label: "Regular", id: "Standard" },
-      ...(isTriggerAvailable()
-        ? [{ icon: "", label: "Trigger", id: "Trigger" }]
-        : []),
-    ]);
+    const isTriggerBasedCampaign = pathname
+      .split("/")
+      .includes("triggerbasedplan");
+    const triggerAvailable = isTriggerAvailable();
 
-    setViewPlayCreativeTime([
-      { icon: "", label: "All", id: "0" },
-      { icon: "", label: "Day", id: "1" },
-      { icon: "", label: "Night", id: "2" },
+    setPlayCreativeTime(
+      isTriggerBasedCampaign
+        ? [{ label: "Trigger", id: "Trigger" }]
+        : [
+            { icon: "", label: "Regular", id: "Standard" },
+            ...(triggerAvailable
+              ? [{ icon: "", label: "Trigger", id: "Trigger" }]
+              : []),
+          ]
+    );
 
-      ...(isTriggerAvailable()
-        ? [{ icon: "", label: "Trigger", id: "3" }]
-        : []),
-    ]);
+    setViewPlayCreativeTime(
+      isTriggerBasedCampaign
+        ? [{ label: "Trigger", id: "3" }]
+        : [
+            { icon: "", label: "All", id: "0" },
+            { icon: "", label: "Day", id: "1" },
+            { icon: "", label: "Night", id: "2" },
+            ...(triggerAvailable
+              ? [{ icon: "", label: "Trigger", id: "3" }]
+              : []),
+          ]
+    );
   };
 
   const getFileListToView = () => {
