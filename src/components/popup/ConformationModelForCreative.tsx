@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export function ConformationModelForCreative({ open, onClose, link }: any) {
+export function ConformationModelForCreative({ open, onClose }: any) {
   const navigate = useNavigate();
   if (!open) {
     return null;
@@ -9,10 +9,10 @@ export function ConformationModelForCreative({ open, onClose, link }: any) {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
       <div className="border bg-white rounded-[10px] h-[350px] w-[350px] p-1">
         <div
-          className="relative inset-0 flex items-center justify-end gap-4 p-3"
+          className="relative inset-0 flex items-center justify-end gap-4 p-1"
           onClick={onClose}
         >
-          <i className="fi fi-rr-cross-small"></i>
+          <i className="fi fi-rs-circle-xmark text-[16px]"></i>
         </div>
         <div className="flex flex-col justify-center items-center  p-2">
           <i className="fi fi-sr-file-upload text-[32px] text-[#129BFF]"></i>
@@ -31,10 +31,9 @@ export function ConformationModelForCreative({ open, onClose, link }: any) {
         </div>
         <div className="flex flex-col justify-center items-center pt-4">
           <button
-            className="border border-1 py-2 px-8 bg-[#129BFF90] hover:bg-[#129BFF] text-white rounded-2xl w-[50%]"
+            className="border border-1 py-2 px-8 bg-[#129BFF] hover:bg-[#2e80bb] text-white rounded-2xl w-[50%]"
             onClick={() => {
               if (onClose) onClose();
-              navigate(link);
             }}
           >
             Yes
@@ -44,7 +43,7 @@ export function ConformationModelForCreative({ open, onClose, link }: any) {
               onClose();
               navigate("/my-creatives");
             }}
-            className="text-[16px] text-[#129BFF]  pt-2 underline cursor-pointer"
+            className="text-[16px] text-[#129BFF] hover:text-[#2e80bb]  py-2 hover:underline cursor-pointer"
           >
             {"I Don't Have Creative Upload new"}
           </h1>

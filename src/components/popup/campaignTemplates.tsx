@@ -65,7 +65,6 @@ const Cart: React.FC<CartProps> = ({ plan, handleCardClick, selectedCard }) => {
 export const CampaignTemplates: React.FC = () => {
   const navigate = useNavigate();
   const [selectedCard, setSelectedCard] = useState<number>(0);
-  const [open, setOpen] = useState<boolean>(false);
   const dispatch = useDispatch<any>();
 
   useEffect(() => {
@@ -78,17 +77,12 @@ export const CampaignTemplates: React.FC = () => {
     setSelectedCard(id);
   };
 
-  const toggle = useCallback(() => {
-    setOpen((pre) => !pre);
-  }, [open]);
+  const toggle = () => {
+    navigate(allPlansData[selectedCard]?.link || "/");
+  };
 
   return (
     <div className="py-2 pt-16 px-16 flex items-center justify-center w-full h-full bg-gray-50">
-      <ConformationModelForCreative
-        open={open}
-        onClose={toggle}
-        link={allPlansData[selectedCard]?.link || "/"}
-      />
       <div className="border border-transparent rounded-lg w-full h-full pt-8">
         <div className="flex flex-col items-start p-2">
           <h1 className="font-custom text-[24px] font-bold text-primaryText">

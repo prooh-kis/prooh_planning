@@ -26,6 +26,7 @@ import SearchInputField from "../../components/molecules/SearchInputField";
 import { UploadCreativesFromBucketPopup } from "../../components/popup/UploadCreativesFromBucketPopup";
 import { getCreativesMediaAction } from "../../actions/creativeAction";
 import { NoDataView } from "../../components/index";
+import { ConformationModelForCreative } from "../../components/popup/ConformationModelForCreative";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -83,6 +84,9 @@ export const CreativeUpload = ({
   const [citiesCreative, setCitiesCreative] = useState<any[]>([]);
   const [isBucketPopupOpen, setIsBucketPopupOpen] = useState<boolean>(false);
   const [mediaFiles, setMediaFiles] = useState<any[]>([]);
+  const [open, setOpen] = useState<boolean>(
+    pathname.split("/").includes("view") ? false : true
+  );
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
@@ -555,8 +559,17 @@ export const CreativeUpload = ({
     setCurrentScreens([]);
   };
 
+  const toggle = () => {
+    setOpen((pre) => !pre);
+  };
+
+  // setTimeout(() => {
+  //   setOpen(false);
+  // }, 2000);
+
   return (
     <div className="w-full">
+      {open && <ConformationModelForCreative open={open} onClose={toggle} />}
       {isBucketPopupOpen && (
         <UploadCreativesFromBucketPopup
           onClose={closePopup}
@@ -572,14 +585,13 @@ export const CreativeUpload = ({
       <div className="mx-auto">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-semibold">Upload Creative</h1>
-          <button
+          <div
             onClick={() => navigate("/my-creatives")}
-            className={
-              "border border-[#129BFF] text-[#000000] rounded-2xl  hover:text-[#129BFF] w-64"
-            }
+            className="border-2 border-[#129BFF] text-[#000000] rounded-md  text-[#129BFF] w-auto text-[14px] py-1 px-4 flex items-center gap-2 cursor-pointer"
           >
-            Go to Media Bucket
-          </button>
+            <i className="fi fi-sr-folder-open text-[16px]"></i>
+            Creative Bucket
+          </div>
         </div>
         <h2 className="text-sm text-gray-500">
           Upload your creatives for the campaigns for your selected screens

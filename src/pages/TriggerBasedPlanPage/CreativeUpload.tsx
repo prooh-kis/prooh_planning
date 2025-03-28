@@ -9,7 +9,7 @@ import {
   getPlanningPageFooterData,
   getScreenDataUploadCreativeData,
 } from "../../actions/screenAction";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Footer } from "../../components/footer";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
@@ -25,6 +25,8 @@ import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignCo
 import SearchInputField from "../../components/molecules/SearchInputField";
 import { UploadCreativesFromBucketPopup } from "../../components/popup/UploadCreativesFromBucketPopup";
 import { getCreativesMediaAction } from "../../actions/creativeAction";
+import { NoDataView } from "../../components/index";
+import { ConformationModelForCreative } from "../../components/popup/ConformationModelForCreative";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -63,6 +65,7 @@ export const CreativeUpload = ({
 }: CreativeUploadDetailsProps) => {
   const { pathname } = useLocation();
   const dispatch = useDispatch<any>();
+  const navigate = useNavigate();
   const [pageLoading, setPageLoading] = useState(true);
   const [currentTab, setCurrentTab] = useState("1");
   const [currentPlayTimeCreative, setCurrentPlayTimeCreative] = useState("1");
@@ -81,6 +84,9 @@ export const CreativeUpload = ({
   const [citiesCreative, setCitiesCreative] = useState<any[]>([]);
   const [isBucketPopupOpen, setIsBucketPopupOpen] = useState<boolean>(false);
   const [mediaFiles, setMediaFiles] = useState<any[]>([]);
+  const [open, setOpen] = useState<boolean>(
+    pathname.split("/").includes("view") ? false : true
+  );
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
@@ -213,22 +219,17 @@ export const CreativeUpload = ({
 
       const screen = { ...newData[currentCity][screenIndex] };
 
-      if (creativeType === "Standard") {
-        if (currentPlayTimeCreative === "1") {
-          screen.standardDayTimeCreatives =
-            screen.standardDayTimeCreatives.filter((file) => file.url !== url);
-        } else {
-          screen.standardNightTimeCreatives =
-            screen.standardNightTimeCreatives.filter(
-              (file) => file.url !== url
-            );
-        }
+      if (viewCreativeType === "1") {
+        screen.standardDayTimeCreatives =
+          screen.standardDayTimeCreatives.filter((file) => file.url !== url);
+      } else if (viewCreativeType === "2") {
+        screen.standardNightTimeCreatives =
+          screen.standardNightTimeCreatives.filter((file) => file.url !== url);
       } else {
         screen.triggerCreatives = screen.triggerCreatives.filter(
           (file) => file.url !== url
         );
       }
-
       newData[currentCity][screenIndex] = screen;
       return newData;
     });
@@ -558,8 +559,17 @@ export const CreativeUpload = ({
     setCurrentScreens([]);
   };
 
+  const toggle = () => {
+    setOpen((pre) => !pre);
+  };
+
+  // setTimeout(() => {
+  //   setOpen(false);
+  // }, 2000);
+
   return (
     <div className="w-full">
+      {open && <ConformationModelForCreative open={open} onClose={toggle} />}
       {isBucketPopupOpen && (
         <UploadCreativesFromBucketPopup
           onClose={closePopup}
@@ -573,7 +583,16 @@ export const CreativeUpload = ({
         />
       )}
       <div className="mx-auto">
-        <h1 className="text-2xl font-semibold">Upload Creative</h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-semibold">Upload Creative</h1>
+          <div
+            onClick={() => navigate("/my-creatives")}
+            className="border-2 border-[#129BFF] text-[#000000] rounded-md  text-[#129BFF] w-auto text-[14px] py-1 px-4 flex items-center gap-2 cursor-pointer"
+          >
+            <i className="fi fi-sr-folder-open text-[16px]"></i>
+            Creative Bucket
+          </div>
+        </div>
         <h2 className="text-sm text-gray-500">
           Upload your creatives for the campaigns for your selected screens
         </h2>
@@ -745,10 +764,20 @@ export const CreativeUpload = ({
                     setCurrentTab={setViewCreativeType}
                     justify={true}
                   />
+                  {getFileListToView()?.length === 0 && (
+                    <NoDataView
+                      title={
+                        currentScreen
+                          ? "No Data"
+                          : "Please select screen to view creatives"
+                      }
+                    />
+                  )}
 
                   <ViewMediaForUploadCreatives
                     files={getFileListToView()}
                     removeFile={removeFile}
+                    viewCreativeType={viewCreativeType}
                   />
                 </div>
               </div>
