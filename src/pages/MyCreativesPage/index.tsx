@@ -16,25 +16,22 @@ import {
 } from "../../utils/localStorageUtils";
 import { ALL_BRAND_LIST } from "../../constants/localStorageConstants";
 import { NoDataView, SearchInputField } from "../../components";
+import { useNavigate } from "react-router-dom";
 
 export const MyCreativesPage: React.FC = () => {
   const dispatch = useDispatch<any>();
-
+  const navigate = useNavigate();
   const [creativeName, setCreativeName] = useState<any>("");
   const [networkChoice, setNetworkChoice] = useState<any>(0);
   const [purpose, setPurpose] = useState<string>("New");
-
   const [resolution, setResolution] = useState<any>("");
-
   const [searchQuery, setSearchQuery] = useState<any>("");
   const [openCreateCreativePopup, setOpenCreateCreativePopup] =
     useState<any>(false);
   const [currentTab, setCurrentTab] = useState<any>("1");
-
   const [brandName, setBrandName] = useState<any>("");
   const [network, setNetwork] = useState<any>("");
   const [creativesMedia, setCreativesMedia] = useState<any>({});
-
   const [mediaFiles, setMediaFiles] = useState<any>([]);
 
   const auth = useSelector((state: any) => state.auth);
@@ -132,7 +129,10 @@ export const MyCreativesPage: React.FC = () => {
 
   return (
     <div className="w-full h-full ">
-      <div className="bg-white">
+      <div className="bg-white flex gap-4 items-center">
+        <Tooltip title="Go back">
+          <i className="fi fi-sr-arrow-left" onClick={() => navigate(-1)}></i>
+        </Tooltip>
         <h1 className="text-[20px] font-bold">Creative Bucket</h1>
       </div>
       <div className="w-full ">
@@ -176,8 +176,8 @@ export const MyCreativesPage: React.FC = () => {
                     <div
                       className={
                         brand === brandName
-                          ? "flex gap-4 items-center p-2 border-b text-[#129BFF]"
-                          : "flex gap-4 items-center p-2 border-b hover:text-[#129BFF] text-primaryText"
+                          ? "flex gap-4 items-center p-2 border-b text-[#129BFF] cursor-pointer"
+                          : "flex gap-4 items-center p-2 border-b hover:text-[#129BFF] text-primaryText cursor-pointer"
                       }
                       key={i}
                       onClick={() => {
@@ -195,7 +195,7 @@ export const MyCreativesPage: React.FC = () => {
           </div>
           {/* brand wise creatives */}
           <div className="col-span-9 bg-white px-4 border rounded-lg">
-            {brandName && (
+            {brandName ? (
               <div className="p-2">
                 <div className="border-b py-1 pb-4 flex items-center justify-between pr-8">
                   <div className="flex gap-1 items-center py-1">
@@ -276,6 +276,14 @@ export const MyCreativesPage: React.FC = () => {
                     {getJSXValue(currentTab == "1" ? "video" : "image")}
                   </div>
                 </div>
+              </div>
+            ) : (
+              <div className="flex flex-col  font-bold justify-center items-center h-[90vh] bg-gray-100 my-4">
+                <i className="fi fi-rr-folder-open text-[24px] text-gray-400 text-center"></i>
+                <h1 className="text-center">No Brand Selected</h1>
+                <h1 className="text-center mt-2">
+                  Please Select Brand To View Media Data
+                </h1>
               </div>
             )}
           </div>
