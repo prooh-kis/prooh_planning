@@ -150,6 +150,11 @@ export const RegularCohortComparisonDetails = ({
                       touchPointData={priceData?.[type]?.touchPointData}
                     />
                   )}
+                  {priceData?.[type]?.tableData?.impressionPerDay  || !priceData?.[type]?.tableData?.totalSlotsPerDay && (
+                    <div className="flex justify-center items-center py-1">
+                      <h1 className="text-[#EF4444] text-[12px] font-semibold">You are getting zero (0) impressions per day after your filter selection. Please update the filters and try again...</h1>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

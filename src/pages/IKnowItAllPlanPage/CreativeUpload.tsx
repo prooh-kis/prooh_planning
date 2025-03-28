@@ -9,13 +9,10 @@ import {
   getPlanningPageFooterData,
   getScreenDataUploadCreativeData,
 } from "../../actions/screenAction";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Footer } from "../../components/footer";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import {
-  getDataFromLocalStorage,
-  saveDataOnLocalStorage,
-} from "../../utils/localStorageUtils";
+import { saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import {
   CAMPAIGN_CREATIVES,
   SELECTED_TRIGGER,
@@ -25,6 +22,9 @@ import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignCo
 import SearchInputField from "../../components/molecules/SearchInputField";
 import { UploadCreativesFromBucketPopup } from "../../components/popup/UploadCreativesFromBucketPopup";
 import { getCreativesMediaAction } from "../../actions/creativeAction";
+import { NoDataView } from "../../components/index";
+import { ConformationModelForCreative } from "../../components/popup/ConformationModelForCreative";
+import { TriggerBasedIndication } from "../../components/molecules/TriggerBasedIndication";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -63,6 +63,7 @@ export const CreativeUpload = ({
 }: CreativeUploadDetailsProps) => {
   const { pathname } = useLocation();
   const dispatch = useDispatch<any>();
+  const navigate = useNavigate();
   const [pageLoading, setPageLoading] = useState(true);
   const [currentTab, setCurrentTab] = useState("1");
   const [currentPlayTimeCreative, setCurrentPlayTimeCreative] = useState("1");
@@ -81,6 +82,9 @@ export const CreativeUpload = ({
   const [citiesCreative, setCitiesCreative] = useState<any[]>([]);
   const [isBucketPopupOpen, setIsBucketPopupOpen] = useState<boolean>(false);
   const [mediaFiles, setMediaFiles] = useState<any[]>([]);
+  const [open, setOpen] = useState<boolean>(
+    pathname.split("/").includes("view") ? false : true
+  );
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
@@ -213,22 +217,17 @@ export const CreativeUpload = ({
 
       const screen = { ...newData[currentCity][screenIndex] };
 
-      if (creativeType === "Standard") {
-        if (currentPlayTimeCreative === "1") {
-          screen.standardDayTimeCreatives =
-            screen.standardDayTimeCreatives.filter((file) => file.url !== url);
-        } else {
-          screen.standardNightTimeCreatives =
-            screen.standardNightTimeCreatives.filter(
-              (file) => file.url !== url
-            );
-        }
+      if (viewCreativeType === "1") {
+        screen.standardDayTimeCreatives =
+          screen.standardDayTimeCreatives.filter((file) => file.url !== url);
+      } else if (viewCreativeType === "2") {
+        screen.standardNightTimeCreatives =
+          screen.standardNightTimeCreatives.filter((file) => file.url !== url);
       } else {
         screen.triggerCreatives = screen.triggerCreatives.filter(
           (file) => file.url !== url
         );
       }
-
       newData[currentCity][screenIndex] = screen;
       return newData;
     });
@@ -286,23 +285,26 @@ export const CreativeUpload = ({
     setCurrentCity(result[0]?.label || "");
   }, []);
 
-  const validate = () => {
-    return Object.values(creativeUploadData).every((cityScreens) =>
-      cityScreens.every(
-        (screen) =>
-          screen.standardDayTimeCreatives?.length > 0 ||
-          screen.standardNightTimeCreatives?.length > 0 ||
-          screen.triggerCreatives?.length > 0
-      )
-    );
-  };
-
   const isTriggerAvailable = () => {
-    const triggers = getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId];
+    const triggers = campaignDetails.triggers;
     return (
       triggers?.weatherTriggers?.length > 0 ||
       triggers?.sportsTriggers?.length > 0 ||
       triggers?.vacantSlots?.length > 0
+    );
+  };
+
+  const validate = () => {
+    const triggerAvailable = isTriggerAvailable();
+
+    return Object.values(creativeUploadData).every((cityScreens) =>
+      cityScreens.every((screen) =>
+        triggerAvailable
+          ? screen.triggerCreatives?.length > 0 // Ensure trigger creatives exist if triggers are available
+          : screen.standardDayTimeCreatives?.length > 0 ||
+            screen.standardNightTimeCreatives?.length > 0 ||
+            screen.triggerCreatives?.length > 0
+      )
     );
   };
 
@@ -313,7 +315,10 @@ export const CreativeUpload = ({
     }
 
     if (!validate()) {
-      message.error("Please upload creatives for each row and each city");
+      const errorMessage = `Please upload creatives for all screens ${
+        isTriggerAvailable() && " and for triggers also"
+      }`;
+      message.error(errorMessage);
       return;
     }
 
@@ -445,22 +450,34 @@ export const CreativeUpload = ({
   };
 
   const handleSetValue = () => {
-    setPlayCreativeTime([
-      { icon: "", label: "Regular", id: "Standard" },
-      ...(isTriggerAvailable()
-        ? [{ icon: "", label: "Trigger", id: "Trigger" }]
-        : []),
-    ]);
+    const isTriggerBasedCampaign = pathname
+      .split("/")
+      .includes("triggerbasedplan");
+    const triggerAvailable = isTriggerAvailable();
 
-    setViewPlayCreativeTime([
-      { icon: "", label: "All", id: "0" },
-      { icon: "", label: "Day", id: "1" },
-      { icon: "", label: "Night", id: "2" },
+    setPlayCreativeTime(
+      isTriggerBasedCampaign
+        ? [{ label: "Trigger", id: "Trigger" }]
+        : [
+            { icon: "", label: "Regular", id: "Standard" },
+            ...(triggerAvailable
+              ? [{ icon: "", label: "Trigger", id: "Trigger" }]
+              : []),
+          ]
+    );
 
-      ...(isTriggerAvailable()
-        ? [{ icon: "", label: "Trigger", id: "3" }]
-        : []),
-    ]);
+    setViewPlayCreativeTime(
+      isTriggerBasedCampaign
+        ? [{ label: "Trigger", id: "3" }]
+        : [
+            { icon: "", label: "All", id: "0" },
+            { icon: "", label: "Day", id: "1" },
+            { icon: "", label: "Night", id: "2" },
+            ...(triggerAvailable
+              ? [{ icon: "", label: "Trigger", id: "3" }]
+              : []),
+          ]
+    );
   };
 
   const getFileListToView = () => {
@@ -558,8 +575,50 @@ export const CreativeUpload = ({
     setCurrentScreens([]);
   };
 
+  const toggle = () => {
+    setOpen((pre) => !pre);
+  };
+
+  const getLabel = () => {
+    return (
+      <div>
+        {creativeType === "Standard" ? (
+          currentPlayTimeCreative === "1" ? (
+            <h1 className="py-2">
+              Upload creative for <span className="font-semibold">Day</span>{" "}
+            </h1>
+          ) : currentPlayTimeCreative === "2" ? (
+            <h1 className="py-2">
+              Upload creative for <span className="font-semibold">Night</span>{" "}
+            </h1>
+          ) : null
+        ) : creativeType === "Trigger" ? (
+          <TriggerBasedIndication
+            triggerData={
+              campaignDetails?.triggers?.weatherTriggers?.length > 0
+                ? campaignDetails?.triggers?.weatherTriggers[0]
+                : campaignDetails?.triggers?.sportsTriggers?.length > 0
+                ? campaignDetails?.triggers?.sportsTriggers[0]
+                : campaignDetails?.triggers?.vacantSlots?.length > 0
+                ? campaignDetails?.triggers?.vacantSlots[0]
+                : {}
+            }
+            triggerType={
+              campaignDetails?.triggers?.weatherTriggers?.length > 0
+                ? "Weather Trigger"
+                : campaignDetails?.triggers?.sportsTriggers?.length > 0
+                ? "Sports Trigger"
+                : "Fill Vacancy Trigger"
+            }
+          />
+        ) : null}
+      </div>
+    );
+  };
+
   return (
     <div className="w-full">
+      {open && <ConformationModelForCreative open={open} onClose={toggle} />}
       {isBucketPopupOpen && (
         <UploadCreativesFromBucketPopup
           onClose={closePopup}
@@ -573,7 +632,16 @@ export const CreativeUpload = ({
         />
       )}
       <div className="mx-auto">
-        <h1 className="text-2xl font-semibold">Upload Creative</h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-semibold">Upload Creative</h1>
+          <div
+            onClick={() => navigate("/my-creatives")}
+            className="border-2 border-[#129BFF] text-[#000000] rounded-md  text-[#129BFF] w-auto text-[14px] py-1 px-4 flex items-center gap-2 cursor-pointer"
+          >
+            <i className="fi fi-sr-folder-open text-[16px]"></i>
+            Creative Bucket
+          </div>
+        </div>
         <h2 className="text-sm text-gray-500">
           Upload your creatives for the campaigns for your selected screens
         </h2>
@@ -710,32 +778,35 @@ export const CreativeUpload = ({
                       justify={true}
                     />
                   </div>
-                  <h1 className="mt-2">Select Creative Type</h1>
-                  <div className="flex justify-between items-center mt-2">
-                    <Select
-                      options={[
-                        { label: "Day", value: "1" },
-                        { label: "Night", value: "2" },
-                      ]}
-                      style={{ width: "150px" }}
-                      value={currentPlayTimeCreative}
-                      onChange={setCurrentPlayTimeCreative}
-                    />
-                  </div>
-                  {currentScreens?.length > 0 && (
+                  {creativeType === "Standard" && (
                     <div>
-                      <h1 className="py-2">Upload creative</h1>
-                      <button
-                        onClick={() =>
-                          setIsBucketPopupOpen((pre: boolean) => !pre)
-                        }
-                        className={
-                          "border border-dashed border-2 border-[#129BFF] text-[#129BFF] rounded-2xl  bg-[#F4F9FF] py-1 w-full"
-                        }
-                      >
-                        + Upload
-                      </button>
+                      <h1 className="mt-2">Select Creative Type</h1>
+                      <div className="flex justify-between items-center mt-2">
+                        <Select
+                          options={[
+                            { label: "Day", value: "1" },
+                            { label: "Night", value: "2" },
+                          ]}
+                          style={{ width: "100%" }}
+                          value={currentPlayTimeCreative}
+                          onChange={setCurrentPlayTimeCreative}
+                        />
+                      </div>
                     </div>
+                  )}
+                  {getLabel()}
+
+                  {currentScreens?.length > 0 && (
+                    <button
+                      onClick={() =>
+                        setIsBucketPopupOpen((pre: boolean) => !pre)
+                      }
+                      className={
+                        "border border-dashed border-2 border-[#129BFF] text-[#129BFF] rounded-2xl  bg-[#F4F9FF] py-1 w-full"
+                      }
+                    >
+                      + Upload
+                    </button>
                   )}
                 </div>
                 <div className="w-[60%] p-4">
@@ -745,10 +816,20 @@ export const CreativeUpload = ({
                     setCurrentTab={setViewCreativeType}
                     justify={true}
                   />
+                  {getFileListToView()?.length === 0 && (
+                    <NoDataView
+                      title={
+                        currentScreen
+                          ? "No Data"
+                          : "Please select screen to view creatives"
+                      }
+                    />
+                  )}
 
                   <ViewMediaForUploadCreatives
                     files={getFileListToView()}
                     removeFile={removeFile}
+                    viewCreativeType={viewCreativeType}
                   />
                 </div>
               </div>

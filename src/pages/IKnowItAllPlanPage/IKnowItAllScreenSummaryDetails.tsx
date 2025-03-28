@@ -138,19 +138,74 @@ export const IKnowItAllScreenSummaryDetails = ({
   const handleScreenClick = useCallback(({ screen, city, statusRes }: any) => {
     const screenId = screen._id;
 
-    setScreensBuyingCount((prev: any) => ({
-      ...prev,
-      [city]: {
-        ...prev[city],
-        [screenId]: {
-          status: statusRes ?? !prev[city]?.[screenId]?.status,
-          data: screen
+    setScreensBuyingCount((prev: any) => {
+      const newState = {
+        ...prev,
+        [city]: {
+          ...prev[city],
+          [screenId]: {
+            status: statusRes ?? !prev[city]?.[screenId]?.status,
+            data: screen
+          }
+        }
+      };
+      
+      // Immediately update filters after state change
+      const updatedFilters = {
+        zones: new Set(zoneFilters),
+        tps: new Set(tpFilters),
+        sts: new Set(stFilters),
+      };
+
+      if (statusRes !== undefined) {
+        if (statusRes) {
+          if (screen.location?.zoneOrRegion) updatedFilters.zones.add(screen.location.zoneOrRegion);
+          if (screen.location?.touchPoint) updatedFilters.tps.add(screen.location.touchPoint);
+          if (screen.screenType) updatedFilters.sts.add(screen.screenType);
+        } else {
+          // Check if we should remove the filters when deselecting
+          const shouldRemoveZone = !Object.values(newState[city] || {}).some(
+            (s: any) => s.status && s.data.location?.zoneOrRegion === screen.location?.zoneOrRegion
+          );
+          const shouldRemoveTp = !Object.values(newState[city] || {}).some(
+            (s: any) => s.status && s.data.location?.touchPoint === screen.location?.touchPoint
+          );
+          const shouldRemoveSt = !Object.values(newState[city] || {}).some(
+            (s: any) => s.status && s.data.screenType === screen.screenType
+          );
+
+          if (shouldRemoveZone && screen.location?.zoneOrRegion) {
+            updatedFilters.zones.delete(screen.location.zoneOrRegion);
+          }
+          if (shouldRemoveTp && screen.location?.touchPoint) {
+            updatedFilters.tps.delete(screen.location.touchPoint);
+          }
+          if (shouldRemoveSt && screen.screenType) {
+            updatedFilters.sts.delete(screen.screenType);
+          }
         }
       }
-    }));
 
-    setTimeout(reEvaluateFilters, 0);
-  }, [reEvaluateFilters]);
+      setZoneFilters(Array.from(updatedFilters.zones));
+      setTpFilters(Array.from(updatedFilters.tps));
+      setStFilters(Array.from(updatedFilters.sts));
+
+      return newState;
+    });
+
+    saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
+      [campaignId]: {
+        ...screensBuyingCount,
+        [city]: {
+          ...screensBuyingCount[city],
+          [screenId]: {
+            status: statusRes ?? !screensBuyingCount[city]?.[screenId]?.status,
+            data: screen
+          }
+        }
+      }
+    });
+  }, [campaignId, screensBuyingCount, zoneFilters, tpFilters, stFilters]);
 
   const handleSave = useCallback(() => {
     if (!isViewPage) {
@@ -228,7 +283,7 @@ export const IKnowItAllScreenSummaryDetails = ({
     };
   }, [successAddDetails]);
 
-  // Filtered data
+  // Filtered data - now updates in real-time
   const filteredScreensData = useMemo(() => {
     if (!screensBuyingCount || !Object.keys(screensBuyingCount).length) {
       return { result: [], allResult: [] };
@@ -249,13 +304,54 @@ export const IKnowItAllScreenSummaryDetails = ({
     return { result: filtered, allResult: allScreens };
   }, [screensBuyingCount, currentSummaryTab, zoneFilters, tpFilters, stFilters]);
 
-  if (errorScreenSummary) {
-    return (
-      <div className="p-4 bg-red-300 text-[#FFFFFF]">
-        Something went wrong! Please refresh the page...
-      </div>
-    );
-  }
+  const handleFilterSelection = useCallback(({ type, value, checked }: any) => {
+    // Update filter state immediately
+    if (type === "zone") {
+      setZoneFilters(prev => 
+        checked ? [...prev, value] : prev.filter(item => item !== value)
+      );
+    } else if (type === "tp") {
+      setTpFilters(prev => 
+        checked ? [...prev, value] : prev.filter(item => item !== value)
+      );
+    } else if (type === "st") {
+      setStFilters(prev => 
+        checked ? [...prev, value] : prev.filter(item => item !== value)
+      );
+    }
+
+    // Update screen selections based on filter change
+    if (currentCity && screensBuyingCount[currentCity]) {
+      const screensToUpdate = Object.entries(screensBuyingCount[currentCity])
+        .filter(([_, screen]: [any, any]) => {
+          const s = screen.data;
+          if (type === "zone") return s.location?.zoneOrRegion === value;
+          if (type === "tp") return s.location?.touchPoint === value;
+          if (type === "st") return s.screenType === value;
+          return false;
+        })
+        .map(([id, screen]: any) => ({ id, screen }));
+
+      if (screensToUpdate.length > 0) {
+        setScreensBuyingCount((prev: any) => {
+          const newState = { ...prev };
+          screensToUpdate.forEach(({ id, screen }) => {
+            newState[currentCity] = {
+              ...newState[currentCity],
+              [id]: {
+                ...screen,
+                status: checked
+              }
+            };
+          });
+          saveDataOnLocalStorage(SCREEN_SUMMARY_SELECTION, {
+            [campaignId]: newState
+          });
+          return newState;
+        });
+      }
+    }
+  }, [currentCity, screensBuyingCount, campaignId]);
 
   if (loadingScreenSummary) {
     return <LoadingScreen />;

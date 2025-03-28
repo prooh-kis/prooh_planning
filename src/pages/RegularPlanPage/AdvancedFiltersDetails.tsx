@@ -190,6 +190,7 @@ export const AdvanceFiltersDetails = ({
         message.error("Please  confirm screen selection");
         return;
       }
+      console.log("asd", polygons)
       dispatch(
         addDetailsToCreateCampaign({
           pageName: "Advance Filter Page",

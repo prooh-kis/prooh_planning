@@ -1,10 +1,14 @@
-import { NoDataView } from "./NoDataView";
 import { ImageContainer, VideoContainer } from "./ShowMyFile";
 
-export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
+export const ViewMediaForUploadCreatives = ({
+  files,
+  removeFile,
+  viewCreativeType,
+}: any) => {
+  const showIcon = viewCreativeType === "0" ? false : true;
+
   return (
     <div className="pt-4">
-      {files?.length === 0 && <NoDataView />}
       {files?.length > 0 && (
         <div key={files[0]?.url}>
           {files[0].fileType?.split("/")[0] === "image" ? (
@@ -13,6 +17,7 @@ export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
               className=" rounded-lg"
               height="207px"
               width="500px"
+              showIcon={showIcon}
               removeFile={() => removeFile(files[0]?.url)}
             />
           ) : (
@@ -21,6 +26,7 @@ export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
               className=" rounded-lg"
               height="207px"
               width="500px"
+              showIcon={showIcon}
               removeFile={() => removeFile(files[0]?.url)}
             />
           )}
@@ -38,6 +44,7 @@ export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
                   className="rounded-lg "
                   height="102px"
                   width="150px"
+                  showIcon={showIcon}
                   removeFile={removeFile}
                 />
               </div>
@@ -51,6 +58,7 @@ export const ViewMediaForUploadCreatives = ({ files, removeFile }: any) => {
                   className="rounded-lg "
                   height="102px"
                   width="150px"
+                  showIcon={showIcon}
                   removeFile={removeFile}
                 />
               </div>

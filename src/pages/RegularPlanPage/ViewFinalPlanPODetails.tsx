@@ -352,7 +352,7 @@ export const ViewFinalPlanPODetails = ({
   const handleApplyCoupon = useCallback(
     (couponId: any) => {
       if (poTableData?.couponId) {
-        message.warning("Discount coupon applied...");
+        message.success("Discount coupon applied...");
       }
       dispatch(
         applyCouponForCampaign({
@@ -375,12 +375,12 @@ export const ViewFinalPlanPODetails = ({
   useEffect(() => {
     if (errorApply) {
       message.error(
-        "Something went wrong applying this discount. Please try again."
+        "Something went wrong while applying this discount. Please try again."
       );
     }
     if (errorRemove) {
       message.error(
-        "Something went wrong removing this discount. Please try again."
+        "Something went wrong while removing this discount. Please try again."
       );
     }
   }, [errorApply, errorRemove]);

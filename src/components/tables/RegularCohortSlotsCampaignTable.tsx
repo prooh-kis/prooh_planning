@@ -59,7 +59,7 @@ export const RegularCohortSlotsCampaignTable = ({
         </tr>
       </thead>
       <tbody className="overflow-scroll">
-        {loading || priceData?.tableData?.impressionPerDay === 0 || !priceData?.tableData?.totalSlotsPerDay ?(
+        {loading ? (
           <tr className="flex border rounded-b justify-between w-full h-[45px] animate-pulse">
             <td className="h-[45px] bg-gray-200 rounded-b dark:bg-gray-700 w-full"></td>
           </tr>

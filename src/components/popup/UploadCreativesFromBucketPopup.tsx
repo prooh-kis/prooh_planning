@@ -8,6 +8,7 @@ import { Loading } from "../Loading";
 import SingleCreativeInPopup from "../molecules/SingleCreativeInPopup";
 import SearchInputField from "../molecules/SearchInputField";
 import { TabWithoutIcon } from "../molecules/TabWithoutIcon";
+import { NoDataView } from "../../components/molecules/NoDataView";
 
 interface UploadCreativesFromBucketPopupProps {
   onClose?: any;
@@ -137,21 +138,20 @@ export function UploadCreativesFromBucketPopup({
               {loadingCreatives ? (
                 <Loading />
               ) : (
-                <div className="mt-2 px-2">
-                  <div className="py-1">
-                    <TabWithoutIcon
-                      tabData={creativesMedia?.map((data: any, index: any) => {
-                        return {
-                          id: index,
-                          label: data?.network,
-                        };
-                      })}
-                      setCurrentTab={setCurrentTab}
-                      currentTab={currentTab}
-                    />
-                  </div>
-                  {creativesMedia && (
-                    <div className={`overflow-auto  ${isImageAvailable()}`}>
+                <div className="px-2">
+                  <TabWithoutIcon
+                    tabData={creativesMedia?.map((data: any, index: any) => {
+                      return {
+                        id: index,
+                        label: data?.network,
+                      };
+                    })}
+                    setCurrentTab={setCurrentTab}
+                    currentTab={currentTab}
+                  />
+
+                  {creativesMedia ? (
+                    <div className={`h-[52vh] overflow-auto mt-2`}>
                       {Object.keys(creativesMedia?.[currentTab] || {})
                         ?.filter((c: any) => c !== "network")
                         ?.map((m: any, i: any) => (
@@ -232,6 +232,8 @@ export function UploadCreativesFromBucketPopup({
                           </div>
                         ))}
                     </div>
+                  ) : (
+                    <NoDataView />
                   )}
                 </div>
               )}
