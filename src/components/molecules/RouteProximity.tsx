@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import { PrimaryInput } from "../atoms/PrimaryInput";
-import { CheckboxInput } from "../atoms/CheckboxInput";
 import { PrimaryButton } from "../atoms/PrimaryButton";
-import { LinearBar } from "../../components/molecules/linearbar";
 import { MapSearchInput } from "../../components/atoms/MapSearchInput";
 import { Tooltip } from "antd";
 import { MapBoxSearchInput } from "../../components/atoms/MapboxSearchInput";
@@ -44,10 +41,6 @@ export const RouteProximity = ({
 }: RouteProximityProps) => {
   const [showDetails, setShowDetails] = useState<any>(null);
 
-  function randomColor(index: any) {
-    const colors = ["#540b0e", "#e09f3e", "#073b4c", "#0f4c5c", "#ef476f"];
-    return colors[index % 5];
-  }
   const handleRouteSetup = async (originData: any, destinationData: any) => {
     let newRoute: any = {};
     newRoute["origin"] = originData[0];
@@ -105,7 +98,7 @@ export const RouteProximity = ({
       >
         <div className="flex justify-between w-full">
           <div className="flex justify-start">
-            <div className="flex justify-start gap-2 items-center py-2">
+            <div className="flex justify-start gap-2 items-center py-2 truncate">
               <h1 className="lg:text-[16px] text-[14px] text-gray-500 truncate">2. Choose your desired routes </h1>
               <Tooltip
                 title="Enter the origin and destination of your desired routes and select all the screens in proximity of your desired routes"

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import {APIProvider, Map, useMapsLibrary, AdvancedMarker, Marker, InfoWindow, useMap, MapControl, ControlPosition} from "@vis.gl/react-google-maps";
+import { Map, InfoWindow } from "@vis.gl/react-google-maps";
 import { CustomAdvancedMarker } from "./CustomMarker";
 import { Circle } from "./MapCircle";
 import { Directions } from "./Direction";
@@ -7,7 +7,6 @@ import { DrawPolygon } from "./DrawPolygon";
 import {FeatureCollection, Point, GeoJsonProperties} from 'geojson';
 import { Heatmap } from "./Heatmap";
 import { ToggleSwitch } from "../../components/atoms/ToggleSwitch";
-import { Tooltip } from "antd";
 
 type POIProps = {
   id: string;
@@ -81,8 +80,8 @@ export function GoogleMapWithGeometry(props: any) {
     setSelectedMarkers(
       props?.filteredScreens?.map((m: any) => ({
         images: m.images,
-        lng: m.location.geographicalLocation.longitude,
-        lat: m.location.geographicalLocation.latitude,
+        lng: m?.location?.geographicalLocation?.longitude,
+        lat: m?.location?.geographicalLocation?.latitude,
         id: m._id,
         details: m.screenName,
         screenType: m.screenType
@@ -97,8 +96,8 @@ export function GoogleMapWithGeometry(props: any) {
         )
         ?.map((m: any) => ({
           images: m.images,
-          lng: m.location.geographicalLocation.longitude,
-          lat: m.location.geographicalLocation.latitude,
+          lng: m?.location?.geographicalLocation?.longitude,
+          lat: m?.location?.geographicalLocation?.latitude,
           id: m._id,
           details: m.screenName,
           screenType: m.screenType
@@ -190,6 +189,7 @@ export function GoogleMapWithGeometry(props: any) {
           allRoutes={props?.routes}
           setAllRoutes={props?.setRoutes}
           allScreens={props?.allScreens}
+          routeFilteredScreens={props?.routeFilteredScreens}
           routeRadius={props?.routeRadius}
           setRouteFilteredScreens={props?.setRouteFilteredScreens}
           handleFinalSelectedScreens={props?.handleFinalSelectedScreens}
