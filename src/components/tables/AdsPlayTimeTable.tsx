@@ -35,6 +35,7 @@ interface Props {
   setData: any;
   bottomTableData?: any;
   totals?: any;
+  campaignDetails?: any;
 }
 
 
@@ -43,6 +44,7 @@ export const AdsPlayTimeTable = ({
   data,
   setData,
   totals,
+  campaignDetails
 }: Props) => {
   const getUpto2Decimal = (value: any) => {
     return `${Number(value)?.toFixed(2)}%`;

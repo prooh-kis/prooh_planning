@@ -251,7 +251,41 @@ export const SetAdsPlayTime = ({
   // Update local data state when tableData changes
   useEffect(() => {
     if (tableData?.result) {
-      setData(tableData.result);
+      const dayWiseDetails = campaignDetails?.screenWiseSlotDetails?.map((s: any) => {
+        return {
+          screenName: s.screenName,
+          slots: s.slotsInfo
+        }
+      });
+      setData(() => {
+        return tableData.result.map((d: any) => ({
+          ...d,
+          screenData: d.screenData.map((d1: any) => ({
+            ...d1,
+            dayWiseData: {
+              ...d1.dayWiseData,
+              [currentTab]: {
+                morning: { 
+                  ...d1.dayWiseData[currentTab].morning, 
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "morning")?.length === 0 ? false : d1.dayWiseData[currentTab].morning.included 
+                },
+                afternoon: { 
+                  ...d1.dayWiseData[currentTab].afternoon,
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "afternoon")?.length === 0 ? false : d1.dayWiseData[currentTab].morning.included
+                },
+                evening: {
+                  ...d1.dayWiseData[currentTab].evening,
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "evening")?.length === 0 ? false : d1.dayWiseData[currentTab].morning.included   
+                },
+                night: {
+                    ...d1.dayWiseData[currentTab].night,
+                    included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "night")?.length === 0 ? false : d1.dayWiseData[currentTab].morning.included  
+                },
+              },
+            },
+          })),
+        }))
+      });
     }
   }, [tableData]);
 
@@ -308,6 +342,7 @@ export const SetAdsPlayTime = ({
               setData={setData}
               bottomTableData={tableData?.bottomTableData}
               totals={mainTableStats}
+              campaignDetails={campaignDetails}
             />
           </div>
           <h1 className="text-xl py-4">Selected summary</h1>
