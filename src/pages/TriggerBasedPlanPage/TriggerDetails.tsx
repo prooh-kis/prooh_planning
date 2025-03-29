@@ -26,7 +26,7 @@ import {
   getPlanningPageFooterData,
   getTableDataForSelectTriggerPage,
 } from "../../actions/screenAction";
-import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET, CAMPAIGN_PLAN_TYPE_TRIGGER } from "../../constants/campaignConstants";
 interface TriggerProps {
   setCurrentStep: (step: number) => void;
   step: number;
@@ -229,13 +229,34 @@ export const TriggerDetails = ({
           "Please confirm budget for your selected trigger or skip this step"
         );
       } else {
-        dispatch(
-          addDetailsToCreateCampaign({
-            pageName: "Add Triggers Page",
-            id: campaignId,
-            triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
-          })
-        );
+        console.log(pathname?.split("/"));
+        console.log(CAMPAIGN_PLAN_TYPE_TRIGGER)
+        if (pathname?.split("/")?.includes("triggerbasedplan")) {
+          console.log(tableDataForSelectTrigger["Total Cities"]);
+          dispatch(
+            addDetailsToCreateCampaign({
+              pageName: "Add Triggers Page",
+              id: campaignId,
+              triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
+              totalCities: tableDataForSelectTrigger["Total Cities"],
+              totalScreens: tableDataForSelectTrigger["Total Screens"],
+              totalTouchPoints: tableDataForSelectTrigger["Total Touchpoints"],
+              totalImpression: tableDataForSelectTrigger["Avg Impression Per Day"] *  tableDataForSelectTrigger["Campaign Duration"],
+              totalCampaignBudget: tableDataForSelectTrigger["Total Budget"],
+              totalCpm: tableDataForSelectTrigger["CPM"],
+              pricePerSlot: tableDataForSelectTrigger["Price Per Slot"],
+            })
+          );
+        } else {
+          dispatch(
+            addDetailsToCreateCampaign({
+              pageName: "Add Triggers Page",
+              id: campaignId,
+              triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
+            })
+          );
+        }
+
       }
     }
   };
@@ -255,6 +276,7 @@ export const TriggerDetails = ({
           pageName: "Add Triggers Page",
           id: pathname.split("/").splice(-1)[0],
           triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
+          
         })
       );
     }
@@ -381,7 +403,7 @@ export const TriggerDetails = ({
           </div>
         )}
       </div>
-      <div className="grid grid-cols-12 gap-4 w-full">
+      <div className="grid grid-cols-12 gap-4 w-full pb-16">
         {!pathname?.split("/").includes("triggerbasedplan") && (
           <div className="col-span-4 border rounded py-5 flex flex-col justify-between">
             <div className="">
@@ -431,7 +453,7 @@ export const TriggerDetails = ({
                   </p>
                 </div>
               </div>
-              <div className="py-1">
+              <div className="py-1 truncate">
                 <TabWithIcon
                   trigger={true}
                   currentTab={currentTab}
@@ -537,9 +559,9 @@ export const TriggerDetails = ({
           </div>
 
           <div className="flex justify-between items-center px-2">
-            <div>
+            <div className="truncate">
               <div className="flex items-center gap-4 pb-1">
-                <p className="text-[12px] text-[#969696]">
+                <p className="text-[12px] text-[#969696] truncate">
                   Click here to change the time period for the trigger
                 </p>
                 <DropdownInput

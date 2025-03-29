@@ -12,7 +12,7 @@ export const LinearBar = ({
   percent = true,
   value,
   colors,
-  highest,
+  highest = 100,
 }: LinearBarProps) => {
   // Calculate width based on value and highest
   const widthPercentage = highest ? (value * 100) / highest : value;

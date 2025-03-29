@@ -45,8 +45,8 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
       {selectedSOV !== 1 && (
         <div className="pt-2">
           <h1>Kindly approve maximum budget for this trigger</h1>
-          <div className="flex justify-start gap-4 py-2">
-            <div className="flex gap-1 items-center">
+          <div className="flex justify-start gap-4 py-2 truncate">
+            <div className="flex gap-1 items-center truncate">
               <RadioInput
                 title="1%"
                 value={"1"}
@@ -57,7 +57,7 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
                 (&#8377;{(0.01 * totalCost).toFixed(0)})
               </p>
             </div>
-            <div className="flex gap-1 items-center">
+            <div className="flex gap-1 items-center truncate">
               <RadioInput
                 title="2%"
                 value={"2"}
@@ -68,7 +68,7 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
                 (&#8377;{(0.02 * totalCost).toFixed(0)})
               </p>
             </div>
-            <div className="flex gap-1 items-center">
+            <div className="flex gap-1 items-center truncate">
               <RadioInput
                 title="3%"
                 value={"3"}
