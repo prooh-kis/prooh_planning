@@ -62,22 +62,6 @@ export const VendorConfirmationDetails = ({
 
   const [selectedCampaignIds, setSelectedCampaignIds] = useState<any>([]);
 
-  // Initialize vendorInput with fallback values
-  const [vendorInput, setVendorInput] = useState<any>({
-    pageName: "View Final Plan Page",
-    id: campaignId,
-    name: campaignDetails?.name,
-    brandName: campaignDetails?.brandName,
-    clientName: campaignDetails?.clientName,
-    campaignType: campaignDetails?.campaignType,
-    startDate: campaignDetails?.startDate,
-    endDate: campaignDetails?.endDate,
-    duration: campaignDetails?.duration || 30,
-    selectedType: campaignDetails?.selectedType,
-    screenIds: campaignDetails?.screenIds || [],
-    triggers: campaignDetails?.triggers || [],
-  });
-
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
   );
@@ -281,6 +265,9 @@ export const VendorConfirmationDetails = ({
   useEffect(() => {
     if (!campaignDetails) return;
     // Fetch data even if pageSuccess is false initially
+    if (errorVendorConfirmationData || errorStatusTableData || errorAddDetails) {
+      message.error("Something went wrong, please contact tech support...")
+    }
     dispatch(
       getVendorConfirmationStatusTableDetails({
         id: campaignId,
@@ -377,7 +364,7 @@ export const VendorConfirmationDetails = ({
   return (
     <div className="w-full">
 
-      {loadingStatusTableData ? (
+      {loadingStatusTableData || loadingVendorConfirmationData ? (
         <LoadingScreen />
       ) : (
         <div className="w-full h-full">
@@ -411,7 +398,7 @@ export const VendorConfirmationDetails = ({
             <div className="flex justify-between">
               <div className="flex gap-8">
                 <div className="flex">
-                  <h1 className="text-[14px]">
+                  <h1 className="text-[14px] text-[#5FAC90]">
                     Approved (
                     {myData?.Approved?.Connected +
                       myData?.Approved?.["Third Party"]}
@@ -419,7 +406,7 @@ export const VendorConfirmationDetails = ({
                   </h1>
                 </div>
                 <div className="flex">
-                  <h1 className="text-[14px]">
+                  <h1 className="text-[14px] text-[#F9B34B]">
                     Pending (
                     {myData?.Pending?.Connected +
                       myData?.Pending?.["Third Party"]}
@@ -427,7 +414,7 @@ export const VendorConfirmationDetails = ({
                   </h1>
                 </div>
                 <div className="flex">
-                  <h1 className="text-[14px]">
+                  <h1 className="text-[14px] text-[#FF0808]">
                     Rejected (
                     {myData?.Rejected?.Connected +
                       myData?.Rejected?.["Third Party"]}
@@ -520,7 +507,7 @@ export const VendorConfirmationDetails = ({
               handleSave={handleSaveAndContinue}
               campaignId={campaignId}
               pageName="Vendor Confirmation Page"
-              loadingCost={loadingAddDetails || loadingStatusTableData}
+              loadingCost={loadingAddDetails || loadingStatusTableData || loadingVendorConfirmationData}
               successCampaignDetails={successAddDetails}
             />
           </div>

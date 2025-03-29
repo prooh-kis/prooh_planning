@@ -65,7 +65,7 @@ export const TriggerDetails = ({
   const [player, setPlayer] = useState<any>("");
 
   const [selectedBudget, setSelectedBudget] = useState<any>(null);
-  const [selectedSOV, setSelectedSOV] = useState<any>(1);
+  const [selectedSOV, setSelectedSOV] = useState<any>(null);
   const [selectedTimeOptions, setSelectedTimeOptions] = useState<any>(300);
 
   const timeOptionSportsTrigger = [
@@ -539,14 +539,7 @@ export const TriggerDetails = ({
               />
             </div>
           )}
-          <div className="" onClick={() => {
-              if (triggerSelected) {
-                setDisableApply(false);
-              } else {
-                message.info("Please select a trigger first to continue or skip...")
-              }
-            }}
-          >
+          <div className="">
             <OpenBudgetSegment
               totalCost={
                 tableDataForSelectTrigger?.["Total Budget"]
@@ -555,6 +548,8 @@ export const TriggerDetails = ({
               selectedBudget={selectedBudget}
               setSelectedBudget={setSelectedBudget}
               setSelectedSOV={setSelectedSOV}
+              triggerSelected={triggerSelected}
+              setDisableApply={setDisableApply}
             />
           </div>
 

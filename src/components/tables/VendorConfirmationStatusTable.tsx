@@ -5,11 +5,8 @@ import { ShowMediaPopup } from "../../components/popup/ShowMediaPopup";
 export const VendorConfirmationStatusTable = ({
   userInfo,
   statusTableData,
-  selectedCampaignIds,
-  setSelectedCampaignIds,
   handleOpenStatusModel,
   handleOpenMediaModel,
-  campaignsList
 }: any) => {
   const [openShowMediaPopup, setOpenShowMediaPopup] = useState<any>(false);
   const [creativesToShow, setCreativesToShow] = useState<any>({
@@ -152,7 +149,7 @@ export const VendorConfirmationStatusTable = ({
                   </h1>
                 </td>
                 <td className="py-2 col-span-1 flex justify-around items-center">
-                  <h1 className="text-[14px]">
+                  <h1 className="text-[14px] text-[#5FAC90]">
                     &#8377;{Number(status.cost).toFixed(0)}
                   </h1>
                 </td>

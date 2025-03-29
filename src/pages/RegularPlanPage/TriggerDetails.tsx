@@ -65,7 +65,7 @@ export const TriggerDetails = ({
   const [player, setPlayer] = useState<any>("");
 
   const [selectedBudget, setSelectedBudget] = useState<any>(null);
-  const [selectedSOV, setSelectedSOV] = useState<any>(1);
+  const [selectedSOV, setSelectedSOV] = useState<any>(null);
   const [selectedTimeOptions, setSelectedTimeOptions] = useState<any>(300);
 
   const timeOptionSportsTrigger = [
@@ -381,7 +381,7 @@ export const TriggerDetails = ({
           </div>
         )}
       </div>
-      <div className="grid grid-cols-12 gap-4 w-full">
+      <div className="grid grid-cols-12 gap-4 w-full pb-16">
         {!pathname?.split("/").includes("triggerbasedplan") && (
           <div className="col-span-4 border rounded py-5 flex flex-col justify-between">
             <div className="">
@@ -517,22 +517,17 @@ export const TriggerDetails = ({
               />
             </div>
           )}
-          <div className="" onClick={() => {
-              if (triggerSelected) {
-                setDisableApply(false);
-              } else {
-                message.info("Please select a trigger first to continue or skip...")
-              }
-            }}
-          >
+          <div className="">
             <OpenBudgetSegment
               totalCost={
-                campaignDetails.totalCampaignBudget
+                campaignDetails?.totalCampaignBudget
               }
               selectedSOV={selectedSOV}
               selectedBudget={selectedBudget}
               setSelectedBudget={setSelectedBudget}
               setSelectedSOV={setSelectedSOV}
+              triggerSelected={triggerSelected}
+              setDisableApply={setDisableApply}
             />
           </div>
 
@@ -579,7 +574,7 @@ export const TriggerDetails = ({
                 textSize="text-[14px]"
                 action={() => {
                   handleSelectTrigger();
-                  setIsDisabled(!isDisabled);
+                  setIsDisabled(false);
                   message.success(
                     "Trigger applied, please confirm and proceed..."
                   );

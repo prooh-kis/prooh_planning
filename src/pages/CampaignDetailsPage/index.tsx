@@ -456,7 +456,7 @@ export const CampaignDetailsPage: React.FC = () => {
         </div>
       ) : (
         <div className="col-span-8">
-          <div className="w-full border border-[#DBDBDB] rounded-[18px] p-4  bg-white">
+          <div className="w-full border border-[#D3D3D350] rounded-[18px] px-4 pt-4 bg-white">
             <div className="flex justify-between mx-1">
               <div className="flex gap-4">
                 <i
@@ -554,7 +554,7 @@ export const CampaignDetailsPage: React.FC = () => {
             </div>
           </div>
           {currentTab1 === "1" ? (
-            <div className="w-full h-[65vh] border border-[#DBDBDB] rounded-[18px] p-4 bg-white mt-2">
+            <div className="w-full h-[65vh] border border-[#D3D3D350] rounded-[18px] p-4 bg-white mt-2">
               <div className="flex justify-between border-b pb-2">
                 <h1 className="text-[#092A41] text-[16px] font-semibold mt-2 px-1">
                   Your Plan Details
@@ -629,7 +629,7 @@ export const CampaignDetailsPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="w-full border border-[#DBDBDB] rounded-[18px] p-4 bg-white mt-2">
+            <div className="w-full border border-[#D3D3D350] rounded-[18px] p-4 bg-white mt-2">
               <div className="flex justify-between">
                 <h1 className="text-[#092A41] text-[16px] font-semibold mt-2 px-1">
                   Campaign Creatives
@@ -696,7 +696,7 @@ export const CampaignDetailsPage: React.FC = () => {
           <Loading />
         </div>
       ) : (
-        <div className="col-span-4 w-full h-auto border border-[#DBDBDB] rounded-[18px] p-4 bg-white">
+        <div className="col-span-4 w-full h-auto border border-[#D3D3D350] rounded-[18px] p-4 bg-white">
           <div className="flex justify-between">
             <h1 className="text-[16px] font-semibold px-1 py-2">
               Screens Play{" "}
