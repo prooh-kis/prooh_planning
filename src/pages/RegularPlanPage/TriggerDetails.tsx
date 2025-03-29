@@ -253,7 +253,7 @@ export const TriggerDetails = ({
       dispatch(
         addDetailsToCreateCampaign({
           pageName: "Add Triggers Page",
-          id: pathname.split("/").splice(-1)[0],
+          id: campaignId,
           triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
         })
       );
@@ -372,12 +372,14 @@ export const TriggerDetails = ({
               Choose any one of your desired triggers for contextual targeting
               of you target audiences
             </p>
-            <p
-              className="text-[14px] text-primaryButton underline cursor-pointer"
-              onClick={handleSkipTriggerSelection}
-            >
-              Skip trigger selection
-            </p>
+            {!pathname?.split("/").includes("view") && (
+              <p
+                className="text-[14px] text-primaryButton underline cursor-pointer"
+                onClick={handleSkipTriggerSelection}
+              >
+                Skip trigger selection
+              </p>
+            )}
           </div>
         )}
       </div>
