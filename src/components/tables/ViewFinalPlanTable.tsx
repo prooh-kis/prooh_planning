@@ -154,7 +154,7 @@ export const ViewFinalPlanTable = ({
           <div className="flex font-semibold ">
             <h1 className="text-left text-[#388e3c] text-sm">
               You saved &#8377;{" "}
-              {formatNumber(Number(poTableData?.totalDiscount))}*
+              {formatNumber(Number(poTableData?.totalDiscount).toFixed(2))}*
             </h1>
           </div>
           <div className="flex font-semibold items-center gap-4">
