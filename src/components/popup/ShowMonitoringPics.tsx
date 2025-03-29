@@ -8,6 +8,7 @@ import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import { MonitoringPictures } from "../../components/segments/MonitoringPictures";
 import { campaignMonitoringTab } from "../../constants/tabDataConstant";
 import { GetCampaignMonitoringPicsAction } from "../../actions/campaignAction";
+import { message } from "antd";
 
 export const ShowMonitoringPicsPopup = (props: any) => {
   const dispatch = useDispatch<any>();
@@ -109,6 +110,58 @@ export const ShowMonitoringPicsPopup = (props: any) => {
     return null;
   }
 
+  const handleDownload = async (url: string, filename: string) => {
+    if (!url) return;
+    try {
+      //message.info("Start Downloading....");
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = filename || "download";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      window.URL.revokeObjectURL(blobUrl);
+      //message.success("Download Completed successfully!");
+    } catch (error) {
+      console.error("Download failed:", error);
+      message.error("Download Fail!, Retry");
+    }
+  };
+
+  // Function to handle "Download All"
+  const handleDownloadAll = async () => {
+    message.info("Downloading all files...");
+
+    const filesToDownload: { url: string; filename: string }[] = [];
+    const days = ["day", "night", "misc"];
+    const mediaTypes = ["video", "images", "geoTag", "newspaper"];
+    for (let time of days) {
+      mediaTypes.forEach((type) => {
+        const files = monitoringPics?.timeWiseMonitoringData?.[time]?.[type];
+        if (files?.length > 0) {
+          filesToDownload.push({
+            url: files[0], // Taking only the first file of each type
+            filename: `${type}-${time}.${type === "video" ? "mp4" : "jpg"}`,
+          });
+        }
+      });
+    }
+
+    if (filesToDownload.length === 0) {
+      message.warning("No files available to download.");
+      return;
+    }
+
+    for (const file of filesToDownload) {
+      await handleDownload(file.url, file.filename);
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 ">
       <div
@@ -168,11 +221,19 @@ export const ShowMonitoringPicsPopup = (props: any) => {
               <NoDataView />
             ) : (
               <div>
-                <TabWithoutIcon
-                  currentTab={currentTab}
-                  setCurrentTab={handleSetCurrentTab}
-                  tabData={campaignMonitoringTab}
-                />
+                <div className="flex justify-between items-center">
+                  <TabWithoutIcon
+                    currentTab={currentTab}
+                    setCurrentTab={handleSetCurrentTab}
+                    tabData={campaignMonitoringTab}
+                  />
+                  <button
+                    onClick={handleDownloadAll}
+                    className="bg-[#129BFF] h-8 text-white text-sm px-3 py-1 rounded shadow-md hover:bg-[#107ACC] transition"
+                  >
+                    Download All
+                  </button>
+                </div>
                 <div className="h-auto pt-2">
                   <div className="w-full">
                     <MonitoringPictures
@@ -185,6 +246,7 @@ export const ShowMonitoringPicsPopup = (props: any) => {
                       screenId={monitoringPics?.screenId}
                       campaignId={monitoringPics?.campaignId}
                       setFileType={() => {}}
+                      handleDownload={handleDownload}
                     />
                   </div>
                 </div>
