@@ -59,6 +59,7 @@ export const RegularCohortComparisonDetails = ({
     }
     setSelectedBuyingOption(campaignDetails?.selectedType);
     setSelecting(campaignDetails?.selectedType);
+    setIsDisabled(false);
     dispatch(
       getRegularVsCohortPriceData({
         id: campaignId,

@@ -98,6 +98,7 @@ export function PlanSummaryTable({
             priceData={priceData?.[regularVsCohort]}
             loading={loadingPriceData}
             setShowSummary={setShowSummary}
+            showSummary={showSummary}
           />
         )}
         {showSummary && (
