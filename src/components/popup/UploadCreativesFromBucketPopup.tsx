@@ -233,7 +233,7 @@ export function UploadCreativesFromBucketPopup({
                         ))}
                     </div>
                   ) : (
-                    <NoDataView />
+                    <NoDataView title="No Data Found, Please Upload Creatives in creative bucket " />
                   )}
                 </div>
               )}

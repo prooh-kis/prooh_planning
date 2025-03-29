@@ -83,7 +83,7 @@ export const CreativeUpload = ({
   const [isBucketPopupOpen, setIsBucketPopupOpen] = useState<boolean>(false);
   const [mediaFiles, setMediaFiles] = useState<any[]>([]);
   const [open, setOpen] = useState<boolean>(
-    pathname.split("/").includes("view") ? false : true
+    ["view", "edit"].includes(pathname.split("/").pop() ?? "") ? false : true
   );
 
   const auth = useSelector((state: any) => state.auth);
@@ -582,7 +582,7 @@ export const CreativeUpload = ({
 
   const getLabel = () => {
     return (
-      <div>
+      <div className="mt-2">
         {creativeType === "Standard" ? (
           currentPlayTimeCreative === "1" ? (
             <h1 className="py-2">
@@ -801,18 +801,21 @@ export const CreativeUpload = ({
                   )}
                   {getLabel()}
 
-                  {currentScreens?.length > 0 && (
-                    <button
-                      onClick={() =>
-                        setIsBucketPopupOpen((pre: boolean) => !pre)
-                      }
-                      className={
-                        "border border-dashed border-2 border-[#129BFF] text-[#129BFF] rounded-2xl  bg-[#F4F9FF] py-1 w-full"
-                      }
-                    >
-                      + Upload
-                    </button>
-                  )}
+                  <button
+                    onClick={() => {
+                      if (currentScreens?.length > 0)
+                        setIsBucketPopupOpen((pre: boolean) => !pre);
+                      else
+                        message.error(
+                          "Please select screens by checkbox to chose creatives"
+                        );
+                    }}
+                    className={
+                      "border border-dashed border-2 border-[#129BFF] text-[#129BFF] rounded-2xl  bg-[#F4F9FF] py-1 w-full"
+                    }
+                  >
+                    + Upload
+                  </button>
                 </div>
                 <div className="w-[60%] p-4">
                   <TabWithIcon
