@@ -273,15 +273,15 @@ export const SetAdsPlayTime = ({
                 },
                 afternoon: { 
                   ...d1.dayWiseData[currentTab].afternoon,
-                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "afternoon")?.length === 0 ? false : d1.dayWiseData[currentTab].morning.included
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "afternoon")?.length === 0 ? false : d1.dayWiseData[currentTab].afternoon.included
                 },
                 evening: {
                   ...d1.dayWiseData[currentTab].evening,
-                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "evening")?.length === 0 ? false : d1.dayWiseData[currentTab].morning.included   
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "evening")?.length === 0 ? false : d1.dayWiseData[currentTab].evening.included   
                 },
                 night: {
                     ...d1.dayWiseData[currentTab].night,
-                    included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "night")?.length === 0 ? false : d1.dayWiseData[currentTab].morning.included  
+                    included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "night")?.length === 0 ? false : d1.dayWiseData[currentTab].night.included  
                 },
               },
             },
@@ -305,19 +305,19 @@ export const SetAdsPlayTime = ({
             [currentTab]: {
               morning: { 
                 ...d1.dayWiseData[currentTab].morning, 
-                included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "morning")?.length === 0 ? false : d1.dayWiseData[currentTab].morning.included 
+                included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "morning")?.length === 0 ? false : !d1.dayWiseData[currentTab].morning.included 
               },
               afternoon: { 
                 ...d1.dayWiseData[currentTab].afternoon,
-                included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "afternoon")?.length === 0 ? false : d1.dayWiseData[currentTab].morning.included
+                included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "afternoon")?.length === 0 ? false : !d1.dayWiseData[currentTab].afternoon.included
               },
               evening: {
                 ...d1.dayWiseData[currentTab].evening,
-                included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "evening")?.length === 0 ? false : d1.dayWiseData[currentTab].morning.included   
+                included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "evening")?.length === 0 ? false : !d1.dayWiseData[currentTab].evening.included   
               },
               night: {
                   ...d1.dayWiseData[currentTab].night,
-                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "night")?.length === 0 ? false : d1.dayWiseData[currentTab].morning.included  
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "night")?.length === 0 ? false : !d1.dayWiseData[currentTab].night.included  
               },
             },
           },

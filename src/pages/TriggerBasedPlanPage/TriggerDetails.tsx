@@ -238,13 +238,13 @@ export const TriggerDetails = ({
               pageName: "Add Triggers Page",
               id: campaignId,
               triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
-              totalCities: tableDataForSelectTrigger["Total Cities"],
-              totalScreens: tableDataForSelectTrigger["Total Screens"],
-              totalTouchPoints: tableDataForSelectTrigger["Total Touchpoints"],
-              totalImpression: tableDataForSelectTrigger["Avg Impression Per Day"] *  tableDataForSelectTrigger["Campaign Duration"],
-              totalCampaignBudget: tableDataForSelectTrigger["Total Budget"],
-              totalCpm: tableDataForSelectTrigger["CPM"],
-              pricePerSlot: tableDataForSelectTrigger["Price Per Slot"],
+              totalCities: tableDataForSelectTrigger?.["Total Cities"],
+              totalScreens: tableDataForSelectTrigger?.["Total Screens"],
+              totalTouchPoints: tableDataForSelectTrigger?.["Total Touchpoints"],
+              totalImpression: tableDataForSelectTrigger?.["Avg Impression Per Day"] *  tableDataForSelectTrigger?.["Campaign Duration"],
+              totalCampaignBudget: tableDataForSelectTrigger?.["Total Budget"],
+              totalCpm: tableDataForSelectTrigger?.["CPM"],
+              pricePerSlot: tableDataForSelectTrigger?.["Price Per Slot"],
             })
           );
         } else {

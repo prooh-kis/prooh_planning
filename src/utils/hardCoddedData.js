@@ -13,17 +13,17 @@ export const screenSummaryTabData = [
 
 export const AdsPlayTimeTabData = [
   {
-    icon: <></>,
+    icon: <i className="fi fi-rr-desk"></i>,
     label: "Weekdays",
     id: "weekdays",
   },
   {
-    icon: <></>,
+    icon: <i className="fi fi-rr-party-horn"></i>,
     label: "Saturday",
     id: "saturdays",
   },
   {
-    icon: <></>,
+    icon: <i className="fi fi-br-sun"></i>,
     label: "Sunday",
     id: "sundays",
   },

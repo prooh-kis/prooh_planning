@@ -7,9 +7,10 @@ interface EmailConfirmationImageProps {
   removeImage: (file: any) => void;
   setSkipEmailConfirmation?: any;
   skipEmailConfirmation?: any;
+  skipFunction?: any;
 }
 
-export const EmailConfirmationImage = ({skipEmailConfirmation, setSkipEmailConfirmation, files, handleAddNewFile, removeImage}: EmailConfirmationImageProps) => {
+export const EmailConfirmationImage = ({skipEmailConfirmation, setSkipEmailConfirmation, files, handleAddNewFile, removeImage, skipFunction}: EmailConfirmationImageProps) => {
   return (
     <div className="p-2 h-auto">
       <div className="flex flex-col">
@@ -38,7 +39,10 @@ export const EmailConfirmationImage = ({skipEmailConfirmation, setSkipEmailConfi
       </div>
       {files?.length === 0 && (
         <div className="flex justify-end items-bottom px-2 cursor-pointer"
-          onClick={() => setSkipEmailConfirmation(true)}
+          onClick={() => {
+            setSkipEmailConfirmation(true);
+            skipFunction();
+          }}
         >
           <p className="text-[12px] text-primaryButton underline">
             {skipEmailConfirmation ? "Skipped" :

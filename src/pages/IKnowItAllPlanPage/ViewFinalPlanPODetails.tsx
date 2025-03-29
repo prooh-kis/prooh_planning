@@ -465,6 +465,16 @@ export const ViewFinalPlanPODetails = ({
     }
   },[successAddDetails, step, setCurrentStep, confirmToProceed, dispatch]);
 
+  const skipFunction = () => {
+    dispatch(
+      addDetailsToCreateCampaign({
+        pageName: "View Final Plan Page",
+        id: campaignId,
+        clientApprovalImgs: [],
+      })
+    );
+  }
+
   return (
     <div className="w-full">
       <div>
@@ -624,6 +634,7 @@ export const ViewFinalPlanPODetails = ({
                   setConfirmToProceed(true);
                   setSkipEmailConfirmation(e);
                 }}
+                skipFunction={skipFunction}
                 skipEmailConfirmation={skipEmailConfirmation}
               />
             </div>

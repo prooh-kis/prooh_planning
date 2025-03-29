@@ -34,11 +34,16 @@ export function CustomTabWithSelectAll({
           className={
             currentTab === tab.id
               ? `px-1 w-40 flex ${
-                  trigger ? "gap-2" : "gap-4"
+                  trigger ? "" : ""
                 } text-primaryButton items-center text-[14px] border-b-2 border-primaryButton py-2 justify-between`
-              : `px-1 w-48 flex gap-2 text-gray-500 items-center text-[14px] py-2`
+              : `px-1 w-40 flex gap-2 text-gray-500 items-center text-[14px] py-2`
           }
         >
+          {tab.icon && (
+            <div className="flex items-center justify-center">
+              {tab?.icon}
+            </div>
+          )}
           <h1 className="text text-center flex items-center cursor-pointer">
             {tab.label}
           </h1>
@@ -49,7 +54,7 @@ export function CustomTabWithSelectAll({
                 className={`fi fi-br-check text-[#358E0B] flex items-center text-[12px]`}
               ></i>
             </Tooltip>
-            <Tooltip title="De select All">
+            <Tooltip title="Deselect All">
               <i
                 onClick={() => handleClick(false, tab.id)}
                 className={`fi fi-br-cross text-[#FF0808] flex items-center text-[12px]`}

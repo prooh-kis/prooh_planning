@@ -260,7 +260,7 @@ export const SpecialDay = ({
                           : "text-[#CC1C1C]"
                       } text-[14px] leading-[21.79px] tracking-[-0.02em]`}
                     >
-                      {key === "per slot price" ||
+                      {key === "Price Per Slot" ||
                       key === "Total Budget" ||
                       key === "CPM"
                         ? "\u20B9 "
