@@ -9,7 +9,7 @@ export const DropdownInput = ({
   options,
 }: any) => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedOption(Number(event.target.value));
+    setSelectedOption(event.target.value);
   };
 
   return (

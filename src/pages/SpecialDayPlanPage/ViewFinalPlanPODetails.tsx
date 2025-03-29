@@ -351,6 +351,7 @@ export const ViewFinalPlanPODetails = ({
 
   const handleApplyCoupon = useCallback(
     (couponId: any) => {
+      console.log(couponId)
       if (poTableData?.couponId) {
         message.warning("Discount coupon applied...");
       }
