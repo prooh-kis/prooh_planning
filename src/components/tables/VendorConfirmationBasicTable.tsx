@@ -51,7 +51,7 @@ export const VendorConfirmationBasicTable = ({
               <h1 className="text-[14px]">Discount</h1>
             </div>
             <div className="border py-1 px-4 rounded-br truncate">
-              <h1 className="text-[14px]">&#8377; {vendorConfirmationData?.totalDiscount.toFixed(2)}</h1>
+              <h1 className="text-[14px]">&#8377; {vendorConfirmationData?.totalDiscount?.toFixed(2)}</h1>
             </div>
           </div>
           <div className="grid grid-cols-2">
@@ -60,7 +60,7 @@ export const VendorConfirmationBasicTable = ({
             </div>
             <div className="border py-1 px-4 truncate">
               <h1 className="text-[14px] text-[#5FAC90] font-semibold">
-                &#8377; {Number(vendorConfirmationData?.finalCampaignBudget || vendorConfirmationData?.totalCampaignBudget).toFixed(2)}
+                &#8377; {Number(vendorConfirmationData?.finalCampaignBudget || vendorConfirmationData?.totalCampaignBudget)?.toFixed(2)}
               </h1>
             </div>
           </div>
