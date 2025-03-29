@@ -16,18 +16,18 @@ export const OpenBudgetSegment = ({ totalCost, selectedBudget, selectedSOV, setS
             }}
           />
           <RadioInput
-            title="2/18"
-            value={"2"}
-            isChecked={selectedSOV === 2 ? true : false}
+            title="3/18"
+            value={"3"}
+            isChecked={selectedSOV === 3 ? true : false}
             onChange={() => {
               setSelectedSOV(3);
               setSelectedBudget(`${Number(0.01 * totalCost).toFixed(0)}`);
             }}
           />
           <RadioInput
-            title="3/18"
-            value={"3"}
-            isChecked={selectedSOV === 3 ? true : false}
+            title="6/18"
+            value={"6"}
+            isChecked={selectedSOV === 6 ? true : false}
             onChange={() => {
               setSelectedSOV(6);
               setSelectedBudget(`${Number(0.01 * totalCost).toFixed(0)}`);
