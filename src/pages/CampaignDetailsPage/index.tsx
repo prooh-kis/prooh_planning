@@ -48,6 +48,7 @@ import { ScreenListMonitoringView } from "../../components/molecules/ScreenListM
 import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
 import { GET_CAMPAIGN_DASHBOARD_DATA_RESET } from "../../constants/screenConstants";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
+import { formatNumber } from "../../utils/formatValue";
 
 export const CampaignDetailsPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -138,7 +139,7 @@ export const CampaignDetailsPage: React.FC = () => {
     screens?.length > 0
       ? campaignCreated?.campaigns
           ?.filter((camp: any) =>
-            campaignCreated?.screens?.includes(camp.screenId.toString())
+            campaignCreated?.screenIds?.includes(camp.screenId.toString())
           )
           ?.filter((camp: any) =>
             camp?.screenName
@@ -174,7 +175,7 @@ export const CampaignDetailsPage: React.FC = () => {
     if (campaignCreated) {
       dispatch(
         getCampaignCreatedScreensDetailsAction({
-          screenIds: campaignCreated.screens,
+          screenIds: campaignCreated.screenIds,
         })
       );
     }
@@ -319,28 +320,39 @@ export const CampaignDetailsPage: React.FC = () => {
     return colors[index];
   };
 
-  function MyDiv({ left, right }: any) {
+  function MyDiv({ left, right, paisa = false }: any) {
     return (
       <div className="flex ">
         <h1 className="text-left text-[14px] basis-1/2 text-[#6F7F8E] font-medium ">
           {left}
         </h1>
-        <h1 className="text-left text-[14px] basis-1/2 text-[#0E212E]">
-          {right}
-        </h1>
+        {paisa ? (
+          <h1 className="text-left text-[14px] basis-1/2 text-[#0E212E]">
+            &#8377; {right}
+          </h1>
+        ) : (
+          <h1 className="text-left text-[14px] basis-1/2 text-[#0E212E]">
+            {right}
+          </h1>
+        )}
+        
       </div>
     );
   }
-  console.log("ddddddddd : ", JSON.stringify(campaignCreated));
 
   const basicDetails = [
-    { label: "Campaign Name", value: campaignCreated?.campaignName },
-    { label: "Client Name", value: campaignCreated?.client },
+    { label: "Campaign Name", value: campaignCreated?.name },
+    { label: "Client Name", value: campaignCreated?.clientName },
     { label: "Brand Name", value: campaignCreated?.brandName },
     { label: "Campaign Type", value: campaignCreated?.campaignType },
-    { label: "Trigger", value: "None" },
-    { label: "Plan Created by", value: "Vishal kumar" },
-    { label: "Plan Approved by", value: "Kishan Kumar" },
+    { label: "Trigger", value: campaignCreated?.triggers?.weatherTriggers?.length > 0
+      ? "Weather Trigger"
+      : campaignCreated?.triggers?.sportsTriggers?.length > 0
+      ? "Sports Trigger"
+      : campaignCreated?.triggers?.vacantSlots?.length > 0 ? 
+      "Fill Vacancy Trigger" : "None" },
+    { label: "Plan Created by", value: campaignCreated?.campaignPlannerName },
+    { label: "Plan Approved by", value: campaignCreated?.campaignManagerEmail?.split("@")[0] },
   ];
 
   const durationDetails = [
@@ -362,44 +374,57 @@ export const CampaignDetailsPage: React.FC = () => {
   const performanceMatrix = [
     {
       label: "Total Cities",
-      value: 2,
+      value: campaignCreated?.cities?.length,
     },
     {
       label: "Total TouchPoints",
-      value: 5,
+      value: campaignCreated?.touchPoints?.length,
     },
-    { label: "Total Screens", value: 43 },
+    { label: "Total Screens", value: campaignCreated?.screenIds?.length},
     {
       label: "Audience Impression",
-      value: "34K",
+      value: formatNumber(campaignCreated?.totalImpression),
     },
     {
       label: "Reach",
-      value: "34K",
+      value: formatNumber(campaignCreated?.totalReach),
     },
     {
       label: "Tg%",
-      value: "56%",
+      value: `${Number((campaignCreated?.totalImpression / campaignCreated?.totalReach)).toFixed(2)}  %`,
     },
     {
       label: "CPM",
-      value: `Rs.54`,
+      value: `${formatNumber(Number(campaignCreated?.totalCpm).toFixed(2))}`,
+      paisa: true,
     },
   ];
 
   const campaignCost = [
     {
       label: "Plan Cost",
-      value: "1.5 L",
+      value: formatNumber(campaignCreated?.totalCampaignBudget.toFixed(2)),
+      paisa: true,
     },
     {
       label: "Trigger Cost",
-      value: "34K",
+      value: campaignCreated?.triggers?.weatherTriggers?.length > 0
+      ? campaignCreated?.triggers?.weatherTriggers?.[0]?.budget.toFixed(2)
+      : campaignCreated?.triggers?.sportsTriggers?.length > 0
+      ? campaignCreated?.triggers?.sportsTriggers?.[0]?.budget.toFixed(2)
+      : campaignCreated?.triggers?.vacantSlots?.length > 0 ? 
+      campaignCreated?.triggers?.vacantSlots?.[0]?.budget.toFixed(2) : "None" ,
+      paisa: true,
     },
-    { label: "Total Discount", value: `24 K` },
+    {
+      label: "Total Discount",
+      value: formatNumber(campaignCreated?.totalDiscount.toFixed(2)),
+      paisa: true,
+    },
     {
       label: "Total Cost",
-      value: "1.6 L",
+      value: formatNumber(campaignCreated?.finalCampaignBudget !== 0 ? campaignCreated?.finalCampaignBudget.toFixed(2) : campaignCreated?.totalCampaignBudget.toFixed(2)),
+      paisa: true
     },
   ];
 
@@ -454,7 +479,7 @@ export const CampaignDetailsPage: React.FC = () => {
                 </div>
                 <div className="flex flex-col gap-1">
                   <h1 className="text-[18px] font-semibold p-0 m-0">
-                    {campaignCreated?.campaignName?.toUpperCase() ||
+                    {campaignCreated?.name?.toUpperCase() ||
                       "Campaign Name"}
                   </h1>
                   <h1 className="text-[12px]">
@@ -480,10 +505,10 @@ export const CampaignDetailsPage: React.FC = () => {
                         }
                       );
                     }}
-                    className="h-8 flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
+                    className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
                   >
                     <i className="fi fi-rr-file-edit"></i>
-                    <h1 className="">Edit Plan</h1>
+                    <h1 className="truncate">Edit Plan</h1>
                   </div>
                   <div
                     onClick={() =>
@@ -491,17 +516,17 @@ export const CampaignDetailsPage: React.FC = () => {
                         !openCreateCampaignEndDateChangePopup
                       )
                     }
-                    className=" h-8 flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
+                    className="truncate h-8 flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
                   >
                     <i className="fi fi-rs-calendar-lines-pen"></i>
-                    <h1 className="">Edit Duration</h1>
+                    <h1 className=" truncate">Edit Duration</h1>
                   </div>
                   <div
                     onClick={() => openCampaignDashboard()}
-                    className="h-8 flex gap-2 text-[14px] font-medium text-[#129BFF] cursor-pointer border border-[#129BFF] rounded-md py-1 px-4"
+                    className="h-8 truncate flex gap-2 text-[14px] font-medium text-[#129BFF] cursor-pointer border border-[#129BFF] rounded-md py-1 px-4"
                   >
                     <i className="fi fi-rs-dashboard"></i>
-                    <h1 className="">View Analytics</h1>
+                    <h1 className=" truncate">View Analytics</h1>
                   </div>
                 </div>
               )}
@@ -582,6 +607,7 @@ export const CampaignDetailsPage: React.FC = () => {
                           key={index}
                           left={data.label}
                           right={data.value}
+                          paisa={data.paisa}
                         />
                       ))}
                     </div>
@@ -591,6 +617,7 @@ export const CampaignDetailsPage: React.FC = () => {
                     <div className="mt-2 flex flex-col gap-1">
                       {campaignCost?.map((data, index) => (
                         <MyDiv
+                          paisa={data.paisa}
                           key={index}
                           left={data.label}
                           right={data.value}
@@ -674,7 +701,7 @@ export const CampaignDetailsPage: React.FC = () => {
             <h1 className="text-[16px] font-semibold px-1 py-2">
               Screens Play{" "}
               <span className="text-[14px]">
-                ({campaignCreated?.screens?.length || 0})
+                ({campaignCreated?.screenIds?.length || 0})
               </span>
             </h1>
             <div className="flex flex-col px-1 justify-center">
