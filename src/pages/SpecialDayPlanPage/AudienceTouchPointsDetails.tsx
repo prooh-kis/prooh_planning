@@ -143,7 +143,8 @@ export const AudienceTouchPointsDetails = ({
     }
 
     if (errorAddDetails) {
-      message.error("Error in saving campaigns details");
+      message.error("Error in saving campaigns details, please check your requests...");
+      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
     }
 
     dispatch(

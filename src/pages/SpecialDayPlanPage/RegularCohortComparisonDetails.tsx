@@ -49,11 +49,16 @@ export const RegularCohortComparisonDetails = ({
   useEffect(() => {
     if (!campaignDetails) return;
     if (errorAddDetails) {
-      message.error("Error in add campaign details...")
+      message.error("Error in add campaign details...");
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
     }
     if (errorPriceData) {
       message.error("Error in getting impression wise data...")
     }
+    setSelectedBuyingOption(campaignDetails?.selectedType);
+    setSelecting(campaignDetails?.selectedType);
     dispatch(
       getRegularVsCohortPriceData({
         id: campaignId,
@@ -150,7 +155,7 @@ export const RegularCohortComparisonDetails = ({
                       touchPointData={priceData?.[type]?.touchPointData}
                     />
                   )}
-                  {priceData?.[type]?.tableData?.impressionPerDay  || !priceData?.[type]?.tableData?.totalSlotsPerDay && (
+                  {priceData?.[type]?.tableData?.impressionPerDay === 0  || !priceData?.[type]?.tableData?.totalSlotsPerDay && (
                     <div className="flex justify-center items-center py-1">
                       <h1 className="text-[#EF4444] text-[12px] font-semibold">You are getting zero (0) impressions per day after your filter selection. Please update the filters and try again...</h1>
                     </div>

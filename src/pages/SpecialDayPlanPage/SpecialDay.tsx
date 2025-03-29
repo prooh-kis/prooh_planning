@@ -111,7 +111,6 @@ export const SpecialDay = ({
   }, [dispatch]);
 
   const handleSaveData = (data: any) => {
-    // console.log("all datat :", data);
     dispatch(
       addDetailsToCreateCampaign({
         ...data,
