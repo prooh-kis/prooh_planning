@@ -61,6 +61,7 @@ export const VendorConfirmationDetails = ({
   const [isDisabled, setIsDisabled] = useState<any>(true);
 
   const [selectedCampaignIds, setSelectedCampaignIds] = useState<any>([]);
+  const [skipEmailConfirmation, setSkipEmailConfirmation] = useState<any>(false);
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -293,14 +294,15 @@ export const VendorConfirmationDetails = ({
         pageName: "Vendor Confirmation Page",
       })
     );
-  }, [campaignDetails, campaignId, dispatch]);
+  }, [campaignDetails, campaignId, dispatch, errorAddDetails, errorStatusTableData, errorVendorConfirmationData]);
 
   useEffect(() => {
     if (successAddDetails) {
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
-      setCurrentStep(step+1);
+      setCurrentStep(step);
+      setIsDisabled(false);
     }
   },[successAddDetails, step, setCurrentStep, dispatch]);
 
@@ -360,6 +362,15 @@ export const VendorConfirmationDetails = ({
     Connected: statusTableData?.length || 0,
     "Third Party": 0,
   };
+
+  const skipFunction = () => {
+    setIsDisabled(false);
+    dispatch(
+      getVendorConfirmationStatusTableDetails({
+        id: campaignId,
+      })
+    );
+  }
 
   return (
     <div className="w-full">
@@ -489,6 +500,11 @@ export const VendorConfirmationDetails = ({
                     files={files}
                     handleAddNewFile={handleAddNewFile}
                     removeImage={removeImage}
+                    setSkipEmailConfirmation={(e: any) => {
+                      setSkipEmailConfirmation(e);
+                    }}
+                    skipFunction={skipFunction}
+                    skipEmailConfirmation={skipEmailConfirmation}
                   />
                 </div>
               </div>
@@ -500,7 +516,7 @@ export const VendorConfirmationDetails = ({
             onDoubleClick={() => setIsDisabled(!isDisabled)}
           >
             <Footer
-              mainTitle="See Dashboard"
+              mainTitle={new Date().getTime() < new Date(campaignDetails?.startDate)?.getTime() ? "Confirm" : "See Analytics"}
               handleBack={() => {
                 setCurrentStep(step - 1);
               }}

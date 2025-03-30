@@ -49,6 +49,9 @@ import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
 import { GET_CAMPAIGN_DASHBOARD_DATA_RESET } from "../../constants/screenConstants";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 import { formatNumber } from "../../utils/formatValue";
+import { getRegularVsCohortPriceData, getScreenSummaryPlanTableData } from "../../actions/screenAction";
+import { generateCampaignSummaryPdfFromJSON } from "../../utils/generatePdf";
+import { generatePPT } from "../../utils/generatePPT";
 
 export const CampaignDetailsPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -121,6 +124,15 @@ export const CampaignDetailsPage: React.FC = () => {
     success: successChange,
   } = changeCampaignCreativeEndDate;
 
+  const screenSummaryPlanTableDataGet = useSelector(
+    (state: any) => state.screenSummaryPlanTableDataGet
+  );
+  const {
+    loading: loadingScreenSummaryPlanTable,
+    error: errorScreenSummaryPlanTable,
+    data: screenSummaryPlanTableData,
+  } = screenSummaryPlanTableDataGet;
+
   const handleEditAllSubCampaigns = (
     campaignCreationId: string,
     endDate: any
@@ -173,6 +185,20 @@ export const CampaignDetailsPage: React.FC = () => {
 
   useEffect(() => {
     if (campaignCreated) {
+      dispatch(
+        getScreenSummaryPlanTableData({
+          id: campaignCreated?._id,
+          screenIds: campaignCreated?.screenIds,
+        })
+      );
+
+      dispatch(getRegularVsCohortPriceData({
+        id: campaignCreated?._id,
+        screenIds: campaignCreated?.screenIds,
+        cohorts: campaignCreated?.cohorts,
+        gender: campaignCreated?.gender,
+        duration: campaignCreated?.duration,
+      }));
       dispatch(
         getCampaignCreatedScreensDetailsAction({
           screenIds: campaignCreated.screenIds,
@@ -294,6 +320,65 @@ export const CampaignDetailsPage: React.FC = () => {
 
   const openCampaignDashboard = () => {
     navigate(`/campaignDashboard/${campaignId}`);
+  };
+
+  const countScreensByResolutionAndCity = (data: any) => {
+    const result: any = {};
+
+    data.forEach((screen: any) => {
+      const { city } = screen.location;
+      const { screenResolution } = screen;
+      if (!result[city]) {
+        result[city] = {};
+      }
+      if (!result[city][screenResolution]) {
+        result[city][screenResolution] = 0;
+      }
+      result[city][screenResolution]++;
+    });
+
+    return result;
+  };
+
+  const downloadSummary = () => {
+
+    let pdfDownload: any = {
+      "summary" : {
+        heading: "CAMPAIGN SUMMARY",
+        pdfData: {
+          approach: [campaignCreated],
+          costSummary: [screenSummaryPlanTableData],
+          creativeRatio: countScreensByResolutionAndCity(campaignCreated?.screenWiseSlotDetails),
+        },
+        fileName: `${campaignCreated?.brandName} Campaign Summary`,
+      },
+      "screen-pictures": {
+        heading: "SCREEN PICTURES",
+        pdfData: campaignCreated?.screenWiseSlotDetails?.filter(
+            (s: any) =>
+              campaignCreated?.screenIds.includes(s.screenId)
+          )
+          ?.map((screen: any) => {
+            return screen;
+          }),
+        fileName: `${campaignCreated?.brandName} Campaign Screen Pictures`,
+      }
+    };
+
+    generateCampaignSummaryPdfFromJSON({
+      preview: false,
+      download: true,
+      jsonData: pdfDownload["summary"].pdfData,
+      fileName: pdfDownload["summary"].fileName,
+      heading: pdfDownload["summary"].heading,
+    });
+    message.success("Downloading Summary...")
+    generatePPT({
+      download: true,
+      data: pdfDownload["screen-pictures"].pdfData,
+      fileName: pdfDownload["screen-pictures"].fileName,
+    });
+ 
   };
 
   const getBgColors = (index: any) => {
@@ -530,7 +615,7 @@ export const CampaignDetailsPage: React.FC = () => {
                 </div>
               )}
             </div>
-            <div className="flex justify-between px-4 mt-2 items-center">
+            <div className="flex justify-between px-4 mt-4 items-center">
               <TabWithoutIcon
                 currentTab={currentTab1}
                 setCurrentTab={setCurrentTab1}
@@ -553,13 +638,13 @@ export const CampaignDetailsPage: React.FC = () => {
             </div>
           </div>
           {currentTab1 === "1" ? (
-            <div className="w-full h-[65vh] border border-[#D3D3D350] rounded-[18px] p-4 bg-white mt-2">
+            <div className="w-full border border-[#D3D3D350] rounded-[18px] p-4 bg-white mt-2">
               <div className="flex justify-between border-b pb-2">
                 <h1 className="text-[#092A41] text-[16px] font-semibold mt-2 px-1">
                   Your Plan Details
                 </h1>{" "}
                 <div
-                  onClick={() => openCampaignDashboard()}
+                  onClick={() => downloadSummary()}
                   className="h-8 flex items-center gap-2 text-[14px] font-medium text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
                 >
                   <i className="fi-rr-file-download"></i>

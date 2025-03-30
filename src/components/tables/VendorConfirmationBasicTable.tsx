@@ -51,7 +51,7 @@ export const VendorConfirmationBasicTable = ({
               <h1 className="text-[14px]">Discount</h1>
             </div>
             <div className="border py-1 px-4 rounded-br truncate">
-              <h1 className="text-[14px]">&#8377; {vendorConfirmationData?.totalDiscount?.toFixed(2)}</h1>
+              <h1 className="text-[14px]">{(vendorConfirmationData?.totalDiscount * 100 /vendorConfirmationData?.totalCampaignBudget)?.toFixed(2)} %</h1>
             </div>
           </div>
           <div className="grid grid-cols-2">

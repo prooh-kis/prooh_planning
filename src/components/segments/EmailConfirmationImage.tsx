@@ -16,7 +16,7 @@ export const EmailConfirmationImage = ({skipEmailConfirmation, setSkipEmailConfi
       <div className="flex flex-col">
         <div className="flex justify-between items-center">
           <h1 className="font-semibold text-lg">
-            3.Upload email approval screenshot
+            Upload email approval screenshot
           </h1>
           <div className="flex items-center">
             <FileUploadButton
