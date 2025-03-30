@@ -94,8 +94,8 @@ export const DashboardPieChart: React.FC<DoughnutChartProps> = ({
       <div className="relative">
         <Doughnut data={chartData} options={options} />
       </div>
-      <div className="w-full flex items-center justify-center mt-2 text-[#0E212E] text-[16px]">
-        <h1 className="text-[14px]">{type}</h1>
+      <div className="relative w-full flex items-center justify-center">
+        <h1 className="text-[12px]">{type}</h1>
         <h1 className="text-[14px] ml-2">{total}</h1>
       </div>
     </div>

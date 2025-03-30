@@ -207,7 +207,7 @@ export const CampaignDashboard = ({
   };
 
   return (
-    <div className="w-full h-full pt-10 flex flex-col gap-2 bg-[#D3D3D320]">
+    <div className="w-full h-full pt-10 flex flex-col gap-2 bg-[#D3D3D320] font-custom">
       <BillingAndInvoice
         open={openInvoice}
         onClose={() => {
@@ -392,28 +392,40 @@ export const CampaignDashboard = ({
                     <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
                   </Tooltip>
                 </div>
-                <div className="grid grid-cols-3 gap-2 ">
-                  <div className="col-span-1">
-                    <DashboardPieChart
-                      type="City Wise"
-                      data={screenLevelData?.audiencePerformanceData?.cityWise}
-                    />
+                <div className="">
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="col-span-1">
+                      <DashboardPieChart
+                        type="City Wise"
+                        data={screenLevelData?.audiencePerformanceData?.cityWise}
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <DashboardPieChart
+                        type="Touchpoint Wise"
+                        data={
+                          screenLevelData?.audiencePerformanceData?.touchPointWise
+                        }
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <DashboardPieChart
+                        type="Screen Cost"
+                        data={getCostDataScreenWise(
+                          screenLevelData?.costConsumedData?.screenWise || {}
+                        )}
+                      />
+                    </div>
                   </div>
-                  <div className="col-span-1">
-                    <DashboardPieChart
-                      type="Touchpoint Wise"
-                      data={
-                        screenLevelData?.audiencePerformanceData?.touchPointWise
-                      }
-                    />
-                  </div>
-                  <div className="col-span-1">
-                    <DashboardPieChart
-                      type="Screen Cost"
-                      data={getCostDataScreenWise(
-                        screenLevelData?.costConsumedData?.screenWise || {}
-                      )}
-                    />
+                  <div className="flex gap-4 justify-around pt-4">
+                    <div className="flex items-center gap-2">
+                      <div className="h-3 w-3 rounded bg-[#FF6384]"/>
+                      <h1 className="text-[14px] font-semibold">Promised</h1> 
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-3 w-3 rounded bg-[#36A2EB]"/>
+                      <h1 className="text-[14px] font-semibold">Delivered</h1> 
+                    </div>
                   </div>
                 </div>
               </div>
