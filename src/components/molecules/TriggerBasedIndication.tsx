@@ -17,7 +17,6 @@ const triggerText = [
 ];
 
 export const TriggerBasedIndication = ({ triggerData, triggerType }: any) => {
-  console.log("triggerData", triggerData);
   return (
     <div className="">
       <h1 className="py-2">

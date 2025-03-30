@@ -10,13 +10,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 export function LandingPageMapStats({ data }: any) {
   const [year, setYear] = useState<any>("All");
 
-    // Extract labels (cities) and values (audience numbers) from the object
-    const labels = ["Small", "Big", "Spectacular"]
-    const values = [3, 4, 9]
-  
-    const totalValue = [3,4,9].reduce((sum, value) => sum + value, 0);
-    // console.log("data : ", data);
-  
     // Define colors for each segment
     const backgroundColors = [
       "#FF6384",
@@ -29,11 +22,29 @@ export function LandingPageMapStats({ data }: any) {
       "#76D2D2",
     ];
   
+    function calculateData(arr: any) {
+      const counts = arr.reduce((acc: any, item: any) => {
+          const key = item.includes('Small') ? 'Small' : item.includes('Large') ? 'Large' : 'Spectacular';
+          acc[key] = (acc[key] || 0) + 1;
+          return acc;
+      }, {});
+  
+      return counts;
+    }
+  
+
+      // Extract labels (cities) and values (audience numbers) from the object
+      const labels = Object.keys(calculateData(data?.screens?.map((screen: any) => screen?.screenType)))
+      const values = Object.values(calculateData(data?.screens?.map((screen: any) => screen?.screenType)))
+    
+      const totalValue: any = values?.reduce((sum: any, value: any) => sum + value, 0);
+      // console.log("data : ", data);
+    
     const chartData = {
       // ["Small", "Big", "Spectacular"],
       datasets: [
         {
-          data: [3, 4, 9],
+          data: Object.values(calculateData(data?.screens?.map((screen: any) => screen?.screenType))),
           backgroundColor: backgroundColors.slice(0, labels.length),
           hoverBackgroundColor: backgroundColors
             .slice(0, labels.length)
@@ -41,6 +52,7 @@ export function LandingPageMapStats({ data }: any) {
           borderWidth: 1,
           spacing: 1, // Adds spacing between each segment
           datalabels: {
+            display: false, // Hides labels inside the chart
             color: "#fff",
             anchor: "center" as const,
             align: "center" as const,
@@ -67,8 +79,9 @@ export function LandingPageMapStats({ data }: any) {
           callbacks: {
             label: function (tooltipItem: any) {
               const label = labels[tooltipItem.dataIndex];
-              const value = [3,4,9][tooltipItem.dataIndex];
-              return `${label}: ${formatNumber(value.toFixed(0))}`;
+              const value: any = values[tooltipItem.dataIndex];
+              // return `${label}: ${formatNumber(value.toFixed(0))}`;
+              return [`${label}:`, `${formatNumber(value.toFixed(0))}`];
             },
           },
         },
@@ -112,7 +125,7 @@ export function LandingPageMapStats({ data }: any) {
         ].map((item, index) => (
           <div
             key={index}
-            className={`truncate h-40 lg:py-6 py-4 px-8 col-span-1 border border-x-2 border-white flex flex-col items-center text-[#20272C] justify-center bg-[#F8FCFF] rounded-[12px]`}
+            className={`h-40 lg:py-6 py-4 px-8 col-span-1 border border-x-2 border-white flex flex-col items-center text-[#20272C] justify-center bg-[#F8FCFF] rounded-[12px]`}
           >
             {index === 5 ? (
               <div className="">

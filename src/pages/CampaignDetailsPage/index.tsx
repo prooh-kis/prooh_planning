@@ -494,10 +494,9 @@ export const CampaignDetailsPage: React.FC = () => {
                 <div className="flex h-auto gap-1">
                   <div
                     onClick={() => {
+                      const pageName = getCampaignPageNameFromCampaignType(campaignCreated?.campaignType);
                       navigate(
-                        `/${getCampaignPageNameFromCampaignType(
-                          campaignCreated?.campaignType
-                        )}/${campaignCreated._id}/edit`,
+                        `/${pageName}/${campaignCreated._id}/edit`,
                         {
                           state: {
                             from: EDIT_CAMPAIGN,

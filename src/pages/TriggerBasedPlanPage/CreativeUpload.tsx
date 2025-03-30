@@ -657,7 +657,7 @@ export const CreativeUpload = ({
         </h2>
 
         {currentCity && (
-          <div>
+          <div className="pb-16">
             <div className="flex gap-4">
               <TabWithoutIcon
                 tabData={citiesCreative}

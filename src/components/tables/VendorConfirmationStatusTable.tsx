@@ -103,32 +103,32 @@ export const VendorConfirmationStatusTable = ({
               <tr
                 key={i}
                 className={`border w-full grid grid-cols-12 rounded-b
-              ${status.status === "PleaRequestBudgetSent" && "bg-purple-50"}
-              ${status.status === "PleaRequestBudgetAccepted" && "bg-purple-50"}
-              ${status.status === "PleaRequestBudgetRejected" && "bg-purple-50"}
+              ${status.status === "PleaRequestBudgetSent" && "bg-[#F59E0B10]"}
+              ${status.status === "PleaRequestBudgetAccepted" && "bg-[#22C55E10]"}
+              ${status.status === "PleaRequestBudgetRejected" && "bg-[#EF444410]"}
               ${
                 status.status === "PleaRequestScreenApprovalSent" &&
-                "bg-blue-50"
+                "bg-[#F59E0B10]"
               }
               ${
                 status.status === "PleaRequestScreenApprovalAccepted" &&
-                "bg-blue-50"
+              "bg-[#22C55E10]"
               }
               ${
                 status.status === "PleaRequestScreenApprovalRejected" &&
-                "bg-blue-50"
+                "bg-[#EF444410]"
               }
               ${
                 status.status === "PleaRequestFinalApprovalSent" &&
-                "bg-violet-100"
+                "bg-[#F59E0B10]"
               }
               ${
                 status.status === "PleaRequestFinalApprovalAccepted" &&
-                "bg-violet-100"
+                "bg-[#22C55E10]"
               }
               ${
                 status.status === "PleaRequestFinalApprovalRejected" &&
-                "bg-violet-100"
+                "bg-[#EF444410]"
               }
             `}
               >
@@ -196,26 +196,26 @@ export const VendorConfirmationStatusTable = ({
                     <h1
                       className={`text-[14px] truncate ${
                         status.status === "PleaRequestBudgetSent"
-                          ? "text-[#129BFF]"
+                          ? "text-[#F59E0B]"
                           : status.status === "PleaRequestBudgetAccepted"
-                          ? "text-[#129BFF]"
+                          ? "text-[#22C55E]"
                           : status.status === "PleaRequestBudgetRejected"
-                          ? "text-[#129BFF]"
+                          ? "text-[#EF4444]"
                           : status.status === "PleaRequestScreenApprovalSent"
-                          ? "text-[#129BFF]"
+                          ? "text-[#F59E0B]"
                           : status.status === "PleaRequestScreenApprovalAccepted"
-                          ? "text-[#129BFF]"
+                          ? "text-[#22C55E]"
                           : status.status === "PleaRequestScreenApprovalRejected"
-                          ? "text-[#129BFF]"
+                          ? "text-[#EF4444]"
                           : status.status === "PleaRequestFinalApprovalSent"
-                          ? "text-[#129BFF]"
+                          ? "text-[#F59E0B]"
                           : status.status === "PleaRequestFinalApprovalAccepted"
-                          ? "text-[#129BFF]"
+                          ? "text-[#22C55E]"
                           : status.status === "PleaRequestFinalApprovalRejected"
-                          ? "text-[#129BFF]"
+                          ? "text-[#EF4444]"
                           : status.status === "Pending"
-                          ? "text-[#129BFF]"
-                          : ""
+                          ? "text-[#22C55E]"
+                          : "text-[#3B82F6"
                       }`}
                     >
                       {status.status === "PleaRequestBudgetSent"

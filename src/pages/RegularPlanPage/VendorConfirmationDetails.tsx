@@ -398,7 +398,7 @@ export const VendorConfirmationDetails = ({
             <div className="flex justify-between">
               <div className="flex gap-8">
                 <div className="flex">
-                  <h1 className="text-[14px] text-[#5FAC90]">
+                  <h1 className="text-[14px] text-[#22C55E]">
                     Approved (
                     {myData?.Approved?.Connected +
                       myData?.Approved?.["Third Party"]}
@@ -406,7 +406,7 @@ export const VendorConfirmationDetails = ({
                   </h1>
                 </div>
                 <div className="flex">
-                  <h1 className="text-[14px] text-[#F9B34B]">
+                  <h1 className="text-[14px] text-[#F59E0B]">
                     Pending (
                     {myData?.Pending?.Connected +
                       myData?.Pending?.["Third Party"]}
@@ -414,7 +414,7 @@ export const VendorConfirmationDetails = ({
                   </h1>
                 </div>
                 <div className="flex">
-                  <h1 className="text-[14px] text-[#FF0808]">
+                  <h1 className="text-[14px] text-[#EF4444]">
                     Rejected (
                     {myData?.Rejected?.Connected +
                       myData?.Rejected?.["Third Party"]}
@@ -455,7 +455,7 @@ export const VendorConfirmationDetails = ({
                       CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
                   ).length,
                 ]}
-                colors={["#FF0808", "#5FAC90", "#F9B34B"]}
+                colors={["#EF4444", "#22C55E", "#EF4444"]}
                 totalValue={statusTableData?.length}
               />
             </div>

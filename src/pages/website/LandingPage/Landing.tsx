@@ -40,7 +40,9 @@ export const Landing: React.FC = () => {
     <div className="w-screen h-full bg-white">
       <Section1 />
       <FloatingBrandIcon />
-      <FlowDiagram />
+      <div className="h-[480px] shadow-t overflow-auto no-scrollbar">
+        <FlowDiagram />
+      </div>
       <OurAdvertisingJourney data={data} />
       <HowItsWork />
       <ProohCreator />

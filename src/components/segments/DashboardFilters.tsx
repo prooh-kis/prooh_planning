@@ -73,6 +73,7 @@ export const DashboardFilters = ({
           border="border-gray-100"
           height="h-8"
           width="w-full"
+          selectedOption={""}
           placeHolder="----Select City----"
           setSelectedOption={handleSelectCity}
           options={cityList?.map((city: string) => {
@@ -88,6 +89,7 @@ export const DashboardFilters = ({
           border="border-gray-100"
           height="h-8"
           width="w-full"
+          selectedOption={""}
           placeHolder="----Select TouchPoint-----"
           setSelectedOption={handleSelectTouchPoint}
           options={touchPointList?.map((tp: string) => {

@@ -287,7 +287,6 @@ export const CreativeUpload = ({
 
   const isTriggerAvailable = () => {
     const triggers = campaignDetails.triggers;
-    console.log("triggers :", triggers);
     return (
       triggers?.weatherTriggers?.length > 0 ||
       triggers?.sportsTriggers?.length > 0 ||
@@ -652,7 +651,7 @@ export const CreativeUpload = ({
         </h2>
 
         {currentCity && (
-          <div>
+          <div className="pb-16">
             <div className="flex gap-4">
               <TabWithoutIcon
                 tabData={citiesCreative}

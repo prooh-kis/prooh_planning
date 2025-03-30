@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
+import {
+  // AdvanceFiltersDetails,
+  // AudienceTouchPointsDetails,
+  // RegularCohortComparisonDetails,
+  // ScreenSummaryDetails,
+  // ViewFinalPlanPODetails,
+  // VendorConfirmationDetails,
+} from "../../components/planner";
 import { SpecialDay } from "./SpecialDay";
 import { AudienceTouchPointsDetails } from "./AudienceTouchPointsDetails";
 import { AdvanceFiltersDetails } from "./AdvancedFiltersDetails";
@@ -18,6 +26,7 @@ import {
   CURRENT_STEP,
 } from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+// import { SpecialDay } from "../../components/planner/SpecialDay";
 import { specialDayPlanData } from "../../data";
 import { CAMPAIGN_PLAN_TYPE_TOPICAL, EDIT_CAMPAIGN, VIEW_CAMPAIGN } from "../../constants/campaignConstants";
 import { CreativeUpload } from "../../pages/RegularPlanPage/CreativeUpload";
