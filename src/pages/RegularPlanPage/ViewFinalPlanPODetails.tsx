@@ -635,6 +635,7 @@ export const ViewFinalPlanPODetails = ({
 
               <Divider />
               <EmailConfirmationImage
+                page="VendorApproval"
                 files={confirmationImageFiles}
                 handleAddNewFile={handleAddNewFile}
                 removeImage={removeImage}

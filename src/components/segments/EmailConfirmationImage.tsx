@@ -8,15 +8,16 @@ interface EmailConfirmationImageProps {
   setSkipEmailConfirmation?: any;
   skipEmailConfirmation?: any;
   skipFunction?: any;
+  page?: any;
 }
 
-export const EmailConfirmationImage = ({skipEmailConfirmation, setSkipEmailConfirmation, files, handleAddNewFile, removeImage, skipFunction}: EmailConfirmationImageProps) => {
+export const EmailConfirmationImage = ({page, skipEmailConfirmation, setSkipEmailConfirmation, files, handleAddNewFile, removeImage, skipFunction}: EmailConfirmationImageProps) => {
   return (
     <div className="p-2 h-auto">
       <div className="flex flex-col">
         <div className="flex justify-between items-center">
           <h1 className="font-semibold text-lg">
-            Upload email approval screenshot
+            {page === "VendorApproval" && "3."}Upload email approval screenshot
           </h1>
           <div className="flex items-center">
             <FileUploadButton

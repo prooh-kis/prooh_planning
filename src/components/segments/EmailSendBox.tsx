@@ -31,7 +31,7 @@ export const EmailSendBox = ({
   return (
     <div className="p-2">
       <div className="flex flex-col">
-        <h1 className="font-semibold text-lg">Share this plan</h1>
+        <h1 className="font-semibold text-lg">{page === "VendorApproval" && "2."}Share this plan</h1>
         <div className="grid grid-cols-6 gap-2 pt-4">
           <div className="col-span-4">
             <PrimaryInput
