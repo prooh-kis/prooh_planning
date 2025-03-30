@@ -119,7 +119,6 @@ export const CreativeUpload = ({
     dispatch(getCreativesMediaAction({ userId: userInfo?._id }));
   }, [dispatch, campaignId, campaignDetails]);
 
-
   const mergeCreativeWithScreenData = (
     creatives: TransformedData,
     screenData: TransformedData
@@ -454,7 +453,13 @@ export const CreativeUpload = ({
     const isTriggerBasedCampaign = pathname
       .split("/")
       .includes("triggerbasedplan");
+
     const triggerAvailable = isTriggerAvailable();
+
+    if (isTriggerBasedCampaign) {
+      setCreativeType("Trigger");
+      setViewCreativeType("3");
+    }
 
     setPlayCreativeTime(
       isTriggerBasedCampaign

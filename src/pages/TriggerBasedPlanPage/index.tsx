@@ -1,17 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
-import {
-  CreativeUploadDetails,
-  // EnterCampaignBasicDetails,
-  // ScreenSummaryDetails,
-  // ViewFinalPlanPODetails,
-  // VendorConfirmationDetails,
-  // AdvanceFiltersDetails,
-  // TriggerDetails,
-  // AudienceTouchPointsDetails,
-  // RegularCohortComparisonDetails,
-} from "../../components/planner";
-
 import { EnterCampaignBasicDetails } from "./EnterCampaignBasicDetails";
 import { TriggerDetails } from "./TriggerDetails";
 import { AudienceTouchPointsDetails } from "./AudienceTouchPointsDetails";
@@ -19,9 +7,7 @@ import { AdvanceFiltersDetails } from "./AdvancedFiltersDetails";
 import { RegularCohortComparisonDetails } from "./RegularCohortComparisonDetails";
 import { ScreenSummaryDetails } from "./ScreenSummaryDetails";
 import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
-import { CreativeUpload } from "./CreativeUpload";
 import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
-
 import { useDispatch, useSelector } from "react-redux";
 import {
   getDataFromLocalStorage,
@@ -37,6 +23,7 @@ import {
 } from "../../constants/campaignConstants";
 import { triggerBasePlanData } from "../../data";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { NewCreativeUpload } from "../../components/planner/NewCreativeUpload";
 
 export const TriggerBasedPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -57,34 +44,39 @@ export const TriggerBasedPlanPage: React.FC = () => {
 
   useEffect(() => {
     if (campaignData) {
-      setCampaingDetails(campaignData)
+      setCampaingDetails(campaignData);
     }
-  },[campaignData]);
+  }, [campaignData]);
 
   useEffect(() => {
     if (campaignId && campaignDetails) {
-      const newStep = pathname.split("/").includes("view") && state?.from === VIEW_CAMPAIGN ? 1 :
-      pathname.split("/").includes("edit") && state?.from === EDIT_CAMPAIGN ? 1 :
-        triggerBasePlanData.find(
-          (page: any) => page.value === campaignDetails.currentPage
-        )?.id || 0;
+      const newStep =
+        pathname.split("/").includes("view") && state?.from === VIEW_CAMPAIGN
+          ? 1
+          : pathname.split("/").includes("edit") &&
+            state?.from === EDIT_CAMPAIGN
+          ? 1
+          : triggerBasePlanData.find(
+              (page: any) => page.value === campaignDetails.currentPage
+            )?.id || 0;
 
-      setCurrentStep(newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1);
+      setCurrentStep(
+        newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1
+      );
       const currStep = {
-        [campaignId]: newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1,
+        [campaignId]:
+          newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
   }, [campaignDetails, campaignId, state, pathname, dispatch]);
 
-
   useEffect(() => {
     navigate(pathname, { replace: true, state: {} });
     if (campaignId) {
       dispatch(getCampaignCreationsDetails({ id: campaignId }));
-    };
+    }
   }, [dispatch, campaignId, navigate, pathname]);
-
 
   const stepComponents: Record<number, React.FC<any>> = {
     1: EnterCampaignBasicDetails,
@@ -94,11 +86,10 @@ export const TriggerBasedPlanPage: React.FC = () => {
     5: RegularCohortComparisonDetails,
     6: ScreenSummaryDetails,
     7: ViewFinalPlanPODetails,
-    8: CreativeUpload,
+    8: NewCreativeUpload,
     9: VendorConfirmationDetails,
   };
   const StepComponent = stepComponents[currentStep] || null;
-
 
   return (
     <div className="w-full">

@@ -1,30 +1,30 @@
 import { useCallback, useEffect, useState } from "react";
-import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
-import { TabWithIcon } from "../../components/molecules/TabWithIcon";
+import { TabWithoutIcon } from "../molecules/TabWithoutIcon";
+import { TabWithIcon } from "../molecules/TabWithIcon";
 import { Checkbox, message, Select, Tooltip } from "antd";
 import type { CheckboxProps } from "antd";
-import { ViewMediaForUploadCreatives } from "../../components/molecules/ViewMediaForUploadCreatives";
+import { ViewMediaForUploadCreatives } from "../molecules/ViewMediaForUploadCreatives";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getPlanningPageFooterData,
   getScreenDataUploadCreativeData,
 } from "../../actions/screenAction";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Footer } from "../../components/footer";
+import { Footer } from "../footer";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import {
   CAMPAIGN_CREATIVES,
   SELECTED_TRIGGER,
 } from "../../constants/localStorageConstants";
-import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { LoadingScreen } from "../molecules/LoadingScreen";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
-import SearchInputField from "../../components/molecules/SearchInputField";
-import { UploadCreativesFromBucketPopup } from "../../components/popup/UploadCreativesFromBucketPopup";
+import SearchInputField from "../molecules/SearchInputField";
+import { UploadCreativesFromBucketPopup } from "../popup/UploadCreativesFromBucketPopup";
 import { getCreativesMediaAction } from "../../actions/creativeAction";
-import { NoDataView } from "../../components/index";
-import { ConformationModelForCreative } from "../../components/popup/ConformationModelForCreative";
-import { TriggerBasedIndication } from "../../components/molecules/TriggerBasedIndication";
+import { NoDataView } from "../index";
+import { ConformationModelForCreative } from "../popup/ConformationModelForCreative";
+import { TriggerBasedIndication } from "../molecules/TriggerBasedIndication";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -55,7 +55,7 @@ interface Screen {
 
 type TransformedData = Record<string, Screen[]>;
 
-export const CreativeUpload = ({
+export const NewCreativeUpload = ({
   setCurrentStep,
   step,
   campaignId,
@@ -285,6 +285,22 @@ export const CreativeUpload = ({
     setCurrentCity(result[0]?.label || "");
   }, []);
 
+  const handleNextStep = (data: TransformedData) => {
+    let arr = Object.keys(data || {});
+    let result = arr?.map((city: string, index: number) => {
+      return {
+        id: `${index + 1}`,
+        label: city,
+        params: [
+          getCreativeCountCityWise(data, city),
+          getScreenCountCityWise(data, city) -
+            getCreativeCountCityWise(data, city),
+        ],
+      };
+    });
+    setCitiesCreative(result);
+  };
+
   const isTriggerAvailable = () => {
     const triggers = campaignDetails.triggers;
     return (
@@ -421,6 +437,8 @@ export const CreativeUpload = ({
 
       newData[currentCity][screenIndex] = screen;
       saveDataOnLocalStorage(CAMPAIGN_CREATIVES, { [campaignId]: newData });
+
+      handleNextStep(newData);
       return newData;
     });
   };

@@ -453,7 +453,13 @@ export const CreativeUpload = ({
     const isTriggerBasedCampaign = pathname
       .split("/")
       .includes("triggerbasedplan");
+
     const triggerAvailable = isTriggerAvailable();
+
+    if (isTriggerBasedCampaign) {
+      setCreativeType("Trigger");
+      setViewCreativeType("3");
+    }
 
     setPlayCreativeTime(
       isTriggerBasedCampaign
