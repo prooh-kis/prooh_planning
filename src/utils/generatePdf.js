@@ -76,14 +76,14 @@ const addCostSummaryData = (costData, doc, yOffset) => {
     // Prepare the data for the table
     const locationDetails = [
       ["Total Screens", Number(costData[key].totalScreens)],
-      ["Total Impressions", Number(costData[key].totalImpression).toFixed(0)],
+      ["Total Impressions Per Day", Number(costData[key].totalImpression).toFixed(0)],
       ["Total Reach", Number(costData[key].totalReach).toFixed(0)],
-      ["Total Slots", Number(costData[key].totalSlots).toFixed(0)],
+      ["Total Slots Per Day", Number(costData[key].totalSlots).toFixed(0)],
       [
         "Total Campaign Budget",
         `INR ${Number(costData[key].totalCampaignBudget).toFixed(0)}`,
       ],
-      ["Total CPM", `INR ${Number(costData[key].totalCpm).toFixed(0)}`],
+      ["Total CPM", `INR ${Number(costData[key].totalCpm).toFixed(2)}`],
       [
         "Total Price Per Slot",
         `INR ${Number(costData[key].pricePerSlot).toFixed(0)}`,
@@ -156,7 +156,7 @@ const addCreativeSummaryData = (creativeData, doc, yOffset) => {
 
     // Add the table
     doc.autoTable({
-      head: [["Resolution", "Count"]],
+      head: [["Resolution", "Ratio", "Count"]],
       body: tableRows,
       startY: yOffset,
       margin: { top: 30 },
@@ -221,7 +221,7 @@ export const generateCampaignSummaryPdfFromJSON = ({
     ["Duration (days)", `${campaignApproach.duration} Days`],
     ["Markets", campaignApproach.markets.join(", ")],
     ["SOV", `${campaignApproach.sov}/18`],
-    ["Total Impressions", campaignApproach?.totalImpression?.toFixed(0)],
+    ["Total Impressions Per Day", campaignApproach?.totalImpression?.toFixed(0)],
     ["Total CPM", `INR ${campaignApproach?.totalCpm?.toFixed(2) || 0}`],
     ["Total Reach", campaignApproach?.totalReach?.toFixed(0)],
     [
@@ -230,21 +230,20 @@ export const generateCampaignSummaryPdfFromJSON = ({
     ],
     [
       "Discount Availed",
-      `${
-        campaignApproach.couponId !== ""
-          ? `INR ${campaignApproach.totalDiscount?.toFixed(0)}`
-          : "None"
+      `${campaignApproach.couponId !== ""
+        ? `INR ${campaignApproach.totalDiscount?.toFixed(0)}`
+        : "None"
       }`,
     ],
     campaignApproach?.couponId !== ""
       ? [
-          "Final Campaign Budget",
-          `INR ${campaignApproach.finalCampaignBudget?.toFixed(0) || 0}`,
-        ]
+        "Final Campaign Budget",
+        `INR ${campaignApproach.finalCampaignBudget?.toFixed(0) || 0}`,
+      ]
       : [
-          "Final Campaign Budget",
-          `INR ${campaignApproach.totalCampaignBudget?.toFixed(0) || 0}`,
-        ],
+        "Final Campaign Budget",
+        `INR ${campaignApproach.totalCampaignBudget?.toFixed(0) || 0}`,
+      ],
   ];
   // Campaign Overview
   doc.setFontSize(16);
