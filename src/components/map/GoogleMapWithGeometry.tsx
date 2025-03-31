@@ -7,6 +7,7 @@ import { DrawPolygon } from "./DrawPolygon";
 import {FeatureCollection, Point, GeoJsonProperties} from 'geojson';
 import { Heatmap } from "./Heatmap";
 import { ToggleSwitch } from "../../components/atoms/ToggleSwitch";
+import clsx from "clsx";
 
 type POIProps = {
   id: string;
@@ -83,9 +84,9 @@ export function GoogleMapWithGeometry(props: any) {
         lng: m?.location?.geographicalLocation?.longitude,
         lat: m?.location?.geographicalLocation?.latitude,
         id: m._id,
-        details: m.screenName,
-        screenType: m.screenType
-
+        details: m.location,
+        screenType: m.screenType,
+        name: m.screenName,
       }))
     );
 
@@ -99,19 +100,20 @@ export function GoogleMapWithGeometry(props: any) {
           lng: m?.location?.geographicalLocation?.longitude,
           lat: m?.location?.geographicalLocation?.latitude,
           id: m._id,
-          details: m.screenName,
-          screenType: m.screenType
+          details: m.location,
+          screenType: m.screenType,
+          name: m.screenName,
 
         }))
     );
   }, [props]);
 
   // console.log("selected screens", selectedMarkers);
-  // console.log("unselected screens", unSelectedMarkers);
+  console.log("screenData", screenData);
 
   return (
     <div className="relative h-full w-full items-top">
-      <div className="flex flex-col items-end gap-2 right-2 pt-2 absolute z-10">
+      <div className="flex flex-col items-end gap-2 right-2 bottom-4 pt-2 absolute z-10">
         <div className="flex items-center gap-2 group">
           <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#00A0FA] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Selected Screens</h1>
           <div className="h-4 w-4 bg-[#00A0FA] rounded-full"></div>
@@ -137,7 +139,8 @@ export function GoogleMapWithGeometry(props: any) {
           <div className="h-4 w-4 bg-[#FF77E9] rounded-full"></div>
         </div>
       </div>
-      <div className="absolute z-10 bottom-2 right-1">
+      <div className="absolute z-10 bottom-0 left-1">
+        <h1 className="text-[8px] font-semibold text-center">POI Heatmap</h1>
         <ToggleSwitch
           value={heatmapOn}
           action={() => setHeatMapOn(!heatmapOn)}
@@ -220,7 +223,7 @@ export function GoogleMapWithGeometry(props: any) {
             color={"#00A0FA"}
             // color={marker.screenType === "Spectacular" ? "#00A0FA" : marker.screenType === "Large" ? "#00A0FA60" : "#00A0FA20"}
             size={marker.screenType == "Spectacular" ? 60 : marker.screenType == "Large" ? 44 : 36}
-            action={(e: any) => setScreenData(e.screenName)}
+            action={(e: any) => setScreenData(e)}
           />
         ))}
 
@@ -230,22 +233,36 @@ export function GoogleMapWithGeometry(props: any) {
             marker={marker}
             color="#F94623"
             size={marker.screenType == "Spectacular" ? 44 : marker.screenType == "Large" ? 36 : 28}
+            action={(e: any) => setScreenData(e)}
           />
         ))}
 
         {screenData && (
           <InfoWindow
             position={{
-              lat: screenData?.location?.geographicalLocation?.latitude || 28.495,
-              lng: screenData?.location?.geographicalLocation?.longitude
+              lat: screenData?.lat || 28.495,
+              lng: screenData?.lng
             }}
             onCloseClick={() => {
               setScreenData(null);
             }}
           >
-            <div>
-              <h2>Marker </h2>
-              <p>Some arbitrary html to be rendered into the InfoWindow.</p>
+            <div className={clsx("rounded-[4px] p-1 transition-colors cursor-pointer bg-white")}>
+              <div className="relative rounded w-full h-40">
+                <img
+                  className="h-40 w-full rounded-lg object-cover"
+                  src={screenData.images[0]}
+                  alt={screenData.name}
+                />
+              </div>
+              <div className="flex flex-col justify-center truncate mt-4 gap-1">
+                <h1 className="text-[14px] font-semibold w-full truncate text-ellipsis overflow-hidden">
+                  {screenData.name}
+                </h1>
+                <h1 className="text-[12px] w-full truncate text-ellipsis overflow-hidden">
+                  {screenData?.details.address}, {screenData?.details?.city}
+                </h1>
+              </div>
             </div>
           </InfoWindow>
         )}

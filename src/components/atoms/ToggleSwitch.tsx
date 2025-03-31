@@ -16,12 +16,12 @@ export const ToggleSwitch: FC<ToggleSwitchProps>  = ({value, action}) => {
         onChange={action}
       />
       <div
-        className={`w-10 h-5 flex items-center rounded-full p-1 transition-colors 
+        className={`w-16 h-5 flex items-center rounded-full p-1 transition-colors 
           ${value ? "bg-[#22C55E]" : "bg-gray-400"}`}
       >
         <div
           className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform 
-            ${value ? "translate-x-4" : "translate-x-0"}`}
+            ${value ? "translate-x-10" : "translate-x-0"}`}
         />
       </div>
     </label>

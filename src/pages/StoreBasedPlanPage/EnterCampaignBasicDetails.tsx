@@ -455,7 +455,7 @@ export const EnterCampaignBasicDetails = ({
           }}
           disabled={loadingAddDetails}
         >
-          {loadingAddDetails ? "Please Wait...." : !campaignId ? "Create New Campaign" : "Continue"}
+          {loadingAddDetails ? "Please Wait...." : !campaignId ? "Create" : "Continue"}
         </button>
       </div>
     </div>

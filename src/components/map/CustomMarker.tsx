@@ -51,6 +51,7 @@ export const CustomAdvancedMarker: FunctionComponent<Props> = ({
         className="cursor-pointer relative transition-transform"
         onClick={() => {
           action(marker);
+          console.log(marker);
           setClicked(!clicked);
         }}>
         {renderCustomPin()}
