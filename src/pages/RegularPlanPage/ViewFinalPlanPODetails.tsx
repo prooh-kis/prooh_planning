@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getFinalPlanPOTableData,
   getPlanningPageFooterData,
+  getRegularVsCohortPriceData,
   getScreenSummaryPlanTableData,
 } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
@@ -446,6 +447,13 @@ export const ViewFinalPlanPODetails = ({
         screenIds: poInput.screenIds,
       })
     );
+    dispatch(getRegularVsCohortPriceData({
+      id: campaignDetails?._id,
+      screenIds: poInput?.screenIds,
+      cohorts: campaignDetails?.cohorts,
+      gender: campaignDetails?.gender,
+      duration: campaignDetails?.duration,
+    }));
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
@@ -627,6 +635,7 @@ export const ViewFinalPlanPODetails = ({
 
               <Divider />
               <EmailConfirmationImage
+                page="VendorApproval"
                 files={confirmationImageFiles}
                 handleAddNewFile={handleAddNewFile}
                 removeImage={removeImage}

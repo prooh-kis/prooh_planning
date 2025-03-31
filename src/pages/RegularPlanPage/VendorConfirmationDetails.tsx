@@ -61,22 +61,7 @@ export const VendorConfirmationDetails = ({
   const [isDisabled, setIsDisabled] = useState<any>(true);
 
   const [selectedCampaignIds, setSelectedCampaignIds] = useState<any>([]);
-
-  // Initialize vendorInput with fallback values
-  const [vendorInput, setVendorInput] = useState<any>({
-    pageName: "View Final Plan Page",
-    id: campaignId,
-    name: campaignDetails?.name,
-    brandName: campaignDetails?.brandName,
-    clientName: campaignDetails?.clientName,
-    campaignType: campaignDetails?.campaignType,
-    startDate: campaignDetails?.startDate,
-    endDate: campaignDetails?.endDate,
-    duration: campaignDetails?.duration || 30,
-    selectedType: campaignDetails?.selectedType,
-    screenIds: campaignDetails?.screenIds || [],
-    triggers: campaignDetails?.triggers || [],
-  });
+  const [skipEmailConfirmation, setSkipEmailConfirmation] = useState<any>(false);
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -281,6 +266,9 @@ export const VendorConfirmationDetails = ({
   useEffect(() => {
     if (!campaignDetails) return;
     // Fetch data even if pageSuccess is false initially
+    if (errorVendorConfirmationData || errorStatusTableData || errorAddDetails) {
+      message.error("Something went wrong, please contact tech support...")
+    }
     dispatch(
       getVendorConfirmationStatusTableDetails({
         id: campaignId,
@@ -306,14 +294,15 @@ export const VendorConfirmationDetails = ({
         pageName: "Vendor Confirmation Page",
       })
     );
-  }, [campaignDetails, campaignId, dispatch]);
+  }, [campaignDetails, campaignId, dispatch, errorAddDetails, errorStatusTableData, errorVendorConfirmationData]);
 
   useEffect(() => {
     if (successAddDetails) {
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
-      setCurrentStep(step+1);
+      setCurrentStep(step);
+      setIsDisabled(false);
     }
   },[successAddDetails, step, setCurrentStep, dispatch]);
 
@@ -374,10 +363,19 @@ export const VendorConfirmationDetails = ({
     "Third Party": 0,
   };
 
+  const skipFunction = () => {
+    setIsDisabled(false);
+    dispatch(
+      getVendorConfirmationStatusTableDetails({
+        id: campaignId,
+      })
+    );
+  }
+
   return (
     <div className="w-full">
 
-      {loadingStatusTableData ? (
+      {loadingStatusTableData || loadingVendorConfirmationData ? (
         <LoadingScreen />
       ) : (
         <div className="w-full h-full">
@@ -411,7 +409,7 @@ export const VendorConfirmationDetails = ({
             <div className="flex justify-between">
               <div className="flex gap-8">
                 <div className="flex">
-                  <h1 className="text-[14px]">
+                  <h1 className="text-[14px] text-[#22C55E]">
                     Approved (
                     {myData?.Approved?.Connected +
                       myData?.Approved?.["Third Party"]}
@@ -419,7 +417,7 @@ export const VendorConfirmationDetails = ({
                   </h1>
                 </div>
                 <div className="flex">
-                  <h1 className="text-[14px]">
+                  <h1 className="text-[14px] text-[#F59E0B]">
                     Pending (
                     {myData?.Pending?.Connected +
                       myData?.Pending?.["Third Party"]}
@@ -427,7 +425,7 @@ export const VendorConfirmationDetails = ({
                   </h1>
                 </div>
                 <div className="flex">
-                  <h1 className="text-[14px]">
+                  <h1 className="text-[14px] text-[#EF4444]">
                     Rejected (
                     {myData?.Rejected?.Connected +
                       myData?.Rejected?.["Third Party"]}
@@ -468,7 +466,7 @@ export const VendorConfirmationDetails = ({
                       CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
                   ).length,
                 ]}
-                colors={["#FF0808", "#5FAC90", "#F9B34B"]}
+                colors={["#EF4444", "#22C55E", "#EF4444"]}
                 totalValue={statusTableData?.length}
               />
             </div>
@@ -502,6 +500,11 @@ export const VendorConfirmationDetails = ({
                     files={files}
                     handleAddNewFile={handleAddNewFile}
                     removeImage={removeImage}
+                    setSkipEmailConfirmation={(e: any) => {
+                      setSkipEmailConfirmation(e);
+                    }}
+                    skipFunction={skipFunction}
+                    skipEmailConfirmation={skipEmailConfirmation}
                   />
                 </div>
               </div>
@@ -513,14 +516,14 @@ export const VendorConfirmationDetails = ({
             onDoubleClick={() => setIsDisabled(!isDisabled)}
           >
             <Footer
-              mainTitle="See Dashboard"
+              mainTitle={new Date().getTime() < new Date(campaignDetails?.startDate)?.getTime() ? "Confirm" : "See Analytics"}
               handleBack={() => {
                 setCurrentStep(step - 1);
               }}
               handleSave={handleSaveAndContinue}
               campaignId={campaignId}
               pageName="Vendor Confirmation Page"
-              loadingCost={loadingAddDetails || loadingStatusTableData}
+              loadingCost={loadingAddDetails || loadingStatusTableData || loadingVendorConfirmationData}
               successCampaignDetails={successAddDetails}
             />
           </div>

@@ -98,6 +98,7 @@ export function PlanSummaryTable({
             priceData={priceData?.[regularVsCohort]}
             loading={loadingPriceData}
             setShowSummary={setShowSummary}
+            showSummary={showSummary}
           />
         )}
         {showSummary && (
@@ -134,7 +135,7 @@ export function PlanSummaryTable({
         </table>
       </div>
 
-      <div className="w-full py-4">
+      <div className="w-full py-4 pb-16">
         <div className="flex justify-start gap-2">
           <h1 className="py-2 text-[14px] font-semibold">
             Screen Summary City Wise

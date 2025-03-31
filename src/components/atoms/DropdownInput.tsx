@@ -17,7 +17,7 @@ export const DropdownInput = ({
       <select
         title="dropdown"
         className={`truncate ${height} ${width} text-[14px] border border-gray-200 px-3 pr-8 py-1 focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-[#FFFFFF] active:bg-[#FFFFFF] transition-colors appearance-none rounded-md`}
-        value={selectedOption}
+        value={Number(selectedOption)}
         onChange={handleSelectChange}
       >
         <option value={""}>{placeHolder}</option>

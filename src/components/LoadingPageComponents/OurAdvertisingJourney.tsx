@@ -56,7 +56,7 @@ export const OurAdvertisingJourney = ({ data }: any) => {
   const [defCt, setDefCt] = useState<any>("");
   const [landingPageData, setLandingPageData] = useState<any>({});
 
-  const [currentOfferIndex, setCurrentOfferIndex] = useState(0);
+  const [currentOfferIndex, setCurrentOfferIndex] = useState(3);
 
   useEffect(() => {
     if (getDataFromLocalStorage(LANDING_PAGE_DATA)) {
@@ -298,7 +298,7 @@ export const OurAdvertisingJourney = ({ data }: any) => {
         <h1 className="font-custom text-[32px] sm:text-[40px] md:text-[48px] lg:text-[56px] font-semibold leading-[40px] sm:leading-[48px] md:leading-[57.6px] lg:leading-[64px] tracking-normal text-[#0E212E] text-center font-inter">
           Our Advertising Journey
         </h1>
-        <p className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-[300] leading-[20px] sm:leading-[24px] md:leading-[28px] lg:leading-[32px] tracking-normal text-[#667D8C] text-center font-inter">
+        <p className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[16px] font-[300] leading-[20px] sm:leading-[24px] md:leading-[28px] lg:leading-[32px] tracking-normal text-[#667D8C] text-center font-inter">
           Our platform helps your business in managing expenses. These are some
           of the reasons why you
         </p>
@@ -321,7 +321,7 @@ export const OurAdvertisingJourney = ({ data }: any) => {
                   ${i <= currentOfferIndex ? "bg-primaryButton" : "bg-gray-200"}
                 `}
               >
-                <Tooltip title={[2022, 2023, 2024, 2025][i]}>
+                <Tooltip title={[2022, 2023, 2024, 2025][3]}>
                   {/* Icon or Text for each step */}
                   <div
                     className={`${
@@ -384,23 +384,25 @@ export const OurAdvertisingJourney = ({ data }: any) => {
             )}
           </div>
         </div>
+        {landingPageData?.screens?.length > 0 && (
+          <div className="col-span-1 sm:col-span-2 lg:col-span-1 flex items-center">
+            <LandingPageMapStats data={landingPageData} />
+          </div>
+        )}
 
-        <div className="col-span-1 sm:col-span-2 lg:col-span-1 flex items-center">
-          <LandingPageMapStats data={landingPageData} />
-        </div>
       </div>
 
       {view === "map" && (
-        <div className="flex justify-between flex-wrap justify-start gap-4 py-4 px-8">
+        <div className="flex justify-around flex-wrap justify-start gap-2 py-4 px-8">
           {memoizedTouchPoints?.map((tp: any, i: any) => (
             <div
               key={i}
-              className="cursor-pointer flex items-center gap-2 group"
+              className="cursor-pointer flex items-center gap-1 group"
             >
-              <div className={clsx(`h-4 w-4 ${colors[i]} rounded-full`)}></div>
+              <div className={clsx(`h-3 w-3 ${colors[i]} rounded-full`)}></div>
               <h1
                 className={clsx(
-                  `text-[10px] sm:text-[12px] md:text-[14px] leading-[18.1px] tracking-[0.01em] ${colorsbg[i]} p-1 rounded-[4px]`
+                  `text-[10px] sm:text-[12px] md:text-[12px] leading-[18.1px] tracking-[0.01em] ${colorsbg[i]} p-1 rounded-[4px]`
                 )}
               >
                 {tp?.tp}

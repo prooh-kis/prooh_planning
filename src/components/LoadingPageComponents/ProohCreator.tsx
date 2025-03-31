@@ -34,7 +34,7 @@ export const ProohCreator = ({
           <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4">
             Meet The Creators Behind Our Vision
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-[16px] text-gray-600 max-w-3xl mx-auto">
             Meet the passionate leaders driving our mission. Their expertise and
             commitment to excellence propel us forward, creating lasting impact
             and inspiring success

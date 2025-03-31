@@ -1,23 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
-import {
-  // EnterCampaignBasicDetails,
-  // ViewFinalPlanPODetails,
-  // VendorConfirmationDetails,
-  // SetAdsPlayTime,
-  // AdvanceFiltersDetails,
-  // StoreBaseScreenSummaryDetails,
-  // StoreBasedPlanSummaryTable,
-} from "../../components/planner";
 import { EnterCampaignBasicDetails } from "./EnterCampaignBasicDetails";
 import { AdvanceFiltersDetails } from "./AdvancedFiltersDetails";
 import { StoreBasedScreenSummaryDetails } from "./StoreBasedScreenSummaryDetails";
 import { SetAdsPlayTime } from "./SetAdsPlayTime";
 import { StoreBasedPlanSummaryTable } from "./StoreBasedPlanSummaryTable";
 import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
-import { CreativeUpload } from "./CreativeUpload";
 import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
-
 import { useDispatch, useSelector } from "react-redux";
 import {
   getDataFromLocalStorage,
@@ -33,6 +22,7 @@ import {
 } from "../../constants/campaignConstants";
 import { storeBasePlanData } from "../../data";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { NewCreativeUpload } from "../../components/planner/NewCreativeUpload";
 
 export const StoreBasedPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -55,21 +45,28 @@ export const StoreBasedPlanPage: React.FC = () => {
 
   useEffect(() => {
     if (campaignData) {
-      setCampaingDetails(campaignData)
+      setCampaingDetails(campaignData);
     }
-  },[campaignData]);
+  }, [campaignData]);
 
   // Fix: Ensure campaignId is always a string when used as an object key
   useEffect(() => {
     if (campaignId && campaignDetails) {
-      const newStep = pathname.split("/").includes("view") && state?.from === VIEW_CAMPAIGN ? 1 :
-      pathname.split("/").includes("edit") && state?.from === EDIT_CAMPAIGN ? 1 :
-        storeBasePlanData.find(
-          (page: any) => page.value === campaignDetails.currentPage
-        )?.id || 0;
-      setCurrentStep(newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1);
+      const newStep =
+        pathname.split("/").includes("view") && state?.from === VIEW_CAMPAIGN
+          ? 1
+          : pathname.split("/").includes("edit") &&
+            state?.from === EDIT_CAMPAIGN
+          ? 1
+          : storeBasePlanData.find(
+              (page: any) => page.value === campaignDetails.currentPage
+            )?.id || 0;
+      setCurrentStep(
+        newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1
+      );
       const currStep = {
-        [campaignId]: newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1,
+        [campaignId]:
+          newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
@@ -79,9 +76,8 @@ export const StoreBasedPlanPage: React.FC = () => {
     navigate(pathname, { replace: true, state: {} });
     if (campaignId) {
       dispatch(getCampaignCreationsDetails({ id: campaignId }));
-    };
+    }
   }, [dispatch, campaignId, navigate, pathname]);
-
 
   const stepComponents: Record<number, React.FC<any>> = {
     1: EnterCampaignBasicDetails,
@@ -90,9 +86,9 @@ export const StoreBasedPlanPage: React.FC = () => {
     4: SetAdsPlayTime,
     5: StoreBasedPlanSummaryTable,
     6: ViewFinalPlanPODetails,
-    7: CreativeUpload,
+    7: NewCreativeUpload,
     8: VendorConfirmationDetails,
-  }
+  };
 
   const StepComponent = stepComponents[currentStep] || null;
 

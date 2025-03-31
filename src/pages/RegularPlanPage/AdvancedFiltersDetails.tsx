@@ -173,7 +173,7 @@ export const AdvanceFiltersDetails = ({
 
   useEffect(() => {
     if (advanceFilterData && finalSelectedScreens?.length === 0) {
-      if (campaignDetails && advanceFilterData?.screens?.length == 0) {
+      if (successAddDetails && advanceFilterData?.screens?.length == 0) {
         message.error(
           "You have got Zero screen, please change your previous selection"
         );
@@ -182,7 +182,7 @@ export const AdvanceFiltersDetails = ({
         setFinalSelectedScreens(advanceFilterData?.screens);
       }
     }
-  }, [advanceFilterData, campaignId, finalSelectedScreens, campaignDetails]);
+  }, [advanceFilterData, campaignId, finalSelectedScreens, successAddDetails]);
 
   const handleSaveAndContinue = () => {
     if (!pathname.split("/").includes("view")) {
@@ -190,7 +190,6 @@ export const AdvanceFiltersDetails = ({
         message.error("Please  confirm screen selection");
         return;
       }
-      console.log("asd", polygons)
       dispatch(
         addDetailsToCreateCampaign({
           pageName: "Advance Filter Page",
@@ -233,7 +232,7 @@ export const AdvanceFiltersDetails = ({
         <LoadingScreen />
       ) : (
         <div className="w-full">
-          <div className="w-full h-full grid grid-cols-2 gap-4">
+          <div className="w-full h-full grid grid-cols-2 gap-4 pb-16">
             <div className="col-span-1 h-full pr-4">
               <div className="flex justify-between items-center">
                 <div>

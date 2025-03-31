@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
-import {
-  // CreativeUploadDetails,
-  // EnterCampaignBasicDetails,
-  // ViewFinalPlanPODetails,
-  // VendorConfirmationDetails,
-  // SetAdsPlayTime,
-} from "../../components/planner";
 import { EnterCampaignBasicDetails } from "./EnterCampaignBasicDetails";
 import { IKnowItAllScreenSummaryDetails } from "./IKnowItAllScreenSummaryDetails";
 import { SetAdsPlayTime } from "./SetAdsPlayTime";
 import { IKnowItAllPlanSummaryTable } from "./IKnowItAllPlanSummaryTable";
 import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
-import { CreativeUpload } from "./CreativeUpload";
 import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -21,19 +13,16 @@ import {
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  CURRENT_STEP,
-} from "../../constants/localStorageConstants";
+import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { getCampaignCreationsDetails } from "../../actions/campaignAction";
 import {
   CAMPAIGN_PLAN_TYPE_KNOW,
   EDIT_CAMPAIGN,
   VIEW_CAMPAIGN,
 } from "../../constants/campaignConstants";
-// import { IKnowItAllPlanSummaryTable } from "../../components/planner/IKnowItAllPlanSummaryTable";
-// import { IKnowItAllScreenSummaryDetails } from "../../components/planner/IKnowItAllScreenSummaryDetails";
 import { iKnowItAllPlanData } from "../../data";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { NewCreativeUpload } from "../../components/planner/NewCreativeUpload";
 
 export const IKnowItAllPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -54,22 +43,28 @@ export const IKnowItAllPlanPage: React.FC = () => {
 
   useEffect(() => {
     if (campaignData) {
-      setCampaingDetails(campaignData)
+      setCampaingDetails(campaignData);
     }
-  },[campaignData]);
+  }, [campaignData]);
 
   useEffect(() => {
     if (campaignDetails && campaignId) {
+      const newStep =
+        pathname.split("/").includes("view") && state?.from === VIEW_CAMPAIGN
+          ? 1
+          : pathname.split("/").includes("edit") &&
+            state?.from === EDIT_CAMPAIGN
+          ? 1
+          : iKnowItAllPlanData.find(
+              (page: any) => page.value === campaignDetails.currentPage
+            )?.id || 0;
 
-      const newStep = pathname.split("/").includes("view") && state?.from === VIEW_CAMPAIGN ? 1 :
-      pathname.split("/").includes("edit") && state?.from === EDIT_CAMPAIGN ? 1 :
-        (iKnowItAllPlanData.find(
-          (page: any) => page.value === campaignDetails.currentPage
-        )?.id || 0);
-
-      setCurrentStep(newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1);
+      setCurrentStep(
+        newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1
+      );
       const currStep = {
-        [campaignId]: newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1,
+        [campaignId]:
+          newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1,
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
@@ -80,7 +75,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
 
     if (campaignId) {
       dispatch(getCampaignCreationsDetails({ id: campaignId }));
-    };
+    }
   }, [dispatch, navigate, pathname, campaignId]);
 
   const stepComponents: Record<number, React.FC<any>> = {
@@ -89,9 +84,9 @@ export const IKnowItAllPlanPage: React.FC = () => {
     3: SetAdsPlayTime,
     4: IKnowItAllPlanSummaryTable,
     5: ViewFinalPlanPODetails,
-    6: CreativeUpload,
+    6: NewCreativeUpload,
     7: VendorConfirmationDetails,
-  }
+  };
 
   const StepComponent = stepComponents[currentStep] || null;
 

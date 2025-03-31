@@ -19,7 +19,7 @@ export const MultiColorLinearBar = ({
   return (
     <div
       className="rounded flex items-center w-full h-1 mt-1 relative group"
-      style={{ backgroundColor: colors[0] || "#F3F3F3" }}
+      style={{ backgroundColor: colors[0] }}
       onMouseEnter={() => setIsHoveredMainBar(true)} // Set hover state for the main bar
       onMouseLeave={() => {
         setIsHoveredMainBar(false); // Reset hover state for the main bar
@@ -29,14 +29,14 @@ export const MultiColorLinearBar = ({
       {values.map((value, index) => {
         const percentage = (value / totalValue) * 100; // Calculate percentage for each value
         const isHovered = hoveredIndex === index; // Check if the current index is hovered
-
+        
         return (
           <div
             key={index}
             className="relative flex border border-transparent rounded h-full"
             style={{
               width: `${percentage}%`, // Set width based on the calculated percentage
-              backgroundColor: colors[index + 1] || "#7AB3A2", // Assign a color from the array
+              backgroundColor: colors[index + 1], // Assign a color from the array
             }}
             onMouseEnter={() => setHoveredIndex(index)} // Set hovered index on mouse enter
             onMouseLeave={() => setHoveredIndex(null)} // Reset hovered index on mouse leave

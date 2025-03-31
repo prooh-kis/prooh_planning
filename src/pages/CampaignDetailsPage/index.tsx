@@ -6,6 +6,7 @@ import { Loading } from "../../components/Loading";
 import {
   convertIntoDateAndTime,
   getCampaignEndingStatus,
+  getNumberOfDaysBetweenTwoDates,
 } from "../../utils/dateAndTimeUtils";
 import {
   campaignLogsByCampaignIdAction,
@@ -22,7 +23,7 @@ import {
   CAMPAIGN_STATUS_CHANGE_RESET,
   EDIT_ALL_SUB_CAMPAIGNS_RESET,
   EDIT_CAMPAIGN_CREATIVE_END_DATE_RESET,
-  EDIT_CAMPAIGN
+  EDIT_CAMPAIGN,
 } from "../../constants/campaignConstants";
 import { getCreativesMediaAction } from "../../actions/creativeAction";
 import {
@@ -47,6 +48,10 @@ import { ScreenListMonitoringView } from "../../components/molecules/ScreenListM
 import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
 import { GET_CAMPAIGN_DASHBOARD_DATA_RESET } from "../../constants/screenConstants";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
+import { formatNumber } from "../../utils/formatValue";
+import { getRegularVsCohortPriceData, getScreenSummaryPlanTableData } from "../../actions/screenAction";
+import { generateCampaignSummaryPdfFromJSON } from "../../utils/generatePdf";
+import { generatePPT } from "../../utils/generatePPT";
 
 export const CampaignDetailsPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -56,6 +61,7 @@ export const CampaignDetailsPage: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string>(
     "standardDayTimeCreatives"
   );
+  const [currentTab1, setCurrentTab1] = useState<string>("1");
   const campaignId =
     pathname?.split("/")?.length > 2
       ? pathname?.split("/")?.splice(2)[0]
@@ -118,6 +124,15 @@ export const CampaignDetailsPage: React.FC = () => {
     success: successChange,
   } = changeCampaignCreativeEndDate;
 
+  const screenSummaryPlanTableDataGet = useSelector(
+    (state: any) => state.screenSummaryPlanTableDataGet
+  );
+  const {
+    loading: loadingScreenSummaryPlanTable,
+    error: errorScreenSummaryPlanTable,
+    data: screenSummaryPlanTableData,
+  } = screenSummaryPlanTableDataGet;
+
   const handleEditAllSubCampaigns = (
     campaignCreationId: string,
     endDate: any
@@ -135,14 +150,14 @@ export const CampaignDetailsPage: React.FC = () => {
   const campaigns =
     screens?.length > 0
       ? campaignCreated?.campaigns
-        ?.filter((camp: any) =>
-          campaignCreated?.screens?.includes(camp.screenId.toString())
-        )
-        ?.filter((camp: any) =>
-          camp?.screenName
-            ?.toLowerCase()
-            ?.includes(searchQuery?.toLowerCase())
-        )
+          ?.filter((camp: any) =>
+            campaignCreated?.screenIds?.includes(camp.screenId.toString())
+          )
+          ?.filter((camp: any) =>
+            camp?.screenName
+              ?.toLowerCase()
+              ?.includes(searchQuery?.toLowerCase())
+          )
       : [];
 
   useEffect(() => {
@@ -152,7 +167,12 @@ export const CampaignDetailsPage: React.FC = () => {
         type: EDIT_ALL_SUB_CAMPAIGNS_RESET,
       });
       setOpenCreateCampaignEndDateChangePopup(false);
-      dispatch(getCampaignDetailsAction({ campaignId: campaignId, event: CAMPAIGN_CREATION_GET_CAMPAIGN_DETAILS_PLANNING_PAGE }));
+      dispatch(
+        getCampaignDetailsAction({
+          campaignId: campaignId,
+          event: CAMPAIGN_CREATION_GET_CAMPAIGN_DETAILS_PLANNING_PAGE,
+        })
+      );
     }
     if (errorEditAllSubCampaigns) {
       message.error(errorEditAllSubCampaigns);
@@ -166,8 +186,22 @@ export const CampaignDetailsPage: React.FC = () => {
   useEffect(() => {
     if (campaignCreated) {
       dispatch(
+        getScreenSummaryPlanTableData({
+          id: campaignCreated?._id,
+          screenIds: campaignCreated?.screenIds,
+        })
+      );
+
+      dispatch(getRegularVsCohortPriceData({
+        id: campaignCreated?._id,
+        screenIds: campaignCreated?.screenIds,
+        cohorts: campaignCreated?.cohorts,
+        gender: campaignCreated?.gender,
+        duration: campaignCreated?.duration,
+      }));
+      dispatch(
         getCampaignCreatedScreensDetailsAction({
-          screenIds: campaignCreated.screens,
+          screenIds: campaignCreated.screenIds,
         })
       );
     }
@@ -179,7 +213,12 @@ export const CampaignDetailsPage: React.FC = () => {
       dispatch({
         type: CAMPAIGN_STATUS_CHANGE_RESET,
       });
-      dispatch(getCampaignDetailsAction({ campaignId: campaignId, event: CAMPAIGN_CREATION_GET_CAMPAIGN_DETAILS_PLANNING_PAGE }));
+      dispatch(
+        getCampaignDetailsAction({
+          campaignId: campaignId,
+          event: CAMPAIGN_CREATION_GET_CAMPAIGN_DETAILS_PLANNING_PAGE,
+        })
+      );
     }
     if (errorStatusChange) {
       message.error(errorStatusChange);
@@ -199,7 +238,12 @@ export const CampaignDetailsPage: React.FC = () => {
   useEffect(() => {
     removeAllKeyFromLocalStorage();
     dispatch({ type: GET_CAMPAIGN_DASHBOARD_DATA_RESET });
-    dispatch(getCampaignDetailsAction({ campaignId: campaignId, event: CAMPAIGN_CREATION_GET_CAMPAIGN_DETAILS_PLANNING_PAGE }));
+    dispatch(
+      getCampaignDetailsAction({
+        campaignId: campaignId,
+        event: CAMPAIGN_CREATION_GET_CAMPAIGN_DETAILS_PLANNING_PAGE,
+      })
+    );
     dispatch(getCreativesMediaAction({ userId: userInfo?._id }));
   }, [campaignId, dispatch, userInfo]);
 
@@ -275,16 +319,202 @@ export const CampaignDetailsPage: React.FC = () => {
   };
 
   const openCampaignDashboard = () => {
-    navigate(`/campaignDashboard/${campaignId}`)
-  }
+    navigate(`/campaignDashboard/${campaignId}`);
+  };
+
+  const countScreensByResolutionAndCity = (data: any) => {
+    const result: any = {};
+
+    data.forEach((screen: any) => {
+      const { city } = screen.location;
+      const { screenResolution } = screen;
+      if (!result[city]) {
+        result[city] = {};
+      }
+      if (!result[city][screenResolution]) {
+        result[city][screenResolution] = 0;
+      }
+      result[city][screenResolution]++;
+    });
+
+    return result;
+  };
+
+  const downloadSummary = () => {
+
+    let pdfDownload: any = {
+      "summary" : {
+        heading: "CAMPAIGN SUMMARY",
+        pdfData: {
+          approach: [campaignCreated],
+          costSummary: [screenSummaryPlanTableData],
+          creativeRatio: countScreensByResolutionAndCity(campaignCreated?.screenWiseSlotDetails),
+        },
+        fileName: `${campaignCreated?.brandName} Campaign Summary`,
+      },
+      "screen-pictures": {
+        heading: "SCREEN PICTURES",
+        pdfData: campaignCreated?.screenWiseSlotDetails?.filter(
+            (s: any) =>
+              campaignCreated?.screenIds.includes(s.screenId)
+          )
+          ?.map((screen: any) => {
+            return screen;
+          }),
+        fileName: `${campaignCreated?.brandName} Campaign Screen Pictures`,
+      }
+    };
+
+    generateCampaignSummaryPdfFromJSON({
+      preview: false,
+      download: true,
+      jsonData: pdfDownload["summary"].pdfData,
+      fileName: pdfDownload["summary"].fileName,
+      heading: pdfDownload["summary"].heading,
+    });
+    message.success("Downloading Summary...")
+    generatePPT({
+      download: true,
+      data: pdfDownload["screen-pictures"].pdfData,
+      fileName: pdfDownload["screen-pictures"].fileName,
+    });
+ 
+  };
 
   const getBgColors = (index: any) => {
-    const colors = ["bg-[#EF444450]", "bg-[#F59E0B50]", "bg-[#EAB30850]", "bg-[#22C55E50]", "bg-[#06B6D450]", "bg-[#3B82F650]", "bg-[#6366F150]", "bg-[#8B5CF650]", "bg-[#78DCCA50]", "bg-[#FF77E950]", "bg-[#3AB7BF50]", "bg-[#3F3CBB50]", "bg-[#22C55E50]", "bg-[#06B6D450]", "bg-[#3B82F650]", "bg-[#6366F150]", "bg-[#EF444450]", "bg-[#F59E0B50]"];
+    const colors = [
+      "bg-[#EF444450]",
+      "bg-[#F59E0B50]",
+      "bg-[#EAB30850]",
+      "bg-[#22C55E50]",
+      "bg-[#06B6D450]",
+      "bg-[#3B82F650]",
+      "bg-[#6366F150]",
+      "bg-[#8B5CF650]",
+      "bg-[#78DCCA50]",
+      "bg-[#FF77E950]",
+      "bg-[#3AB7BF50]",
+      "bg-[#3F3CBB50]",
+      "bg-[#22C55E50]",
+      "bg-[#06B6D450]",
+      "bg-[#3B82F650]",
+      "bg-[#6366F150]",
+      "bg-[#EF444450]",
+      "bg-[#F59E0B50]",
+    ];
     return colors[index];
+  };
+
+  function MyDiv({ left, right, paisa = false }: any) {
+    return (
+      <div className="flex ">
+        <h1 className="text-left text-[14px] basis-1/2 text-[#6F7F8E] font-medium ">
+          {left}
+        </h1>
+        {paisa ? (
+          <h1 className="text-left text-[14px] basis-1/2 text-[#0E212E]">
+            &#8377; {right}
+          </h1>
+        ) : (
+          <h1 className="text-left text-[14px] basis-1/2 text-[#0E212E]">
+            {right}
+          </h1>
+        )}
+        
+      </div>
+    );
   }
 
+  const basicDetails = [
+    { label: "Campaign Name", value: campaignCreated?.name },
+    { label: "Client Name", value: campaignCreated?.clientName },
+    { label: "Brand Name", value: campaignCreated?.brandName },
+    { label: "Campaign Type", value: campaignCreated?.campaignType },
+    { label: "Trigger", value: campaignCreated?.triggers?.weatherTriggers?.length > 0
+      ? "Weather Trigger"
+      : campaignCreated?.triggers?.sportsTriggers?.length > 0
+      ? "Sports Trigger"
+      : campaignCreated?.triggers?.vacantSlots?.length > 0 ? 
+      "Fill Vacancy Trigger" : "None" },
+    { label: "Plan Created by", value: campaignCreated?.campaignPlannerName },
+    { label: "Plan Approved by", value: campaignCreated?.campaignManagerEmail?.split("@")[0] },
+  ];
+
+  const durationDetails = [
+    {
+      label: "Start Date",
+      value: convertIntoDateAndTime(campaignCreated?.startDate),
+    },
+    {
+      label: "End Date",
+      value: convertIntoDateAndTime(campaignCreated?.endDate),
+    },
+    { label: "Duration", value: `${campaignCreated?.duration} Days ` },
+    {
+      label: "Ends In",
+      value: getCampaignEndingStatus(campaignCreated?.endDate)?.split(":")[1],
+    },
+  ];
+
+  const performanceMatrix = [
+    {
+      label: "Total Cities",
+      value: campaignCreated?.cities?.length,
+    },
+    {
+      label: "Total TouchPoints",
+      value: campaignCreated?.touchPoints?.length,
+    },
+    { label: "Total Screens", value: campaignCreated?.screenIds?.length},
+    {
+      label: "Audience Impression",
+      value: formatNumber(campaignCreated?.totalImpression),
+    },
+    {
+      label: "Reach",
+      value: formatNumber(campaignCreated?.totalReach),
+    },
+    {
+      label: "Tg%",
+      value: `${Number((campaignCreated?.totalImpression / campaignCreated?.totalReach)).toFixed(2)}  %`,
+    },
+    {
+      label: "CPM",
+      value: `${formatNumber(Number(campaignCreated?.totalCpm).toFixed(2))}`,
+      paisa: true,
+    },
+  ];
+
+  const campaignCost = [
+    {
+      label: "Plan Cost",
+      value: formatNumber(campaignCreated?.totalCampaignBudget.toFixed(2)),
+      paisa: true,
+    },
+    {
+      label: "Trigger Cost",
+      value: campaignCreated?.triggers?.weatherTriggers?.length > 0
+      ? campaignCreated?.triggers?.weatherTriggers?.[0]?.budget.toFixed(2)
+      : campaignCreated?.triggers?.sportsTriggers?.length > 0
+      ? campaignCreated?.triggers?.sportsTriggers?.[0]?.budget.toFixed(2)
+      : campaignCreated?.triggers?.vacantSlots?.length > 0 ? 
+      campaignCreated?.triggers?.vacantSlots?.[0]?.budget.toFixed(2) : "None" ,
+      paisa: true,
+    },
+    {
+      label: "Total Discount",
+      value: formatNumber(campaignCreated?.totalDiscount.toFixed(2)),
+      paisa: true,
+    },
+    {
+      label: "Total Cost",
+      value: formatNumber(campaignCreated?.finalCampaignBudget !== 0 ? campaignCreated?.finalCampaignBudget.toFixed(2) : campaignCreated?.totalCampaignBudget.toFixed(2)),
+      paisa: true
+    },
+  ];
+
   return (
-    <div className="w-full grid grid-cols-12 gap-1 pt-2">
+    <div className="w-full grid grid-cols-12 gap-2 pt-2">
       {openCreativeEndDateChangePopup && (
         <EditCreativeEndDatePopup
           onClose={() => setOpenCreativeEndDateChangePopup(false)}
@@ -310,10 +540,10 @@ export const CampaignDetailsPage: React.FC = () => {
           <Loading />
         </div>
       ) : (
-        <div className="col-span-8 ">
-          <div className="w-full border border-gray-100 rounded py-4 bg-white">
-            <div className="flex justify-between pb-4 mx-1 border-b">
-              <div className="flex items-center gap-4">
+        <div className="col-span-8">
+          <div className="w-full border border-[#D3D3D350] rounded-[18px] px-4 pt-4 bg-white">
+            <div className="flex justify-between mx-1">
+              <div className="flex gap-4">
                 <i
                   className="fi fi-sr-angle-small-left text-[#7C8E9B] flex items-center"
                   onClick={() => navigate(-1)}
@@ -321,7 +551,10 @@ export const CampaignDetailsPage: React.FC = () => {
                 <div
                   className={
                     campaignCreated
-                      ? `rounded  ${getBgColors(campaignCreated?.brandName?.split(" ")[0]?.split("").length)}`
+                      ? `rounded  ${getBgColors(
+                          campaignCreated?.brandName?.split(" ")[0]?.split("")
+                            .length
+                        )}`
                       : `rounded bg-gray-100`
                   }
                 >
@@ -330,9 +563,9 @@ export const CampaignDetailsPage: React.FC = () => {
                   </h1>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <h1
-                    className="text-[18px] font-semibold">
-                    {campaignCreated?.campaignName || "Campaign Name"}
+                  <h1 className="text-[18px] font-semibold p-0 m-0">
+                    {campaignCreated?.name?.toUpperCase() ||
+                      "Campaign Name"}
                   </h1>
                   <h1 className="text-[12px]">
                     {campaignCreated?.brandName}, {campaignCreated?.duration}{" "}
@@ -340,136 +573,206 @@ export const CampaignDetailsPage: React.FC = () => {
                   </h1>
                 </div>
               </div>
-              <div className="flex flex-col px-4 justify-center">
-                {loadingStatusChange ? (
-                  <Skeleton active paragraph={{ rows: 1 }} />
-                ) : (
-                  <div className=" flex h-auto gap-4">
-                    
-                    <Tooltip title="Edit Campaign">
-                      <i
-                        className="fi fi-ss-pen-circle text-gray-500"
-                        title="Edit Creatives"
-                        onClick={() => {
-                          navigate(
-                            `/${getCampaignPageNameFromCampaignType(
-                              campaignCreated?.campaignType
-                            )}/${campaignCreated._id}/edit`, {
-                              state: {
-                                from: EDIT_CAMPAIGN
-                              }
-                            }
-                          )
-                        }}
-                      ></i>
-                    </Tooltip>
-                    <Tooltip title="Edit end date for all screens">
-                      <i
-                        className="fi fi-sr-calendar-lines-pen text-gray-500"
-                        title="Edit End Date"
-                        onClick={() =>
-                          setOpenCreateCampaignEndDateChangePopup(
-                            !openCreateCampaignEndDateChangePopup
-                          )
+              {loadingStatusChange ? (
+                <Skeleton active paragraph={{ rows: 1 }} />
+              ) : (
+                <div className="flex h-auto gap-1">
+                  <div
+                    onClick={() => {
+                      const pageName = getCampaignPageNameFromCampaignType(campaignCreated?.campaignType);
+                      navigate(
+                        `/${pageName}/${campaignCreated._id}/edit`,
+                        {
+                          state: {
+                            from: EDIT_CAMPAIGN,
+                          },
                         }
-                      ></i>
-                    </Tooltip>
-                    <Tooltip title="View Campaign Dashboard">
-                      <i
-                        className="fi fi-sr-dashboard text-gray-500"
-                        onClick={() => openCampaignDashboard()}
-                      ></i>
-                    </Tooltip>
+                      );
+                    }}
+                    className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
+                  >
+                    <i className="fi fi-rr-file-edit"></i>
+                    <h1 className="truncate">Edit Plan</h1>
                   </div>
-                )}
-                <h1
-                  className={`text-[12px] ${getCampaignEndingStatus(
-                    campaignCreated?.endDate
-                  ).includes("Already")
+                  <div
+                    onClick={() =>
+                      setOpenCreateCampaignEndDateChangePopup(
+                        !openCreateCampaignEndDateChangePopup
+                      )
+                    }
+                    className="truncate h-8 flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
+                  >
+                    <i className="fi fi-rs-calendar-lines-pen"></i>
+                    <h1 className=" truncate">Edit Duration</h1>
+                  </div>
+                  <div
+                    onClick={() => openCampaignDashboard()}
+                    className="h-8 truncate flex gap-2 text-[14px] font-medium text-[#129BFF] cursor-pointer border border-[#129BFF] rounded-md py-1 px-4"
+                  >
+                    <i className="fi fi-rs-dashboard"></i>
+                    <h1 className=" truncate">View Analytics</h1>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="flex justify-between px-4 mt-4 items-center">
+              <TabWithoutIcon
+                currentTab={currentTab1}
+                setCurrentTab={setCurrentTab1}
+                tabData={[
+                  { label: "Campaign details", id: "1" },
+                  { label: "Campaign creatives", id: "2" },
+                ]}
+              />
+              <h1
+                className={`text-[12px] ${
+                  getCampaignEndingStatus(campaignCreated?.endDate).includes(
+                    "Already"
+                  )
                     ? "text-[#EF4444]"
                     : "text-[#22C55E]"
-                    }`}
-                >
-                  {getCampaignEndingStatus(campaignCreated?.endDate)}
-                </h1>
-              </div>
-            </div>
-            <h1 className="px-9 text-[#092A41] text-[15px] font-normal mt-2">
-              Basic Details
-            </h1>
-            <div className="px-9 p-2 flex gap-8">
-              <div className="flex flex-col gap-2">
-                <h1 className=" text-[12px]">Start Date</h1>
-                <h1 className=" text-[12px]">End Date</h1>
-              </div>
-              <div className="flex flex-col gap-2">
-                <h1 className=" text-[12px]">
-                  {convertIntoDateAndTime(campaignCreated?.startDate)}
-                </h1>
-                <h1 className="text-[12px]">
-                  {convertIntoDateAndTime(campaignCreated?.endDate)}
-                </h1>
-              </div>
-            </div>
-          </div>
-          <div className="border border-gray-100 rounded my-1 p-4 bg-white">
-            <div className="flex justify-between">
-              <h1 className="text-[#092A41] text-[16px] font-semibold mt-2 px-1">
-                Campaign Creatives
+                }`}
+              >
+                {getCampaignEndingStatus(campaignCreated?.endDate)}
               </h1>
-              <PrimaryButton
-                action={() => navigate(MY_CREATIVES)}
-                title="+ Creatives"
-                rounded="rounded-full"
-                height="h-10"
-                width="w-28"
-                textSize="text-[12px] font-semibold"
-                reverse={true}
-              />
-            </div>
-            <div className="border-b mb-1">
-              <TabWithoutIcon
-                currentTab={currentTab}
-                setCurrentTab={setCurrentTab}
-                tabData={creativeTypeTab}
-              />
-            </div>
-            <div className="h-[50vh] rounded overflow-y-auto no-scrollbar py-2">
-              {campaignCreated?.creatives?.map((c: any, i: any) => (
-                <div key={i}>
-                  {c?.[currentTab]?.length > 0 && (
-                    <div className="py-4">
-                      <div className="grid grid-cols-3 gap-1 ">
-                        {c?.[currentTab]?.map((cs: any, j: any) => (
-                          <div className="col-span-1 " key={j}>
-                            <ShowMediaFile
-                              url={cs.url}
-                              mediaType={cs.type.split("/")[0]}
-                            />
-
-                            <Tooltip
-                              title={`${cs.url?.split("_")[
-                                cs.url?.split("_")?.length - 1
-                              ]
-                                }`}
-                            >
-                              <h1 className="text-[12px] text-gray-500 truncate">
-                                {
-                                  cs.url?.split("_")[
-                                  cs.url?.split("_")?.length - 1
-                                  ]
-                                }
-                              </h1>
-                            </Tooltip>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
             </div>
           </div>
+          {currentTab1 === "1" ? (
+            <div className="w-full border border-[#D3D3D350] rounded-[18px] p-4 bg-white mt-2">
+              <div className="flex justify-between border-b pb-2">
+                <h1 className="text-[#092A41] text-[16px] font-semibold mt-2 px-1">
+                  Your Plan Details
+                </h1>{" "}
+                <div
+                  onClick={() => downloadSummary()}
+                  className="h-8 flex items-center gap-2 text-[14px] font-medium text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
+                >
+                  <i className="fi-rr-file-download"></i>
+                  <h1 className="">Download Approach</h1>
+                </div>
+              </div>
+              <div className="grid grid-cols-12">
+                <div className="col-span-6 border-r-2">
+                  <div className="p-4">
+                    <h1 className="text-[#0E212E] font-semibold text-[14px]  ">
+                      Basic Details
+                    </h1>
+                    <div className="mt-2 flex flex-col gap-1">
+                      {basicDetails?.map((data, index) => (
+                        <MyDiv
+                          key={index}
+                          left={data.label}
+                          right={data.value}
+                        />
+                      ))}
+                    </div>
+                    <h1 className="text-[#0E212E] font-semibold text-[14px] mt-4">
+                      Campaign Duration
+                    </h1>
+                    <div className="mt-2 flex flex-col gap-1">
+                      {durationDetails?.map((data, index) => (
+                        <MyDiv
+                          key={index}
+                          left={data.label}
+                          right={data.value}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="col-span-6">
+                  <div className="p-4">
+                    <h1 className="text-[#0E212E] font-semibold text-[14px]  ">
+                      Performance Metrics
+                    </h1>
+                    <div className="mt-2 flex flex-col gap-1">
+                      {performanceMatrix?.map((data, index) => (
+                        <MyDiv
+                          key={index}
+                          left={data.label}
+                          right={data.value}
+                          paisa={data.paisa}
+                        />
+                      ))}
+                    </div>
+                    <h1 className="text-[#0E212E] font-semibold text-[14px] mt-4">
+                      Campaign Cost
+                    </h1>
+                    <div className="mt-2 flex flex-col gap-1">
+                      {campaignCost?.map((data, index) => (
+                        <MyDiv
+                          paisa={data.paisa}
+                          key={index}
+                          left={data.label}
+                          right={data.value}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="w-full border border-[#D3D3D350] rounded-[18px] p-4 bg-white mt-2">
+              <div className="flex justify-between">
+                <h1 className="text-[#092A41] text-[16px] font-semibold mt-2 px-1">
+                  Campaign Creatives
+                </h1>
+                <PrimaryButton
+                  action={() => navigate(MY_CREATIVES)}
+                  title="+ Creatives"
+                  rounded="rounded-full"
+                  height="h-10"
+                  width="w-28"
+                  textSize="text-[12px] font-semibold"
+                  reverse={true}
+                />
+              </div>
+              <div className="border-b mb-1">
+                <TabWithoutIcon
+                  currentTab={currentTab}
+                  setCurrentTab={setCurrentTab}
+                  tabData={creativeTypeTab}
+                />
+              </div>
+              <div className="h-[50vh] rounded overflow-y-auto no-scrollbar py-2">
+                {campaignCreated?.creatives?.map((c: any, i: any) => (
+                  <div key={i}>
+                    {c?.[currentTab]?.length > 0 && (
+                      <div className="py-4">
+                        <div className="grid grid-cols-3 gap-1 ">
+                          {c?.[currentTab]?.map((cs: any, j: any) => (
+                            <div className="col-span-1 " key={j}>
+                              <ShowMediaFile
+                                url={cs.url}
+                                mediaType={cs.type.split("/")[0]}
+                              />
+
+                              <Tooltip
+                                title={`${
+                                  cs.url?.split("_")[
+                                    cs.url?.split("_")?.length - 1
+                                  ]
+                                }`}
+                              >
+                                <h1 className="text-[12px] text-gray-500 truncate">
+                                  {
+                                    cs.url?.split("_")[
+                                      cs.url?.split("_")?.length - 1
+                                    ]
+                                  }
+                                </h1>
+                              </Tooltip>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
       {loading || loadingScreens ? (
@@ -477,12 +780,12 @@ export const CampaignDetailsPage: React.FC = () => {
           <Loading />
         </div>
       ) : (
-        <div className="col-span-4 border border-gray-100 rounded bg-white p-2 h-full">
+        <div className="col-span-4 w-full h-auto border border-[#D3D3D350] rounded-[18px] p-4 bg-white">
           <div className="flex justify-between">
             <h1 className="text-[16px] font-semibold px-1 py-2">
               Screens Play{" "}
               <span className="text-[14px]">
-                ({campaignCreated?.screens?.length || 0})
+                ({campaignCreated?.screenIds?.length || 0})
               </span>
             </h1>
             <div className="flex flex-col px-1 justify-center">
@@ -492,7 +795,7 @@ export const CampaignDetailsPage: React.FC = () => {
                 <div className="py-2 flex items-center justify-center h-auto gap-4">
                   <Tooltip title="Pause for all screens">
                     <i
-                      className="fi fi-ss-pause-circle text-gray-500"
+                      className="fi fi-br-pause-circle text-[#000000]"
                       title="Pause All"
                       onClick={() =>
                         handleChangeStatusAll(
@@ -504,7 +807,7 @@ export const CampaignDetailsPage: React.FC = () => {
                   </Tooltip>
                   <Tooltip title="Activate for all screens">
                     <i
-                      className="fi fi-sr-play-circle text-gray-500"
+                      className="fi fi-br-play-circle text-[#000000]"
                       title="Active All"
                       onClick={() =>
                         handleChangeStatusAll(
@@ -516,7 +819,7 @@ export const CampaignDetailsPage: React.FC = () => {
                   </Tooltip>
                   <Tooltip title="Delete for all screens">
                     <i
-                      className="fi fi-sr-trash text-gray-500"
+                      className="fi fi-br-trash text-[#D44949]"
                       title="Delete All"
                       onClick={() =>
                         handleChangeStatusAll(
@@ -530,8 +833,8 @@ export const CampaignDetailsPage: React.FC = () => {
               )}
             </div>
           </div>
-          
-          <div className="py-4 ">
+
+          <div className="mt-0">
             <SearchInputField
               placeholder="Search screens by name"
               height="h-8"
@@ -539,7 +842,7 @@ export const CampaignDetailsPage: React.FC = () => {
               onChange={setSearchQuery}
             />
           </div>
-          <div className="h-[70vh] overflow-y-auto no-scrollbar py-1 flex flex-col gap-2">
+          <div className="h-[70vh] overflow-y-auto no-scrollbar mt-2 flex flex-col gap-2">
             {campaigns?.length === 0 && <NoDataView />}
             {campaigns?.map((camp: any, k: any) => (
               <div

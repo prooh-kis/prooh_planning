@@ -153,7 +153,7 @@ export const LocationProximity = ({
       </div>
 
       <div className="grid grid-cols-12 gap-2 flex items-center pt-2">
-        <div className="col-span-1">
+        <div className="col-span-2">
           <CheckboxInput
             color="#52A2FF"
             label={finalSelectedScreens.length}
@@ -162,7 +162,7 @@ export const LocationProximity = ({
             onChange={() => {}}
           />
         </div>
-        <div className="col-span-10">
+        <div className="col-span-8">
           <LinearBar
             value={(
               (finalSelectedScreens.length * 100) /
@@ -171,7 +171,7 @@ export const LocationProximity = ({
             colors={["#F3F3F3", "#7AB3A2"]}
           />
         </div>
-        <p className="col-span-1 text-[12px] text-semibold flex justify-end truncate">
+        <p className="col-span-2 text-[12px] text-semibold flex justify-end truncate">
           {allScreens?.length} Sites
         </p>
       </div>

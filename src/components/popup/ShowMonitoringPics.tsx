@@ -8,6 +8,7 @@ import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import { MonitoringPictures } from "../../components/segments/MonitoringPictures";
 import { campaignMonitoringTab } from "../../constants/tabDataConstant";
 import { GetCampaignMonitoringPicsAction } from "../../actions/campaignAction";
+import { message } from "antd";
 
 export const ShowMonitoringPicsPopup = (props: any) => {
   const dispatch = useDispatch<any>();
@@ -19,6 +20,11 @@ export const ShowMonitoringPicsPopup = (props: any) => {
   const [monitoringDate, setMonitoringDate] = useState<any>(dateToday);
   const [allDates, setAllDates] = useState<any>([]);
   const [monitoringTime, setMonitoringTime] = useState<any>("day");
+  const [isDownloadingAll, setIsDownloadingAll] = useState<boolean>(false);
+  const [downloadProgress, setDownloadProgress] = useState<{
+    current: number;
+    total: number;
+  }>({ current: 0, total: 0 });
 
   const campaignMonitoringPicsGet = useSelector(
     (state: any) => state.campaignMonitoringPicsGet
@@ -109,6 +115,82 @@ export const ShowMonitoringPicsPopup = (props: any) => {
     return null;
   }
 
+  const handleDownload = async (url: string, filename: string) => {
+    if (!url) return;
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = filename || "download";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      window.URL.revokeObjectURL(blobUrl);
+      return true;
+    } catch (error) {
+      console.error("Download failed:", error);
+      message.error(`Download failed for ${filename}`);
+      return false;
+    }
+  };
+
+  // Function to handle "Download All"
+  const handleDownloadAll = async () => {
+    setIsDownloadingAll(true);
+    setDownloadProgress({ current: 0, total: 0 });
+    message.info("Preparing files for download...");
+
+    const filesToDownload: { url: string; filename: string }[] = [];
+    const days = ["day", "night", "misc"];
+    const mediaTypes = ["video", "images", "geoTag", "newspaper"];
+
+    // Build the files to download array
+    days.forEach((time) => {
+      mediaTypes.forEach((type) => {
+        const files = monitoringPics?.timeWiseMonitoringData?.[time]?.[type];
+        if (files?.length > 0) {
+          filesToDownload.push({
+            url: files[0], // Taking only the first file of each type
+            filename: `${type}-${time}-${moment(monitoringDate).format(
+              "YYYY-MM-DD"
+            )}.${type === "video" ? "mp4" : "jpg"}`,
+          });
+        }
+      });
+    });
+
+    setDownloadProgress((prev) => ({ ...prev, total: filesToDownload.length }));
+
+    if (filesToDownload.length === 0) {
+      message.warning("No files available to download.");
+      setIsDownloadingAll(false);
+      return;
+    }
+
+    let successCount = 0;
+    // Use a traditional for loop instead of for...of with entries()
+    for (let i = 0; i < filesToDownload.length; i++) {
+      const file = filesToDownload[i];
+      const success = await handleDownload(file.url, file.filename);
+      if (success) successCount++;
+      setDownloadProgress({ current: i + 1, total: filesToDownload.length });
+    }
+
+    if (successCount === filesToDownload.length) {
+      message.success(`All ${successCount} files downloaded successfully!`);
+    } else {
+      message.warning(
+        `Downloaded ${successCount} out of ${filesToDownload.length} files.`
+      );
+    }
+
+    setIsDownloadingAll(false);
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 ">
       <div
@@ -129,23 +211,11 @@ export const ShowMonitoringPicsPopup = (props: any) => {
         <div className="flex justify-between">
           <div className="w-full flex items-center justify-between">
             <h1 className="text-[16px] font-semibold">Campaign Monitoring</h1>
-
             <i
               className="fi fi-br-circle-xmark"
               onClick={() => props?.onClose()}
             ></i>
           </div>
-          {/* {isShow ? (
-            <i
-              className="fi fi-br-angle-small-down"
-              onClick={() => handleClick(false)}
-            ></i>
-          ) : (
-            <i
-              className="fi fi-rr-angle-small-up"
-              onClick={() => handleClick(true)}
-            ></i>
-          )} */}
         </div>
         {isShow && (
           <div>
@@ -168,11 +238,32 @@ export const ShowMonitoringPicsPopup = (props: any) => {
               <NoDataView />
             ) : (
               <div>
-                <TabWithoutIcon
-                  currentTab={currentTab}
-                  setCurrentTab={handleSetCurrentTab}
-                  tabData={campaignMonitoringTab}
-                />
+                <div className="flex justify-between items-center">
+                  <TabWithoutIcon
+                    currentTab={currentTab}
+                    setCurrentTab={handleSetCurrentTab}
+                    tabData={campaignMonitoringTab}
+                  />
+                  <div className="flex items-center gap-2">
+                    {isDownloadingAll && (
+                      <span className="text-sm text-gray-600">
+                        Downloading {downloadProgress.current} of{" "}
+                        {downloadProgress.total}
+                      </span>
+                    )}
+                    <button
+                      onClick={handleDownloadAll}
+                      disabled={isDownloadingAll}
+                      className={`h-8 text-white text-sm px-3 py-1 rounded shadow-md transition ${
+                        isDownloadingAll
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-[#129BFF] hover:bg-[#107ACC]"
+                      }`}
+                    >
+                      {isDownloadingAll ? "Downloading..." : "Download All"}
+                    </button>
+                  </div>
+                </div>
                 <div className="h-auto pt-2">
                   <div className="w-full">
                     <MonitoringPictures
@@ -185,6 +276,7 @@ export const ShowMonitoringPicsPopup = (props: any) => {
                       screenId={monitoringPics?.screenId}
                       campaignId={monitoringPics?.campaignId}
                       setFileType={() => {}}
+                      handleDownload={handleDownload}
                     />
                   </div>
                 </div>

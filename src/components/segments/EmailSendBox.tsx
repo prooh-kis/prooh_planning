@@ -31,7 +31,7 @@ export const EmailSendBox = ({
   return (
     <div className="p-2">
       <div className="flex flex-col">
-        <h1 className="font-semibold text-lg">2. Share this plan</h1>
+        <h1 className="font-semibold text-lg">{page === "VendorApproval" && "2."}Share this plan</h1>
         <div className="grid grid-cols-6 gap-2 pt-4">
           <div className="col-span-4">
             <PrimaryInput
@@ -60,15 +60,16 @@ export const EmailSendBox = ({
         {page !== "VendorApproval" ? (
           <div
             className="py-4 flex items-center gap-2"
-            onClick={() => {
-              message.info("Sending email to all vendors...");
-              sendEmailToAll();
-            }}
           >
             <p className="text-gray-500 text-[14px] truncate">
               Click here to send request for email confirmation to vendor
             </p>
-            <i className="fi fi-ss-paper-plane text-primaryButton text-[14px] flex items-center"></i>
+            <i className="cursor-pointer fi fi-ss-paper-plane text-primaryButton text-[14px] flex items-center"
+              onClick={() => {
+                message.info("Sending email to all vendors...");
+                sendEmailToAll();
+              }}
+            ></i>
           </div>
         ) : (
           <div className="py-4 flex items-center gap-2">

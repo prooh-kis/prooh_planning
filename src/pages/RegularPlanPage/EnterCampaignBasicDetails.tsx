@@ -444,7 +444,7 @@ export const EnterCampaignBasicDetails = ({
         <button
           type="submit"
           className="border border-1 py-2 px-8 text-[16px] font-semibold rounded-md bg-[#00A0FA] text-[#FFFFFF] hover:bg-[#D7D7D7] hover:text-black truncate font-custom h-12 w-48"
-          title="Save and go next"
+          title="Create"
           onClick={() => {
             if (validateForm()) {
               saveCampaignDetailsOnLocalStorage();

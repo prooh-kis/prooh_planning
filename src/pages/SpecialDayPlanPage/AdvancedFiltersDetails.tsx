@@ -11,7 +11,6 @@ import {
   getPlanningPageFooterData,
   getScreenDataForAdvanceFilters,
 } from "../../actions/screenAction";
-import { ALL_TOUCHPOINTS } from "../../constants/helperConstants";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { getUniqueScreens } from "../../utils/screenRanking";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
@@ -142,10 +141,11 @@ export const AdvanceFiltersDetails = ({
   useEffect(() => {
     if (!campaignDetails) return;
     if (errorAddDetails) {
-      message.error("Error in saving campaigns details");
+      message.error("Error in saving campaigns details, please check you request");
     }
     if (errorAdvanceFilterData) {
       alert("Your system is having some issue, please refresh the page...");
+      dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
     }
 
     dispatch(
@@ -173,16 +173,16 @@ export const AdvanceFiltersDetails = ({
 
   useEffect(() => {
     if (advanceFilterData && finalSelectedScreens?.length === 0) {
-      if (campaignDetails && advanceFilterData?.screens?.length == 0) {
+      if (successAddDetails && advanceFilterData?.screens?.length == 0) {
         message.error(
-          "You have got Zero screen, please change your previous selection"
+          "You have got Zero screen, please change your previous selection sunbaaa"
         );
       } else {
         setAllScreens(advanceFilterData?.screens);
         setFinalSelectedScreens(advanceFilterData?.screens);
       }
     }
-  }, [advanceFilterData, campaignId, finalSelectedScreens, campaignDetails]);
+  }, [advanceFilterData, campaignId, finalSelectedScreens, successAddDetails]);
 
   const handleSaveAndContinue = () => {
     if (!pathname.split("/").includes("view")) {
@@ -232,7 +232,7 @@ export const AdvanceFiltersDetails = ({
         <LoadingScreen />
       ) : (
         <div className="w-full">
-          <div className="w-full h-full grid grid-cols-2 gap-4">
+          <div className="w-full h-full grid grid-cols-2 gap-4 pb-16">
             <div className="col-span-1 h-full pr-4">
               <div className="flex justify-between items-center">
                 <div>

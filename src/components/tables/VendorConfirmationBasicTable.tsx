@@ -1,8 +1,6 @@
 import { Tooltip } from "antd";
 import {
-  convertDataTimeToLocale,
   convertDateIntoDateMonthYear,
-  convertIntoDateAndTime,
 } from "../../utils/dateAndTimeUtils";
 import { formatNumber } from "../../utils/formatValue";
 
@@ -21,19 +19,7 @@ export const VendorConfirmationBasicTable = ({
               <h1 className="text-[14px]">{vendorConfirmationData?.name}</h1>
             </div>
           </div>
-          <div className="grid grid-cols-2">
-            <div className="border py-1 px-4 bg-[#F7F7F7] truncate">
-              <h1 className="text-[14px]">Total Cost</h1>
-            </div>
-            <div className="border py-1 px-4 truncate">
-              <h1 className="text-[14px]">
-                &#8377;
-                {formatNumber(
-                  Number(vendorConfirmationData?.totalCampaignBudget)
-                )}
-              </h1>
-            </div>
-          </div>
+          
           <div className="grid grid-cols-2">
             <div className="border py-1 px-4 bg-[#F7F7F7] truncate">
               <h1 className="text-[14px]">Campaign Type</h1>
@@ -62,10 +48,20 @@ export const VendorConfirmationBasicTable = ({
           </div>
           <div className="grid grid-cols-2">
             <div className="border py-1 px-4 bg-[#F7F7F7] rounded-bl truncate">
-              <h1 className="text-[14px]">Plan No.</h1>
+              <h1 className="text-[14px]">Discount</h1>
             </div>
             <div className="border py-1 px-4 rounded-br truncate">
-              <h1 className="text-[14px]">24/10/12-332-04</h1>
+              <h1 className="text-[14px]">{(vendorConfirmationData?.totalDiscount * 100 /vendorConfirmationData?.totalCampaignBudget)?.toFixed(2)} %</h1>
+            </div>
+          </div>
+          <div className="grid grid-cols-2">
+            <div className="border py-1 px-4 bg-[#F7F7F7] truncate">
+              <h1 className="text-[14px]">Total Cost</h1>
+            </div>
+            <div className="border py-1 px-4 truncate">
+              <h1 className="text-[14px] text-[#5FAC90] font-semibold">
+                &#8377; {Number(vendorConfirmationData?.finalCampaignBudget || vendorConfirmationData?.totalCampaignBudget)?.toFixed(2)}
+              </h1>
             </div>
           </div>
         </div>
@@ -112,7 +108,6 @@ export const VendorConfirmationBasicTable = ({
                   {vendorConfirmationData?.clientName}
                 </h1>
               </Tooltip>
-
             </div>
           </div>
           <div className="grid grid-cols-2">

@@ -111,7 +111,6 @@ export const SpecialDay = ({
   }, [dispatch]);
 
   const handleSaveData = (data: any) => {
-    // console.log("all datat :", data);
     dispatch(
       addDetailsToCreateCampaign({
         ...data,
@@ -143,6 +142,7 @@ export const SpecialDay = ({
         selectedSpacialDay={selectedSpacialDay}
         path={path}
       />
+      {/* <CreateCalendarDate /> */}
       <div className="flex justify-between">
         <div>
           <h1 className="text-[24px] text-[#232323] font-semibold leading-[32.68px] tracking-[-0.02em]">
@@ -163,6 +163,7 @@ export const SpecialDay = ({
             style={{ width: "456px" }}
           />
           <button
+            type="button"
             onClick={() => setCategory("")}
             className="border border-[#D9D9D9] px-4 py-2 rounded-md text-[#D9D9D9]"
           >
@@ -171,17 +172,17 @@ export const SpecialDay = ({
         </div>
         <div className="flex justify-end mt-4">
           <button
+            type="button"
             className="px-8 py-2 bg-[#1297E2] text-[#FFFFFF] rounded-md h-12"
             onClick={handleOpenModel}
           >
             Continue
-            {/* Proceed To Cost Optimization */}
           </button>
         </div>
         {/* <EventCalender events={calendarListData1?.filteredCalendar || []} /> */}
       </div>
       <div className="">
-        <h1 className="py-2">Months</h1>
+        <h1 className="pt-2 text-[14px] font-semibold">{new Date().getFullYear()}</h1>
         <div className="py-4 w-full">
           <MonthRangeSlider
             setMonth={setMonth}

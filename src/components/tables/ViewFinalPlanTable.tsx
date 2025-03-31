@@ -116,13 +116,13 @@ export const ViewFinalPlanTable = ({
             <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
           </Tooltip>
         </div>
-        <div className="flex  basis-1/2 gap-8">
+        <div className="flex  basis-1/2 gap-4 truncate">
           {poTableData?.couponId && poTableData?.couponId !== "NA" && (
             <h1 className="text-left ">
               &#8377;{" "}
-              {formatNumber(
+              {
                 Number(poTableData?.finalCampaignBudget)?.toFixed(2)
-              )}
+              }
               *
             </h1>
           )}
@@ -134,48 +134,53 @@ export const ViewFinalPlanTable = ({
             }`}
           >
             &#8377;{" "}
-            {formatNumber(Number(poTableData?.totalCampaignBudget)?.toFixed(2))}
+            {Number(poTableData?.totalCampaignBudget)?.toFixed(2)}
             *
           </h1>
 
-          {poTableData?.couponId && poTableData?.couponId !== "NA" && (
-            <h1 className="text-left text-[#388e3c]">
-              {
-                coupons?.find((c: any) => c._id == poTableData?.couponId)
-                  ?.discountPercent
-              }
-              % off
-            </h1>
-          )}
+         
         </div>
       </div>
       {poTableData?.couponId && poTableData?.couponId !== "NA" && (
-        <>
-          <div className="flex font-semibold ">
-            <h1 className="text-left text-[#388e3c] text-sm">
-              You saved &#8377;{" "}
-              {formatNumber(Number(poTableData?.totalDiscount))}*
-            </h1>
+        <div className="flex items-end justify-center">
+          <div className="basis-1/2">
+            <div className="flex font-semibold ">
+              <h1 className="text-left text-[#388e3c] text-sm">
+                You saved &#8377;{" "}
+                {formatNumber(Number(poTableData?.totalDiscount).toFixed(2))}*
+              </h1>
+            </div>
+            <div className="flex font-semibold items-center gap-4">
+              <h1 className="text-left text-sm">
+                Discount Applied:{" "}
+                <span className="text-[#129BFF]">
+                  {
+                    coupons?.find((c: any) => c._id == poTableData?.couponId)
+                      ?.couponCode
+                  }
+                </span>
+              </h1>
+              <i
+                className="fi fi-sr-trash flex items-center lg:text-[14px] text-[12px] text-[#EF4444]"
+                onClick={() => {
+                  if (window.confirm("Do u want to remove applied coupon?"))
+                    handleRemoveCoupon();
+                }}
+              ></i>
+            </div>
           </div>
-          <div className="flex font-semibold items-center gap-4">
-            <h1 className="text-left text-sm">
-              Discount Applied:{" "}
-              <span className="text-[#129BFF]">
-                {
-                  coupons?.find((c: any) => c._id == poTableData?.couponId)
-                    ?.couponCode
-                }
-              </span>
-            </h1>
-            <i
-              className="fi fi-sr-trash flex items-center lg:text-[14px] text-[12px] text-[#EF4444]"
-              onClick={() => {
-                if (window.confirm("Do u want to remove applied coupon?"))
-                  handleRemoveCoupon();
-              }}
-            ></i>
-          </div>
-        </>
+          <div className="basis-1/2">
+              {poTableData?.couponId && poTableData?.couponId !== "NA" && (
+                <h1 className="text-left text-[#388e3c]">
+                  {
+                    coupons?.find((c: any) => c._id == poTableData?.couponId)
+                      ?.discountPercent
+                  }
+                  % off
+                </h1>
+              )}
+            </div>
+        </div>
       )}
     </div>
   );

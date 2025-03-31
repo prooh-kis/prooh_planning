@@ -26,7 +26,6 @@ export const AddCampaignDetails = ({
   step,
   open,
   userInfo,
-  campaignId,
   router,
   setCurrentStep,
   campaignDetails,
@@ -41,13 +40,11 @@ export const AddCampaignDetails = ({
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [campaignName, setCampaignName] = useState<any>(campaignDetails?.name || ""
-  );
+  const [campaignName, setCampaignName] = useState<any>(campaignDetails?.name || "");
   const [brandName, setBrandName] = useState<any>(campaignDetails?.brandName || "");
   const [clientName, setClientName] = useState<any>(campaignDetails?.clientName || "");
   const [industry, setIndustry] = useState<any>(campaignDetails?.industry || "");
-
-  const [sov, setSov] = useState<number>(campaignDetails?.sov || 1);
+  const [sov, setSov] = useState<any>(campaignDetails?.sov || 1);
   const allClientAgencyNamesListGet = useSelector(
     (state: any) => state.allClientAgencyNamesListGet
   );
@@ -130,7 +127,6 @@ export const AddCampaignDetails = ({
     }
 
     if (successAddDetails && !pathname.split("/").includes("view") && !pathname.split("/").includes("edit")) {
-      console.log(addDetails);
       navigate(`/${path}/${addDetails?._id}`);
       setCurrentStep(step + 1);
       dispatch({
@@ -154,6 +150,7 @@ export const AddCampaignDetails = ({
       setSov(campaignDetails?.sov);
     }
   },[campaignDetails]);
+
   return (
     <Modal
       closable={true}
@@ -269,24 +266,27 @@ export const AddCampaignDetails = ({
             )}
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-8 pt-2">
-          <div className="col-span-1 py-1">
-            <div className="block flex justify-between gap-2 items-center mb-2">
-              <label className="block text-secondaryText text-[14px]">
-                SOV
-              </label>
-              <Tooltip title="How many times you want to play creatives in one loop">
-                <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-              </Tooltip>
+        {sov && (
+          <div className="grid grid-cols-2 gap-8 pt-2">
+            <div className="col-span-1 py-1">
+              <div className="block flex justify-between gap-2 items-center mb-2">
+                <label className="block text-secondaryText text-[14px]">
+                  SOV
+                </label>
+                <Tooltip title="How many times you want to play creatives in one loop">
+                  <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+                </Tooltip>
+              </div>
+              <DropdownInput
+                options={allIndex}
+                selectedOption={sov}
+                placeHolder="Select SOV"
+                setSelectedOption={setSov}
+              />
             </div>
-            <DropdownInput
-              options={allIndex}
-              selectedOptions={sov}
-              placeHolder="Select SOV"
-              setSelectedOption={setSov}
-            />
           </div>
-        </div>
+        )}
+
         <button
           className="px-8 py-2 mt-4 text-[16px] font-semibold bg-[#1297E2] text-[#FFFFFF] rounded-md w-full"
           onClick={saveCampaignDetailsOnLocalStorage}
