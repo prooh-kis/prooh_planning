@@ -126,8 +126,8 @@ export const RegularCohortComparisonDetails = ({
                     <Tooltip
                       title={
                         type === "regular"
-                          ? "Regular slots have more than 7% of total audiences available on the site"
-                          : "Cohort slots have more than 15% of total audiences available on the site"
+                          ? "Regular slots have more than 3% of total audiences available on the site"
+                          : "Cohort slots have more than 5% of total audiences available on the site"
                       }
                     >
                       <i className="fi fi-rs-info lg:text-[12px] md:text-[10px] text-gray-400 flex items-center"></i>
