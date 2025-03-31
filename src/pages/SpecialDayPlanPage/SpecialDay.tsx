@@ -89,17 +89,12 @@ export const SpecialDay = ({
   useEffect(() => {
     const year = new Date().getFullYear();
     const todayDate = new Date().getDate();
-    const lastDayOfCurrentMonth = new Date(
-      year,
-      new Date().getMonth() + 1,
-      0
-    ).getDate();
+    const lastDayOfCurrentMonth = new Date(year, month + 1, 0).getDate();
 
     dispatch(
       getCalendarListData({
-        startDate: `${year}-${month + 1}-${
-          month === new Date().getMonth() ? todayDate : "01"
-        }`,
+        startDate: `${year}-${month + 1}-${month === new Date().getMonth() ? todayDate : "01"
+          }`,
         endDate: `${year}-${month + 1}-${lastDayOfCurrentMonth}`,
         category: [category],
       })
@@ -255,23 +250,22 @@ export const SpecialDay = ({
                       {key}
                     </h1>
                     <h1
-                      className={`${
-                        key === "Total Budget"
-                          ? "text-[#1297E2]"
-                          : "text-[#CC1C1C]"
-                      } text-[14px] leading-[21.79px] tracking-[-0.02em]`}
+                      className={`${key === "Total Budget"
+                        ? "text-[#1297E2]"
+                        : "text-[#CC1C1C]"
+                        } text-[14px] leading-[21.79px] tracking-[-0.02em]`}
                     >
                       {key === "Price Per Slot" ||
-                      key === "Total Budget" ||
-                      key === "CPM"
+                        key === "Total Budget" ||
+                        key === "CPM"
                         ? "\u20B9 "
                         : ""}
                       {!isNaN(Number(tableDataForSelectTopicalDay1[key]))
                         ? formatNumber(
-                            Number(tableDataForSelectTopicalDay1[key]).toFixed(
-                              0
-                            )
+                          Number(tableDataForSelectTopicalDay1[key]).toFixed(
+                            0
                           )
+                        )
                         : tableDataForSelectTopicalDay1[key]}
                       {key === "Campaign Duration" ? " Days" : ""}
                     </h1>
