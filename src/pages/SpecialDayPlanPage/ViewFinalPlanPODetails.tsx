@@ -275,6 +275,9 @@ export const ViewFinalPlanPODetails = ({
           awsURL: "",
         },
       ]);
+
+      setConfirmToProceed(true);
+      setSkipEmailConfirmation(true);
     }
   };
 
@@ -284,6 +287,12 @@ export const ViewFinalPlanPODetails = ({
         (singleFile: any) => singleFile.url !== file.url
       )
     );
+    if (confirmationImageFiles.filter(
+      (singleFile: any) => singleFile.url !== file.url
+    ).length === 0) {
+      setConfirmToProceed(false);
+      setSkipEmailConfirmation(false);
+    }
   };
 
   const getAWSUrl = async (data: any) => {
@@ -425,6 +434,19 @@ export const ViewFinalPlanPODetails = ({
           };
         })
       );
+
+      if (images?.map((image: string) => {
+        return {
+          file: null,
+          url: image,
+          fileType: "",
+          fileSize: "",
+          awsURL: image,
+        };
+      }).length > 0) {
+        setConfirmToProceed(true);
+        setSkipEmailConfirmation(true);
+      }
     }
   }, [userInfo, dispatch, campaignDetails, loadingSendEmail]);
 

@@ -6,8 +6,9 @@ import { AdvanceFiltersDetails } from "./AdvancedFiltersDetails";
 import { RegularCohortComparisonDetails } from "./RegularCohortComparisonDetails";
 import { ScreenSummaryDetails } from "./ScreenSummaryDetails";
 import { TriggerDetails } from "./TriggerDetails";
-import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
-import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
+import { ViewFinalPlanPODetails, VendorConfirmationDetails } from "../../components/planner";
+// import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
+// import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
