@@ -794,7 +794,7 @@ export const NewCreativeUpload = ({
                 <div className="w-[50%] border-r p-4">
                   <h1>
                     Selected Screen Count{" "}
-                    <span className="text-[#F69336] text-[13px]">
+                    <span className="text-[#b2b2b2] text-[13px]">
                       ({currentScreens.length})
                     </span>
                   </h1>
@@ -824,26 +824,40 @@ export const NewCreativeUpload = ({
                   )}
                   {getLabel()}
 
-                  {currentScreens?.length > 0 && (
-                    <button
-                      onClick={() =>
-                        setIsBucketPopupOpen((pre: boolean) => !pre)
+                  <button
+                    onClick={() => {
+                      if (currentScreens?.length == 0) {
+                        message.error(
+                          "Please select screens to upload creatives"
+                        );
+                        return;
                       }
-                      className={
-                        "border border-dashed border-2 border-[#129BFF] text-[#129BFF] rounded-2xl  bg-[#F4F9FF] py-1 w-full"
-                      }
-                    >
-                      + Upload
-                    </button>
-                  )}
+                      setIsBucketPopupOpen((pre: boolean) => !pre);
+                    }}
+                    className={`border border-dashed border-2  rounded-2xl py-1 w-full    ${
+                      currentScreens?.length > 0
+                        ? "text-[#129BFF] bg-[#F4F9FF] "
+                        : "text-[#b2b2b2] bg-[#fafafa] border-[#b2b2b2]"
+                    }`}
+                  >
+                    + Upload
+                  </button>
                 </div>
                 <div className="w-[60%] p-4">
-                  <TabWithIcon
-                    tabData={viewPlayCreativeTime}
-                    currentTab={viewCreativeType}
-                    setCurrentTab={setViewCreativeType}
-                    justify={true}
-                  />
+                  <h1>
+                    Uploaded Creatives{" "}
+                    <span className="text-[#b2b2b2] text-[13px] ">
+                      ({getFileListToView()?.length})
+                    </span>
+                  </h1>
+                  <div className="mt-2">
+                    <TabWithIcon
+                      tabData={viewPlayCreativeTime}
+                      currentTab={viewCreativeType}
+                      setCurrentTab={setViewCreativeType}
+                      justify={true}
+                    />
+                  </div>
                   {getFileListToView()?.length === 0 && (
                     <NoDataView
                       title={
@@ -866,7 +880,7 @@ export const NewCreativeUpload = ({
         )}
         <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
           <Footer
-            mainTitle={validate() ? "Continue" : "Upload and Continue"}
+            mainTitle={validate() ? "Continue" : "Continue"}
             handleBack={() => setCurrentStep(step - 1)}
             campaignId={campaignId}
             handleSave={handleSaveAndContinue}

@@ -13,9 +13,7 @@ import {
   getDataFromLocalStorage,
   saveDataOnLocalStorage,
 } from "../../utils/localStorageUtils";
-import {
-  SELECTED_TRIGGER,
-} from "../../constants/localStorageConstants";
+import { SELECTED_TRIGGER } from "../../constants/localStorageConstants";
 import { message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
@@ -27,6 +25,7 @@ import {
   getTableDataForSelectTriggerPage,
 } from "../../actions/screenAction";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
+import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 interface TriggerProps {
   setCurrentStep: (step: number) => void;
   step: number;
@@ -217,7 +216,7 @@ export const TriggerDetails = ({
     maxVal,
     rainType,
     aqi,
-    campaignId
+    campaignId,
   ]);
 
   const handleSaveAndContinue = () => {
@@ -276,7 +275,9 @@ export const TriggerDetails = ({
       setRainType(trigger?.weatherTriggers[0]?.rainType || "0");
       setAqi(trigger?.weatherTriggers[0]?.aqi || "");
       setSelectedSOV(trigger?.weatherTriggers[0]?.openBudgetSovPercent || null);
-      setSelectedBudget(Number(trigger?.weatherTriggers[0]?.budget).toFixed(0) || null);
+      setSelectedBudget(
+        Number(trigger?.weatherTriggers[0]?.budget).toFixed(0) || null
+      );
       setMaxVal(trigger?.weatherTriggers[0]?.maxVal || 0);
       setSelectedTimeOptions(trigger?.weatherTriggers[0]?.period || 300);
     } else if (trigger?.sportsTriggers?.length > 0) {
@@ -288,7 +289,9 @@ export const TriggerDetails = ({
       setSelectedMatchId(trigger?.sportsTriggers[0]?.matchId || "");
       setCondition(trigger?.sportsTriggers[0]?.condition || "");
       setSelectedSOV(trigger?.sportsTriggers[0]?.openBudgetSovPercent || null);
-      setSelectedBudget(Number(trigger?.sportsTriggers[0]?.budget).toFixed(0) || null);
+      setSelectedBudget(
+        Number(trigger?.sportsTriggers[0]?.budget).toFixed(0) || null
+      );
       setSelectedTimeOptions(trigger?.sportsTriggers[0]?.period || 300);
     } else if (trigger?.vacantSlots?.length > 0) {
       setSelectedTrigger({
@@ -296,7 +299,9 @@ export const TriggerDetails = ({
       });
       setCondition(trigger?.sportsTriggers[0]?.condition || "");
       setSelectedSOV(trigger?.sportsTriggers[0]?.openBudgetSovPercent || null);
-      setSelectedBudget(Number(trigger?.sportsTriggers[0]?.budget).toFixed(0) || null);
+      setSelectedBudget(
+        Number(trigger?.sportsTriggers[0]?.budget).toFixed(0) || null
+      );
       setSelectedTimeOptions(trigger?.sportsTriggers[0]?.period || 300);
     }
   }, [campaignId]);
@@ -310,10 +315,10 @@ export const TriggerDetails = ({
   useEffect(() => {
     if (!campaignDetails) return;
     if (errorAddDetails) {
-      message.error("Error in add campaign details...")
+      message.error("Error in add campaign details...");
     }
     if (errorTriggerDetails) {
-      message.error("Error in getting impression wise data...")
+      message.error("Error in getting impression wise data...");
     }
     dispatch(
       getTableDataForSelectTriggerPage({ duration: 30, impactFactor: 0.1 })
@@ -331,9 +336,9 @@ export const TriggerDetails = ({
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
-      setCurrentStep(step+1);
+      setCurrentStep(step + 1);
     }
-  },[successAddDetails, step, setCurrentStep, dispatch]);
+  }, [successAddDetails, step, setCurrentStep, dispatch]);
 
   return (
     <div className="w-full">
@@ -377,13 +382,13 @@ export const TriggerDetails = ({
                 className="text-[14px] text-primaryButton underline cursor-pointer"
                 onClick={handleSkipTriggerSelection}
               >
-                Skip trigger selection
+                Skip trigger selection / Remove
               </p>
             )}
           </div>
         )}
       </div>
-      <div className="grid grid-cols-12 gap-4 w-full pb-16">
+      <div className="grid grid-cols-12 gap-4 w-full">
         {!pathname?.split("/").includes("triggerbasedplan") && (
           <div className="col-span-4 border rounded py-5 flex flex-col justify-between">
             <div className="">
@@ -423,9 +428,10 @@ export const TriggerDetails = ({
                     <p className="text-[14px]">Choose your weather condition</p>
                   </div>
                 </div>
-                <div className="flex items-center cursor-pointer"
+                <div
+                  className="flex items-center cursor-pointer"
                   onClick={() => {
-                    message.info("Coming soon, stay tuned...")
+                    message.info("Coming soon, stay tuned...");
                   }}
                 >
                   <p className="text-[12px] text-primaryButton underline">
@@ -436,12 +442,13 @@ export const TriggerDetails = ({
               <div className="py-1">
                 <TabWithIcon
                   trigger={true}
+                  justify={true}
                   currentTab={currentTab}
                   setCurrentTab={setCurrentTab}
                   tabData={weatherTabData()}
                 />
               </div>
-              
+
               <WeatherSegment
                 minVal={minVal}
                 setMinVal={setMinVal}
@@ -521,9 +528,7 @@ export const TriggerDetails = ({
           )}
           <div className="">
             <OpenBudgetSegment
-              totalCost={
-                campaignDetails?.totalCampaignBudget
-              }
+              totalCost={campaignDetails?.totalCampaignBudget}
               selectedSOV={selectedSOV}
               selectedBudget={selectedBudget}
               setSelectedBudget={setSelectedBudget}
@@ -556,9 +561,9 @@ export const TriggerDetails = ({
                   })}
                 />
               </div>
-              <h1 className="text-[14px] text-[#969696]">
-                Kindly re-confirm the additional budget of
-                <span className="font-bold">
+              <h1 className="text-[16px] text-primary  pt-2">
+                Additional budget of
+                <span className="font-bold text-[#129BFF]">
                   {" "}
                   &#8377;{formatNumber(Number(selectedBudget).toFixed(0))}{" "}
                 </span>
@@ -597,6 +602,28 @@ export const TriggerDetails = ({
           </div>
         )}
       </div>
+      {/* <div className="pb-16">
+        <div className="flex items-center pt-4">
+          <CheckboxInput
+            label={
+              <>
+                Kindly re-confirm the additional budget of
+                <span className="font-bold">
+                  {" "}
+                  &#8377;{formatNumber(Number(selectedBudget).toFixed(0))}{" "}
+                </span>
+                for your campaign triggers
+              </>
+            }
+            onChange={(e) => {
+              // handleConfirmScreensSelections({
+              //   checked: e,
+              //   screens: finalSelectedScreens,
+              // });
+            }}
+          />
+        </div>
+      </div> */}
 
       <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF] z-10">
         <Footer
