@@ -55,8 +55,7 @@ export const AdvanceFiltersDetails = ({
   );
   const [circleData, setCircleData] = useState<any>({});
   const [routes, setRoutes] = useState<any[]>(
-    campaignDetails?.advanceFilterData
-      ?.routes || []
+    JSON.parse(JSON.stringify(campaignDetails?.advanceFilterData?.routes || []))
   );
   const [routeOrigin, setRouteOrigin] = useState<any>([]);
   const [routeDestination, setRouteDestination] = useState<any>([]);
@@ -198,28 +197,20 @@ export const AdvanceFiltersDetails = ({
           advanceFilterData: {
             stores: [
               {
-                brands: dataBrand,
-                comp: dataComp,
+                brands: [...dataBrand],
+                comp: [...dataComp],
                 radius: circleRadius,
               },
             ],
-            routes: routes?.map((route: any) => {
-              return {
-                origin: route.origin,
-                destination: route.destination,
-                radius: routeRadius,
-              };
-            }),
+            routes: routes.map((route: any) => ({
+              ...route,
+              selectedScreens: [...(route.selectedScreens || [])], // Ensure a new array
+            })),
             poiLists: [],
-            polygons: polygons?.map((poly: any) => {
-              return {
-                id: poly.id,
-                type: poly.type,
-                properties: poly.properties,
-                geometry: poly.geometry,
-                screens: poly.screens,
-              };
-            }),
+            polygons: polygons.map((poly: any) => ({
+              ...poly,
+              screens: [...(poly.screens || [])],
+            })),
           },
         })
       );
