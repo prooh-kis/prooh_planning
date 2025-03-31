@@ -9,8 +9,6 @@ import {
   getVendorConfirmationDetails,
   getVendorConfirmationStatusTableDetails,
 } from "../../actions/screenAction";
-import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
-import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import {
   VendorConfirmationBasicTable,
   VendorConfirmationStatusTable,
@@ -40,9 +38,7 @@ interface VendorConfirmationDetailsProps {
   step: any;
   campaignId?: any;
   userInfo?: any;
-  successAddCampaignDetails?: any;
-  pageSuccess?: boolean;
-  setPageSuccess?: any;
+  campaignDetails?: any;
 }
 
 export const VendorConfirmationDetails = ({
@@ -50,9 +46,7 @@ export const VendorConfirmationDetails = ({
   step,
   campaignId,
   userInfo,
-  successAddCampaignDetails,
-  pageSuccess,
-  setPageSuccess,
+  campaignDetails,
 }: VendorConfirmationDetailsProps) => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
@@ -67,22 +61,16 @@ export const VendorConfirmationDetails = ({
   const [isDisabled, setIsDisabled] = useState<any>(true);
 
   const [selectedCampaignIds, setSelectedCampaignIds] = useState<any>([]);
+  const [skipEmailConfirmation, setSkipEmailConfirmation] = useState<any>(false);
 
-  // Initialize vendorInput with fallback values
-  const [vendorInput, setVendorInput] = useState<any>({
-    pageName: "View Final Plan Page",
-    id: campaignId,
-    name: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || "N/A",
-    brandName: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName || "N/A",
-    clientName: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.clientName || "N/A",
-    campaignType: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.campaignType || "N/A",
-    startDate: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startDate || "N/A",
-    endDate: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate || "N/A",
-    duration: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30,
-    selectedType: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType || "N/A",
-    screenIds: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds || [],
-    triggers: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.triggers || [],
-  });
+  const detailsToCreateCampaignAdd = useSelector(
+    (state: any) => state.detailsToCreateCampaignAdd
+  );
+  const {
+    loading: loadingAddDetails,
+    error: errorAddDetails,
+    success: successAddDetails,
+  } = detailsToCreateCampaignAdd;
 
   const vendorConfirmationDetailsGet = useSelector(
     (state: any) => state.vendorConfirmationDetailsGet
@@ -101,25 +89,6 @@ export const VendorConfirmationDetails = ({
     error: errorStatusTableData,
     data: statusTableData,
   } = vendorConfirmationStatusTableDetailsGet;
-
-  const campaignStatusChangeAfterVendorApproval = useSelector(
-    (state: any) => state.campaignStatusChangeAfterVendorApproval
-  );
-  const {
-    loading: loadingVendorApproval,
-    error: errorVendorApproval,
-    data: vendorApprovalStatus,
-  } = campaignStatusChangeAfterVendorApproval;
-
-  const campaignStatusChangeAfterCreativeUpload = useSelector(
-    (state: any) => state.campaignStatusChangeAfterCreativeUpload
-  );
-  const {
-    loading: loadingCampaignStatusChangeAfterCreativeUpload,
-    error: errorCampaignStatusChangeAfterCreativeUpload,
-    data: dataCampaignStatusChangeAfterCreativeUpload,
-    success: successCampaignStatusChangeAfterCreativeUpload,
-  } = campaignStatusChangeAfterCreativeUpload;
 
   const sendEmail = () => {
     const formData = new FormData();
@@ -295,28 +264,61 @@ export const VendorConfirmationDetails = ({
   };
 
   useEffect(() => {
-    if (!successAddCampaignDetails) return;
-    setPageSuccess(true);
-    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-  }, [dispatch, successAddCampaignDetails, setPageSuccess]);
+    if (!campaignDetails) return;
+    // Fetch data even if pageSuccess is false initially
+    if (errorVendorConfirmationData || errorStatusTableData || errorAddDetails) {
+      message.error("Something went wrong, please contact tech support...")
+    }
+    const images = campaignDetails?.clientApprovalImgs;
+
+    setFiles(
+      images?.map((image: string) => {
+        return {
+          file: null,
+          url: image,
+          fileType: "",
+          fileSize: "",
+          awsURL: image,
+        };
+      })
+    );
+    dispatch(
+      getVendorConfirmationStatusTableDetails({
+        id: campaignId,
+      })
+    );
+    dispatch(getVendorConfirmationDetails({
+      pageName: "View Final Plan Page",
+      id: campaignId,
+      name: campaignDetails?.name,
+      brandName: campaignDetails?.brandName,
+      clientName: campaignDetails?.clientName,
+      campaignType: campaignDetails?.campaignType,
+      startDate: campaignDetails?.startDate,
+      endDate: campaignDetails?.endDate,
+      duration: campaignDetails?.duration,
+      selectedType: campaignDetails?.selectedType,
+      screenIds: campaignDetails?.screenIds,
+      triggers: campaignDetails?.triggers,
+    }));
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "Vendor Confirmation Page",
+      })
+    );
+  }, [campaignDetails, campaignId, dispatch, errorAddDetails, errorStatusTableData, errorVendorConfirmationData]);
 
   useEffect(() => {
-    if (!successAddCampaignDetails && !pageSuccess) {
-      // Fetch data even if pageSuccess is false initially
-      dispatch(
-        getVendorConfirmationStatusTableDetails({
-          id: campaignId,
-        })
-      );
-      dispatch(getVendorConfirmationDetails(vendorInput));
-      dispatch(
-        getPlanningPageFooterData({
-          id: campaignId,
-          pageName: "Vendor Confirmation Page",
-        })
-      );
+    if (successAddDetails) {
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
+      setCurrentStep(step);
+      setIsDisabled(false);
     }
-  }, [dispatch, campaignId, vendorInput, successAddCampaignDetails, pageSuccess]);
+  },[successAddDetails, step, setCurrentStep, dispatch]);
+
 
   const handleOpenStatusModel = () => {
     setOpen((pre: boolean) => !open);
@@ -374,9 +376,19 @@ export const VendorConfirmationDetails = ({
     "Third Party": 0,
   };
 
+  const skipFunction = () => {
+    setIsDisabled(false);
+    dispatch(
+      getVendorConfirmationStatusTableDetails({
+        id: campaignId,
+      })
+    );
+  }
+
   return (
-    <>
-      {loadingStatusTableData ? (
+    <div className="w-full">
+
+      {loadingStatusTableData || loadingVendorConfirmationData ? (
         <LoadingScreen />
       ) : (
         <div className="w-full h-full">
@@ -410,7 +422,7 @@ export const VendorConfirmationDetails = ({
             <div className="flex justify-between">
               <div className="flex gap-8">
                 <div className="flex">
-                  <h1 className="text-[14px]">
+                  <h1 className="text-[14px] text-[#22C55E]">
                     Approved (
                     {myData?.Approved?.Connected +
                       myData?.Approved?.["Third Party"]}
@@ -418,7 +430,7 @@ export const VendorConfirmationDetails = ({
                   </h1>
                 </div>
                 <div className="flex">
-                  <h1 className="text-[14px]">
+                  <h1 className="text-[14px] text-[#F59E0B]">
                     Pending (
                     {myData?.Pending?.Connected +
                       myData?.Pending?.["Third Party"]}
@@ -426,7 +438,7 @@ export const VendorConfirmationDetails = ({
                   </h1>
                 </div>
                 <div className="flex">
-                  <h1 className="text-[14px]">
+                  <h1 className="text-[14px] text-[#EF4444]">
                     Rejected (
                     {myData?.Rejected?.Connected +
                       myData?.Rejected?.["Third Party"]}
@@ -467,7 +479,7 @@ export const VendorConfirmationDetails = ({
                       CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
                   ).length,
                 ]}
-                colors={["#FF0808", "#5FAC90", "#F9B34B"]}
+                colors={["#EF4444", "#22C55E", "#EF4444"]}
                 totalValue={statusTableData?.length}
               />
             </div>
@@ -501,6 +513,11 @@ export const VendorConfirmationDetails = ({
                     files={files}
                     handleAddNewFile={handleAddNewFile}
                     removeImage={removeImage}
+                    setSkipEmailConfirmation={(e: any) => {
+                      setSkipEmailConfirmation(e);
+                    }}
+                    skipFunction={skipFunction}
+                    skipEmailConfirmation={skipEmailConfirmation}
                   />
                 </div>
               </div>
@@ -512,18 +529,19 @@ export const VendorConfirmationDetails = ({
             onDoubleClick={() => setIsDisabled(!isDisabled)}
           >
             <Footer
-              mainTitle="See Dashboard"
+              mainTitle={new Date().getTime() < new Date(campaignDetails?.startDate)?.getTime() ? "Confirm" : "See Analytics"}
               handleBack={() => {
                 setCurrentStep(step - 1);
               }}
               handleSave={handleSaveAndContinue}
               campaignId={campaignId}
               pageName="Vendor Confirmation Page"
-              successAddCampaignDetails={successAddCampaignDetails}
+              loadingCost={loadingAddDetails || loadingStatusTableData || loadingVendorConfirmationData}
+              successCampaignDetails={successAddDetails}
             />
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };

@@ -5,8 +5,10 @@ import { AdvanceFiltersDetails } from "./AdvancedFiltersDetails";
 import { StoreBasedScreenSummaryDetails } from "./StoreBasedScreenSummaryDetails";
 import { SetAdsPlayTime } from "./SetAdsPlayTime";
 import { StoreBasedPlanSummaryTable } from "./StoreBasedPlanSummaryTable";
-import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
-import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
+// import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
+import { ViewFinalPlanPODetails, VendorConfirmationDetails } from "../../components/planner";
+// import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   getDataFromLocalStorage,

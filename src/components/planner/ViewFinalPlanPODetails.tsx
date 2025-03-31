@@ -7,14 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getFinalPlanPOTableData,
   getPlanningPageFooterData,
+  getRegularVsCohortPriceData,
   getScreenSummaryPlanTableData,
 } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
-import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
-import {
-  FULL_CAMPAIGN_PLAN,
-  SCREEN_SUMMARY_TABLE_DATA,
-} from "../../constants/localStorageConstants";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
   getAWSUrlToUploadFile,
@@ -40,23 +36,18 @@ interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
   campaignId?: any;
-  successAddCampaignDetails?: any;
-  pageSuccess?: boolean;
-  setPageSuccess?: any;
+  campaignDetails?: any;
 }
 
 export const ViewFinalPlanPODetails = ({
   setCurrentStep,
   step,
   campaignId,
-  successAddCampaignDetails,
-  pageSuccess,
-  setPageSuccess,
+  campaignDetails,
 }: ViewFinalPlanPODetailsProps) => {
   const pageRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
-  const [pageLoading, setPageLoading] = useState<boolean>(true);
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
@@ -74,39 +65,34 @@ export const ViewFinalPlanPODetails = ({
   const [poInput, setPoInput] = useState<any>({
     pageName: "View Final Plan Page",
     id: campaignId,
-    name: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name,
-    brandName:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName,
-    clientName:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.clientName,
-    campaignType:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.campaignType,
-    startDate:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startData,
-    endDate: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate,
-    duration:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration,
-    selectedType:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.selectedType,
-    gender: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender,
-    screenIds:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds,
-
-    totalImpression:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-        ?.totalImpression,
-    totalReach:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.totalReach,
-    totalCpm:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.totalCpm,
-    triggers:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-        ?.selectedTriggers,
-    totalCampaignBudget:
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-        ?.totalCampaignBudget,
-    cohorts: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts,
+    name: campaignDetails?.name,
+    brandName: campaignDetails?.brandName,
+    clientName: campaignDetails?.clientName,
+    campaignType: campaignDetails?.campaignType,
+    startDate: campaignDetails?.startData,
+    endDate: campaignDetails?.endDate,
+    duration: campaignDetails?.duration,
+    selectedType: campaignDetails?.selectedType,
+    gender: campaignDetails?.gender,
+    screenIds: campaignDetails?.screenIds,
+    totalImpression: campaignDetails?.totalImpression,
+    totalReach: campaignDetails?.totalReach,
+    totalCpm: campaignDetails?.totalCpm,
+    triggers: campaignDetails?.selectedTriggers,
+    totalCampaignBudget: campaignDetails?.totalCampaignBudget,
+    cohorts: campaignDetails?.cohorts,
   });
+  const [confirmToProceed, setConfirmToProceed] = useState<any>(false);
+
+  const detailsToCreateCampaignAdd = useSelector(
+    (state: any) => state.detailsToCreateCampaignAdd
+  );
+  const {
+    loading: loadingAddDetails,
+    error: errorAddDetails,
+    success: successAddDetails,
+  } = detailsToCreateCampaignAdd;
+
 
   const couponList = useSelector((state: any) => state.couponList);
   const { data: coupons } = couponList;
@@ -289,6 +275,9 @@ export const ViewFinalPlanPODetails = ({
           awsURL: "",
         },
       ]);
+
+      setConfirmToProceed(true);
+      setSkipEmailConfirmation(true);
     }
   };
 
@@ -298,6 +287,12 @@ export const ViewFinalPlanPODetails = ({
         (singleFile: any) => singleFile.url !== file.url
       )
     );
+    if (confirmationImageFiles.filter(
+      (singleFile: any) => singleFile.url !== file.url
+    ).length === 0) {
+      setConfirmToProceed(false);
+      setSkipEmailConfirmation(false);
+    }
   };
 
   const getAWSUrl = async (data: any) => {
@@ -330,6 +325,8 @@ export const ViewFinalPlanPODetails = ({
           }
         }
 
+        setConfirmToProceed(true);
+
         dispatch(
           addDetailsToCreateCampaign({
             pageName: "View Final Plan Page",
@@ -337,7 +334,6 @@ export const ViewFinalPlanPODetails = ({
             clientApprovalImgs: imageArr,
           })
         );
-        setPageSuccess(false);
       }
 
     } else {
@@ -366,7 +362,7 @@ export const ViewFinalPlanPODetails = ({
   const handleApplyCoupon = useCallback(
     (couponId: any) => {
       if (poTableData?.couponId) {
-        message.warning("Applying discount coupon...");
+        message.warning("Discount coupon applied...");
       }
       dispatch(
         applyCouponForCampaign({
@@ -387,12 +383,6 @@ export const ViewFinalPlanPODetails = ({
   };
 
   useEffect(() => {
-    if (!poTableData) return;
-    setPageLoading(false);
-  }, [poTableData]);
-
-
-  useEffect(() => {
     if (errorApply) {
       message.error(
         "Something went wrong applying this discount. Please try again."
@@ -410,39 +400,42 @@ export const ViewFinalPlanPODetails = ({
       setSummaryChecked(false);
       setPicturesChecked(false);
       setCurrentCoupon("");
+      setConfirmToProceed(false);
       dispatch({ type: APPLY_COUPON_RESET });
       dispatch(getFinalPlanPOTableData(poInput));
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
-  }, [couponApplySuccess, dispatch, campaignId, poInput]);
-
-  // Handle coupon removal success
-  useEffect(() => {
     if (couponRemoveSuccess) {
       setSummaryChecked(false);
       setPicturesChecked(false);
       setCurrentCoupon("");
+      setConfirmToProceed(false);
       dispatch({ type: APPLY_COUPON_RESET });
       dispatch(getFinalPlanPOTableData(poInput));
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
-  }, [couponRemoveSuccess, dispatch, campaignId, poInput]);
+  }, [couponRemoveSuccess, couponApplySuccess, dispatch, campaignId, poInput]);
 
   useEffect(() => {
     if (userInfo) {
       setCC(userInfo?.email);
       setLoadingEmailReady(loadingSendEmail);
-    }
-  }, [userInfo, loadingSendEmail]);
+      dispatch(getCouponList());
+      const images = campaignDetails?.clientApprovalImgs;
 
-  useEffect(() => {
-    dispatch(getCouponList());
-    const images =
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-        ?.clientApprovalImgs;
+      setConfirmationImageFiles(
+        images?.map((image: string) => {
+          return {
+            file: null,
+            url: image,
+            fileType: "",
+            fileSize: "",
+            awsURL: image,
+          };
+        })
+      );
 
-    setConfirmationImageFiles(
-      images?.map((image: string) => {
+      if (images?.map((image: string) => {
         return {
           file: null,
           url: image,
@@ -450,34 +443,13 @@ export const ViewFinalPlanPODetails = ({
           fileSize: "",
           awsURL: image,
         };
-      })
-    );
-  }, [dispatch, campaignId]);
+      }).length > 0) {
+        setConfirmToProceed(true);
+        setSkipEmailConfirmation(true);
+      }
+    }
+  }, [userInfo, dispatch, campaignDetails, loadingSendEmail]);
 
-  useEffect(() => {
-    if (!successAddCampaignDetails) return;
-    setPageSuccess(true);
-    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-  }, [dispatch, setPageSuccess, successAddCampaignDetails]);
-
-  useEffect(() => {
-    if (!pageSuccess) return;
-    dispatch(getFinalPlanPOTableData(poInput));
-    dispatch(
-      getScreenSummaryPlanTableData({
-        id: campaignId,
-        screenIds: poInput.screenIds,
-      })
-    );
-    dispatch(
-      getPlanningPageFooterData({
-        id: campaignId,
-        pageName: "View Final Plan Page",
-      })
-    );
-  }, [dispatch, pageSuccess, poInput, campaignId]);
-
-  // Handle success email sending
   useEffect(() => {
     if (successSendEmail) {
       message.success("Email sent successfully!");
@@ -486,7 +458,52 @@ export const ViewFinalPlanPODetails = ({
       setConfirmationImageFiles([]);
       dispatch({ type: SEND_EMAIL_FOR_CONFIRMATION_RESET });
     }
-  }, [successSendEmail, dispatch]);
+  },[successSendEmail, dispatch]);
+
+  useEffect(() => {
+    if (!campaignDetails) return;
+    dispatch(getFinalPlanPOTableData(poInput));
+    dispatch(
+      getScreenSummaryPlanTableData({
+        id: campaignId,
+        screenIds: poInput.screenIds,
+      })
+    );
+    dispatch(getRegularVsCohortPriceData({
+      id: campaignDetails?._id,
+      screenIds: poInput?.screenIds,
+      cohorts: campaignDetails?.cohorts,
+      gender: campaignDetails?.gender,
+      duration: campaignDetails?.duration,
+    }));
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "View Final Plan Page",
+      })
+    );
+  }, [dispatch, campaignDetails, poInput, campaignId]);
+
+  useEffect(() => {
+    if (successAddDetails) {
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
+      if (confirmToProceed) {
+        setCurrentStep(step+1);
+      }
+    }
+  },[successAddDetails, step, setCurrentStep, confirmToProceed, dispatch]);
+
+  const skipFunction = () => {
+    dispatch(
+      addDetailsToCreateCampaign({
+        pageName: "View Final Plan Page",
+        id: campaignId,
+        clientApprovalImgs: [],
+      })
+    );
+  }
 
   return (
     <div className="w-full">
@@ -496,7 +513,7 @@ export const ViewFinalPlanPODetails = ({
           Any specific route you want to cover in this campaign
         </h1>
       </div>
-      {pageLoading ? (
+      {loadingPOData ? (
         <LoadingScreen />
       ) : (
         <div>
@@ -531,28 +548,16 @@ export const ViewFinalPlanPODetails = ({
                     checked={summaryChecked}
                     disabled={loadingPOData}
                     onChange={(e) => {
-                      setSummaryChecked(true);
+                      setSummaryChecked(e.target.checked);
 
                       const pdfToDownload = pdfDownload;
                       if (e.target.checked) {
                         pdfToDownload["summary"] = {
                           heading: "CAMPAIGN SUMMARY",
                           pdfData: {
-                            approach: [
-                              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
-                                campaignId
-                              ],
-                            ],
-                            costSummary: [
-                              getDataFromLocalStorage(
-                                SCREEN_SUMMARY_TABLE_DATA
-                              )?.[campaignId],
-                            ],
-                            creativeRatio: countScreensByResolutionAndCity(
-                              getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
-                                campaignId
-                              ]?.screenWiseSlotDetails
-                            ),
+                            approach: [campaignDetails],
+                            costSummary: [screenSummaryPlanTableData],
+                            creativeRatio: countScreensByResolutionAndCity(campaignDetails?.screenWiseSlotDetails),
                           },
                           fileName: `${poInput?.brandName} Campaign Summary`,
                         };
@@ -571,18 +576,15 @@ export const ViewFinalPlanPODetails = ({
                     checked={picturesChecked}
                     disabled={loadingPOData}
                     onChange={(e) => {
-                      setPicturesChecked(true);
+                      setPicturesChecked(e.target.checked);
                       const pdfToDownload = pdfDownload;
 
                       if (e.target.checked) {
                         pdfToDownload["screen-pictures"] = {
                           heading: "SCREEN PICTURES",
-                          pdfData: getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)
-                            ?.[campaignId]?.screenWiseSlotDetails?.filter(
+                          pdfData: campaignDetails?.screenWiseSlotDetails?.filter(
                               (s: any) =>
-                                getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
-                                  campaignId
-                                ]?.screenIds.includes(s.screenId)
+                                campaignDetails?.screenIds.includes(s.screenId)
                             )
                             ?.map((screen: any) => {
                               return screen;
@@ -658,7 +660,11 @@ export const ViewFinalPlanPODetails = ({
                 files={confirmationImageFiles}
                 handleAddNewFile={handleAddNewFile}
                 removeImage={removeImage}
-                setSkipEmailConfirmation={setSkipEmailConfirmation}
+                setSkipEmailConfirmation={(e: any) => {
+                  setConfirmToProceed(true);
+                  setSkipEmailConfirmation(e);
+                }}
+                skipFunction={skipFunction}
                 skipEmailConfirmation={skipEmailConfirmation}
               />
             </div>
@@ -672,7 +678,8 @@ export const ViewFinalPlanPODetails = ({
               handleSave={handleSaveAndContinue}
               campaignId={campaignId}
               pageName="View Final Plan Page"
-              successAddCampaignDetails={successAddCampaignDetails}
+              loadingCost={loadingAddDetails}
+              successCampaignDetails={successAddDetails}
             />
           </div>
         </div>

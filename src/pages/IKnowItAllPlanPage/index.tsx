@@ -4,8 +4,9 @@ import { EnterCampaignBasicDetails } from "./EnterCampaignBasicDetails";
 import { IKnowItAllScreenSummaryDetails } from "./IKnowItAllScreenSummaryDetails";
 import { SetAdsPlayTime } from "./SetAdsPlayTime";
 import { IKnowItAllPlanSummaryTable } from "./IKnowItAllPlanSummaryTable";
-import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
-import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
+import { ViewFinalPlanPODetails, VendorConfirmationDetails } from "../../components/planner";
+// import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
+// import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
 
 import { useDispatch, useSelector } from "react-redux";
 import {

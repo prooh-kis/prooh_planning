@@ -23,7 +23,7 @@ export const EmailConfirmationImage = ({page, skipEmailConfirmation, setSkipEmai
             <FileUploadButton
               handleFile={handleAddNewFile}
               width=""
-              fileType={"any"}
+              fileType={"image"}
             />
           </div>
         </div>
