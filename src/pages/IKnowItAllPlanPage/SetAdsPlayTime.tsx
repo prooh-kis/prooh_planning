@@ -208,13 +208,6 @@ export const SetAdsPlayTime = ({
 
   const summaryStats = calculateSelectionStats(data);
   const mainTableStats = calculateSelectionStats(data).byDayType[currentTab];
-
-  const dayWiseDetails = campaignDetails?.screenWiseSlotDetails?.map((s: any) => {
-    return {
-      screenName: s.screenName,
-      slots: s.slotsInfo
-    }
-  });
   
   const handleSaveAndContinue = async (e: any) => {
     e.preventDefault();
@@ -259,6 +252,13 @@ export const SetAdsPlayTime = ({
   useEffect(() => {
     if (tableData?.result) {
      
+      const dayWiseDetails = campaignDetails?.screenWiseSlotDetails?.map((s: any) => {
+        return {
+          screenName: s.screenName,
+          slots: s.slotsInfo
+        }
+      });
+
       setData(() => {
         return tableData.result.map((d: any) => ({
           ...d,
@@ -289,12 +289,19 @@ export const SetAdsPlayTime = ({
         }))
       });
     }
-  }, [tableData]);
+  }, [campaignDetails?.screenWiseSlotDetails, currentTab, tableData]);
 
   const toggleAllIncludesByCurrentTab = (
     included: boolean,
     currentTab: keyof DayWiseData
   ) => {
+    const dayWiseDetails = campaignDetails?.screenWiseSlotDetails?.map((s: any) => {
+      return {
+        screenName: s.screenName,
+        slots: s.slotsInfo
+      }
+    });
+
     setData((prevData) =>
       prevData.map((d) => ({
         ...d,

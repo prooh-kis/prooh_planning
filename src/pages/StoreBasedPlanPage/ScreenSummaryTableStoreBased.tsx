@@ -253,6 +253,7 @@ export const ScreenSummaryTableStoreBased = ({
                                 <ScreenDataModel
                                   listView={listView}
                                   campaignId={campaignId}
+                                  campaignDetails={campaignDetails}
                                   screen={screen}
                                   handleRemove={() => handleScreenClick({ screen, city: currentCity })}
                                   isAdded={screensBuyingCount[currentCity]?.[screen._id]?.status}

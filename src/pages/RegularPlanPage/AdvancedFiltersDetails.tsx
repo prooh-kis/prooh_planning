@@ -207,10 +207,11 @@ export const AdvanceFiltersDetails = ({
               selectedScreens: [...(route.selectedScreens || [])], // Ensure a new array
             })),
             poiLists: [],
-            polygons: polygons.map((poly: any) => ({
-              ...poly,
-              screens: [...(poly.screens || [])],
-            })),
+            // polygons: polygons.map((poly: any) => ({
+            //   ...poly,
+            //   screens: [...(poly.screens || [])],
+            // })),
+            polygons: []
           },
         })
       );

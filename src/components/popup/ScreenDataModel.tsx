@@ -11,6 +11,7 @@ interface Props {
   isAdded: boolean;
   campaignId?: any;
   listView?: any;
+  campaignDetails?: any;
 }
 
 const allTabs = [
@@ -34,6 +35,7 @@ export function ScreenDataModel({
   handleRemove,
   isAdded,
   listView,
+  campaignDetails
 }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<any>("1");
@@ -118,17 +120,9 @@ export function ScreenDataModel({
                     <div className="p-2">
                       <h1 className="text-[14px]">
                         Your campaign parameters have{" "}
-                        {
-                          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
-                            campaignId
-                          ]?.touchPoints?.length
-                        }{" "}
+                        {campaignDetails?.touchPoints?.length}{" "}
                         touchpoints, with{" "}
-                        {
-                          getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
-                            campaignId
-                          ]?.cohorts?.length
-                        }{" "}
+                        {campaignDetails?.cohorts?.length}{" "}
                         cohorts selection.
                       </h1>
                     </div>
@@ -139,10 +133,7 @@ export function ScreenDataModel({
                       <div>
                         <h1 className="text-[12px]">Target Touchpoint</h1>
                         <h1 className="text-[14px] font-semibold">
-                          {
-                            getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
-                              campaignId
-                            ]?.touchPoints?.filter(
+                          {campaignDetails?.touchPoints?.filter(
                               (t: any) => t === screen.location.touchPoint
                             )[0]
                           }
@@ -156,9 +147,7 @@ export function ScreenDataModel({
                       <div>
                         <h1 className="text-[12px]">Target Audience</h1>
                         <div>
-                          {getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[
-                            campaignId
-                          ]?.cohorts?.map((c: any, i: any) => (
+                          {campaignDetails?.cohorts?.map((c: any, i: any) => (
                             <h1 key={i} className="text-[14px] font-semibold">
                               {c}
                             </h1>
