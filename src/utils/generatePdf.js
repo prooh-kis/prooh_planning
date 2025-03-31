@@ -156,7 +156,7 @@ const addCreativeSummaryData = (creativeData, doc, yOffset) => {
 
     // Add the table
     doc.autoTable({
-      head: [["Resolution", "Ratio", "Count"]],
+      head: [["Resolution", "Count"]],
       body: tableRows,
       startY: yOffset,
       margin: { top: 30 },
