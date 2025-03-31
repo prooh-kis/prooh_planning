@@ -17,7 +17,7 @@ import { Footer } from "../../components/footer";
 import { message } from "antd";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
-import { CAMPAIGN_DETAILS_PAGE } from "../../routes/routes";
+import { CAMPAIGN_DETAILS_PAGE, MY_CAMPAIGNS_LIST } from "../../routes/routes";
 import { CountdownTimer } from "../../components/molecules/CountdownTimer";
 import {
   sendEmailForConfirmation,
@@ -259,7 +259,7 @@ export const VendorConfirmationDetails = ({
         "You will be redirected to campaign dashboard, once the campaign has started. Please wait..."
       );
     } else {
-      navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignId}`);
+      navigate(`${MY_CAMPAIGNS_LIST}`);
     }
   };
 
@@ -529,7 +529,7 @@ export const VendorConfirmationDetails = ({
             onDoubleClick={() => setIsDisabled(!isDisabled)}
           >
             <Footer
-              mainTitle={new Date().getTime() < new Date(campaignDetails?.startDate)?.getTime() ? "Confirm" : "See Analytics"}
+              mainTitle={new Date().getTime() < new Date(campaignDetails?.startDate)?.getTime() ? "Confirm" : "Complete Planning"}
               handleBack={() => {
                 setCurrentStep(step - 1);
               }}
