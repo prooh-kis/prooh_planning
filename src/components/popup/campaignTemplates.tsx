@@ -1,14 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 import { allPlansData } from "../../data";
-import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import {
   ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
   GET_CAMPAIGN_CREATIONS_DETAILS_RESET,
 } from "../../constants/campaignConstants";
 import { useDispatch } from "react-redux";
-import { ConformationModelForCreative } from "./ConformationModelForCreative";
+import ButtonInput from "../../components/atoms/ButtonInput";
 
 interface Plan {
   id: number;
@@ -122,12 +121,9 @@ export const CampaignTemplates: React.FC = () => {
                 </p>
               </div>
               <div className="flex justify-start py-4">
-                <PrimaryButton
-                  title="Start Planning"
-                  rounded="rounded-full"
-                  action={toggle}
-                  textSize="text-[14px]"
-                />
+                <ButtonInput rounded="full" onClick={toggle}>
+                  Start Planning
+                </ButtonInput>
               </div>
             </div>
           </div>
