@@ -562,9 +562,6 @@ export const NewCreativeUpload = ({
     handleSetValue();
     const storedCampaignData = campaignDetails;
     const storedCreatives = storedCampaignData?.creatives;
-    const storedTriggers = storedCampaignData?.triggers;
-
-    saveDataOnLocalStorage(SELECTED_TRIGGER, { [campaignId]: storedTriggers });
 
     const transformedCreatives = transformData(storedCreatives || []);
     const transformedScreenData = newTransformData(screenData || {});

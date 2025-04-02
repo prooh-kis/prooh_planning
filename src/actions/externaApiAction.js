@@ -39,24 +39,24 @@ export const getPlayersList = ({ id }) => async (dispatch, getState) => {
     payload: { id },
   });
   try {
-    // const { data } = await axios.get(`${url}/matchPlayersList?id=${id}`);
-    const data = [
-      {
-        label: "Virat Kohli",
-        value: "virat kohli",
-      },{
-        label: "Rohit Sharma",
-        value: "rohit sharma",
-      },{
-        label: "Surya Kumar Yadav",
-        value: "surya kumar yadav"
-      },{
-        label: "Jasprit Bumrah",
-        value: "jasprit bumrah",
-      },{
-        label: "Hardik Pandya",
-        value: "hardik pandya"
-      }];
+    const { data } = await axios.get(`${url}/matchPlayersList?id=${id}`);
+    // const data = [
+    //   {
+    //     label: "Virat Kohli",
+    //     value: "virat kohli",
+    //   },{
+    //     label: "Rohit Sharma",
+    //     value: "rohit sharma",
+    //   },{
+    //     label: "Surya Kumar Yadav",
+    //     value: "surya kumar yadav"
+    //   },{
+    //     label: "Jasprit Bumrah",
+    //     value: "jasprit bumrah",
+    //   },{
+    //     label: "Hardik Pandya",
+    //     value: "hardik pandya"
+    //   }];
       
     dispatch({
       type: GET_PLAYERS_LIST_SUCCESS,

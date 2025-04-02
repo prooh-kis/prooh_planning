@@ -25,7 +25,6 @@ export function GoogleMapWithGeometry(props: any) {
   const [unSelectedMarkers, setUnselectedMarkers] = useState([]);
   const [screenData, setScreenData] = useState<any>(null);
   const [heatmapOn, setHeatMapOn] = useState<any>(false);
-  const [isSelectedData, setIsSelectedData] = useState(false);
   
   const brandCoor = props?.data?.["brand"]?.map((c: any) => {
     return {
@@ -109,7 +108,7 @@ export function GoogleMapWithGeometry(props: any) {
   }, [props]);
 
   // console.log("selected screens", selectedMarkers);
-  console.log("screenData", screenData);
+  // console.log("screenData", screenData);
 
   return (
     <div className="relative h-full w-full items-top">
