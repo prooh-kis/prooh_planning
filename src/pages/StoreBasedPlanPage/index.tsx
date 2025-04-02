@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
-import { EnterCampaignBasicDetails } from "./EnterCampaignBasicDetails";
-import { AdvanceFiltersDetails } from "./AdvancedFiltersDetails";
 import { StoreBasedScreenSummaryDetails } from "./StoreBasedScreenSummaryDetails";
 import { SetAdsPlayTime } from "./SetAdsPlayTime";
 import { StoreBasedPlanSummaryTable } from "./StoreBasedPlanSummaryTable";
-// import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
-import { ViewFinalPlanPODetails, VendorConfirmationDetails } from "../../components/planner";
-// import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
+import {
+  EnterCampaignBasicDetails,
+  NewCreativeUpload,
+  ViewFinalPlanPODetails,
+  VendorConfirmationDetails,
+  AdvanceFiltersDetails,
+} from "../../components/planner";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -24,7 +26,6 @@ import {
 } from "../../constants/campaignConstants";
 import { storeBasePlanData } from "../../data";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-import { NewCreativeUpload } from "../../components/planner/NewCreativeUpload";
 
 export const StoreBasedPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();

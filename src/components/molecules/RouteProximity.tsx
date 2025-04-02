@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { PrimaryButton } from "../atoms/PrimaryButton";
 import { MapSearchInput } from "../../components/atoms/MapSearchInput";
 import { Tooltip } from "antd";
 import { MapBoxSearchInput } from "../../components/atoms/MapboxSearchInput";
+import ButtonInput from "../../components/atoms/ButtonInput";
 
 interface RouteProximityProps {
   open: any;
@@ -17,8 +17,8 @@ interface RouteProximityProps {
   routeDestination?: any;
   setRouteDestination?: any;
   routeFilteredScreens?: any;
-  handleFinalSelectedScreens?: any
-  setRouteFilteredScreens?: any
+  handleFinalSelectedScreens?: any;
+  setRouteFilteredScreens?: any;
   setRoutes?: any;
 }
 
@@ -48,15 +48,22 @@ export const RouteProximity = ({
     newRoute["selectedScreens"] = [];
     newRoute["id"] = routes?.length + 1;
 
-    var addRoute = 0
+    var addRoute = 0;
     for (const route of routes) {
-      if (route.origin === newRoute.origin && route.destination === newRoute.destination) {
-        addRoute = 1
+      if (
+        route.origin === newRoute.origin &&
+        route.destination === newRoute.destination
+      ) {
+        addRoute = 1;
       }
     }
 
-    if (addRoute === 0 && newRoute.origin != null && newRoute.destination != null)
-      routes.push(newRoute)
+    if (
+      addRoute === 0 &&
+      newRoute.origin != null &&
+      newRoute.destination != null
+    )
+      routes.push(newRoute);
 
     setRoutes([...routes]);
   };
@@ -85,10 +92,11 @@ export const RouteProximity = ({
     handleRouteSetup(routeOrigin, routeDestination);
   }, [routeRadius]);
 
-
   return (
     <div className="py-4 border-b border-gray-100">
-      <button type="button" className="flex w-full items-center justify-between"
+      <button
+        type="button"
+        className="flex w-full items-center justify-between"
         onClick={() => {
           // setOpen((prev: any) => ({
           //   ...prev,
@@ -99,13 +107,15 @@ export const RouteProximity = ({
         <div className="flex justify-between w-full">
           <div className="flex justify-start">
             <div className="flex justify-start gap-2 items-center py-2 truncate">
-              <h1 className="lg:text-[16px] text-[14px] text-gray-500 truncate">2. Choose your desired routes </h1>
-              <Tooltip
-                title="Enter the origin and destination of your desired routes and select all the screens in proximity of your desired routes"
-              >
+              <h1 className="lg:text-[16px] text-[14px] text-gray-500 truncate">
+                2. Choose your desired routes{" "}
+              </h1>
+              <Tooltip title="Enter the origin and destination of your desired routes and select all the screens in proximity of your desired routes">
                 <i className="fi fi-rs-info pr-1 lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
               </Tooltip>
-              <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({routeFilteredScreens?.length} sites)</h1>
+              <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">
+                ({routeFilteredScreens?.length} sites)
+              </h1>
             </div>
             <div className="flex items-center justify-center">
               {open["route"] ? (
@@ -127,14 +137,11 @@ export const RouteProximity = ({
                 setRouteRadius(() => (newValue === 0 ? 1000 : newValue * 1000));
               }}
             /> */}
-            <Tooltip
-              title="Route Radius is fixed as 1 km">
+            <Tooltip title="Route Radius is fixed as 1 km">
               <h1 className="lg:text-[14px] text-[12px] pl-1">1 km</h1>
             </Tooltip>
           </div>
         </div>
-
-
       </button>
 
       {open["route"] && (
@@ -189,38 +196,49 @@ export const RouteProximity = ({
               />
             </div>
             <div className="col-span-1">
-              <PrimaryButton
-                title="Check"
-                action={() => {
+              <ButtonInput
+                onClick={() => {
                   if (routes?.length >= 5) {
-                    alert("Oops! you can only choose upto 5 routes...")
+                    alert("Oops! you can only choose upto 5 routes...");
                   } else {
                     handleRouteSetup(routeOrigin, routeDestination);
                     setRouteOrigin([]);
                     setRouteDestination([]);
                   }
                 }}
-                textSize="lg:text-[14px] text-[12px]"
-                rounded="rounded-[10px]"
+                variant="primary"
                 disabled={routeOrigin && routeDestination ? false : true}
-              />
+              >
+                Check
+              </ButtonInput>
             </div>
           </div>
           <div className="pt-2">
-            <div className="flex justify-between p-2" onClick={() => setShowDetails(null)}>
+            <div
+              className="flex justify-between p-2"
+              onClick={() => setShowDetails(null)}
+            >
               <p className="text-sm text-[#9f9f9f]">Added Route</p>
               <p className="text-sm text-[#9f9f9f]">{routes.length}</p>
             </div>
             <div className="overflow-scroll h-40 mb-1 border rounded">
               {routes?.map((route: any, index: any) => (
-                <div key={index} className={`
-                    ${index === 0 ? "bg-[#540b0e20]" :
-                    index === 1 ? "bg-[#e09f3e20]" :
-                      index === 2 ? "bg-[#073b4c20]" :
-                        index === 3 ? "bg-[#0f4c5c20]" :
-                          index === 4 ? "bg-[#ef476f20]" :
-                            "bg-[#F6F6F6]"
-                  }
+                <div
+                  key={index}
+                  className={`
+                    ${
+                      index === 0
+                        ? "bg-[#540b0e20]"
+                        : index === 1
+                        ? "bg-[#e09f3e20]"
+                        : index === 2
+                        ? "bg-[#073b4c20]"
+                        : index === 3
+                        ? "bg-[#0f4c5c20]"
+                        : index === 4
+                        ? "bg-[#ef476f20]"
+                        : "bg-[#F6F6F6]"
+                    }
                     p-2 my-1 rounded
                   `}
                   onClick={() => {
@@ -229,11 +247,18 @@ export const RouteProximity = ({
                   }}
                 >
                   <div className="">
-                    <div className="flex justify-between items-center" onClick={() => {
-                      setShowDetails(index);
-                    }}>
+                    <div
+                      className="flex justify-between items-center"
+                      onClick={() => {
+                        setShowDetails(index);
+                      }}
+                    >
                       <p className="text-sm">
-                        {index + 1}. <span className="font-bold">{route?.origin?.place_name?.split(",")[0]}</span> to {" "}
+                        {index + 1}.{" "}
+                        <span className="font-bold">
+                          {route?.origin?.place_name?.split(",")[0]}
+                        </span>{" "}
+                        to{" "}
                         <span className="font-bold">
                           {route?.destination?.place_name?.split(",")[0]}
                         </span>
@@ -241,7 +266,10 @@ export const RouteProximity = ({
                           ({route?.selectedScreens?.length})
                         </span>
                       </p>
-                      <i className="fi fi-sr-cross-small text-gray-700 flex items-center" onClick={() => handleRemoveRoute(route?.id)}></i>
+                      <i
+                        className="fi fi-sr-cross-small text-gray-700 flex items-center"
+                        onClick={() => handleRemoveRoute(route?.id)}
+                      ></i>
                     </div>
                   </div>
 
@@ -264,15 +292,12 @@ export const RouteProximity = ({
                       </div>
                     </div>
                   )}
-
                 </div>
               ))}
             </div>
-
           </div>
         </div>
       )}
-
     </div>
   );
 };

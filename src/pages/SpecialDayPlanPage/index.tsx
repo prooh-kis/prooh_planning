@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
 import { SpecialDay } from "./SpecialDay";
-import { AudienceTouchPointsDetails } from "./AudienceTouchPointsDetails";
-import { AdvanceFiltersDetails } from "./AdvancedFiltersDetails";
 import { RegularCohortComparisonDetails } from "./RegularCohortComparisonDetails";
 import { ScreenSummaryDetails } from "./ScreenSummaryDetails";
-import { ViewFinalPlanPODetails, VendorConfirmationDetails } from "../../components/planner";
-// import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
-// import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
+import {
+  NewCreativeUpload,
+  ViewFinalPlanPODetails,
+  VendorConfirmationDetails,
+  AdvanceFiltersDetails,
+  AudienceTouchPointsDetails,
+} from "../../components/planner";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -24,7 +26,6 @@ import {
   VIEW_CAMPAIGN,
 } from "../../constants/campaignConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-import { NewCreativeUpload } from "../../components/planner/NewCreativeUpload";
 
 export const SpecialDayPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();

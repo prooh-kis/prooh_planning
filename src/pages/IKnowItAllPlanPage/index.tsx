@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
-import { EnterCampaignBasicDetails } from "./EnterCampaignBasicDetails";
+import {
+  EnterCampaignBasicDetails,
+  NewCreativeUpload,
+  ViewFinalPlanPODetails,
+  VendorConfirmationDetails,
+} from "../../components/planner";
 import { IKnowItAllScreenSummaryDetails } from "./IKnowItAllScreenSummaryDetails";
 import { SetAdsPlayTime } from "./SetAdsPlayTime";
 import { IKnowItAllPlanSummaryTable } from "./IKnowItAllPlanSummaryTable";
-import { ViewFinalPlanPODetails, VendorConfirmationDetails } from "../../components/planner";
-// import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
-// import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -23,7 +25,6 @@ import {
 } from "../../constants/campaignConstants";
 import { iKnowItAllPlanData } from "../../data";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-import { NewCreativeUpload } from "../../components/planner/NewCreativeUpload";
 
 export const IKnowItAllPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();

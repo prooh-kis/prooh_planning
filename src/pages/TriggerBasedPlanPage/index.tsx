@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
-import { EnterCampaignBasicDetails } from "./EnterCampaignBasicDetails";
 import { TriggerDetails } from "./TriggerDetails";
-import { AudienceTouchPointsDetails } from "./AudienceTouchPointsDetails";
-import { AdvanceFiltersDetails } from "./AdvancedFiltersDetails";
 import { RegularCohortComparisonDetails } from "./RegularCohortComparisonDetails";
 import { ScreenSummaryDetails } from "./ScreenSummaryDetails";
-import { ViewFinalPlanPODetails, VendorConfirmationDetails } from "../../components/planner";
-// import { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
-// import { VendorConfirmationDetails } from "./VendorConfirmationDetails";
+import {
+  EnterCampaignBasicDetails,
+  NewCreativeUpload,
+  ViewFinalPlanPODetails,
+  VendorConfirmationDetails,
+  AdvanceFiltersDetails,
+  AudienceTouchPointsDetails,
+} from "../../components/planner";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -25,7 +27,6 @@ import {
 } from "../../constants/campaignConstants";
 import { triggerBasePlanData } from "../../data";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-import { NewCreativeUpload } from "../../components/planner/NewCreativeUpload";
 
 export const TriggerBasedPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();

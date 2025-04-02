@@ -1,24 +1,19 @@
 import { useEffect, useState } from "react";
-import { RadioInput } from "../atoms/RadioInput";
-import { VerticalLine } from "../molecules/VerticalLine";
+import { RadioInput } from "../../components/atoms/RadioInput";
+import { VerticalLine } from "../../components/molecules/VerticalLine";
 import {
   RegularCohortSlotsCampaignTable,
   RegularCohortSummaryTable,
-} from "../tables";
+} from "../../components/tables";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getPlanningPageFooterData,
   getRegularVsCohortPriceData,
 } from "../../actions/screenAction";
-import {
-  getDataFromLocalStorage,
-  saveDataOnLocalStorage,
-} from "../../utils/localStorageUtils";
 import { Footer } from "../../components/footer";
 import { message, Tooltip } from "antd";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { useLocation } from "react-router-dom";
-import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
@@ -26,31 +21,23 @@ export const RegularCohortComparisonDetails = ({
   campaignId,
   setCurrentStep,
   step,
-  successAddCampaignDetails,
-  pageSuccess=false,
-  setPageSuccess,
+  campaignDetails,
 }: any) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
-  const [pageLoading, setPageLoading] = useState<boolean>(true);
   const [selecting, setSelecting] = useState<string | null>(null);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [showSummary, setShowSummary] = useState<string | null>(null);
-
-  const [screenIds, setScreenIds] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.screenIds || []
-  );
-  const [cohorts, setCohorts] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.cohorts || []
-  );
-  const [gender, setGender] = useState<string>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.gender || "both"
-  );
-  const [duration, setDuration] = useState<number>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || 30
-  );
-
   const [selectedBuyingOption, setSelectedBuyingOption] = useState<string>("");
+
+  const detailsToCreateCampaignAdd = useSelector(
+    (state: any) => state.detailsToCreateCampaignAdd
+  );
+  const {
+    loading: loadingAddDetails,
+    error: errorAddDetails,
+    success: successAddDetails,
+  } = detailsToCreateCampaignAdd;
 
   const {
     loading: loadingPriceData,
@@ -59,27 +46,26 @@ export const RegularCohortComparisonDetails = ({
   } = useSelector((state: any) => state.regularVsCohortPriceDataGet);
 
   useEffect(() => {
-    if (!successAddCampaignDetails) return;
-    dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
-    setPageSuccess(true);
-  }, [dispatch, setPageSuccess, successAddCampaignDetails]);
-
-  useEffect(() => {
-    if (priceData) {
-      setPageLoading(false);
+    if (!campaignDetails) return;
+    if (errorAddDetails) {
+      message.error("Error in add campaign details...");
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
     }
-  }, [priceData]);
-
-  useEffect(() => {
-    if (!pageSuccess) return;
-
+    if (errorPriceData) {
+      message.error("Error in getting impression wise data...");
+    }
+    setSelectedBuyingOption(campaignDetails?.selectedType);
+    setSelecting(campaignDetails?.selectedType);
+    setIsDisabled(false);
     dispatch(
       getRegularVsCohortPriceData({
         id: campaignId,
-        screenIds,
-        cohorts,
-        gender,
-        duration,
+        screenIds: campaignDetails?.screenIds,
+        cohorts: campaignDetails?.cohorts,
+        gender: campaignDetails?.gender,
+        duration: campaignDetails?.duration,
       })
     );
 
@@ -89,24 +75,27 @@ export const RegularCohortComparisonDetails = ({
         pageName: "Compare Plan Page",
       })
     );
+  }, [dispatch, campaignId, campaignDetails, errorPriceData, errorAddDetails]);
 
-  }, [cohorts, dispatch, duration, gender, screenIds, campaignId, pageSuccess]);
-
+  useEffect(() => {
+    if (successAddDetails) {
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
+      setCurrentStep(step + 1);
+    }
+  }, [successAddDetails, step, setCurrentStep, dispatch]);
 
   const handleRegularVsCohortSelection = (type: string) => {
     setSelectedBuyingOption(type);
     setShowSummary(null);
     setIsDisabled(false);
-    const campaign =
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId] || {};
-    campaign["selectedType"] = type;
-    saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, { [campaignId]: campaign });
   };
 
   return (
     <div className="w-full">
       {errorPriceData && <p>Error: {errorPriceData}</p>}
-      {pageLoading ? (
+      {loadingPriceData ? (
         <LoadingScreen />
       ) : (
         <div className="w-full">
@@ -135,8 +124,8 @@ export const RegularCohortComparisonDetails = ({
                     <Tooltip
                       title={
                         type === "regular"
-                          ? "Regular slots have more than 7% of total audiences available on the site"
-                          : "Cohort slots have more than 15% of total audiences available on the site"
+                          ? "Regular slots have more than 3% of total audiences available on the site"
+                          : "Cohort slots have more than 5% of total audiences available on the site"
                       }
                     >
                       <i className="fi fi-rs-info lg:text-[12px] md:text-[10px] text-gray-400 flex items-center"></i>
@@ -165,6 +154,16 @@ export const RegularCohortComparisonDetails = ({
                       touchPointData={priceData?.[type]?.touchPointData}
                     />
                   )}
+                  {priceData?.[type]?.tableData?.impressionPerDay === 0 ||
+                    (!priceData?.[type]?.tableData?.totalSlotsPerDay && (
+                      <div className="flex justify-center items-center py-1">
+                        <h1 className="text-[#EF4444] text-[12px] font-semibold">
+                          You are getting zero (0) impressions per day after
+                          your filter selection. Please update the filters and
+                          try again...
+                        </h1>
+                      </div>
+                    ))}
                 </div>
               ))}
             </div>
@@ -201,26 +200,21 @@ export const RegularCohortComparisonDetails = ({
               mainTitle={isDisabled ? "Choose to Confirm" : "Continue"}
               handleBack={() => setCurrentStep(step - 1)}
               handleSave={() => {
-                if (!pathname.split("/").includes("view")) {
-                  if (isDisabled) {
-                    message.error("Please confirm your selection");
-                  } else {
-                    dispatch(
-                      addDetailsToCreateCampaign({
-                        pageName: "Compare Plan Page",
-                        id: campaignId,
-                        regularTouchPointWiseSlotDetails:
-                          priceData?.regular?.touchPointData,
-                        cohortTouchPointWiseSlotDetails:
-                          priceData?.cohort?.touchPointData,
-                        selectedType: selectedBuyingOption,
-                        tableData: priceData?.[selectedBuyingOption]?.tableData,
-                      })
-                    );
-                    setCurrentStep(step + 1);
-                  }
+                if (isDisabled) {
+                  message.error("Please confirm your selection");
                 } else {
-                  setCurrentStep(step + 1);
+                  dispatch(
+                    addDetailsToCreateCampaign({
+                      pageName: "Compare Plan Page",
+                      id: campaignId,
+                      regularTouchPointWiseSlotDetails:
+                        priceData?.regular?.touchPointData,
+                      cohortTouchPointWiseSlotDetails:
+                        priceData?.cohort?.touchPointData,
+                      selectedType: selectedBuyingOption,
+                      tableData: priceData?.[selectedBuyingOption]?.tableData,
+                    })
+                  );
                 }
               }}
               disabled={
@@ -229,7 +223,8 @@ export const RegularCohortComparisonDetails = ({
               }
               campaignId={campaignId}
               pageName="Compare Plan Page"
-              successAddCampaignDetails={successAddCampaignDetails}
+              loadingCost={loadingAddDetails || loadingPriceData}
+              successCampaignDetails={successAddDetails}
             />
           </div>
         </div>

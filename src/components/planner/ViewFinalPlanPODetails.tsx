@@ -31,6 +31,7 @@ import { APPLY_COUPON_RESET } from "../../constants/couponConstants";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { ViewFinalPlanTable } from "../../components/tables/ViewFinalPlanTable";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import ButtonInput from "../../components/atoms/ButtonInput";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -51,7 +52,8 @@ export const ViewFinalPlanPODetails = ({
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-  const [skipEmailConfirmation, setSkipEmailConfirmation] = useState<any>(false);
+  const [skipEmailConfirmation, setSkipEmailConfirmation] =
+    useState<any>(false);
 
   const [confirmationImageFiles, setConfirmationImageFiles] = useState<any>([]);
   const [toEmail, setToEmail] = useState<any>("");
@@ -92,7 +94,6 @@ export const ViewFinalPlanPODetails = ({
     error: errorAddDetails,
     success: successAddDetails,
   } = detailsToCreateCampaignAdd;
-
 
   const couponList = useSelector((state: any) => state.couponList);
   const { data: coupons } = couponList;
@@ -275,7 +276,6 @@ export const ViewFinalPlanPODetails = ({
           awsURL: "",
         },
       ]);
-
       setConfirmToProceed(true);
       setSkipEmailConfirmation(true);
     }
@@ -287,9 +287,11 @@ export const ViewFinalPlanPODetails = ({
         (singleFile: any) => singleFile.url !== file.url
       )
     );
-    if (confirmationImageFiles.filter(
-      (singleFile: any) => singleFile.url !== file.url
-    ).length === 0) {
+    if (
+      confirmationImageFiles.filter(
+        (singleFile: any) => singleFile.url !== file.url
+      ).length === 0
+    ) {
       setConfirmToProceed(false);
       setSkipEmailConfirmation(false);
     }
@@ -312,7 +314,9 @@ export const ViewFinalPlanPODetails = ({
   const handleSaveAndContinue = async () => {
     if (!pathname.split("/").includes("view")) {
       if (!skipEmailConfirmation) {
-        message.info("Please skip the email confirmation or upload an email confirmation screenshot to continue")
+        message.info(
+          "Please skip the email confirmation or upload an email confirmation screenshot to continue"
+        );
       } else {
         let imageArr: string[] = [];
         for (let data of confirmationImageFiles) {
@@ -335,7 +339,6 @@ export const ViewFinalPlanPODetails = ({
           })
         );
       }
-
     } else {
       setCurrentStep(step + 1);
     }
@@ -434,16 +437,17 @@ export const ViewFinalPlanPODetails = ({
           };
         })
       );
-
-      if (images?.map((image: string) => {
-        return {
-          file: null,
-          url: image,
-          fileType: "",
-          fileSize: "",
-          awsURL: image,
-        };
-      }).length > 0) {
+      if (
+        images?.map((image: string) => {
+          return {
+            file: null,
+            url: image,
+            fileType: "",
+            fileSize: "",
+            awsURL: image,
+          };
+        }).length > 0
+      ) {
         setConfirmToProceed(true);
         setSkipEmailConfirmation(true);
       }
@@ -458,7 +462,7 @@ export const ViewFinalPlanPODetails = ({
       setConfirmationImageFiles([]);
       dispatch({ type: SEND_EMAIL_FOR_CONFIRMATION_RESET });
     }
-  },[successSendEmail, dispatch]);
+  }, [successSendEmail, dispatch]);
 
   useEffect(() => {
     if (!campaignDetails) return;
@@ -469,13 +473,15 @@ export const ViewFinalPlanPODetails = ({
         screenIds: poInput.screenIds,
       })
     );
-    dispatch(getRegularVsCohortPriceData({
-      id: campaignDetails?._id,
-      screenIds: poInput?.screenIds,
-      cohorts: campaignDetails?.cohorts,
-      gender: campaignDetails?.gender,
-      duration: campaignDetails?.duration,
-    }));
+    dispatch(
+      getRegularVsCohortPriceData({
+        id: campaignDetails?._id,
+        screenIds: poInput?.screenIds,
+        cohorts: campaignDetails?.cohorts,
+        gender: campaignDetails?.gender,
+        duration: campaignDetails?.duration,
+      })
+    );
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
@@ -490,10 +496,10 @@ export const ViewFinalPlanPODetails = ({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
       if (confirmToProceed) {
-        setCurrentStep(step+1);
+        setCurrentStep(step + 1);
       }
     }
-  },[successAddDetails, step, setCurrentStep, confirmToProceed, dispatch]);
+  }, [successAddDetails, step, setCurrentStep, confirmToProceed, dispatch]);
 
   const skipFunction = () => {
     dispatch(
@@ -503,7 +509,7 @@ export const ViewFinalPlanPODetails = ({
         clientApprovalImgs: [],
       })
     );
-  }
+  };
 
   return (
     <div className="w-full">
@@ -557,7 +563,9 @@ export const ViewFinalPlanPODetails = ({
                           pdfData: {
                             approach: [campaignDetails],
                             costSummary: [screenSummaryPlanTableData],
-                            creativeRatio: countScreensByResolutionAndCity(campaignDetails?.screenWiseSlotDetails),
+                            creativeRatio: countScreensByResolutionAndCity(
+                              campaignDetails?.screenWiseSlotDetails
+                            ),
                           },
                           fileName: `${poInput?.brandName} Campaign Summary`,
                         };
@@ -582,9 +590,9 @@ export const ViewFinalPlanPODetails = ({
                       if (e.target.checked) {
                         pdfToDownload["screen-pictures"] = {
                           heading: "SCREEN PICTURES",
-                          pdfData: campaignDetails?.screenWiseSlotDetails?.filter(
-                              (s: any) =>
-                                campaignDetails?.screenIds.includes(s.screenId)
+                          pdfData: campaignDetails?.screenWiseSlotDetails
+                            ?.filter((s: any) =>
+                              campaignDetails?.screenIds.includes(s.screenId)
                             )
                             ?.map((screen: any) => {
                               return screen;
@@ -609,10 +617,13 @@ export const ViewFinalPlanPODetails = ({
                   references...
                 </h1>
               </div>
-              <button
-                type="submit"
+              <ButtonInput
+                className={"w-40"}
+                variant="outline"
+                rounded="full"
                 disabled={loadingPOData}
-                className="px-8 py-2 bg-[#3B82F6] text-white rounded-full text-gray-500 text-sm"
+                loadingText="Downloading...."
+                icon={<i className="fi fi-sr-file-download"></i>}
                 onClick={() => {
                   Object.keys(pdfDownload)?.map(async (pdf: any) => {
                     if (pdf === "summary") {
@@ -639,7 +650,8 @@ export const ViewFinalPlanPODetails = ({
                 }}
               >
                 Download
-              </button>
+              </ButtonInput>
+
               <Divider />
               <div>
                 <EmailSendBox
@@ -671,7 +683,9 @@ export const ViewFinalPlanPODetails = ({
           </div>
           <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">
             <Footer
-              mainTitle={!skipEmailConfirmation ? "Confirm to Continue" : "Continue"}
+              mainTitle={
+                !skipEmailConfirmation ? "Confirm to Continue" : "Continue"
+              }
               handleBack={() => {
                 setCurrentStep(step - 1);
               }}

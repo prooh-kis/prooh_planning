@@ -1,9 +1,7 @@
 import { PrimaryInput } from "../../components/atoms/PrimaryInput";
-import { PrimaryButton } from "../../components/atoms/PrimaryButton";
-import { useState } from "react";
-import { Loading } from "../../components/Loading";
 import { isValidEmail } from "../../utils/valueValidate";
 import { message } from "antd";
+import ButtonInput from "../../components/atoms/ButtonInput";
 
 interface EmailSendBoxProps {
   toEmail?: any;
@@ -31,7 +29,9 @@ export const EmailSendBox = ({
   return (
     <div className="p-2">
       <div className="flex flex-col">
-        <h1 className="font-semibold text-lg">{page === "VendorApproval" && "2."}Share this plan</h1>
+        <h1 className="font-semibold text-lg">
+          {page === "VendorApproval" && "2."}Share this plan
+        </h1>
         <div className="grid grid-cols-6 gap-2 pt-4">
           <div className="col-span-4">
             <PrimaryInput
@@ -43,28 +43,28 @@ export const EmailSendBox = ({
             />
           </div>
           <div className="col-span-2">
-            <PrimaryButton
-              title={"Send"}
-              rounded="rounded-[8px]"
-              action={(value: any) => {
-                if (isValidEmail(toEmail)) sendEmail(value);
+            <ButtonInput
+              variant="primary"
+              disabled={loading}
+              size="large"
+              loadingText="Sending...."
+              icon={<i className="fi fi-rs-paper-plane"></i>}
+              onClick={() => {
+                if (isValidEmail(toEmail)) sendEmail(toEmail);
                 else message.error("Please Enter valid email");
               }}
-              width="w-full"
-              height=""
-              textSize="14px"
-              disabled={loading}
-            />
+            >
+              Send Email
+            </ButtonInput>
           </div>
         </div>
         {page !== "VendorApproval" ? (
-          <div
-            className="py-4 flex items-center gap-2"
-          >
+          <div className="py-4 flex items-center gap-2">
             <p className="text-gray-500 text-[14px] truncate">
               Click here to send request for email confirmation to vendor
             </p>
-            <i className="cursor-pointer fi fi-ss-paper-plane text-primaryButton text-[14px] flex items-center"
+            <i
+              className="cursor-pointer fi fi-ss-paper-plane text-primaryButton text-[14px] flex items-center"
               onClick={() => {
                 message.info("Sending email to all vendors...");
                 sendEmailToAll();

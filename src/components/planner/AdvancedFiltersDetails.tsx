@@ -4,21 +4,13 @@ import { message, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import {
-  getDataFromLocalStorage,
-  saveDataOnLocalStorage,
-} from "../../utils/localStorageUtils";
-import {
-  FULL_CAMPAIGN_PLAN,
-  SELECTED_SCREENS_ID,
-} from "../../constants/localStorageConstants";
+
 import { LocationProximity } from "../../components/segments/LocationProximity";
 import { Footer } from "../../components/footer";
 import {
   getPlanningPageFooterData,
   getScreenDataForAdvanceFilters,
 } from "../../actions/screenAction";
-import { ALL_TOUCHPOINTS } from "../../constants/helperConstants";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { getUniqueScreens } from "../../utils/screenRanking";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
@@ -29,18 +21,14 @@ interface AdvanceFiltersDetailsProps {
   loading?: boolean;
   error?: any;
   campaignId?: any;
-  successAddCampaignDetails?: any;
-  pageSuccess?: boolean;
-  setPageSuccess?: any;
+  campaignDetails?: any;
 }
 
 export const AdvanceFiltersDetails = ({
   step,
   setCurrentStep,
-  pageSuccess = false,
-  setPageSuccess,
   campaignId,
-  successAddCampaignDetails,
+  campaignDetails,
 }: AdvanceFiltersDetailsProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -60,27 +48,32 @@ export const AdvanceFiltersDetails = ({
   const [polygonFilteredScreens, setPolygonFilteredScreens] = useState<any>([]);
 
   const [dataBrand, setDataBrand] = useState<any[]>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.advanceFilterData
-      ?.stores?.[0]?.brands || []
+    campaignDetails?.advanceFilterData?.stores?.[0]?.brands || []
   );
   const [dataComp, setDataComp] = useState<any[]>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.advanceFilterData
-      ?.stores?.[0]?.comp || []
+    campaignDetails?.advanceFilterData?.stores?.[0]?.comp || []
   );
   const [circleRadius, setCircleRadius] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.advanceFilterData
-      ?.stores?.[0]?.radius || 1000 // in meters
+    campaignDetails?.advanceFilterData?.stores?.[0]?.radius || 1000 // in meters
   );
   const [circleData, setCircleData] = useState<any>({});
   const [routes, setRoutes] = useState<any[]>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.advanceFilterData
-      ?.routes || []
+    JSON.parse(JSON.stringify(campaignDetails?.advanceFilterData?.routes || []))
   );
   const [routeOrigin, setRouteOrigin] = useState<any>([]);
   const [routeDestination, setRouteDestination] = useState<any>([]);
   const [routeRadius, setRouteRadius] = useState<any>(1000); // in meteres
 
   const [polygons, setPolygons] = useState<google.maps.Polygon[]>([]);
+
+  const detailsToCreateCampaignAdd = useSelector(
+    (state: any) => state.detailsToCreateCampaignAdd
+  );
+  const {
+    loading: loadingAddDetails,
+    error: errorAddDetails,
+    success: successAddDetails,
+  } = detailsToCreateCampaignAdd;
 
   const screensDataAdvanceFilterGet = useSelector(
     (state: any) => state.screensDataAdvanceFilterGet
@@ -98,12 +91,9 @@ export const AdvanceFiltersDetails = ({
         ...routeFilteredScreens,
         ...polygonFilteredScreens,
         ...screens,
-        // ...poiFilteredScreens,
-        // ...selectedScreensFromMap,
       ];
       const uniqueScreens = getUniqueScreens([{ screens }]);
       setFinalSelectedScreens(uniqueScreens);
-      saveDataOnLocalStorage(SELECTED_SCREENS_ID, { [campaignId]: uniqueScreens });
     } else if (type === "remove") {
       const uniqueScreens = getUniqueScreens([{ screens }]);
 
@@ -112,11 +102,6 @@ export const AdvanceFiltersDetails = ({
           (fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)
         )
       );
-      saveDataOnLocalStorage(SELECTED_SCREENS_ID, {
-        [campaignId]: finalSelectedScreens.filter(
-          (fs: any) => !uniqueScreens.map((s: any) => s._id).includes(fs._id)
-        ),
-      });
     }
   };
 
@@ -134,22 +119,12 @@ export const AdvanceFiltersDetails = ({
     dispatch(
       getScreenDataForAdvanceFilters({
         id: campaignId,
-        touchPoints: pathname?.split("/").includes("storebasedplan")
-          ? ALL_TOUCHPOINTS
-          : getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.touchPoints,
+        touchPoints: campaignDetails?.touchPoints,
       })
     );
   };
 
   useEffect(() => {
-    handleReload();
-  }, []);
-
-
-  useEffect(() => {
-    if (errorAdvanceFilterData) {
-      alert("Your system is having some issue, please refresh the page...");
-    }
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setUserLocation({
@@ -162,38 +137,59 @@ export const AdvanceFiltersDetails = ({
       },
       { enableHighAccuracy: true }
     );
-
-  }, [errorAdvanceFilterData]);
+  }, []);
 
   useEffect(() => {
-    if (!pageSuccess) return;
+    if (!campaignDetails) return;
+    if (errorAddDetails) {
+      message.error("Error in saving campaigns details");
+    }
+    if (errorAdvanceFilterData) {
+      alert("Your system is having some issue, please refresh the page...");
+    }
+
+    dispatch(
+      getScreenDataForAdvanceFilters({
+        id: campaignId,
+        touchPoints: campaignDetails?.touchPoints,
+      })
+    );
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
         pageName: "Advance Filter Page",
       })
     );
-    dispatch({
-      type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
-    });
-    setPageSuccess(true);
-  }, [dispatch, campaignId, pathname, pageSuccess, setPageSuccess]);
+  }, [
+    dispatch,
+    campaignId,
+    pathname,
+    campaignDetails,
+    errorAddDetails,
+    errorAdvanceFilterData,
+  ]);
+
+  useEffect(() => {
+    if (successAddDetails) {
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
+      setCurrentStep(step + 1);
+    }
+  }, [successAddDetails, step, setCurrentStep, dispatch]);
 
   useEffect(() => {
     if (advanceFilterData && finalSelectedScreens?.length === 0) {
-      if (pageSuccess && advanceFilterData?.screens?.length == 0) {
+      if (successAddDetails && advanceFilterData?.screens?.length == 0) {
         message.error(
           "You have got Zero screen, please change your previous selection"
         );
       } else {
         setAllScreens(advanceFilterData?.screens);
         setFinalSelectedScreens(advanceFilterData?.screens);
-        saveDataOnLocalStorage(SELECTED_SCREENS_ID, {
-          [campaignId]: advanceFilterData?.screens,
-        });
       }
     }
-  }, [advanceFilterData, campaignId, finalSelectedScreens]);
+  }, [advanceFilterData, campaignId, finalSelectedScreens, successAddDetails]);
 
   const handleSaveAndContinue = () => {
     if (!pathname.split("/").includes("view")) {
@@ -209,35 +205,25 @@ export const AdvanceFiltersDetails = ({
           advanceFilterData: {
             stores: [
               {
-                brands: dataBrand,
-                comp: dataComp,
+                brands: [...dataBrand],
+                comp: [...dataComp],
                 radius: circleRadius,
               },
             ],
-            routes: routes?.map((route: any) => {
-              return {
-                origin: route.origin,
-                destination: route.destination,
-                radius: routeRadius,
-              };
-            }),
+            routes: routes.map((route: any) => ({
+              ...route,
+              selectedScreens: [...(route.selectedScreens || [])], // Ensure a new array
+            })),
             poiLists: [],
-            polygons: polygons?.map((poly: any) => {
-              return {
-                id: poly.id,
-                type: poly.type,
-                properties: poly.properties,
-                geometry: poly.geometry,
-                screens: poly.screens,
-              };
-            }),
+            // polygons: polygons.map((poly: any) => ({
+            //   ...poly,
+            //   screens: [...(poly.screens || [])],
+            // })),
+            polygons: [],
           },
         })
       );
-      setPageSuccess(false);
     }
-    
-    setCurrentStep(step + 1);
   };
 
   return (
@@ -246,7 +232,7 @@ export const AdvanceFiltersDetails = ({
         <LoadingScreen />
       ) : (
         <div className="w-full">
-          <div className="w-full h-full grid grid-cols-2 gap-4">
+          <div className="w-full h-full grid grid-cols-2 gap-4 pb-16">
             <div className="col-span-1 h-full pr-4">
               <div className="flex justify-between items-center">
                 <div>
@@ -334,7 +320,8 @@ export const AdvanceFiltersDetails = ({
               handleSave={handleSaveAndContinue}
               campaignId={campaignId}
               pageName="Advance Filter Page"
-              successAddCampaignDetails={successAddCampaignDetails}
+              loadingCost={loadingAdvanceFilterData || loadingAddDetails}
+              successCampaignDetails={successAddDetails}
             />
           </div>
         </div>

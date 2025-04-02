@@ -1,30 +1,34 @@
 import { useCallback, useEffect, useState } from "react";
-import { PrimaryInput } from "../atoms/PrimaryInput";
+import { PrimaryInput } from "../../components/atoms/PrimaryInput";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CalendarInput } from "../atoms/CalendarInput";
+import { CalendarInput } from "../../components/atoms/CalendarInput";
 import {
   getCampaignDurationFromStartAndEndDate,
   getEndDateFromStartDateAndDuration,
 } from "../../utils/dateAndTimeUtils";
-import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { message, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
-import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import {
   addClientAgencyDetails,
   getAllClientAgencyNames,
 } from "../../actions/clientAgencyAction";
 import { SuggestionInput } from "../../components/atoms/SuggestionInput";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
+import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { ALL_BRAND_LIST } from "../../constants/localStorageConstants";
+import { getAllBrandAndNetworkAction } from "../../actions/creativeAction";
+import ButtonInput from "../../components/atoms/ButtonInput";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
   userInfo?: any;
   campaignId?: any;
-  campaignType: string;
   path: string;
+  campaignDetails?: any;
+  campaignType?: any;
 }
 const allIndex = [1, 2, 3, 6].map((data: any) => {
   return {
@@ -37,6 +41,7 @@ export const EnterCampaignBasicDetails = ({
   step,
   userInfo,
   campaignId,
+  campaignDetails,
   campaignType,
   path,
 }: EnterCampaignBasicDetailsProps) => {
@@ -45,52 +50,37 @@ export const EnterCampaignBasicDetails = ({
   const { pathname } = useLocation();
 
   const [campaignName, setCampaignName] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.name || ""
+    campaignDetails?.name || ""
   );
   const [brandName, setBrandName] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.brandName || ""
+    campaignDetails?.brandName || ""
   );
   const [clientName, setClientName] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.clientName || ""
+    campaignDetails?.clientName || ""
   );
   const [industry, setIndustry] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.industry || ""
+    campaignDetails?.industry || ""
   );
   const [startDate, setStartDate] = useState<any>(() => {
-    const localDate = new Date(
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.startDate
-    );
+    const localDate = new Date(campaignDetails?.startDate);
     const utcDate = new Date(
       localDate.getTime() - localDate.getTimezoneOffset() * 60000
     );
 
-    return getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-      ? utcDate.toISOString().slice(0, 16)
-      : "";
+    return campaignDetails ? utcDate.toISOString().slice(0, 16) : "";
   });
-
   const [endDate, setEndDate] = useState<any>(() => {
-    const localDate = new Date(
-      getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.endDate
-    );
+    const localDate = new Date(campaignDetails?.endDate);
     const utcDate = new Date(
       localDate.getTime() - localDate.getTimezoneOffset() * 60000
     );
 
-    return getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-      ? utcDate.toISOString().slice(0, 16)
-      : "";
+    return campaignDetails ? utcDate.toISOString().slice(0, 16) : "";
   });
-
   const [duration, setDuration] = useState<any>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.duration || ""
+    campaignDetails?.duration || ""
   );
-
-  const [sov, setSov] = useState<number>(
-    getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]?.sov || 1
-  );
-
-  const [enterDuration, setEnterDuration] = useState<any>(true);
+  const [sov, setSov] = useState<number>(campaignDetails?.sov || 1);
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -105,11 +95,7 @@ export const EnterCampaignBasicDetails = ({
   const allClientAgencyNamesListGet = useSelector(
     (state: any) => state.allClientAgencyNamesListGet
   );
-  const {
-    loading: loadingClientAgencyNames,
-    error: errorClientAgencyNames,
-    data: clientAgencyNamesList,
-  } = allClientAgencyNamesListGet;
+  const { data: clientAgencyNamesList } = allClientAgencyNamesListGet;
 
   const handleAddNewClient = useCallback(
     (value: string) => {
@@ -224,24 +210,55 @@ export const EnterCampaignBasicDetails = ({
       !pathname.split("/").includes("edit")
     ) {
       navigate(`/${path}/${addDetails?._id}`);
-      // dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
       setCurrentStep(step + 1);
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
     }
   }, [
-    navigate,
+    addDetails?._id,
     dispatch,
     errorAddDetails,
-    successAddDetails,
-    setCurrentStep,
-    step,
+    navigate,
     path,
     pathname,
-    addDetails,
+    setCurrentStep,
+    step,
+    successAddDetails,
   ]);
 
   useEffect(() => {
     dispatch(getAllClientAgencyNames());
+    dispatch(getAllBrandAndNetworkAction());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (campaignDetails) {
+      setCampaignName(campaignDetails?.name);
+      setBrandName(campaignDetails?.brandName);
+      setClientName(campaignDetails?.clientName);
+      setIndustry(campaignDetails?.industry);
+      setStartDate(() => {
+        const localDate = new Date(campaignDetails?.startDate);
+        const utcDate = new Date(
+          localDate.getTime() - localDate.getTimezoneOffset() * 60000
+        );
+
+        return campaignDetails ? utcDate.toISOString().slice(0, 16) : "";
+      });
+      setEndDate(() => {
+        const localDate = new Date(campaignDetails?.endDate);
+        const utcDate = new Date(
+          localDate.getTime() - localDate.getTimezoneOffset() * 60000
+        );
+
+        return campaignDetails ? utcDate.toISOString().slice(0, 16) : "";
+      });
+      setSov(campaignDetails?.sov);
+      setDuration(campaignDetails?.duration);
+    }
+  }, [campaignDetails]);
+
   const handleDateChange = (value: any, type: any) => {
     if (type === "start") {
       if (new Date() > new Date(value)) {
@@ -284,7 +301,7 @@ export const EnterCampaignBasicDetails = ({
       <div className="grid grid-cols-3 gap-8 pt-2">
         <div className="col-span-1 py-1">
           <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="text-secondaryText text-[14px] ">
+            <label className="text-secondaryText text-[14px] truncate">
               Campaign Name
             </label>
             <Tooltip title="Enter a unique name for your campaign">
@@ -301,7 +318,7 @@ export const EnterCampaignBasicDetails = ({
         </div>
         <div className="col-span-1 py-1">
           <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">
+            <label className="block text-secondaryText text-[14px] truncate">
               Brand Name
             </label>
             <Tooltip title="Enter campaign's brand name">
@@ -309,18 +326,24 @@ export const EnterCampaignBasicDetails = ({
             </Tooltip>
           </div>
 
-          <PrimaryInput
-            inputType="text"
+          <SuggestionInput
+            suggestions={getDataFromLocalStorage(ALL_BRAND_LIST)}
+            onChange={(value: string) =>
+              setBrandName(
+                String(value ?? "")
+                  .toUpperCase()
+                  .trim()
+              )
+            }
+            value={brandName || ""}
             placeholder="Brand Name"
-            value={brandName}
-            action={(value) => setBrandName(value?.toUpperCase())}
           />
         </div>
       </div>
       <div className="grid grid-cols-3 gap-8 pt-2">
         <div className="col-span-1 py-1">
           <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">
+            <label className="block text-secondaryText text-[14px] truncate">
               Agency / Client
             </label>
             <Tooltip title="Enter Agency's name or client's name who is managing the campaign">
@@ -338,7 +361,7 @@ export const EnterCampaignBasicDetails = ({
         </div>
         <div className="col-span-1 py-1">
           <div className="block flex justify-between justify-betweengap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">
+            <label className="block text-secondaryText text-[14px] truncate">
               Industry Type
             </label>
             <Tooltip title="Enter industry name your brand belongs to">
@@ -356,7 +379,7 @@ export const EnterCampaignBasicDetails = ({
       <div className="grid grid-cols-3 gap-8 pt-2">
         <div className="col-span-1 py-1">
           <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">
+            <label className="block text-secondaryText text-[14px] truncate">
               Start Date
             </label>
             <Tooltip title="Select Date from when the campaign is to be started">
@@ -374,7 +397,7 @@ export const EnterCampaignBasicDetails = ({
 
         <div className="col-span-1 py-1">
           <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">
+            <label className="block text-secondaryText text-[14px] truncate">
               End Date
             </label>
             <Tooltip title="Select Date from when the campaign is to be started">
@@ -406,14 +429,15 @@ export const EnterCampaignBasicDetails = ({
           </div>
           <DropdownInput
             options={allIndex}
-            selectedOptions={sov}
+            selectedOption={sov}
             placeHolder="Select SOV"
             setSelectedOption={setSov}
+            height="h-[48px]"
           />
         </div>
         <div className="col-span-1 py-1">
           <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">
+            <label className="block text-secondaryText text-[14px] truncate">
               Duration (Days)
             </label>
             <Tooltip title="Enter total duration of campaigns in days">
@@ -438,19 +462,17 @@ export const EnterCampaignBasicDetails = ({
       </div>
 
       <div className="flex py-8">
-        <button
-          type="submit"
-          className="border border-1 py-2 px-8 text-[16px] font-semibold rounded-md bg-[#00A0FA] text-[#FFFFFF] hover:bg-[#D7D7D7] hover:text-black truncate font-custom h-12 w-48"
-          title="Save and go next"
+        <ButtonInput
           onClick={() => {
             if (validateForm()) {
               saveCampaignDetailsOnLocalStorage();
             }
           }}
-          disabled={loadingAddDetails}
+          variant="primary"
+          loading={loadingAddDetails}
         >
-          {loadingAddDetails ? "Please Wait...." : "Continue"}
-        </button>
+          {!campaignId ? "Create" : "Continue"}
+        </ButtonInput>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
-import { getAllLocalStorageData } from "../../utils/localStorageUtils";
 import { CostSummaryTable1 } from "../../components/tables";
 import Modal from "antd/es/modal/Modal";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import ButtonInput from "../../components/atoms/ButtonInput";
 
 export function ScreenSummaryModel({
   pageName,
@@ -16,16 +16,19 @@ export function ScreenSummaryModel({
 
   return (
     <div className="w-full">
-      <button
-        type="submit"
+      <ButtonInput
         onClick={() => setOpen(true)}
-        className="border border-1 bg-[#D7D7D7] rounded-full py-2 px-4 text-[14px] hover:bg-[#00A0FA] hover:text-[#FFFFFF]"
+        variant="outline"
+        rounded="full"
       >
         Summary
-      </button>
+      </ButtonInput>
+
       <Modal open={open} onCancel={handleCancel} footer={[]} width={1100}>
         <div className="p-2 mt-4">
-          <h1 className="text-[12px] p-1 font-semibold">Campaign Cost Summary </h1>
+          <h1 className="text-[12px] p-1 font-semibold">
+            Campaign Cost Summary{" "}
+          </h1>
           <CostSummaryTable1
             loading={loadingCost}
             totalData={totalScreensData}

@@ -10,3 +10,4 @@ export { VendorConfirmationDetails } from "./VendorConfirmationDetails";
 export { SetAdsPlayTime } from "./SetAdsPlayTime";
 export { StoreBaseScreenSummaryDetails } from "./StoreBaseScreenSummaryDetails";
 export { StoreBasedPlanSummaryTable } from "./StoreBasedPlanSummaryTable";
+export { NewCreativeUpload } from "./NewCreativeUpload";

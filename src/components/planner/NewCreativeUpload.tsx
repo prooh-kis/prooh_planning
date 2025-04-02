@@ -25,6 +25,7 @@ import { getCreativesMediaAction } from "../../actions/creativeAction";
 import { NoDataView } from "../index";
 import { ConformationModelForCreative } from "../popup/ConformationModelForCreative";
 import { TriggerBasedIndication } from "../molecules/TriggerBasedIndication";
+import ButtonInput from "../../components/atoms/ButtonInput";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -662,13 +663,13 @@ export const NewCreativeUpload = ({
       <div className="mx-auto">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-semibold">Upload Creative</h1>
-          <div
+          <ButtonInput
+            variant="outline"
+            icon={<i className="fi fi-sr-folder-open text-[16px]"></i>}
             onClick={() => navigate("/my-creatives")}
-            className="border-2 border-[#129BFF] text-[#000000] rounded-md  text-[#129BFF] w-auto text-[14px] py-1 px-4 flex items-center gap-2 cursor-pointer"
           >
-            <i className="fi fi-sr-folder-open text-[16px]"></i>
             Creative Bucket
-          </div>
+          </ButtonInput>
         </div>
         <h2 className="text-sm text-gray-500">
           Upload your creatives for the campaigns for your selected screens
