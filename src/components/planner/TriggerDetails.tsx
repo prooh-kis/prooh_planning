@@ -452,7 +452,7 @@ export const TriggerDetails = ({
               </div>
               <div className="py-2">
                 <SportsSegment
-                  campaignId={campaignId}
+                  // campaignId={campaignId}
                   selectedMatchId={selectedMatchId}
                   setSelectedMatchId={setSelectedMatchId}
                   sport={sport}

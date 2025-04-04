@@ -1,7 +1,7 @@
 import { WeatherSegment } from "../../components/segments/WeatherSegment";
 import { TabWithIcon } from "../../components/molecules/TabWithIcon";
 import { VerticalStepperSlider } from "../../components/molecules/VerticalStepperSlide";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { SportsSegment } from "../../components/segments/SportsSegment";
 import { BuyVacantSlots } from "../../components/segments/BuyVacantSlots";
 import { OpenBudgetSegment } from "../../components/segments/OpenBudgetSegment";
@@ -9,11 +9,6 @@ import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import { formatNumber } from "../../utils/formatValue";
 import { Footer } from "../../components/footer";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
-import {
-  getDataFromLocalStorage,
-  saveDataOnLocalStorage,
-} from "../../utils/localStorageUtils";
-import { SELECTED_TRIGGER } from "../../constants/localStorageConstants";
 import { message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
@@ -25,7 +20,8 @@ import {
   getTableDataForSelectTriggerPage,
 } from "../../actions/screenAction";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
-import { CheckboxInput } from "../../components/atoms/CheckboxInput";
+
+
 interface TriggerProps {
   setCurrentStep: (step: number) => void;
   step: number;
@@ -52,6 +48,12 @@ export const TriggerDetails = ({
   const [selectedTrigger, setSelectedTrigger] = useState<any>({
     triggerType: "weather",
   });
+  const [selectedTriggerData, setSelectedTriggerData] = useState<any>({
+    weatherTriggers: [],
+    sportsTriggers: [],
+    vacantSlots: [],
+  });
+
   const [minVal, setMinVal] = useState<any>(0);
   const [maxVal, setMaxVal] = useState<any>(0);
   const [rainType, setRainType] = useState<any>("0");
@@ -59,7 +61,7 @@ export const TriggerDetails = ({
 
   const [condition, setCondition] = useState<any>("");
 
-  const [selectedMatchId, setSelectedMatchId] = useState<any>("");
+  const [selectedMatchId, setSelectedMatchId] = useState<any>(null);
   const [sport, setSport] = useState<any>("");
   const [player, setPlayer] = useState<any>("");
 
@@ -105,28 +107,26 @@ export const TriggerDetails = ({
     },
   ];
 
-  const weatherTabData = () => {
-    return [
-      {
-        icon: <i className="fi fi-tr-summer flex items-center"></i>,
-        label: "Temperature",
-        value: "temperature",
-        id: 1,
-      },
-      {
-        icon: <i className="fi fi-ts-cloud-sun-rain flex items-center"></i>,
-        label: "Rain",
-        value: "rain",
-        id: 2,
-      },
-      {
-        icon: <i className="fi fi-ts-pollution flex items-center"></i>,
-        label: "AQI",
-        value: "aqi",
-        id: 3,
-      },
-    ];
-  };
+  const weatherTabData = useMemo(() => [
+    {
+      icon: <i className="fi fi-tr-summer flex items-center"></i>,
+      label: "Temperature",
+      value: "temperature",
+      id: 1,
+    },
+    {
+      icon: <i className="fi fi-ts-cloud-sun-rain flex items-center"></i>,
+      label: "Rain",
+      value: "rain",
+      id: 2,
+    },
+    {
+      icon: <i className="fi fi-ts-pollution flex items-center"></i>,
+      label: "AQI",
+      value: "aqi",
+      id: 3,
+    },
+  ],[]);
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -147,77 +147,53 @@ export const TriggerDetails = ({
   } = tableDataForSelectTriggerPageGet;
 
   const handleSelectTrigger = useCallback(() => {
-    saveDataOnLocalStorage(SELECTED_TRIGGER, {
-      [campaignId]: {
-        weatherTriggers: [],
-        sportsTriggers: [],
-        vacantSlots: [],
-      },
+
+    setSelectedTriggerData(() => {
+      return {
+      weatherTriggers: selectedTrigger?.triggerType === "weather"
+        ? [
+            {
+              type: weatherTabData?.filter(
+                (w: any) => w.id === currentTab
+              )[0]?.value,
+              minVal: minVal,
+              maxVal: maxVal,
+              rainType: rainType,
+              aqi: aqi,
+              openBudgetSovPercent: selectedSOV,
+              budget: Number(selectedBudget),
+              period: Number(selectedTimeOptions),
+            },
+          ]
+        : [],
+        sportsTriggers: selectedTrigger?.triggerType === "sport"
+        ? [
+            {
+              sport: sport,
+              player: player,
+              matchId: selectedMatchId,
+              condition: condition,
+              openBudgetSovPercent: selectedSOV,
+              budget: Number(selectedBudget),
+              period: Number(selectedTimeOptions),
+            },
+          ]
+        : [],
+        vacantSlots: selectedTrigger?.triggerType === "empty"
+        ? [
+            {
+              type: "vacantSlots",
+              slotType: condition,
+              openBudgetSovPercent: selectedSOV,
+              budget: Number(selectedBudget),
+              period: Number(selectedTimeOptions),
+            },
+          ]
+        : [],
+      }
     });
 
-    saveDataOnLocalStorage(SELECTED_TRIGGER, {
-      [campaignId]: {
-        weatherTriggers:
-          selectedTrigger?.triggerType === "weather"
-            ? [
-                {
-                  type: weatherTabData()?.filter(
-                    (w: any) => w.id === currentTab
-                  )[0]?.value,
-                  minVal: minVal,
-                  maxVal: maxVal,
-                  rainType: rainType,
-                  aqi: aqi,
-                  openBudgetSovPercent: selectedSOV,
-                  budget: Number(selectedBudget),
-                  period: Number(selectedTimeOptions),
-                },
-              ]
-            : [],
-        sportsTriggers:
-          selectedTrigger?.triggerType === "sport"
-            ? [
-                {
-                  sport: sport,
-                  player: player,
-                  matchId: selectedMatchId,
-                  condition: condition,
-                  openBudgetSovPercent: selectedSOV,
-                  budget: Number(selectedBudget),
-                  period: Number(selectedTimeOptions),
-                },
-              ]
-            : [],
-        vacantSlots:
-          selectedTrigger?.triggerType === "empty"
-            ? [
-                {
-                  type: "vacantSlots",
-                  slotType: condition,
-                  openBudgetSovPercent: selectedSOV,
-                  budget: Number(selectedBudget),
-                  period: Number(selectedTimeOptions),
-                },
-              ]
-            : [],
-      },
-    });
-  }, [
-    currentTab,
-    selectedTrigger,
-    selectedSOV,
-    selectedBudget,
-    condition,
-    sport,
-    player,
-    selectedMatchId,
-    selectedTimeOptions,
-    minVal,
-    maxVal,
-    rainType,
-    aqi,
-    campaignId,
-  ]);
+  }, [selectedTrigger, weatherTabData, minVal, maxVal, rainType, aqi, selectedSOV, selectedBudget, selectedTimeOptions, sport, player, selectedMatchId, condition, currentTab]);
 
   const handleSaveAndContinue = () => {
     if (pathname?.split("/").includes("view")) {
@@ -232,7 +208,7 @@ export const TriggerDetails = ({
           addDetailsToCreateCampaign({
             pageName: "Add Triggers Page",
             id: campaignId,
-            triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
+            triggers: selectedTriggerData,
           })
         );
       }
@@ -241,19 +217,16 @@ export const TriggerDetails = ({
 
   const handleSkipTriggerSelection = () => {
     if (confirm("Do you really want to skip this steps?")) {
-      saveDataOnLocalStorage(SELECTED_TRIGGER, {
-        [campaignId]: {
-          weatherTriggers: [],
-          sportsTriggers: [],
-          vacantSlots: [],
-        },
-      });
       setIsDisabled(false);
       dispatch(
         addDetailsToCreateCampaign({
           pageName: "Add Triggers Page",
           id: campaignId,
-          triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
+          triggers: {
+            weatherTriggers: [],
+            sportsTriggers: [],
+            vacantSlots: [],
+          },
         })
       );
     }
@@ -261,7 +234,7 @@ export const TriggerDetails = ({
 
   // setting initial value  when page reload or came from future
   useEffect(() => {
-    const trigger = getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId];
+    const trigger = campaignDetails?.triggers;
     if (trigger) {
       setTriggerSelected(true);
       setIsDisabled(false);
@@ -304,7 +277,7 @@ export const TriggerDetails = ({
       );
       setSelectedTimeOptions(trigger?.sportsTriggers[0]?.period || 300);
     }
-  }, [campaignId]);
+  }, [campaignDetails, campaignId]);
 
   useEffect(() => {
     if (selectedTrigger) {
@@ -382,13 +355,13 @@ export const TriggerDetails = ({
                 className="text-[14px] text-primaryButton underline cursor-pointer"
                 onClick={handleSkipTriggerSelection}
               >
-                Skip trigger selection / Remove
+                Skip / Remove trigger selection
               </p>
             )}
           </div>
         )}
       </div>
-      <div className="grid grid-cols-12 gap-4 w-full">
+      <div className="grid grid-cols-12 gap-4 w-full pb-16">
         {!pathname?.split("/").includes("triggerbasedplan") && (
           <div className="col-span-4 border rounded py-5 flex flex-col justify-between">
             <div className="">
@@ -445,7 +418,7 @@ export const TriggerDetails = ({
                   justify={true}
                   currentTab={currentTab}
                   setCurrentTab={setCurrentTab}
-                  tabData={weatherTabData()}
+                  tabData={weatherTabData}
                 />
               </div>
 
@@ -484,7 +457,7 @@ export const TriggerDetails = ({
               </div>
               <div className="py-2">
                 <SportsSegment
-                  campaignId={campaignId}
+                  campaignDetails={campaignDetails}
                   selectedMatchId={selectedMatchId}
                   setSelectedMatchId={setSelectedMatchId}
                   sport={sport}

@@ -21,7 +21,7 @@ export const VerticalStepperSlider: React.FC<StepSliderProps> = ({
   ];
 
   const handleStepClick = (selectedStep: number) => {
-    if (selectedStep === 3) return; // Step 3 is disabled
+    // if (selectedStep === 3) return; // Step 3 is disabled
     setStep(selectedStep);
     setTrigger({ triggerType: stepLabels[selectedStep - 1].value });
   };

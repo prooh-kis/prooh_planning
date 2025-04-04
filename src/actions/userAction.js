@@ -301,10 +301,15 @@ export const sendEmailForConfirmation = (formData) => async (dispatch, getState)
     // payload: ,
   });
   try {
+      const {
+        auth: { userInfo },
+      } = getState();
 
     const { data } = await Axios.post(`${USER_URL}/sendEmailForConfirmation`, formData, {
+      params: userInfo,
       headers: {
         "Content-Type": "multipart/form-data",
+        authorization: `Bearer ${userInfo.token}`
       }
     });
     dispatch({
