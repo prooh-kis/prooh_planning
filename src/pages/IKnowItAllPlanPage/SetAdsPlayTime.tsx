@@ -210,7 +210,7 @@ export const SetAdsPlayTime = ({
   const mainTableStats = calculateSelectionStats(data).byDayType[currentTab];
   
   const handleSaveAndContinue = async (e: any) => {
-    e.preventDefault();
+    // e.preventDefault();
     if (!pathname.split("/").includes("view")) {
       dispatch(
         addDetailsToCreateCampaign({
