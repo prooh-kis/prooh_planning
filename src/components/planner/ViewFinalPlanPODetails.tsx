@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Divider, message } from "antd";
 import { Footer } from "../../components/footer";
 import { EmailConfirmationImage } from "../../components/segments/EmailConfirmationImage";
-import { EmailSendBox } from "../../components/segments/EmailSendBox";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getFinalPlanPOTableData,
@@ -32,12 +31,28 @@ import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignCo
 import { ViewFinalPlanTable } from "../../components/tables/ViewFinalPlanTable";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import ButtonInput from "../../components/atoms/ButtonInput";
+import { ChoseMonitoringType } from "../../components/segments/ChoseMonitoringType";
+import { format } from "date-fns";
+import { PrimaryInput } from "../../components/atoms/PrimaryInput";
+import { isValidEmail } from "../../utils/valueValidate";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
   step: number;
   campaignId?: any;
   campaignDetails?: any;
+}
+
+interface MonitoringTypeData {
+  dates: string[];
+  dayMonitoringType: string[];
+  nightMonitoringType: string[];
+}
+
+interface InitialData {
+  startDate: MonitoringTypeData;
+  midDate: MonitoringTypeData;
+  endDate: MonitoringTypeData;
 }
 
 export const ViewFinalPlanPODetails = ({
@@ -147,6 +162,28 @@ export const ViewFinalPlanPODetails = ({
   const [currentCoupon, setCurrentCoupon] = useState<string>(
     poTableData?.couponId || ""
   );
+
+  const [initialData, setInitialData] = useState<InitialData>({
+    startDate: {
+      dates: [
+        format(new Date(poTableData?.startDate || new Date()), "yyyy-MM-dd"),
+      ],
+      dayMonitoringType: [],
+      nightMonitoringType: [],
+    },
+    endDate: {
+      dates: [
+        format(new Date(poTableData?.endDate || new Date()), "yyyy-MM-dd"),
+      ],
+      dayMonitoringType: [],
+      nightMonitoringType: [],
+    },
+    midDate: {
+      dates: [],
+      dayMonitoringType: [],
+      nightMonitoringType: [],
+    },
+  });
 
   const sendEmail = (fileLinks: string) => {
     const formData = new FormData();
@@ -336,6 +373,7 @@ export const ViewFinalPlanPODetails = ({
             pageName: "View Final Plan Page",
             id: campaignId,
             clientApprovalImgs: imageArr,
+            monitoringSelection: initialData,
           })
         );
       }
@@ -511,11 +549,36 @@ export const ViewFinalPlanPODetails = ({
     );
   };
 
+  const handleDownload = () => {
+    Object.keys(pdfDownload)?.map(async (pdf: any) => {
+      if (pdf === "summary") {
+        generateCampaignSummaryPdfFromJSON({
+          preview: false,
+          download: true,
+          jsonData: pdfDownload[pdf].pdfData,
+          fileName: pdfDownload[pdf].fileName,
+          heading: pdfDownload[pdf].heading,
+        });
+      }
+      if (pdf === "screen-pictures") {
+        if (pdfDownload[pdf].pdfData?.length > 0) {
+          generatePPT({
+            download: true,
+            data: pdfDownload[pdf].pdfData,
+            fileName: pdfDownload[pdf].fileName,
+          });
+        } else {
+          message.error("No data found, to download!");
+        }
+      }
+    });
+  };
+
   return (
     <div className="w-full">
       <div>
         <h1 className="text-2xl font-semibold">View Final Plan & Share</h1>
-        <h1 className="text-sm text-gray-500 ">
+        <h1 className="text-sm text-gray-500">
           Any specific route you want to cover in this campaign
         </h1>
       </div>
@@ -543,7 +606,7 @@ export const ViewFinalPlanPODetails = ({
               className="col-span-1 p-4 border border-1 border-#C3C3C3 rounded-2xl w-full"
             >
               <h1 className="font-semibold text-lg">
-                1.Download or share your campaign plan{" "}
+                1.Download or share your campaign plan
               </h1>
               <div className="flex flex-wrap gap-6 py-4">
                 <div className="flex items-center gap-2">
@@ -609,8 +672,8 @@ export const ViewFinalPlanPODetails = ({
                 </div>
               </div>
               <div className="flex gap-2 pb-4">
-                <i className="fi fi-sr-lightbulb-on flex items-top justify-center text-primaryButton"></i>
-                <h1 className="text-[12px] text-primaryButton">
+                <i className="fi fi-sr-lightbulb-on flex items-top justify-center text-[#b3b3b3]"></i>
+                <h1 className="text-[12px] text-[#b3b3b3]">
                   Check the document that you wish to see, Campaign Summary
                   contains Campaign Details, Plan Summary and Creative Ratios,
                   while Screen Pictures have all the inventory pictures for your
@@ -624,47 +687,49 @@ export const ViewFinalPlanPODetails = ({
                 disabled={loadingPOData}
                 loadingText="Downloading...."
                 icon={<i className="fi fi-sr-file-download"></i>}
-                onClick={() => {
-                  Object.keys(pdfDownload)?.map(async (pdf: any) => {
-                    if (pdf === "summary") {
-                      generateCampaignSummaryPdfFromJSON({
-                        preview: false,
-                        download: true,
-                        jsonData: pdfDownload[pdf].pdfData,
-                        fileName: pdfDownload[pdf].fileName,
-                        heading: pdfDownload[pdf].heading,
-                      });
-                    }
-                    if (pdf === "screen-pictures") {
-                      if (pdfDownload[pdf].pdfData?.length > 0) {
-                        generatePPT({
-                          download: true,
-                          data: pdfDownload[pdf].pdfData,
-                          fileName: pdfDownload[pdf].fileName,
-                        });
-                      } else {
-                        message.error("No data found, to download!");
-                      }
-                    }
-                  });
-                }}
+                onClick={handleDownload}
               >
                 Download
               </ButtonInput>
 
               <Divider />
-              <div>
-                <EmailSendBox
-                  page="VendorApproval"
-                  toEmail={toEmail}
-                  setToEmail={setToEmail}
-                  cc={cc}
-                  sendEmail={() => {
-                    sendMultipleAttachments();
-                  }}
-                  type="po"
-                  loading={loadingEmailReady || loadingPOData}
+              <div className="">
+                <h1 className="font-semibold text-lg pb-4">
+                  2. Choose Monitoring Pics Type
+                </h1>
+                <ChoseMonitoringType
+                  initialData={initialData}
+                  setInitialData={setInitialData}
                 />
+              </div>
+              <Divider />
+              <div className="">
+                <h1 className="font-semibold text-lg">3. Share this plan</h1>
+                <div className="grid grid-cols-6 gap-2 pt-4">
+                  <div className="col-span-4">
+                    <PrimaryInput
+                      placeholder="Enter Email"
+                      value={toEmail}
+                      inputType="text"
+                      action={setToEmail}
+                      rounded="rounded-[8px]"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <ButtonInput
+                      variant="primary"
+                      size="large"
+                      loadingText="Sending...."
+                      icon={<i className="fi fi-rs-paper-plane"></i>}
+                      onClick={() => {
+                        if (isValidEmail(toEmail)) sendEmail(toEmail);
+                        else message.error("Please Enter valid email");
+                      }}
+                    >
+                      Send Email
+                    </ButtonInput>
+                  </div>
+                </div>
               </div>
 
               <Divider />

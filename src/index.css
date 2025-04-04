@@ -4,6 +4,12 @@
 
 @import "~@flaticon/flaticon-uicons/css/all/all";
 
+/* Preline UI */
+@import "../node_modules/preline/variants.css";
+
+/* Plugins */
+/* @plugin "@tailwindcss/forms"; */
+
 html {
   width: 100%;
   height: 100%;

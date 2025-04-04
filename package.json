@@ -44,6 +44,7 @@
     "moment": "^2.30.1",
     "npm": "^10.8.3",
     "pptxgenjs": "^3.12.0",
+    "preline": "^3.0.1",
     "react": "^18.3.1",
     "react-big-calendar": "^1.15.0",
     "react-chartjs-2": "^5.2.0",
@@ -86,6 +87,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@tailwindcss/forms": "^0.5.10",
     "@types/file-saver": "^2.0.7",
     "@types/lodash.debounce": "^4.0.9",
     "@types/mapbox__mapbox-gl-draw": "^1.4.8",
