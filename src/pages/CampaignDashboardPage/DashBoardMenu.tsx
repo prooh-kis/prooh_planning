@@ -23,7 +23,7 @@ export const DashBoardMenu = ({ campaignDetails }: any) => {
           ].map((label, index) => (
             <p
               key={index}
-              className="text-[14px] text-[#0E212E] font-semibold leading-[16.94px] border-b border-[#ECECEC] last:border-b-0 py-2"
+              className="text-[14px] text-[#0E212E] font-medium leading-[16.94px] border-b border-[#ECECEC] last:border-b-0 py-2"
             >
               {label}
             </p>

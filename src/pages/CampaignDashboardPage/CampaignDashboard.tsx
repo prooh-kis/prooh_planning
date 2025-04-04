@@ -1,6 +1,5 @@
 import { CampaignDashboardTable } from "../../components/tables/CampaignDashboardTable";
-import React, { useEffect, useRef, useState } from "react";
-import { DashboardFilters } from "../../components/segments/DashboardFilters";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { calculateDaysPlayed } from "../../utils/dateAndTimeUtils";
 import { CalendarScaleSlider } from "../../components/molecules/CalenderScaleSlider";
 import { DashboardImpressionDetailsTable } from "../../components/tables/DashboardImpressionDetailsTable";
@@ -8,13 +7,13 @@ import { DashboardBarChart } from "../../components/segments/DashboardBarGraph";
 import { DashboardPieChart } from "../../components/segments/DashboardPieChart";
 import { DashboardGrid } from "../../components/molecules/DashboardGrid";
 import { useNavigate } from "react-router-dom";
-import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
 import { DashBoardSlotGraph } from "../../components/segments/DashBoardSlotGraph";
 import { BillingAndInvoice } from "./BillingAndInvoice";
 import { GET_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyConstants";
 import { useDispatch } from "react-redux";
 import { DashBoardMenu } from "./DashBoardMenu";
 import { Tooltip } from "antd";
+import { FirstCharForBrandName } from "../../components/molecules/FirstCharForBrandName";
 
 export const CampaignDashboard = ({
   campaignDetails,
@@ -206,6 +205,10 @@ export const CampaignDashboard = ({
     return result; // {"ScreenName" : value,....}
   };
 
+  const handleToggleMenu = useCallback(() => {
+    setShowMenu((pre: boolean) => !pre);
+  }, [showMenu]);
+
   return (
     <div className="w-full h-full pt-10 flex flex-col gap-2 bg-[#D3D3D320] font-custom">
       <BillingAndInvoice
@@ -264,26 +267,30 @@ export const CampaignDashboard = ({
         invoiceAmount={invoiceAmount}
         setInvoiceAmount={setInvoiceAmount}
       />
+      {/* Dashboard header Section */}
       <div className="bg-[#FFFFFF] p-2 px-10 flex justify-between mt-6 fixed z-10 shadow-sm w-full">
         <div className="px-2 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <i className="fi fi-br-arrow-left" onClick={() => navigate(-1)}></i>
-            <div className="h-[39px] w-[39px] p-4 flex items-center justify-center rounded-full bg-[#4E952D]">
-              <h1 className="text-[24px] font-bold text-white">
-                {campaignDetails?.name?.charAt(0) || "?"}
-              </h1>
+          <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
+              <i
+                className="fi fi-br-arrow-left"
+                onClick={() => navigate(-1)}
+              ></i>
+              <FirstCharForBrandName brandName={campaignDetails?.brandName} />
             </div>
-            <div className="w-full relative">
+            <div className="w-full relative flex flex-col justify-between">
               <div className="flex items-center gap-4">
-                <h1 className="text-[16px] font-semibold leading-[19.36px]">
-                  {campaignDetails?.name}
+                <h1 className="text-[20px] font-semibold leading-[19.36px] text-[#0E212E]">
+                  {campaignDetails?.name?.toUpperCase()}
                 </h1>
                 <i
-                  className="fi fi-rr-angle-small-down text-[#5B7180] cursor-pointer"
-                  onClick={() => setShowMenu((prev) => !prev)}
+                  className={`${
+                    showMenu ? "fi fi-br-angle-down" : "fi fi-br-angle-up"
+                  } text-[#5B7180] cursor-pointer`}
+                  onClick={handleToggleMenu}
                 ></i>
               </div>
-              <p className="text-[14px] text-[#B0B0B0] leading-[16.94px]">
+              <p className="text-[14px] text-[#5B7180] leading-[100%]">
                 {campaignDetails?.brandName}
               </p>
               <div className="relative w-full" ref={dropdownRef}>
@@ -294,38 +301,23 @@ export const CampaignDashboard = ({
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-end  gap-2 ">
-          <DashboardFilters
-            campaignDetails={campaignDetails}
-            handleSelectCity={handleSelectCity}
-            handleSelectTouchPoint={handleSelectTouchPoint}
-            touchPointList={extractAllTouchPoints()}
-            cityList={extractAllCity()}
-          />
-          <div className="grid grid-cols-2 gap-2">
-            <div
-              className="col-span-1 border border-gray-300 rounded-lg px-2 flex justify-center items-center h-[32px]"
-              onClick={() =>
-                // navigate(
-                //   `/${getCampaignPageNameFromCampaignType(
-                //     campaignDetails?.campaignType
-                //   )}/${campaignDetails._id}/edit`, { state: { from: EDIT_CAMPAIGN } } 
-                // )
-                navigate(`/campaignDetails/${campaignDetails?._id}`)
-              }
-            >
-              <i className="fi fi-tr-file-edit text-[14px] flex items-center justify-center"></i>
-            </div>
-            <div
-              className="col-span-1 border border-gray-300 rounded-lg px-2 flex justify-center items-center h-[32px]"
-              onClick={() => setOpenInvoice(true)}
-            >
-              <i className="fi fi-tr-point-of-sale-bill text-[14px] flex items-center justify-center"></i>
-            </div>
+        <div className="flex items-center justify-end gap-2 ">
+          <div
+            className="border border-gray-300 rounded-lg flex justify-center items-center h-[38px] px-2 cursor-pointer"
+            onClick={() => navigate(`/campaignDetails/${campaignDetails?._id}`)}
+          >
+            <i className="fi fi-sr-file-edit text-[14px] flex items-center justify-center text-[#129BFF]"></i>
+          </div>
+          <div
+            className="px-4 border border-gray-300 rounded-lg flex justify-center gap-2 items-center h-[38px] cursor-pointer"
+            onClick={() => setOpenInvoice(true)}
+          >
+            <i className="fi fi-rs-calculator-bill text-[14px] flex items-center justify-center text-[#129BFF]"></i>
+            <p className="text-[16px] text-[#0E212E]">Invoice</p>
           </div>
         </div>
       </div>
-      <div className="px-10 max-h-[340px] pt-24">
+      <div className="px-10 max-h-[340px] mt-28">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
           {gridItems.map((item) => (
             <div
@@ -397,14 +389,17 @@ export const CampaignDashboard = ({
                     <div className="col-span-1">
                       <DashboardPieChart
                         type="City Wise"
-                        data={screenLevelData?.audiencePerformanceData?.cityWise}
+                        data={
+                          screenLevelData?.audiencePerformanceData?.cityWise
+                        }
                       />
                     </div>
                     <div className="col-span-1">
                       <DashboardPieChart
                         type="Touchpoint Wise"
                         data={
-                          screenLevelData?.audiencePerformanceData?.touchPointWise
+                          screenLevelData?.audiencePerformanceData
+                            ?.touchPointWise
                         }
                       />
                     </div>
@@ -419,12 +414,12 @@ export const CampaignDashboard = ({
                   </div>
                   <div className="flex gap-4 justify-around pt-4">
                     <div className="flex items-center gap-2">
-                      <div className="h-3 w-3 rounded bg-[#FF6384]"/>
-                      <h1 className="text-[14px] font-semibold">Promised</h1> 
+                      <div className="h-3 w-3 rounded bg-[#FF6384]" />
+                      <h1 className="text-[14px] font-semibold">Promised</h1>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="h-3 w-3 rounded bg-[#36A2EB]"/>
-                      <h1 className="text-[14px] font-semibold">Delivered</h1> 
+                      <div className="h-3 w-3 rounded bg-[#36A2EB]" />
+                      <h1 className="text-[14px] font-semibold">Delivered</h1>
                     </div>
                   </div>
                 </div>
