@@ -285,7 +285,7 @@ const TeamDropdown = ({teamData}: any) => {
 
           {/* Player list */}
           <div className="max-h-60 overflow-y-auto">
-            {teamData[selectedTeam].map((player: any) => (
+            {teamData?.[selectedTeam]?.map((player: any) => (
               <div
                 key={player}
                 onClick={() => handlePlayerSelect(player)}
