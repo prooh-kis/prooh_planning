@@ -38,6 +38,7 @@ import {
   USERS,
   VERIFY_EMAIL,
   MY_CREATIVES,
+  NEW_DASHBOARD,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 import { PublicRoute } from "../layout/PublicRoute";
@@ -46,6 +47,7 @@ import { AppDashBoardLayout } from "../layout/AppDashBoardLayout";
 import { PlayLiveUrl } from "../pages/PageNotFound/PlayLiveUrl";
 import { MyCreativesPage } from "../pages/MyCreativesPage";
 import { CampaignDetailsPage } from "../pages/CampaignDetailsPage";
+import { NewDashBoard } from "../pages/NewDashBoard";
 
 const Routers: React.FC = () => {
   return (
@@ -158,6 +160,14 @@ const Routers: React.FC = () => {
             <AppDashBoardLayout className="bg-[#D1D1D110] pt-20">
               <MyCreativesPage />
             </AppDashBoardLayout>
+          }
+        />
+        <Route
+          path={NEW_DASHBOARD}
+          element={
+            <PublicRoute layout={HomePageLayout}>
+              <NewDashBoard />
+            </PublicRoute>
           }
         />
         <Route

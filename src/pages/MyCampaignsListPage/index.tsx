@@ -175,7 +175,7 @@ export const MyCampaignsListPage: React.FC = () => {
                 <div
                   key={index}
                   className="pointer-cursor"
-                  onClick={() => navigate(`/campaignDashboard/${data._id}`)}
+                  onClick={() => navigate(`/new-dashboard/${data._id}`)}
                 >
                   <CampaignsListModel data={data} />
                 </div>
