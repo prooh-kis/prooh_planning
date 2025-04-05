@@ -66,9 +66,27 @@ import {
   getCouponListReducer,
   removeCouponForCampaignReducer,
 } from "../reducers/couponReducers";
-import { billInvoiceCreationReducer, billInvoiceDetailsGetReducer } from "../reducers/billInvoiceReducers";
-import { allClientAgencyNamesListGetReducer, clientAgencyDetailsAddGetReducer, clientAgencyDetailsGetReducer } from "../reducers/clientAgencyReducers";
-import { creativesMediaGetReducer, creativesMediaUploadReducer, getAllBrandAndNetworkReducer } from "../reducers/creativeReducers";
+import {
+  billInvoiceCreationReducer,
+  billInvoiceDetailsGetReducer,
+} from "../reducers/billInvoiceReducers";
+import {
+  allClientAgencyNamesListGetReducer,
+  clientAgencyDetailsAddGetReducer,
+  clientAgencyDetailsGetReducer,
+} from "../reducers/clientAgencyReducers";
+import {
+  creativesMediaGetReducer,
+  creativesMediaUploadReducer,
+  getAllBrandAndNetworkReducer,
+} from "../reducers/creativeReducers";
+import {
+  getAudienceDataForPlannerDashboardReducer,
+  getBasicDataForPlannerDashboardReducer,
+  getCostDataForPlannerDashboardReducer,
+  getSiteLevelPerformanceForPlannerDashboardReducer,
+  getSpotDeliveryDataForPlannerDashboardReducer,
+} from "../reducers/dashboardReducers";
 
 const initialState = {
   userSignin: {
@@ -86,10 +104,11 @@ const store = configureStore({
     screensAudiencesDataGet: screensAudiencesDataGetReducer,
     screensCostDataGet: screensCostDataGetReducer,
     screensDataAdvanceFilterGet: screensDataAdvanceFilterGetReducer,
-    poiBasedAudienceDataAdvanceFilterGet: poiBasedAudienceDataAdvanceFilterGetReducer,
+    poiBasedAudienceDataAdvanceFilterGet:
+      poiBasedAudienceDataAdvanceFilterGetReducer,
     regularVsCohortPriceDataGet: regularVsCohortPriceDataGetReducer,
     screenSummaryDataGet: screenSummaryDataGetReducer,
-    screenSummaryDataIKnowItAllGet : screenSummaryDataIKnowItAllGetReducer,
+    screenSummaryDataIKnowItAllGet: screenSummaryDataIKnowItAllGetReducer,
     screenSummaryPlanTableDataGet: screenSummaryPlanTableDataGetReducer,
     finalPlanPOTableDataGet: finalPlanPOTableDataGetReducer,
     screenDataUploadCreative: screenDataUploadCreativeReducer,
@@ -138,7 +157,7 @@ const store = configureStore({
     auth: authReducer,
     userSignin: userSigninReducer,
     userSignup: userSignupReducer,
-    userAddNewUser : userAddNewUserReducer,
+    userAddNewUser: userAddNewUserReducer,
     userUpdatePassword: userUpdatePasswordReducer,
     emailVerify: userEmailVerificationReducer,
     userSendEmailToResetPassword: userSendEmailToResetPasswordReducer,
@@ -170,7 +189,16 @@ const store = configureStore({
     creativesMediaUpload: creativesMediaUploadReducer,
     creativesMediaGet: creativesMediaGetReducer,
     getAllBrandAndNetwork: getAllBrandAndNetworkReducer,
+    // New Dashboard
+    basicDataForPlannerDashboard: getBasicDataForPlannerDashboardReducer,
+    audienceDataForPlannerDashboard: getAudienceDataForPlannerDashboardReducer,
+    spotDeliveryDataForPlannerDashboard:
+      getSpotDeliveryDataForPlannerDashboardReducer,
+    costDataForPlannerDashboard: getCostDataForPlannerDashboardReducer,
+    siteLevelPerformanceForPlannerDashboard:
+      getSiteLevelPerformanceForPlannerDashboardReducer,
   },
+
   // middleware: thunk
   // devTools: process.env.NODE_ENV !== 'production'
 });

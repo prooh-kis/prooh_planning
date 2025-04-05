@@ -11,7 +11,10 @@ import {
   MEDIA_OWNER_PAGE,
   SIGN_UP,
 } from "../../routes/routes";
-import { CAMPAIGN_MANAGER, CAMPAIGN_PLANNER } from "../../constants/userConstants";
+import {
+  CAMPAIGN_MANAGER,
+  CAMPAIGN_PLANNER,
+} from "../../constants/userConstants";
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -50,7 +53,7 @@ export const Header: React.FC = () => {
   }, []);
 
   return (
-    <div className="fixed top-0 w-full h-16 flex items-center justify-between px-4 sm:px-10 bg-[#FFFFFF] z-50 border-b shadow-md">
+    <div className="fixed top-0 w-full h-16 flex items-center justify-between px-4 sm:px-10 bg-[#FFFFFF] z-50 border-b shadow-sm">
       {/* Logo Section */}
       <div className="flex items-center">
         <div
@@ -97,9 +100,15 @@ export const Header: React.FC = () => {
         <div className="flex items-center space-x-2 pr-4">
           <img src={userImage} alt="User" className="w-10 h-10 rounded-full" />
           <div className="truncate">
-            <h3 className="font-custom text-lg font-semibold">{userInfo.name}</h3>
+            <h3 className="font-custom text-lg font-semibold">
+              {userInfo.name}
+            </h3>
             <p className="font-custom text-xs font-bold text-gray-700">
-              {userInfo.userRole === CAMPAIGN_PLANNER ? "PLANNER" : userInfo.userRole === CAMPAIGN_MANAGER ? "MANAGER" : userInfo?.userRole}
+              {userInfo.userRole === CAMPAIGN_PLANNER
+                ? "PLANNER"
+                : userInfo.userRole === CAMPAIGN_MANAGER
+                ? "MANAGER"
+                : userInfo?.userRole}
             </p>
           </div>
           <Menu userInfo={userInfo} />
@@ -120,7 +129,12 @@ export const Header: React.FC = () => {
           </button>
           {/* Mobile Menu Icon */}
           <div className="md:hidden">
-            <button title="toggl" type="submit" onClick={handleMenuToggle} className="focus:outline-none">
+            <button
+              title="toggl"
+              type="submit"
+              onClick={handleMenuToggle}
+              className="focus:outline-none"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

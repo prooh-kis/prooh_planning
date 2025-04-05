@@ -20,9 +20,11 @@ export const MultiColorLinearBar2: React.FC<MultiColorLinearBar2Props> = ({
   return (
     <div className="relative w-full h-2 rounded overflow-visible">
       <Tooltip
-        title={`${formatNumber(delivered)} / ${formatNumber(expected)} / ${formatNumber(total)}`}     
+        title={`${formatNumber(delivered)} / ${formatNumber(
+          expected
+        )} / ${formatNumber(total)}`}
       >
-        <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div className="relative h-2 bg-[#D1E5F7] rounded-full overflow-hidden">
           {/* Promised Bar (Red) */}
           <div
             className="group absolute top-0 left-0 h-full bg-[#FF0000]"

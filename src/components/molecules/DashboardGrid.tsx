@@ -2,348 +2,324 @@ import { calculateDaysPlayed } from "../../utils/dateAndTimeUtils";
 import { LinearBar } from "./linearbar";
 import { MultiColorLinearBar2 } from "./MultiColorLinearBar2";
 import { formatNumber } from "../../utils/formatValue";
+import { Tooltip } from "antd";
 
 interface BarChartProps {
-  campaignDetails?: any;
-  type?: any;
-  screenLevelData?: any;
+  campaignDetails?: {
+    startDate: string;
+    endDate: string;
+  };
+  type: string;
+  screenLevelData?: {
+    durationDelivered: number;
+    durationPromised: number;
+    impressionsDelivered: number;
+    impressionsPromised: number;
+    impressionsPromisedTillDate: number;
+    slotsDelivered: number;
+    slotsPromised: number;
+    slotsPromisedTillDate: number;
+    costConsumed: number;
+    costTaken: number;
+    costTakenTillDate: number;
+    screenPerformance: number;
+    result?: {
+      totalData?: {
+        screenPerformance: number;
+      };
+    };
+  };
 }
 
-// Reusable Header Component
-const SectionHeader: React.FC<{ iconClass: string; title: string }> = ({
+interface SectionHeaderProps {
+  iconClass: string;
+  title: string;
+  bgColor: string;
+}
+
+interface ValueDisplayProps {
+  left: string | number;
+  right: string | number;
+  isPositive?: boolean;
+  value?: number;
+}
+
+const SectionHeader: React.FC<SectionHeaderProps> = ({
   iconClass,
   title,
+  bgColor,
 }) => (
-  <div className="flex items-center gap-2">
-    <div className="rounded-full bg-gray-100 p-2">
+  <div className="flex items-center gap-2 pb-2">
+    <div className={`rounded-full p-2 ${bgColor}`}>
       <i
-        className={`fi ${iconClass} text-[14px] flex items-center justify-center`}
+        className={`fi ${iconClass} text-[14px] text-white flex items-center justify-center`}
       ></i>
     </div>
     <h1 className="text-[14px] text-[#0E212E] leading-[16.94px] truncate">
       {title}
     </h1>
+    <Tooltip title="">
+      <i className="fi fi-br-info text-[14px] text-[#b2c1ca]"></i>
+    </Tooltip>
   </div>
 );
+
+const ValueAboveGraph: React.FC<
+  Omit<ValueDisplayProps, "isPositive" | "value">
+> = ({ left, right }) => (
+  <div className="mt-1">
+    <h1 className="text-[20px] font-bold text-[#9bb3c9]">
+      <span className="text-[#0E212E]">{left}</span> / {right}
+    </h1>
+  </div>
+);
+
+const ValueBelowGraph: React.FC<ValueDisplayProps> = ({
+  left,
+  right,
+  isPositive = true,
+  value,
+}) => (
+  <div className="mt-1">
+    <h1 className="text-[16px] font-medium leading-[32.68px] text-[#9bb3c9]">
+      <span className="text-[#0E212E]">{left}</span> / {right}
+      {value !== undefined && (
+        <span className={isPositive ? "text-[#2A892D]" : "text-[#CC0000]"}>
+          {` (${value}%)`}
+          <i
+            className={`fi ${
+              isPositive ? "fi-rr-arrow-up" : "fi-rr-arrow-down"
+            }`}
+          ></i>
+        </span>
+      )}
+    </h1>
+  </div>
+);
+
+const getPercentageDifference = (
+  delivered: number,
+  promised: number,
+  totalDays: number
+): number => {
+  const averageDelivered = delivered / totalDays;
+  const averagePromised = promised / totalDays;
+  const difference = averageDelivered - averagePromised;
+  return Number(((difference / averagePromised) * 100).toFixed(2));
+};
 
 export const DashboardGrid: React.FC<BarChartProps> = ({
   campaignDetails,
   type,
   screenLevelData,
 }) => {
-  const calculateSpot = () => {
-    const days =
-      calculateDaysPlayed(
-        campaignDetails?.startDate,
-        campaignDetails?.endDate
-      ) === 0
-        ? 1
-        : calculateDaysPlayed(
-            campaignDetails?.startDate,
-            campaignDetails?.endDate
-          );
-    const totalDays = campaignDetails?.duration;
-    const delivered =
-      screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(0);
-
-    const promised =
-      screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0);
-    const result =
-      Number((delivered / days).toFixed(2)) -
-      Number((promised / totalDays).toFixed(2));
-
-    const averagePromised = Number((promised / totalDays).toFixed(2));
-
-    return Number(((result / averagePromised) * 100)?.toFixed(2));
+  const getDaysPlayed = (): number => {
+    const days = calculateDaysPlayed(
+      campaignDetails?.startDate,
+      campaignDetails?.endDate
+    );
+    return days === 0 ? 1 : days;
   };
 
-  const calculateAudience = () => {
-    const days =
-      calculateDaysPlayed(
-        campaignDetails?.startDate,
-        campaignDetails?.endDate
-      ) === 0
-        ? 1
-        : calculateDaysPlayed(
-            campaignDetails?.startDate,
-            campaignDetails?.endDate
-          );
+  const daysPlayed = getDaysPlayed();
+  const durationPromised = screenLevelData?.durationPromised || 0;
 
-    const totalDays = campaignDetails?.duration;
-    const delivered =
-      screenLevelData?.result?.totalData?.impressionsDelivered?.toFixed(0);
+  const renderDurationSection = () => (
+    <>
+      <SectionHeader
+        iconClass="fi-sr-calendar-clock"
+        title="Campaign Duration"
+        bgColor=" bg-[#DC6700]"
+      />
+      <div className="mt-1">
+        <h1 className="text-[20px] font-bold leading-[32.68px] text-[#9bb3c9]">
+          <span className="text-[#0E212E]">
+            {screenLevelData?.durationDelivered || 1}
+          </span>
+          /{durationPromised} <span>Days</span>
+        </h1>
+      </div>
+      <div className="mt-1">
+        <LinearBar
+          value={screenLevelData?.durationDelivered || 1}
+          colors={["#D1E5F7", "#DC6700"]}
+          highest={durationPromised}
+          percent={false}
+        />
+      </div>
+      <div className="mt-1">
+        <h1 className="text-[#9BB3C9] text-[16px] font-medium">
+          <span className="text-[#3B8518]">
+            {Math.round(
+              ((screenLevelData?.durationDelivered || 0) / durationPromised) *
+                100
+            )}
+            %{"  "}
+          </span>
+          Duration Completed
+        </h1>
+      </div>
+    </>
+  );
 
-    const promised =
-      screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(0);
+  const renderAudienceSection = () => {
+    const impressionsDelivered = screenLevelData?.impressionsDelivered || 0;
+    const impressionsPromised = screenLevelData?.impressionsPromised || 0;
+    const impressionsTillDate =
+      screenLevelData?.impressionsPromisedTillDate || 0;
+    const percentage = getPercentageDifference(
+      impressionsDelivered,
+      impressionsTillDate,
+      screenLevelData?.durationDelivered || 0
+    );
 
-    const result =
-      Number((delivered / days).toFixed(2)) -
-      Number((promised / totalDays).toFixed(2));
-
-    const averagePromised = Number((promised / totalDays).toFixed(2));
-
-    return Number(((result / averagePromised) * 100)?.toFixed(2));
+    return (
+      <>
+        <SectionHeader
+          iconClass="fi fi-sr-users"
+          title="Audience Impressions"
+          bgColor=" bg-[#129BFF]"
+        />
+        <ValueAboveGraph
+          left={formatNumber(impressionsDelivered)}
+          right={formatNumber(impressionsPromised)}
+        />
+        <div className="mt-1">
+          <MultiColorLinearBar2
+            delivered={impressionsDelivered}
+            expected={(impressionsPromised * daysPlayed) / durationPromised}
+            total={impressionsPromised}
+          />
+        </div>
+        <ValueBelowGraph
+          left={formatNumber(impressionsDelivered)}
+          right={formatNumber(impressionsTillDate)}
+          value={percentage}
+          isPositive={percentage > 0}
+        />
+      </>
+    );
   };
 
-  const calculateCost = () => {
-    const days =
-      calculateDaysPlayed(
-        campaignDetails?.startDate,
-        campaignDetails?.endDate
-      ) === 0
-        ? 1
-        : calculateDaysPlayed(
-            campaignDetails?.startDate,
-            campaignDetails?.endDate
-          );
+  const renderScreenSection = () => {
+    const screenPerformance = screenLevelData?.screenPerformance || 0;
+    const percentage = getPercentageDifference(
+      screenPerformance,
+      100,
+      screenLevelData?.durationDelivered || 0
+    );
 
-    const totalDays = campaignDetails?.duration;
-    const delivered =
-      screenLevelData?.result?.totalData?.costConsumed?.toFixed(0);
+    return (
+      <>
+        <SectionHeader
+          iconClass="fi-sr-dashboard"
+          title="Hardware Performance"
+          bgColor=" bg-[#6982FF]"
+        />
+        <ValueAboveGraph
+          left={`${formatNumber(screenPerformance)}%`}
+          right="100%"
+        />
+        <div className="mt-1">
+          <LinearBar
+            value={screenLevelData?.result?.totalData?.screenPerformance || 0}
+            colors={["#D1E5F7", "#DC6700"]}
+            highest={100}
+          />
+        </div>
+        <ValueBelowGraph
+          left={`${formatNumber(screenPerformance)}%`}
+          right="100%"
+          value={percentage}
+          isPositive={percentage > 0}
+        />
+      </>
+    );
+  };
 
-    const promised = screenLevelData?.result?.totalData?.costTaken?.toFixed(0);
+  const renderSpotSection = () => {
+    const slotsDelivered = screenLevelData?.slotsDelivered || 0;
+    const slotsPromised = screenLevelData?.slotsPromised || 0;
+    const slotsTillDate = screenLevelData?.slotsPromisedTillDate || 0;
+    const percentage = getPercentageDifference(
+      slotsDelivered,
+      slotsTillDate,
+      screenLevelData?.durationDelivered || 0
+    );
 
-    const result =
-      Number((delivered / days).toFixed(2)) -
-      Number((promised / totalDays).toFixed(2));
+    return (
+      <>
+        <SectionHeader
+          iconClass="fi-ss-screen"
+          title="Spot Delivery"
+          bgColor=" bg-[#77BFEF]"
+        />
+        <ValueAboveGraph
+          left={formatNumber(slotsDelivered)}
+          right={formatNumber(slotsPromised)}
+        />
+        <div className="mt-1">
+          <MultiColorLinearBar2
+            delivered={slotsDelivered}
+            expected={(slotsPromised * daysPlayed) / durationPromised}
+            total={slotsPromised}
+          />
+        </div>
+        <ValueBelowGraph
+          left={formatNumber(slotsDelivered)}
+          right={formatNumber(slotsTillDate)}
+          value={percentage}
+          isPositive={percentage > 0}
+        />
+      </>
+    );
+  };
 
-    const averagePromised = Number((promised / totalDays).toFixed(2));
+  const renderCostSection = () => {
+    const costConsumed = screenLevelData?.costConsumed || 0;
+    const costTaken = screenLevelData?.costTaken || 0;
+    const costTillDate = screenLevelData?.costTakenTillDate || 0;
+    const percentage = getPercentageDifference(
+      costConsumed,
+      costTillDate,
+      screenLevelData?.durationDelivered || 0
+    );
 
-    return Number(((result / averagePromised) * 100)?.toFixed(2));
+    return (
+      <>
+        <SectionHeader
+          iconClass="fi-ss-sack"
+          title="Cost Consumed"
+          bgColor=" bg-[#6DBC48]"
+        />
+        <ValueAboveGraph
+          left={formatNumber(costConsumed)}
+          right={formatNumber(costTaken)}
+        />
+        <div className="mt-1">
+          <MultiColorLinearBar2
+            delivered={costConsumed}
+            expected={(costTaken * daysPlayed) / durationPromised}
+            total={costTaken}
+          />
+        </div>
+        <ValueBelowGraph
+          left={formatNumber(costConsumed)}
+          right={formatNumber(costTillDate)}
+          value={percentage}
+          isPositive={percentage > 0}
+        />
+      </>
+    );
   };
 
   return (
     <div className="w-full">
-      {type === "duration" ? (
-        <div>
-          <SectionHeader
-            iconClass="fi-rr-calendar text-[#8079F9]"
-            title="Campaign Duration"
-          />
-          <div className="mt-4">
-            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
-              <span className="text-[#0E212E]">
-                {calculateDaysPlayed(
-                  campaignDetails?.startDate,
-                  campaignDetails?.endDate
-                ) === 0
-                  ? 1
-                  : calculateDaysPlayed(
-                      campaignDetails?.startDate,
-                      campaignDetails?.endDate
-                    ) || 0}
-              </span>
-              /{campaignDetails?.duration} <span> Days</span>
-            </h1>
-          </div>
-          <div className="mt-4">
-            <LinearBar
-              value={
-                calculateDaysPlayed(
-                  campaignDetails?.startDate,
-                  campaignDetails?.endDate
-                ) === 0
-                  ? 1
-                  : calculateDaysPlayed(
-                      campaignDetails?.startDate,
-                      campaignDetails?.endDate
-                    )
-              }
-              colors={["#00000020", "#7AB3A2"]}
-              highest={campaignDetails?.duration}
-              percent={false}
-            />
-          </div>
-        </div>
-      ) : type === "audience" ? (
-        <div>
-          <SectionHeader
-            iconClass="fi-rr-target-audience text-blue"
-            title="Audience Impressions"
-          />
-          <div className="mt-4">
-            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
-              <span className="text-[#0E212E]">
-                {formatNumber(
-                  screenLevelData?.result?.totalData?.impressionsDelivered?.toFixed(
-                    0
-                  ) || 0
-                )}
-              </span>{" "}
-              /{" "}
-              {formatNumber(
-                screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(
-                  0
-                ) || 0
-              )}
-              <span
-                className={`text-[14px] ${
-                  calculateAudience() > 0 ? "text-[#2A892D]" : "text-[#CC0000]"
-                }`}
-              >
-                {" "}
-                {`(${formatNumber(calculateAudience() || 0)}%)`}
-                {calculateAudience() > 0 ? (
-                  <i className="fi fi-rr-arrow-up "></i>
-                ) : (
-                  <i className="fi fi-rr-arrow-down "></i>
-                )}
-              </span>
-            </h1>
-          </div>
-          <div className="mt-4">
-            <MultiColorLinearBar2
-              delivered={screenLevelData?.result?.totalData?.impressionsDelivered?.toFixed(
-                0
-              )}
-              expected={
-                (screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(
-                  0
-                ) *
-                  calculateDaysPlayed(
-                    campaignDetails?.startDate,
-                    campaignDetails?.endDate
-                  )) /
-                campaignDetails?.duration
-              }
-              total={screenLevelData?.result?.totalData?.impressionsPromised?.toFixed(
-                0
-              )}
-            />
-          </div>
-        </div>
-      ) : type === "screen" ? (
-        <div>
-          <SectionHeader
-            iconClass="fi-rs-dashboard text-[#B077FF]"
-            title="Screen Performance"
-          />
-          <div className="mt-4">
-            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
-              <span className="text-[#0E212E]">
-                {formatNumber(
-                  screenLevelData?.result?.totalData?.screenPerformance?.toFixed(
-                    0
-                  ) || 0
-                )}
-                %
-              </span>{" "}
-              / 100%
-            </h1>
-          </div>
-          <div className="mt-4">
-            <LinearBar
-              value={screenLevelData?.result?.totalData?.screenPerformance?.toFixed(
-                0
-              )}
-              colors={["#00000020", "#7AB3A2"]}
-              highest={100}
-            />
-          </div>
-        </div>
-      ) : type === "spot" ? (
-        <div>
-          <SectionHeader
-            iconClass="fi-rs-selling text-indigo"
-            title="Spot Delivery"
-          />
-          <div className="mt-4">
-            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
-              <span className="text-[#0E212E]">
-                {formatNumber(
-                  screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(
-                    0
-                  ) || 0
-                )}
-              </span>{" "}
-              /{" "}
-              {formatNumber(
-                screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0) ||
-                  0
-              )}
-              <span
-                className={`text-[14px] ${
-                  calculateSpot() > 0 ? "text-[#2A892D]" : "text-[#CC0000]"
-                }`}
-              >
-                {" "}
-                {`(${formatNumber(calculateSpot() || 0)}%)`}
-                {calculateSpot() > 0 ? (
-                  <i className="fi fi-rr-arrow-up "></i>
-                ) : (
-                  <i className="fi fi-rr-arrow-down "></i>
-                )}
-              </span>
-            </h1>
-          </div>
-          <div className="mt-4">
-            <MultiColorLinearBar2
-              delivered={screenLevelData?.result?.totalData?.slotsDelivered?.toFixed(
-                0
-              )}
-              expected={
-                (screenLevelData?.result?.totalData?.slotsPromised?.toFixed(0) *
-                  calculateDaysPlayed(
-                    campaignDetails?.startDate,
-                    campaignDetails?.endDate
-                  )) /
-                campaignDetails?.duration
-              }
-              total={screenLevelData?.result?.totalData?.slotsPromised?.toFixed(
-                0
-              )}
-            />
-          </div>
-        </div>
-      ) : type === "cost" ? (
-        <div>
-          <SectionHeader
-            iconClass="fi-br-sack text-green"
-            title="Cost Consumed"
-          />
-          <div className="mt-4">
-            <h1 className="text-[24px] font-semibold  leading-[32.68px] text-[#BCBCBC]">
-              <span className="text-[#0E212E]">
-                &#8377;
-                {formatNumber(
-                  screenLevelData?.result?.totalData?.costConsumed?.toFixed(
-                    0
-                  ) || 0
-                )}
-              </span>{" "}
-              / &#8377;
-              {formatNumber(
-                screenLevelData?.result?.totalData?.costTaken?.toFixed(0) || 0
-              )}
-              <span
-                className={`text-[14px] ${
-                  calculateCost() > 0 ? "text-[#2A892D]" : "text-[#CC0000]"
-                }`}
-              >
-                {" "}
-                {`(${formatNumber(calculateCost() || 0)}%)`}
-                {calculateCost() > 0 ? (
-                  <i className="fi fi-rr-arrow-up "></i>
-                ) : (
-                  <i className="fi fi-rr-arrow-down "></i>
-                )}
-              </span>
-            </h1>
-          </div>
-          <div className="mt-4">
-            <LinearBar
-              percent={false}
-              value={screenLevelData?.result?.totalData?.costConsumed?.toFixed(
-                0
-              )}
-              colors={["#00000020", "#7AB3A2"]}
-              highest={screenLevelData?.result?.totalData?.costTaken?.toFixed(
-                0
-              )}
-            />
-          </div>
-        </div>
-      ) : null}
+      {type === "duration" && renderDurationSection()}
+      {type === "audience" && renderAudienceSection()}
+      {type === "screen" && renderScreenSection()}
+      {type === "spot" && renderSpotSection()}
+      {type === "cost" && renderCostSection()}
     </div>
   );
 };

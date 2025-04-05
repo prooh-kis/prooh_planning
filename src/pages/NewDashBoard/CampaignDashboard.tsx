@@ -15,6 +15,16 @@ import { DashBoardMenu } from "./DashBoardMenu";
 import { Tooltip } from "antd";
 import { FirstCharForBrandName } from "../../components/molecules/FirstCharForBrandName";
 
+interface GridItem {
+  id: string;
+  type: "duration" | "audience" | "screen" | "spot" | "cost";
+  campaignDetails?: {
+    startDate: string;
+    endDate: string;
+  };
+  screenLevelData?: any; // You should replace 'any' with a proper interface
+}
+
 export const CampaignDashboard = ({
   campaignDetails,
   screenLevelData,
@@ -117,30 +127,40 @@ export const CampaignDashboard = ({
     return { datesArray, countsArray };
   };
 
-  const gridItems = [
+  const gridItems: GridItem[] = [
     {
       id: "1",
       type: "duration",
-      campaignDetails,
-      screenLevelData,
+      campaignDetails: screenLevelData?.campaignCreation,
+      screenLevelData: screenLevelData?.data,
     },
     {
       id: "2",
       type: "audience",
-      campaignDetails,
-      screenLevelData,
+      campaignDetails: screenLevelData?.campaignCreation,
+      screenLevelData: screenLevelData?.data,
     },
     {
       id: "3",
       type: "screen",
-      campaignDetails,
-      screenLevelData,
+      campaignDetails: screenLevelData?.campaignCreation,
+      screenLevelData: screenLevelData?.data,
     },
-    { id: "4", type: "spot", campaignDetails, screenLevelData },
-    { id: "5", type: "cost", campaignDetails, screenLevelData },
+    {
+      id: "4",
+      type: "spot",
+      campaignDetails: screenLevelData?.campaignCreation,
+      screenLevelData: screenLevelData?.data,
+    },
+    {
+      id: "5",
+      type: "cost",
+      campaignDetails: screenLevelData?.campaignCreation,
+      screenLevelData: screenLevelData?.data,
+    },
   ];
 
-  const commonClasses = "col-span-1 bg-white p-4 rounded-[12px] h-[156px] ";
+  const commonClasses = "col-span-1 bg-white p-4 rounded-[12px] h-auto ";
 
   const dropdownRef = useRef<any>(null);
   useEffect(() => {
@@ -210,7 +230,7 @@ export const CampaignDashboard = ({
   }, [showMenu]);
 
   return (
-    <div className="w-full h-full mt-12 flex flex-col gap-2 bg-[#D3D3D320] font-custom">
+    <div className="w-full h-full mt-12 flex flex-col gap-2 bg-[#f2f4f7] font-custom">
       <BillingAndInvoice
         open={openInvoice}
         onClose={() => {
@@ -268,12 +288,12 @@ export const CampaignDashboard = ({
         setInvoiceAmount={setInvoiceAmount}
       />
       {/* Dashboard header Section */}
-      <div className="bg-[#FFFFFF] p-2 px-10 flex justify-between mt-6 fixed z-10 shadow-sm w-full">
+      <div className="bg-[#FFFFFF] p-2 py-4 px-2  pr-14 flex justify-between mt-4 fixed z-10 shadow-sm w-full">
         <div className="px-2 flex justify-between items-center">
           <div className="flex gap-4">
             <div className="flex gap-4 items-center">
               <i
-                className="fi fi-br-arrow-left"
+                className="fi fi-br-arrow-left text-[#6f7f8e]"
                 onClick={() => navigate(-1)}
               ></i>
               <FirstCharForBrandName brandName={campaignDetails?.brandName} />
@@ -285,8 +305,8 @@ export const CampaignDashboard = ({
                 </h1>
                 <i
                   className={`${
-                    showMenu ? "fi fi-br-angle-down" : "fi fi-br-angle-up"
-                  } text-[#5B7180] cursor-pointer`}
+                    !showMenu ? "fi fi-br-angle-down" : "fi fi-br-angle-up"
+                  } text-[#6f7f8e] cursor-pointer`}
                   onClick={handleToggleMenu}
                 ></i>
               </div>
@@ -303,7 +323,7 @@ export const CampaignDashboard = ({
         </div>
         <div className="flex items-center justify-end gap-2 ">
           <div
-            className="border border-gray-300 rounded-lg flex justify-center items-center h-[38px] px-2 cursor-pointer"
+            className="border border-gray-300 rounded-lg flex justify-center items-center h-[38px] w-[38px] cursor-pointer"
             onClick={() => navigate(`/campaignDetails/${campaignDetails?._id}`)}
           >
             <i className="fi fi-sr-file-edit text-[14px] flex items-center justify-center text-[#129BFF]"></i>
@@ -317,16 +337,17 @@ export const CampaignDashboard = ({
           </div>
         </div>
       </div>
-      <div className="px-10 max-h-[340px] mt-28">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
+      <div className="px-10 max-h-[360px] mt-32">
+        {/* campaign dashboard grid view */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {gridItems.map((item) => (
             <div
               key={item.id}
               className={`${commonClasses} ${
                 clicked === item.id
-                  ? "border-[#0094FF] border-2"
-                  : "border-[#DCDCDC] border-[0.47px]"
-              }`}
+                  ? "border-[#129BFF] border-2"
+                  : "border-[#DCDCDC]"
+              } rounded-[21px]`}
               onClick={() => setClicked(item.id)}
             >
               <DashboardGrid

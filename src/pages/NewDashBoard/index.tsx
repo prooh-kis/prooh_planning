@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { CampaignDashboard } from "./CampaignDashboard";
 import { useDispatch, useSelector } from "react-redux";
-import { getCampaignDashboardData } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
+import { getBasicDataForPlannerDashboard } from "../../actions/dashboardAction";
 
 export const NewDashBoard: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -22,25 +22,27 @@ export const NewDashBoard: React.FC = () => {
     data: campaignDetails,
   } = detailsToCreateCampaignAdd;
 
-  const campaignDashboardDataGet = useSelector(
-    (state: any) => state.campaignDashboardDataGet
+  const basicDataForPlannerDashboard = useSelector(
+    (state: any) => state.basicDataForPlannerDashboard
   );
   const {
     loading: loadingDashboard,
     error: errorDashboard,
     data: dashboardData,
-  } = campaignDashboardDataGet;
+  } = basicDataForPlannerDashboard;
+
+  console.log("dashboardData : ", dashboardData);
 
   useEffect(() => {
     removeAllKeyFromLocalStorage();
     dispatch(addDetailsToCreateCampaign({ id: campaignId }));
-    dispatch(getCampaignDashboardData({ id: campaignId }));
+    dispatch(getBasicDataForPlannerDashboard({ id: campaignId }));
 
     const interval = setInterval(() => {
-      dispatch(getCampaignDashboardData({ id: campaignId })); // Refresh data every 5 seconds
+      dispatch(getBasicDataForPlannerDashboard({ id: campaignId })); // Refresh data every 5 seconds
     }, 600000);
-  
-    return () => clearInterval(interval); 
+
+    return () => clearInterval(interval);
   }, [dispatch, campaignId]);
   return (
     <div className="w-full h-full">

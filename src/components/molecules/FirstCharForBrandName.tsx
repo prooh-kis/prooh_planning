@@ -8,24 +8,24 @@ export const FirstCharForBrandName = ({
   brandName,
 }: FirstCharForBrandNameProps) => {
   const colors = [
-    "bg-[#EF444450]",
-    "bg-[#F59E0B50]",
-    "bg-[#EAB30850]",
-    "bg-[#22C55E50]",
-    "bg-[#06B6D450]",
-    "bg-[#3B82F650]",
-    "bg-[#6366F150]",
-    "bg-[#8B5CF650]",
-    "bg-[#78DCCA50]",
-    "bg-[#FF77E950]",
-    "bg-[#3AB7BF50]",
-    "bg-[#3F3CBB50]",
-    "bg-[#22C55E50]",
-    "bg-[#06B6D450]",
-    "bg-[#3B82F650]",
-    "bg-[#6366F150]",
-    "bg-[#EF444450]",
-    "bg-[#F59E0B50]",
+    "bg-[#EF4444]", // Removed 50 opacity (now 100%)
+    "bg-[#F59E0B]",
+    "bg-[#EAB308]",
+    "bg-[#22C55E]",
+    "bg-[#06B6D4]",
+    "bg-[#3B82F6]",
+    "bg-[#6366F1]",
+    "bg-[#8B5CF6]",
+    "bg-[#78DCCA]",
+    "bg-[#FF77E9]",
+    "bg-[#3AB7BF]",
+    "bg-[#3F3CBB]",
+    "bg-[#22C55E]",
+    "bg-[#06B6D4]",
+    "bg-[#3B82F6]",
+    "bg-[#6366F1]",
+    "bg-[#EF4444]",
+    "bg-[#F59E0B]",
   ];
 
   const getBgColors = (index: number) => colors[index % colors.length];
@@ -36,7 +36,7 @@ export const FirstCharForBrandName = ({
   return (
     <div
       className={clsx(
-        "rounded-[12px] flex justify-center items-center w-24 border border-[#D7D7D750]",
+        "rounded-[12px] flex justify-center items-center w-16 h-16 border border-[#D7D7D750]",
         getBgColors(bgColorIndex) // ✅ Uses ASCII-based indexing for better color distribution
       )}
     >
