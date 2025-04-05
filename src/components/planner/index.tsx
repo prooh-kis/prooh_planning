@@ -1,13 +1,8 @@
 export { EnterCampaignBasicDetails } from "./EnterCampaignBasicDetails";
 export { AudienceTouchPointsDetails } from "./AudienceTouchPointsDetails";
 export { AdvanceFiltersDetails } from "./AdvancedFiltersDetails";
-export { RegularCohortComparisonDetails } from "./RegularCohortComparisonDetails";
-export { ScreenSummaryDetails } from "./ScreenSummaryDetails";
 export { TriggerDetails } from "./TriggerDetails";
 export { ViewFinalPlanPODetails } from "./ViewFinalPlanPODetails";
 export { CreativeUploadDetails } from "./CreativeUploadDetails";
 export { VendorConfirmationDetails } from "./VendorConfirmationDetails";
-export { SetAdsPlayTime } from "./SetAdsPlayTime";
-export { StoreBaseScreenSummaryDetails } from "./StoreBaseScreenSummaryDetails";
-export { StoreBasedPlanSummaryTable } from "./StoreBasedPlanSummaryTable";
 export { NewCreativeUpload } from "./NewCreativeUpload";

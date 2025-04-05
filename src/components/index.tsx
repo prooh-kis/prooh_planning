@@ -11,8 +11,6 @@ export {
   EnterCampaignBasicDetails,
   AudienceTouchPointsDetails,
   AdvanceFiltersDetails,
-  RegularCohortComparisonDetails,
-  ScreenSummaryDetails,
   TriggerDetails,
   ViewFinalPlanPODetails,
   CreativeUploadDetails,

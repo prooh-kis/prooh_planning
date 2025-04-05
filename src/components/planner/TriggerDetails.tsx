@@ -1,7 +1,7 @@
 import { WeatherSegment } from "../../components/segments/WeatherSegment";
-import { TabWithIcon } from "../molecules/TabWithIcon";
+import { TabWithIcon } from "../../components/molecules/TabWithIcon";
 import { VerticalStepperSlider } from "../../components/molecules/VerticalStepperSlide";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { SportsSegment } from "../../components/segments/SportsSegment";
 import { BuyVacantSlots } from "../../components/segments/BuyVacantSlots";
 import { OpenBudgetSegment } from "../../components/segments/OpenBudgetSegment";
@@ -9,16 +9,8 @@ import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import { formatNumber } from "../../utils/formatValue";
 import { Footer } from "../../components/footer";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
-import {
-  getDataFromLocalStorage,
-  saveDataOnLocalStorage,
-} from "../../utils/localStorageUtils";
-import {
-  FULL_CAMPAIGN_PLAN,
-  SELECTED_TRIGGER,
-} from "../../constants/localStorageConstants";
 import { message } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { useLocation } from "react-router-dom";
 import { RadioInput } from "../../components/atoms/RadioInput";
@@ -27,18 +19,21 @@ import {
   getPlanningPageFooterData,
   getTableDataForSelectTriggerPage,
 } from "../../actions/screenAction";
-import { useSelector } from "react-redux";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
+
+
 interface TriggerProps {
   setCurrentStep: (step: number) => void;
   step: number;
   campaignId?: any;
   successAddCampaignDetails?: any;
+  campaignDetails?: any;
 }
 export const TriggerDetails = ({
   setCurrentStep,
   step,
   campaignId,
-  successAddCampaignDetails,
+  campaignDetails,
 }: TriggerProps) => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
@@ -53,6 +48,12 @@ export const TriggerDetails = ({
   const [selectedTrigger, setSelectedTrigger] = useState<any>({
     triggerType: "weather",
   });
+  const [selectedTriggerData, setSelectedTriggerData] = useState<any>({
+    weatherTriggers: [],
+    sportsTriggers: [],
+    vacantSlots: [],
+  });
+
   const [minVal, setMinVal] = useState<any>(0);
   const [maxVal, setMaxVal] = useState<any>(0);
   const [rainType, setRainType] = useState<any>("0");
@@ -60,12 +61,12 @@ export const TriggerDetails = ({
 
   const [condition, setCondition] = useState<any>("");
 
-  const [selectedMatchId, setSelectedMatchId] = useState<any>("");
+  const [selectedMatchId, setSelectedMatchId] = useState<any>(null);
   const [sport, setSport] = useState<any>("");
   const [player, setPlayer] = useState<any>("");
 
   const [selectedBudget, setSelectedBudget] = useState<any>(null);
-  const [selectedSOV, setSelectedSOV] = useState<any>(1);
+  const [selectedSOV, setSelectedSOV] = useState<any>(null);
   const [selectedTimeOptions, setSelectedTimeOptions] = useState<any>(300);
 
   const timeOptionSportsTrigger = [
@@ -106,110 +107,93 @@ export const TriggerDetails = ({
     },
   ];
 
-  const weatherTabData = () => {
-    return [
-      {
-        icon: <i className="fi fi-tr-summer flex items-center"></i>,
-        label: "Temperature",
-        value: "temperature",
-        id: 1,
-      },
-      {
-        icon: <i className="fi fi-ts-cloud-sun-rain flex items-center"></i>,
-        label: "Rain",
-        value: "rain",
-        id: 2,
-      },
-      {
-        icon: <i className="fi fi-ts-pollution flex items-center"></i>,
-        label: "AQI",
-        value: "aqi",
-        id: 3,
-      },
-    ];
-  };
+  const weatherTabData = useMemo(() => [
+    {
+      icon: <i className="fi fi-tr-summer flex items-center"></i>,
+      label: "Temperature",
+      value: "temperature",
+      id: 1,
+    },
+    {
+      icon: <i className="fi fi-ts-cloud-sun-rain flex items-center"></i>,
+      label: "Rain",
+      value: "rain",
+      id: 2,
+    },
+    {
+      icon: <i className="fi fi-ts-pollution flex items-center"></i>,
+      label: "AQI",
+      value: "aqi",
+      id: 3,
+    },
+  ],[]);
+
+  const detailsToCreateCampaignAdd = useSelector(
+    (state: any) => state.detailsToCreateCampaignAdd
+  );
+  const {
+    loading: loadingAddDetails,
+    error: errorAddDetails,
+    success: successAddDetails,
+  } = detailsToCreateCampaignAdd;
 
   const tableDataForSelectTriggerPageGet = useSelector(
     (state: any) => state.tableDataForSelectTriggerPageGet
   );
   const {
-    loading,
-    error,
+    loading: loadingTriggerDetails,
+    error: errorTriggerDetails,
     data: tableDataForSelectTrigger,
   } = tableDataForSelectTriggerPageGet;
 
   const handleSelectTrigger = useCallback(() => {
-    saveDataOnLocalStorage(SELECTED_TRIGGER, {
-      [campaignId]: {
-        weatherTriggers: [],
-        sportsTriggers: [],
-        vacantSlots: [],
-      },
+
+    setSelectedTriggerData(() => {
+      return {
+      weatherTriggers: selectedTrigger?.triggerType === "weather"
+        ? [
+            {
+              type: weatherTabData?.filter(
+                (w: any) => w.id === currentTab
+              )[0]?.value,
+              minVal: minVal,
+              maxVal: maxVal,
+              rainType: rainType,
+              aqi: aqi,
+              openBudgetSovPercent: selectedSOV,
+              budget: Number(selectedBudget),
+              period: Number(selectedTimeOptions),
+            },
+          ]
+        : [],
+        sportsTriggers: selectedTrigger?.triggerType === "sport"
+        ? [
+            {
+              sport: sport,
+              player: player,
+              matchId: selectedMatchId,
+              condition: condition,
+              openBudgetSovPercent: selectedSOV,
+              budget: Number(selectedBudget),
+              period: Number(selectedTimeOptions),
+            },
+          ]
+        : [],
+        vacantSlots: selectedTrigger?.triggerType === "empty"
+        ? [
+            {
+              type: "vacantSlots",
+              slotType: condition,
+              openBudgetSovPercent: selectedSOV,
+              budget: Number(selectedBudget),
+              period: Number(selectedTimeOptions),
+            },
+          ]
+        : [],
+      }
     });
 
-    saveDataOnLocalStorage(SELECTED_TRIGGER, {
-      [campaignId]: {
-        weatherTriggers:
-          selectedTrigger?.triggerType === "weather"
-            ? [
-                {
-                  type: weatherTabData()?.filter(
-                    (w: any) => w.id === currentTab
-                  )[0]?.value,
-                  minVal: minVal,
-                  maxVal: maxVal,
-                  rainType: rainType,
-                  aqi: aqi,
-                  openBudgetSovPercent: selectedSOV,
-                  budget: Number(selectedBudget),
-                  period: Number(selectedTimeOptions),
-                },
-              ]
-            : [],
-        sportsTriggers:
-          selectedTrigger?.triggerType === "sport"
-            ? [
-                {
-                  sport: sport,
-                  player: player,
-                  matchId: selectedMatchId,
-                  condition: condition,
-                  openBudgetSovPercent: selectedSOV,
-                  budget: Number(selectedBudget),
-                  period: Number(selectedTimeOptions),
-                },
-              ]
-            : [],
-        vacantSlots:
-          selectedTrigger?.triggerType === "empty"
-            ? [
-                {
-                  type: "vacantSlots",
-                  slotType: condition,
-                  openBudgetSovPercent: selectedSOV,
-                  budget: Number(selectedBudget),
-                  period: Number(selectedTimeOptions),
-                },
-              ]
-            : [],
-      },
-    });
-  }, [
-    currentTab,
-    selectedTrigger,
-    selectedSOV,
-    selectedBudget,
-    condition,
-    sport,
-    player,
-    selectedMatchId,
-    selectedTimeOptions,
-    minVal,
-    maxVal,
-    rainType,
-    aqi,
-    campaignId
-  ]);
+  }, [selectedTrigger, weatherTabData, minVal, maxVal, rainType, aqi, selectedSOV, selectedBudget, selectedTimeOptions, sport, player, selectedMatchId, condition, currentTab]);
 
   const handleSaveAndContinue = () => {
     if (pathname?.split("/").includes("view")) {
@@ -224,38 +208,33 @@ export const TriggerDetails = ({
           addDetailsToCreateCampaign({
             pageName: "Add Triggers Page",
             id: campaignId,
-            triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
+            triggers: selectedTriggerData,
           })
         );
-        setCurrentStep(step + 1);
       }
     }
   };
 
   const handleSkipTriggerSelection = () => {
     if (confirm("Do you really want to skip this steps?")) {
-      saveDataOnLocalStorage(SELECTED_TRIGGER, {
-        [campaignId]: {
-          weatherTriggers: [],
-          sportsTriggers: [],
-          vacantSlots: [],
-        },
-      });
       setIsDisabled(false);
       dispatch(
         addDetailsToCreateCampaign({
           pageName: "Add Triggers Page",
-          id: pathname.split("/").splice(-1)[0],
-          triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
+          id: campaignId,
+          triggers: {
+            weatherTriggers: [],
+            sportsTriggers: [],
+            vacantSlots: [],
+          },
         })
       );
-      setCurrentStep(step + 1);
     }
   };
 
   // setting initial value  when page reload or came from future
   useEffect(() => {
-    const trigger = getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId];
+    const trigger = campaignDetails?.triggers;
     if (trigger) {
       setTriggerSelected(true);
       setIsDisabled(false);
@@ -269,7 +248,9 @@ export const TriggerDetails = ({
       setRainType(trigger?.weatherTriggers[0]?.rainType || "0");
       setAqi(trigger?.weatherTriggers[0]?.aqi || "");
       setSelectedSOV(trigger?.weatherTriggers[0]?.openBudgetSovPercent || null);
-      setSelectedBudget(Number(trigger?.weatherTriggers[0]?.budget).toFixed(0) || null);
+      setSelectedBudget(
+        Number(trigger?.weatherTriggers[0]?.budget).toFixed(0) || null
+      );
       setMaxVal(trigger?.weatherTriggers[0]?.maxVal || 0);
       setSelectedTimeOptions(trigger?.weatherTriggers[0]?.period || 300);
     } else if (trigger?.sportsTriggers?.length > 0) {
@@ -281,7 +262,9 @@ export const TriggerDetails = ({
       setSelectedMatchId(trigger?.sportsTriggers[0]?.matchId || "");
       setCondition(trigger?.sportsTriggers[0]?.condition || "");
       setSelectedSOV(trigger?.sportsTriggers[0]?.openBudgetSovPercent || null);
-      setSelectedBudget(Number(trigger?.sportsTriggers[0]?.budget).toFixed(0) || null);
+      setSelectedBudget(
+        Number(trigger?.sportsTriggers[0]?.budget).toFixed(0) || null
+      );
       setSelectedTimeOptions(trigger?.sportsTriggers[0]?.period || 300);
     } else if (trigger?.vacantSlots?.length > 0) {
       setSelectedTrigger({
@@ -289,11 +272,12 @@ export const TriggerDetails = ({
       });
       setCondition(trigger?.sportsTriggers[0]?.condition || "");
       setSelectedSOV(trigger?.sportsTriggers[0]?.openBudgetSovPercent || null);
-      setSelectedBudget(Number(trigger?.sportsTriggers[0]?.budget).toFixed(0) || null);
+      setSelectedBudget(
+        Number(trigger?.sportsTriggers[0]?.budget).toFixed(0) || null
+      );
       setSelectedTimeOptions(trigger?.sportsTriggers[0]?.period || 300);
     }
-    console.log(trigger);
-  }, [campaignId]);
+  }, [campaignDetails, campaignId]);
 
   useEffect(() => {
     if (selectedTrigger) {
@@ -302,16 +286,33 @@ export const TriggerDetails = ({
   }, [handleSelectTrigger, selectedTrigger]);
 
   useEffect(() => {
+    if (!campaignDetails) return;
+    if (errorAddDetails) {
+      message.error("Error in add campaign details...");
+    }
+    if (errorTriggerDetails) {
+      message.error("Error in getting impression wise data...");
+    }
     dispatch(
       getTableDataForSelectTriggerPage({ duration: 30, impactFactor: 0.1 })
     );
     dispatch(
       getPlanningPageFooterData({
-        id: campaignId,
+        id: campaignDetails?._id,
         pageName: "Add Triggers Page",
       })
     );
-  }, [dispatch, campaignId]);
+  }, [dispatch, campaignDetails, errorAddDetails, errorTriggerDetails]);
+
+  useEffect(() => {
+    if (successAddDetails) {
+      dispatch({
+        type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+      });
+      setCurrentStep(step + 1);
+    }
+  }, [successAddDetails, step, setCurrentStep, dispatch]);
+
   return (
     <div className="w-full">
       <div className="pb-2">
@@ -337,8 +338,8 @@ export const TriggerDetails = ({
                 value="2"
                 isChecked={currentStep1 === Number("2") ? true : false}
                 onChange={() => {
-                  // setCurrentStep1(Number("2"));
-                  // setSelectedTrigger({ triggerType: "sport" });
+                  setCurrentStep1(Number("3"));
+                  setSelectedTrigger({ triggerType: "sport" });
                 }}
               />
             </div>
@@ -349,16 +350,18 @@ export const TriggerDetails = ({
               Choose any one of your desired triggers for contextual targeting
               of you target audiences
             </p>
-            <p
-              className="text-[14px] text-primaryButton underline cursor-pointer"
-              onClick={handleSkipTriggerSelection}
-            >
-              Skip trigger selection
-            </p>
+            {!pathname?.split("/").includes("view") && (
+              <p
+                className="text-[14px] text-primaryButton underline cursor-pointer"
+                onClick={handleSkipTriggerSelection}
+              >
+                Skip / Remove trigger selection
+              </p>
+            )}
           </div>
         )}
       </div>
-      <div className="grid grid-cols-12 gap-4 w-full">
+      <div className="grid grid-cols-12 gap-4 w-full pb-16">
         {!pathname?.split("/").includes("triggerbasedplan") && (
           <div className="col-span-4 border rounded py-5 flex flex-col justify-between">
             <div className="">
@@ -398,9 +401,10 @@ export const TriggerDetails = ({
                     <p className="text-[14px]">Choose your weather condition</p>
                   </div>
                 </div>
-                <div className="flex items-center cursor-pointer"
+                <div
+                  className="flex items-center cursor-pointer"
                   onClick={() => {
-                    message.info("Coming soon, stay tuned...")
+                    message.info("Coming soon, stay tuned...");
                   }}
                 >
                   <p className="text-[12px] text-primaryButton underline">
@@ -411,12 +415,13 @@ export const TriggerDetails = ({
               <div className="py-1">
                 <TabWithIcon
                   trigger={true}
+                  justify={true}
                   currentTab={currentTab}
                   setCurrentTab={setCurrentTab}
-                  tabData={weatherTabData()}
+                  tabData={weatherTabData}
                 />
               </div>
-              
+
               <WeatherSegment
                 minVal={minVal}
                 setMinVal={setMinVal}
@@ -452,7 +457,7 @@ export const TriggerDetails = ({
               </div>
               <div className="py-2">
                 <SportsSegment
-                  // campaignId={campaignId}
+                  campaignDetails={campaignDetails}
                   selectedMatchId={selectedMatchId}
                   setSelectedMatchId={setSelectedMatchId}
                   sport={sport}
@@ -494,23 +499,15 @@ export const TriggerDetails = ({
               />
             </div>
           )}
-          <div className="" onClick={() => {
-              if (triggerSelected) {
-                setDisableApply(false);
-              } else {
-                message.info("Please select a trigger first to continue or skip...")
-              }
-            }}
-          >
+          <div className="">
             <OpenBudgetSegment
-              totalCost={
-                getDataFromLocalStorage(FULL_CAMPAIGN_PLAN)?.[campaignId]
-                  ?.totalCampaignBudget
-              }
+              totalCost={pathname?.split("/")?.includes("triggerbasedplan") ? tableDataForSelectTrigger?.["Total Budget"] : campaignDetails?.totalCampaignBudget}
               selectedSOV={selectedSOV}
               selectedBudget={selectedBudget}
               setSelectedBudget={setSelectedBudget}
               setSelectedSOV={setSelectedSOV}
+              triggerSelected={triggerSelected}
+              setDisableApply={setDisableApply}
             />
           </div>
 
@@ -537,9 +534,9 @@ export const TriggerDetails = ({
                   })}
                 />
               </div>
-              <h1 className="text-[14px] text-[#969696]">
-                Kindly re-confirm the additional budget of
-                <span className="font-bold">
+              <h1 className="text-[16px] text-primary  pt-2">
+                Additional budget of
+                <span className="font-bold text-[#129BFF]">
                   {" "}
                   &#8377;{formatNumber(Number(selectedBudget).toFixed(0))}{" "}
                 </span>
@@ -557,7 +554,7 @@ export const TriggerDetails = ({
                 textSize="text-[14px]"
                 action={() => {
                   handleSelectTrigger();
-                  setIsDisabled(!isDisabled);
+                  setIsDisabled(false);
                   message.success(
                     "Trigger applied, please confirm and proceed..."
                   );
@@ -578,6 +575,28 @@ export const TriggerDetails = ({
           </div>
         )}
       </div>
+      {/* <div className="pb-16">
+        <div className="flex items-center pt-4">
+          <CheckboxInput
+            label={
+              <>
+                Kindly re-confirm the additional budget of
+                <span className="font-bold">
+                  {" "}
+                  &#8377;{formatNumber(Number(selectedBudget).toFixed(0))}{" "}
+                </span>
+                for your campaign triggers
+              </>
+            }
+            onChange={(e) => {
+              // handleConfirmScreensSelections({
+              //   checked: e,
+              //   screens: finalSelectedScreens,
+              // });
+            }}
+          />
+        </div>
+      </div> */}
 
       <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF] z-10">
         <Footer
@@ -588,7 +607,8 @@ export const TriggerDetails = ({
           handleSave={handleSaveAndContinue}
           campaignId={campaignId}
           pageName="Add Triggers Page"
-          successAddCampaignDetails={successAddCampaignDetails}
+          loadingCost={loadingTriggerDetails || loadingAddDetails}
+          successCampaignDetails={successAddDetails}
         />
       </div>
     </div>

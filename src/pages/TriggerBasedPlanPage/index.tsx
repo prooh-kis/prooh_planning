@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
-import { TriggerDetails } from "./TriggerDetails";
+// import { TriggerDetails } from "./TriggerDetails";
 import { RegularCohortComparisonDetails } from "./RegularCohortComparisonDetails";
 import { ScreenSummaryDetails } from "./ScreenSummaryDetails";
 import {
@@ -10,6 +10,7 @@ import {
   VendorConfirmationDetails,
   AdvanceFiltersDetails,
   AudienceTouchPointsDetails,
+  TriggerDetails
 } from "../../components/planner";
 
 import { useDispatch, useSelector } from "react-redux";
