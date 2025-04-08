@@ -32,12 +32,12 @@ export const SiteLevelPerformance = ({
       onChange={onChange}
       placeholder={placeholder}
       value={value}
-      size="md"
+      size="sm"
     />
   );
 
   return (
-    <div className="bg-[#FFFFFF] px-0 w-full border border-gray-100 rounded-[12px] flex justify-between px-2 mt-2">
+    <div className="bg-[#FFFFFF] mt-2 w-full border border-gray-100 rounded-[12px] flex justify-between px-2">
       <div className="w-full">
         <div className="flex justify-between">
           <h1 className="text-[16px] py-4 px-2 font-normal leading-[19.36px] text[#0E212E]">
@@ -57,7 +57,7 @@ export const SiteLevelPerformance = ({
               "touchPoint"
             )}
 
-            <ButtonInput variant="outline" className="">
+            <ButtonInput variant="outline" size="small">
               View All Logs
             </ButtonInput>
           </div>

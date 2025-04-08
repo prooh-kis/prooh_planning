@@ -1,5 +1,5 @@
 import { signout } from "../../actions/userAction";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { message, Tooltip } from "antd";
@@ -7,18 +7,20 @@ import {
   formatDateForLogs,
   getNumberOfDaysBetweenTwoDates,
 } from "../../utils/dateAndTimeUtils";
+import moment from "moment";
 
 interface StepSliderProps {
   currentDay: number;
   currentWeek: number;
-  setCurrentDay?: any;
-  setCurrentWeek?: any;
+  setCurrentDay?: (day: number) => void;
+  setCurrentWeek?: (week: number) => void;
   campaignId?: any;
   setPageSuccess?: any;
-  allDates?: any;
-  setCurrentDate?: any;
-  campaignData?: any;
-  loading?: any;
+  allDates?: Array<{value: string, label: string}>;
+  setCurrentDate?: (date: string) => void;
+  currentDate?: string;
+  calendarData?: any;
+  loading?: boolean;
 }
 
 export const CalenderScaleStepper = ({
@@ -26,226 +28,323 @@ export const CalenderScaleStepper = ({
   setCurrentWeek,
   currentDay,
   currentWeek,
-  allDates,
+  allDates = [],
   setCurrentDate,
-  campaignData,
+  currentDate,
+  calendarData,
   loading,
 }: StepSliderProps) => {
+  console.log(allDates);
+  console.log(calendarData);
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
-
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
-  const groupDatesByWeek = (dates: string[]) => {
-    const weeks: { [key: string]: string[] } = {};
+  const groupDatesByWeek = useCallback((dates: Array<{value: string, label: string}>) => {
+    const weeks: { [key: string]: Array<{value: string, label: string}> } = {};
 
     dates.forEach((date, index) => {
-      const weekIndex = Math.floor(index / 7) + 1; // Group every 7 days into a "week"
+      const weekIndex = Math.floor(index / 7) + 1;
       const weekKey = `Week ${weekIndex}`;
 
       if (!weeks[weekKey]) weeks[weekKey] = [];
       weeks[weekKey].push(date);
     });
 
-    return Object.entries(weeks); // Returns an array of [weekName, dates]
-  };
+    return Object.entries(weeks);
+  }, []);
 
-  const weeks = groupDatesByWeek(allDates);
+  const weeks = useMemo(() => groupDatesByWeek(allDates), [allDates, groupDatesByWeek]);
+  console.log(weeks);
 
-  const handleStepClick = (input: any) => {
-    if (!loading) {
-      if (input.type == "week") {
-        setCurrentWeek(input.step + 1);
-        if (currentDay > Object.values(weeks)[input.step][1].length) {
-          setCurrentDay(Object.values(weeks)[input.step][1].length);
+  const getWeekPercentageValue = useCallback((data: any) => {
+    const formatToMDY = (dateStr: any) => {
+      const date = new Date(dateStr);
+      return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    };
+
+    const matchingDates = new Set(data?.[1]?.map((d: any) => formatToMDY(d.value)));
+    return calendarData?.reduce(
+      (totals: any, entry: any) => {
+        if (matchingDates.has(entry.date)) {
+          totals.totalCount += entry.count;
+          totals.totalCountPromised += entry.countPromised;
         }
-        setCurrentDate(Object.values(weeks)[input.step][1][currentDay - 1]);
-      } else if (input.type == "day") {
-        setCurrentDay(input.step + 1);
-        setCurrentDate(Object.values(weeks)[currentWeek - 1][1][input.step]);
-      }
-    } else {
+        return totals;
+      },
+      { totalCount: 0, totalCountPromised: 0 }
+    );
+  }, [calendarData]);
+
+  const handleStepClick = useCallback((input: any) => {
+    if (loading) {
       message.info(
         "Fetching logs is a tedious task, please let us fetch the earlier request logs first and then continue..."
       );
+      return;
     }
-  };
 
-  const getValueDateWise = (label: string, i: number) => {
-    const result = campaignData?.slotsPlayedPerDay?.find(
+    if (input.type === "week") {
+      setCurrentWeek?.(input.step + 1);
+      if (currentDay > weeks[input.step][1].length) {
+        setCurrentDay?.(weeks[input.step][1].length);
+      }
+      setCurrentDate?.(weeks[input.step][1][currentDay - 1].value);
+    } else if (input.type === "day") {
+      setCurrentDay?.(input.step + 1);
+      setCurrentDate?.(weeks[currentWeek - 1][1][input.step].value);
+    }
+  }, [loading, currentDay, currentWeek, weeks, setCurrentDay, setCurrentWeek, setCurrentDate]);
+
+  const getValueDateWise = useCallback((label: string, i: number) => {
+    const result = calendarData?.find(
       (data: any) =>
         formatDateForLogs(new Date(data.date)).apiDate ===
-        formatDateForLogs(new Date(Object.values(weeks)[currentWeek - 1][1][i]))
+        formatDateForLogs(new Date(weeks[currentWeek - 1][1][i].value))
           .apiDate
     )?.[label];
     return Number(result);
-  };
+  }, [calendarData, currentWeek, weeks]);
 
-  const getPercentageValue = (delivered: number, promised: number) => {
-    const percentage = (delivered / promised) * 100;
-    return percentage.toFixed(0) + "%";
-  };
+  const getPercentageValue = useCallback((delivered: number, promised: number) => {
+    const percentage = (delivered / promised) * 100 || 0;
+    return `${percentage.toFixed(0)}%`;
+  }, []);
+
+  const getCurrentTime = useCallback(() => {
+    const weekDates = weeks?.[currentWeek - 1]?.[1] || [];
+    const numberOfGaps = weekDates.length - 1;
+    let timeMarkerPosition = 0;
+
+    for (let i = 0; i < numberOfGaps; i++) {
+      const start = new Date(weekDates[i].value);
+      const end = new Date(weekDates[i + 1].value);
+      const now = new Date();
+
+      if (now >= start && now <= end) {
+        const hoursSinceStart = (now.getTime() - start.getTime()) / (1000 * 60 * 60);
+        const percentageOfGap = (hoursSinceStart / 24) * (100 / numberOfGaps);
+        timeMarkerPosition = (i * (100 / numberOfGaps)) + percentageOfGap;
+        break;
+      }
+    }
+    return timeMarkerPosition;
+  }, [currentWeek, weeks]);
+
+  const getCurrentDay = useCallback(() => {
+    const today = moment();
+    let todayMarkerLeft = 0;
+
+    if (weeks.length > 1) {
+      const totalWeeks = weeks.length - 1;
+
+      weeks.forEach(([_, dates], weekIndex) => {
+        const match = dates.find((d) =>
+          moment(d.value).isSame(today, "day")
+        );
+        if (match) {
+          const dayIndex = dates.indexOf(match);
+          const percentPerWeek = 100 / totalWeeks;
+          const percentPerDay = percentPerWeek / 7;
+          todayMarkerLeft = weekIndex * percentPerWeek + dayIndex * percentPerDay;
+        }
+      });
+    }
+    return todayMarkerLeft;
+  }, [weeks]);
 
   useEffect(() => {
     if (!userInfo) {
       dispatch(signout());
     }
   }, [dispatch, userInfo]);
+
+  const currentWeekPercentage = useMemo(() => {
+    const weekData = getWeekPercentageValue(weeks[currentWeek - 1]);
+    return weekData ? (weekData.totalCount * 100 / weekData.totalCountPromised).toFixed(0) : 0;
+  }, [currentWeek, getWeekPercentageValue, weeks]);
+
+  const currentWeekPercentageColor = useMemo(() => {
+    const weekData = getWeekPercentageValue(weeks[currentWeek - 1]);
+    return weekData?.totalCount / weekData?.totalCountPromised > 1 ? "#22C55E" : "#EF4444";
+  }, [currentWeek, getWeekPercentageValue, weeks]);
+
+  console.log(calendarData);
   return (
-    <div className="w-full">
-      <div className="pt-12 mb-20">
-        <div className="flex-1 h-1 bg-gray-200 relative mx-4">
+    <div className="w-full cursor-pointer">
+      <div className="pt-12 mb-20 flex justify-center">
+        <div className={`flex-${weeks.length === 1 ? 0 : 1} h-1 bg-[#D1E5F7] relative mx-4`}>
           <div className="absolute inset-x-0 flex justify-between">
             <div
-              className="absolute h-1 inset-x-0 bg-primaryButton rounded transition-all duration-500"
+              className="absolute h-1 inset-x-0 bg-[#DC6700] rounded transition-all duration-500"
               style={{
-                width: `${
+                width: `${weeks?.length === 1 ? 0 :
                   Number((currentWeek - 1) / (weeks.length - 1)) * 100
                 }%`,
               }}
             />
-            {weeks.map(([week, dates], i) => (
+            {getCurrentDay() > 0 && (
               <div
-                key={i}
-                onClick={() => {
-                  if (
-                    getNumberOfDaysBetweenTwoDates(
-                      new Date(),
-                      new Date(Object.values(weeks)[i][1][currentDay - 1])
-                    ) > 0
-                  ) {
-                    message.info("Still to come...");
-                  } else {
-                    handleStepClick({ type: "week", step: i });
-                  }
+                className="absolute z-1 absolute h-1 inset-x-0 bg-[#FFD700] rounded transition-all duration-500"
+                style={{
+                  width: `${getCurrentDay() - (Number((currentWeek - 1) / (weeks.length - 1)) * 100)}%`,
+                  left: `${weeks?.length === 1 ? 0 :
+                  Number((currentWeek - 1) / (weeks.length - 1)) * 100
+                }%`
+                  // opacity: 0.3
                 }}
-                className="relative flex flex-col items-center"
               >
-                <div
-                  className={`relative w-4 h-4 rounded-full -mt-1.5 flex flex-col items-center
-                    ${
-                      i < currentWeek - 1
-                        ? "bg-primaryButton"
-                        : i == currentWeek - 1 
-                        ? "bg-[#22C55E]"
-                        : "border border-primaryButton bg-gray-200"
-                    }
-                  `}
-                >
-                  <Tooltip title={week}>
-                    <div className="relative mt-[-32px] w-full">
-                      <div
-                        className={`flex w-full gap-2 font-custom text-[12px] ${
-                          i <= currentWeek - 1
-                            ? "text-primaryButton"
-                            : "text-[#D6D2D2]"
-                        }`}
-                      >
-                        {week.split(" ")[1]}
-                      </div>
-                    </div>
-                  </Tooltip>
+                <Tooltip placement="bottom" title={`${new Date().toDateString()}`} open={true}>
                   <div
-                    className={`absolute w-4 h-4 rounded-full flex flex-col items-center
-                      ${
-                        i == currentWeek - 1 
-                          && "bg-[#22C55E] animate-ping"
-                          
-                      }
-                    `}
+                    className="absolute h-1 w-[2px] bg-[#FFD700] rounded-full"
+                    style={{
+                      left: `100%`
+                    }}
                   />
-                </div>
-  
-                {/* Adjust label positioning: left-aligned for first step, centered otherwise, right-aligned for last step */}
-                {i === currentWeek - 1 && (
-                  <div
-                    className={`font-custom  absolute top-full mt-2 text-primaryButton text-[12px] font-medium whitespace-nowrap
-                      ${
-                        i === 0
-                          ? "left-0"
-                          : i + 1 === weeks.length
-                          ? "right-0"
-                          : "left-1/2 transform -translate-x-1/2"
-                      }
-                    `}
-                  >
-                    {week}
-                  </div>
-                )}
+                </Tooltip>
               </div>
-            ))}
+            )}
+            {weeks.map(([week, dates], i) => {
+              const isCurrentWeek = i === currentWeek - 1;
+              const isPastWeek = i < currentWeek - 1;
+              const weekColor = isPastWeek || isCurrentWeek ? "text-[#DC6700]" : "text-[#D6D2D2]";
+              const bgColor = isPastWeek || isCurrentWeek ? "bg-[#DC6700]" : "border bg-[#D1E5F7]";
+
+              let labelPosition = "";
+              if (i === 0 && weeks.length !== 1) {
+                labelPosition = "left-0";
+              } else if (i === 0 && weeks.length === 1) {
+                labelPosition = "-left-1/2";
+              } else if (i + 1 === weeks.length) {
+                labelPosition = "right-0";
+              } else {
+                labelPosition = "left-1/2 transform -translate-x-1/2";
+              }
+
+              return (
+                <div
+                  key={i}
+                  onClick={() => {
+                    if (
+                      !weeks[i][1][currentDay - 1] || 
+                      getNumberOfDaysBetweenTwoDates(
+                        new Date(),
+                        new Date(weeks[i][1][currentDay - 1]?.value)
+                      ) > 0
+                    ) {
+                      message.info("Still to come...");
+                    } else {
+                      handleStepClick({ type: "week", step: i });
+                    }
+                  }}
+                  className="relative flex flex-col items-center"
+                >
+                  <div className={`relative w-3 h-3 rounded-full -mt-1 flex flex-col items-center ${bgColor}`}>
+                    {/* Circular marker */}
+                    <div className={`absolute inset-0 rounded-full ${bgColor}`} />
+                    
+                    <Tooltip title={week}>
+                      <div className="relative mt-[-24px] w-full flex items-center justify-center w-full gap-1">
+                        <h1 className={`text-[12px] whitespace-nowrap ${labelPosition} ${weekColor}`}>
+                          {week}
+                        </h1>
+                        {/* {isCurrentWeek && (
+                          <h1 className={`text-[12px] font-medium whitespace-nowrap text-[${currentWeekPercentageColor}]`}>
+                            ({currentWeekPercentage}%)
+                          </h1>
+                        )} */}
+                      </div>
+                    </Tooltip>
+                    {isCurrentWeek && (
+                      <div className="absolute w-3 h-3 rounded-full flex flex-col items-center bg-[#DC6700] animate-ping" />
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
-      <div className="pt-2 mb-6">
-        <div className="flex-1 h-1 bg-gray-200 relative mx-4">
+      <div className="pt-4 mb-12">
+        <div className="flex-1 h-1 bg-[#D1E5F7] relative mx-4">
           <div className="absolute inset-x-0 flex justify-between">
             <div
-              className="absolute h-1 inset-x-0 bg-primaryButton rounded transition-all duration-500"
+              className="absolute h-1 inset-x-0 bg-[#DC6700] rounded transition-all duration-500"
               style={{
-                width: `${
-                  (Number(currentDay - 1) /
-                    (Object.values(weeks)?.[currentWeek - 1]?.[1]?.length -
-                      1)) *
-                  100
-                }%`,
+                width: `${(Number(currentDay - 1) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100}%`,
               }}
             />
-            {Object.values(weeks)?.[currentWeek - 1]?.[1]?.map((_, i) => (
+            {getCurrentTime() > 0 && (
               <div
-                key={i}
-                onClick={() => {
-                  if (
-                    getNumberOfDaysBetweenTwoDates(
-                      new Date(),
-                      new Date(Object.values(weeks)[currentWeek - 1][1][i])
-                    ) > 0
-                  ) {
-                    message.info("Still to come...");
-                  } else {
-                    handleStepClick({ type: "day", step: i });
-                  }
+                className="absolute h-1 inset-x-0 bg-[#FFD700] rounded transition-all duration-500"
+                style={{
+                  width: `${getCurrentTime() - (Number(currentDay - 1) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100}%`,
+                  left: `${(Number(currentDay - 1) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100}%`
                 }}
-                className="relative flex flex-col items-center"
               >
-                <div
-                  className={`relative w-4 h-4 rounded-full -mt-1.5 flex flex-col items-center
-                    ${
-                      i < currentDay - 1
-                        ? "bg-primaryButton"
-                        : i == currentDay - 1
-                        ? "bg-[#22C55E]"
-                        : "border border-primaryButton bg-gray-200"
-                    }
-                  `}
-                >
-                  {/* Ping animation for the selected day */}
+                <Tooltip placement="bottom" title={moment().format("hh:mm A")} open={true}>
                   <div
-                    className={`absolute w-4 h-4 rounded-full flex flex-col items-center
-                      ${i == currentDay - 1 && "bg-[#22C55E] animate-ping"}
-                    `}
+                    className="absolute h-1 w-[2px] bg-[#FFD700] z-1 rounded-full"
+                    style={{
+                      left: `100%`
+                    }}
                   />
-
-                  {/* Showing date on top */}
-                  <Tooltip title={Object.values(weeks)[currentWeek - 1][1][i]}>
-                    <div className="relative mt-[-32px] w-full">
-                      <div
-                        className={`font-custom flex w-full gap-2 -ml-[8px] text-[12px] ${
-                          i <= currentDay - 1 ? "text-primaryButton" : "text-[#D6D2D2]"
-                        }`}
-                      >
-                        {Object.values(weeks)[currentWeek - 1][1][i]
-                          .split("-")
-                          .splice(1, 2)
-                          .join("/")}
-                      </div>
-                    </div>
-                  </Tooltip>
-                </div>
+              </Tooltip>
               </div>
-            ))}
+            )}
+           
+            {weeks?.[currentWeek - 1]?.[1]?.map((dateObj, i) => {
+              const isCurrentDay = i === currentDay - 1;
+              const isPastDay = i < currentDay - 1;
+              const dayColor = isPastDay || isCurrentDay ? "text-[#DC6700]" : "text-[#D6D2D2]";
+              const bgColor = isPastDay || isCurrentDay ? "bg-[#DC6700]" : "border bg-[#D1E5F7]";
 
+              const dayData = calendarData?.find((s: any) => 
+                new Date(s.date).toDateString() === new Date(dateObj.value).toDateString()
+              );
+              console.log(dayData);
+              const percentageValue = dayData ? getPercentageValue(dayData.count, dayData.countPromised) : "";
+              const percentageColor = dayData?.count / dayData?.countPromised > 1 ? "#22C55E" : "#EF4444";
+
+              return (
+                <div
+                  key={i}
+                  onClick={() => {
+                    if (getNumberOfDaysBetweenTwoDates(new Date(), new Date(dateObj.value)) > 0) {
+                      message.info("Still to come...");
+                    } else {
+                      handleStepClick({ type: "day", step: i });
+                    }
+                  }}
+                  className="relative flex flex-col items-center"
+                >
+                  <div className={`relative w-3 h-3 rounded-full -mt-1 flex flex-col items-center ${bgColor}`}>
+                    {/* Circular marker */}
+                    <div className={`absolute inset-0 rounded-full ${bgColor}`} />
+                    
+                    {isCurrentDay && (
+                      <div className="absolute w-3 h-3 rounded-full flex flex-col items-center bg-[#DC6700] animate-ping" />
+                    )}
+                    <Tooltip title={dateObj.value} >
+                      <div className="relative mt-[-24px] w-full cursor-pointer flex">
+                        <div className={`flex items-center w-full gap-1 -ml-[8px]`}>
+                          <h1 className={`text-[12px] text-nowrap ${dayColor}`}>
+                            {dateObj.label}
+                          </h1>
+                          {calendarData && new Date(dateObj.value).getTime() < new Date().getTime() && dayData && (
+                          <h1 className={`text-[10px] font-medium whitespace-nowrap text-[${percentageColor}]`}>
+                            ({percentageValue})
+                          </h1>
+                        )}
+                        </div>
+                   
+                      </div>
+                    </Tooltip>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

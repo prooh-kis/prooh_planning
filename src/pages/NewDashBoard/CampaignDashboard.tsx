@@ -4,7 +4,7 @@ import { CalendarScaleSlider } from "../../components/molecules/CalenderScaleSli
 import { DashboardImpressionDetailsTable } from "../../components/tables/DashboardImpressionDetailsTable";
 import { DashboardBarChart } from "../../components/segments/DashboardBarGraph";
 import { DashboardPieChart } from "../../components/segments/DashboardPieChart";
-import { DashboardGrid } from "../../components/molecules/DashboardGrid";
+import { DashboardGrid, SectionHeader } from "../../components/molecules/DashboardGrid";
 import { useNavigate } from "react-router-dom";
 import { DashBoardSlotGraph } from "../../components/segments/DashBoardSlotGraph";
 import { BillingAndInvoice } from "./BillingAndInvoice";
@@ -13,6 +13,8 @@ import { useDispatch } from "react-redux";
 import { DashBoardMenu } from "./DashBoardMenu";
 import { Tooltip } from "antd";
 import { FirstCharForBrandName } from "../../components/molecules/FirstCharForBrandName";
+import { CalenderScaleStepper } from "../../components/molecules/CalenderScale2";
+import { DurationGraphPerDay } from "../../components/segments/DurationGraphPerDay";
 import { SiteLevelPerformance } from "./SiteLevelPerformance";
 
 interface GridItem {
@@ -26,13 +28,16 @@ interface GridItem {
 }
 
 export const CampaignDashboard = ({
+  loading,
   campaignDetails,
   screenLevelData,
   siteLevelData,
 }: any) => {
-  const [clicked, setClicked] = useState<any>("1");
+  const dropdownRef = useRef<any>(null);
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
+
+  const [clicked, setClicked] = useState<any>("1");
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [openInvoice, setOpenInvoice] = useState<any>(false);
   const [poNumber, setPoNumber] = useState<any>("");
@@ -62,6 +67,11 @@ export const CampaignDashboard = ({
   );
 
   const [jsonDataForInvoice, setJsonDataForInvoice] = useState<any>({});
+
+  const [calendarData, setCalendarData] = useState<any>({});
+  const [currentWeek, setCurrentWeek] = useState<any>(1);
+  const [currentDay, setCurrentDay] = useState<any>(1);
+  const [currentDate, setCurrentDate] = useState<any>(new Date().toISOString().split("T")[0]);
 
   const getScreenPerformanceData = () => {
     const datesArray = screenLevelData?.result[
@@ -161,8 +171,9 @@ export const CampaignDashboard = ({
 
   const commonClasses = "col-span-1 bg-white p-4 rounded-[12px] h-auto ";
 
-  const dropdownRef = useRef<any>(null);
+  
   useEffect(() => {
+    setCalendarData(screenLevelData?.slotDataDateWiseArray);
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
@@ -176,31 +187,7 @@ export const CampaignDashboard = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
-
-  function extractAllTouchPoints() {
-    let touchPointsArray: string[] = [];
-    const data = screenLevelData?.result;
-    for (const key in data || {}) {
-      if (data[key].touchPoint) {
-        if (!touchPointsArray.includes(data?.[key].touchPoint))
-          touchPointsArray.push(data?.[key].touchPoint);
-      }
-    }
-    return touchPointsArray;
-  }
-
-  function extractAllCity() {
-    let cityArray: string[] = [];
-    const data = screenLevelData?.result;
-    for (const key in data || {}) {
-      if (data[key].city) {
-        if (!cityArray.includes(data?.[key].city))
-          cityArray.push(data?.[key].city);
-      }
-    }
-    return cityArray;
-  }
+  }, [screenLevelData?.slotDataDateWiseArray, setCalendarData]);
 
   const getCostDataScreenWise = (data: any) => {
     const newData: any = {};
@@ -218,7 +205,32 @@ export const CampaignDashboard = ({
 
   const handleToggleMenu = useCallback(() => {
     setShowMenu((pre: boolean) => !pre);
-  }, [showMenu]);
+  }, []);
+
+  const getAllDates = ({ startDate, endDate }: any) => {
+    const dates = [];
+    let currentDate = new Date(startDate);
+    const lastDate = new Date(endDate);
+
+    while (currentDate <= lastDate) {
+      // dates.push(currentDate.toISOString().split("T")[0]); // Format as YYYY-MM-DD
+      dates.push({
+        value: currentDate.toISOString().split("T")[0],
+        label: currentDate.toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+        })
+      });
+      currentDate.setDate(currentDate.getDate() + 1); // Move to next day
+    }
+
+    return dates;
+  };
+
+  const allDates: any = getAllDates({
+    startDate: campaignDetails?.startDate,
+    endDate: campaignDetails?.endDate,
+  });
 
   return (
     <div className="w-full h-full mt-12 flex flex-col gap-2 bg-[#f2f4f7] font-custom">
@@ -330,7 +342,7 @@ export const CampaignDashboard = ({
       </div>
       <div className="px-10 max-h-[360px] mt-32">
         {/* campaign dashboard grid view */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
           {gridItems.map((item) => (
             <div
               key={item.id}
@@ -351,36 +363,63 @@ export const CampaignDashboard = ({
         </div>
         <div className="mt-2">
           {clicked === "1" ? (
-            <div className="relative bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100">
-              <div className="flex items-center gap-2 px-4">
-                <div className="rounded-full bg-[#8079F910] p-2">
-                  <i className="fi fi-rr-calendar text-[#8079F9] lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+            <div className="relative grid grid-cols-12 gap-2">
+              {calendarData && Object.keys(calendarData).length > 0 && (
+                <div className="col-span-8 p-4 bg-[#FFFFFF] rounded-[12px] border border-gray-100">
+                  <div className="border-b">
+                    <SectionHeader
+                      iconClass="fi-sr-calendar-clock"
+                      title="Campaign Duration"
+                      bgColor=" bg-[#DC6700]"
+                    />
+                  </div>
+                  <CalenderScaleStepper
+                    setCurrentDay={setCurrentDay}
+                    setCurrentWeek={setCurrentWeek}
+                    currentDay={currentDay}
+                    currentWeek={currentWeek}
+                    allDates={allDates}
+                    setCurrentDate={setCurrentDate}
+                    currentDate={currentDate}
+                    calendarData={calendarData}
+                    loading={loading}
+                  />
                 </div>
-                <h1 className="lg:text-[14px] md:text-[12px] leading-[16.96px]truncate">
-                  Campaign Duration
-                </h1>
-                <Tooltip title="Number of days campaign needs to run">
-                  <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
-                </Tooltip>
-              </div>
-              <div className="relative pt-8 pb-4 px-2">
-                <CalendarScaleSlider
-                  days={campaignDetails?.duration}
-                  daysPlayed={
-                    calculateDaysPlayed(
-                      campaignDetails?.startDate,
-                      campaignDetails?.endDate
-                    ) === 0
-                      ? 1
-                      : calculateDaysPlayed(
-                          campaignDetails?.startDate,
-                          campaignDetails?.endDate
-                        )
-                  }
-                  // day={day}
-                  // setDay={setDay}
-                />
-              </div>
+              )}
+              {screenLevelData && Object.keys(screenLevelData.slotData).length > 0 && (
+                <div className="col-span-4 bg-[#FFFFFF] rounded-[12px] border border-gray-100 h-full">
+                  <div className="flex items-center justify-between border-b mx-4">
+                    <div className="flex items-center gap-2 pt-4 pb-2 truncate">
+                      <div className={`rounded-full p-2 bg-[#DC6700]`}>
+                        <i
+                          className={`fi fi-sr-calendar-clock text-[14px] text-white flex items-center justify-center`}
+                        ></i>
+                      </div>
+                      <h1 className="text-[14px] text-[#0E212E] leading-[16.94px] truncate ">
+                        {"Today"}
+                      </h1>
+                      <Tooltip title="">
+                        <i className="fi fi-br-info text-[14px] text-[#b2c1ca] flex justify-center items-center"></i>
+                      </Tooltip>
+                    </div>
+                    <div className="flex items-center gap-4 pt-4 pb-2 truncate">
+                      <div className="flex items-center gap-2 truncate">
+                        <i className="fi fi-rr-calendar-lines text-[#DC6700] text-[12px] flex items-center" />
+                        <h1 className="text-[12px] truncate">{new Date().toLocaleDateString()}</h1>
+                      </div>
+                      <div className="flex items-center gap-2 truncate">
+                        <i className="fi fi-br-clock text-[#DC6700] text-[12px] flex items-center" />
+                        <h1 className="text-[12px] truncate">{new Date().toLocaleTimeString()}</h1>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="h-full">
+                    <DurationGraphPerDay
+                      currentData={screenLevelData?.slotData}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           ) : clicked === "2" ? (
             <div className="grid grid-cols-5 gap-2 ">

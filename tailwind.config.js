@@ -41,6 +41,7 @@ module.exports = {
         yellow: "#EAB308",
         amber: "#F59E0B",
         red: "#EF4444",
+        sliderOrange: "#DC6700",
         violetbg: "#8B5CF610",
         indigobg: "#6366F110",
         bluebg: "#3B82F610",

@@ -11,18 +11,6 @@ import { useDispatch } from "react-redux";
 import { GetCampaignLogsAction } from "../../actions/campaignAction";
 import { downloadExcel } from "../../utils/excelUtils";
 
-type DataRow = {
-  time: string;
-  creativeName: string;
-  status: string;
-  // delivered: number;
-  // promised: number;
-  // averageLogTIme: string;
-};
-
-type DataStructure = {
-  [date: string]: DataRow[];
-};
 
 export const ShowCampaignLogsPopup = ({
   open,
@@ -45,7 +33,7 @@ export const ShowCampaignLogsPopup = ({
   const scrollRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const newData = useMemo(() => {
-    return logs?.reduce((accum: DataStructure, current: any) => {
+    return logs?.reduce((accum: any, current: any) => {
       const key: any = formatDateForLogs(current?.logTime)?.logDate;
       if (!accum[key]) {
         accum[key] = [];
@@ -183,7 +171,7 @@ export const ShowCampaignLogsPopup = ({
             currentWeek={currentWeek}
             allDates={allDates}
             setCurrentDate={setCurrentDate}
-            campaignData={campaignData}
+            calendarData={campaignData}
             loading={loading}
           />
         </div>

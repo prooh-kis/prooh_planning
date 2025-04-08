@@ -5,10 +5,12 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
+  Filler,
 } from "chart.js";
 import { formatNumber } from "../../utils/formatValue";
 import { formatDate } from "../../utils/dateAndTimeUtils";
@@ -16,11 +18,12 @@ import { formatDate } from "../../utils/dateAndTimeUtils";
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
-  ChartDataLabels
+  Filler
 );
 
 ChartJS.register(ChartDataLabels);

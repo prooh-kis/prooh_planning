@@ -44,7 +44,7 @@ interface ValueDisplayProps {
   value?: number;
 }
 
-const SectionHeader: React.FC<SectionHeaderProps> = ({
+export const SectionHeader: React.FC<SectionHeaderProps> = ({
   iconClass,
   title,
   bgColor,
@@ -55,11 +55,11 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
         className={`fi ${iconClass} text-[14px] text-white flex items-center justify-center`}
       ></i>
     </div>
-    <h1 className="text-[14px] text-[#0E212E] leading-[16.94px] truncate">
+    <h1 className="text-[14px] text-[#0E212E] leading-[16.94px] truncate ">
       {title}
     </h1>
     <Tooltip title="">
-      <i className="fi fi-br-info text-[14px] text-[#b2c1ca]"></i>
+      <i className="fi fi-br-info text-[14px] text-[#b2c1ca] flex justify-center items-center"></i>
     </Tooltip>
   </div>
 );

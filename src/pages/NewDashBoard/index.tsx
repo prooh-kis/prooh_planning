@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { CampaignDashboard } from "./CampaignDashboard";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -72,6 +72,7 @@ export const NewDashBoard: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [dispatch, campaignId]);
+
   return (
     <div className="w-full h-full">
       {loading || loadingDashboard ? (
@@ -92,6 +93,7 @@ export const NewDashBoard: React.FC = () => {
         </div>
       ) : (
         <CampaignDashboard
+          loading={loading || loadingDashboard}
           campaignDetails={campaignDetails}
           screenLevelData={dashboardData}
           siteLevelData={siteLevelData}
