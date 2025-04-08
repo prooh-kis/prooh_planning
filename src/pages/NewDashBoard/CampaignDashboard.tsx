@@ -1,4 +1,3 @@
-import { CampaignDashboardTable } from "../../components/tables/CampaignDashboardTable";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { calculateDaysPlayed } from "../../utils/dateAndTimeUtils";
 import { CalendarScaleSlider } from "../../components/molecules/CalenderScaleSlider";
@@ -14,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { DashBoardMenu } from "./DashBoardMenu";
 import { Tooltip } from "antd";
 import { FirstCharForBrandName } from "../../components/molecules/FirstCharForBrandName";
+import { SiteLevelPerformance } from "./SiteLevelPerformance";
 
 interface GridItem {
   id: string;
@@ -28,6 +28,7 @@ interface GridItem {
 export const CampaignDashboard = ({
   campaignDetails,
   screenLevelData,
+  siteLevelData,
 }: any) => {
   const [clicked, setClicked] = useState<any>("1");
   const navigate = useNavigate();
@@ -59,8 +60,6 @@ export const CampaignDashboard = ({
       ? Number(campaignDetails?.totalCampaignBudget)
       : Number(campaignDetails?.finalCampaignBudget)
   );
-  const [currentCity, setCurrentCity] = useState<string>("");
-  const [currentTouchPoint, setCurrentTouchPoint] = useState<string>("");
 
   const [jsonDataForInvoice, setJsonDataForInvoice] = useState<any>({});
 
@@ -178,14 +177,6 @@ export const CampaignDashboard = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  const handleSelectCity = (city: string) => {
-    setCurrentCity(city);
-  };
-
-  const handleSelectTouchPoint = (touchPont: string) => {
-    setCurrentTouchPoint(touchPont);
-  };
 
   function extractAllTouchPoints() {
     let touchPointsArray: string[] = [];
@@ -704,20 +695,10 @@ export const CampaignDashboard = ({
             </div>
           )}
         </div>
-        <div className="bg-[#FFFFFF] px-0 w-full border border-gray-100 rounded-[12px] flex justify-between px-2 mt-2">
-          <div className="w-full">
-            {/* ICON */}
-            <h1 className="text-[16px] py-4 px-2 font-normal leading-[19.36px] text[#0E212E]">
-              Site Level Performance
-            </h1>
-            <CampaignDashboardTable
-              campaignDetails={campaignDetails}
-              screenLevelData={screenLevelData?.result}
-              city={currentCity}
-              currentTouchPoint={currentTouchPoint}
-            />
-          </div>
-        </div>
+        <SiteLevelPerformance
+          siteLevelData={siteLevelData}
+          campaignDetails={campaignDetails}
+        />
       </div>
     </div>
   );

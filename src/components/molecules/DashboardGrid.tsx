@@ -102,10 +102,8 @@ const getPercentageDifference = (
   promised: number,
   totalDays: number
 ): number => {
-  const averageDelivered = delivered / totalDays;
-  const averagePromised = promised / totalDays;
-  const difference = averageDelivered - averagePromised;
-  return Number(((difference / averagePromised) * 100).toFixed(2));
+  const difference = delivered - promised;
+  return Number(((difference / promised) * 100).toFixed(2));
 };
 
 export const DashboardGrid: React.FC<BarChartProps> = ({
@@ -181,8 +179,8 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
           bgColor=" bg-[#129BFF]"
         />
         <ValueAboveGraph
-          left={formatNumber(impressionsDelivered)}
-          right={formatNumber(impressionsPromised)}
+          left={formatNumber(impressionsDelivered?.toFixed(0))}
+          right={formatNumber(impressionsPromised?.toFixed(0))}
         />
         <div className="mt-1">
           <MultiColorLinearBar2
@@ -192,8 +190,8 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
           />
         </div>
         <ValueBelowGraph
-          left={formatNumber(impressionsDelivered)}
-          right={formatNumber(impressionsTillDate)}
+          left={formatNumber(impressionsDelivered?.toFixed(0))}
+          right={formatNumber(impressionsTillDate?.toFixed(0))}
           value={percentage}
           isPositive={percentage > 0}
         />

@@ -5,7 +5,10 @@ import { useLocation } from "react-router-dom";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
-import { getBasicDataForPlannerDashboard } from "../../actions/dashboardAction";
+import {
+  getBasicDataForPlannerDashboard,
+  getSiteLevelPerformanceForPlannerDashboard,
+} from "../../actions/dashboardAction";
 
 export const NewDashBoard: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -31,15 +34,40 @@ export const NewDashBoard: React.FC = () => {
     data: dashboardData,
   } = basicDataForPlannerDashboard;
 
-  console.log("dashboardData : ", dashboardData);
+  const siteLevelPerformanceForPlannerDashboard = useSelector(
+    (state: any) => state.siteLevelPerformanceForPlannerDashboard
+  );
+  const {
+    loading: loadingSiteLevel,
+    error: errorSiteLevel,
+    data: siteLevelData,
+  } = siteLevelPerformanceForPlannerDashboard;
+
+  console.log("siteLevelData : ", siteLevelData);
 
   useEffect(() => {
     removeAllKeyFromLocalStorage();
     dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     dispatch(getBasicDataForPlannerDashboard({ id: campaignId }));
+    dispatch(
+      getSiteLevelPerformanceForPlannerDashboard({
+        id: campaignId,
+        cities: [],
+        touchPoints: [],
+        screenTypes: [],
+      })
+    );
 
     const interval = setInterval(() => {
       dispatch(getBasicDataForPlannerDashboard({ id: campaignId })); // Refresh data every 5 seconds
+      dispatch(
+        getSiteLevelPerformanceForPlannerDashboard({
+          id: campaignId,
+          cities: [],
+          touchPoints: [],
+          screenTypes: [],
+        })
+      );
     }, 600000);
 
     return () => clearInterval(interval);
@@ -66,6 +94,7 @@ export const NewDashBoard: React.FC = () => {
         <CampaignDashboard
           campaignDetails={campaignDetails}
           screenLevelData={dashboardData}
+          siteLevelData={siteLevelData}
         />
       )}
     </div>
