@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { CampaignDashboard } from "./CampaignDashboard";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -42,8 +42,6 @@ export const NewDashBoard: React.FC = () => {
     error: errorSiteLevel,
     data: siteLevelData,
   } = siteLevelPerformanceForPlannerDashboard;
-
-  console.log("siteLevelData : ", siteLevelData);
 
   useEffect(() => {
     removeAllKeyFromLocalStorage();

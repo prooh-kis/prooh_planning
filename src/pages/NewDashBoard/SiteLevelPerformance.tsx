@@ -39,8 +39,8 @@ export const SiteLevelPerformance = ({
   return (
     <div className="bg-[#FFFFFF] mt-2 w-full border border-gray-100 rounded-[12px] flex justify-between px-2">
       <div className="w-full">
-        <div className="flex justify-between">
-          <h1 className="text-[16px] py-4 px-2 font-normal leading-[19.36px] text[#0E212E]">
+        <div className="flex justify-between items-center">
+          <h1 className="text-[16px] py-4 px-2 font-semibold leading-[19.36px] text[#0E212E]">
             Site Level Performance
           </h1>
           <div className="flex gap-4 items-center">
@@ -56,6 +56,17 @@ export const SiteLevelPerformance = ({
               setCurrentTouchPoint,
               "touchPoint"
             )}
+            <ButtonInput
+              variant="outline"
+              size="small"
+              onClick={() => {
+                console.log("clicked!");
+                setCurrentCity("");
+                setCurrentTouchPoint("");
+              }}
+            >
+              Reset
+            </ButtonInput>
 
             <ButtonInput variant="outline" size="small">
               View All Logs
