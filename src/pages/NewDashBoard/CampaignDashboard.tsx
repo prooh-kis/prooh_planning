@@ -413,11 +413,13 @@ export const CampaignDashboard = ({
                       </div>
                     </div>
                   </div>
-                  <div className="h-full">
-                    <DurationGraphPerDay
-                      currentData={screenLevelData?.slotData}
-                    />
-                  </div>
+                  <DurationGraphPerDay
+                    currentData={screenLevelData?.slotData}
+                    additionalLegends={[
+                      { label: "Hourly Delivery", values: [1500], color: "rgba(16, 185, 129, 1)" },
+                      { label: "Extra Delivery", values: [1200], color: "rgba(245, 158, 11, 1)" },
+                    ]}
+                  />
                 </div>
               )}
             </div>

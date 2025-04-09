@@ -186,3 +186,9 @@ export function transformToAmPm(time) {
 
   return formattedTime;
 }
+
+export function convertTo12Hour(hour24) {
+  const period = hour24 >= 12 ? 'PM' : 'AM';
+  const hour12 = hour24 % 12 || 12; // Converts 0 to 12
+  return `${hour12} ${period}`;
+}

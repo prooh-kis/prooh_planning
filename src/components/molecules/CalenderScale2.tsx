@@ -222,7 +222,12 @@ export const CalenderScaleStepper = ({
                   // opacity: 0.3
                 }}
               >
-                <Tooltip placement="bottom" title={`${new Date().toDateString()}`} open={true}>
+                <Tooltip id="1" placement="bottom" title={
+                  <div className="flex items-center gap-2">
+                    <i className="fi fi-rr-calendar-lines text-[12px] flex items-center"></i>
+                    <h1 className="text-[12px]">{`${new Date().toDateString()}`}</h1>
+                  </div>
+                  } open={true}>
                   <div
                     className="absolute h-1 w-[2px] bg-[#FFD700] rounded-full"
                     style={{
@@ -274,7 +279,7 @@ export const CalenderScaleStepper = ({
                     {/* Circular marker */}
                     <div className={`absolute inset-0 rounded-full ${bgColor}`} />
                     
-                    <Tooltip title={week}>
+                    <Tooltip id="2" title={week}>
                       <div className={`relative mt-[-24px] w-full flex items-center ${i == 0 ? "" : i+1 == weeks?.length ? "justify-end" : "justify-center"} w-full gap-1`}>
                         <h1 className={`text-[12px] whitespace-nowrap ${labelPosition} ${weekColor}`}>
                           {week}
@@ -313,7 +318,16 @@ export const CalenderScaleStepper = ({
                   left: `${(Number(currentDay - 1) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100}%`
                 }}
               >
-                <Tooltip placement="bottom" title={moment().format("hh:mm A")} open={true}>
+                <Tooltip id="3" placement="bottom"
+                  title={
+                  
+                    <div className="flex items-center gap-2">
+                      <i className="fi fi-br-clock text-[12px] flex items-center"></i>
+                      <h1 className="text-[12px]">{moment().format("hh:mm A")}</h1>
+                    </div>
+                  } 
+                  open={true}
+                >
                   <div
                     className="absolute h-1 w-[2px] bg-[#FFD700] z-1 rounded-full"
                     style={{
@@ -355,7 +369,7 @@ export const CalenderScaleStepper = ({
                     {isCurrentDay && (
                       <div className="absolute w-3 h-3 rounded-full flex flex-col items-center bg-[#DC6700] animate-ping" />
                     )}
-                    <Tooltip title={dateObj.value} >
+                    <Tooltip id="4" title={dateObj.value} >
                       <div className="relative mt-[-24px] w-full cursor-pointer flex items-center justify-center">
                         <div className={`flex ${i == 0 ? "" : i+1 == weeks?.[currentWeek - 1]?.[1]?.length ? "justify-end" : "justify-center"} items-center w-full gap-1 -ml-[8px]`}>
                           <h1 className={`text-[12px] text-nowrap ${dayColor}`}>
