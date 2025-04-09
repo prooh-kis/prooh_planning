@@ -240,7 +240,7 @@ export const CalenderScaleStepper = ({
             {weeks.map(([week, dates], i) => {
               const isCurrentWeek = i === currentWeek - 1;
               const isPastWeek = i < currentWeek - 1;
-              const weekColor = isPastWeek || isCurrentWeek ? "text-[#DC6700]" : "text-[#D6D2D2]";
+              const weekColor = isPastWeek || isCurrentWeek ? "text-[#00000090] font-semibold" : "text-[#D6D2D2]";
               const bgColor = isPastWeek || isCurrentWeek ? "bg-[#DC6700]" : "border bg-[#D1E5F7]";
 
               // Get the percentage data for this week
@@ -341,7 +341,7 @@ export const CalenderScaleStepper = ({
             {weeks?.[currentWeek - 1]?.[1]?.map((dateObj, i) => {
               const isCurrentDay = i === currentDay - 1;
               const isPastDay = i < currentDay - 1;
-              const dayColor = isPastDay || isCurrentDay ? "text-[#DC6700]" : "text-[#D6D2D2]";
+              const dayColor = isPastDay || isCurrentDay ? "text-[#00000090] font-semibold" : "text-[#D6D2D2]";
               const bgColor = isPastDay || isCurrentDay ? "bg-[#DC6700]" : "border bg-[#D1E5F7]";
 
               const dayData = calendarData?.find((s: any) => 

@@ -514,7 +514,7 @@ export const CampaignDetailsPage: React.FC = () => {
   ];
 
   return (
-    <div className="w-full grid grid-cols-12 gap-2 pt-2">
+    <div className="w-full grid grid-cols-12 gap-2 pt-2 font-custom">
       {openCreativeEndDateChangePopup && (
         <EditCreativeEndDatePopup
           onClose={() => setOpenCreativeEndDateChangePopup(false)}

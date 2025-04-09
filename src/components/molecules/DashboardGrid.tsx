@@ -52,14 +52,14 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
   <div className="flex items-center gap-2 pb-2">
     <div className={`rounded-full p-2 ${bgColor}`}>
       <i
-        className={`fi ${iconClass} text-[14px] text-white flex items-center justify-center`}
+        className={`fi ${iconClass} text-[12px] text-white flex items-center justify-center`}
       ></i>
     </div>
-    <h1 className="text-[14px] text-[#0E212E] leading-[16.94px] truncate ">
+    <h1 className="text-[12px] text-[#0E212E] leading-[16.94px] truncate ">
       {title}
     </h1>
     <Tooltip title="">
-      <i className="fi fi-br-info text-[14px] text-[#b2c1ca] flex justify-center items-center"></i>
+      <i className="fi fi-br-info text-[12px] text-[#b2c1ca] flex justify-center items-center"></i>
     </Tooltip>
   </div>
 );
@@ -81,7 +81,7 @@ const ValueBelowGraph: React.FC<ValueDisplayProps> = ({
   value,
 }) => (
   <div className="mt-1">
-    <h1 className="text-[16px] font-medium leading-[32.68px] text-[#9bb3c9]">
+    <h1 className="text-[14px] font-medium leading-[32.68px] text-[#9bb3c9]">
       <span className="text-[#0E212E]">{left}</span> / {right}
       {value !== undefined && (
         <span className={isPositive ? "text-[#2A892D]" : "text-[#CC0000]"}>
@@ -146,7 +146,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
         />
       </div>
       <div className="mt-1">
-        <h1 className="text-[#9BB3C9] text-[16px] font-medium">
+        <h1 className="text-[#9BB3C9] text-[14px] font-medium">
           <span className="text-[#3B8518]">
             {Math.round(
               ((screenLevelData?.durationDelivered || 0) / durationPromised) *
