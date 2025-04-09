@@ -114,7 +114,7 @@ export const DurationGraphPerDay: React.FC<LineChartProps> = ({
         // },
       },
       tooltip: {
-        backgroundColor: "#1F293790",
+        backgroundColor: "#00000095",
         titleColor: "#F9FAFB",
         bodyColor: "#F9FAFB",
         borderColor: "#37415190",

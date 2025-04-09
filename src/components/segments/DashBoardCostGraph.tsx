@@ -30,48 +30,26 @@ ChartJS.register(ChartDataLabels);
 
 interface BarChartProps {
   currentData: any[];
-  targetData?: number[]; // Optional target data
   labels: string[];
-  label?: string;
-  total?: string;
-  color?: string;
-  bgColor?: string;
-  color2?: string;
-  bgColor2?: string;
   percent?: boolean;
 }
 
-export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
+export const DashBoardCostGraph: React.FC<BarChartProps> = ({
   currentData,
-  targetData,
   labels,
-  label,
-  total,
-  color = "rgba(138, 43, 226, 1)",
-  bgColor = "rgba(138, 43, 226, 0.5)",
-  color2,
-  bgColor2,
   percent = true,
 }) => {
   const requiredToPlayed: number[] = currentData?.map(
     (played: any) =>
-      played.slotsPromised - (played.slotsDelivered - played.extraSlotsDelivered)  > 0 ? played.slotsPromised - (played.slotsDelivered - played.extraSlotsDelivered): 0
+      played.costPromised - played.costConsumed > 0 ? played.costPromised - played.costConsumed : 0
   );
 
-  const extraSlots: number[] = currentData?.map(
-    (played: any) =>
-      played.extraSlotsDelivered
-  );
-
+ 
   const dailyPlayedSlots: number[] = currentData?.map(
     (played: any) =>
-      played.slotsDelivered - played.extraSlotsDelivered
+      played.costConsumed
   );
 
-  const remainingSlots: number[] = currentData?.map(
-    (played: any) =>
-      played.slotsDelivered - played.extraSlotsDelivered < played.slotsPromised ? played.slotsDelivered - played.extraSlotsDelivered : 0
-  );
 
   const newLabel = labels?.map((date: string) => formatDate(date));
 
@@ -79,10 +57,10 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
     labels: newLabel,
     datasets: [
       {
-        label: "Daily Delivery",
+        label: "Consumed Cost",
         data: dailyPlayedSlots,
-        backgroundColor: "#77BFEF",
-        borderColor: "#77BFEF50",
+        backgroundColor: "#64AB42",
+        borderColor: "#64AB4250",
         borderWidth: 1,
         borderRadius: 5,
         datalabels: {
@@ -91,14 +69,14 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           align: "center" as const,
           font: { size: 8 },
           formatter: (value: number) =>
-            value !== 0 ? formatNumber(value.toFixed(0)) : "", // Hide
+            value > 1000 ? formatNumber(value.toFixed(0)) : "", // Hide
         },
       },
       {
-        label: "Daily Remaining",
+        label: "Unconsumed Cost",
         data: requiredToPlayed,
-        backgroundColor: "#E5F4FF",
-        borderColor: "#E5F4FF50",
+        backgroundColor: "#E1FFD3",
+        borderColor: "#E1FFD350",
         borderWidth: 1,
         borderRadius: 5,
         datalabels: {
@@ -107,23 +85,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           align: "center" as const,
           font: { size: 8 },
           formatter: (value: number) =>
-            value !== 0 ? formatNumber(value.toFixed(0)) : "", // Hide
-        },
-      },
-      {
-        label: "Adjustment Delivery",
-        data: extraSlots,
-        backgroundColor: "#CDC5FF",
-        borderColor: "#CDC5FF50",
-        borderWidth: 0,
-        borderRadius: 5,
-        datalabels: {
-          color: "#fff",
-          anchor: "center" as const,
-          align: "center" as const,
-          font: { size: 8 },
-          formatter: (value: number) =>
-            value > 10 ? formatNumber(value.toFixed(0)) : "", // Hide
+            value > 1000 ? formatNumber(value.toFixed(0)) : "", // Hide
         },
       },
     ],
@@ -203,7 +165,11 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           maxRotation: 0, // Prevent rotation
           minRotation: 0, // Prevent rotation
           padding: 1,
+          callback: function(value: number | string) {
+            return formatNumber(value);
+          },
         },
+        
       },
     },
     animation: {

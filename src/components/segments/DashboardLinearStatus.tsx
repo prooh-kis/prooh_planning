@@ -6,7 +6,6 @@ import { formatNumber } from "../../utils/formatValue";
 import { Divider } from "antd";
 import { LinearBar } from "../../components/molecules/linearbar";
 import { DashboardImpressionDetailsTable } from "../../components/tables/DashboardImpressionDetailsTable";
-import { DashboardBarChart } from "./DashboardBarGraph";
 
 interface DashboardLinearStatusProps {
  campaignDetails?: any;
