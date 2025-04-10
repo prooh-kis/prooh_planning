@@ -179,7 +179,7 @@ export const DashBoardCostGraph: React.FC<BarChartProps> = ({
   };
 
   return (
-    <div className="w-full h-[260px]">
+    <div className="w-full h-[200px]">
       <Chart type="bar" data={chartData} options={options as any} />
     </div>
   );

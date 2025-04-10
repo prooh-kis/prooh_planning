@@ -34,25 +34,26 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({
         onChange={(event: any) => onChange?.(event.target.checked)}
       />
 
-      {showIcon ? (
-        <span className={`col-span-11`}>
-          <Tooltip title={`${label ? label: "Checkbox"}`}>
-            <i
-              className={`${icon} pl-2 flex justify-start items-center text-[${
-                color ? color : "#21394F"
-              }] text-[${textSize ? textSize : "12px"}]`}
-            ></i>
-          </Tooltip>
-        </span>
-      ) : (
-        <span
-          className={`pl-2 col-span-11 flex justify-start text-[${
-            color ? color : "#21394F"
-          }] text-[${textSize ? textSize : "12px"}] truncate whitespace-pre`}
-        >
-          {label}
-        </span>
-      )}
+      <Tooltip title={<h1 className="text-[10px]">{label ? label : "Checkbox"}</h1>}>
+        {showIcon ? (
+          <span className={`col-span-11`}>
+              <i
+                className={`${icon} pl-2 flex justify-start items-center text-[${
+                  color ? color : "#21394F"
+                }] text-[${textSize ? textSize : "12px"}]`}
+              ></i>
+          </span>
+        ) : (
+          <span
+            className={`pl-2 col-span-11 flex justify-start text-[${
+              color ? color : "#21394F"
+            }] text-[${textSize ? textSize : "12px"}] truncate whitespace-pre`}
+          >
+            {label}
+          </span>
+        )}
+        </Tooltip>
+
     </label>
   );
 };

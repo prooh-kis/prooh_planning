@@ -1,6 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { calculateDaysPlayed } from "../../utils/dateAndTimeUtils";
-import { CalendarScaleSlider } from "../../components/molecules/CalenderScaleSlider";
 import { DashboardImpressionDetailsTable } from "../../components/tables/DashboardImpressionDetailsTable";
 import { DashboardBarChart } from "../../components/segments/DashboardBarGraph";
 import { DashboardPieChart } from "../../components/segments/DashboardPieChart";
@@ -18,6 +16,11 @@ import { DurationGraphPerDay } from "../../components/segments/DurationGraphPerD
 import { SiteLevelPerformance } from "./SiteLevelPerformance";
 import { SectionHeaderWithSwitch } from "../../components/segments/SectionHeaderWithSwitch";
 import { DashBoardCostGraph } from "../../components/segments/DashBoardCostGraph";
+import { CheckboxInput } from "../../components/atoms/CheckboxInput";
+import { MultiColorLinearBar2 } from "../../components/molecules/MultiColorLinearBar2";
+import { formatNumber } from "../../utils/formatValue";
+import { SlotSegment } from "./SlotSegment";
+import { CostSegment } from "./CostSegment";
 
 interface GridItem {
   id: string;
@@ -41,7 +44,7 @@ export const CampaignDashboard = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
 
-  const [clicked, setClicked] = useState<any>("1");
+  const [clicked, setClicked] = useState<any>("4");
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [openInvoice, setOpenInvoice] = useState<any>(false);
   const [poNumber, setPoNumber] = useState<any>("");
@@ -103,17 +106,8 @@ export const CampaignDashboard = ({
     return { datesArray, countsArray };
   };
 
-  const getSpotDeliveryData = () => {
-    const datesArray = Object.keys(spotData?.spotDeliveryData)?.map((date: any) => date);
-    const countsArray = Object.values(spotData?.spotDeliveryData).map((slot: any) => slot);
-    return { datesArray, countsArray };
-  };
 
-  const getCostData = () => {
-    const datesArray = Object.keys(costData?.costData)?.map((date: any) => date);
-    const countsArray = Object.values(costData?.costData).map((slot: any) => slot);
-    return { datesArray, countsArray };
-  };
+
 
   const gridItems: GridItem[] = [
     {
@@ -211,6 +205,7 @@ export const CampaignDashboard = ({
     endDate: campaignDetails?.endDate,
   });
 
+  console.log(screenLevelData);
   return (
     <div className="absolute w-full h-full mt-12 flex flex-col gap-2 bg-[] font-custom">
       <BillingAndInvoice
@@ -559,244 +554,11 @@ export const CampaignDashboard = ({
                 </div>
               </div>
             </div>
-          ) : clicked === "4" ? (
-            <div className="grid grid-cols-5 gap-2 ">
-              <div className="col-span-2 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
-                <div className="border-b">
-                  <SectionHeader
-                    iconClass="fi-ss-screen"
-                    title="Spot Delivery"
-                    bgColor=" bg-[#77BFEF]"
-                  />
-                </div>
-                <div className="p-2">
-                  <DashBoardSlotGraph
-                    currentData={getSpotDeliveryData().countsArray}
-                    labels={getSpotDeliveryData().datesArray}
-                  />
-                </div>
-              </div>
-              <div className="col-span-3 grid grid-cols-3 gap-2">
-                <div className="col-span-1 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
-                  <div className="border-b">
-                    <SectionHeaderWithSwitch
-                      iconClass="fi-ss-screen"
-                      title="Spot Delivery"
-                      bgColor=" bg-[#77BFEF]"
-                      showPercent={showPercent?.[1]}
-                      setShowPercent={() => {
-                        setShowPercent(() => {
-                          return {
-                            1: !showPercent?.[1],
-                            2: showPercent?.[2],
-                            3: showPercent?.[3]
-                          }
-                        });
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="col-span-1 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
-                  <div className="border-b">
-                    <SectionHeaderWithSwitch
-                      iconClass="fi-ss-screen"
-                      title="Spot Delivery"
-                      bgColor=" bg-[#77BFEF]"
-                      showPercent={showPercent?.[2]}
-                      setShowPercent={() => {
-                        setShowPercent(() => {
-                          return {
-                            1: showPercent?.[1],
-                            2: !showPercent?.[2],
-                            3: showPercent?.[3]
-                          }
-                        });
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="col-span-1 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
-                  <div className="border-b">
-                    <SectionHeaderWithSwitch
-                      iconClass="fi-ss-screen"
-                      title="Spot Delivery"
-                      bgColor=" bg-[#77BFEF]"
-                      showPercent={showPercent?.[3]}
-                      setShowPercent={() => {
-                        setShowPercent(() => {
-                          return {
-                            1: showPercent?.[1],
-                            2: showPercent?.[2],
-                            3: !showPercent?.[3]
-                          }
-                        });
-                      }}
-                    />
-                  </div>
-                </div>
-                {/* <div className="flex justify-between">
-                  <div className="flex items-center gap-2 px-4 py-1">
-                    <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                      Day Wise Spot Delivered
-                    </h1>
-                    <Tooltip title="Day wise number of spots delivered for campaign">
-                      <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
-                    </Tooltip>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-1">
-                    <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                      Promised :{" "}
-                      {(
-                        getPromisedSpotDeliveryData().countsArray?.reduce(
-                          (a: number, c: number) => a + c,
-                          0
-                        ) / getPromisedSpotDeliveryData().countsArray?.length
-                      ).toFixed(0)}{" "}
-                    </h1>
-                    <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                      Delivered :{" "}
-                      {(
-                        getSpotDeliveryData().countsArray?.reduce(
-                          (a: number, c: number) => a + c,
-                          0
-                        ) / getSpotDeliveryData().countsArray?.length
-                      ).toFixed(0)}{" "}
-                    </h1>
-                  </div>
-                </div>
-                <div className="p-2">
-                  
-                </div> */}
-              </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-5 gap-2 ">
-              <div className="col-span-2 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
-                <div className="border-b">
-                  <SectionHeader
-                    iconClass="fi-ss-sack"
-                    title="Cost Consumed"
-                    bgColor=" bg-[#6DBC48]"
-                  />
-                </div>
-                <div className="p-2">
-                  <DashBoardCostGraph
-                    currentData={getCostData().countsArray}
-                    labels={getCostData().datesArray}
-                  />
-                  
-                </div>
-              </div>
-              <div className="col-span-3 grid grid-cols-3 gap-2">
-                <div className="col-span-1 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
-                  <div className="border-b">
-                    <SectionHeaderWithSwitch
-                      iconClass="fi-ss-sack"
-                      title="Cost Consumed"
-                      bgColor=" bg-[#6DBC48]"
-                      showPercent={showPercent?.[1]}
-                      setShowPercent={() => {
-                        setShowPercent(() => {
-                          return {
-                            1: !showPercent?.[1],
-                            2: showPercent?.[2],
-                            3: showPercent?.[3]
-                          }
-                        });
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="col-span-1 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
-                  <div className="border-b">
-                    <SectionHeaderWithSwitch
-                      iconClass="fi-ss-sack"
-                      title="Cost Consumed"
-                      bgColor=" bg-[#6DBC48]"
-                      showPercent={showPercent?.[2]}
-                      setShowPercent={() => {
-                        setShowPercent(() => {
-                          return {
-                            1: showPercent?.[1],
-                            2: !showPercent?.[2],
-                            3: showPercent?.[3]
-                          }
-                        });
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="col-span-1 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
-                  <div className="border-b">
-                    <SectionHeaderWithSwitch
-                      iconClass="fi-ss-sack"
-                      title="Cost Consumed"
-                      bgColor=" bg-[#6DBC48]"
-                      showPercent={showPercent?.[3]}
-                      setShowPercent={() => {
-                        setShowPercent(() => {
-                          return {
-                            1: showPercent?.[1],
-                            2: showPercent?.[2],
-                            3: !showPercent?.[3]
-                          }
-                        });
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              {/* <div className="col-span-2 bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100">
-                <div className="flex items-center gap-2 px-4">
-                  <div className="rounded-full bg-bluebg p-2">
-                    <i className="fi fi-rr-target-audience text-blue lg:text-[14px] text-[12px] flex items-center justify-center"></i>
-                  </div>
-                  <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                    Cost Consumed
-                  </h1>
-                  <Tooltip title="Total cost consumed for the delivery of campaign">
-                    <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
-                  </Tooltip>
-                </div>
-                <div className="grid grid-cols-3 p-2">
-                  <div className="col-span-1">
-                    <DashboardPieChart
-                      type="City Wise"
-                      data={screenLevelData?.costConsumedData?.cityWise}
-                    />
-                  </div>
-                  <div className="col-span-1">
-                    <DashboardPieChart
-                      type="Touchpoint Wise"
-                      data={screenLevelData?.costConsumedData?.touchPointWise}
-                    />
-                  </div>
-                  <div className="col-span-1">
-                    <DashboardPieChart
-                      type="Screen Wise"
-                      data={getCostDataScreenWise(
-                        screenLevelData?.costConsumedData?.screenWise || {}
-                      )}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="col-span-3 bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100">
-                <div className="flex items-center gap-2 px-4 py-1">
-                  <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                    Day Wise Cost Consumed
-                  </h1>
-                  <Tooltip title="Day wise total cost consumed ">
-                    <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
-                  </Tooltip>
-                </div>
-                <div className="p-2">
-                  
-                </div>
-              </div> */}
-            
-            </div>
-          )}
+          ) : clicked === "4" && spotData ? (
+            <SlotSegment screenLevelData={screenLevelData} spotData={spotData} showPercent={showPercent} setShowPercent={setShowPercent} />
+          ) : clicked === "5" && costData ? (
+            <CostSegment screenLevelData={screenLevelData} costData={costData} showPercent={showPercent} setShowPercent={setShowPercent} />
+          ): null}
         </div>
         <SiteLevelPerformance
           siteLevelData={siteLevelData}
