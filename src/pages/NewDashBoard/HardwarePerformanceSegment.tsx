@@ -14,8 +14,8 @@ export const HardwarePerformanceSegment = ({
 
 
   const getHardwarePerformanceData = () => {
-    const datesArray = Object.keys(hardwarePerformanceData?.spotDeliveryData)?.map((date: any) => date);
-    const countsArray = Object.values(hardwarePerformanceData?.spotDeliveryData).map((slot: any) => slot);
+    const datesArray = Object.keys(hardwarePerformanceData?.hardwarePerformanceData)?.map((date: any) => date);
+    const countsArray = Object.values(hardwarePerformanceData?.hardwarePerformanceData)?.map((slot: any) => slot);
     return { datesArray, countsArray };
   };
 

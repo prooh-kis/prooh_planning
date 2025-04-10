@@ -41,13 +41,13 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
 }) => {
   const requiredToPlayed: number[] = currentData?.map(
     (played: any) =>
-      played.costPromised - played.costConsumed > 0 ? played.costPromised - played.costConsumed : 0
+      played.hardwarePerformancePromised - played.hardwarePerformanceDelivered > 0 ? played.hardwarePerformancePromised - played.hardwarePerformanceDelivered : 0
   );
 
  
   const dailyPlayedSlots: number[] = currentData?.map(
     (played: any) =>
-      played.costConsumed
+      played.hardwarePerformanceDelivered
   );
 
 
@@ -69,7 +69,7 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
           align: "center" as const,
           font: { size: 8 },
           formatter: (value: number) =>
-            value > 1000 ? formatNumber(value.toFixed(0)) : "", // Hide
+            value > 10 ? formatNumber(value.toFixed(0)) : "", // Hide
         },
       },
       {
@@ -85,7 +85,7 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
           align: "center" as const,
           font: { size: 8 },
           formatter: (value: number) =>
-            value > 1000 ? formatNumber(value.toFixed(0)) : "", // Hide
+            value > 10 ? formatNumber(value.toFixed(0)) : "", // Hide
         },
       },
     ],
