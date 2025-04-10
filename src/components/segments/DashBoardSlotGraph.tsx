@@ -55,7 +55,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
 }) => {
   const requiredToPlayed: number[] = currentData?.map(
     (played: any) =>
-      played.slotsPromised - (played.slotsDelivered - played.extraSlotsDelivered)  > 0 ? played.slotsPromised - (played.slotsDelivered - played.extraSlotsDelivered): 0
+      played.slotsPromised - played.slotsDelivered  > 0 ? played.slotsPromised - played.slotsDelivered: 0
   );
 
   const extraSlots: number[] = currentData?.map(
@@ -65,12 +65,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
 
   const dailyPlayedSlots: number[] = currentData?.map(
     (played: any) =>
-      played.slotsDelivered - played.extraSlotsDelivered
-  );
-
-  const remainingSlots: number[] = currentData?.map(
-    (played: any) =>
-      played.slotsDelivered - played.extraSlotsDelivered < played.slotsPromised ? played.slotsDelivered - played.extraSlotsDelivered : 0
+      played.slotsDelivered
   );
 
   const newLabel = labels?.map((date: string) => formatDate(date));
@@ -203,6 +198,9 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           maxRotation: 0, // Prevent rotation
           minRotation: 0, // Prevent rotation
           padding: 1,
+          callback: function(value: number | string) {
+            return formatNumber(value);
+          },
         },
       },
     },

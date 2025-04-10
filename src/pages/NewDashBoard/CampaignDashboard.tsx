@@ -196,7 +196,6 @@ export const CampaignDashboard = ({
     endDate: campaignDetails?.endDate,
   });
 
-  console.log(screenLevelData);
   return (
     <div className="absolute w-full h-full mt-12 flex flex-col gap-2 bg-[] font-custom">
       <BillingAndInvoice
