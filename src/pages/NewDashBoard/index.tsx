@@ -6,6 +6,7 @@ import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 import {
+  getAudienceDataForPlannerDashboard,
   getBasicDataForPlannerDashboard,
   getCostDataForPlannerDashboard,
   getSiteLevelPerformanceForPlannerDashboard,
@@ -41,6 +42,13 @@ export const NewDashBoard: React.FC = () => {
     data: dashboardData,
   } = basicDataForPlannerDashboard;
 
+  const audienceDataForPlannerDashboard = useSelector((state: any) => state.audienceDataForPlannerDashboard);
+  const {
+    loading: loadingAudienceData,
+    error: errorAudienceData,
+    data: audienceData,
+  } = audienceDataForPlannerDashboard;
+
   const spotDeliveryDataForPlannerDashboard = useSelector((state: any) => state.spotDeliveryDataForPlannerDashboard);
   const {
     loading: loadingSpotData,
@@ -69,6 +77,14 @@ export const NewDashBoard: React.FC = () => {
     dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     dispatch(getBasicDataForPlannerDashboard({ id: campaignId }));
     dispatch(
+      getAudienceDataForPlannerDashboard({
+        id: campaignId,
+        cities: cities,
+        touchPoints: touchPoints, 
+        screenTypes: screenTypes
+      })
+    );
+    dispatch(
       getSpotDeliveryDataForPlannerDashboard({
         id: campaignId,
         cities: cities,
@@ -95,12 +111,28 @@ export const NewDashBoard: React.FC = () => {
 
     const interval = setInterval(() => {
       dispatch(getBasicDataForPlannerDashboard({ id: campaignId })); // Refresh data every 5 seconds
-      // dispatch(getSpotDeliveryDataForPlannerDashboard({
-      //   id: campaignId,
-      //   cities: cities,
-      //   touchPoints: touchPoints, 
-      //   screenTypes: screenTypes
-      // }));
+      dispatch(
+        getAudienceDataForPlannerDashboard({
+          id: campaignId,
+          cities: cities,
+          touchPoints: touchPoints, 
+          screenTypes: screenTypes
+        })
+      );
+      dispatch(getSpotDeliveryDataForPlannerDashboard({
+        id: campaignId,
+        cities: cities,
+        touchPoints: touchPoints, 
+        screenTypes: screenTypes
+      }));
+      dispatch(
+        getCostDataForPlannerDashboard({
+          id: campaignId,
+          cities: cities,
+          touchPoints: touchPoints, 
+          screenTypes: screenTypes
+        })
+      );
       dispatch(
         getSiteLevelPerformanceForPlannerDashboard({
           id: campaignId,
@@ -138,6 +170,7 @@ export const NewDashBoard: React.FC = () => {
           campaignDetails={campaignDetails}
           screenLevelData={dashboardData}
           siteLevelData={siteLevelData}
+          audienceData={audienceData}
           spotData={spotData}
           costData={costData}
         />

@@ -15,6 +15,8 @@ import { DurationGraphPerDay } from "../../components/segments/DurationGraphPerD
 import { SiteLevelPerformance } from "./SiteLevelPerformance";
 import { SlotSegment } from "./SlotSegment";
 import { CostSegment } from "./CostSegment";
+import { AudienceSegment } from "./AudienceSegment";
+import { DurationSegment } from "./DurationSegment";
 
 interface GridItem {
   id: string;
@@ -32,6 +34,7 @@ export const CampaignDashboard = ({
   screenLevelData,
   siteLevelData,
   spotData,
+  audienceData,
   costData
 }: any) => {
   const dropdownRef = useRef<any>(null);
@@ -325,136 +328,9 @@ export const CampaignDashboard = ({
         </div>
         <div className="mt-2">
           {clicked === "1" ? (
-            <div className="relative grid grid-cols-12 gap-2">
-              {calendarData && Object.keys(calendarData).length > 0 && (
-                <div className="col-span-8 p-4 bg-[#FFFFFF] rounded-[12px] border border-gray-100 shadow-sm">
-                  <div className="border-b">
-                    <SectionHeader
-                      iconClass="fi-sr-calendar-clock"
-                      title="Campaign Duration"
-                      bgColor=" bg-[#DC6700]"
-                    />
-                  </div>
-                  <CalenderScaleStepper
-                    setCurrentDay={setCurrentDay}
-                    setCurrentWeek={setCurrentWeek}
-                    currentDay={currentDay}
-                    currentWeek={currentWeek}
-                    allDates={allDates}
-                    setCurrentDate={setCurrentDate}
-                    currentDate={currentDate}
-                    calendarData={calendarData}
-                    loading={loading}
-                  />
-                </div>
-              )}
-              {screenLevelData && Object.keys(screenLevelData.slotData).length > 0 && (
-                <div className="col-span-4 bg-[#FFFFFF] rounded-[12px] border border-gray-100 h-full shadow-sm">
-                  <div className="flex items-center justify-between border-b mx-4">
-                    <div className="flex items-center gap-2 pt-4 pb-2 truncate">
-                      <div className={`rounded-full p-2 bg-[#DC6700]`}>
-                        <i
-                          className={`fi fi-sr-calendar-clock text-[14px] text-white flex items-center justify-center`}
-                        ></i>
-                      </div>
-                      <h1 className="text-[14px] text-[#0E212E] leading-[16.94px] truncate ">
-                        {"Today"}
-                      </h1>
-                      <Tooltip title="">
-                        <i className="fi fi-br-info text-[14px] text-[#b2c1ca] flex justify-center items-center"></i>
-                      </Tooltip>
-                    </div>
-                    <div className="flex items-center gap-4 pt-4 pb-2 truncate">
-                      <div className="flex items-center gap-2 truncate">
-                        <i className="fi fi-rr-calendar-lines text-[#DC6700] text-[12px] flex items-center" />
-                        <h1 className="text-[12px] truncate">{new Date().toLocaleDateString()}</h1>
-                      </div>
-                      <div className="flex items-center gap-2 truncate">
-                        <i className="fi fi-br-clock text-[#DC6700] text-[12px] flex items-center" />
-                        <h1 className="text-[12px] truncate">{new Date().toLocaleTimeString()}</h1>
-                      </div>
-                    </div>
-                  </div>
-                  <DurationGraphPerDay
-                    currentData={screenLevelData?.slotData}
-                    additionalLegends={[
-                      { label: "Hourly Delivery", values: [1500], color: "rgba(16, 185, 129, 1)" },
-                      { label: "Extra Delivery", values: [1200], color: "rgba(245, 158, 11, 1)" },
-                    ]}
-                  />
-                </div>
-              )}
-            </div>
+            <DurationSegment screenLevelData={screenLevelData} calendarData={calendarData} setCurrentWeek={setCurrentWeek} currentWeek={currentWeek} setCurrentDay={setCurrentDay} currentDay={currentDay} setCurrentDate={setCurrentDate} currentDate={currentDate} allDates={allDates} loading={loading} showPercent={showPercent} setShowPercent={setShowPercent} />
           ) : clicked === "2" ? (
-            <div className="grid grid-cols-5 gap-2 ">
-              <div className="col-span-2 bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100">
-                <div className="flex items-center gap-2 px-4">
-                  <div className="rounded-full bg-bluebg p-2">
-                    <i className="fi fi-rr-target-audience text-blue lg:text-[14px] text-[12px] flex items-center justify-center"></i>
-                  </div>
-                  <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                    Audience Impressions
-                  </h1>
-                  <Tooltip title="Total audience impressions delivered">
-                    <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
-                  </Tooltip>
-                </div>
-                <div className="">
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="col-span-1">
-                      <DashboardPieChart
-                        type="City Wise"
-                        data={
-                          screenLevelData?.audiencePerformanceData?.cityWise
-                        }
-                      />
-                    </div>
-                    <div className="col-span-1">
-                      <DashboardPieChart
-                        type="Touchpoint Wise"
-                        data={
-                          screenLevelData?.audiencePerformanceData
-                            ?.touchPointWise
-                        }
-                      />
-                    </div>
-                    <div className="col-span-1">
-                      <DashboardPieChart
-                        type="Screen Cost"
-                        data={getCostDataScreenWise(
-                          screenLevelData?.costConsumedData?.screenWise || {}
-                        )}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex gap-4 justify-around pt-4">
-                    <div className="flex items-center gap-2">
-                      <div className="h-3 w-3 rounded bg-[#FF6384]" />
-                      <h1 className="text-[14px] font-semibold">Promised</h1>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="h-3 w-3 rounded bg-[#36A2EB]" />
-                      <h1 className="text-[14px] font-semibold">Delivered</h1>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-span-3 bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100 ">
-                <div className="flex items-center gap-2 px-4 py-1">
-                  <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                    Audience Type Wise Impressions
-                  </h1>
-                  <Tooltip title="Total audience impressions delivered category wise">
-                    <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
-                  </Tooltip>
-                </div>
-                <div className="p-2">
-                  <DashboardImpressionDetailsTable
-                    screenLevelData={screenLevelData?.result?.totalData}
-                  />
-                </div>
-              </div>
-            </div>
+            <AudienceSegment screenLevelData={screenLevelData} audienceData={audienceData} showPercent={showPercent} setShowPercent={setShowPercent} />
           ) : clicked === "3" ? (
             <div className="grid grid-cols-5 gap-2 ">
               <div className="col-span-2 bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100">
