@@ -16,9 +16,8 @@ export const MultiColorLinearBar2: React.FC<MultiColorLinearBar2Props> = ({
   // Prevent division by zero
   const deliveredPercentage = total > 0 ? (delivered / total) * 100 : 0;
   const expectedPercentage = total > 0 ? (expected / total) * 100 : 0;
-  console.log(delivered, expected, total)
   return (
-    <div className="relative w-full h-2 rounded overflow-visible">
+    <div className="relative w-full h-2 rounded-full overflow-visible">
       <Tooltip
         title={`${formatNumber(delivered)} / ${formatNumber(
           expected
@@ -27,7 +26,7 @@ export const MultiColorLinearBar2: React.FC<MultiColorLinearBar2Props> = ({
         <div className="relative h-2 bg-[#D1E5F7] rounded-full overflow-hidden">
           {/* Promised Bar (Red) */}
           <div
-            className="group absolute top-0 left-0 h-full bg-[#FF0000]"
+            className="group absolute rounded-full top-0 left-0 h-full bg-[#FF0000]"
             style={{ width: `${Math.min(expectedPercentage, 100)}%` }}
           >
             <span className="absolute hidden group-hover:inline-block bg-gray-700 text-[#FFFFFF] text-[12px] rounded-full px-2 py-1 -top-7 right-0 z-10">
