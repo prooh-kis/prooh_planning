@@ -50,7 +50,19 @@ export const CalenderScaleStepper = ({
       if (!weeks[weekKey]) weeks[weekKey] = [];
       weeks[weekKey].push(date);
     });
+    Object.keys(weeks)?.forEach((weekKey: any) => {
 
+      if (weekKey !== "End") {
+        const dateToAdd = new Date(weeks[weekKey][weeks[weekKey].length-1]?.value);
+        dateToAdd.setDate(dateToAdd.getDate() + 1);
+        const resultDate = dateToAdd.toISOString().split('T')[0];
+
+        weeks[weekKey].push(({
+          value: resultDate, label: "End"
+        }))
+      }
+    })
+    weeks["End"] = [];
     return Object.entries(weeks);
   }, []);
 
@@ -119,7 +131,6 @@ export const CalenderScaleStepper = ({
       const start = new Date(weekDates[i].value);
       const end = new Date(weekDates[i + 1].value);
       const now = new Date();
-
       if (now >= start && now <= end) {
         const hoursSinceStart = (now.getTime() - start.getTime()) / (1000 * 60 * 60);
         const percentageOfGap = (hoursSinceStart / 24) * (100 / numberOfGaps);
@@ -197,7 +208,6 @@ export const CalenderScaleStepper = ({
   // Then you can access the current week's data like this:
   const currentWeekPercentage = allWeekPercentages[currentWeek - 1]?.percentage || 0;
   const currentWeekPercentageColor = allWeekPercentages[currentWeek - 1]?.color || "#EF4444";
-
   return (
     <div className="w-full cursor-pointer">
       <div className="pt-12 mb-20 flex justify-center">
@@ -339,6 +349,7 @@ export const CalenderScaleStepper = ({
             )}
            
             {weeks?.[currentWeek - 1]?.[1]?.map((dateObj, i) => {
+
               const isCurrentDay = i === currentDay - 1;
               const isPastDay = i < currentDay - 1;
               const dayColor = isPastDay || isCurrentDay ? "text-[#00000090] font-semibold" : "text-[#D6D2D2]";
