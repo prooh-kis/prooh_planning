@@ -150,7 +150,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           label: (context: any) => {
             let label = context.dataset.label || "";
             let value = context.raw;
-            return `${label}: ${formatNumber(value.toFixed(0))}`;
+            return `${label}: ${value.toFixed(0)}`;
           },
         },
       },

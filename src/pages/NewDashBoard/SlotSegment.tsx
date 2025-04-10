@@ -73,6 +73,9 @@ export const SlotSegment = ({
                     delivered={spotData.cityWiseData[cityKey]?.slotsDelivered}
                     expected={spotData.cityWiseData[cityKey]?.slotsPromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
                     total={spotData.cityWiseData[cityKey]?.slotsPromised}
+                    deliveredColor="bg-[#77BFEF]"
+                    expectedColor="bg-[#CFC7FF]"
+                    totalColor="bg-[#D3EDFF]"
                   />
                   <h1 className="text-[10px]">
                     {showPercent[1] ? `${(spotData.cityWiseData[cityKey]?.slotsDelivered*100/spotData.cityWiseData[cityKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.cityWiseData[cityKey]?.slotsDelivered)}
@@ -118,6 +121,9 @@ export const SlotSegment = ({
                     delivered={spotData.touchPointWiseData[tpKey]?.slotsDelivered}
                     expected={spotData.touchPointWiseData[tpKey]?.slotsPromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
                     total={spotData.touchPointWiseData[tpKey]?.slotsPromised}
+                    deliveredColor="bg-[#77BFEF]"
+                    expectedColor="bg-[#CFC7FF]"
+                    totalColor="bg-[#D3EDFF]"
                   />
                   <h1 className="text-[10px]">
                     {showPercent[2] ? `${(spotData.touchPointWiseData[tpKey]?.slotsDelivered*100/spotData.touchPointWiseData[tpKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.touchPointWiseData[tpKey]?.slotsDelivered)}
@@ -163,6 +169,9 @@ export const SlotSegment = ({
                     delivered={spotData.screenTypeWiseData[stKey]?.slotsDelivered}
                     expected={spotData.screenTypeWiseData[stKey]?.slotsPromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
                     total={spotData.screenTypeWiseData[stKey]?.slotsPromised}
+                    deliveredColor="bg-[#77BFEF]"
+                    expectedColor="bg-[#CFC7FF]"
+                    totalColor="bg-[#D3EDFF]"
                   />
                   <h1 className="text-[10px]">
                     {showPercent[3] ? `${(spotData.screenTypeWiseData[stKey]?.slotsDelivered*100/spotData.screenTypeWiseData[stKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.screenTypeWiseData[stKey]?.slotsDelivered)}

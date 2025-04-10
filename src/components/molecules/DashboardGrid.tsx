@@ -176,7 +176,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
         <SectionHeader
           iconClass="fi fi-sr-users"
           title="Audience Impressions"
-          bgColor=" bg-[#129BFF]"
+          bgColor="bg-[#129BFF]"
         />
         <ValueAboveGraph
           left={formatNumber(impressionsDelivered?.toFixed(0))}
@@ -187,6 +187,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
             delivered={impressionsDelivered}
             expected={(impressionsPromised * daysPlayed) / durationPromised}
             total={impressionsPromised}
+            deliveredColor="bg-[#129BFF]"
           />
         </div>
         <ValueBelowGraph
@@ -250,7 +251,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
         <SectionHeader
           iconClass="fi-ss-screen"
           title="Spot Delivery"
-          bgColor=" bg-[#77BFEF]"
+          bgColor="bg-[#77BFEF]"
         />
         <ValueAboveGraph
           left={formatNumber(slotsDelivered)}
@@ -261,6 +262,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
             delivered={slotsDelivered}
             expected={(slotsPromised * daysPlayed) / durationPromised}
             total={slotsPromised}
+            deliveredColor="bg-[#77BFEF]"
           />
         </div>
         <ValueBelowGraph
@@ -288,7 +290,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
         <SectionHeader
           iconClass="fi-ss-sack"
           title="Cost Consumed"
-          bgColor=" bg-[#6DBC48]"
+          bgColor="bg-[#6DBC48]"
         />
         <ValueAboveGraph
           left={formatNumber(costConsumed)}
@@ -299,6 +301,8 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
             delivered={costConsumed}
             expected={(costTaken * daysPlayed) / durationPromised}
             total={costTaken}
+            deliveredColor="bg-[#6DBC48]"
+
           />
         </div>
         <ValueBelowGraph
