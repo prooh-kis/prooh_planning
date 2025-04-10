@@ -43,6 +43,7 @@ export const DashBoardCostGraph: React.FC<BarChartProps> = ({
     (played: any) =>
       played.costPromised - played.costConsumed > 0 ? played.costPromised - played.costConsumed : 0
   );
+  requiredToPlayed[requiredToPlayed.length - 1] = 0;
 
  
   const dailyPlayedSlots: number[] = currentData?.map(
@@ -50,7 +51,14 @@ export const DashBoardCostGraph: React.FC<BarChartProps> = ({
       played.costConsumed
   );
 
-
+  const currentDayRemaining: number [] = currentData?.map(
+    (played: any) =>
+      played.costPromised - played.costConsumed > 0 ? played.costPromised - played.costConsumed : 0
+  ).map((value, index) => index === currentData?.map(
+    (played: any) =>
+      played.costPromised - played.costConsumed > 0 ? played.costPromised - played.costConsumed : 0
+  ).length - 1 ? value : 0);
+  
   const newLabel = labels?.map((date: string) => formatDate(date));
 
   const chartData = {
@@ -60,8 +68,8 @@ export const DashBoardCostGraph: React.FC<BarChartProps> = ({
         label: "Consumed Cost",
         data: dailyPlayedSlots,
         backgroundColor: "#64AB42",
-        borderColor: "#64AB4250",
-        borderWidth: 1,
+        // borderColor: "#64AB4250",
+        // borderWidth: 1,
         borderRadius: 5,
         datalabels: {
           color: "#fff",
@@ -76,8 +84,8 @@ export const DashBoardCostGraph: React.FC<BarChartProps> = ({
         label: "Unconsumed Cost",
         data: requiredToPlayed,
         backgroundColor: "#E1FFD3",
-        borderColor: "#E1FFD350",
-        borderWidth: 1,
+        // borderColor: "#E1FFD350",
+        // borderWidth: 1,
         borderRadius: 5,
         datalabels: {
           color: "#00000050",
@@ -86,6 +94,22 @@ export const DashBoardCostGraph: React.FC<BarChartProps> = ({
           font: { size: 8 },
           formatter: (value: number) =>
             value > 1000 ? formatNumber(value.toFixed(0)) : "", // Hide
+        },
+      },
+      {
+        label: "Current Day",
+        data: currentDayRemaining,
+        backgroundColor: "#FFE896",
+        // borderColor: "#FFE89650",
+        // borderWidth: 1,
+        borderRadius: 5,
+        datalabels: {
+          color: "#00000050",
+          anchor: "center" as const,
+          align: "center" as const,
+          font: { size: 8 },
+          formatter: (value: number) =>
+            value > 10 ? formatNumber(value.toFixed(0)) : "", // Hide
         },
       },
     ],

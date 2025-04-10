@@ -25,8 +25,8 @@ export const HardwarePerformanceSegment = ({
         <div className="border-b">
           <SectionHeader
             iconClass="fi-ss-screen"
-            title="Spot Delivery"
-            bgColor=" bg-[#77BFEF]"
+            title="Screen Performance"
+            bgColor=" bg-[#6982FF]"
           />
         </div>
         <div className="p-2">
@@ -42,7 +42,7 @@ export const HardwarePerformanceSegment = ({
             <SectionHeaderWithSwitch
               iconClass="fi-sr-marker"
               title="Cities"
-              bgColor=" bg-[#77BFEF]"
+              bgColor=" bg-[#6982FF]"
               showPercent={showPercent?.[1]}
               setShowPercent={() => {
                 setShowPercent(() => {
@@ -74,9 +74,9 @@ export const HardwarePerformanceSegment = ({
                     delivered={hardwarePerformanceData.cityWiseData[cityKey]?.hardwarePerformanceDelivered}
                     expected={hardwarePerformanceData.cityWiseData[cityKey]?.hardwarePerformancePromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
                     total={hardwarePerformanceData.cityWiseData[cityKey]?.hardwarePerformancePromised}
-                    deliveredColor="bg-[#77BFEF]"
+                    deliveredColor="bg-[#6982FF]"
                     expectedColor="bg-[#CFC7FF]"
-                    totalColor="bg-[#D3EDFF]"
+                    totalColor="bg-[#DFE5FF]"
                     height="h-[5px]"
                   />
                   <h1 className="text-[10px]">
@@ -92,7 +92,7 @@ export const HardwarePerformanceSegment = ({
             <SectionHeaderWithSwitch
               iconClass="fi-sr-land-location"
               title="Touchpoints"
-              bgColor=" bg-[#77BFEF]"
+              bgColor=" bg-[#6982FF]"
               showPercent={showPercent?.[2]}
               setShowPercent={() => {
                 setShowPercent(() => {
@@ -124,9 +124,9 @@ export const HardwarePerformanceSegment = ({
                     delivered={hardwarePerformanceData.touchPointWiseData[tpKey]?.hardwarePerformanceDelivered}
                     expected={hardwarePerformanceData.touchPointWiseData[tpKey]?.hardwarePerformancePromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
                     total={hardwarePerformanceData.touchPointWiseData[tpKey]?.hardwarePerformancePromised}
-                    deliveredColor="bg-[#77BFEF]"
+                    deliveredColor="bg-[#6982FF]"
                     expectedColor="bg-[#CFC7FF]"
-                    totalColor="bg-[#D3EDFF]"
+                    totalColor="bg-[#DFE5FF]"
                     height="h-[5px]"
                   />
                   <h1 className="text-[10px]">
@@ -142,7 +142,7 @@ export const HardwarePerformanceSegment = ({
             <SectionHeaderWithSwitch
               iconClass="fi-sr-computer"
               title="Screen Types"
-              bgColor=" bg-[#77BFEF]"
+              bgColor=" bg-[#6982FF]"
               showPercent={showPercent?.[3]}
               setShowPercent={() => {
                 setShowPercent(() => {
@@ -174,9 +174,9 @@ export const HardwarePerformanceSegment = ({
                     delivered={hardwarePerformanceData.screenTypeWiseData[stKey]?.hardwarePerformanceDelivered}
                     expected={hardwarePerformanceData.screenTypeWiseData[stKey]?.hardwarePerformancePromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
                     total={hardwarePerformanceData.screenTypeWiseData[stKey]?.hardwarePerformancePromised}
-                    deliveredColor="bg-[#77BFEF]"
+                    deliveredColor="bg-[#6982FF]"
                     expectedColor="bg-[#CFC7FF]"
-                    totalColor="bg-[#D3EDFF]"
+                    totalColor="bg-[#DFE5FF]"
                     height="h-[5px]"
                   />
                   <h1 className="text-[10px]">

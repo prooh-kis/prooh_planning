@@ -86,7 +86,7 @@ const ValueBelowGraph: React.FC<ValueDisplayProps> = ({
     <h1 className={`${textSize} font-medium leading-[32.68px] text-[#9bb3c9]`}>
       <span className="text-[#0E212E]">{left}</span> / {right}
       {value !== undefined && (
-        <span className={isPositive ? "text-[#2A892D]" : "text-[#CC0000]"}>
+        <span className={isPositive ? "text-[#2A892D]" : "text-[#FF4747]"}>
           {` (${value}%)`}
           <i
             className={`fi ${

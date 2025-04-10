@@ -36,7 +36,7 @@ export const SectionHeaderWithSwitch: React.FC<SectionHeaderWithSwitchProps> = (
     {switchShow && (
       <div className="flex items-center gap-1">
         <h1 className="text-[10px] text-gray-500">
-          {showPercent ? "%" : "#"}
+          {showPercent ? "#" : "%"}
         </h1>
         <ToggleSwitch
           h="h-2"

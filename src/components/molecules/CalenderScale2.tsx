@@ -194,10 +194,10 @@ export const CalenderScaleStepper = ({
   const allWeekPercentages = useMemo(() => {
     return weeks.map((week) => {
       const weekData = getWeekPercentageValue(week);
-      if (!weekData) return { percentage: 0, color: "#EF4444" };
+      if (!weekData) return { percentage: 0, color: "#2A892D" };
       
       const percentage = (weekData.totalCount * 100 / weekData.totalCountPromised).toFixed(0);
-      const color = weekData.totalCount / weekData.totalCountPromised > 1 ? "#22C55E" : "#EF4444";
+      const color = weekData.totalCount / weekData.totalCountPromised > 1 ? "#2A892D" : "#FF4747";
       
       return {
         percentage,
@@ -207,7 +207,7 @@ export const CalenderScaleStepper = ({
   }, [weeks, getWeekPercentageValue]);
   // Then you can access the current week's data like this:
   const currentWeekPercentage = allWeekPercentages[currentWeek - 1]?.percentage || 0;
-  const currentWeekPercentageColor = allWeekPercentages[currentWeek - 1]?.color || "#EF4444";
+  const currentWeekPercentageColor = allWeekPercentages[currentWeek - 1]?.color || "#FF4747";
   return (
     <div className="w-full cursor-pointer">
       <div className="pt-12 mb-20 flex justify-center">
@@ -359,7 +359,7 @@ export const CalenderScaleStepper = ({
                 new Date(s.date).toDateString() === new Date(dateObj.value).toDateString()
               );
               const percentageValue = dayData ? getPercentageValue(dayData.count, dayData.countPromised) : "";
-              const percentageColor = dayData?.count / dayData?.countPromised > 1 ? "#22C55E" : "#EF4444";
+              const percentageColor = dayData?.count / dayData?.countPromised > 1 ? "#2A892D" : "#FF4747";
 
               return (
                 <div

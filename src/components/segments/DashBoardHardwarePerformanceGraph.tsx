@@ -39,7 +39,10 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
   labels,
   percent = true,
 }) => {
-  const requiredToPlayed: number[] = currentData?.map(
+  const requiredToPlayed: number[] = currentData.map((item: any, index: any, arr: any) => ({
+    ...item,
+    hardwarePerformanceDelivered: index === arr.length - 1 ? 100 : item.hardwarePerformanceDelivered
+  }))?.map(
     (played: any) =>
       played.hardwarePerformancePromised - played.hardwarePerformanceDelivered > 0 ? played.hardwarePerformancePromised - played.hardwarePerformanceDelivered : 0
   );
@@ -49,19 +52,22 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
     (played: any) =>
       played.hardwarePerformanceDelivered
   );
-
-
+  const currentDayRemaining: number [] = currentData.map((item: any, index: any, arr: any) => ({
+    ...item,
+    hardwarePerformanceDelivered: index === arr.length - 1 ? item.hardwarePerformanceDelivered : 100
+  }))?.map((played: any) => 100 - played.hardwarePerformanceDelivered);
+  
   const newLabel = labels?.map((date: string) => formatDate(date));
 
   const chartData = {
     labels: newLabel,
     datasets: [
       {
-        label: "Consumed Cost",
+        label: "Performance",
         data: dailyPlayedSlots,
-        backgroundColor: "#64AB42",
-        borderColor: "#64AB4250",
-        borderWidth: 1,
+        backgroundColor: "#6982FF",
+        // borderColor: "#6982FF50",
+        // borderWidth: 1,
         borderRadius: 5,
         datalabels: {
           color: "#fff",
@@ -69,15 +75,31 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
           align: "center" as const,
           font: { size: 8 },
           formatter: (value: number) =>
-            value > 10 ? formatNumber(value.toFixed(0)) : "", // Hide
+            value > 10 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
         },
       },
       {
-        label: "Unconsumed Cost",
+        label: "Under-Performance",
         data: requiredToPlayed,
-        backgroundColor: "#E1FFD3",
-        borderColor: "#E1FFD350",
-        borderWidth: 1,
+        backgroundColor: "#DFE5FF",
+        // borderColor: "#DFE5FF50",
+        // borderWidth: 1,
+        borderRadius: 5,
+        datalabels: {
+          color: "#00000050",
+          anchor: "center" as const,
+          align: "center" as const,
+          font: { size: 8 },
+          formatter: (value: number) =>
+            value > 10 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
+        },
+      },
+      {
+        label: "Current Day",
+        data: currentDayRemaining,
+        backgroundColor: "#FFE896",
+        // borderColor: "#FFE89650",
+        // borderWidth: 1,
         borderRadius: 5,
         datalabels: {
           color: "#00000050",

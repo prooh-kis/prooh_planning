@@ -43,20 +43,14 @@ interface BarChartProps {
 
 export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
   currentData,
-  targetData,
   labels,
-  label,
-  total,
-  color = "rgba(138, 43, 226, 1)",
-  bgColor = "rgba(138, 43, 226, 0.5)",
-  color2,
-  bgColor2,
   percent = true,
 }) => {
   const requiredToPlayed: number[] = currentData?.map(
     (played: any) =>
       played.slotsPromised - played.slotsDelivered  > 0 ? played.slotsPromised - played.slotsDelivered: 0
   );
+  requiredToPlayed[requiredToPlayed.length - 1] = 0;
 
   const extraSlots: number[] = currentData?.map(
     (played: any) =>
@@ -68,6 +62,14 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
       played.slotsDelivered
   );
 
+  const currentDayRemaining: number [] = currentData?.map(
+    (played: any) =>
+      played.slotsPromised - played.slotsDelivered  > 0 ? played.slotsPromised - played.slotsDelivered: 0
+  ).map((value, index) => index === currentData?.map(
+    (played: any) =>
+      played.slotsPromised - played.slotsDelivered  > 0 ? played.slotsPromised - played.slotsDelivered: 0
+  ).length - 1 ? value : 0);
+  
   const newLabel = labels?.map((date: string) => formatDate(date));
 
   const chartData = {
@@ -77,8 +79,8 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
         label: "Daily Delivery",
         data: dailyPlayedSlots,
         backgroundColor: "#77BFEF",
-        borderColor: "#77BFEF50",
-        borderWidth: 1,
+        // borderColor: "#77BFEF50",
+        // borderWidth: 1,
         borderRadius: 5,
         datalabels: {
           color: "#fff",
@@ -93,8 +95,8 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
         label: "Daily Remaining",
         data: requiredToPlayed,
         backgroundColor: "#E5F4FF",
-        borderColor: "#E5F4FF50",
-        borderWidth: 1,
+        // borderColor: "#E5F4FF50",
+        // borderWidth: 1,
         borderRadius: 5,
         datalabels: {
           color: "#00000050",
@@ -103,6 +105,22 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           font: { size: 8 },
           formatter: (value: number) =>
             value > 75 ? formatNumber(value.toFixed(0)) : "", // Hide
+        },
+      },
+      {
+        label: "Current Day",
+        data: currentDayRemaining,
+        backgroundColor: "#FFE896",
+        // borderColor: "#FFE89650",
+        // borderWidth: 1,
+        borderRadius: 5,
+        datalabels: {
+          color: "#00000050",
+          anchor: "center" as const,
+          align: "center" as const,
+          font: { size: 8 },
+          formatter: (value: number) =>
+            value > 10 ? formatNumber(value.toFixed(0)) : "", // Hide
         },
       },
       {
