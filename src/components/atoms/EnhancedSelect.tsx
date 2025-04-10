@@ -43,6 +43,7 @@ export const EnhancedSelect = ({
         </div>
       )}
       <select
+        title="Select"
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
         disabled={disabled}
