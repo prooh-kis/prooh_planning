@@ -4,7 +4,6 @@ import { DashboardBarChart } from "../../components/segments/DashboardBarGraph";
 import { DashboardPieChart } from "../../components/segments/DashboardPieChart";
 import { DashboardGrid, SectionHeader } from "../../components/molecules/DashboardGrid";
 import { useNavigate } from "react-router-dom";
-import { DashBoardSlotGraph } from "../../components/segments/DashBoardSlotGraph";
 import { BillingAndInvoice } from "./BillingAndInvoice";
 import { GET_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyConstants";
 import { useDispatch } from "react-redux";
@@ -14,11 +13,6 @@ import { FirstCharForBrandName } from "../../components/molecules/FirstCharForBr
 import { CalenderScaleStepper } from "../../components/molecules/CalenderScale2";
 import { DurationGraphPerDay } from "../../components/segments/DurationGraphPerDay";
 import { SiteLevelPerformance } from "./SiteLevelPerformance";
-import { SectionHeaderWithSwitch } from "../../components/segments/SectionHeaderWithSwitch";
-import { DashBoardCostGraph } from "../../components/segments/DashBoardCostGraph";
-import { CheckboxInput } from "../../components/atoms/CheckboxInput";
-import { MultiColorLinearBar2 } from "../../components/molecules/MultiColorLinearBar2";
-import { formatNumber } from "../../utils/formatValue";
 import { SlotSegment } from "./SlotSegment";
 import { CostSegment } from "./CostSegment";
 
@@ -44,7 +38,7 @@ export const CampaignDashboard = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
 
-  const [clicked, setClicked] = useState<any>("4");
+  const [clicked, setClicked] = useState<any>("1");
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [openInvoice, setOpenInvoice] = useState<any>(false);
   const [poNumber, setPoNumber] = useState<any>("");
@@ -105,9 +99,6 @@ export const CampaignDashboard = ({
     ]?.screenPerformanceDateWise?.map((slot: any) => 100);
     return { datesArray, countsArray };
   };
-
-
-
 
   const gridItems: GridItem[] = [
     {
