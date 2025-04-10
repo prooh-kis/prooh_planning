@@ -9,6 +9,7 @@ import {
   getAudienceDataForPlannerDashboard,
   getBasicDataForPlannerDashboard,
   getCostDataForPlannerDashboard,
+  getHardwarePerformanceDataForPlannerDashboard,
   getSiteLevelPerformanceForPlannerDashboard,
   getSpotDeliveryDataForPlannerDashboard,
 } from "../../actions/dashboardAction";
@@ -49,6 +50,13 @@ export const NewDashBoard: React.FC = () => {
     data: audienceData,
   } = audienceDataForPlannerDashboard;
 
+  const hardwarePerformanceDataForPlannerDashboard = useSelector((state: any) => state.hardwarePerformanceDataForPlannerDashboard);
+  const {
+    loading: loadingHardwarePerformanceData,
+    error: errorHardwarePerformanceData,
+    data: hardwarePerformanceData,
+  } = hardwarePerformanceDataForPlannerDashboard;
+
   const spotDeliveryDataForPlannerDashboard = useSelector((state: any) => state.spotDeliveryDataForPlannerDashboard);
   const {
     loading: loadingSpotData,
@@ -78,6 +86,14 @@ export const NewDashBoard: React.FC = () => {
     dispatch(getBasicDataForPlannerDashboard({ id: campaignId }));
     dispatch(
       getAudienceDataForPlannerDashboard({
+        id: campaignId,
+        cities: cities,
+        touchPoints: touchPoints, 
+        screenTypes: screenTypes
+      })
+    );
+    dispatch(
+      getHardwarePerformanceDataForPlannerDashboard({
         id: campaignId,
         cities: cities,
         touchPoints: touchPoints, 
@@ -171,6 +187,7 @@ export const NewDashBoard: React.FC = () => {
           screenLevelData={dashboardData}
           siteLevelData={siteLevelData}
           audienceData={audienceData}
+          hardwarePerformanceData={hardwarePerformanceData}
           spotData={spotData}
           costData={costData}
         />

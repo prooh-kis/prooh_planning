@@ -57,6 +57,7 @@ export const AudienceSegment = ({
                     deliveredColor="bg-[#129BFF]"
                     expectedColor="bg-[#CFC7FF]"
                     totalColor="bg-[#D3EDFF]"
+                    height="h-[5px]"
                   />
                   <h1 className="text-[10px]">
                     {showPercent[1] ? `${(audienceData.cityWiseData[cityKey]?.impressionDelivered*100/audienceData.cityWiseData[cityKey]?.impressionPromised).toFixed(0)}%` : formatNumber(audienceData.cityWiseData[cityKey]?.impressionDelivered)}
@@ -105,6 +106,7 @@ export const AudienceSegment = ({
                     deliveredColor="bg-[#129BFF]"
                     expectedColor="bg-[#CFC7FF]"
                     totalColor="bg-[#D3EDFF]"
+                    height="h-[5px]"
                   />
                   <h1 className="text-[10px]">
                     {showPercent[2] ? `${(audienceData.touchPointWiseData[tpKey]?.impressionDelivered*100/audienceData.touchPointWiseData[tpKey]?.impressionPromised).toFixed(0)}%` : formatNumber(audienceData.touchPointWiseData[tpKey]?.impressionDelivered)}
@@ -153,6 +155,7 @@ export const AudienceSegment = ({
                     deliveredColor="bg-[#129BFF]"
                     expectedColor="bg-[#CFC7FF]"
                     totalColor="bg-[#D3EDFF]"
+                    height="h-[5px]"
                   />
                   <h1 className="text-[10px]">
                     {showPercent[3] ? `${(audienceData.screenTypeWiseData[stKey]?.impressionDelivered*100/audienceData.screenTypeWiseData[stKey]?.impressionPromised).toFixed(0)}%` : formatNumber(audienceData.screenTypeWiseData[stKey]?.impressionDelivered)}
@@ -173,7 +176,9 @@ export const AudienceSegment = ({
         </div>
         <div className="p-2">
           <div className="grid grid-cols-10">
-              <div className="col-span-4" />
+              <div className="col-span-4">
+                <h1 className="text-[12px]">Category</h1>
+              </div>
               <div className="col-span-6 grid grid-cols-6 flex items-center w-full gap-2">
                 <div className="col-span-5 flex items-center justify-around w-full gap-2">
                   <div className="flex items-center gap-1">
@@ -185,24 +190,21 @@ export const AudienceSegment = ({
                     <h1 className="text-[12px]">Female</h1>
                   </div>
                 </div>
-                <div className="cols-span-1 text-[10px]" />
+                <div className="cols-span-1 text-[10px]">
+                  <h1 className="text-[12px]">
+                    Value
+                  </h1>
+                </div>
               </div>
           </div>
-          <div className="h-[200px] overflow-y-auto no-scrollbar">
+          <div className="h-[160px] overflow-y-auto no-scrollbar">
             {Object.keys(audienceData.audienceTypeData)?.map((audienceType: any, i: any) => (
-              <div key={i} className="flex items-center gap-2 pt-1">
-                <div>
-                  <CheckboxInput
-                    disabled={false}
-                    label={audienceType.toUpperCase()}
-                    checked={true}
-                    textSize={"10px"}
-                    color={"#D7D7D7"}
-                    onChange={() => {}}
-                  />
+              <div key={i} className="grid grid-cols-10 flex items-center gap-2 pt-1">
+                <div className="col-span-4 truncate py-1">
+                  <h1 className="text-[10px] truncate">{audienceType.toUpperCase()}</h1>
                 </div>
-                <div className="flex items-center w-full gap-2">
-                  <div className="flex items-center w-full gap-2">
+                <div className="col-span-6 grid grid-cols-6 flex items-center w-full gap-2">
+                  <div className="col-span-5 flex items-center w-full gap-2">
                     <MultiColorLinearBar2
                       delivered={audienceData.audienceTypeData[audienceType]?.impressionDeliveredMale}
                       expected={audienceData.audienceTypeData[audienceType]?.impressionPromisedMale * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
@@ -210,6 +212,7 @@ export const AudienceSegment = ({
                       deliveredColor="bg-[#5863FF]"
                       expectedColor="bg-[#CFC7FF]"
                       totalColor="bg-[#DFE5FF]"
+                      height="h-[5px]"
                     />
                     <MultiColorLinearBar2
                       delivered={audienceData.audienceTypeData[audienceType]?.impressionDeliveredFemale}
@@ -218,11 +221,15 @@ export const AudienceSegment = ({
                       deliveredColor="bg-[#DC97FF]"
                       expectedColor="bg-[#CFC7FF]"
                       totalColor="bg-[#F9ECFF]"
+                      height="h-[5px]"
                     />
                   </div>
-                  <h1 className="text-[10px]">
-                    {showPercent[3] && showPercent[2] && showPercent[1] ? `${(audienceData.audienceTypeData[audienceType]?.impressionDeliveredTotal*100/audienceData.audienceTypeData[audienceType]?.impressionPromisedTotal).toFixed(0)}%` : formatNumber(audienceData.audienceTypeData[audienceType]?.impressionDeliveredTotal)}
-                  </h1>
+                  <div className="col-span-1">
+                    <h1 className="text-[10px]">
+                      {showPercent[3] && showPercent[2] && showPercent[1] ? `${(audienceData.audienceTypeData[audienceType]?.impressionDeliveredTotal*100/audienceData.audienceTypeData[audienceType]?.impressionPromisedTotal).toFixed(0)}%` : formatNumber(audienceData.audienceTypeData[audienceType]?.impressionDeliveredTotal)}
+                    </h1>
+                  </div>
+                  
                 </div>
               </div>
             ))}

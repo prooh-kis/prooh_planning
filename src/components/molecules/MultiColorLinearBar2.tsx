@@ -9,6 +9,7 @@ interface MultiColorLinearBar2Props {
   deliveredColor?: string;
   expectedColor?: string;
   totalColor?: string;
+  height?: string;
 }
 
 export const MultiColorLinearBar2: React.FC<MultiColorLinearBar2Props> = ({
@@ -17,19 +18,20 @@ export const MultiColorLinearBar2: React.FC<MultiColorLinearBar2Props> = ({
   total,
   deliveredColor="bg-[#00B7FF]",
   expectedColor="bg-[#FF4747]",
-  totalColor="bg-[#D1E5F7]"
+  totalColor="bg-[#D1E5F7]",
+  height="h-2",
 }) => {
   // Prevent division by zero
   const deliveredPercentage = total > 0 ? (delivered / total) * 100 : 0;
   const expectedPercentage = total > 0 ? (expected / total) * 100 : 0;
   return (
-    <div className="relative w-full h-2 rounded-full overflow-visible">
+    <div className={`relative w-full ${height} rounded-full overflow-visible`}>
       <Tooltip
         title={`${formatNumber(delivered)} / ${formatNumber(
           expected
         )} / ${formatNumber(total)}`}
       >
-        <div className={`relative h-2 ${totalColor} rounded-full overflow-hidden`}>
+        <div className={`relative ${height} ${totalColor} rounded-full overflow-hidden`}>
           {/* Promised Bar (Red) */}
           <div
             className={`group absolute rounded-full top-0 left-0 h-full ${expectedColor}`}

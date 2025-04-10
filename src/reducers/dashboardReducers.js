@@ -8,6 +8,9 @@ import {
   GET_COST_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_COST_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_COST_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
+  GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
+  GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
+  GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
@@ -45,6 +48,28 @@ export function getAudienceDataForPlannerDashboardReducer(state = {}, action) {
         data: action.payload,
       };
     case GET_AUDIENCE_DATA_FOR_PLANNER_DASHBOARD_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function getHardwarePerformanceDataForPlannerDashboardReducer(
+  state = {},
+  action
+) {
+  switch (action.type) {
+    case GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST:
+      return { loading: true };
+    case GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR:
       return {
         loading: false,
         error: action.payload,

@@ -1,21 +1,21 @@
-import { DashBoardSlotGraph } from "../../components/segments/DashBoardSlotGraph";
 import { SectionHeader } from "../../components/molecules/DashboardGrid";
 import { SectionHeaderWithSwitch } from "../../components/segments/SectionHeaderWithSwitch";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { MultiColorLinearBar2 } from "../../components/molecules/MultiColorLinearBar2";
 import { formatNumber } from "../../utils/formatValue";
+import { DashBoardHardwarePerformanceGraph } from "../../components/segments/DashBoardHardwarePerformanceGraph";
 
-export const SlotSegment = ({
-  spotData = [],
+export const HardwarePerformanceSegment = ({
+  hardwarePerformanceData = [],
   setShowPercent,
   showPercent,
   screenLevelData,
 }: any) => {
 
 
-  const getSpotDeliveryData = () => {
-    const datesArray = Object.keys(spotData?.spotDeliveryData)?.map((date: any) => date);
-    const countsArray = Object.values(spotData?.spotDeliveryData).map((slot: any) => slot);
+  const getHardwarePerformanceData = () => {
+    const datesArray = Object.keys(hardwarePerformanceData?.spotDeliveryData)?.map((date: any) => date);
+    const countsArray = Object.values(hardwarePerformanceData?.spotDeliveryData).map((slot: any) => slot);
     return { datesArray, countsArray };
   };
 
@@ -30,9 +30,9 @@ export const SlotSegment = ({
           />
         </div>
         <div className="p-2">
-          <DashBoardSlotGraph
-            currentData={getSpotDeliveryData().countsArray}
-            labels={getSpotDeliveryData().datesArray}
+          <DashBoardHardwarePerformanceGraph
+            currentData={getHardwarePerformanceData().countsArray}
+            labels={getHardwarePerformanceData().datesArray}
           />
         </div>
       </div>
@@ -53,10 +53,11 @@ export const SlotSegment = ({
                   }
                 });
               }}
+              switchShow={false}
             />
           </div>
           <div className="py-2">
-            {Object.keys(spotData.cityWiseData)?.map((cityKey: any, i: any) => (
+            {Object.keys(hardwarePerformanceData.cityWiseData)?.map((cityKey: any, i: any) => (
               <div key={i} className="flex items-center gap-2 pt-1">
                 <div>
                   <CheckboxInput
@@ -70,16 +71,16 @@ export const SlotSegment = ({
                 </div>
                 <div className="flex items-center w-full gap-2">
                   <MultiColorLinearBar2
-                    delivered={spotData.cityWiseData[cityKey]?.slotsDelivered}
-                    expected={spotData.cityWiseData[cityKey]?.slotsPromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
-                    total={spotData.cityWiseData[cityKey]?.slotsPromised}
+                    delivered={hardwarePerformanceData.cityWiseData[cityKey]?.hardwarePerformanceDelivered}
+                    expected={hardwarePerformanceData.cityWiseData[cityKey]?.hardwarePerformancePromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
+                    total={hardwarePerformanceData.cityWiseData[cityKey]?.hardwarePerformancePromised}
                     deliveredColor="bg-[#77BFEF]"
                     expectedColor="bg-[#CFC7FF]"
                     totalColor="bg-[#D3EDFF]"
                     height="h-[5px]"
                   />
                   <h1 className="text-[10px]">
-                    {showPercent[1] ? `${(spotData.cityWiseData[cityKey]?.slotsDelivered*100/spotData.cityWiseData[cityKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.cityWiseData[cityKey]?.slotsDelivered)}
+                    {formatNumber(hardwarePerformanceData.cityWiseData[cityKey]?.hardwarePerformanceDelivered.toFixed(0))}%
                   </h1>
                 </div>
               </div>
@@ -102,10 +103,11 @@ export const SlotSegment = ({
                   }
                 });
               }}
+              switchShow={false}
             />
           </div>
           <div className="py-2">
-            {Object.keys(spotData.touchPointWiseData)?.map((tpKey: any, i: any) => (
+            {Object.keys(hardwarePerformanceData.touchPointWiseData)?.map((tpKey: any, i: any) => (
               <div key={i} className="flex items-center gap-2 pt-1">
                 <div>
                   <CheckboxInput
@@ -119,16 +121,16 @@ export const SlotSegment = ({
                 </div>
                 <div className="flex items-center w-full gap-2">
                   <MultiColorLinearBar2
-                    delivered={spotData.touchPointWiseData[tpKey]?.slotsDelivered}
-                    expected={spotData.touchPointWiseData[tpKey]?.slotsPromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
-                    total={spotData.touchPointWiseData[tpKey]?.slotsPromised}
+                    delivered={hardwarePerformanceData.touchPointWiseData[tpKey]?.hardwarePerformanceDelivered}
+                    expected={hardwarePerformanceData.touchPointWiseData[tpKey]?.hardwarePerformancePromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
+                    total={hardwarePerformanceData.touchPointWiseData[tpKey]?.hardwarePerformancePromised}
                     deliveredColor="bg-[#77BFEF]"
                     expectedColor="bg-[#CFC7FF]"
                     totalColor="bg-[#D3EDFF]"
                     height="h-[5px]"
                   />
                   <h1 className="text-[10px]">
-                    {showPercent[2] ? `${(spotData.touchPointWiseData[tpKey]?.slotsDelivered*100/spotData.touchPointWiseData[tpKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.touchPointWiseData[tpKey]?.slotsDelivered)}
+                    {formatNumber(hardwarePerformanceData.touchPointWiseData[tpKey]?.hardwarePerformanceDelivered.toFixed(0))}%
                   </h1>
                 </div>
               </div>
@@ -151,10 +153,11 @@ export const SlotSegment = ({
                   }
                 });
               }}
+              switchShow={false}
             />
           </div>
           <div className="py-2">
-            {Object.keys(spotData.screenTypeWiseData)?.map((stKey: any, i: any) => (
+            {Object.keys(hardwarePerformanceData.screenTypeWiseData)?.map((stKey: any, i: any) => (
               <div key={i} className="flex items-center gap-2 pt-1">
                 <div>
                   <CheckboxInput
@@ -168,16 +171,16 @@ export const SlotSegment = ({
                 </div>
                 <div className="flex items-center w-full gap-2">
                   <MultiColorLinearBar2
-                    delivered={spotData.screenTypeWiseData[stKey]?.slotsDelivered}
-                    expected={spotData.screenTypeWiseData[stKey]?.slotsPromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
-                    total={spotData.screenTypeWiseData[stKey]?.slotsPromised}
+                    delivered={hardwarePerformanceData.screenTypeWiseData[stKey]?.hardwarePerformanceDelivered}
+                    expected={hardwarePerformanceData.screenTypeWiseData[stKey]?.hardwarePerformancePromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
+                    total={hardwarePerformanceData.screenTypeWiseData[stKey]?.hardwarePerformancePromised}
                     deliveredColor="bg-[#77BFEF]"
                     expectedColor="bg-[#CFC7FF]"
                     totalColor="bg-[#D3EDFF]"
                     height="h-[5px]"
                   />
                   <h1 className="text-[10px]">
-                    {showPercent[3] ? `${(spotData.screenTypeWiseData[stKey]?.slotsDelivered*100/spotData.screenTypeWiseData[stKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.screenTypeWiseData[stKey]?.slotsDelivered)}
+                    {formatNumber(hardwarePerformanceData.screenTypeWiseData[stKey]?.hardwarePerformanceDelivered.toFixed(0))}%
                   </h1>
                 </div>
               </div>

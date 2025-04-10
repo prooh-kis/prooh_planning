@@ -9,6 +9,9 @@ import {
   GET_COST_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_COST_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_COST_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
+  GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
+  GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
+  GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
@@ -64,6 +67,33 @@ export const getAudienceDataForPlannerDashboard =
     } catch (error) {
       dispatch({
         type: GET_AUDIENCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
+
+  export const getHardwarePerformanceDataForPlannerDashboard =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
+      payload: input,
+    });
+    try {
+      const { data } = await axios.post(
+        `${newDashboardURL}/getHardwarePerformanceDataForPlannerDashboard`,
+        input
+      );
+      dispatch({
+        type: GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
         payload: {
           message: error.message,
           status: error.response?.status,

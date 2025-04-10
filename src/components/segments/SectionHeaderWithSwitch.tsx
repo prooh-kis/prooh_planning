@@ -7,6 +7,7 @@ interface SectionHeaderWithSwitchProps {
   bgColor: string;
   showPercent?: any;
   setShowPercent?: any;
+  switchShow?: boolean;
 }
 
 
@@ -16,6 +17,7 @@ export const SectionHeaderWithSwitch: React.FC<SectionHeaderWithSwitchProps> = (
   bgColor,
   showPercent=false,
   setShowPercent,
+  switchShow=true,
 }) => (
   <div className="flex items-center justify-between gap-2 pb-2">
     <div className="flex items-center gap-1 truncate">
@@ -31,20 +33,23 @@ export const SectionHeaderWithSwitch: React.FC<SectionHeaderWithSwitchProps> = (
         <i className="fi fi-br-info text-[12px] text-[#b2c1ca] flex justify-center items-center"></i>
       </Tooltip>
     </div>
-    <div className="flex items-center gap-1">
-      <h1 className="text-[10px] text-gray-500">
-        {showPercent ? "%" : "#"}
-      </h1>
-      <ToggleSwitch
-        h="h-2"
-        w="w-2"
-        height="h-3"
-        width="w-6"
-        value={showPercent}
-        action={setShowPercent}
-        translate="sm"
-      />
+    {switchShow && (
+      <div className="flex items-center gap-1">
+        <h1 className="text-[10px] text-gray-500">
+          {showPercent ? "%" : "#"}
+        </h1>
+        <ToggleSwitch
+          h="h-2"
+          w="w-2"
+          height="h-3"
+          width="w-6"
+          value={showPercent}
+          action={setShowPercent}
+          translate="sm"
+        />
 
-    </div>
+      </div>
+    )}
+
   </div>
 );

@@ -77,6 +77,7 @@ export const CostSegment = ({
                   deliveredColor="bg-[#64AB42]"
                   expectedColor="bg-[#CFC7FF]"
                   totalColor="bg-[#E1FFD3]"
+                  height="h-[5px]"
                 />
                 <h1 className="text-[10px]">
                   {showPercent[1] ? `${(costData.cityWiseData[cityKey]?.costConsumed*100/costData.cityWiseData[cityKey]?.costPromised).toFixed(0)}%` : formatNumber(costData.cityWiseData[cityKey]?.costConsumed)}
@@ -125,6 +126,7 @@ export const CostSegment = ({
                   deliveredColor="bg-[#64AB42]"
                   expectedColor="bg-[#CFC7FF]"
                   totalColor="bg-[#E1FFD3]"
+                  height="h-[5px]"
                 />
                 <h1 className="text-[10px]">
                   {showPercent[2] ? `${(costData.touchPointWiseData[tpKey]?.costConsumed*100/costData.touchPointWiseData[tpKey]?.costPromised).toFixed(0)}%` : formatNumber(costData.touchPointWiseData[tpKey]?.costConsumed)}
@@ -173,6 +175,7 @@ export const CostSegment = ({
                   deliveredColor="bg-[#64AB42]"
                   expectedColor="bg-[#CFC7FF]"
                   totalColor="bg-[#E1FFD3]"
+                  height="h-[5px]"
                 />
                 <h1 className="text-[10px]">
                   {showPercent[3] ? `${(costData.screenTypeWiseData[stKey]?.costConsumed*100/costData.screenTypeWiseData[stKey]?.costPromised).toFixed(0)}%` : formatNumber(costData.screenTypeWiseData[stKey]?.costConsumed)}

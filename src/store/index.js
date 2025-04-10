@@ -84,6 +84,7 @@ import {
   getAudienceDataForPlannerDashboardReducer,
   getBasicDataForPlannerDashboardReducer,
   getCostDataForPlannerDashboardReducer,
+  getHardwarePerformanceDataForPlannerDashboardReducer,
   getSiteLevelPerformanceForPlannerDashboardReducer,
   getSpotDeliveryDataForPlannerDashboardReducer,
 } from "../reducers/dashboardReducers";
@@ -192,6 +193,8 @@ const store = configureStore({
     // New Dashboard
     basicDataForPlannerDashboard: getBasicDataForPlannerDashboardReducer,
     audienceDataForPlannerDashboard: getAudienceDataForPlannerDashboardReducer,
+    hardwarePerformanceDataForPlannerDashboard:
+      getHardwarePerformanceDataForPlannerDashboardReducer,
     spotDeliveryDataForPlannerDashboard:
       getSpotDeliveryDataForPlannerDashboardReducer,
     costDataForPlannerDashboard: getCostDataForPlannerDashboardReducer,

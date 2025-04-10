@@ -17,6 +17,7 @@ import { SlotSegment } from "./SlotSegment";
 import { CostSegment } from "./CostSegment";
 import { AudienceSegment } from "./AudienceSegment";
 import { DurationSegment } from "./DurationSegment";
+import { HardwarePerformanceSegment } from "./HardwarePerformanceSegment";
 
 interface GridItem {
   id: string;
@@ -33,8 +34,9 @@ export const CampaignDashboard = ({
   campaignDetails,
   screenLevelData,
   siteLevelData,
-  spotData,
   audienceData,
+  hardwarePerformanceData,
+  spotData,
   costData
 }: any) => {
   const dropdownRef = useRef<any>(null);
@@ -332,94 +334,7 @@ export const CampaignDashboard = ({
           ) : clicked === "2" ? (
             <AudienceSegment screenLevelData={screenLevelData} audienceData={audienceData} showPercent={showPercent} setShowPercent={setShowPercent} />
           ) : clicked === "3" ? (
-            <div className="grid grid-cols-5 gap-2 ">
-              <div className="col-span-2 bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100">
-                <div className="flex items-center gap-2 px-4">
-                  <div className="rounded-full bg-[#B077FF10] p-2">
-                    <i className="fi-rs-dashboard text-blue lg:text-[14px] text-[12px] text-[#B077FF] flex items-center justify-center"></i>
-                  </div>
-                  <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                    Screen Performance
-                  </h1>
-                  <Tooltip title="Screen perfomance delivered">
-                    <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
-                  </Tooltip>
-                </div>
-                <div className="grid grid-cols-3 gap-2 p-2 ">
-                  <div className="col-span-1">
-                    <DashboardPieChart
-                      type="city Wise"
-                      data={screenLevelData?.screenPerformanceData?.cityWise}
-                    />
-                  </div>
-
-                  <div className="col-span-1">
-                    <DashboardPieChart
-                      type="Touchpoint Wise"
-                      data={
-                        screenLevelData?.screenPerformanceData?.touchPointWise
-                      }
-                    />
-                  </div>
-                  <div className="col-span-1">
-                    <DashboardPieChart
-                      type="Screen Wise"
-                      data={getCostDataScreenWise(
-                        screenLevelData?.screenPerformanceData?.screenWise || {}
-                      )}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="col-span-3 bg-[#FFFFFF] py-4 rounded-[12px] border border-gray-100 ">
-                <div className="flex justify-between">
-                  <div className="flex items-center gap-2 px-4 py-1">
-                    <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                      Day Wise Screen Performance
-                    </h1>
-                    <Tooltip title="Screen perfomance delivered day wise">
-                      <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
-                    </Tooltip>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-1">
-                    <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                      Promised :{" "}
-                      {(
-                        getPromisedScreenPerformanceData().countsArray?.reduce(
-                          (a: number, c: number) => a + c,
-                          0
-                        ) /
-                        getPromisedScreenPerformanceData().countsArray?.length
-                      ).toFixed(0)}
-                      %
-                    </h1>
-                    <h1 className="lg:text-[14px] md:text-[12px] font-bold truncate">
-                      Delivered :{" "}
-                      {(
-                        getScreenPerformanceData().countsArray?.reduce(
-                          (a: number, c: number) => a + c,
-                          0
-                        ) / getScreenPerformanceData().countsArray?.length
-                      ).toFixed(0)}
-                      %
-                    </h1>
-                  </div>
-                </div>
-                <div className="p-2">
-                  <DashboardBarChart
-                    total={"100 %"}
-                    label={"Screen Performance"}
-                    targetData={getPromisedScreenPerformanceData().countsArray}
-                    currentData={getScreenPerformanceData().countsArray}
-                    labels={getScreenPerformanceData().datesArray}
-                    color="#58A5FF"
-                    bgColor="#58A5FF"
-                    color2="#FFC955"
-                    bgColor2="#FFC955"
-                  />
-                </div>
-              </div>
-            </div>
+            <HardwarePerformanceSegment screenLevelData={screenLevelData} hardwarePerformanceData={hardwarePerformanceData} showPercent={showPercent} setShowPercent={setShowPercent} />
           ) : clicked === "4" && spotData ? (
             <SlotSegment screenLevelData={screenLevelData} spotData={spotData} showPercent={showPercent} setShowPercent={setShowPercent} />
           ) : clicked === "5" && costData ? (

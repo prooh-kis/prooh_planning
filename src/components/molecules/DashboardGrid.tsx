@@ -42,6 +42,7 @@ interface ValueDisplayProps {
   right: string | number;
   isPositive?: boolean;
   value?: number;
+  textSize?: string;
 }
 
 export const SectionHeader: React.FC<SectionHeaderProps> = ({
@@ -79,9 +80,10 @@ const ValueBelowGraph: React.FC<ValueDisplayProps> = ({
   right,
   isPositive = true,
   value,
+  textSize="text-[14px]"
 }) => (
   <div className="mt-1">
-    <h1 className="text-[14px] font-medium leading-[32.68px] text-[#9bb3c9]">
+    <h1 className={`${textSize} font-medium leading-[32.68px] text-[#9bb3c9]`}>
       <span className="text-[#0E212E]">{left}</span> / {right}
       {value !== undefined && (
         <span className={isPositive ? "text-[#2A892D]" : "text-[#CC0000]"}>

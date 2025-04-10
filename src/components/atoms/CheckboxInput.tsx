@@ -36,12 +36,12 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({
 
       <Tooltip title={<h1 className="text-[10px]">{label ? label : "Checkbox"}</h1>}>
         {showIcon ? (
-          <span className={`col-span-11`}>
-              <i
-                className={`${icon} pl-2 flex justify-start items-center text-[${
-                  color ? color : "#21394F"
-                }] text-[${textSize ? textSize : "12px"}]`}
-              ></i>
+          <span className={`col-span-11 truncate`}>
+            <i
+              className={`${icon} pl-2 flex justify-start items-center text-[${
+                color ? color : "#21394F"
+              }] text-[${textSize ? textSize : "12px"}]`}
+            ></i>
           </span>
         ) : (
           <span
@@ -53,7 +53,6 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({
           </span>
         )}
         </Tooltip>
-
     </label>
   );
 };
