@@ -20,8 +20,6 @@ const analyticsV1 = `${process.env.REACT_APP_PROOH_SERVER}/api/v1/analytics`;
 interface CostSummaryTableProps {
   screenLevelData?: any;
   campaignDetails?: any;
-  city: string;
-  currentTouchPoint: string;
 }
 
 interface PercentageDisplayProps {
@@ -120,8 +118,6 @@ const getAllDates = ({ startDate, endDate }: any) => {
 export const CampaignDashboardTable = ({
   screenLevelData,
   campaignDetails,
-  city,
-  currentTouchPoint,
 }: CostSummaryTableProps) => {
   const dispatch = useDispatch<any>();
   const [isDownLoad, setIsDownload] = useState<string>("");
@@ -281,189 +277,178 @@ export const CampaignDashboardTable = ({
           </tr>
         </thead>
         <tbody className="max-h-[250px] overflow-scroll">
-          {screenLevelData
-            ?.filter((d: string) => {
-              const item: any = d;
-              const cityMatch = city ? item?.city === city : true;
-              const touchpointMatch = currentTouchPoint
-                ? item?.touchPoint === currentTouchPoint
-                : true;
-              return cityMatch && touchpointMatch;
-            })
-            .map((screenData: any, index: number) => (
-              <React.Fragment key={index}>
-                <tr
-                  key={screenData}
-                  className="grid grid-cols-12 flex w-full h-[40px] hover:bg-gray-100 hover:rounded-[6px] border-b text-[#0E212E]"
-                >
-                  <td className="w-full flex items-center justify-start gap-4 col-span-3 grid grid-cols-8 pl-4">
-                    <p className="text-[12px] col-span-1">
-                      {index + 1 <= 9 ? `0${index + 1}` : index + 1}
-                    </p>
+          {screenLevelData.map((screenData: any, index: number) => (
+            <React.Fragment key={index}>
+              <tr
+                key={screenData}
+                className="grid grid-cols-12 flex w-full h-[40px] hover:bg-gray-100 hover:rounded-[6px] border-b text-[#0E212E]"
+              >
+                <td className="w-full flex items-center justify-start gap-4 col-span-3 grid grid-cols-8 pl-4">
+                  <p className="text-[12px] col-span-1">
+                    {index + 1 <= 9 ? `0${index + 1}` : index + 1}
+                  </p>
 
-                    <Tooltip
-                      title={`${getScreenStatus(
+                  <Tooltip
+                    title={`${getScreenStatus(
+                      screenData?.lastActive
+                    )}, ${convertIntoDateAndTime(screenData?.lastActive)} `}
+                  >
+                    <div
+                      className={`${getScreenClassName(
                         screenData?.lastActive
-                      )}, ${convertIntoDateAndTime(screenData?.lastActive)} `}
-                    >
-                      <div
-                        className={`${getScreenClassName(
-                          screenData?.lastActive
-                        )} col-span-1`}
-                      />
-                    </Tooltip>
-                    <p className="text-[12px] truncate px-1 col-span-6">
-                      {screenData?.screenName}
-                    </p>
-                  </td>
+                      )} col-span-1`}
+                    />
+                  </Tooltip>
+                  <p className="text-[12px] truncate px-1 col-span-6">
+                    {screenData?.screenName}
+                  </p>
+                </td>
 
-                  <td className="w-full flex items-center justify-center truncate col-span-1">
-                    <p className="text-[12px] truncate">
-                      {screenData?.location}
-                    </p>
-                  </td>
-                  <td className="w-full flex items-center justify-center truncate col-span-2">
-                    <p className="text-[12px] truncate">
-                      {screenData?.touchPoint}
-                    </p>
-                  </td>
-                  <td className="w-full flex items-center justify-center col-span-1">
-                    <div className="flex flex-row justify-center items-center gap-1">
-                      <p className="text-[12px]">
-                        {formatNumber(screenData?.slotsDelivered)}
-                      </p>
-                      <PercentageDisplay
-                        delivered={screenData?.slotsDelivered}
-                        promised={screenData?.slotsPromisedTillDate}
-                        options={{
-                          isTillDate: true,
-                          campaignDays,
-                          totalDays,
-                        }}
-                      />
-                    </div>
-                  </td>
-                  <td className="w-full flex items-center justify-center col-span-1">
-                    <div className="flex flex-row justify-center items-center gap-1">
-                      <p className="text-[12px]">
-                        {formatNumber(
-                          screenData?.impressionsDelivered?.toFixed(0)
-                        )}
-                      </p>
-                      <PercentageDisplay
-                        delivered={screenData?.impressionsDelivered}
-                        promised={screenData?.impressionsPromisedTillDate}
-                        options={{
-                          isTillDate: true,
-                          campaignDays,
-                          totalDays,
-                        }}
-                      />
-                    </div>
-                  </td>
-                  <td className="w-full flex items-center justify-center col-span-1">
-                    <div className="flex flex-row justify-center items-center gap-1">
-                      <p className="text-[12px]">
-                        {formatNumber(screenData?.costConsumed?.toFixed(0))}
-                      </p>
-                      <PercentageDisplay
-                        delivered={screenData?.costConsumed}
-                        promised={screenData?.costTakenTillDate}
-                        options={{
-                          isTillDate: true,
-                          campaignDays,
-                          totalDays,
-                        }}
-                      />
-                    </div>
-                  </td>
-                  <td className="w-full flex items-center justify-center gap-1 col-span-1">
-                    <div className="w-[28px]">
-                      <LinearBar
-                        value={
-                          (screenData?.slotsDelivered * 100) /
-                          screenData?.slotsPromised
-                        }
-                        colors={["#D9D9D9", "#2A892D"]}
-                        highest={100}
-                        percent={false}
-                      />
-                    </div>
+                <td className="w-full flex items-center justify-center truncate col-span-1">
+                  <p className="text-[12px] truncate">{screenData?.location}</p>
+                </td>
+                <td className="w-full flex items-center justify-center truncate col-span-2">
+                  <p className="text-[12px] truncate">
+                    {screenData?.touchPoint}
+                  </p>
+                </td>
+                <td className="w-full flex items-center justify-center col-span-1">
+                  <div className="flex flex-row justify-center items-center gap-1">
                     <p className="text-[12px]">
-                      {(
+                      {formatNumber(screenData?.slotsDelivered)}
+                    </p>
+                    <PercentageDisplay
+                      delivered={screenData?.slotsDelivered}
+                      promised={screenData?.slotsPromisedTillDate}
+                      options={{
+                        isTillDate: true,
+                        campaignDays,
+                        totalDays,
+                      }}
+                    />
+                  </div>
+                </td>
+                <td className="w-full flex items-center justify-center col-span-1">
+                  <div className="flex flex-row justify-center items-center gap-1">
+                    <p className="text-[12px]">
+                      {formatNumber(
+                        screenData?.impressionsDelivered?.toFixed(0)
+                      )}
+                    </p>
+                    <PercentageDisplay
+                      delivered={screenData?.impressionsDelivered}
+                      promised={screenData?.impressionsPromisedTillDate}
+                      options={{
+                        isTillDate: true,
+                        campaignDays,
+                        totalDays,
+                      }}
+                    />
+                  </div>
+                </td>
+                <td className="w-full flex items-center justify-center col-span-1">
+                  <div className="flex flex-row justify-center items-center gap-1">
+                    <p className="text-[12px]">
+                      {formatNumber(screenData?.costConsumed?.toFixed(0))}
+                    </p>
+                    <PercentageDisplay
+                      delivered={screenData?.costConsumed}
+                      promised={screenData?.costTakenTillDate}
+                      options={{
+                        isTillDate: true,
+                        campaignDays,
+                        totalDays,
+                      }}
+                    />
+                  </div>
+                </td>
+                <td className="w-full flex items-center justify-center gap-1 col-span-1">
+                  <div className="w-[28px]">
+                    <LinearBar
+                      value={
                         (screenData?.slotsDelivered * 100) /
                         screenData?.slotsPromised
-                      )?.toFixed(0)}
-                      %
-                    </p>
-                  </td>
-                  <td className="w-full flex items-center justify-center col-span-1">
-                    <Tooltip title="View Monitoring Pics">
+                      }
+                      colors={["#D9D9D9", "#2A892D"]}
+                      highest={100}
+                      percent={false}
+                    />
+                  </div>
+                  <p className="text-[12px]">
+                    {(
+                      (screenData?.slotsDelivered * 100) /
+                      screenData?.slotsPromised
+                    )?.toFixed(0)}
+                    %
+                  </p>
+                </td>
+                <td className="w-full flex items-center justify-center col-span-1">
+                  <Tooltip title="View Monitoring Pics">
+                    <i
+                      className="fi fi-sr-picture text-[12px] text-[#129BFF]"
+                      onClick={() => {
+                        dispatch(
+                          GetCampaignMonitoringPicsAction({
+                            campaignId: screenData?.campaignId,
+                            screenId: screenData,
+                            date: campaignDetails.startDate,
+                          })
+                        );
+                        setScreenId(screenData);
+                        setOpenMonitoringPicsPopup(true);
+                      }}
+                    ></i>
+                  </Tooltip>
+                </td>
+                <td className="w-full flex items-center justify-center col-span-1">
+                  <div className="flex gap-4">
+                    <Tooltip title="View Logs">
                       <i
-                        className="fi fi-sr-picture text-[12px] text-[#129BFF]"
+                        className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}
                         onClick={() => {
-                          dispatch(
-                            GetCampaignMonitoringPicsAction({
-                              campaignId: screenData?.campaignId,
-                              screenId: screenData,
-                              date: campaignDetails.startDate,
-                            })
-                          );
-                          setScreenId(screenData);
-                          setOpenMonitoringPicsPopup(true);
+                          setCampaignData(screenData);
+                          setOpenLogsPopup(true);
                         }}
                       ></i>
                     </Tooltip>
-                  </td>
-                  <td className="w-full flex items-center justify-center col-span-1">
-                    <div className="flex gap-4">
-                      <Tooltip title="View Logs">
-                        <i
-                          className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}
-                          onClick={() => {
-                            setCampaignData(screenData);
-                            setOpenLogsPopup(true);
-                          }}
-                        ></i>
-                      </Tooltip>
-                      <Tooltip title="Download logs in one click">
-                        <i
-                          className={`fi fi-sr-download text-[12px] ${
-                            isDownLoad == screenData?.campaignId
-                              ? "text-gray-400"
-                              : "text-[#129BFF]"
-                          }`}
-                          onClick={() => {
-                            downloadFileFromUrl(
-                              screenData.logUrl,
-                              `${screenData?.screenName}`
-                            );
-                          }}
-                        ></i>
-                      </Tooltip>
+                    <Tooltip title="Download logs in one click">
                       <i
-                        className="fi fi-rs-chart-histogram text-[12px] text-[#129BFF]"
-                        title="Analytic"
+                        className={`fi fi-sr-download text-[12px] ${
+                          isDownLoad == screenData?.campaignId
+                            ? "text-gray-400"
+                            : "text-[#129BFF]"
+                        }`}
                         onClick={() => {
-                          setCurrentIndex(
-                            currentIndex === screenData?.campaignId
-                              ? null
-                              : screenData?.campaignId
+                          downloadFileFromUrl(
+                            screenData.logUrl,
+                            `${screenData?.screenName}`
                           );
                         }}
                       ></i>
-                    </div>
+                    </Tooltip>
+                    <i
+                      className="fi fi-rs-chart-histogram text-[12px] text-[#129BFF]"
+                      title="Analytic"
+                      onClick={() => {
+                        setCurrentIndex(
+                          currentIndex === screenData?.campaignId
+                            ? null
+                            : screenData?.campaignId
+                        );
+                      }}
+                    ></i>
+                  </div>
+                </td>
+              </tr>
+              {currentIndex === screenData?.campaignId && (
+                <tr>
+                  <td className="w-full p-4 rounded-[8px] shadow-md">
+                    <SiteLevelAnalysis screenData={screenData} />
                   </td>
                 </tr>
-                {currentIndex === screenData?.campaignId && (
-                  <tr>
-                    <td className="w-full p-4 rounded-[8px] shadow-md">
-                      <SiteLevelAnalysis screenData={screenData} />
-                    </td>
-                  </tr>
-                )}
-              </React.Fragment>
-            ))}
+              )}
+            </React.Fragment>
+          ))}
         </tbody>
       </table>
     </div>

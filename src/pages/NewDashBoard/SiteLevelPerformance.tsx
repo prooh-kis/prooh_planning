@@ -3,71 +3,110 @@ import { CampaignDashboardTable } from "../../components/tables/CampaignDashboar
 import { EnhancedSelect } from "../../components/atoms/EnhancedSelect";
 import ButtonInput from "../../components/atoms/ButtonInput";
 
-export const SiteLevelPerformance = ({
+interface SiteData {
+  city?: string;
+  touchPoint?: string;
+  screenType?: string;
+  [key: string]: any;
+}
+
+interface SiteLevelPerformanceProps {
+  siteLevelData?: SiteData[];
+  campaignDetails?: any;
+}
+
+export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
   siteLevelData = [],
   campaignDetails,
-}: any) => {
-  const [currentCity, setCurrentCity] = useState<string>("");
-  const [currentTouchPoint, setCurrentTouchPoint] = useState<string>("");
+}) => {
+  const [filters, setFilters] = useState({
+    city: "",
+    touchPoint: "",
+    screenType: "",
+  });
 
-  const getUniqueOptions = (key: string) => {
-    if (!Array.isArray(siteLevelData)) return [];
+  const getUniqueOptions = (key: keyof SiteData) => {
     const uniqueValues = Array.from(
-      new Set(siteLevelData.map((item: any) => item?.[key]).filter(Boolean))
+      new Set(
+        siteLevelData
+          .map((item) => item?.[key])
+          .filter((value): value is string => Boolean(value))
+      )
+    );
+    return uniqueValues.map((value) => ({ label: value, value }));
+  };
+
+  const getUniqueOptions1 = (key: keyof SiteData) => {
+    const uniqueValues = Array.from(
+      new Set(
+        siteLevelData
+          .map((item) => item?.[key])
+          .filter((value): value is string => Boolean(value))
+      )
     );
     return uniqueValues.map((value) => ({
-      label: value,
+      label:
+        value === "Spectacular"
+          ? "Iconic"
+          : value === "Large"
+          ? "Big"
+          : "Small",
       value,
     }));
   };
 
-  const renderSelect = (
-    placeholder: string,
-    value: string,
-    onChange: (val: string) => void,
-    key: string
-  ) => (
-    <EnhancedSelect
-      options={getUniqueOptions(key)}
-      onChange={onChange}
-      placeholder={placeholder}
-      value={value}
-      size="sm"
-    />
-  );
+  const handleFilterChange = (key: keyof typeof filters, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const resetFilters = () => {
+    setFilters({
+      city: "",
+      touchPoint: "",
+      screenType: "",
+    });
+  };
+
+  const filteredResults = siteLevelData.filter((item) => {
+    return (
+      (!filters.city || item.city === filters.city) &&
+      (!filters.touchPoint || item.touchPoint === filters.touchPoint) &&
+      (!filters.screenType || item.screenType === filters.screenType)
+    );
+  });
 
   return (
-    <div className="bg-[#FFFFFF] mt-2 w-full border border-gray-100 rounded-[12px] flex justify-between px-2">
+    <div className="bg-white mt-2 w-full border border-gray-100 rounded-xl flex justify-between px-2">
       <div className="w-full">
         <div className="flex justify-between items-center">
-          <h1 className="text-[16px] py-4 px-2 font-semibold leading-[19.36px] text[#0E212E]">
+          <h1 className="text-base py-4 px-2 font-semibold leading-5 text-gray-900">
             Site Level Performance
           </h1>
           <div className="flex gap-4 items-center">
-            {renderSelect(
-              "Filter by city",
-              currentCity,
-              setCurrentCity,
-              "city"
-            )}
-            {renderSelect(
-              "Filter by touchPoint",
-              currentTouchPoint,
-              setCurrentTouchPoint,
-              "touchPoint"
-            )}
-            <ButtonInput
-              variant="outline"
-              size="small"
-              onClick={() => {
-                console.log("clicked!");
-                setCurrentCity("");
-                setCurrentTouchPoint("");
-              }}
-            >
+            <EnhancedSelect
+              options={getUniqueOptions("city")}
+              onChange={(val) => handleFilterChange("city", val)}
+              placeholder="Filter by city"
+              value={filters.city}
+              size="sm"
+            />
+            <EnhancedSelect
+              options={getUniqueOptions("touchPoint")}
+              onChange={(val) => handleFilterChange("touchPoint", val)}
+              placeholder="Filter by touchPoint"
+              value={filters.touchPoint}
+              size="sm"
+            />
+            <EnhancedSelect
+              options={getUniqueOptions1("screenType")}
+              onChange={(val) => handleFilterChange("screenType", val)}
+              placeholder="Filter by Screen Type"
+              value={filters.screenType}
+              size="sm"
+            />
+            <ButtonInput variant="outline" size="small" onClick={resetFilters}>
               Reset
             </ButtonInput>
-
             <ButtonInput variant="outline" size="small">
               View All Logs
             </ButtonInput>
@@ -76,9 +115,7 @@ export const SiteLevelPerformance = ({
 
         <CampaignDashboardTable
           campaignDetails={campaignDetails}
-          screenLevelData={siteLevelData}
-          city={currentCity}
-          currentTouchPoint={currentTouchPoint}
+          screenLevelData={filteredResults}
         />
       </div>
     </div>
