@@ -60,7 +60,6 @@ interface LegendItem {
   doubleColor?: boolean;
   secondColor?: string;
 }
-
 const Legend = () => {
   const legendItems: LegendItem[] = [
     {
@@ -73,7 +72,7 @@ const Legend = () => {
       id: "big-screens",
       label: "Big Screens",
       color: "#129BFF",
-      size: 5, // Now required for all items
+      size: 5,
     },
     {
       id: "small-screens",
@@ -108,18 +107,20 @@ const Legend = () => {
       {legendItems.map((item) => (
         <div key={item.id} className="flex gap-2 items-center">
           <div
-            className={`bg-[${item.color}] rounded-full`}
+            className="rounded-full"
             style={{
               width: `${item.size * 0.25}rem`,
               height: `${item.size * 0.25}rem`,
+              backgroundColor: item.color,
             }}
           />
           {item.doubleColor && item.secondColor && (
             <div
-              className={`bg-[${item.secondColor}] rounded-full`}
+              className="rounded-full"
               style={{
                 width: `${item.size * 0.25}rem`,
                 height: `${item.size * 0.25}rem`,
+                backgroundColor: item.secondColor,
               }}
             />
           )}
@@ -131,6 +132,7 @@ const Legend = () => {
     </div>
   );
 };
+
 export const ValueDisplay = ({
   left,
   right,
