@@ -74,8 +74,9 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
           anchor: "center" as const,
           align: "center" as const,
           font: { size: 8 },
+          rotation: 270,
           formatter: (value: number) =>
-            value > 10 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
+            value > 20 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
         },
       },
       {
@@ -90,8 +91,9 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
           anchor: "center" as const,
           align: "center" as const,
           font: { size: 8 },
+          rotation: 270,
           formatter: (value: number) =>
-            value > 10 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
+            value > 20 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
         },
       },
       {
@@ -106,8 +108,9 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
           anchor: "center" as const,
           align: "center" as const,
           font: { size: 8 },
+          rotation: 270,
           formatter: (value: number) =>
-            value > 10 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
+            value > 20 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
         },
       },
     ],
