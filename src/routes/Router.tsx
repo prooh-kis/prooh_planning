@@ -10,7 +10,6 @@ import {
   UpdatePassword,
   VerifyEmail,
   MyCampaignsListPage,
-  CampaignDashboardPage,
   MyPlansListPage,
   SpecialDayPlanPage,
   TriggerBasedPlanPage,
@@ -167,14 +166,6 @@ const Routers: React.FC = () => {
           element={
             <PublicRoute layout={HomePageLayout}>
               <NewDashBoard />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path={"/campaignDashboard/:id?"}
-          element={
-            <PublicRoute layout={HomePageLayout}>
-              <CampaignDashboardPage />
             </PublicRoute>
           }
         />

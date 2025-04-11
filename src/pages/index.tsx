@@ -11,8 +11,6 @@ export {
 export { MyCampaignsListPage } from "./MyCampaignsListPage";
 export { MyPlansListPage } from "./MyPlansListPage";
 
-export { CampaignDashboardPage } from "./CampaignDashboardPage";
-
 export { RegularPlanPage } from "./RegularPlanPage";
 export { SpecialDayPlanPage } from "./SpecialDayPlanPage";
 export { TriggerBasedPlanPage } from "./TriggerBasedPlanPage";
