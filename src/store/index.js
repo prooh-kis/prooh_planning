@@ -86,6 +86,8 @@ import {
   getCostDataForPlannerDashboardReducer,
   getHardwarePerformanceDataForPlannerDashboardReducer,
   getSiteLevelPerformanceForPlannerDashboardReducer,
+  getSiteMonitoringPicsPercentageReducer,
+  getSitesDataMapViewForPlannerDashboardReducer,
   getSpotDeliveryDataForPlannerDashboardReducer,
 } from "../reducers/dashboardReducers";
 
@@ -200,6 +202,9 @@ const store = configureStore({
     costDataForPlannerDashboard: getCostDataForPlannerDashboardReducer,
     siteLevelPerformanceForPlannerDashboard:
       getSiteLevelPerformanceForPlannerDashboardReducer,
+    sitesDataMapViewForPlannerDashboard:
+      getSitesDataMapViewForPlannerDashboardReducer,
+    siteMonitoringPicsPercentage: getSiteMonitoringPicsPercentageReducer,
   },
 
   // middleware: thunk

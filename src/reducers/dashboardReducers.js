@@ -11,9 +11,15 @@ import {
   GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
+  GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_ERROR,
+  GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_REQUEST,
+  GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_SUCCESS,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
+  GET_SITE_MONITORING_PICS_PERCENTAGE_ERROR,
+  GET_SITE_MONITORING_PICS_PERCENTAGE_REQUEST,
+  GET_SITE_MONITORING_PICS_PERCENTAGE_SUCCESS,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
@@ -133,6 +139,47 @@ export function getSiteLevelPerformanceForPlannerDashboardReducer(
         data: action.payload,
       };
     case GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function getSitesDataMapViewForPlannerDashboardReducer(
+  state = {},
+  action
+) {
+  switch (action.type) {
+    case GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_REQUEST:
+      return { loading: true };
+    case GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function getSiteMonitoringPicsPercentageReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_SITE_MONITORING_PICS_PERCENTAGE_REQUEST:
+      return { loading: true };
+    case GET_SITE_MONITORING_PICS_PERCENTAGE_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_SITE_MONITORING_PICS_PERCENTAGE_ERROR:
       return {
         loading: false,
         error: action.payload,

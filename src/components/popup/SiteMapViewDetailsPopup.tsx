@@ -1,0 +1,331 @@
+import { useState } from "react";
+import { Map } from "@vis.gl/react-google-maps";
+import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
+import { NewCustomMarker } from "../../components/map/NewCustomMarker";
+import { getTimeDifferenceInMin } from "../../utils/dateAndTimeUtils";
+import { formatNumber } from "../../utils/formatValue";
+import { LinearBar } from "../../components/molecules/linearbar";
+import ButtonInput from "../../components/atoms/ButtonInput";
+
+interface SiteMapViewDetailsPopupProps {
+  handleCancel: () => void;
+  geometry?: {
+    coordinates: [number, number];
+  };
+  zoom?: number;
+  sitesDataMapViewData?: any[];
+  currentSite?: {
+    slotsPromisedTillDate?: number;
+    slotsDelivered?: number;
+    impressionsPromisedTillDate?: number;
+    impressionsDelivered?: number;
+    costTakenTillDate?: number;
+    costConsumed?: number;
+  };
+}
+
+interface SiteInfoHeaderProps {
+  screenName?: string;
+  address?: string;
+  lastActive?: Date | string;
+  onClose: () => void;
+  images: string[];
+}
+
+interface StatusIndicatorProps {
+  lastActive?: Date | string;
+}
+
+interface ValueDisplayProps {
+  left: string | number;
+  right: string | number;
+  isPositive?: boolean;
+  value?: number;
+}
+
+interface MetricCardProps {
+  label: string;
+  delivered: number;
+  promised: number;
+  colors?: string[];
+}
+
+export const ValueDisplay = ({
+  left,
+  right,
+  isPositive = true,
+  value,
+}: ValueDisplayProps) => (
+  <h1 className="text-[12px] font-medium leading-[32.68px] text-[#9bb3c9]">
+    <span className="text-[#0E212E]">{formatNumber(left)}</span> /{" "}
+    {formatNumber(right)}
+    {value !== undefined && (
+      <span className={isPositive ? "text-[#2A892D]" : "text-[#CC0000]"}>
+        {` (${value}%)`}
+        <i
+          className={`fi ${isPositive ? "fi-rr-arrow-up" : "fi-rr-arrow-down"}`}
+        />
+      </span>
+    )}
+  </h1>
+);
+
+export const MetricCard = ({
+  label,
+  delivered,
+  promised,
+  colors,
+}: MetricCardProps) => {
+  const percentage = ((delivered / promised) * 100).toFixed(0);
+  const isPositive = delivered >= promised;
+
+  return (
+    <div className="flex flex-col gap-2 mt-2 border-b">
+      <p className="text-[#0E212E] font-normal text-[14px]">{label}</p>
+      <div className="grid grid-cols-5 gap-4 items-center">
+        <div className="col-span-3">
+          <LinearBar
+            value={delivered}
+            colors={colors || ["#FFF2C3", "#FFDB5D"]}
+            highest={promised}
+            percent={false}
+          />
+        </div>
+        <div className="col-span-2">
+          <ValueDisplay
+            left={delivered}
+            right={promised}
+            value={Number(percentage)}
+            isPositive={isPositive}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const StatusIndicator = ({ lastActive }: StatusIndicatorProps) => {
+  const getStatusClass = () => {
+    if (!lastActive) return "bg-[#ff3333]";
+    const diffMinutes = getTimeDifferenceInMin(lastActive);
+    return diffMinutes < 15 ? "bg-[#348730]" : "bg-[#ffec33]";
+  };
+
+  return (
+    <div
+      className={`border w-4 h-4 ${getStatusClass()} rounded-full justify-end`}
+    />
+  );
+};
+
+export const SiteInfoHeader = ({
+  screenName = "Road segment A",
+  address = "Delhi Sector-29",
+  lastActive,
+  onClose,
+  images,
+}: SiteInfoHeaderProps) => (
+  <div className="flex justify-between">
+    <div className="flex gap-2">
+      <div className={`h-16 w-16 rounded-[7px] overflow-hidden`}>
+        <img
+          src={images[0]}
+          alt={screenName}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = "none";
+            (e.target as HTMLImageElement).parentElement!.classList.add(
+              "bg-[#e3e3e3]"
+            );
+          }}
+        />
+      </div>
+      <div>
+        <div className="flex gap-2 items-center">
+          <h1 className="text-[#0E212E] text-[16px] font-semibold m-0 p-0">
+            {screenName}
+          </h1>
+          <StatusIndicator lastActive={lastActive} />
+        </div>
+        <p className="text-[#667D8C] font-normal text-[12px]">{address}</p>
+      </div>
+    </div>
+    <i
+      className="fi fi-br-circle-xmark text-[20px] cursor-pointer"
+      onClick={onClose}
+    />
+  </div>
+);
+
+export const MonitoringPic = () => {
+  const [currentTab, setCurrentTab] = useState<string>("Start Date");
+  const data = ["Start Date", "Mid Monitoring", "End Date"];
+
+  return (
+    <div className="overflow-auto">
+      <div className="flex gap-4">
+        {data?.map((value: string) => {
+          if (currentTab === value)
+            return (
+              <ButtonInput
+                key="value"
+                rounded="full"
+                size="small"
+                onClick={() => setCurrentTab(value)}
+              >
+                {value}
+              </ButtonInput>
+            );
+          else
+            return (
+              <ButtonInput
+                variant="outline"
+                rounded="full"
+                size="small"
+                onClick={() => setCurrentTab(value)}
+                key="value"
+              >
+                {value}
+              </ButtonInput>
+            );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export const SiteMapViewDetailsPopup = ({
+  handleCancel,
+  geometry,
+  zoom = 10,
+  sitesDataMapViewData = [],
+}: SiteMapViewDetailsPopupProps) => {
+  const [viewState] = useState({
+    center: {
+      lat: sitesDataMapViewData?.[0]?.lat || 28.495,
+      lng: sitesDataMapViewData?.[0]?.lng || 77.0891,
+    },
+    zoom,
+  });
+
+  const [currentSite, setCurrentSite] = useState<any>(null);
+  const [currentTab, setCurrentTab] = useState<string>("1");
+
+  const metrics = [
+    {
+      id: "1",
+      label: "Spots Delivery",
+      delivered: currentSite?.slotsDelivered || 0,
+      promised: currentSite?.slotsPromisedTillDate || 1,
+      colors: ["#EDEDED", "#FFAC26"],
+    },
+    {
+      id: "2",
+      label: "Hardware Performance",
+      delivered: currentSite?.slotsDelivered || 0,
+      promised: currentSite?.slotsPromisedTillDate || 1,
+      colors: ["#EDEDED", "#6982FF"],
+    },
+    {
+      id: "3",
+      label: "Impressions",
+      delivered: currentSite?.impressionsDelivered || 0,
+      promised: currentSite?.impressionsPromisedTillDate || 1,
+      colors: ["#EDEDED", "#129BFF"],
+    },
+    {
+      id: "4",
+      label: "Cost Consumed",
+      delivered: currentSite?.costConsumed || 0,
+      promised: currentSite?.costTakenTillDate || 1,
+      colors: ["#EDEDED", "#01A227"],
+    },
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
+      <div className="border bg-[#FFFFFF] rounded-[10px] h-3/4 w-[95%] p-1">
+        <div className="relative inset-0 flex items-center justify-between gap-4 p-2 pr-5">
+          <h1 className="text-[#0E212E] font-semibold text-[20px]">
+            Site Map View
+          </h1>
+          <i
+            className="fi fi-br-circle-xmark text-[20px] cursor-pointer"
+            onClick={handleCancel}
+          />
+        </div>
+        <div className={`h-[60vh] w-full flex ${currentSite ? "gap-4" : ""}`}>
+          <div
+            className={`${
+              currentSite ? "w-2/3" : "w-full"
+            } h-full bg-[#F3F3F3]`}
+          >
+            <Map
+              defaultCenter={viewState.center}
+              defaultZoom={viewState.zoom}
+              mapId="96194b21d9fc00de"
+              gestureHandling="greedy"
+              disableDefaultUI={true}
+              className="h-full w-full"
+            >
+              {sitesDataMapViewData.map((marker) => (
+                <NewCustomMarker
+                  key={marker.id}
+                  marker={marker}
+                  color="#00A0FA"
+                  size={
+                    marker.screenType === "Spectacular"
+                      ? 60
+                      : marker.screenType === "Large"
+                      ? 44
+                      : 36
+                  }
+                  action={setCurrentSite}
+                />
+              ))}
+            </Map>
+          </div>
+
+          {currentSite && (
+            <div className="w-1/3 bg-[#FFFFFF] border rounded-[12px] shadow-md p-4 h-full overflow-auto">
+              <SiteInfoHeader
+                screenName={currentSite?.screenName}
+                address={currentSite?.address}
+                lastActive={currentSite?.lastActive}
+                onClose={() => setCurrentSite(null)}
+                images={currentSite?.images}
+              />
+              <div className="mt-2">
+                <TabWithoutIcon
+                  tabData={[
+                    { id: "1", label: "Site Overview" },
+                    { id: "2", label: "Monitoring Pic" },
+                  ]}
+                  currentTab={currentTab}
+                  setCurrentTab={setCurrentTab}
+                />
+              </div>
+              {currentTab === "1" ? (
+                <div className="flex flex-col mt-4">
+                  {metrics.map((metric) => (
+                    <MetricCard
+                      key={metric.id}
+                      label={metric.label}
+                      delivered={metric.delivered}
+                      promised={metric.promised}
+                      colors={metric?.colors}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="mt-4">
+                  <MonitoringPic />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};

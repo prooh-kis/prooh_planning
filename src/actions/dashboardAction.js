@@ -12,9 +12,15 @@ import {
   GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
+  GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_ERROR,
+  GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_REQUEST,
+  GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_SUCCESS,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
+  GET_SITE_MONITORING_PICS_PERCENTAGE_ERROR,
+  GET_SITE_MONITORING_PICS_PERCENTAGE_REQUEST,
+  GET_SITE_MONITORING_PICS_PERCENTAGE_SUCCESS,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
@@ -76,7 +82,7 @@ export const getAudienceDataForPlannerDashboard =
     }
   };
 
-  export const getHardwarePerformanceDataForPlannerDashboard =
+export const getHardwarePerformanceDataForPlannerDashboard =
   (input) => async (dispatch, getState) => {
     dispatch({
       type: GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
@@ -175,6 +181,61 @@ export const getSiteLevelPerformanceForPlannerDashboard =
     } catch (error) {
       dispatch({
         type: GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
+
+export const getSitesDataMapViewForPlannerDashboard =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_REQUEST,
+      payload: input,
+    });
+    try {
+      console.log("getSitesDataMapViewForPlannerDashboard called!");
+      const { data } = await axios.post(
+        `${newDashboardURL}/getSitesDataMapViewForPlannerDashboard`,
+        input
+      );
+      dispatch({
+        type: GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
+
+export const getSiteMonitoringPicsPercentage =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_SITE_MONITORING_PICS_PERCENTAGE_REQUEST,
+      payload: input,
+    });
+    try {
+      const { data } = await axios.post(
+        `${newDashboardURL}/getSiteMonitoringPicsPercentage`,
+        input
+      );
+      dispatch({
+        type: GET_SITE_MONITORING_PICS_PERCENTAGE_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_SITE_MONITORING_PICS_PERCENTAGE_ERROR,
         payload: {
           message: error.message,
           status: error.response?.status,

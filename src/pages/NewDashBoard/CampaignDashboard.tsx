@@ -1,23 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { DashboardImpressionDetailsTable } from "../../components/tables/DashboardImpressionDetailsTable";
-import { DashboardBarChart } from "../../components/segments/DashboardBarGraph";
-import { DashboardPieChart } from "../../components/segments/DashboardPieChart";
-import { DashboardGrid, SectionHeader } from "../../components/molecules/DashboardGrid";
+import { DashboardGrid } from "../../components/molecules/DashboardGrid";
 import { useNavigate } from "react-router-dom";
 import { BillingAndInvoice } from "./BillingAndInvoice";
 import { GET_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyConstants";
 import { useDispatch } from "react-redux";
 import { DashBoardMenu } from "./DashBoardMenu";
-import { Tooltip } from "antd";
 import { FirstCharForBrandName } from "../../components/molecules/FirstCharForBrandName";
-import { CalenderScaleStepper } from "../../components/molecules/CalenderScale2";
-import { DurationGraphPerDay } from "../../components/segments/DurationGraphPerDay";
 import { SiteLevelPerformance } from "./SiteLevelPerformance";
 import { SlotSegment } from "./SlotSegment";
 import { CostSegment } from "./CostSegment";
 import { AudienceSegment } from "./AudienceSegment";
 import { DurationSegment } from "./DurationSegment";
 import { HardwarePerformanceSegment } from "./HardwarePerformanceSegment";
+import { SiteMonitoringPic } from "./SiteMonitoringPic";
 
 interface GridItem {
   id: string;
@@ -37,7 +32,8 @@ export const CampaignDashboard = ({
   audienceData,
   hardwarePerformanceData,
   spotData,
-  costData
+  costData,
+  sitesDataMapViewData,
 }: any) => {
   const dropdownRef = useRef<any>(null);
   const navigate = useNavigate();
@@ -77,13 +73,15 @@ export const CampaignDashboard = ({
   const [calendarData, setCalendarData] = useState<any>({});
   const [currentWeek, setCurrentWeek] = useState<any>(1);
   const [currentDay, setCurrentDay] = useState<any>(1);
-  const [currentDate, setCurrentDate] = useState<any>(new Date().toISOString().split("T")[0]);
+  const [currentDate, setCurrentDate] = useState<any>(
+    new Date().toISOString().split("T")[0]
+  );
 
   const [showPercent, setShowPercent] = useState<any>({
     1: false,
     2: false,
     3: false,
-  })
+  });
   const getScreenPerformanceData = () => {
     const datesArray = screenLevelData?.result[
       "totalData"
@@ -138,9 +136,9 @@ export const CampaignDashboard = ({
     },
   ];
 
-  const commonClasses = "cursor-pointer rounded-[21px] shadow-sm col-span-1 bg-white p-4 rounded-[12px] h-auto ";
+  const commonClasses =
+    "cursor-pointer rounded-[21px] shadow-sm col-span-1 bg-white p-4 rounded-[12px] h-auto ";
 
-  
   useEffect(() => {
     setCalendarData(screenLevelData?.slotDataDateWiseArray);
     const handleClickOutside = (event: MouseEvent) => {
@@ -185,10 +183,10 @@ export const CampaignDashboard = ({
       // dates.push(currentDate.toISOString().split("T")[0]); // Format as YYYY-MM-DD
       dates.push({
         value: currentDate.toISOString().split("T")[0],
-        label: currentDate.toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: 'short',
-        })
+        label: currentDate.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+        }),
       });
       currentDate.setDate(currentDate.getDate() + 1); // Move to next day
     }
@@ -316,7 +314,11 @@ export const CampaignDashboard = ({
             <div
               key={item.id}
               className={`${commonClasses}
-              ${clicked === item.id ? "border border-[#129BFF] border-2" : "border border-gray-100 "}
+              ${
+                clicked === item.id
+                  ? "border border-[#129BFF] border-2"
+                  : "border border-gray-100 "
+              }
               `}
               onClick={() => setClicked(item.id)}
             >
@@ -330,17 +332,51 @@ export const CampaignDashboard = ({
         </div>
         <div className="mt-2">
           {clicked === "1" ? (
-            <DurationSegment screenLevelData={screenLevelData} calendarData={calendarData} setCurrentWeek={setCurrentWeek} currentWeek={currentWeek} setCurrentDay={setCurrentDay} currentDay={currentDay} setCurrentDate={setCurrentDate} currentDate={currentDate} allDates={allDates} loading={loading} showPercent={showPercent} setShowPercent={setShowPercent} />
+            <DurationSegment
+              screenLevelData={screenLevelData}
+              calendarData={calendarData}
+              setCurrentWeek={setCurrentWeek}
+              currentWeek={currentWeek}
+              setCurrentDay={setCurrentDay}
+              currentDay={currentDay}
+              setCurrentDate={setCurrentDate}
+              currentDate={currentDate}
+              allDates={allDates}
+              loading={loading}
+              showPercent={showPercent}
+              setShowPercent={setShowPercent}
+            />
           ) : clicked === "2" ? (
-            <AudienceSegment screenLevelData={screenLevelData} audienceData={audienceData} showPercent={showPercent} setShowPercent={setShowPercent} />
+            <AudienceSegment
+              screenLevelData={screenLevelData}
+              audienceData={audienceData}
+              showPercent={showPercent}
+              setShowPercent={setShowPercent}
+            />
           ) : clicked === "3" ? (
-            <HardwarePerformanceSegment screenLevelData={screenLevelData} hardwarePerformanceData={hardwarePerformanceData} showPercent={showPercent} setShowPercent={setShowPercent} />
+            <HardwarePerformanceSegment
+              screenLevelData={screenLevelData}
+              hardwarePerformanceData={hardwarePerformanceData}
+              showPercent={showPercent}
+              setShowPercent={setShowPercent}
+            />
           ) : clicked === "4" && spotData ? (
-            <SlotSegment screenLevelData={screenLevelData} spotData={spotData} showPercent={showPercent} setShowPercent={setShowPercent} />
+            <SlotSegment
+              screenLevelData={screenLevelData}
+              spotData={spotData}
+              showPercent={showPercent}
+              setShowPercent={setShowPercent}
+            />
           ) : clicked === "5" && costData ? (
-            <CostSegment screenLevelData={screenLevelData} costData={costData} showPercent={showPercent} setShowPercent={setShowPercent} />
-          ): null}
+            <CostSegment
+              screenLevelData={screenLevelData}
+              costData={costData}
+              showPercent={showPercent}
+              setShowPercent={setShowPercent}
+            />
+          ) : null}
         </div>
+        <SiteMonitoringPic sitesDataMapViewData={sitesDataMapViewData} />
         <SiteLevelPerformance
           siteLevelData={siteLevelData}
           campaignDetails={campaignDetails}

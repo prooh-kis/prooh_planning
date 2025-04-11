@@ -12,6 +12,8 @@ import {
   getHardwarePerformanceDataForPlannerDashboard,
   getSiteLevelPerformanceForPlannerDashboard,
   getSpotDeliveryDataForPlannerDashboard,
+  getSiteMonitoringPicsPercentage,
+  getSitesDataMapViewForPlannerDashboard,
 } from "../../actions/dashboardAction";
 
 export const NewDashBoard: React.FC = () => {
@@ -22,7 +24,6 @@ export const NewDashBoard: React.FC = () => {
   const [cities, setCities] = useState<any>([]);
   const [touchPoints, setTouchponints] = useState<any>([]);
   const [screenTypes, setScreenTypes] = useState<any>([]);
-
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -43,28 +44,36 @@ export const NewDashBoard: React.FC = () => {
     data: dashboardData,
   } = basicDataForPlannerDashboard;
 
-  const audienceDataForPlannerDashboard = useSelector((state: any) => state.audienceDataForPlannerDashboard);
+  const audienceDataForPlannerDashboard = useSelector(
+    (state: any) => state.audienceDataForPlannerDashboard
+  );
   const {
     loading: loadingAudienceData,
     error: errorAudienceData,
     data: audienceData,
   } = audienceDataForPlannerDashboard;
 
-  const hardwarePerformanceDataForPlannerDashboard = useSelector((state: any) => state.hardwarePerformanceDataForPlannerDashboard);
+  const hardwarePerformanceDataForPlannerDashboard = useSelector(
+    (state: any) => state.hardwarePerformanceDataForPlannerDashboard
+  );
   const {
     loading: loadingHardwarePerformanceData,
     error: errorHardwarePerformanceData,
     data: hardwarePerformanceData,
   } = hardwarePerformanceDataForPlannerDashboard;
 
-  const spotDeliveryDataForPlannerDashboard = useSelector((state: any) => state.spotDeliveryDataForPlannerDashboard);
+  const spotDeliveryDataForPlannerDashboard = useSelector(
+    (state: any) => state.spotDeliveryDataForPlannerDashboard
+  );
   const {
     loading: loadingSpotData,
     error: errorSpotData,
     data: spotData,
   } = spotDeliveryDataForPlannerDashboard;
 
-  const costDataForPlannerDashboard = useSelector((state: any) => state.costDataForPlannerDashboard);
+  const costDataForPlannerDashboard = useSelector(
+    (state: any) => state.costDataForPlannerDashboard
+  );
   const {
     loading: loadingCostData,
     error: errorCostData,
@@ -80,6 +89,17 @@ export const NewDashBoard: React.FC = () => {
     data: siteLevelData,
   } = siteLevelPerformanceForPlannerDashboard;
 
+  const sitesDataMapViewForPlannerDashboard = useSelector(
+    (state: any) => state.sitesDataMapViewForPlannerDashboard
+  );
+  const {
+    loading: loadingSitesDataMapView,
+    error: errorSitesDataMapView,
+    data: sitesDataMapViewData,
+  } = sitesDataMapViewForPlannerDashboard;
+
+  console.log("sitesDataMapViewData : ", sitesDataMapViewData);
+
   useEffect(() => {
     removeAllKeyFromLocalStorage();
     dispatch(addDetailsToCreateCampaign({ id: campaignId }));
@@ -88,32 +108,32 @@ export const NewDashBoard: React.FC = () => {
       getAudienceDataForPlannerDashboard({
         id: campaignId,
         cities: cities,
-        touchPoints: touchPoints, 
-        screenTypes: screenTypes
+        touchPoints: touchPoints,
+        screenTypes: screenTypes,
       })
     );
     dispatch(
       getHardwarePerformanceDataForPlannerDashboard({
         id: campaignId,
         cities: cities,
-        touchPoints: touchPoints, 
-        screenTypes: screenTypes
+        touchPoints: touchPoints,
+        screenTypes: screenTypes,
       })
     );
     dispatch(
       getSpotDeliveryDataForPlannerDashboard({
         id: campaignId,
         cities: cities,
-        touchPoints: touchPoints, 
-        screenTypes: screenTypes
+        touchPoints: touchPoints,
+        screenTypes: screenTypes,
       })
     );
     dispatch(
       getCostDataForPlannerDashboard({
         id: campaignId,
         cities: cities,
-        touchPoints: touchPoints, 
-        screenTypes: screenTypes
+        touchPoints: touchPoints,
+        screenTypes: screenTypes,
       })
     );
     dispatch(
@@ -124,29 +144,32 @@ export const NewDashBoard: React.FC = () => {
         screenTypes: screenTypes,
       })
     );
-
+    dispatch(getSiteMonitoringPicsPercentage({ id: campaignId }));
+    dispatch(getSitesDataMapViewForPlannerDashboard({ id: campaignId }));
     const interval = setInterval(() => {
       dispatch(getBasicDataForPlannerDashboard({ id: campaignId })); // Refresh data every 5 seconds
       dispatch(
         getAudienceDataForPlannerDashboard({
           id: campaignId,
           cities: cities,
-          touchPoints: touchPoints, 
-          screenTypes: screenTypes
+          touchPoints: touchPoints,
+          screenTypes: screenTypes,
         })
       );
-      dispatch(getSpotDeliveryDataForPlannerDashboard({
-        id: campaignId,
-        cities: cities,
-        touchPoints: touchPoints, 
-        screenTypes: screenTypes
-      }));
+      dispatch(
+        getSpotDeliveryDataForPlannerDashboard({
+          id: campaignId,
+          cities: cities,
+          touchPoints: touchPoints,
+          screenTypes: screenTypes,
+        })
+      );
       dispatch(
         getCostDataForPlannerDashboard({
           id: campaignId,
           cities: cities,
-          touchPoints: touchPoints, 
-          screenTypes: screenTypes
+          touchPoints: touchPoints,
+          screenTypes: screenTypes,
         })
       );
       dispatch(
@@ -157,6 +180,8 @@ export const NewDashBoard: React.FC = () => {
           screenTypes: screenTypes,
         })
       );
+      getSiteMonitoringPicsPercentage({ id: campaignId });
+      getSitesDataMapViewForPlannerDashboard({ id: campaignId });
     }, 600000);
 
     return () => clearInterval(interval);
@@ -190,6 +215,7 @@ export const NewDashBoard: React.FC = () => {
           hardwarePerformanceData={hardwarePerformanceData}
           spotData={spotData}
           costData={costData}
+          sitesDataMapViewData={sitesDataMapViewData}
         />
       )}
     </div>
