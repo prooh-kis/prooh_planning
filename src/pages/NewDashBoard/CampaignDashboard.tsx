@@ -13,6 +13,7 @@ import { AudienceSegment } from "./AudienceSegment";
 import { DurationSegment } from "./DurationSegment";
 import { HardwarePerformanceSegment } from "./HardwarePerformanceSegment";
 import { SiteMonitoringPic } from "./SiteMonitoringPic";
+import { getAudienceDataForPlannerDashboard, getCostDataForPlannerDashboard, getHardwarePerformanceDataForPlannerDashboard, getSiteLevelPerformanceForPlannerDashboard, getSpotDeliveryDataForPlannerDashboard } from "../../actions/dashboardAction";
 
 interface GridItem {
   id: string;
@@ -29,23 +30,25 @@ export const CampaignDashboard = ({
   campaignDetails,
   screenLevelData,
   siteLevelData,
-  audienceData,
-  hardwarePerformanceData,
-  spotData,
-  costData,
-  cities,
-  setCities,
-  touchPoints,
-  setTouchponints,
-  screenTypes,
-  setScreenTypes,
+  // audienceData,
+  // hardwarePerformanceData,
+  // spotData,
+  // costData,
+  filters,
+  setFilters,
+  // cities,
+  // setCities,
+  // touchPoints,
+  // setTouchponints,
+  // screenTypes,
+  // setScreenTypes,
   sitesDataMapViewData,
 }: any) => {
   const dropdownRef = useRef<any>(null);
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
 
-  const [clicked, setClicked] = useState<any>("1");
+  const [clicked, setClicked] = useState<any>("2");
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [openInvoice, setOpenInvoice] = useState<any>(false);
   const [poNumber, setPoNumber] = useState<any>("");
@@ -171,6 +174,65 @@ export const CampaignDashboard = ({
     endDate: campaignDetails?.endDate,
   });
 
+
+  // Fetch all dashboard data
+  const fetchDashboardData = useCallback(() => {
+
+    const commonParams = { id: campaignDetails?._id };
+
+    dispatch(
+      getAudienceDataForPlannerDashboard({
+        ...commonParams,
+        cities: filters.cities.audience?.filter((f: any) => f !== "all"),
+        touchPoints: filters.touchPoints.audience?.filter((f: any) => f !== "all"),
+        screenTypes: filters.screenTypes.audience?.filter((f: any) => f !== "all"),
+      })
+    );
+
+    dispatch(
+      getHardwarePerformanceDataForPlannerDashboard({
+        ...commonParams,
+        cities: filters.cities.screenPerformance?.filter((f: any) => f !== "all"),
+        touchPoints: filters.touchPoints.screenPerformance?.filter((f: any) => f !== "all"),
+        screenTypes: filters.screenTypes.screenPerformance?.filter((f: any) => f !== "all"),
+      })
+    );
+
+    dispatch(
+      getSpotDeliveryDataForPlannerDashboard({
+        ...commonParams,
+        cities: filters.cities.spotDelivery?.filter((f: any) => f !== "all"),
+        touchPoints: filters.touchPoints.spotDelivery?.filter((f: any) => f !== "all"),
+        screenTypes: filters.screenTypes.spotDelivery?.filter((f: any) => f !== "all"),
+      })
+    );
+
+    dispatch(
+      getCostDataForPlannerDashboard({
+        ...commonParams,
+        cities: filters.cities.costConsumption?.filter((f: any) => f !== "all"),
+        touchPoints: filters.touchPoints.costConsumption?.filter((f: any) => f !== "all"),
+        screenTypes: filters.screenTypes.costConsumption?.filter((f: any) => f !== "all"),
+      })
+    );
+
+    dispatch(
+      getSiteLevelPerformanceForPlannerDashboard({
+        ...commonParams,
+        cities: filters.cities.siteLevel,
+        touchPoints: filters.touchPoints.siteLevel,
+        screenTypes: filters.screenTypes.siteLevel,
+      })
+    );
+
+  }, [campaignDetails, dispatch, filters]);
+
+
+  useEffect(() => {
+    if (campaignDetails?._id) {
+      fetchDashboardData()
+    }
+  },[fetchDashboardData, campaignDetails?._id]);
   return (
     <div className="absolute w-full h-full mt-12 flex flex-col gap-2 bg-[] font-custom">
       <BillingAndInvoice
@@ -320,55 +382,67 @@ export const CampaignDashboard = ({
             />
           ) : clicked === "2" ? (
             <AudienceSegment
+              campaignId={campaignDetails?._id}
               screenLevelData={screenLevelData}
-              audienceData={audienceData}
+              // audienceData={audienceData}
               showPercent={showPercent}
               setShowPercent={setShowPercent}
-              cities={cities}
-              setCities={setCities}
-              touchPoints={touchPoints}
-              setTouchponints={setTouchponints}
-              screenTypes={screenTypes}
-              setScreenTypes={setScreenTypes}
+              filters={filters}
+              setFilters={setFilters}
+              // cities={cities}
+              // setCities={setCities}
+              // touchPoints={touchPoints}
+              // setTouchponints={setTouchponints}
+              // screenTypes={screenTypes}
+              // setScreenTypes={setScreenTypes}
             />
           ) : clicked === "3" ? (
             <HardwarePerformanceSegment
+              campaignId={campaignDetails?._id}
               screenLevelData={screenLevelData}
-              hardwarePerformanceData={hardwarePerformanceData}
+              // hardwarePerformanceData={hardwarePerformanceData}
               showPercent={showPercent}
               setShowPercent={setShowPercent}
-              cities={cities}
-              setCities={setCities}
-              touchPoints={touchPoints}
-              setTouchponints={setTouchponints}
-              screenTypes={screenTypes}
-              setScreenTypes={setScreenTypes}
+              filters={filters}
+              setFilters={setFilters}
+              // cities={cities}
+              // setCities={setCities}
+              // touchPoints={touchPoints}
+              // setTouchponints={setTouchponints}
+              // screenTypes={screenTypes}
+              // setScreenTypes={setScreenTypes}
             />
-          ) : clicked === "4" && spotData ? (
+          ) : clicked === "4" ? (
             <SlotSegment
+              campaignId={campaignDetails?._id}
               screenLevelData={screenLevelData}
-              spotData={spotData}
+              // spotData={spotData}
               showPercent={showPercent}
               setShowPercent={setShowPercent}
-              cities={cities}
-              setCities={setCities}
-              touchPoints={touchPoints}
-              setTouchponints={setTouchponints}
-              screenTypes={screenTypes}
-              setScreenTypes={setScreenTypes}
+              filters={filters}
+              setFilters={setFilters}
+              // cities={cities}
+              // setCities={setCities}
+              // touchPoints={touchPoints}
+              // setTouchponints={setTouchponints}
+              // screenTypes={screenTypes}
+              // setScreenTypes={setScreenTypes}
             />
-          ) : clicked === "5" && costData ? (
+          ) : clicked === "5" ? (
             <CostSegment
+              campaignId={campaignDetails?._id}
               screenLevelData={screenLevelData}
-              costData={costData}
+              // costData={costData}
               showPercent={showPercent}
               setShowPercent={setShowPercent}
-              cities={cities}
-              setCities={setCities}
-              touchPoints={touchPoints}
-              setTouchponints={setTouchponints}
-              screenTypes={screenTypes}
-              setScreenTypes={setScreenTypes}
+              filters={filters}
+              setFilters={setFilters}
+              // cities={cities}
+              // setCities={setCities}
+              // touchPoints={touchPoints}
+              // setTouchponints={setTouchponints}
+              // screenTypes={screenTypes}
+              // setScreenTypes={setScreenTypes}
             />
           ): null}
         </div>
