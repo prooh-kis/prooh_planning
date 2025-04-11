@@ -117,8 +117,6 @@ export const NewDashBoard: React.FC = () => {
     data: sitesDataMapViewData,
   } = sitesDataMapViewForPlannerDashboard;
 
-  console.log("sitesDataMapViewData : ", sitesDataMapViewData);
-
   useEffect(() => {
     removeAllKeyFromLocalStorage();
     dispatch(addDetailsToCreateCampaign({ id: campaignId }));

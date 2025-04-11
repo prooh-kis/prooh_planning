@@ -320,7 +320,6 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
     );
   };
 
-  console.log("sadsd", screenLevelData);
   return (
     <div className="w-full">
       {type === "duration" && renderDurationSection()}
