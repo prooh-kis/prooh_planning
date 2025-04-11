@@ -10,7 +10,6 @@ import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 export const AudienceSegment = ({
   campaignId,
-  // audienceData = [],
   setShowPercent,
   showPercent,
   screenLevelData,
@@ -101,7 +100,7 @@ export const AudienceSegment = ({
   return (
     <div className="w-full h-full">
       {loadingAudienceData && (
-        <div className="border border-gray-100 rounded-[12px] shadow-sm">
+        <div className="h-[240px] border border-gray-100 rounded-[12px] shadow-sm">
           <LoadingScreen />
         </div>
       )}

@@ -11,7 +11,6 @@ import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 export const CostSegment = ({
   campaignId,
-  // costData = [],
   setShowPercent,
   showPercent,
   screenLevelData,
@@ -23,7 +22,6 @@ export const CostSegment = ({
   const { loading: loadingCostData, data: costData } = useSelector(
     (state: any) => state.costDataForPlannerDashboard
   );
-
 
   const getCostData = () => {
     const datesArray = Object.keys(costData?.costData)?.map((date: any) => date);
@@ -105,9 +103,9 @@ export const CostSegment = ({
 
 
   return (
-    <div>
+    <div className="h-full w-full">
       {loadingCostData && (
-        <div className="border border-gray-100 rounded-[12px] shadow-sm">
+        <div className="h-[240px] border border-gray-100 rounded-[12px] shadow-sm">
           <LoadingScreen />
         </div>
       )}

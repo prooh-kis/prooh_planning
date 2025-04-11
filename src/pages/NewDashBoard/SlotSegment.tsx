@@ -11,18 +11,11 @@ import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 export const SlotSegment = ({
   campaignId,
-  // spotData,
   setShowPercent,
   showPercent,
   screenLevelData,
   filters,
   setFilters
-  // cities,
-  // setCities,
-  // touchPoints,
-  // setTouchponints,
-  // screenTypes,
-  // setScreenTypes,
 }: any) => {
 
   const dispatch = useDispatch<any>();
@@ -115,7 +108,7 @@ export const SlotSegment = ({
   return (
     <div className="h-full w-full">
       {loadingSpotData && (
-        <div className="border border-gray-100 rounded-[12px] shadow-sm">
+        <div className="h-[240px] border border-gray-100 rounded-[12px] shadow-sm">
           <LoadingScreen />
         </div>
       )}

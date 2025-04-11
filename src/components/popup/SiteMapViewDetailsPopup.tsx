@@ -344,10 +344,10 @@ export const SiteMapViewDetailsPopup = ({
     },
   ];
 
-  console.log(
-    "sitesDataMapViewData : ",
-    JSON.stringify(sitesDataMapViewData || {})
-  );
+  // console.log(
+  //   "sitesDataMapViewData : ",
+  //   JSON.stringify(sitesDataMapViewData || {})
+  // );
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 font-inter">

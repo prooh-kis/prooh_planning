@@ -145,8 +145,7 @@ export const CampaignDashboard = ({
     const dates = [];
     let currentDate = new Date(startDate);
     const lastDate = new Date(endDate);
-
-    while (currentDate <= lastDate) {
+    while (currentDate.getDate() <= lastDate.getDate()) {
       // dates.push(currentDate.toISOString().split("T")[0]); // Format as YYYY-MM-DD
       dates.push({
         value: currentDate.toISOString().split("T")[0],
@@ -165,7 +164,6 @@ export const CampaignDashboard = ({
     startDate: campaignDetails?.startDate,
     endDate: campaignDetails?.endDate,
   });
-
 
   // Fetch all dashboard data
   const fetchDashboardData = useCallback(() => {

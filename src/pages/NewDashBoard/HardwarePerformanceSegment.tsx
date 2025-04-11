@@ -11,7 +11,6 @@ import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 export const HardwarePerformanceSegment = ({
   campaignId,
-  // hardwarePerformanceData = [],
   setShowPercent,
   showPercent,
   screenLevelData,
@@ -111,7 +110,7 @@ export const HardwarePerformanceSegment = ({
   return (
     <div className="w-full h-full">
       {loadingHardwarePerformanceData && (
-        <div className="border border-gray-100 rounded-[12px] shadow-sm">
+        <div className="h-[240px] border border-gray-100 rounded-[12px] shadow-sm">
           <LoadingScreen />
         </div>
       )}

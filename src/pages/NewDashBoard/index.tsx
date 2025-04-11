@@ -117,7 +117,6 @@ export const NewDashBoard: React.FC = () => {
       </div>
     );
   }
-
   return (
     <div className="w-full h-full">
       <CampaignDashboard
