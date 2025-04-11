@@ -33,6 +33,12 @@ export const CampaignDashboard = ({
   hardwarePerformanceData,
   spotData,
   costData,
+  cities,
+  setCities,
+  touchPoints,
+  setTouchponints,
+  screenTypes,
+  setScreenTypes,
   sitesDataMapViewData,
 }: any) => {
   const dropdownRef = useRef<any>(null);
@@ -155,20 +161,6 @@ export const CampaignDashboard = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [screenLevelData?.slotDataDateWiseArray, setCalendarData]);
-
-  const getCostDataScreenWise = (data: any) => {
-    const newData: any = {};
-    const data1 = screenLevelData?.result;
-    for (const key in data1 || {}) {
-      newData[key] = data1[key].screenName;
-    }
-    const result: any = {};
-
-    for (let key in data) {
-      result[newData[key]] = data[key];
-    }
-    return result; // {"ScreenName" : value,....}
-  };
 
   const handleToggleMenu = useCallback(() => {
     setShowMenu((pre: boolean) => !pre);
@@ -352,6 +344,12 @@ export const CampaignDashboard = ({
               audienceData={audienceData}
               showPercent={showPercent}
               setShowPercent={setShowPercent}
+              cities={cities}
+              setCities={setCities}
+              touchPoints={touchPoints}
+              setTouchponints={setTouchponints}
+              screenTypes={screenTypes}
+              setScreenTypes={setScreenTypes}
             />
           ) : clicked === "3" ? (
             <HardwarePerformanceSegment
@@ -359,6 +357,12 @@ export const CampaignDashboard = ({
               hardwarePerformanceData={hardwarePerformanceData}
               showPercent={showPercent}
               setShowPercent={setShowPercent}
+              cities={cities}
+              setCities={setCities}
+              touchPoints={touchPoints}
+              setTouchponints={setTouchponints}
+              screenTypes={screenTypes}
+              setScreenTypes={setScreenTypes}
             />
           ) : clicked === "4" && spotData ? (
             <SlotSegment
@@ -366,6 +370,12 @@ export const CampaignDashboard = ({
               spotData={spotData}
               showPercent={showPercent}
               setShowPercent={setShowPercent}
+              cities={cities}
+              setCities={setCities}
+              touchPoints={touchPoints}
+              setTouchponints={setTouchponints}
+              screenTypes={screenTypes}
+              setScreenTypes={setScreenTypes}
             />
           ) : clicked === "5" && costData ? (
             <CostSegment
@@ -373,8 +383,14 @@ export const CampaignDashboard = ({
               costData={costData}
               showPercent={showPercent}
               setShowPercent={setShowPercent}
+              cities={cities}
+              setCities={setCities}
+              touchPoints={touchPoints}
+              setTouchponints={setTouchponints}
+              screenTypes={screenTypes}
+              setScreenTypes={setScreenTypes}
             />
-          ) : null}
+          ): null}
         </div>
         <SiteMonitoringPic sitesDataMapViewData={sitesDataMapViewData} />
         <SiteLevelPerformance

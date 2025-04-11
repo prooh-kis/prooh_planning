@@ -107,7 +107,7 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
           align: "center" as const,
           font: { size: 8 },
           formatter: (value: number) =>
-            value > 10 ? formatNumber(value.toFixed(0)) : "", // Hide
+            value > 10 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
         },
       },
     ],
@@ -134,7 +134,7 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
           label: (context: any) => {
             let label = context.dataset.label || "";
             let value = context.raw;
-            return `${label}: INR ${value.toFixed(0)}`;
+            return `${label}: ${value.toFixed(0)}%`;
           },
         },
       },

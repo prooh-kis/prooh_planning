@@ -21,9 +21,28 @@ export const NewDashBoard: React.FC = () => {
   const { pathname } = useLocation();
   const campaignId = pathname?.split("/")?.splice(-1)[0];
 
-  const [cities, setCities] = useState<any>([]);
-  const [touchPoints, setTouchponints] = useState<any>([]);
-  const [screenTypes, setScreenTypes] = useState<any>([]);
+  const [cities, setCities] = useState<any>({
+    "audience":[],
+    "screenPerformance": [],
+    "spotDelivery": [],
+    "costConsumption": [],
+    "siteLevel": [],
+  });
+  const [touchPoints, setTouchponints] = useState<any>({
+    "audience":[],
+    "screenPerformance": [],
+    "spotDelivery": [],
+    "costConsumption": [],
+    "siteLevel": [],
+  });
+  const [screenTypes, setScreenTypes] = useState<any>({
+    "audience":[],
+    "screenPerformance": [],
+    "spotDelivery": [],
+    "costConsumption": [],
+    "siteLevel": [],
+  });
+
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -107,41 +126,41 @@ export const NewDashBoard: React.FC = () => {
     dispatch(
       getAudienceDataForPlannerDashboard({
         id: campaignId,
-        cities: cities,
-        touchPoints: touchPoints,
-        screenTypes: screenTypes,
+        cities: cities["audience"],
+        touchPoints: touchPoints["audience"], 
+        screenTypes: screenTypes["audience"]
       })
     );
     dispatch(
       getHardwarePerformanceDataForPlannerDashboard({
         id: campaignId,
-        cities: cities,
-        touchPoints: touchPoints,
-        screenTypes: screenTypes,
+        cities: cities["screenPerformance"],
+        touchPoints: touchPoints["screenPerformance"], 
+        screenTypes: screenTypes["screenPerformance"]
       })
     );
     dispatch(
       getSpotDeliveryDataForPlannerDashboard({
         id: campaignId,
-        cities: cities,
-        touchPoints: touchPoints,
-        screenTypes: screenTypes,
+        cities: cities["spotDelivery"],
+        touchPoints: touchPoints["spotDelivery"], 
+        screenTypes: screenTypes["spotDelivery"]
       })
     );
     dispatch(
       getCostDataForPlannerDashboard({
         id: campaignId,
-        cities: cities,
-        touchPoints: touchPoints,
-        screenTypes: screenTypes,
+        cities: cities["costConsumption"],
+        touchPoints: touchPoints["costConsumption"], 
+        screenTypes: screenTypes["costConsumption"]
       })
     );
     dispatch(
       getSiteLevelPerformanceForPlannerDashboard({
         id: campaignId,
-        cities: cities,
-        touchPoints: touchPoints,
-        screenTypes: screenTypes,
+        cities: cities["siteLevel"],
+        touchPoints: touchPoints["siteLevel"],
+        screenTypes: screenTypes["siteLevel"],
       })
     );
     dispatch(getSiteMonitoringPicsPercentage({ id: campaignId }));
@@ -151,33 +170,41 @@ export const NewDashBoard: React.FC = () => {
       dispatch(
         getAudienceDataForPlannerDashboard({
           id: campaignId,
-          cities: cities,
-          touchPoints: touchPoints,
-          screenTypes: screenTypes,
+          cities: cities["audience"],
+          touchPoints: touchPoints["audience"], 
+          screenTypes: screenTypes["audience"]
+        })
+      );
+      dispatch(
+        getHardwarePerformanceDataForPlannerDashboard({
+          id: campaignId,
+          cities: cities["screenPerformance"],
+          touchPoints: touchPoints["screenPerformance"], 
+          screenTypes: screenTypes["screenPerformance"]
         })
       );
       dispatch(
         getSpotDeliveryDataForPlannerDashboard({
           id: campaignId,
-          cities: cities,
-          touchPoints: touchPoints,
-          screenTypes: screenTypes,
+          cities: cities["spotDelivery"],
+          touchPoints: touchPoints["spotDelivery"], 
+          screenTypes: screenTypes["spotDelivery"]
         })
       );
       dispatch(
         getCostDataForPlannerDashboard({
           id: campaignId,
-          cities: cities,
-          touchPoints: touchPoints,
-          screenTypes: screenTypes,
+          cities: cities["costConsumption"],
+          touchPoints: touchPoints["costConsumption"], 
+          screenTypes: screenTypes["costConsumption"]
         })
       );
       dispatch(
         getSiteLevelPerformanceForPlannerDashboard({
           id: campaignId,
-          cities: cities,
-          touchPoints: touchPoints,
-          screenTypes: screenTypes,
+          cities: cities["siteLevel"],
+          touchPoints: touchPoints["siteLevel"],
+          screenTypes: screenTypes["siteLevel"],
         })
       );
       getSiteMonitoringPicsPercentage({ id: campaignId });
@@ -186,6 +213,30 @@ export const NewDashBoard: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [dispatch, campaignId, cities, touchPoints, screenTypes]);
+
+  useEffect(() => {
+    if (spotData && (cities["spotDelivery"].length == 0 || touchPoints["spotDelivery"].length == 0 || screenTypes["spotDelivery"].length == 0)) {
+      setCities((pre: any) => {
+        return {
+          ...pre,
+          "spotDelivery": Object.keys(spotData.cityWiseData)
+        }
+      });
+      setTouchponints((pre: any) => {
+        return {
+          ...pre,
+          "spotDelivery": Object.keys(spotData.touchPointWiseData)
+        }
+      });
+      setScreenTypes((pre: any) => {
+        return {
+          ...pre,
+          "spotDelivery": Object.keys(spotData.screenTypeWiseData),
+        }
+      });
+    }
+
+  },[cities, screenTypes, setCities, setScreenTypes, setTouchponints, spotData, touchPoints]);
 
   return (
     <div className="w-full h-full">
@@ -215,7 +266,12 @@ export const NewDashBoard: React.FC = () => {
           hardwarePerformanceData={hardwarePerformanceData}
           spotData={spotData}
           costData={costData}
-          sitesDataMapViewData={sitesDataMapViewData}
+          cities={cities}
+          setCities={setCities}
+          touchPoints={touchPoints}
+          setTouchponints={setTouchponints}
+          screenTypes={screenTypes}
+          setScreenTypes={setScreenTypes}
         />
       )}
     </div>

@@ -22,7 +22,9 @@ interface BarChartProps {
     costConsumed: number;
     costTaken: number;
     costTakenTillDate: number;
-    screenPerformance: number;
+    hardwarePerformancePromised?: any;
+    hardwarePerformanceDelivered?: any;
+    hardwarePerformancePromisedTillDate?: any;
     result?: {
       totalData?: {
         screenPerformance: number;
@@ -203,7 +205,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
   };
 
   const renderScreenSection = () => {
-    const screenPerformance = screenLevelData?.screenPerformance || 0;
+    const screenPerformance = screenLevelData?.hardwarePerformanceDelivered || 0;
     const percentage = getPercentageDifference(
       screenPerformance,
       100,
@@ -218,19 +220,20 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
           bgColor=" bg-[#6982FF]"
         />
         <ValueAboveGraph
-          left={`${formatNumber(screenPerformance)}%`}
+          left={`${formatNumber(screenLevelData?.hardwarePerformanceDelivered.toFixed(0))}%`}
           right="100%"
         />
         <div className="mt-1">
-          <LinearBar
-            value={screenLevelData?.result?.totalData?.screenPerformance || 0}
-            colors={["#D1E5F7", "#DC6700"]}
-            highest={100}
+          <MultiColorLinearBar2
+            delivered={screenLevelData?.hardwarePerformanceDelivered.toFixed(0)}
+            expected={screenLevelData?.hardwarePerformancePromisedTillDate.toFixed(0)}
+            total={screenLevelData?.hardwarePerformancePromised.toFixed(0)}
+            deliveredColor="bg-[#6982FF]"
           />
         </div>
         <ValueBelowGraph
-          left={`${formatNumber(screenPerformance)}%`}
-          right="100%"
+          left={`${formatNumber(screenLevelData?.hardwarePerformanceDelivered.toFixed(0))}%`}
+          right={`${formatNumber(screenLevelData?.hardwarePerformancePromisedTillDate.toFixed(0))}%`}
           value={percentage}
           isPositive={percentage > 0}
         />
@@ -317,6 +320,7 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
     );
   };
 
+  console.log("sadsd", screenLevelData);
   return (
     <div className="w-full">
       {type === "duration" && renderDurationSection()}

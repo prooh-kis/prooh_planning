@@ -4,12 +4,19 @@ import { SectionHeaderWithSwitch } from "../../components/segments/SectionHeader
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { MultiColorLinearBar2 } from "../../components/molecules/MultiColorLinearBar2";
 import { formatNumber } from "../../utils/formatValue";
+import { useEffect } from "react";
 
 export const SlotSegment = ({
-  spotData = [],
+  spotData,
   setShowPercent,
   showPercent,
   screenLevelData,
+  cities,
+  setCities,
+  touchPoints,
+  setTouchponints,
+  screenTypes,
+  setScreenTypes,
 }: any) => {
 
 
@@ -18,6 +25,10 @@ export const SlotSegment = ({
     const countsArray = Object.values(spotData?.spotDeliveryData).map((slot: any) => slot);
     return { datesArray, countsArray };
   };
+
+  const handleClick = ({type, value, checked}: any) => {
+    console.log(type, value, checked);
+  }
 
   return (
     <div className="grid grid-cols-5 gap-2 ">
@@ -62,10 +73,14 @@ export const SlotSegment = ({
                   <CheckboxInput
                     disabled={false}
                     label={cityKey.toUpperCase()}
-                    checked={true}
+                    checked={cities["spotDelivery"].includes(cityKey)}
                     textSize={"10px"}
                     color={"#D7D7D7"}
-                    onChange={() => {}}
+                    onChange={(checked) => handleClick({
+                      type: "city",
+                      value: cityKey,
+                      checked: checked
+                    })}
                   />
                 </div>
                 <div className="flex items-center w-full gap-2">
@@ -111,10 +126,14 @@ export const SlotSegment = ({
                   <CheckboxInput
                     disabled={false}
                     label={tpKey.toUpperCase()}
-                    checked={true}
+                    checked={touchPoints["spotDelivery"].includes(tpKey)}
                     textSize={"10px"}
                     color={"#D7D7D7"}
-                    onChange={() => {}}
+                    onChange={(checked) => handleClick({
+                      type: "city",
+                      value: tpKey,
+                      checked: checked
+                    })}
                   />
                 </div>
                 <div className="flex items-center w-full gap-2">
@@ -160,10 +179,14 @@ export const SlotSegment = ({
                   <CheckboxInput
                     disabled={false}
                     label={stKey.toUpperCase()}
-                    checked={true}
+                    checked={screenTypes["spotDelivery"].includes(stKey)}
                     textSize={"10px"}
                     color={"#D7D7D7"}
-                    onChange={() => {}}
+                    onChange={(checked) => handleClick({
+                      type: "city",
+                      value: stKey,
+                      checked: checked
+                    })}
                   />
                 </div>
                 <div className="flex items-center w-full gap-2">

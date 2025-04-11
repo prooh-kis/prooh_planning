@@ -13,7 +13,6 @@ export const AudienceSegment = ({
 }: any) => {
 
 
-
   return (
     <div className="grid grid-cols-5 gap-2 ">
 
