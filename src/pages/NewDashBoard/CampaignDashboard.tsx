@@ -48,7 +48,7 @@ export const CampaignDashboard = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
 
-  const [clicked, setClicked] = useState<any>("2");
+  const [clicked, setClicked] = useState<any>("1");
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [openInvoice, setOpenInvoice] = useState<any>(false);
   const [poNumber, setPoNumber] = useState<any>("");
