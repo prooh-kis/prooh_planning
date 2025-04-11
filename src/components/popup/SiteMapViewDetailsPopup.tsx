@@ -41,6 +41,7 @@ interface ValueDisplayProps {
   right: string | number;
   isPositive?: boolean;
   value?: number;
+  inPercentage: boolean;
 }
 
 interface MetricCardProps {
@@ -48,17 +49,102 @@ interface MetricCardProps {
   delivered: number;
   promised: number;
   colors?: string[];
+  inPercentage?: boolean;
 }
 
+interface LegendItem {
+  id: string;
+  label: string;
+  color: string;
+  size: number; // Made required by removing the optional operator (?)
+  doubleColor?: boolean;
+  secondColor?: string;
+}
+
+const Legend = () => {
+  const legendItems: LegendItem[] = [
+    {
+      id: "iconic-screens",
+      label: "Iconic Screens",
+      color: "#129BFF",
+      size: 6,
+    },
+    {
+      id: "big-screens",
+      label: "Big Screens",
+      color: "#129BFF",
+      size: 5, // Now required for all items
+    },
+    {
+      id: "small-screens",
+      label: "Small Screens",
+      color: "#129BFF",
+      size: 4,
+    },
+    {
+      id: "current-day",
+      label: "Current Day",
+      color: "#FFDB5D",
+      size: 4,
+    },
+    {
+      id: "hardware-performance",
+      label: "Hardware Performance",
+      color: "#6982FF",
+      size: 4,
+    },
+    {
+      id: "overall-performance",
+      label: "Overall Performance",
+      color: "#FF0000",
+      size: 4,
+      doubleColor: true,
+      secondColor: "#149031",
+    },
+  ];
+
+  return (
+    <div className="flex gap-4 py-2 flex-wrap">
+      {legendItems.map((item) => (
+        <div key={item.id} className="flex gap-2 items-center">
+          <div
+            className={`bg-[${item.color}] rounded-full`}
+            style={{
+              width: `${item.size * 0.25}rem`,
+              height: `${item.size * 0.25}rem`,
+            }}
+          />
+          {item.doubleColor && item.secondColor && (
+            <div
+              className={`bg-[${item.secondColor}] rounded-full`}
+              style={{
+                width: `${item.size * 0.25}rem`,
+                height: `${item.size * 0.25}rem`,
+              }}
+            />
+          )}
+          <h1 className="text-[#0E212E] text-[14px] font-inter">
+            {item.label}
+          </h1>
+        </div>
+      ))}
+    </div>
+  );
+};
 export const ValueDisplay = ({
   left,
   right,
   isPositive = true,
   value,
+  inPercentage,
 }: ValueDisplayProps) => (
   <h1 className="text-[12px] font-medium leading-[32.68px] text-[#9bb3c9]">
-    <span className="text-[#0E212E]">{formatNumber(left)}</span> /{" "}
-    {formatNumber(right)}
+    <span className="text-[#0E212E]">
+      {formatNumber(left)}
+      {inPercentage && "%"}
+    </span>{" "}
+    / {formatNumber(right)}
+    {inPercentage && "%"}
     {value !== undefined && (
       <span className={isPositive ? "text-[#2A892D]" : "text-[#CC0000]"}>
         {` (${value}%)`}
@@ -75,6 +161,7 @@ export const MetricCard = ({
   delivered,
   promised,
   colors,
+  inPercentage = false,
 }: MetricCardProps) => {
   const percentage = ((delivered / promised) * 100).toFixed(0);
   const isPositive = delivered >= promised;
@@ -97,6 +184,7 @@ export const MetricCard = ({
             right={promised}
             value={Number(percentage)}
             isPositive={isPositive}
+            inPercentage={inPercentage}
           />
         </div>
       </div>
@@ -211,6 +299,16 @@ export const SiteMapViewDetailsPopup = ({
   const [currentSite, setCurrentSite] = useState<any>(null);
   const [currentTab, setCurrentTab] = useState<string>("1");
 
+  // Then when using the component:
+  <TabWithoutIcon
+    tabData={[
+      { id: "1", label: "Site Overview" },
+      { id: "2", label: "Monitoring Pic" },
+    ]}
+    currentTab={currentTab}
+    setCurrentTab={setCurrentTab}
+    textSize={"text-[14px]"}
+  />;
   const metrics = [
     {
       id: "1",
@@ -222,9 +320,11 @@ export const SiteMapViewDetailsPopup = ({
     {
       id: "2",
       label: "Hardware Performance",
-      delivered: currentSite?.slotsDelivered || 0,
-      promised: currentSite?.slotsPromisedTillDate || 1,
+      delivered: currentSite?.hardwarePerformanceDelivered?.toFixed(2) || 0,
+      promised:
+        currentSite?.hardwarePerformancePromisedTillDate?.toFixed(2) || 1,
       colors: ["#EDEDED", "#6982FF"],
+      inPercentage: true,
     },
     {
       id: "3",
@@ -248,15 +348,18 @@ export const SiteMapViewDetailsPopup = ({
   );
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 font-inter">
       <div className="border bg-[#FFFFFF] rounded-[10px] h-[80vh] w-[95%] p-4">
         <div className="relative inset-0 flex items-center justify-between gap-4 py-2 pr-5">
           <div className="flex gap-2 items-center">
-            <i className="fi fi-sr-angle-small-left text-[#B0B0B0]"></i>
-            <h1 className="text-[#0E212E] font-semibold text-[20px]">
+            <i
+              className="fi fi-sr-angle-small-left text-[#B0B0B0]"
+              onClick={handleCancel}
+            ></i>
+            <h1 className="text-[#0E212E] font-semibold text-[20px] font-inter">
               Site Map View{" "}
               <span className="text-[#B0B0B0] text-[14px]">
-                ({sitesDataMapViewData?.length})
+                ({sitesDataMapViewData?.length || 0} Sites)
               </span>
             </h1>
           </div>
@@ -315,6 +418,7 @@ export const SiteMapViewDetailsPopup = ({
                   ]}
                   currentTab={currentTab}
                   setCurrentTab={setCurrentTab}
+                  textSize={"text-[14px]"}
                 />
               </div>
               {currentTab === "1" ? (
@@ -326,6 +430,7 @@ export const SiteMapViewDetailsPopup = ({
                       delivered={metric.delivered}
                       promised={metric.promised}
                       colors={metric?.colors}
+                      inPercentage={metric?.inPercentage}
                     />
                   ))}
                 </div>
@@ -337,6 +442,7 @@ export const SiteMapViewDetailsPopup = ({
             </div>
           )}
         </div>
+        <Legend />
       </div>
     </div>
   );

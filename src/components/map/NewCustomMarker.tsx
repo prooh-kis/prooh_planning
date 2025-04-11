@@ -33,13 +33,19 @@ export const NewCustomMarker: FunctionComponent<Props> = ({
             {/* hardware performance not Completed */}
             <div className="flex justify-between gap-1 items-center">
               <LinearBar
-                value={marker?.slotsDelivered}
+                value={marker?.hardwarePerformanceDelivered?.toFixed(2)}
                 colors={["#BDC8FF", "#6982FF"]}
-                highest={marker?.slotsPromised}
+                highest={marker?.hardwarePerformancePromisedTillDate?.toFixed(
+                  2
+                )}
                 percent={false}
               />
               <p>
-                {getPercentage(marker?.slotsDelivered, marker?.slotsPromised)}%
+                {getPercentage(
+                  marker?.hardwarePerformanceDelivered,
+                  marker?.hardwarePerformancePromisedTillDate
+                )}
+                %
               </p>
             </div>
             <div className="flex justify-between gap-1 items-center">
@@ -73,17 +79,24 @@ export const NewCustomMarker: FunctionComponent<Props> = ({
               </p>
             </div>
           </div>
-          <i
+
+          <h1
             className={`
             ${
               marker?.screenType === "Spectacular"
-                ? "fi fi-ss-circle text-[32px]"
+                ? "h-6 w-6 "
                 : marker?.screenType === "Large"
-                ? "fi fi-ss-circle text-[28px]"
-                : "fi fi-ss-circle text-[24px]"
+                ? "h-5 w-5"
+                : "h-4 w-4"
             }
-            flex items-center justify-center text-[${color}]`}
-          ></i>
+            flex items-center justify-center bg-[#129BFF] text-[#FFFFFF] rounded-full `}
+          >
+            {/* {marker?.screenType === "Spectacular"
+              ? "I"
+              : marker?.screenType === "Large"
+              ? "B"
+              : "S"} */}
+          </h1>
         </div>
       </div>
     );

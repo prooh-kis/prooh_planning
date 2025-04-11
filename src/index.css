@@ -48,6 +48,14 @@ code {
   /* letter-spacing: -0.01em; */
 }
 
+.font-inter {
+  font-family: "Inter";
+  font-optical-sizing: auto;
+  /* font-weight: <weight>; */
+  font-style: normal;
+  /* letter-spacing: -0.01em; */
+}
+
 .rotated-text {
   transform: rotate(180deg);
   writing-mode: vertical-lr;
