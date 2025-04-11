@@ -270,6 +270,7 @@ export const NewDashBoard: React.FC = () => {
           setTouchponints={setTouchponints}
           screenTypes={screenTypes}
           setScreenTypes={setScreenTypes}
+          sitesDataMapViewData={sitesDataMapViewData}
         />
       )}
     </div>

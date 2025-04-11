@@ -197,7 +197,6 @@ export const getSitesDataMapViewForPlannerDashboard =
       payload: input,
     });
     try {
-      console.log("getSitesDataMapViewForPlannerDashboard called!");
       const { data } = await axios.post(
         `${newDashboardURL}/getSitesDataMapViewForPlannerDashboard`,
         input
