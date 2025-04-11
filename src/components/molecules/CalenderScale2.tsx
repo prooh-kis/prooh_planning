@@ -1,5 +1,5 @@
 import { signout } from "../../actions/userAction";
-import React, { useEffect, useMemo, useCallback } from "react";
+import React, { useEffect, useMemo, useCallback, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { message, Tooltip } from "antd";
@@ -21,6 +21,7 @@ interface StepSliderProps {
   currentDate?: string;
   calendarData?: any;
   loading?: boolean;
+  openSiteMapView?: any;
 }
 
 export const CalenderScaleStepper = ({
@@ -33,12 +34,15 @@ export const CalenderScaleStepper = ({
   currentDate,
   calendarData,
   loading,
+  openSiteMapView,
 }: StepSliderProps) => {
 
+  const componentRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
+  const [showTooltip, setShowTooltip] = useState<any>(true);
 
   const groupDatesByWeek = useCallback((dates: Array<{value: string, label: string}>) => {
     const weeks: { [key: string]: Array<{value: string, label: string}> } = {};
@@ -107,15 +111,15 @@ export const CalenderScaleStepper = ({
     }
   }, [loading, currentDay, currentWeek, weeks, setCurrentDay, setCurrentWeek, setCurrentDate]);
 
-  const getValueDateWise = useCallback((label: string, i: number) => {
-    const result = calendarData?.find(
-      (data: any) =>
-        formatDateForLogs(new Date(data.date)).apiDate ===
-        formatDateForLogs(new Date(weeks[currentWeek - 1][1][i].value))
-          .apiDate
-    )?.[label];
-    return Number(result);
-  }, [calendarData, currentWeek, weeks]);
+  // const getValueDateWise = useCallback((label: string, i: number) => {
+  //   const result = calendarData?.find(
+  //     (data: any) =>
+  //       formatDateForLogs(new Date(data.date)).apiDate ===
+  //       formatDateForLogs(new Date(weeks[currentWeek - 1][1][i].value))
+  //         .apiDate
+  //   )?.[label];
+  //   return Number(result);
+  // }, [calendarData, currentWeek, weeks]);
 
   const getPercentageValue = useCallback((delivered: number, promised: number) => {
     const percentage = (delivered / promised) * 100 || 0;
@@ -169,6 +173,36 @@ export const CalenderScaleStepper = ({
     }
   }, [dispatch, userInfo]);
 
+
+  useEffect(() => {
+    const checkVisibility = () => {
+      if (componentRef.current) {
+        const rect = componentRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        
+        // Check if the component is in the middle of the viewport
+        const componentMiddle = rect.top + rect.height / 2;
+        const viewportMiddle = viewportHeight / 2;
+        const isInMiddle = Math.abs(componentMiddle - viewportMiddle) < viewportHeight * 0.25;
+        setShowTooltip(isInMiddle);
+      }
+      if (openSiteMapView) {
+        setShowTooltip(false)
+      }
+    };
+
+    // Initial check
+    checkVisibility();
+
+    // Add scroll event listener
+    window.addEventListener('scroll', checkVisibility);
+    // Cleanup
+    return () => {
+      window.removeEventListener('scroll', checkVisibility);
+    };
+  }, [openSiteMapView]);
+  
+
   useEffect(() => {
     if (currentDate && allDates.length > 0) {
       // Find the index of the currentDate in allDates
@@ -209,7 +243,7 @@ export const CalenderScaleStepper = ({
   const currentWeekPercentage = allWeekPercentages[currentWeek - 1]?.percentage || 0;
   const currentWeekPercentageColor = allWeekPercentages[currentWeek - 1]?.color || "#FF4747";
   return (
-    <div className="w-full cursor-pointer">
+    <div className="w-full cursor-pointer" ref={componentRef}>
       <div className="pt-12 mb-20 flex justify-center">
         <div className={`flex-${weeks.length === 1 ? 0 : 1} h-1 bg-[#D1E5F7] relative mx-1`}>
           <div className="absolute inset-x-0 flex justify-between">
@@ -237,7 +271,7 @@ export const CalenderScaleStepper = ({
                     <i className="fi fi-rr-calendar-lines text-[12px] flex items-center"></i>
                     <h1 className="text-[12px]">{`${new Date().toDateString()}`}</h1>
                   </div>
-                  } open={true}>
+                  } open={showTooltip}>
                   <div
                     className="absolute h-1 w-[2px] bg-[#FFD700] rounded-full"
                     style={{
@@ -330,13 +364,12 @@ export const CalenderScaleStepper = ({
               >
                 <Tooltip id="3" placement="bottom"
                   title={
-                  
                     <div className="flex items-center gap-2">
                       <i className="fi fi-br-clock text-[12px] flex items-center"></i>
                       <h1 className="text-[12px]">{moment().format("hh:mm A")}</h1>
                     </div>
                   } 
-                  open={true}
+                  open={showTooltip}
                 >
                   <div
                     className="absolute h-1 w-[2px] bg-[#FFD700] z-1 rounded-full"

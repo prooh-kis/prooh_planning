@@ -27,7 +27,6 @@ export const NewDashBoard: React.FC = () => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
   const campaignId = pathname.split("/").pop() || "";
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   // State for filters
   const [filters, setFilters] = useState<{
@@ -92,14 +91,10 @@ export const NewDashBoard: React.FC = () => {
     // return () => clearInterval(interval);
   }, [dispatch, campaignId]);
 
-  const handlePopupToggle = (isOpen: boolean) => {
-    setIsPopupOpen(isOpen);
-  };
-
   const isLoading = loadingCampaignDetails || loadingDashboard;
   const hasError = errorCampaignDetails || errorDashboard;
 
-  if (loadingCampaignDetails) {
+  if (isLoading) {
     return (
       <div className="w-full h-full space-y-2">
         <div className="h-[10vh] w-full border rounded-[12px] mt-10">
@@ -130,35 +125,9 @@ export const NewDashBoard: React.FC = () => {
         campaignDetails={campaignDetails}
         screenLevelData={dashboardData}
         siteLevelData={siteLevelData}
-        // audienceData={audienceData}
-        // hardwarePerformanceData={hardwarePerformanceData}
-        // spotData={spotData}
-        // costData={costData}
         filters={filters}
         setFilters={setFilters}
-        // cities={filters.cities}
-        // setCities={(type: string, values: string) =>
-        //   setFilters((prev) => ({
-        //     ...prev,
-        //     cities: { ...prev.cities, [type]: values },
-        //   }))
-        // }
-        // touchPoints={filters.touchPoints}
-        // setTouchPoints={(type: string, values: string) =>
-        //   setFilters((prev) => ({
-        //     ...prev,
-        //     touchPoints: { ...prev.touchPoints, [type]: values },
-        //   }))
-        // }
-        // screenTypes={filters.screenTypes}
-        // setScreenTypes={(type: string, values: string) =>
-        //   setFilters((prev) => ({
-        //     ...prev,
-        //     screenTypes: { ...prev.screenTypes, [type]: values },
-        //   }))
-        // }
         sitesDataMapViewData={sitesDataMapViewData}
-        onPopupToggle={handlePopupToggle}
       />
     </div>
   );

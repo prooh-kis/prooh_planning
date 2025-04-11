@@ -30,18 +30,8 @@ export const CampaignDashboard = ({
   campaignDetails,
   screenLevelData,
   siteLevelData,
-  // audienceData,
-  // hardwarePerformanceData,
-  // spotData,
-  // costData,
   filters,
   setFilters,
-  // cities,
-  // setCities,
-  // touchPoints,
-  // setTouchponints,
-  // screenTypes,
-  // setScreenTypes,
   sitesDataMapViewData,
 }: any) => {
   const dropdownRef = useRef<any>(null);
@@ -91,6 +81,8 @@ export const CampaignDashboard = ({
     2: false,
     3: false,
   });
+
+  const [openSiteMapView, setOpenSiteMapView] = useState<boolean>(false);
 
   const gridItems: GridItem[] = [
     {
@@ -377,76 +369,47 @@ export const CampaignDashboard = ({
               currentDate={currentDate}
               allDates={allDates}
               loading={loading}
-              showPercent={showPercent}
-              setShowPercent={setShowPercent}
+              openSiteMapView={openSiteMapView}
             />
           ) : clicked === "2" ? (
             <AudienceSegment
               campaignId={campaignDetails?._id}
               screenLevelData={screenLevelData}
-              // audienceData={audienceData}
               showPercent={showPercent}
               setShowPercent={setShowPercent}
               filters={filters}
               setFilters={setFilters}
-              // cities={cities}
-              // setCities={setCities}
-              // touchPoints={touchPoints}
-              // setTouchponints={setTouchponints}
-              // screenTypes={screenTypes}
-              // setScreenTypes={setScreenTypes}
             />
           ) : clicked === "3" ? (
             <HardwarePerformanceSegment
               campaignId={campaignDetails?._id}
               screenLevelData={screenLevelData}
-              // hardwarePerformanceData={hardwarePerformanceData}
               showPercent={showPercent}
               setShowPercent={setShowPercent}
               filters={filters}
               setFilters={setFilters}
-              // cities={cities}
-              // setCities={setCities}
-              // touchPoints={touchPoints}
-              // setTouchponints={setTouchponints}
-              // screenTypes={screenTypes}
-              // setScreenTypes={setScreenTypes}
             />
           ) : clicked === "4" ? (
             <SlotSegment
               campaignId={campaignDetails?._id}
               screenLevelData={screenLevelData}
-              // spotData={spotData}
               showPercent={showPercent}
               setShowPercent={setShowPercent}
               filters={filters}
               setFilters={setFilters}
-              // cities={cities}
-              // setCities={setCities}
-              // touchPoints={touchPoints}
-              // setTouchponints={setTouchponints}
-              // screenTypes={screenTypes}
-              // setScreenTypes={setScreenTypes}
             />
           ) : clicked === "5" ? (
             <CostSegment
               campaignId={campaignDetails?._id}
               screenLevelData={screenLevelData}
-              // costData={costData}
               showPercent={showPercent}
               setShowPercent={setShowPercent}
               filters={filters}
               setFilters={setFilters}
-              // cities={cities}
-              // setCities={setCities}
-              // touchPoints={touchPoints}
-              // setTouchponints={setTouchponints}
-              // screenTypes={screenTypes}
-              // setScreenTypes={setScreenTypes}
             />
           ): null}
         </div>
-        <SiteMonitoringPic sitesDataMapViewData={sitesDataMapViewData} />
+        <SiteMonitoringPic sitesDataMapViewData={sitesDataMapViewData} openSiteMapView={openSiteMapView} setOpenSiteMapView={setOpenSiteMapView} />
         <SiteLevelPerformance
           siteLevelData={siteLevelData}
           campaignDetails={campaignDetails}

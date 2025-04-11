@@ -45,8 +45,7 @@ const Monitoring = ({ bg, text, label }: MonitoringProps) => {
   );
 };
 
-export const SiteMonitoringPic = ({ sitesDataMapViewData }: any) => {
-  const [openSiteMapView, setOpenSiteMapView] = useState<boolean>(false);
+export const SiteMonitoringPic = ({ sitesDataMapViewData, openSiteMapView, setOpenSiteMapView, }: any) => {
 
   const handleCancel = () => {
     setOpenSiteMapView(false);

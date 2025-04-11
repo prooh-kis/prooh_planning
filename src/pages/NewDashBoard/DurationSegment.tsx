@@ -1,17 +1,11 @@
-import { DashBoardSlotGraph } from "../../components/segments/DashBoardSlotGraph";
+
 import { SectionHeader } from "../../components/molecules/DashboardGrid";
-import { SectionHeaderWithSwitch } from "../../components/segments/SectionHeaderWithSwitch";
-import { CheckboxInput } from "../../components/atoms/CheckboxInput";
-import { MultiColorLinearBar2 } from "../../components/molecules/MultiColorLinearBar2";
-import { formatNumber } from "../../utils/formatValue";
 import { CalenderScaleStepper } from "../../components/molecules/CalenderScale2";
 import { DurationGraphPerDay } from "../../components/segments/DurationGraphPerDay";
 import { Tooltip } from "antd";
 
 export const DurationSegment = ({
   calendarData = [],
-  setShowPercent,
-  showPercent,
   screenLevelData,
   setCurrentDay,
   currentDay,
@@ -20,11 +14,10 @@ export const DurationSegment = ({
   setCurrentDate,
   currentDate,
   allDates,
+  openSiteMapView,
   loading,
 
 }: any) => {
-
-
 
   return (
     <div className="relative grid grid-cols-12 gap-2">
@@ -47,6 +40,7 @@ export const DurationSegment = ({
             currentDate={currentDate}
             calendarData={calendarData}
             loading={loading}
+            openSiteMapView={openSiteMapView}
           />
         </div>
       )}
