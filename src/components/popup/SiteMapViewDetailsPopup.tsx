@@ -242,23 +242,35 @@ export const SiteMapViewDetailsPopup = ({
     },
   ];
 
+  console.log(
+    "sitesDataMapViewData : ",
+    JSON.stringify(sitesDataMapViewData || {})
+  );
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
-      <div className="border bg-[#FFFFFF] rounded-[10px] h-3/4 w-[95%] p-1">
-        <div className="relative inset-0 flex items-center justify-between gap-4 p-2 pr-5">
-          <h1 className="text-[#0E212E] font-semibold text-[20px]">
-            Site Map View
-          </h1>
+      <div className="border bg-[#FFFFFF] rounded-[10px] h-[80vh] w-[95%] p-4">
+        <div className="relative inset-0 flex items-center justify-between gap-4 py-2 pr-5">
+          <div className="flex gap-2 items-center">
+            <i className="fi fi-sr-angle-small-left text-[#B0B0B0]"></i>
+            <h1 className="text-[#0E212E] font-semibold text-[20px]">
+              Site Map View{" "}
+              <span className="text-[#B0B0B0] text-[14px]">
+                ({sitesDataMapViewData?.length})
+              </span>
+            </h1>
+          </div>
+
           <i
             className="fi fi-br-circle-xmark text-[20px] cursor-pointer"
             onClick={handleCancel}
           />
         </div>
-        <div className={`h-[60vh] w-full flex ${currentSite ? "gap-4" : ""}`}>
+        <div className={`h-[65vh] w-full flex rounded-[12px]`}>
           <div
             className={`${
               currentSite ? "w-2/3" : "w-full"
-            } h-full bg-[#F3F3F3]`}
+            } h-full bg-[#F3F3F3] `}
           >
             <Map
               defaultCenter={viewState.center}
@@ -287,7 +299,7 @@ export const SiteMapViewDetailsPopup = ({
           </div>
 
           {currentSite && (
-            <div className="w-1/3 bg-[#FFFFFF] border rounded-[12px] shadow-md p-4 h-full overflow-auto">
+            <div className="w-1/3 bg-white border rounded-tr-[12px] rounded-br-[12px] shadow-md p-4 h-full overflow-auto">
               <SiteInfoHeader
                 screenName={currentSite?.screenName}
                 address={currentSite?.address}

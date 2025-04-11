@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { CampaignDashboard } from "./CampaignDashboard";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
-import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 import {
   getAudienceDataForPlannerDashboard,
   getBasicDataForPlannerDashboard,
@@ -16,263 +15,243 @@ import {
   getSitesDataMapViewForPlannerDashboard,
 } from "../../actions/dashboardAction";
 
+interface FilterState {
+  audience: string[];
+  screenPerformance: string[];
+  spotDelivery: string[];
+  costConsumption: string[];
+  siteLevel: string[];
+}
+
 export const NewDashBoard: React.FC = () => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
-  const campaignId = pathname?.split("/")?.splice(-1)[0];
+  const campaignId = pathname.split("/").pop() || "";
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  const [cities, setCities] = useState<any>({
-    "audience":[],
-    "screenPerformance": [],
-    "spotDelivery": [],
-    "costConsumption": [],
-    "siteLevel": [],
-  });
-  const [touchPoints, setTouchponints] = useState<any>({
-    "audience":[],
-    "screenPerformance": [],
-    "spotDelivery": [],
-    "costConsumption": [],
-    "siteLevel": [],
-  });
-  const [screenTypes, setScreenTypes] = useState<any>({
-    "audience":[],
-    "screenPerformance": [],
-    "spotDelivery": [],
-    "costConsumption": [],
-    "siteLevel": [],
+  // State for filters
+  const [filters, setFilters] = useState<{
+    cities: FilterState;
+    touchPoints: FilterState;
+    screenTypes: FilterState;
+  }>({
+    cities: {
+      audience: [],
+      screenPerformance: [],
+      spotDelivery: [],
+      costConsumption: [],
+      siteLevel: [],
+    },
+    touchPoints: {
+      audience: [],
+      screenPerformance: [],
+      spotDelivery: [],
+      costConsumption: [],
+      siteLevel: [],
+    },
+    screenTypes: {
+      audience: [],
+      screenPerformance: [],
+      spotDelivery: [],
+      costConsumption: [],
+      siteLevel: [],
+    },
   });
 
-
-  const detailsToCreateCampaignAdd = useSelector(
-    (state: any) => state.detailsToCreateCampaignAdd
-  );
+  // Selectors for Redux state
   const {
-    loading,
-    error,
-    success,
+    loading: loadingCampaignDetails,
+    error: errorCampaignDetails,
     data: campaignDetails,
-  } = detailsToCreateCampaignAdd;
+  } = useSelector((state: any) => state.detailsToCreateCampaignAdd);
 
-  const basicDataForPlannerDashboard = useSelector(
-    (state: any) => state.basicDataForPlannerDashboard
-  );
   const {
     loading: loadingDashboard,
     error: errorDashboard,
     data: dashboardData,
-  } = basicDataForPlannerDashboard;
+  } = useSelector((state: any) => state.basicDataForPlannerDashboard);
 
-  const audienceDataForPlannerDashboard = useSelector(
+  const { loading: loadingAudienceData, data: audienceData } = useSelector(
     (state: any) => state.audienceDataForPlannerDashboard
   );
-  const {
-    loading: loadingAudienceData,
-    error: errorAudienceData,
-    data: audienceData,
-  } = audienceDataForPlannerDashboard;
 
-  const hardwarePerformanceDataForPlannerDashboard = useSelector(
-    (state: any) => state.hardwarePerformanceDataForPlannerDashboard
-  );
   const {
     loading: loadingHardwarePerformanceData,
-    error: errorHardwarePerformanceData,
     data: hardwarePerformanceData,
-  } = hardwarePerformanceDataForPlannerDashboard;
+  } = useSelector(
+    (state: any) => state.hardwarePerformanceDataForPlannerDashboard
+  );
 
-  const spotDeliveryDataForPlannerDashboard = useSelector(
+  const { loading: loadingSpotData, data: spotData } = useSelector(
     (state: any) => state.spotDeliveryDataForPlannerDashboard
   );
-  const {
-    loading: loadingSpotData,
-    error: errorSpotData,
-    data: spotData,
-  } = spotDeliveryDataForPlannerDashboard;
 
-  const costDataForPlannerDashboard = useSelector(
+  const { loading: loadingCostData, data: costData } = useSelector(
     (state: any) => state.costDataForPlannerDashboard
   );
-  const {
-    loading: loadingCostData,
-    error: errorCostData,
-    data: costData,
-  } = costDataForPlannerDashboard;
 
-  const siteLevelPerformanceForPlannerDashboard = useSelector(
+  const { loading: loadingSiteLevel, data: siteLevelData } = useSelector(
     (state: any) => state.siteLevelPerformanceForPlannerDashboard
   );
-  const {
-    loading: loadingSiteLevel,
-    error: errorSiteLevel,
-    data: siteLevelData,
-  } = siteLevelPerformanceForPlannerDashboard;
 
-  const sitesDataMapViewForPlannerDashboard = useSelector(
-    (state: any) => state.sitesDataMapViewForPlannerDashboard
-  );
-  const {
-    loading: loadingSitesDataMapView,
-    error: errorSitesDataMapView,
-    data: sitesDataMapViewData,
-  } = sitesDataMapViewForPlannerDashboard;
+  const { loading: loadingSitesDataMapView, data: sitesDataMapViewData } =
+    useSelector((state: any) => state.sitesDataMapViewForPlannerDashboard);
 
-  useEffect(() => {
-    removeAllKeyFromLocalStorage();
-    dispatch(addDetailsToCreateCampaign({ id: campaignId }));
-    dispatch(getBasicDataForPlannerDashboard({ id: campaignId }));
+  // Fetch all dashboard data
+  const fetchDashboardData = useCallback(() => {
+    if (isPopupOpen) return; // Don't refresh if popup is open
+
+    const commonParams = { id: campaignId };
+
+    dispatch(addDetailsToCreateCampaign(commonParams));
+    dispatch(getBasicDataForPlannerDashboard(commonParams));
+
     dispatch(
       getAudienceDataForPlannerDashboard({
-        id: campaignId,
-        cities: cities["audience"],
-        touchPoints: touchPoints["audience"], 
-        screenTypes: screenTypes["audience"]
+        ...commonParams,
+        cities: filters.cities.audience,
+        touchPoints: filters.touchPoints.audience,
+        screenTypes: filters.screenTypes.audience,
       })
     );
+
     dispatch(
       getHardwarePerformanceDataForPlannerDashboard({
-        id: campaignId,
-        cities: cities["screenPerformance"],
-        touchPoints: touchPoints["screenPerformance"], 
-        screenTypes: screenTypes["screenPerformance"]
+        ...commonParams,
+        cities: filters.cities.screenPerformance,
+        touchPoints: filters.touchPoints.screenPerformance,
+        screenTypes: filters.screenTypes.screenPerformance,
       })
     );
+
     dispatch(
       getSpotDeliveryDataForPlannerDashboard({
-        id: campaignId,
-        cities: cities["spotDelivery"],
-        touchPoints: touchPoints["spotDelivery"], 
-        screenTypes: screenTypes["spotDelivery"]
+        ...commonParams,
+        cities: filters.cities.spotDelivery,
+        touchPoints: filters.touchPoints.spotDelivery,
+        screenTypes: filters.screenTypes.spotDelivery,
       })
     );
+
     dispatch(
       getCostDataForPlannerDashboard({
-        id: campaignId,
-        cities: cities["costConsumption"],
-        touchPoints: touchPoints["costConsumption"], 
-        screenTypes: screenTypes["costConsumption"]
+        ...commonParams,
+        cities: filters.cities.costConsumption,
+        touchPoints: filters.touchPoints.costConsumption,
+        screenTypes: filters.screenTypes.costConsumption,
       })
     );
+
     dispatch(
       getSiteLevelPerformanceForPlannerDashboard({
-        id: campaignId,
-        cities: cities["siteLevel"],
-        touchPoints: touchPoints["siteLevel"],
-        screenTypes: screenTypes["siteLevel"],
+        ...commonParams,
+        cities: filters.cities.siteLevel,
+        touchPoints: filters.touchPoints.siteLevel,
+        screenTypes: filters.screenTypes.siteLevel,
       })
     );
-    dispatch(getSiteMonitoringPicsPercentage({ id: campaignId }));
-    dispatch(getSitesDataMapViewForPlannerDashboard({ id: campaignId }));
-    const interval = setInterval(() => {
-      dispatch(getBasicDataForPlannerDashboard({ id: campaignId })); // Refresh data every 5 seconds
-      dispatch(
-        getAudienceDataForPlannerDashboard({
-          id: campaignId,
-          cities: cities["audience"],
-          touchPoints: touchPoints["audience"], 
-          screenTypes: screenTypes["audience"]
-        })
-      );
-      dispatch(
-        getHardwarePerformanceDataForPlannerDashboard({
-          id: campaignId,
-          cities: cities["screenPerformance"],
-          touchPoints: touchPoints["screenPerformance"], 
-          screenTypes: screenTypes["screenPerformance"]
-        })
-      );
-      dispatch(
-        getSpotDeliveryDataForPlannerDashboard({
-          id: campaignId,
-          cities: cities["spotDelivery"],
-          touchPoints: touchPoints["spotDelivery"], 
-          screenTypes: screenTypes["spotDelivery"]
-        })
-      );
-      dispatch(
-        getCostDataForPlannerDashboard({
-          id: campaignId,
-          cities: cities["costConsumption"],
-          touchPoints: touchPoints["costConsumption"], 
-          screenTypes: screenTypes["costConsumption"]
-        })
-      );
-      dispatch(
-        getSiteLevelPerformanceForPlannerDashboard({
-          id: campaignId,
-          cities: cities["siteLevel"],
-          touchPoints: touchPoints["siteLevel"],
-          screenTypes: screenTypes["siteLevel"],
-        })
-      );
-      getSiteMonitoringPicsPercentage({ id: campaignId });
-      getSitesDataMapViewForPlannerDashboard({ id: campaignId });
-    }, 600000);
+
+    dispatch(getSiteMonitoringPicsPercentage(commonParams));
+    dispatch(getSitesDataMapViewForPlannerDashboard(commonParams));
+    console.log("fetch call completed", new Date());
+  }, [campaignId, dispatch, filters, isPopupOpen]);
+
+  // Initialize filters based on spot data
+  useEffect(() => {
+    if (spotData && !filters.cities.spotDelivery.length) {
+      setFilters((prev) => ({
+        ...prev,
+        cities: {
+          ...prev.cities,
+          spotDelivery: Object.keys(spotData.cityWiseData),
+        },
+        touchPoints: {
+          ...prev.touchPoints,
+          spotDelivery: Object.keys(spotData.touchPointWiseData),
+        },
+        screenTypes: {
+          ...prev.screenTypes,
+          spotDelivery: Object.keys(spotData.screenTypeWiseData),
+        },
+      }));
+    }
+  }, [spotData, filters.cities.spotDelivery.length]);
+
+  // Set up initial data fetch and refresh interval
+  useEffect(() => {
+    fetchDashboardData();
+
+    const interval = setInterval(fetchDashboardData, 300000); // 10 minutes
 
     return () => clearInterval(interval);
-  }, [dispatch, campaignId, cities, touchPoints, screenTypes]);
+  }, [fetchDashboardData]);
 
-  useEffect(() => {
-    if (spotData && (cities["spotDelivery"].length == 0 || touchPoints["spotDelivery"].length == 0 || screenTypes["spotDelivery"].length == 0)) {
-      setCities((pre: any) => {
-        return {
-          ...pre,
-          "spotDelivery": Object.keys(spotData.cityWiseData)
-        }
-      });
-      setTouchponints((pre: any) => {
-        return {
-          ...pre,
-          "spotDelivery": Object.keys(spotData.touchPointWiseData)
-        }
-      });
-      setScreenTypes((pre: any) => {
-        return {
-          ...pre,
-          "spotDelivery": Object.keys(spotData.screenTypeWiseData),
-        }
-      });
-    }
+  const handlePopupToggle = (isOpen: boolean) => {
+    setIsPopupOpen(isOpen);
+  };
 
-  },[cities, screenTypes, setCities, setScreenTypes, setTouchponints, spotData, touchPoints]);
+  const isLoading = loadingCampaignDetails || loadingDashboard;
+  const hasError = errorCampaignDetails || errorDashboard;
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-full space-y-2">
+        <div className="h-[10vh] w-full border rounded-[12px] mt-10">
+          <SkeletonLoader />
+        </div>
+        <div className="h-[20vh] w-full border rounded-[12px]">
+          <SkeletonLoader />
+        </div>
+        <div className="h-[40vh] w-full border rounded-[12px]">
+          <SkeletonLoader />
+        </div>
+      </div>
+    );
+  }
+
+  if (hasError) {
+    return (
+      <div className="h-[20vh] w-full border rounded-[12px] mt-10">
+        <p>{errorCampaignDetails || errorDashboard}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full">
-      {loading || loadingDashboard ? (
-        <div>
-          <div className="h-[10vh] w-full border rounded-[12px] mt-10">
-            <SkeletonLoader />
-          </div>
-          <div className="h-[20vh] w-full border rounded-[12px] mt-2">
-            <SkeletonLoader />
-          </div>
-          <div className="h-[40vh] w-full border rounded-[12px] mt-2">
-            <SkeletonLoader />
-          </div>
-        </div>
-      ) : error || errorDashboard ? (
-        <div className="h-[20vh] w-full border rounded-[12px] mt-10">
-          <p>{error}</p>
-        </div>
-      ) : (
-        <CampaignDashboard
-          loading={loading || loadingDashboard}
-          campaignDetails={campaignDetails}
-          screenLevelData={dashboardData}
-          siteLevelData={siteLevelData}
-          audienceData={audienceData}
-          hardwarePerformanceData={hardwarePerformanceData}
-          spotData={spotData}
-          costData={costData}
-          cities={cities}
-          setCities={setCities}
-          touchPoints={touchPoints}
-          setTouchponints={setTouchponints}
-          screenTypes={screenTypes}
-          setScreenTypes={setScreenTypes}
-          sitesDataMapViewData={sitesDataMapViewData}
-        />
-      )}
+      <CampaignDashboard
+        loading={isLoading}
+        campaignDetails={campaignDetails}
+        screenLevelData={dashboardData}
+        siteLevelData={siteLevelData}
+        audienceData={audienceData}
+        hardwarePerformanceData={hardwarePerformanceData}
+        spotData={spotData}
+        costData={costData}
+        cities={filters.cities}
+        setCities={(type: string, values: string) =>
+          setFilters((prev) => ({
+            ...prev,
+            cities: { ...prev.cities, [type]: values },
+          }))
+        }
+        touchPoints={filters.touchPoints}
+        setTouchPoints={(type: string, values: string) =>
+          setFilters((prev) => ({
+            ...prev,
+            touchPoints: { ...prev.touchPoints, [type]: values },
+          }))
+        }
+        screenTypes={filters.screenTypes}
+        setScreenTypes={(type: string, values: string) =>
+          setFilters((prev) => ({
+            ...prev,
+            screenTypes: { ...prev.screenTypes, [type]: values },
+          }))
+        }
+        sitesDataMapViewData={sitesDataMapViewData}
+        onPopupToggle={handlePopupToggle}
+      />
     </div>
   );
 };
