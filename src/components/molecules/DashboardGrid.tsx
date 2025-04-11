@@ -206,11 +206,11 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
 
   const renderScreenSection = () => {
     const screenPerformance = screenLevelData?.hardwarePerformanceDelivered || 0;
-    const percentage = getPercentageDifference(
+    const percentage = Number(getPercentageDifference(
       screenPerformance,
       100,
       screenLevelData?.durationDelivered || 0
-    );
+    ).toFixed(0));
 
     return (
       <>

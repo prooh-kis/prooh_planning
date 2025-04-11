@@ -173,30 +173,30 @@ export const AudienceSegment = ({
             bgColor=" bg-[#129BFF]"
           />
         </div>
-        <div className="p-2">
+        <div className="py-2">
           <div className="grid grid-cols-10">
-              <div className="col-span-4">
-                <h1 className="text-[12px]">Category</h1>
-              </div>
-              <div className="col-span-6 grid grid-cols-6 flex items-center w-full gap-2">
-                <div className="col-span-5 flex items-center justify-around w-full gap-2">
-                  <div className="flex items-center gap-1">
-                    <div className="h-2 w-2 rounded-[2px] bg-[#5863FF]" />
-                    <h1 className="text-[12px]">Male</h1>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="h-2 w-2 rounded-[2px] bg-[#DC97FF]" />
-                    <h1 className="text-[12px]">Female</h1>
-                  </div>
+            <div className="col-span-4">
+              <h1 className="text-[12px]">Category</h1>
+            </div>
+            <div className="col-span-6 grid grid-cols-6 flex items-center w-full gap-2">
+              <div className="col-span-5 flex items-center justify-around w-full gap-2">
+                <div className="flex items-center gap-1">
+                  <div className="h-2 w-2 rounded-[2px] bg-[#5863FF]" />
+                  <h1 className="text-[12px]">Male</h1>
                 </div>
-                <div className="cols-span-1 text-[10px]">
-                  <h1 className="text-[12px]">
-                    Value
-                  </h1>
+                <div className="flex items-center gap-1">
+                  <div className="h-2 w-2 rounded-[2px] bg-[#DC97FF]" />
+                  <h1 className="text-[12px]">Female</h1>
                 </div>
               </div>
+              <div className="cols-span-1 flex justify-center">
+                <h1 className="text-[12px] ">
+                  Value
+                </h1>
+              </div>
+            </div>
           </div>
-          <div className="h-[160px] overflow-y-auto no-scrollbar">
+          <div className="h-[160px] w-full overflow-y-auto no-scrollbar">
             {Object.keys(audienceData.audienceTypeData)?.map((audienceType: any, i: any) => (
               <div key={i} className="grid grid-cols-10 flex items-center gap-2 pt-1">
                 <div className="col-span-4 truncate py-1">
@@ -223,7 +223,7 @@ export const AudienceSegment = ({
                       height="h-[5px]"
                     />
                   </div>
-                  <div className="col-span-1">
+                  <div className="col-span-1 flex justify-center">
                     <h1 className="text-[10px]">
                       {showPercent[3] && showPercent[2] && showPercent[1] ? `${(audienceData.audienceTypeData[audienceType]?.impressionDeliveredTotal*100/audienceData.audienceTypeData[audienceType]?.impressionPromisedTotal).toFixed(0)}%` : formatNumber(audienceData.audienceTypeData[audienceType]?.impressionDeliveredTotal)}
                     </h1>

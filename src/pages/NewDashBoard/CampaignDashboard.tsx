@@ -88,26 +88,6 @@ export const CampaignDashboard = ({
     2: false,
     3: false,
   });
-  const getScreenPerformanceData = () => {
-    const datesArray = screenLevelData?.result[
-      "totalData"
-    ]?.screenPerformanceDateWise?.map((slot: any) => slot.date);
-    const countsArray = screenLevelData?.result[
-      "totalData"
-    ]?.screenPerformanceDateWise?.map((slot: any) => slot.screenPerformance);
-
-    return { datesArray, countsArray };
-  };
-
-  const getPromisedScreenPerformanceData = () => {
-    const datesArray = screenLevelData?.result[
-      "totalData"
-    ]?.screenPerformanceDateWise?.map((slot: any) => slot.date);
-    const countsArray = screenLevelData?.result[
-      "totalData"
-    ]?.screenPerformanceDateWise?.map((slot: any) => 100);
-    return { datesArray, countsArray };
-  };
 
   const gridItems: GridItem[] = [
     {
