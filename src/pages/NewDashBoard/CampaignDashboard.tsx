@@ -145,16 +145,31 @@ export const CampaignDashboard = ({
     const dates = [];
     let currentDate = new Date(startDate);
     const lastDate = new Date(endDate);
-    while (currentDate.getDate() <= lastDate.getDate()) {
-      // dates.push(currentDate.toISOString().split("T")[0]); // Format as YYYY-MM-DD
-      dates.push({
-        value: currentDate.toISOString().split("T")[0],
-        label: currentDate.toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-        }),
-      });
-      currentDate.setDate(currentDate.getDate() + 1); // Move to next day
+
+    if (currentDate.getMonth() == lastDate.getMonth()) {
+      while (currentDate.getDate() <= lastDate.getDate()) {
+        // dates.push(currentDate.toISOString().split("T")[0]); // Format as YYYY-MM-DD
+        dates.push({
+          value: currentDate.toISOString().split("T")[0],
+          label: currentDate.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+          }),
+        });
+        currentDate.setDate(currentDate.getDate() + 1); // Move to next day
+      }
+    } else {
+      while (currentDate <= lastDate) {
+        // dates.push(currentDate.toISOString().split("T")[0]); // Format as YYYY-MM-DD
+        dates.push({
+          value: currentDate.toISOString().split("T")[0],
+          label: currentDate.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+          }),
+        });
+        currentDate.setDate(currentDate.getDate() + 1); // Move to next day
+      }
     }
 
     return dates;
