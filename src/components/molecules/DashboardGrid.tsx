@@ -220,20 +220,20 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
           bgColor=" bg-[#6982FF]"
         />
         <ValueAboveGraph
-          left={`${formatNumber(screenLevelData?.hardwarePerformanceDelivered.toFixed(0))}%`}
+          left={`${formatNumber(screenLevelData?.hardwarePerformanceDelivered?.toFixed(0))}%`}
           right="100%"
         />
         <div className="mt-1">
           <MultiColorLinearBar2
-            delivered={screenLevelData?.hardwarePerformanceDelivered.toFixed(0)}
-            expected={screenLevelData?.hardwarePerformancePromisedTillDate.toFixed(0)}
-            total={screenLevelData?.hardwarePerformancePromised.toFixed(0)}
+            delivered={screenLevelData?.hardwarePerformanceDelivered?.toFixed(0)}
+            expected={screenLevelData?.hardwarePerformancePromisedTillDate?.toFixed(0)}
+            total={screenLevelData?.hardwarePerformancePromised?.toFixed(0)}
             deliveredColor="bg-[#6982FF]"
           />
         </div>
         <ValueBelowGraph
-          left={`${formatNumber(screenLevelData?.hardwarePerformanceDelivered.toFixed(0))}%`}
-          right={`${formatNumber(screenLevelData?.hardwarePerformancePromisedTillDate.toFixed(0))}%`}
+          left={`${formatNumber(screenLevelData?.hardwarePerformanceDelivered?.toFixed(0))}%`}
+          right={`${formatNumber(screenLevelData?.hardwarePerformancePromisedTillDate?.toFixed(0))}%`}
           value={percentage}
           isPositive={percentage > 0}
         />
