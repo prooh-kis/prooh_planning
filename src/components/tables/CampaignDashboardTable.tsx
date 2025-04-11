@@ -250,95 +250,91 @@ export const CampaignDashboardTable = ({
       />
       <table className="table-auto w-full">
         <thead className="bg-[#EFF9FF] text-[#707070] font-medium rounded-[6px] w-full flex justify-between items-center">
-          <tr className="flex w-full items-center h-[40px] border-b">
-            <th className="w-full flex items-center justify-center">
-              <h1 className="text-[14px]">Sr.</h1>
-            </th>
-            <th className="w-full flex items-center justify-center truncate">
+          <tr className="flex grid grid-cols-12 w-full items-center h-[40px] border-b">
+            <th className="w-full flex items-center justify-center truncate col-span-3">
               <h1 className="text-[14px] truncate">Screen Name</h1>
             </th>
-            <th className="w-full flex items-center justify-center">
+            <th className="w-full flex items-center justify-center col-span-1">
               <h1 className="text-[14px]">Location</h1>
             </th>
-            <th className="w-full flex items-center justify-center">
+            <th className="w-full flex items-center justify-center col-span-2">
               <h1 className="text-[14px]">Touch point</h1>
             </th>
-            <th className="w-full flex items-center justify-center">
+            <th className="w-full flex items-center justify-center col-span-1">
               <h1 className="text-[14px]">Slots Played</h1>
             </th>
-            <th className="w-full flex items-center justify-center">
+            <th className="w-full flex items-center justify-center col-span-1">
               <h1 className="text-[14px]">Impressions</h1>
             </th>
-            <th className="w-full flex items-center justify-center">
+            <th className="w-full flex items-center justify-center col-span-1">
               <h1 className="text-[14px]">Cost</h1>
             </th>
-            <th className="w-full flex items-center justify-center">
+            <th className="w-full flex items-center justify-center col-span-1">
               <h1 className="text-[14px]">Delivery</h1>
             </th>
-            <th className="w-full flex items-center justify-center">
+            <th className="w-full flex items-center justify-center col-span-1">
               <h1 className="text-[14px]">Monitoring</h1>
             </th>
-            <th className="w-full flex items-center justify-center">
+            <th className="w-full flex items-center justify-center col-span-1">
               <h1 className="text-[14px]">Action</h1>
             </th>
           </tr>
         </thead>
         <tbody className="max-h-[250px] overflow-scroll">
-          {Object.keys(screenLevelData || {})
-            .filter((d: string) => d !== "totalData")
-            .filter((d: string) => {
-              const item = screenLevelData[d];
+          {screenLevelData
+            ?.filter((d: string) => {
+              const item: any = d;
               const cityMatch = city ? item?.city === city : true;
               const touchpointMatch = currentTouchPoint
                 ? item?.touchPoint === currentTouchPoint
                 : true;
               return cityMatch && touchpointMatch;
             })
-            .map((data: string, index: number) => (
+            .map((screenData: any, index: number) => (
               <React.Fragment key={index}>
                 <tr
-                  key={data}
-                  className="flex w-full h-[40px] hover:bg-gray-100 hover:rounded-[6px] border-b text-[#0E212E]"
+                  key={screenData}
+                  className="grid grid-cols-12 flex w-full h-[40px] hover:bg-gray-100 hover:rounded-[6px] border-b text-[#0E212E]"
                 >
-                  <td className="w-full flex items-center justify-center">
-                    <p className="text-[12px]">{index + 1}</p>
-                  </td>
-                  <td className="w-full flex items-center justify-start gap-2 truncate">
+                  <td className="w-full flex items-center justify-start gap-4 col-span-3 grid grid-cols-8 pl-4">
+                    <p className="text-[12px] col-span-1">
+                      {index + 1 <= 9 ? `0${index + 1}` : index + 1}
+                    </p>
+
                     <Tooltip
                       title={`${getScreenStatus(
-                        screenLevelData?.[data]?.lastActive
-                      )}, ${convertIntoDateAndTime(
-                        screenLevelData?.[data]?.lastActive
-                      )} `}
+                        screenData?.lastActive
+                      )}, ${convertIntoDateAndTime(screenData?.lastActive)} `}
                     >
                       <div
-                        className={getScreenClassName(
-                          screenLevelData?.[data]?.lastActive
-                        )}
+                        className={`${getScreenClassName(
+                          screenData?.lastActive
+                        )} col-span-1`}
                       />
                     </Tooltip>
-                    <p className="text-[12px] truncate px-1">
-                      {screenLevelData[data]?.screenName}
+                    <p className="text-[12px] truncate px-1 col-span-6">
+                      {screenData?.screenName}
                     </p>
                   </td>
-                  <td className="w-full flex items-center justify-center truncate">
+
+                  <td className="w-full flex items-center justify-center truncate col-span-1">
                     <p className="text-[12px] truncate">
-                      {screenLevelData[data]?.location}
+                      {screenData?.location}
                     </p>
                   </td>
-                  <td className="w-full flex items-center justify-center truncate">
+                  <td className="w-full flex items-center justify-center truncate col-span-2">
                     <p className="text-[12px] truncate">
-                      {screenLevelData[data]?.touchPoint}
+                      {screenData?.touchPoint}
                     </p>
                   </td>
-                  <td className="w-full flex items-center justify-center">
+                  <td className="w-full flex items-center justify-center col-span-1">
                     <div className="flex flex-row justify-center items-center gap-1">
                       <p className="text-[12px]">
-                        {formatNumber(screenLevelData[data]?.slotsDelivered)}
+                        {formatNumber(screenData?.slotsDelivered)}
                       </p>
                       <PercentageDisplay
-                        delivered={screenLevelData[data]?.slotsDelivered}
-                        promised={screenLevelData[data]?.slotsPromisedTillDate}
+                        delivered={screenData?.slotsDelivered}
+                        promised={screenData?.slotsPromisedTillDate}
                         options={{
                           isTillDate: true,
                           campaignDays,
@@ -347,20 +343,16 @@ export const CampaignDashboardTable = ({
                       />
                     </div>
                   </td>
-                  <td className="w-full flex items-center justify-center">
+                  <td className="w-full flex items-center justify-center col-span-1">
                     <div className="flex flex-row justify-center items-center gap-1">
                       <p className="text-[12px]">
                         {formatNumber(
-                          screenLevelData[data]?.impressionsDelivered?.toFixed(
-                            0
-                          )
+                          screenData?.impressionsDelivered?.toFixed(0)
                         )}
                       </p>
                       <PercentageDisplay
-                        delivered={screenLevelData[data]?.impressionsDelivered}
-                        promised={
-                          screenLevelData[data]?.impressionsPromisedTillDate
-                        }
+                        delivered={screenData?.impressionsDelivered}
+                        promised={screenData?.impressionsPromisedTillDate}
                         options={{
                           isTillDate: true,
                           campaignDays,
@@ -369,16 +361,14 @@ export const CampaignDashboardTable = ({
                       />
                     </div>
                   </td>
-                  <td className="w-full flex items-center justify-center">
+                  <td className="w-full flex items-center justify-center col-span-1">
                     <div className="flex flex-row justify-center items-center gap-1">
                       <p className="text-[12px]">
-                        {formatNumber(
-                          screenLevelData[data]?.costConsumed?.toFixed(0)
-                        )}
+                        {formatNumber(screenData?.costConsumed?.toFixed(0))}
                       </p>
                       <PercentageDisplay
-                        delivered={screenLevelData[data]?.costConsumed}
-                        promised={screenLevelData[data]?.costTakenTillDate}
+                        delivered={screenData?.costConsumed}
+                        promised={screenData?.costTakenTillDate}
                         options={{
                           isTillDate: true,
                           campaignDays,
@@ -387,12 +377,12 @@ export const CampaignDashboardTable = ({
                       />
                     </div>
                   </td>
-                  <td className="w-full flex items-center justify-center gap-1">
+                  <td className="w-full flex items-center justify-center gap-1 col-span-1">
                     <div className="w-[28px]">
                       <LinearBar
                         value={
-                          (screenLevelData?.[data]?.slotsDelivered * 100) /
-                          screenLevelData?.[data]?.slotsPromised
+                          (screenData?.slotsDelivered * 100) /
+                          screenData?.slotsPromised
                         }
                         colors={["#D9D9D9", "#2A892D"]}
                         highest={100}
@@ -401,37 +391,37 @@ export const CampaignDashboardTable = ({
                     </div>
                     <p className="text-[12px]">
                       {(
-                        (screenLevelData?.[data]?.slotsDelivered * 100) /
-                        screenLevelData?.[data]?.slotsPromised
+                        (screenData?.slotsDelivered * 100) /
+                        screenData?.slotsPromised
                       )?.toFixed(0)}
                       %
                     </p>
                   </td>
-                  <td className="w-full flex items-center justify-center">
+                  <td className="w-full flex items-center justify-center col-span-1">
                     <Tooltip title="View Monitoring Pics">
                       <i
                         className="fi fi-sr-picture text-[12px] text-[#129BFF]"
                         onClick={() => {
                           dispatch(
                             GetCampaignMonitoringPicsAction({
-                              campaignId: screenLevelData[data]?.campaignId,
-                              screenId: data,
+                              campaignId: screenData?.campaignId,
+                              screenId: screenData,
                               date: campaignDetails.startDate,
                             })
                           );
-                          setScreenId(data);
+                          setScreenId(screenData);
                           setOpenMonitoringPicsPopup(true);
                         }}
                       ></i>
                     </Tooltip>
                   </td>
-                  <td className="w-full flex items-center justify-center">
+                  <td className="w-full flex items-center justify-center col-span-1">
                     <div className="flex gap-4">
                       <Tooltip title="View Logs">
                         <i
                           className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}
                           onClick={() => {
-                            setCampaignData(screenLevelData[data]);
+                            setCampaignData(screenData);
                             setOpenLogsPopup(true);
                           }}
                         ></i>
@@ -439,14 +429,14 @@ export const CampaignDashboardTable = ({
                       <Tooltip title="Download logs in one click">
                         <i
                           className={`fi fi-sr-download text-[12px] ${
-                            isDownLoad == screenLevelData[data]?.campaignId
+                            isDownLoad == screenData?.campaignId
                               ? "text-gray-400"
                               : "text-[#129BFF]"
                           }`}
                           onClick={() => {
                             downloadFileFromUrl(
-                              screenLevelData[data].logUrl,
-                              `${screenLevelData[data]?.screenName}`
+                              screenData.logUrl,
+                              `${screenData?.screenName}`
                             );
                           }}
                         ></i>
@@ -455,16 +445,20 @@ export const CampaignDashboardTable = ({
                         className="fi fi-rs-chart-histogram text-[12px] text-[#129BFF]"
                         title="Analytic"
                         onClick={() => {
-                          setCurrentIndex(currentIndex === data ? null : data);
+                          setCurrentIndex(
+                            currentIndex === screenData?.campaignId
+                              ? null
+                              : screenData?.campaignId
+                          );
                         }}
                       ></i>
                     </div>
                   </td>
                 </tr>
-                {currentIndex === data && (
-                  <tr className="h-full w-full p-4">
-                    <td>
-                      <SiteLevelAnalysis />
+                {currentIndex === screenData?.campaignId && (
+                  <tr>
+                    <td className="w-full p-4 rounded-[8px] shadow-md">
+                      <SiteLevelAnalysis screenData={screenData} />
                     </td>
                   </tr>
                 )}
