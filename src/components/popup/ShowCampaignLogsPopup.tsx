@@ -154,7 +154,7 @@ export const ShowCampaignLogsPopup = ({
             {!loading && logs?.length > 0 && (
               <button
                 title="s"
-                className="border border-1 py-2 px-4 rounded-lg bg-blue text-[#FFFFFF] font-custom font-semibold hover:bg-[#129BFF] text-center"
+                className="border border-1 py-2 px-4 rounded-lg bg-blue text-[#FFFFFF] text-[12px] font-custom font-semibold hover:bg-[#129BFF] text-center"
                 onClick={handelDownloadLogs}
               >
                 <i className="fi fi-sr-file-download pr-4"></i>

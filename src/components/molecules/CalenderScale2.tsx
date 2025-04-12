@@ -301,7 +301,7 @@ export const CalenderScaleStepper = ({
 
   return (
     <div className="w-full cursor-pointer" ref={componentRef}>
-      <div className="pt-16 mb-20 flex justify-center">
+      <div className={`pt-16 ${logsPopup ? "mb-12" : "mb-20"} flex justify-center`}>
         <div className={`flex-${weeks.length === 1 ? 0 : 1} h-1 bg-[#D1E5F7] relative mx-1`}>
           <div className="absolute inset-x-0 flex justify-between">
             <div
@@ -368,7 +368,7 @@ export const CalenderScaleStepper = ({
                 <div
                   key={i}
                   onClick={() => {
-                    if (
+                    if (week !== "End" && 
                       !weeks[i][1][currentDay - 1] || 
                       getNumberOfDaysBetweenTwoDates(
                         new Date(),
@@ -409,7 +409,7 @@ export const CalenderScaleStepper = ({
           </div>
         </div>
       </div>
-      <div className="pt-6 mb-12">
+      <div className={`pt-6 ${logsPopup ? "mb-6" : "mb-12"}`}>
         <div className="flex-1 h-1 bg-[#D1E5F7] relative mx-1">
           <div className="absolute inset-x-0 flex justify-between">
             <div
