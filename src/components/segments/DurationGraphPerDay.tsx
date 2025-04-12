@@ -98,7 +98,7 @@ export const DurationGraphPerDay: React.FC<LineChartProps> = ({
 
   const options = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false
@@ -223,11 +223,10 @@ export const DurationGraphPerDay: React.FC<LineChartProps> = ({
   };
 
   return (
-    <div className="w-full h-auto p-4 bg-white ">
-      <div className="w-full h-full">
+    <div className="w-auto h-auto p-4 bg-white">
+      <div className="w-full h-[200px]">
         <Line data={chartData} options={options as any} />
       </div>
-      
       {/* Additional Legends Container */}
       <div className="flex flex-wrap gap-2 justify-around mt-2">
         {/* Main dataset legend */}

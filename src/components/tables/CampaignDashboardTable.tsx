@@ -246,33 +246,33 @@ export const CampaignDashboardTable = ({
       />
       <table className="table-auto w-full">
         <thead className="bg-[#EFF9FF] text-[#707070] font-medium rounded-[6px] w-full flex justify-between items-center">
-          <tr className="flex grid grid-cols-12 w-full items-center h-[40px] border-b">
-            <th className="w-full flex items-center justify-center truncate col-span-3">
+          <tr className="overflow-auto no-scrollbar flex grid grid-cols-12 w-full items-center h-[40px] border-b truncate">
+            <th className="w-full flex items-center justify-center truncate col-span-3 truncate">
               <h1 className="text-[14px] truncate">Screen Name</h1>
             </th>
-            <th className="w-full flex items-center justify-center col-span-1">
-              <h1 className="text-[14px]">Location</h1>
+            <th className="w-full flex items-center justify-center col-span-1 truncate">
+              <h1 className="text-[14px] truncate">Location</h1>
             </th>
-            <th className="w-full flex items-center justify-center col-span-2">
-              <h1 className="text-[14px]">Touch point</h1>
+            <th className="w-full flex items-center justify-center col-span-2 truncate">
+              <h1 className="text-[14px] truncate">Touch point</h1>
             </th>
-            <th className="w-full flex items-center justify-center col-span-1">
-              <h1 className="text-[14px]">Slots Played</h1>
+            <th className="w-full flex items-center justify-center col-span-1 truncate">
+              <h1 className="text-[14px] truncate">Slots Played</h1>
             </th>
-            <th className="w-full flex items-center justify-center col-span-1">
-              <h1 className="text-[14px]">Impressions</h1>
+            <th className="w-full flex items-center justify-center col-span-1 truncate">
+              <h1 className="text-[14px] truncate">Impressions</h1>
             </th>
-            <th className="w-full flex items-center justify-center col-span-1">
-              <h1 className="text-[14px]">Cost</h1>
+            <th className="w-full flex items-center justify-center col-span-1 truncate">
+              <h1 className="text-[14px] truncate">Cost</h1>
             </th>
-            <th className="w-full flex items-center justify-center col-span-1">
-              <h1 className="text-[14px]">Delivery</h1>
+            <th className="w-full flex items-center justify-center col-span-1 truncate">
+              <h1 className="text-[14px] truncate">Delivery</h1>
             </th>
-            <th className="w-full flex items-center justify-center col-span-1">
-              <h1 className="text-[14px]">Monitoring</h1>
+            <th className="w-full flex items-center justify-center col-span-1 truncate">
+              <h1 className="text-[14px] truncate">Monitoring</h1>
             </th>
-            <th className="w-full flex items-center justify-center col-span-1">
-              <h1 className="text-[14px]">Action</h1>
+            <th className="w-full flex items-center justify-center col-span-1 truncate">
+              <h1 className="text-[14px] truncate">Action</h1>
             </th>
           </tr>
         </thead>
@@ -281,9 +281,9 @@ export const CampaignDashboardTable = ({
             <React.Fragment key={index}>
               <tr
                 key={screenData}
-                className="grid grid-cols-12 flex w-full h-[40px] hover:bg-gray-100 hover:rounded-[6px] border-b text-[#0E212E]"
+                className="grid grid-cols-12 flex w-full h-[40px] hover:bg-gray-100 hover:rounded-[6px] border-b text-[#0E212E] truncate"
               >
-                <td className="w-full flex items-center justify-start gap-4 col-span-3 grid grid-cols-8 pl-4">
+                <td className="w-full flex items-center justify-start gap-4 col-span-3 grid grid-cols-8 pl-4 truncate">
                   <p className="text-[12px] col-span-1">
                     {index + 1 <= 9 ? `0${index + 1}` : index + 1}
                   </p>
@@ -304,17 +304,17 @@ export const CampaignDashboardTable = ({
                   </p>
                 </td>
 
-                <td className="w-full flex items-center justify-center truncate col-span-1">
+                <td className="w-full flex items-center justify-center truncate col-span-1 truncate">
                   <p className="text-[12px] truncate">{screenData?.location}</p>
                 </td>
-                <td className="w-full flex items-center justify-center truncate col-span-2">
+                <td className="w-full flex items-center justify-center truncate col-span-2 truncate">
                   <p className="text-[12px] truncate">
                     {screenData?.touchPoint}
                   </p>
                 </td>
-                <td className="w-full flex items-center justify-center col-span-1">
-                  <div className="flex flex-row justify-center items-center gap-1">
-                    <p className="text-[12px]">
+                <td className="w-full flex items-center justify-center col-span-1 truncate">
+                  <div className="flex flex-row justify-center items-center gap-1 truncate">
+                    <p className="text-[12px] truncate">
                       {formatNumber(screenData?.slotsDelivered)}
                     </p>
                     <PercentageDisplay
@@ -328,9 +328,9 @@ export const CampaignDashboardTable = ({
                     />
                   </div>
                 </td>
-                <td className="w-full flex items-center justify-center col-span-1">
-                  <div className="flex flex-row justify-center items-center gap-1">
-                    <p className="text-[12px]">
+                <td className="w-full flex items-center justify-center col-span-1 truncate">
+                  <div className="flex flex-row justify-center items-center gap-1 truncate">
+                    <p className="text-[12px] truncate">
                       {formatNumber(
                         screenData?.impressionsDelivered?.toFixed(0)
                       )}
@@ -346,9 +346,9 @@ export const CampaignDashboardTable = ({
                     />
                   </div>
                 </td>
-                <td className="w-full flex items-center justify-center col-span-1">
-                  <div className="flex flex-row justify-center items-center gap-1">
-                    <p className="text-[12px]">
+                <td className="w-full flex items-center justify-center col-span-1 truncate">
+                  <div className="flex flex-row justify-center items-center gap-1 truncate">
+                    <p className="text-[12px] truncate">
                       {formatNumber(screenData?.costConsumed?.toFixed(0))}
                     </p>
                     <PercentageDisplay
@@ -362,7 +362,7 @@ export const CampaignDashboardTable = ({
                     />
                   </div>
                 </td>
-                <td className="w-full flex items-center justify-center gap-1 col-span-1">
+                <td className="w-full flex items-center justify-center gap-1 col-span-1 truncate">
                   <div className="w-[28px]">
                     <LinearBar
                       value={
@@ -374,7 +374,7 @@ export const CampaignDashboardTable = ({
                       percent={false}
                     />
                   </div>
-                  <p className="text-[12px]">
+                  <p className="text-[12px] truncate">
                     {(
                       (screenData?.slotsDelivered * 100) /
                       screenData?.slotsPromised
@@ -382,7 +382,7 @@ export const CampaignDashboardTable = ({
                     %
                   </p>
                 </td>
-                <td className="w-full flex items-center justify-center col-span-1">
+                <td className="w-full flex items-center justify-center col-span-1 truncate">
                   <Tooltip title="View Monitoring Pics">
                     <i
                       className="fi fi-sr-picture text-[12px] text-[#129BFF]"
@@ -400,7 +400,7 @@ export const CampaignDashboardTable = ({
                     ></i>
                   </Tooltip>
                 </td>
-                <td className="w-full flex items-center justify-center col-span-1">
+                <td className="w-full flex items-center justify-center col-span-1 truncate">
                   <div className="flex gap-4">
                     <Tooltip title="View Logs">
                       <i
@@ -441,9 +441,9 @@ export const CampaignDashboardTable = ({
                 </td>
               </tr>
               {currentIndex === screenData?.campaignId && (
-                <tr>
+                <tr className="">
                   <td className="w-full p-4 rounded-[8px] shadow-md">
-                    <SiteLevelAnalysis screenData={screenData} />
+                    <SiteLevelAnalysis screenData={screenData} screenLevelData={screenLevelData}/>
                   </td>
                 </tr>
               )}

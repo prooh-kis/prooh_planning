@@ -18,6 +18,9 @@ import {
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
+  GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_ERROR,
+  GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_REQUEST,
+  GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_SUCCESS,
   GET_SITE_MONITORING_PICS_PERCENTAGE_ERROR,
   GET_SITE_MONITORING_PICS_PERCENTAGE_REQUEST,
   GET_SITE_MONITORING_PICS_PERCENTAGE_SUCCESS,
@@ -181,6 +184,33 @@ export const getSiteLevelPerformanceForPlannerDashboard =
     } catch (error) {
       dispatch({
         type: GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
+
+  export const getSiteLevelPerformanceTabWiseForPlannerDashboard =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_REQUEST,
+      payload: input,
+    });
+    try {
+      const { data } = await axios.post(
+        `${newDashboardURL}/getSiteLevelPerformanceTabWiseForPlannerDashboard`,
+        input
+      );
+      dispatch({
+        type: GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_ERROR,
         payload: {
           message: error.message,
           status: error.response?.status,

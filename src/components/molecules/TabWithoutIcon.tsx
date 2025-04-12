@@ -28,7 +28,7 @@ export const TabWithoutIcon: React.FC<any> = ({
     }`;
 
   const getLabelClassName = (tabId: string | number) =>
-    `truncate pr-2 ${
+    `pr-2 ${
       currentTab === tabId
         ? "text-primaryButton font-semibold"
         : "text-gray-500 hover:text-gray-700"
@@ -44,14 +44,14 @@ export const TabWithoutIcon: React.FC<any> = ({
     }`;
 
   return (
-    <div className="inline-flex items-center gap-8 w-fit cursor-pointer border-b-2 border-gray-100">
+    <div className="inline-flex items-center gap-4 cursor-pointer border-b-2 border-gray-100 w-full overflow-x-auto">
       {tabData?.map((tab: TabInterface) => (
         <div
           key={tab.id}
           onClick={() => setCurrentTab(tab.id)}
-          className={getTabClassName(tab.id)}
+          className={`${getTabClassName(tab.id)}`}
         >
-          <h1 className={getLabelClassName(tab.id)}>{tab.label}</h1>
+          <h1 className={`${getLabelClassName(tab.id)}`}>{tab.label}</h1>
 
           {tab.params && (
             <div className="flex gap-2 items-center">

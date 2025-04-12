@@ -17,6 +17,9 @@ import {
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
+  GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_ERROR,
+  GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_REQUEST,
+  GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_SUCCESS,
   GET_SITE_MONITORING_PICS_PERCENTAGE_ERROR,
   GET_SITE_MONITORING_PICS_PERCENTAGE_REQUEST,
   GET_SITE_MONITORING_PICS_PERCENTAGE_SUCCESS,
@@ -139,6 +142,29 @@ export function getSiteLevelPerformanceForPlannerDashboardReducer(
         data: action.payload,
       };
     case GET_SITE_LEVEL_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+
+export function getSiteLevelPerformanceTabWiseForPlannerDashboardReducer(
+  state = {},
+  action
+) {
+  switch (action.type) {
+    case GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_REQUEST:
+      return { loading: true };
+    case GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_ERROR:
       return {
         loading: false,
         error: action.payload,

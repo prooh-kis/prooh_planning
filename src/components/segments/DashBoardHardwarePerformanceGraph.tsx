@@ -6,7 +6,7 @@ import {
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -19,7 +19,7 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -80,23 +80,6 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
         },
       },
       {
-        label: "Under-Performance",
-        data: requiredToPlayed,
-        backgroundColor: "#DFE5FF",
-        // borderColor: "#DFE5FF50",
-        // borderWidth: 1,
-        borderRadius: 5,
-        datalabels: {
-          color: "#00000050",
-          anchor: "center" as const,
-          align: "center" as const,
-          font: { size: 8 },
-          rotation: 270,
-          formatter: (value: number) =>
-            value > 20 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
-        },
-      },
-      {
         label: "Current Day",
         data: currentDayRemaining,
         backgroundColor: "#FFE896",
@@ -113,6 +96,24 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
             value > 20 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
         },
       },
+      {
+        label: "Under-Performance",
+        data: requiredToPlayed,
+        backgroundColor: "#DFE5FF",
+        // borderColor: "#DFE5FF50",
+        // borderWidth: 1,
+        borderRadius: 5,
+        datalabels: {
+          color: "#00000050",
+          anchor: "center" as const,
+          align: "center" as const,
+          font: { size: 8 },
+          rotation: 270,
+          formatter: (value: number) =>
+            value > 20 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
+        },
+      },
+    
     ],
   };
 
@@ -137,6 +138,9 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
           label: (context: any) => {
             let label = context.dataset.label || "";
             let value = context.raw;
+            if (label == "Current Day" && value == 0) {
+              return null;
+            }
             return `${label}: ${value.toFixed(0)}%`;
           },
         },

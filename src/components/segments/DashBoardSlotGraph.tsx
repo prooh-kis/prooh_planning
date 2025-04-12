@@ -6,7 +6,7 @@ import {
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -19,7 +19,7 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -163,6 +163,9 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           label: (context: any) => {
             let label = context.dataset.label || "";
             let value = context.raw;
+            if (label == "Current Day" && value == 0) {
+              return null;
+            }
             return `${label}: ${value.toFixed(0)}`;
           },
         },

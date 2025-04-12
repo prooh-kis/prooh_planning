@@ -277,9 +277,14 @@ export const CalenderScaleStepper = ({
     return percentage.toFixed(0);
   }, [currentWeek, weeks]);
 
+  useEffect(() => {
+    document.documentElement.scrollTop = document.documentElement.clientHeight;
+    document.documentElement.scrollLeft = document.documentElement.clientWidth;
+  }, []);
+
   return (
-    <div className="w-full cursor-pointer pb-2" ref={componentRef}>
-      <div className="pt-12 mb-20 flex justify-center">
+    <div className="w-full cursor-pointer" ref={componentRef}>
+      <div className="pt-16 mb-20 flex justify-center">
         <div className={`flex-${weeks.length === 1 ? 0 : 1} h-1 bg-[#D1E5F7] relative mx-1`}>
           <div className="absolute inset-x-0 flex justify-between">
             <div
@@ -302,10 +307,19 @@ export const CalenderScaleStepper = ({
                 }}
               >
                 <div className="relative">
-                  <Tooltip id="1" placement="bottom" title={
-                    <div className="flex items-center gap-2">
-                      <i className="fi fi-rr-calendar-lines text-[12px] flex items-center"></i>
-                      <h1 className="text-[12px]">{`${new Date().toDateString()}`}</h1>
+                  <Tooltip id="1" color="#000000" style={{ boxShadow: "none" }} placement="bottom" title={
+                    <div className="">
+                      <div className="flex items-center gap-2 bg-[]">
+                        <i className="fi fi-rr-calendar-lines text-[12px] flex items-center"></i>
+                        <h1 className="text-[12px]">{`${new Date().toDateString()}`}</h1>
+                      </div>
+                      <div className="text-center text-xs whitespace-nowrap"
+                        style={{
+                          // width: `${getCurrentTime() - (Number(currentDay - 1) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100}%`,
+                        }}
+                      >
+                        {getCurrentWeekPercentage()}% Week Delivered
+                      </div>
                     </div>
                     } open={showTooltip}>
                     <div
@@ -315,16 +329,6 @@ export const CalenderScaleStepper = ({
                       }}
                     />
                   </Tooltip>
-                  {showTooltip && (
-                    <div className="absolute top-12 left-0 right-0 text-center text-xs text-gray-500 whitespace-nowrap"
-                      style={{
-                        // width: `${getCurrentTime() - (Number(currentDay - 1) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100}%`,
-                        left: `${(Number(currentDay - 2) / (weeks?.[currentWeek - 1]?.[1]?.length - 2)) * 100}%`
-                      }}
-                    >
-                      {getCurrentWeekPercentage()}% Week Delivered
-                    </div>
-                  )}
                 </div>
               </div>
             )}

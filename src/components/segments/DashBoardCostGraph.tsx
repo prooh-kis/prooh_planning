@@ -6,7 +6,7 @@ import {
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -19,7 +19,7 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -81,22 +81,6 @@ export const DashBoardCostGraph: React.FC<BarChartProps> = ({
         },
       },
       {
-        label: "Unconsumed Cost",
-        data: requiredToPlayed,
-        backgroundColor: "#E1FFD3",
-        // borderColor: "#E1FFD350",
-        // borderWidth: 1,
-        borderRadius: 5,
-        datalabels: {
-          color: "#00000050",
-          anchor: "center" as const,
-          align: "center" as const,
-          font: { size: 8 },
-          formatter: (value: number) =>
-            value > 1000 ? formatNumber(value.toFixed(0)) : "", // Hide
-        },
-      },
-      {
         label: "Current Day",
         data: currentDayRemaining,
         backgroundColor: "#FFE896",
@@ -110,6 +94,22 @@ export const DashBoardCostGraph: React.FC<BarChartProps> = ({
           font: { size: 8 },
           formatter: (value: number) =>
             value > 10 ? formatNumber(value.toFixed(0)) : "", // Hide
+        },
+      },
+      {
+        label: "Unconsumed Cost",
+        data: requiredToPlayed,
+        backgroundColor: "#E1FFD3",
+        // borderColor: "#E1FFD350",
+        // borderWidth: 1,
+        borderRadius: 5,
+        datalabels: {
+          color: "#00000050",
+          anchor: "center" as const,
+          align: "center" as const,
+          font: { size: 8 },
+          formatter: (value: number) =>
+            value > 1000 ? formatNumber(value.toFixed(0)) : "", // Hide
         },
       },
     ],
@@ -136,6 +136,9 @@ export const DashBoardCostGraph: React.FC<BarChartProps> = ({
           label: (context: any) => {
             let label = context.dataset.label || "";
             let value = context.raw;
+            if (label == "Current Day" && value == 0) {
+              return null;
+            }
             return `${label}: INR ${value.toFixed(0)}`;
           },
         },

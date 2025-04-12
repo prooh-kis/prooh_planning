@@ -86,6 +86,7 @@ import {
   getCostDataForPlannerDashboardReducer,
   getHardwarePerformanceDataForPlannerDashboardReducer,
   getSiteLevelPerformanceForPlannerDashboardReducer,
+  getSiteLevelPerformanceTabWiseForPlannerDashboardReducer,
   getSiteMonitoringPicsPercentageReducer,
   getSitesDataMapViewForPlannerDashboardReducer,
   getSpotDeliveryDataForPlannerDashboardReducer,
@@ -202,6 +203,8 @@ const store = configureStore({
     costDataForPlannerDashboard: getCostDataForPlannerDashboardReducer,
     siteLevelPerformanceForPlannerDashboard:
       getSiteLevelPerformanceForPlannerDashboardReducer,
+    siteLevelPerformanceTabWiseForPlannerDashboard:
+      getSiteLevelPerformanceTabWiseForPlannerDashboardReducer,
     sitesDataMapViewForPlannerDashboard:
       getSitesDataMapViewForPlannerDashboardReducer,
     siteMonitoringPicsPercentage: getSiteMonitoringPicsPercentageReducer,
