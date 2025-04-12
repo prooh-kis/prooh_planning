@@ -18,8 +18,9 @@ import SiteLevelAnalysis from "../../components/segments/SiteLevelAnalysis";
 const analyticsV1 = `${process.env.REACT_APP_PROOH_SERVER}/api/v1/analytics`;
 
 interface CostSummaryTableProps {
-  screenLevelData?: any;
+  filteredScreenLevelData?: any;
   campaignDetails?: any;
+  screenLevelData?: any;
 }
 
 interface PercentageDisplayProps {
@@ -107,17 +108,38 @@ const getAllDates = ({ startDate, endDate }: any) => {
   let currentDate = new Date(startDate);
   const lastDate = new Date(endDate);
 
-  while (currentDate <= lastDate) {
-    dates.push(currentDate.toISOString().split("T")[0]);
-    currentDate.setDate(currentDate.getDate() + 1);
+  if (currentDate.getMonth() == lastDate.getMonth()) {
+    while (currentDate.getDate() <= lastDate.getDate()) {
+      // dates.push(currentDate.toISOString().split("T")[0]); // Format as YYYY-MM-DD
+      dates.push({
+        value: currentDate.toISOString().split("T")[0],
+        label: currentDate.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+        }),
+      });
+      currentDate.setDate(currentDate.getDate() + 1); // Move to next day
+    }
+  } else {
+    while (currentDate <= lastDate) {
+      // dates.push(currentDate.toISOString().split("T")[0]); // Format as YYYY-MM-DD
+      dates.push({
+        value: currentDate.toISOString().split("T")[0],
+        label: currentDate.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+        }),
+      });
+      currentDate.setDate(currentDate.getDate() + 1); // Move to next day
+    }
   }
 
   return dates;
 };
-
 export const CampaignDashboardTable = ({
-  screenLevelData,
+  filteredScreenLevelData,
   campaignDetails,
+  screenLevelData,
 }: CostSummaryTableProps) => {
   const dispatch = useDispatch<any>();
   const [isDownLoad, setIsDownload] = useState<string>("");
@@ -126,7 +148,7 @@ export const CampaignDashboardTable = ({
     useState<any>(false);
   const [screenId, setScreenId] = useState<any>(null);
   const [currentIndex, setCurrentIndex] = useState<any>(null);
-  const [campaignData, setCampaignData] = useState<any>({});
+  const [calendarData, setCalendarData] = useState<any>({});
   const [currentWeek, setCurrentWeek] = useState<any>(1);
   const [currentDay, setCurrentDay] = useState<any>(1);
   const [currentDate, setCurrentDate] = useState<any>(new Date().toUTCString());
@@ -221,7 +243,7 @@ export const CampaignDashboardTable = ({
   return (
     <div>
       <ShowMonitoringPicsPopup
-        campaign={screenLevelData?.[screenId]}
+        campaign={filteredScreenLevelData?.[screenId]}
         screenId={screenId}
         campaignCreation={campaignDetails}
         onClose={onClose}
@@ -232,8 +254,9 @@ export const CampaignDashboardTable = ({
         loading={loadingLogs}
         open={openLogsPopup}
         onClose={onClose}
-        campaignData={campaignData}
+        calendarData={calendarData}
         campaignDetails={campaignDetails}
+        screenCampaignData={screenId}
         setCurrentDay={setCurrentDay}
         setCurrentWeek={setCurrentWeek}
         currentDay={currentDay}
@@ -244,6 +267,7 @@ export const CampaignDashboardTable = ({
         isDownLoad={isDownLoad}
         downloadLogs={downloadLogs}
       />
+      
       <table className="table-auto w-full">
         <thead className="bg-[#EFF9FF] text-[#707070] font-medium rounded-[6px] w-full flex justify-between items-center">
           <tr className="overflow-auto no-scrollbar flex grid grid-cols-12 w-full items-center h-[40px] border-b truncate">
@@ -277,7 +301,7 @@ export const CampaignDashboardTable = ({
           </tr>
         </thead>
         <tbody className="max-h-[250px] overflow-scroll">
-          {screenLevelData.map((screenData: any, index: number) => (
+          {filteredScreenLevelData.map((screenData: any, index: number) => (
             <React.Fragment key={index}>
               <tr
                 key={screenData}
@@ -406,7 +430,8 @@ export const CampaignDashboardTable = ({
                       <i
                         className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}
                         onClick={() => {
-                          setCampaignData(screenData);
+                          setScreenId(screenData);
+                          setCalendarData(screenData.slotDataDateWise);
                           setOpenLogsPopup(true);
                         }}
                       ></i>
@@ -443,6 +468,7 @@ export const CampaignDashboardTable = ({
               {currentIndex === screenData?.campaignId && (
                 <tr className="">
                   <td className="w-full p-4 rounded-[8px] shadow-md">
+                    
                     <SiteLevelAnalysis screenData={screenData} screenLevelData={screenLevelData}/>
                   </td>
                 </tr>

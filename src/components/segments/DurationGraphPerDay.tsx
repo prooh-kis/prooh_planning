@@ -49,6 +49,10 @@ export const DurationGraphPerDay: React.FC<LineChartProps> = ({
   const requiredToPlayed = Object.values(currentData || {}).map(
     (data: any) => data.promised
   );
+
+  const overDelivered = Object.values(currentData || {}).map(
+    (data: any) => data.extra
+  )
   // Calculate the maximum value in the data
   const maxValue = Math.max(...totalPlayed, 0);
   // Set y-axis max to 1.5 times the maximum data value (with minimum of 1 if all values are 0)
@@ -135,7 +139,7 @@ export const DurationGraphPerDay: React.FC<LineChartProps> = ({
               tooltipLines.push(
                 `${legend.label}: ${
                   legend.label == "Hourly Delivery" ? played[context.dataIndex] 
-                  : played[context.dataIndex] - requiredToPlayed[context.dataIndex] > 0 ? played[context.dataIndex] - requiredToPlayed[context.dataIndex]
+                  : overDelivered[context.dataIndex] > 0 ? overDelivered[context.dataIndex]
                   : 0
                 }`
               );
@@ -250,7 +254,7 @@ export const DurationGraphPerDay: React.FC<LineChartProps> = ({
             style={{ backgroundColor: "#D7D7D7" }}
           ></div>
           <span className="text-[10px] text-gray-600">
-            Extra Delivery: {played?.map((s: any, i: any) => s-requiredToPlayed[i])?.reduce((acc, num) => acc + num, 0) > 0 ? formatNumber(played?.map((s: any, i: any) => s-requiredToPlayed[i])?.reduce((acc, num) => acc + num, 0)) : 0}
+            Extra Delivery: {overDelivered?.reduce((acc, num) => acc + num, 0) > 0 ? formatNumber(overDelivered?.reduce((acc, num) => acc + num, 0)) : 0}
           </span>
         </div>
       </div>

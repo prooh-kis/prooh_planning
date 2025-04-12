@@ -99,7 +99,7 @@ const SiteLevelAnalysis = ({ screenData, screenLevelData }: any) => {
                         </div>
                         <div className="col-span-1 flex justify-center">
                           <h1 className="text-[10px]">
-                            {formatNumber(tabWiseSiteData[audienceType]?.impressionDeliveredTotal)}
+                            {formatNumber(Number(tabWiseSiteData[audienceType]?.impressionDeliveredTotal).toFixed(0))}
                           </h1>
                         </div>
                         
@@ -124,7 +124,7 @@ const SiteLevelAnalysis = ({ screenData, screenLevelData }: any) => {
                       </div>
                       <div className="col-span-1 flex justify-center">
                         <h1 className="text-[10px]">
-                          {formatNumber(tabWiseSiteData["all"]?.impressionDeliveredMale)}
+                          {formatNumber(Number(tabWiseSiteData["all"]?.impressionDeliveredMale).toFixed(0))}
                         </h1>
                       </div>
                     </div>
@@ -147,7 +147,7 @@ const SiteLevelAnalysis = ({ screenData, screenLevelData }: any) => {
                       </div>
                       <div className="col-span-1 flex justify-center">
                         <h1 className="text-[10px]">
-                          {formatNumber(tabWiseSiteData["all"]?.impressionDeliveredFemale)}
+                          {formatNumber(Number(tabWiseSiteData["all"]?.impressionDeliveredFemale).toFixed(0))}
                         </h1>
                       </div>
                     </div>
@@ -187,7 +187,7 @@ const SiteLevelAnalysis = ({ screenData, screenLevelData }: any) => {
                         </div>
                         <div className="col-span-1 flex justify-center">
                           <h1 className="text-[10px]">
-                            {formatNumber(tabWiseSiteData[audienceType]?.impressionDeliveredTotal)}
+                            {formatNumber(Number(tabWiseSiteData[audienceType]?.impressionDeliveredTotal).toFixed(0))}
                           </h1>
                         </div>
                         

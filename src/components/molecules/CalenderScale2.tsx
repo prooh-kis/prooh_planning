@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import { message, Tooltip } from "antd";
 import {
   formatDateForLogs,
+  getCampaignDurationFromStartAndEndDate,
   getNumberOfDaysBetweenTwoDates,
 } from "../../utils/dateAndTimeUtils";
 import moment from "moment";
@@ -22,6 +23,7 @@ interface StepSliderProps {
   calendarData?: any;
   loading?: boolean;
   openSiteMapView?: any;
+  logsPopup?: any;
 }
 
 export const CalenderScaleStepper = ({
@@ -35,6 +37,7 @@ export const CalenderScaleStepper = ({
   calendarData,
   loading,
   openSiteMapView,
+  logsPopup=false,
 }: StepSliderProps) => {
 
   const componentRef = useRef<HTMLDivElement>(null);
@@ -42,7 +45,8 @@ export const CalenderScaleStepper = ({
   const { pathname } = useLocation();
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
-  const [showTooltip, setShowTooltip] = useState<any>(true);
+  const [showTooltip, setShowTooltip] = useState<any>(openSiteMapView);
+  const [currentWeekMinusValue, setCurrentWeekMinusValue] = useState<any>(1);
 
   const groupDatesByWeek = useCallback((dates: Array<{value: string, label: string}>) => {
     const weeks: { [key: string]: Array<{value: string, label: string}> } = {};
@@ -59,6 +63,7 @@ export const CalenderScaleStepper = ({
       if (weekKey !== "End") {
         const dateToAdd = new Date(weeks[weekKey][weeks[weekKey].length-1]?.value);
         dateToAdd.setDate(dateToAdd.getDate() + 1);
+ 
         const resultDate = dateToAdd.toISOString().split('T')[0];
 
         weeks[weekKey].push(({
@@ -111,23 +116,19 @@ export const CalenderScaleStepper = ({
     }
   }, [loading, currentDay, currentWeek, weeks, setCurrentDay, setCurrentWeek, setCurrentDate]);
 
-  // const getValueDateWise = useCallback((label: string, i: number) => {
-  //   const result = calendarData?.find(
-  //     (data: any) =>
-  //       formatDateForLogs(new Date(data.date)).apiDate ===
-  //       formatDateForLogs(new Date(weeks[currentWeek - 1][1][i].value))
-  //         .apiDate
-  //   )?.[label];
-  //   return Number(result);
-  // }, [calendarData, currentWeek, weeks]);
-
   const getPercentageValue = useCallback((delivered: number, promised: number) => {
     const percentage = (delivered / promised) * 100 || 0;
     return `${percentage.toFixed(0)}%`;
   }, []);
 
   const getCurrentTime = useCallback(() => {
-    const weekDates = weeks?.[currentWeek - 1]?.[1] || [];
+    let weekDates = weeks?.[currentWeek - 1]?.[1] || [];
+
+    if (currentWeek == weeks.length) {
+      // setCurrentWeekMinusValue(2)
+      weekDates = weeks?.[currentWeek-2]?.[1]
+    }
+    
     const numberOfGaps = weekDates.length - 1;
     let timeMarkerPosition = 0;
 
@@ -148,16 +149,22 @@ export const CalenderScaleStepper = ({
   const getCurrentDay = useCallback(() => {
     const today = moment();
     let todayMarkerLeft = 0;
+    
+    const lastDate = new Date(allDates[allDates.length - 1].value)
+    if (getNumberOfDaysBetweenTwoDates(new Date(), lastDate) < 0) {
+      todayMarkerLeft = 0
+      return todayMarkerLeft
+    }
 
     if (weeks.length > 1) {
       const totalWeeks = weeks.length - 1;
-
       weeks.forEach(([_, dates], weekIndex) => {
         const match = dates.find((d) =>
           moment(d.value).isSame(today, "day")
         );
+
         if (match) {
-          const dayIndex = dates.indexOf(match);
+          const dayIndex = dates.indexOf(match) == 0 ? 1 : dates.indexOf(match);
           const percentPerWeek = 100 / totalWeeks;
           const percentPerDay = percentPerWeek / 7;
           todayMarkerLeft = weekIndex * percentPerWeek + dayIndex * percentPerDay;
@@ -165,7 +172,42 @@ export const CalenderScaleStepper = ({
       });
     }
     return todayMarkerLeft;
-  }, [weeks]);
+  }, [weeks, allDates]);
+
+  const getCurrentTimePercentage = useCallback(() => {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+    
+    // Calculate total seconds passed in the day
+    const totalSecondsPassed = (hours * 3600) + (minutes * 60) + seconds;
+    // Total seconds in a day
+    const totalSecondsInDay = 24 * 3600;
+    
+    // Calculate percentage
+    const percentage = (totalSecondsPassed / totalSecondsInDay) * 100;
+    return percentage.toFixed(0); // Return with 1 decimal place
+  }, []);
+
+  const getCurrentWeekPercentage = useCallback(() => {
+    const now = new Date();
+
+    const currentWeekDates = weeks?.[currentWeek - 1]?.[1] || [];
+    
+    if (currentWeekDates.length < 2) return "0.0"; // Need at least start and end dates
+    
+    const weekStart = new Date(currentWeekDates[0].value);
+    const weekEnd = new Date(currentWeekDates[currentWeekDates.length - 1].value);
+    
+    // Calculate total milliseconds in the week
+    const totalWeekMs = weekEnd.getTime() - weekStart.getTime();
+    const elapsedMs = now.getTime() - weekStart.getTime();
+    
+    // Calculate percentage (clamp between 0 and 100)
+    const percentage = Math.min(100, Math.max(0, (elapsedMs / totalWeekMs) * 100));
+    return percentage.toFixed(0);
+  }, [currentWeek, weeks]);
 
   useEffect(() => {
     if (!userInfo) {
@@ -173,10 +215,9 @@ export const CalenderScaleStepper = ({
     }
   }, [dispatch, userInfo]);
 
-
   useEffect(() => {
     const checkVisibility = () => {
-      if (componentRef.current) {
+      if (!logsPopup && componentRef.current) {
         const rect = componentRef.current.getBoundingClientRect();
         const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
         
@@ -185,9 +226,6 @@ export const CalenderScaleStepper = ({
         const viewportMiddle = viewportHeight / 2;
         const isInMiddle = Math.abs(componentMiddle - viewportMiddle) < viewportHeight * 0.25;
         setShowTooltip(isInMiddle);
-      }
-      if (openSiteMapView) {
-        setShowTooltip(false)
       }
     };
 
@@ -209,15 +247,28 @@ export const CalenderScaleStepper = ({
       const dateIndex = allDates.findIndex(date => 
         new Date(date.value).toDateString() === new Date(currentDate).toDateString()
       );
-      
       if (dateIndex >= 0) {
         // Calculate the week number (1-based)
         const weekNumber = Math.floor(dateIndex / 7) + 1;
         // Calculate the day number within the week (1-based)
         const dayNumber = (dateIndex % 7) + 1;
-        
+
         setCurrentWeek?.(weekNumber);
         setCurrentDay?.(dayNumber);
+      }
+
+      if (dateIndex < 0) {
+        // setCurrentWeekMinusValue(2)
+        // setShowTooltip(false);
+        // setCurrentWeek?.(weeks.length)
+        // setCurrentDay?.(weeks[weeks.length-2][1].length)
+
+        // console.log("current Week", currentWeek)
+        // console.log("currentDay", currentDay)
+        // console.log("current Time",getCurrentTime())
+        // console.log(weeks)
+        // console.log(weeks.length)
+        // console.log(weeks[weeks.length-2][1].length)
       }
     }
   }, [currentDate, allDates, setCurrentWeek, setCurrentDay]);
@@ -242,40 +293,6 @@ export const CalenderScaleStepper = ({
   // Then you can access the current week's data like this:
   const currentWeekPercentage = allWeekPercentages[currentWeek - 1]?.percentage || 0;
   const currentWeekPercentageColor = allWeekPercentages[currentWeek - 1]?.color || "#FF4747";
-
-  const getCurrentTimePercentage = useCallback(() => {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
-    
-    // Calculate total seconds passed in the day
-    const totalSecondsPassed = (hours * 3600) + (minutes * 60) + seconds;
-    // Total seconds in a day
-    const totalSecondsInDay = 24 * 3600;
-    
-    // Calculate percentage
-    const percentage = (totalSecondsPassed / totalSecondsInDay) * 100;
-    return percentage.toFixed(0); // Return with 1 decimal place
-  }, []);
-
-  const getCurrentWeekPercentage = useCallback(() => {
-    const now = new Date();
-    const currentWeekDates = weeks?.[currentWeek - 1]?.[1] || [];
-    
-    if (currentWeekDates.length < 2) return "0.0"; // Need at least start and end dates
-    
-    const weekStart = new Date(currentWeekDates[0].value);
-    const weekEnd = new Date(currentWeekDates[currentWeekDates.length - 1].value);
-    
-    // Calculate total milliseconds in the week
-    const totalWeekMs = weekEnd.getTime() - weekStart.getTime();
-    const elapsedMs = now.getTime() - weekStart.getTime();
-    
-    // Calculate percentage (clamp between 0 and 100)
-    const percentage = Math.min(100, Math.max(0, (elapsedMs / totalWeekMs) * 100));
-    return percentage.toFixed(0);
-  }, [currentWeek, weeks]);
 
   useEffect(() => {
     document.documentElement.scrollTop = document.documentElement.clientHeight;
@@ -303,22 +320,17 @@ export const CalenderScaleStepper = ({
                   left: `${weeks?.length === 1 ? 0 :
                   Number((currentWeek - 1) / (weeks.length - 1)) * 100
                 }%`
-                  // opacity: 0.3
                 }}
               >
                 <div className="relative">
                   <Tooltip id="1" color="#000000" style={{ boxShadow: "none" }} placement="bottom" title={
                     <div className="">
-                      <div className="flex items-center gap-2 bg-[]">
+                      <div className="flex items-center gap-2">
                         <i className="fi fi-rr-calendar-lines text-[12px] flex items-center"></i>
                         <h1 className="text-[12px]">{`${new Date().toDateString()}`}</h1>
                       </div>
-                      <div className="text-center text-xs whitespace-nowrap"
-                        style={{
-                          // width: `${getCurrentTime() - (Number(currentDay - 1) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100}%`,
-                        }}
-                      >
-                        {getCurrentWeekPercentage()}% Week Delivered
+                      <div className="text-center text-xs whitespace-nowrap">
+                        {getCurrentWeekPercentage()}% of Week Delivered
                       </div>
                     </div>
                     } open={showTooltip}>
@@ -365,13 +377,14 @@ export const CalenderScaleStepper = ({
                     ) {
                       message.info("Still to come...");
                     } else {
-                      handleStepClick({ type: "week", step: i });
+                      if (week !== "End") {
+                        handleStepClick({ type: "week", step: i });
+                      }
                     }
                   }}
                   className="relative flex flex-col items-center"
                 >
                   <div className={`relative w-3 h-3 rounded-full -mt-1 flex flex-col items-center ${bgColor}`}>
-                    {/* Circular marker */}
                     <div className={`absolute inset-0 rounded-full ${bgColor}`} />
                     
                     <Tooltip id="2" title={week}>
@@ -379,7 +392,7 @@ export const CalenderScaleStepper = ({
                         <h1 className={`text-[12px] whitespace-nowrap ${labelPosition} ${weekColor}`}>
                           {week}
                         </h1>
-                        {(isPastWeek || isCurrentWeek) && weekPercentageData && (
+                        {(isPastWeek || isCurrentWeek) && weekPercentageData && week !== "End" && (
                           <h1 className={`text-[12px] font-medium whitespace-nowrap text-[${currentWeekPercentageColor}]`}>
                             ({weekPercentageData.percentage}%)
                           </h1>
@@ -433,19 +446,17 @@ export const CalenderScaleStepper = ({
                   {showTooltip && (
                     <div className="absolute top-12 left-0 right-0 text-center text-xs text-gray-500 whitespace-nowrap"
                       style={{
-                        // width: `${getCurrentTime() - (Number(currentDay - 1) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100}%`,
                         left: `${(Number(currentDay - 2) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100}%`
                       }}
                     >
-                      {getCurrentTimePercentage()}% Day Delivered
+                      {getCurrentTimePercentage()}% of Day Delivered
                     </div>
                   )}
                 </div>
               </div>
             )}
            
-            {weeks?.[currentWeek - 1]?.[1]?.map((dateObj, i) => {
-
+            {weeks?.[currentWeek - currentWeekMinusValue]?.[1]?.map((dateObj, i) => {
               const isCurrentDay = i === currentDay - 1;
               const isPastDay = i < currentDay - 1;
               const dayColor = isPastDay || isCurrentDay ? "text-[#00000090] font-semibold" : "text-[#D6D2D2]";
@@ -464,13 +475,14 @@ export const CalenderScaleStepper = ({
                     if (getNumberOfDaysBetweenTwoDates(new Date(), new Date(dateObj.value)) > 0) {
                       message.info("Still to come...");
                     } else {
-                      handleStepClick({ type: "day", step: i });
+                      if (dateObj.label !== "End") {
+                        handleStepClick({ type: "day", step: i });
+                      }
                     }
                   }}
                   className="relative flex flex-col items-center justify-center"
                 >
                   <div className={`relative w-3 h-3 rounded-full -mt-1 flex flex-col items-center ${bgColor}`}>
-                    {/* Circular marker */}
                     <div className={`absolute inset-0 rounded-full ${bgColor}`} />
                     
                     {isCurrentDay && (

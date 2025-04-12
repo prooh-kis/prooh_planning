@@ -29,10 +29,11 @@ export const CampaignDashboard = ({
   loading,
   campaignDetails,
   screenLevelData,
-  siteLevelData,
   filters,
   setFilters,
   sitesDataMapViewData,
+  siteLevelData,
+  loadingSiteLevel,
 }: any) => {
   const dropdownRef = useRef<any>(null);
   const navigate = useNavigate();
@@ -423,9 +424,12 @@ export const CampaignDashboard = ({
           ): null}
         </div>
         <SiteMonitoringPic sitesDataMapViewData={sitesDataMapViewData} openSiteMapView={openSiteMapView} setOpenSiteMapView={setOpenSiteMapView} />
+
         <SiteLevelPerformance
+          loadingSiteLevel={loadingSiteLevel}
           siteLevelData={siteLevelData}
           campaignDetails={campaignDetails}
+          screenLevelData={screenLevelData}
         />
       </div>
     </div>

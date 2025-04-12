@@ -154,7 +154,7 @@ export const AudienceSegment = ({
                         height="h-[5px]"
                       />
                       <h1 className="text-[10px]">
-                        {showPercent[1] ? `${(audienceData.cityWiseData[cityKey]?.impressionDelivered*100/audienceData.cityWiseData[cityKey]?.impressionPromised).toFixed(0)}%` : formatNumber(audienceData.cityWiseData[cityKey]?.impressionDelivered)}
+                        {showPercent[1] ? `${(audienceData.cityWiseData[cityKey]?.impressionDelivered*100/audienceData.cityWiseData[cityKey]?.impressionPromised).toFixed(0)}%` : formatNumber(audienceData.cityWiseData[cityKey]?.impressionDelivered.toFixed(0))}
                       </h1>
                     </div>
                   </div>
@@ -207,7 +207,7 @@ export const AudienceSegment = ({
                         height="h-[5px]"
                       />
                       <h1 className="text-[10px]">
-                        {showPercent[2] ? `${(audienceData.touchPointWiseData[tpKey]?.impressionDelivered*100/audienceData.touchPointWiseData[tpKey]?.impressionPromised).toFixed(0)}%` : formatNumber(audienceData.touchPointWiseData[tpKey]?.impressionDelivered)}
+                        {showPercent[2] ? `${(audienceData.touchPointWiseData[tpKey]?.impressionDelivered*100/audienceData.touchPointWiseData[tpKey]?.impressionPromised).toFixed(0)}%` : formatNumber(audienceData.touchPointWiseData[tpKey]?.impressionDelivered.toFixed(0))}
                       </h1>
                     </div>
                   </div>
@@ -260,7 +260,7 @@ export const AudienceSegment = ({
                         height="h-[5px]"
                       />
                       <h1 className="text-[10px]">
-                        {showPercent[3] ? `${(audienceData.screenTypeWiseData[stKey]?.impressionDelivered*100/audienceData.screenTypeWiseData[stKey]?.impressionPromised).toFixed(0)}%` : formatNumber(audienceData.screenTypeWiseData[stKey]?.impressionDelivered)}
+                        {showPercent[3] ? `${(audienceData.screenTypeWiseData[stKey]?.impressionDelivered*100/audienceData.screenTypeWiseData[stKey]?.impressionPromised).toFixed(0)}%` : formatNumber(audienceData.screenTypeWiseData[stKey]?.impressionDelivered.toFixed(0))}
                       </h1>
                     </div>
                   </div>
@@ -328,7 +328,7 @@ export const AudienceSegment = ({
                       </div>
                       <div className="col-span-1 flex justify-center">
                         <h1 className="text-[10px]">
-                          {showPercent[3] && showPercent[2] && showPercent[1] ? `${(audienceData.audienceTypeData[audienceType]?.impressionDeliveredTotal*100/audienceData.audienceTypeData[audienceType]?.impressionPromisedTotal).toFixed(0)}%` : formatNumber(audienceData.audienceTypeData[audienceType]?.impressionDeliveredTotal)}
+                          {showPercent[3] && showPercent[2] && showPercent[1] ? `${(audienceData.audienceTypeData[audienceType]?.impressionDeliveredTotal*100/audienceData.audienceTypeData[audienceType]?.impressionPromisedTotal).toFixed(0)}%` : formatNumber(audienceData.audienceTypeData[audienceType]?.impressionDeliveredTotal.toFixed(0))}
                         </h1>
                       </div>
                       

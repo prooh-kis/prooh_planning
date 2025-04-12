@@ -123,10 +123,11 @@ export const NewDashBoard: React.FC = () => {
         loading={isLoading}
         campaignDetails={campaignDetails}
         screenLevelData={dashboardData}
-        siteLevelData={siteLevelData}
         filters={filters}
         setFilters={setFilters}
         sitesDataMapViewData={sitesDataMapViewData}
+        siteLevelData={siteLevelData}
+        loadingSiteLevel={loadingSiteLevel}
       />
     </div>
   );

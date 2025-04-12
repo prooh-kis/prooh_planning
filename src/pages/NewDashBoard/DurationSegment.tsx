@@ -44,7 +44,7 @@ export const DurationSegment = ({
           />
         </div>
       )}
-      {screenLevelData && Object.keys(screenLevelData.slotData).length > 0 && (
+      {screenLevelData && Object.keys(screenLevelData.slotDataHourWise).length > 0 && (
         <div className="col-span-4 bg-[#FFFFFF] rounded-[12px] border border-gray-100 h-full shadow-sm">
           <div className="flex items-center justify-between border-b mx-4">
             <div className="flex items-center gap-2 pt-4 pb-2 truncate">
@@ -72,7 +72,7 @@ export const DurationSegment = ({
             </div>
           </div>
           <DurationGraphPerDay
-            currentData={screenLevelData?.slotData}
+            currentData={screenLevelData?.slotDataHourWise}
             additionalLegends={[
               { label: "Hourly Delivery", values: [1500], color: "rgba(16, 185, 129, 1)" },
               { label: "Extra Delivery", values: [1200], color: "rgba(245, 158, 11, 1)" },

@@ -17,7 +17,7 @@ export const ShowCampaignLogsPopup = ({
   onClose,
   logs,
   loading,
-  campaignData,
+  calendarData,
   campaignDetails,
   setCurrentDay,
   setCurrentWeek,
@@ -26,8 +26,7 @@ export const ShowCampaignLogsPopup = ({
   allDates,
   setCurrentDate,
   currentDate,
-  downloadLogs,
-  isDownLoad,
+  screenCampaignData,
 }: any) => {
   const dispatch = useDispatch<any>();
   const scrollRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -101,16 +100,16 @@ export const ShowCampaignLogsPopup = ({
   };
 
   useEffect(() => {
-    if (campaignData?.campaignId) {
+    if (screenCampaignData?.campaignId) {
       dispatch(
         GetCampaignLogsAction({
-          campaignId: campaignData?.campaignId,
+          campaignId: screenCampaignData?.campaignId,
           date: formatDateForLogs(currentDate)?.apiDate,
           // date: "13/03/2025"
         })
       );
     }
-  }, [dispatch, campaignData, currentDate]);
+  }, [dispatch, screenCampaignData, currentDate]);
 
   useEffect(() => {
     if (open) {
@@ -131,6 +130,7 @@ export const ShowCampaignLogsPopup = ({
   const handelDownloadLogs = () => {
     downloadExcel({ campaign: campaignDetails, campaignLog: logs });
   };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 mt-16">
       <div
@@ -140,7 +140,7 @@ export const ShowCampaignLogsPopup = ({
         <div className="flex justify-end">
           <i className="fi fi-br-circle-xmark" onClick={() => onClose()}></i>
         </div>
-        <div className="flex justify-between p-4">
+        <div className="flex justify-between p-2">
           <div>
             <h1 className="font-semibold text-[20px] text-[#0E212E] leading-[19.36px]">
               Log Report
@@ -163,7 +163,7 @@ export const ShowCampaignLogsPopup = ({
             )}
           </div>
         </div>
-        <div>
+        <div className="">
           <CalenderScaleStepper
             setCurrentDay={setCurrentDay}
             setCurrentWeek={setCurrentWeek}
@@ -171,8 +171,11 @@ export const ShowCampaignLogsPopup = ({
             currentWeek={currentWeek}
             allDates={allDates}
             setCurrentDate={setCurrentDate}
-            calendarData={campaignData}
+            currentDate={currentDate}
+            calendarData={calendarData}
             loading={loading}
+            openSiteMapView={false}
+            logsPopup={true}
           />
         </div>
         {loading ? (

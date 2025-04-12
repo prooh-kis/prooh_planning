@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { CampaignDashboardTable } from "../../components/tables/CampaignDashboardTable";
 import { EnhancedSelect } from "../../components/atoms/EnhancedSelect";
 import ButtonInput from "../../components/atoms/ButtonInput";
+import { useSelector } from "react-redux";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 interface SiteData {
   city?: string;
@@ -13,11 +15,15 @@ interface SiteData {
 interface SiteLevelPerformanceProps {
   siteLevelData?: SiteData[];
   campaignDetails?: any;
+  screenLevelData?: any;
+  loadingSiteLevel?: any;
 }
 
 export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
   siteLevelData = [],
   campaignDetails,
+  screenLevelData,
+  loadingSiteLevel,
 }) => {
   const [filters, setFilters] = useState({
     city: "",
@@ -25,12 +31,13 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
     screenType: "",
   });
 
+
   const getUniqueOptions = (key: keyof SiteData) => {
     const uniqueValues = Array.from(
       new Set(
         siteLevelData
-          .map((item) => item?.[key])
-          .filter((value): value is string => Boolean(value))
+          ?.map((item: any) => item?.[key])
+          ?.filter((value: any): value is string => Boolean(value))
       )
     );
     return uniqueValues.map((value) => ({ label: value, value }));
@@ -40,8 +47,8 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
     const uniqueValues = Array.from(
       new Set(
         siteLevelData
-          .map((item) => item?.[key])
-          .filter((value): value is string => Boolean(value))
+          ?.map((item: any) => item?.[key])
+          ?.filter((value: any): value is string => Boolean(value))
       )
     );
     return uniqueValues.map((value) => ({
@@ -67,7 +74,7 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
     });
   };
 
-  const filteredResults = siteLevelData.filter((item) => {
+  const filteredResults = siteLevelData?.filter((item: any) => {
     return (
       (!filters.city || item.city === filters.city) &&
       (!filters.touchPoint || item.touchPoint === filters.touchPoint) &&
@@ -84,21 +91,21 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
           </h1>
           <div className="flex gap-4 items-center">
             <EnhancedSelect
-              options={getUniqueOptions("city")}
+              options={getUniqueOptions("city") as any}
               onChange={(val) => handleFilterChange("city", val)}
               placeholder="Filter by city"
               value={filters.city}
               size="sm"
             />
             <EnhancedSelect
-              options={getUniqueOptions("touchPoint")}
+              options={getUniqueOptions("touchPoint") as any}
               onChange={(val) => handleFilterChange("touchPoint", val)}
               placeholder="Filter by touchPoint"
               value={filters.touchPoint}
               size="sm"
             />
             <EnhancedSelect
-              options={getUniqueOptions1("screenType")}
+              options={getUniqueOptions1("screenType") as any}
               onChange={(val) => handleFilterChange("screenType", val)}
               placeholder="Filter by Screen Type"
               value={filters.screenType}
@@ -112,11 +119,18 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
             </ButtonInput>
           </div>
         </div>
+        {loadingSiteLevel ? (
+          <div>
+            <LoadingScreen />
+          </div>
+        ) : (
+          <CampaignDashboardTable
+            campaignDetails={campaignDetails}
+            filteredScreenLevelData={filteredResults}
+            screenLevelData={screenLevelData}
+          />
+        )}
 
-        <CampaignDashboardTable
-          campaignDetails={campaignDetails}
-          screenLevelData={filteredResults}
-        />
       </div>
     </div>
   );
