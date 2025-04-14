@@ -28,7 +28,7 @@ export const TabWithoutIcon: React.FC<any> = ({
     }`;
 
   const getLabelClassName = (tabId: string | number) =>
-    `pr-2 ${
+    `pr-2 truncate ${
       currentTab === tabId
         ? "text-primaryButton font-semibold"
         : "text-gray-500 hover:text-gray-700"

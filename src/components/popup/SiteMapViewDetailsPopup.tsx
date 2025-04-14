@@ -374,7 +374,7 @@ export const SiteMapViewDetailsPopup = ({
         <div className={`h-[65vh] w-full flex rounded-[12px]`}>
           <div
             className={`${
-              currentSite ? "w-2/3" : "w-full"
+              currentSite ? "w-2/3 rounded" : "w-full rounded"
             } h-full bg-[#F3F3F3] `}
           >
             <Map

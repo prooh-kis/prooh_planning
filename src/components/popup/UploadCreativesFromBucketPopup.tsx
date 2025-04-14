@@ -88,8 +88,8 @@ export function UploadCreativesFromBucketPopup({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 ">
       <div
-        className="bg-white p-4  shadow-lg w-full max-w-full rounded-lg"
-        style={{ height: "80vh", width: "70vw" }}
+        className="bg-white p-4 shadow-lg w-full max-w-full rounded-lg"
+        style={{ height: "80vh", width: "80vw" }}
       >
         <div className="flex justify-between items-center">
           <h1 className="text-[20px] font-semibold text-[#092A41]">
@@ -111,8 +111,8 @@ export function UploadCreativesFromBucketPopup({
           </div>
         </div>
 
-        <div className="flex pt-4">
-          <div className="w-[80%] border border-1">
+        <div className="grid grid-cols-12 pt-4">
+          <div className="col-span-8 border border-1">
             <div className="flex flex-col justify-center">
               <div className="py-4 px-2">
                 <SearchInputField
@@ -151,7 +151,7 @@ export function UploadCreativesFromBucketPopup({
                   />
 
                   {creativesMedia ? (
-                    <div className={`h-[52vh] overflow-auto mt-2`}>
+                    <div className={`h-[55vh] overflow-auto mt-2`}>
                       {Object.keys(creativesMedia?.[currentTab] || {})
                         ?.filter((c: any) => c !== "network")
                         ?.map((m: any, i: any) => (
@@ -240,7 +240,7 @@ export function UploadCreativesFromBucketPopup({
             </div>
           </div>
 
-          <div className="w-[40%] border border-1 ">
+          <div className="col-span-4 border border-1 ">
             <div className="flex justify-between p-2 border border-1">
               <h1 className="test-[#092A41] text-[16px] font-semibold">
                 Selected Creative: {mediaFiles?.length}
@@ -255,7 +255,7 @@ export function UploadCreativesFromBucketPopup({
               </button>
             </div>
 
-            <div className="flex flex-col gap-2 p-2 h-[65vh] relative overflow-scroll no-scrollbar">
+            <div className="flex flex-col gap-2 p-2 relative overflow-scroll no-scrollbar">
               {mediaFiles?.map((media: any, index: any) => (
                 <SingleCreativeInPopup
                   media={media}
