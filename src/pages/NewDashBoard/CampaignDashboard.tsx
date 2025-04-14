@@ -384,6 +384,7 @@ export const CampaignDashboard = ({
               allDates={allDates}
               loading={loading}
               openSiteMapView={openSiteMapView}
+              openInvoice={openInvoice}
             />
           ) : clicked === "2" ? (
             <AudienceSegment

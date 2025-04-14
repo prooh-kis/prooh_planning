@@ -16,7 +16,7 @@ export const DurationSegment = ({
   allDates,
   openSiteMapView,
   loading,
-
+  openInvoice,
 }: any) => {
 
   return (
@@ -41,6 +41,7 @@ export const DurationSegment = ({
             calendarData={calendarData}
             loading={loading}
             openSiteMapView={openSiteMapView}
+            openInvoice={openInvoice}
           />
         </div>
       )}

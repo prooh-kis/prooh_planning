@@ -24,6 +24,7 @@ interface StepSliderProps {
   loading?: boolean;
   openSiteMapView?: any;
   logsPopup?: any;
+  openInvoice?: any;
 }
 
 export const CalenderScaleStepper = ({
@@ -38,6 +39,8 @@ export const CalenderScaleStepper = ({
   loading,
   openSiteMapView,
   logsPopup=false,
+  openInvoice,
+
 }: StepSliderProps) => {
 
   const componentRef = useRef<HTMLDivElement>(null);
@@ -45,7 +48,7 @@ export const CalenderScaleStepper = ({
   const { pathname } = useLocation();
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
-  const [showTooltip, setShowTooltip] = useState<any>(openSiteMapView);
+  const [showTooltip, setShowTooltip] = useState<any>(!openSiteMapView);
   const [currentWeekMinusValue, setCurrentWeekMinusValue] = useState<any>(1);
 
   const groupDatesByWeek = useCallback((dates: Array<{value: string, label: string}>) => {
@@ -226,6 +229,8 @@ export const CalenderScaleStepper = ({
         const viewportMiddle = viewportHeight / 2;
         const isInMiddle = Math.abs(componentMiddle - viewportMiddle) < viewportHeight * 0.25;
         setShowTooltip(isInMiddle);
+        if (openSiteMapView) return setShowTooltip(false);
+        if (openInvoice) return setShowTooltip(false);
       }
     };
 
@@ -238,7 +243,7 @@ export const CalenderScaleStepper = ({
     return () => {
       window.removeEventListener('scroll', checkVisibility);
     };
-  }, [openSiteMapView]);
+  }, [logsPopup, openInvoice, openSiteMapView]);
   
 
   useEffect(() => {
@@ -258,20 +263,13 @@ export const CalenderScaleStepper = ({
       }
 
       if (dateIndex < 0) {
-        // setCurrentWeekMinusValue(2)
-        // setShowTooltip(false);
-        // setCurrentWeek?.(weeks.length)
-        // setCurrentDay?.(weeks[weeks.length-2][1].length)
-
-        // console.log("current Week", currentWeek)
-        // console.log("currentDay", currentDay)
-        // console.log("current Time",getCurrentTime())
-        // console.log(weeks)
-        // console.log(weeks.length)
-        // console.log(weeks[weeks.length-2][1].length)
+        setCurrentWeekMinusValue(2)
+        setShowTooltip(false);
+        setCurrentWeek?.(weeks.length)
+        setCurrentDay?.(weeks[weeks.length-2][1].length)
       }
     }
-  }, [currentDate, allDates, setCurrentWeek, setCurrentDay]);
+  }, [currentDate, allDates, setCurrentWeek, setCurrentDay, weeks]);
 
 
   // Replace the currentWeekPercentage and currentWeekPercentageColor useMemos with:
@@ -323,7 +321,7 @@ export const CalenderScaleStepper = ({
                 }}
               >
                 <div className="relative">
-                  <Tooltip id="1" color="#000000" style={{ boxShadow: "none" }} placement="bottom" title={
+                  <Tooltip id="1" placement="bottom" title={
                     <div className="">
                       <div className="flex items-center gap-2">
                         <i className="fi fi-rr-calendar-lines text-[12px] flex items-center"></i>
@@ -415,7 +413,7 @@ export const CalenderScaleStepper = ({
             <div
               className="absolute h-1 inset-x-0 bg-[#DC6700] rounded transition-all duration-500"
               style={{
-                width: `${(Number(currentDay - 1) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100}%`,
+                width: `${(Number(currentDay - 1) / (weeks?.[currentWeek - currentWeekMinusValue]?.[1]?.length - 1)) * 100}%`,
               }}
             />
             {getCurrentTime() > 0 && (
@@ -429,9 +427,14 @@ export const CalenderScaleStepper = ({
                 <div className="relative">
                   <Tooltip id="3" placement="bottom"
                     title={
-                      <div className="flex items-center gap-2">
-                        <i className="fi fi-br-clock text-[12px] flex items-center"></i>
-                        <h1 className="text-[12px]">{moment().format("hh:mm A")}</h1>
+                      <div className="">
+                        <div className="flex items-center justify-center gap-2">
+                          <i className="fi fi-br-clock text-[12px] flex items-center"></i>
+                          <h1 className="text-[12px]">{moment().format("hh:mm A")}</h1>
+                        </div>
+                        <div className="text-center text-xs whitespace-nowrap">
+                          {getCurrentTimePercentage()}% of Day Delivered
+                        </div>
                       </div>
                     } 
                     open={showTooltip}
@@ -443,15 +446,7 @@ export const CalenderScaleStepper = ({
                       }}
                     />
                   </Tooltip>
-                  {showTooltip && (
-                    <div className="absolute top-12 left-0 right-0 text-center text-xs text-gray-500 whitespace-nowrap"
-                      style={{
-                        left: `${(Number(currentDay - 2) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100}%`
-                      }}
-                    >
-                      {getCurrentTimePercentage()}% of Day Delivered
-                    </div>
-                  )}
+                 
                 </div>
               </div>
             )}
@@ -467,7 +462,6 @@ export const CalenderScaleStepper = ({
               );
               const percentageValue = dayData ? getPercentageValue(dayData.count, dayData.countPromised) : "";
               const percentageColor = dayData?.count / dayData?.countPromised > 1 ? "#2A892D" : "#FF4747";
-
               return (
                 <div
                   key={i}
