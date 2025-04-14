@@ -135,7 +135,7 @@ export const AudienceSegment = ({
                         label={cityKey.toUpperCase()}
                         checked={filters.cities["audience"]?.includes(cityKey)}
                         textSize={"10px"}
-                        color={"#D7D7D7"}
+                        color={"#0E212E"}
                         onChange={(checked) => handleClick({
                           type: "city",
                           value: cityKey,
@@ -188,7 +188,7 @@ export const AudienceSegment = ({
                         label={tpKey.toUpperCase()}
                         checked={filters.touchPoints["audience"]?.includes(tpKey)}
                         textSize={"10px"}
-                        color={"#D7D7D7"}
+                        color={"#0E212E"}
                         onChange={(checked) => handleClick({
                           type: "touchpoint",
                           value: tpKey,
@@ -241,7 +241,7 @@ export const AudienceSegment = ({
                         label={stKey.toUpperCase()}
                         checked={filters.screenTypes["audience"]?.includes(stKey)}
                         textSize={"10px"}
-                        color={"#D7D7D7"}
+                        color={"#0E212E"}
                         onChange={(checked) => handleClick({
                           type: "screenType",
                           value: stKey,

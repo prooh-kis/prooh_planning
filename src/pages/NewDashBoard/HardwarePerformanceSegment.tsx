@@ -126,9 +126,13 @@ console.log(dataToShow);
                 dataValue={
                   <h1 className="text-[12px] font-semibold truncate">
                     Total-{dataToShow.hardwarePerformanceDelivered.toFixed(0)}%
-                    <span className="text-[#D7D7D7]">
-                      /{dataToShow.hardwarePerformancePromisedTillDate.toFixed(0)}%
-                    </span>  
+                    <span className="text-[#0E212E]">
+                      /
+                      {dataToShow.hardwarePerformancePromisedTillDate.toFixed(
+                        0
+                      )}
+                      %
+                    </span>
                   </h1>
                 }
                 subHeading={"Maxima represent 100% screen performance "}
@@ -154,46 +158,68 @@ console.log(dataToShow);
                       return {
                         1: !showPercent?.[1],
                         2: showPercent?.[2],
-                        3: showPercent?.[3]
-                      }
+                        3: showPercent?.[3],
+                      };
                     });
                   }}
                   switchShow={false}
                 />
               </div>
               <div className="py-2">
-                {Object.keys(hardwarePerformanceData.cityWiseData)?.map((cityKey: any, i: any) => (
-                  <div key={i} className="flex items-center gap-2 pt-1">
-                    <div>
-                      <CheckboxInput
-                        disabled={false}
-                        label={cityKey.toUpperCase()}
-                        checked={filters.cities["screenPerformance"]?.includes(cityKey)}
-                        textSize={"10px"}
-                        color={"#D7D7D7"}
-                        onChange={(checked) => handleClick({
-                          type: "city",
-                          value: cityKey,
-                          checked: checked
-                        })}
-                      />
+                {Object.keys(hardwarePerformanceData.cityWiseData)?.map(
+                  (cityKey: any, i: any) => (
+                    <div key={i} className="flex items-center gap-2 pt-1">
+                      <div>
+                        <CheckboxInput
+                          disabled={false}
+                          label={cityKey.toUpperCase()}
+                          checked={filters.cities[
+                            "screenPerformance"
+                          ]?.includes(cityKey)}
+                          textSize={"10px"}
+                          color={"#0E212E"}
+                          onChange={(checked) =>
+                            handleClick({
+                              type: "city",
+                              value: cityKey,
+                              checked: checked,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex items-center w-full gap-2">
+                        <MultiColorLinearBar2
+                          delivered={
+                            hardwarePerformanceData.cityWiseData[cityKey]
+                              ?.hardwarePerformanceDelivered
+                          }
+                          expected={
+                            (hardwarePerformanceData.cityWiseData[cityKey]
+                              ?.hardwarePerformancePromised *
+                              (screenLevelData?.data?.durationDelivered || 1)) /
+                            screenLevelData?.data?.durationPromised
+                          }
+                          total={
+                            hardwarePerformanceData.cityWiseData[cityKey]
+                              ?.hardwarePerformancePromised
+                          }
+                          deliveredColor="bg-[#6982FF]"
+                          expectedColor="bg-[#CFC7FF]"
+                          totalColor="bg-[#DFE5FF]"
+                          height="h-[5px]"
+                        />
+                        <h1 className="text-[10px]">
+                          {formatNumber(
+                            hardwarePerformanceData.cityWiseData[
+                              cityKey
+                            ]?.hardwarePerformanceDelivered.toFixed(0)
+                          )}
+                          %
+                        </h1>
+                      </div>
                     </div>
-                    <div className="flex items-center w-full gap-2">
-                      <MultiColorLinearBar2
-                        delivered={hardwarePerformanceData.cityWiseData[cityKey]?.hardwarePerformanceDelivered}
-                        expected={hardwarePerformanceData.cityWiseData[cityKey]?.hardwarePerformancePromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
-                        total={hardwarePerformanceData.cityWiseData[cityKey]?.hardwarePerformancePromised}
-                        deliveredColor="bg-[#6982FF]"
-                        expectedColor="bg-[#CFC7FF]"
-                        totalColor="bg-[#DFE5FF]"
-                        height="h-[5px]"
-                      />
-                      <h1 className="text-[10px]">
-                        {formatNumber(hardwarePerformanceData.cityWiseData[cityKey]?.hardwarePerformanceDelivered.toFixed(0))}%
-                      </h1>
-                    </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             </div>
             <div className="col-span-1 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
@@ -208,46 +234,68 @@ console.log(dataToShow);
                       return {
                         1: showPercent?.[1],
                         2: !showPercent?.[2],
-                        3: showPercent?.[3]
-                      }
+                        3: showPercent?.[3],
+                      };
                     });
                   }}
                   switchShow={false}
                 />
               </div>
               <div className="py-2">
-                {Object.keys(hardwarePerformanceData.touchPointWiseData)?.map((tpKey: any, i: any) => (
-                  <div key={i} className="flex items-center gap-2 pt-1">
-                    <div>
-                      <CheckboxInput
-                        disabled={false}
-                        label={tpKey.toUpperCase()}
-                        checked={filters.touchPoints["screenPerformance"]?.includes(tpKey)}
-                        textSize={"10px"}
-                        color={"#D7D7D7"}
-                        onChange={(checked) => handleClick({
-                          type: "touchpoint",
-                          value: tpKey,
-                          checked: checked
-                        })}
-                      />
+                {Object.keys(hardwarePerformanceData.touchPointWiseData)?.map(
+                  (tpKey: any, i: any) => (
+                    <div key={i} className="flex items-center gap-2 pt-1">
+                      <div>
+                        <CheckboxInput
+                          disabled={false}
+                          label={tpKey.toUpperCase()}
+                          checked={filters.touchPoints[
+                            "screenPerformance"
+                          ]?.includes(tpKey)}
+                          textSize={"10px"}
+                          color={"#0E212E"}
+                          onChange={(checked) =>
+                            handleClick({
+                              type: "touchpoint",
+                              value: tpKey,
+                              checked: checked,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex items-center w-full gap-2">
+                        <MultiColorLinearBar2
+                          delivered={
+                            hardwarePerformanceData.touchPointWiseData[tpKey]
+                              ?.hardwarePerformanceDelivered
+                          }
+                          expected={
+                            (hardwarePerformanceData.touchPointWiseData[tpKey]
+                              ?.hardwarePerformancePromised *
+                              (screenLevelData?.data?.durationDelivered || 1)) /
+                            screenLevelData?.data?.durationPromised
+                          }
+                          total={
+                            hardwarePerformanceData.touchPointWiseData[tpKey]
+                              ?.hardwarePerformancePromised
+                          }
+                          deliveredColor="bg-[#6982FF]"
+                          expectedColor="bg-[#CFC7FF]"
+                          totalColor="bg-[#DFE5FF]"
+                          height="h-[5px]"
+                        />
+                        <h1 className="text-[10px]">
+                          {formatNumber(
+                            hardwarePerformanceData.touchPointWiseData[
+                              tpKey
+                            ]?.hardwarePerformanceDelivered.toFixed(0)
+                          )}
+                          %
+                        </h1>
+                      </div>
                     </div>
-                    <div className="flex items-center w-full gap-2">
-                      <MultiColorLinearBar2
-                        delivered={hardwarePerformanceData.touchPointWiseData[tpKey]?.hardwarePerformanceDelivered}
-                        expected={hardwarePerformanceData.touchPointWiseData[tpKey]?.hardwarePerformancePromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
-                        total={hardwarePerformanceData.touchPointWiseData[tpKey]?.hardwarePerformancePromised}
-                        deliveredColor="bg-[#6982FF]"
-                        expectedColor="bg-[#CFC7FF]"
-                        totalColor="bg-[#DFE5FF]"
-                        height="h-[5px]"
-                      />
-                      <h1 className="text-[10px]">
-                        {formatNumber(hardwarePerformanceData.touchPointWiseData[tpKey]?.hardwarePerformanceDelivered.toFixed(0))}%
-                      </h1>
-                    </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             </div>
             <div className="col-span-1 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
@@ -262,54 +310,73 @@ console.log(dataToShow);
                       return {
                         1: showPercent?.[1],
                         2: showPercent?.[2],
-                        3: !showPercent?.[3]
-                      }
+                        3: !showPercent?.[3],
+                      };
                     });
                   }}
                   switchShow={false}
                 />
               </div>
               <div className="py-2">
-                {Object.keys(hardwarePerformanceData.screenTypeWiseData)?.map((stKey: any, i: any) => (
-                  <div key={i} className="flex items-center gap-2 pt-1">
-                    <div>
-                      <CheckboxInput
-                        disabled={false}
-                        label={stKey.toUpperCase()}
-                        checked={filters.screenTypes["screenPerformance"]?.includes(stKey)}
-                        textSize={"10px"}
-                        color={"#D7D7D7"}
-                        onChange={(checked) => handleClick({
-                          type: "screenType",
-                          value: stKey,
-                          checked: checked
-                        })}
-                      />
+                {Object.keys(hardwarePerformanceData.screenTypeWiseData)?.map(
+                  (stKey: any, i: any) => (
+                    <div key={i} className="flex items-center gap-2 pt-1">
+                      <div>
+                        <CheckboxInput
+                          disabled={false}
+                          label={stKey.toUpperCase()}
+                          checked={filters.screenTypes[
+                            "screenPerformance"
+                          ]?.includes(stKey)}
+                          textSize={"10px"}
+                          color={"#0E212E"}
+                          onChange={(checked) =>
+                            handleClick({
+                              type: "screenType",
+                              value: stKey,
+                              checked: checked,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex items-center w-full gap-2">
+                        <MultiColorLinearBar2
+                          delivered={
+                            hardwarePerformanceData.screenTypeWiseData[stKey]
+                              ?.hardwarePerformanceDelivered
+                          }
+                          expected={
+                            (hardwarePerformanceData.screenTypeWiseData[stKey]
+                              ?.hardwarePerformancePromised *
+                              (screenLevelData?.data?.durationDelivered || 1)) /
+                            screenLevelData?.data?.durationPromised
+                          }
+                          total={
+                            hardwarePerformanceData.screenTypeWiseData[stKey]
+                              ?.hardwarePerformancePromised
+                          }
+                          deliveredColor="bg-[#6982FF]"
+                          expectedColor="bg-[#CFC7FF]"
+                          totalColor="bg-[#DFE5FF]"
+                          height="h-[5px]"
+                        />
+                        <h1 className="text-[10px]">
+                          {formatNumber(
+                            hardwarePerformanceData.screenTypeWiseData[
+                              stKey
+                            ]?.hardwarePerformanceDelivered.toFixed(0)
+                          )}
+                          %
+                        </h1>
+                      </div>
                     </div>
-                    <div className="flex items-center w-full gap-2">
-                      <MultiColorLinearBar2
-                        delivered={hardwarePerformanceData.screenTypeWiseData[stKey]?.hardwarePerformanceDelivered}
-                        expected={hardwarePerformanceData.screenTypeWiseData[stKey]?.hardwarePerformancePromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
-                        total={hardwarePerformanceData.screenTypeWiseData[stKey]?.hardwarePerformancePromised}
-                        deliveredColor="bg-[#6982FF]"
-                        expectedColor="bg-[#CFC7FF]"
-                        totalColor="bg-[#DFE5FF]"
-                        height="h-[5px]"
-                      />
-                      <h1 className="text-[10px]">
-                        {formatNumber(hardwarePerformanceData.screenTypeWiseData[stKey]?.hardwarePerformanceDelivered.toFixed(0))}%
-                      </h1>
-                    </div>
-                  </div>
-                ))}
-                
+                  )
+                )}
               </div>
             </div>
           </div>
         </div>
       )}
-
     </div>
-
-  )
+  );
 }

@@ -124,7 +124,7 @@ export const SlotSegment = ({
                 dataValue={
                   <h1 className="text-[12px] font-semibold truncate">
                     Total-{formatNumber(dataToShow.slotsDelivered.toFixed(0))}
-                    <span className="text-[#D7D7D7]">
+                    <span className="text-[#0E212E]">
                       /{formatNumber(dataToShow.slotsPromisedTillDate.toFixed(0))}
                     </span>  
                   </h1>
@@ -167,7 +167,7 @@ export const SlotSegment = ({
                         label={cityKey.toUpperCase()}
                         checked={filters.cities["spotDelivery"]?.includes(cityKey)}
                         textSize={"10px"}
-                        color={"#D7D7D7"}
+                        color={"#0E212E"}
                         onChange={(checked) => handleClick({
                           type: "city",
                           value: cityKey,
@@ -220,7 +220,7 @@ export const SlotSegment = ({
                         label={tpKey.toUpperCase()}
                         checked={filters.touchPoints["spotDelivery"].includes(tpKey)}
                         textSize={"10px"}
-                        color={"#D7D7D7"}
+                        color={"#0E212E"}
                         onChange={(checked) => handleClick({
                           type: "touchpoint",
                           value: tpKey,
@@ -273,7 +273,7 @@ export const SlotSegment = ({
                         label={stKey.toUpperCase()}
                         checked={filters.screenTypes["spotDelivery"].includes(stKey)}
                         textSize={"10px"}
-                        color={"#D7D7D7"}
+                        color={"#0E212E"}
                         onChange={(checked) => handleClick({
                           type: "screenType",
                           value: stKey,

@@ -121,7 +121,7 @@ export const CostSegment = ({
                 dataValue={
                   <h1 className="text-[12px] font-semibold truncate">
                     Total-&#8377;{formatNumber(dataToShow.costConsumed.toFixed(0))}
-                    <span className="text-[#D7D7D7]">
+                    <span className="text-[#0E212E]">
                       /&#8377;{formatNumber(dataToShow.costTakenTillDate.toFixed(0))}
                     </span>  
                   </h1>
@@ -164,7 +164,7 @@ export const CostSegment = ({
                         label={cityKey.toUpperCase()}
                         checked={filters.cities["costConsumption"]?.includes(cityKey)}
                         textSize={"10px"}
-                        color={"#D7D7D7"}
+                        color={"#0E212E"}
                         onChange={(checked) => handleClick({
                           type: "city",
                           value: cityKey,
@@ -217,7 +217,7 @@ export const CostSegment = ({
                         label={tpKey.toUpperCase()}
                         checked={filters.touchPoints["costConsumption"]?.includes(tpKey)}
                         textSize={"10px"}
-                        color={"#D7D7D7"}
+                        color={"#0E212E"}
                         onChange={(checked) => handleClick({
                           type: "touchpoint",
                           value: tpKey,
@@ -270,7 +270,7 @@ export const CostSegment = ({
                         label={stKey.toUpperCase()}
                         checked={filters.screenTypes["costConsumption"]?.includes(stKey)}
                         textSize={"10px"}
-                        color={"#D7D7D7"}
+                        color={"#0E212E"}
                         onChange={(checked) => handleClick({
                           type: "screenType",
                           value: stKey,
