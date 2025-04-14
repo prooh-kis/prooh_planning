@@ -9,8 +9,7 @@ import { NoDataView } from "../../components/molecules/NoDataView";
 import { CalenderScaleStepper } from "../../components/molecules/CalenderScale2";
 import { useDispatch } from "react-redux";
 import { GetCampaignLogsAction } from "../../actions/campaignAction";
-import { downloadExcel } from "../../utils/excelUtils";
-
+import { downloadExcel2 } from "../../utils/excelUtils";
 
 export const ShowCampaignLogsPopup = ({
   open,
@@ -128,7 +127,7 @@ export const ShowCampaignLogsPopup = ({
   }
 
   const handelDownloadLogs = () => {
-    downloadExcel({ campaign: campaignDetails, campaignLog: logs });
+    downloadExcel2({ campaign: campaignDetails, campaignLog: logs });
   };
 
   return (

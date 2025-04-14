@@ -10,7 +10,7 @@ import {
   getTimeDifferenceInMin,
 } from "../../utils/dateAndTimeUtils";
 import { message, Tooltip } from "antd";
-import { downloadExcel } from "../../utils/excelUtils";
+import { downloadExcel2 } from "../../utils/excelUtils";
 import axios from "axios";
 import { LinearBar } from "../../components/molecules/linearbar";
 import SiteLevelAnalysis from "../../components/segments/SiteLevelAnalysis";
@@ -192,7 +192,7 @@ export const CampaignDashboardTable = ({
       const { data } = await axios.get(
         `${analyticsV1}/downloadAllCampaignLogs?campaignId=${campaignId}`
       );
-      await downloadExcel({
+      await downloadExcel2({
         campaign: data?.campaign,
         campaignLog: data?.logs,
       });
@@ -267,7 +267,7 @@ export const CampaignDashboardTable = ({
         isDownLoad={isDownLoad}
         downloadLogs={downloadLogs}
       />
-      
+
       <table className="table-auto w-full">
         <thead className="bg-[#EFF9FF] text-[#707070] font-medium rounded-[6px] w-full flex justify-between items-center">
           <tr className="overflow-auto no-scrollbar flex grid grid-cols-12 w-full items-center h-[40px] border-b truncate">
@@ -468,8 +468,10 @@ export const CampaignDashboardTable = ({
               {currentIndex === screenData?.campaignId && (
                 <tr className="">
                   <td className="w-full p-4 rounded-[8px] shadow-md">
-                    
-                    <SiteLevelAnalysis screenData={screenData} screenLevelData={screenLevelData}/>
+                    <SiteLevelAnalysis
+                      screenData={screenData}
+                      screenLevelData={screenLevelData}
+                    />
                   </td>
                 </tr>
               )}
