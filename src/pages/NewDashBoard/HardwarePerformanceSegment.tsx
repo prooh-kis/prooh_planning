@@ -16,8 +16,9 @@ export const HardwarePerformanceSegment = ({
   screenLevelData,
   filters,
   setFilters,
+  dataToShow,
 }: any) => {
-
+console.log(dataToShow);
   const dispatch = useDispatch<any>();
   const {
     loading: loadingHardwarePerformanceData,
@@ -122,6 +123,15 @@ export const HardwarePerformanceSegment = ({
                 iconClass="fi-ss-screen"
                 title="Screen Performance"
                 bgColor=" bg-[#6982FF]"
+                dataValue={
+                  <h1 className="text-[12px] font-semibold truncate">
+                    Total-{dataToShow.hardwarePerformanceDelivered.toFixed(0)}%
+                    <span className="text-[#D7D7D7]">
+                      /{dataToShow.hardwarePerformancePromisedTillDate.toFixed(0)}%
+                    </span>  
+                  </h1>
+                }
+                subHeading={"Maxima represent 100% screen performance "}
               />
             </div>
             <div className="p-2">

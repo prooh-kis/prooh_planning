@@ -16,6 +16,7 @@ export const CostSegment = ({
   screenLevelData,
   filters,
   setFilters,
+  dataToShow
 }: any) => {
   const dispatch = useDispatch<any>();
 
@@ -117,6 +118,15 @@ export const CostSegment = ({
                 iconClass="fi-ss-sack"
                 title="Cost Consumed"
                 bgColor=" bg-[#6DBC48]"
+                dataValue={
+                  <h1 className="text-[12px] font-semibold truncate">
+                    Total-&#8377;{formatNumber(dataToShow.costConsumed.toFixed(0))}
+                    <span className="text-[#D7D7D7]">
+                      /&#8377;{formatNumber(dataToShow.costTakenTillDate.toFixed(0))}
+                    </span>  
+                  </h1>
+                }
+                subHeading={"Maxima represent total cost spend for all the delivered slots"}
               />
             </div>
             <div className="p-2">

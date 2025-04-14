@@ -403,6 +403,7 @@ export const CampaignDashboard = ({
               setShowPercent={setShowPercent}
               filters={filters}
               setFilters={setFilters}
+              dataToShow={gridItems?.find((item: any) => item.id === "3")?.screenLevelData}
             />
           ) : clicked === "4" ? (
             <SlotSegment
@@ -412,6 +413,7 @@ export const CampaignDashboard = ({
               setShowPercent={setShowPercent}
               filters={filters}
               setFilters={setFilters}
+              dataToShow={gridItems?.find((item: any) => item.id === "4")?.screenLevelData}
             />
           ) : clicked === "5" ? (
             <CostSegment
@@ -421,6 +423,7 @@ export const CampaignDashboard = ({
               setShowPercent={setShowPercent}
               filters={filters}
               setFilters={setFilters}
+              dataToShow={gridItems?.find((item: any) => item.id === "5")?.screenLevelData}
             />
           ): null}
         </div>

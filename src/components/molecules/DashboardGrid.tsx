@@ -37,6 +37,8 @@ interface SectionHeaderProps {
   iconClass: string;
   title: string;
   bgColor: string;
+  dataValue?: any;
+  subHeading?: any;
 }
 
 interface ValueDisplayProps {
@@ -51,19 +53,35 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
   iconClass,
   title,
   bgColor,
+  dataValue,
+  subHeading,
 }) => (
-  <div className="flex items-center gap-2 pb-2">
+  <div className="flex items-center gap-2 pb-2 truncate">
     <div className={`rounded-full p-2 ${bgColor}`}>
       <i
         className={`fi ${iconClass} text-[12px] text-white flex items-center justify-center`}
       ></i>
     </div>
-    <h1 className="text-[12px] text-[#0E212E] leading-[16.94px] truncate ">
-      {title}
-    </h1>
-    <Tooltip title="">
-      <i className="fi fi-br-info text-[12px] text-[#b2c1ca] flex justify-center items-center"></i>
-    </Tooltip>
+    <div className="truncate w-full">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1">
+          <h1 className="text-[12px] text-[#0E212E] leading-[16.94px] truncate ">
+            {title}
+          </h1>
+          <Tooltip title="">
+            <i className="fi fi-br-info text-[12px] text-[#b2c1ca] flex justify-center items-center"></i>
+          </Tooltip>
+        </div>
+        {dataValue && (
+          <div className="flex items-center truncate">
+            {dataValue}
+          </div>
+        )}
+      </div>
+      {subHeading && (
+        <p className="text-[9px] truncate">{subHeading}</p>
+      )}
+    </div>
   </div>
 );
 

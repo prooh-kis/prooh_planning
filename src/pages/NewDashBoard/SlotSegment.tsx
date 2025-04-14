@@ -15,7 +15,8 @@ export const SlotSegment = ({
   showPercent,
   screenLevelData,
   filters,
-  setFilters
+  setFilters,
+  dataToShow,
 }: any) => {
 
   const dispatch = useDispatch<any>();
@@ -120,6 +121,15 @@ export const SlotSegment = ({
                 iconClass="fi-ss-screen"
                 title="Spot Delivery"
                 bgColor=" bg-[#77BFEF]"
+                dataValue={
+                  <h1 className="text-[12px] font-semibold truncate">
+                    Total-{formatNumber(dataToShow.slotsDelivered.toFixed(0))}
+                    <span className="text-[#D7D7D7]">
+                      /{formatNumber(dataToShow.slotsPromisedTillDate.toFixed(0))}
+                    </span>  
+                  </h1>
+                }
+                subHeading={"Maxima represent total spots delivered along with extra slots delivered"}
               />
             </div>
             <div className="p-2">
