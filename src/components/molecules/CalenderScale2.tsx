@@ -86,7 +86,7 @@ export const CalenderScaleStepper = ({
       return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
     };
 
-    const matchingDates = new Set(data?.[1]?.map((d: any) => formatToMDY(d.value)));
+    const matchingDates = new Set(data?.[1]?.map((d: any) => formatToMDY(d?.value)));
     return calendarData?.reduce(
       (totals: any, entry: any) => {
         if (matchingDates.has(entry.date)) {
@@ -112,10 +112,10 @@ export const CalenderScaleStepper = ({
       if (currentDay > weeks[input.step][1].length) {
         setCurrentDay?.(weeks[input.step][1].length);
       }
-      setCurrentDate?.(weeks[input.step][1][currentDay - 1].value);
+      setCurrentDate?.(weeks[input.step][1][currentDay - 1]?.value);
     } else if (input.type === "day") {
       setCurrentDay?.(input.step + 1);
-      setCurrentDate?.(weeks[currentWeek - 1][1][input.step].value);
+      setCurrentDate?.(weeks[currentWeek - 1][1][input.step]?.value);
     }
   }, [loading, currentDay, currentWeek, weeks, setCurrentDay, setCurrentWeek, setCurrentDate]);
 
@@ -136,8 +136,8 @@ export const CalenderScaleStepper = ({
     let timeMarkerPosition = 0;
 
     for (let i = 0; i < numberOfGaps; i++) {
-      const start = new Date(weekDates[i].value);
-      const end = new Date(weekDates[i + 1].value);
+      const start = new Date(weekDates[i]?.value);
+      const end = new Date(weekDates[i + 1]?.value);
       const now = new Date();
       if (now >= start && now <= end) {
         const hoursSinceStart = (now.getTime() - start.getTime()) / (1000 * 60 * 60);
@@ -153,7 +153,7 @@ export const CalenderScaleStepper = ({
     const today = moment();
     let todayMarkerLeft = 0;
     
-    const lastDate = new Date(allDates[allDates.length - 1].value)
+    const lastDate = new Date(allDates[allDates.length - 1]?.value)
     if (getNumberOfDaysBetweenTwoDates(new Date(), lastDate) < 0) {
       todayMarkerLeft = 0
       return todayMarkerLeft
@@ -162,12 +162,12 @@ export const CalenderScaleStepper = ({
     if (weeks.length > 1) {
       const totalWeeks = weeks.length - 1;
       weeks.forEach(([_, dates], weekIndex) => {
-        const match = dates.find((d) =>
-          moment(d.value).isSame(today, "day")
+        const match = dates?.find((d) =>
+          moment(d?.value).isSame(today, "day")
         );
 
         if (match) {
-          const dayIndex = dates.indexOf(match) == 0 ? 1 : dates.indexOf(match);
+          const dayIndex = dates?.indexOf(match) == 0 ? 1 : dates?.indexOf(match);
           const percentPerWeek = 100 / totalWeeks;
           const percentPerDay = percentPerWeek / 7;
           todayMarkerLeft = weekIndex * percentPerWeek + dayIndex * percentPerDay;
@@ -200,8 +200,8 @@ export const CalenderScaleStepper = ({
     
     if (currentWeekDates.length < 2) return "0.0"; // Need at least start and end dates
     
-    const weekStart = new Date(currentWeekDates[0].value);
-    const weekEnd = new Date(currentWeekDates[currentWeekDates.length - 1].value);
+    const weekStart = new Date(currentWeekDates[0]?.value);
+    const weekEnd = new Date(currentWeekDates[currentWeekDates.length - 1]?.value);
     
     // Calculate total milliseconds in the week
     const totalWeekMs = weekEnd.getTime() - weekStart.getTime();
@@ -250,9 +250,10 @@ export const CalenderScaleStepper = ({
     if (currentDate && allDates.length > 0) {
       // Find the index of the currentDate in allDates
       const dateIndex = allDates.findIndex(date => 
-        new Date(date.value).toDateString() === new Date(currentDate).toDateString()
+        new Date(date?.value).toDateString() === new Date(currentDate).toDateString()
       );
       if (dateIndex >= 0) {
+        setCurrentWeekMinusValue(1)
         // Calculate the week number (1-based)
         const weekNumber = Math.floor(dateIndex / 7) + 1;
         // Calculate the day number within the week (1-based)
@@ -270,7 +271,6 @@ export const CalenderScaleStepper = ({
       }
     }
   }, [currentDate, allDates, setCurrentWeek, setCurrentDay, weeks]);
-
 
   // Replace the currentWeekPercentage and currentWeekPercentageColor useMemos with:
 
@@ -458,7 +458,7 @@ export const CalenderScaleStepper = ({
               const bgColor = isPastDay || isCurrentDay ? "bg-[#DC6700]" : "border bg-[#D1E5F7]";
 
               const dayData = calendarData?.find((s: any) => 
-                new Date(s.date).toDateString() === new Date(dateObj.value).toDateString()
+                new Date(s.date).toDateString() === new Date(dateObj?.value).toDateString()
               );
               const percentageValue = dayData ? getPercentageValue(dayData.count, dayData.countPromised) : "";
               const percentageColor = dayData?.count / dayData?.countPromised > 1 ? "#2A892D" : "#FF4747";
@@ -466,7 +466,7 @@ export const CalenderScaleStepper = ({
                 <div
                   key={i}
                   onClick={() => {
-                    if (getNumberOfDaysBetweenTwoDates(new Date(), new Date(dateObj.value)) > 0) {
+                    if (getNumberOfDaysBetweenTwoDates(new Date(), new Date(dateObj?.value)) > 0) {
                       message.info("Still to come...");
                     } else {
                       if (dateObj.label !== "End") {
@@ -482,13 +482,13 @@ export const CalenderScaleStepper = ({
                     {isCurrentDay && (
                       <div className="absolute w-3 h-3 rounded-full flex flex-col items-center bg-[#DC6700] animate-ping" />
                     )}
-                    <Tooltip id="4" title={dateObj.value} >
+                    <Tooltip id="4" title={dateObj?.value} >
                       <div className="relative mt-[-24px] w-full cursor-pointer flex items-center justify-center">
                         <div className={`flex ${i == 0 ? "" : i+1 == weeks?.[currentWeek - 1]?.[1]?.length ? "justify-end" : "justify-center"} items-center w-full gap-1 -ml-[8px]`}>
                           <h1 className={`text-[12px] text-nowrap ${dayColor}`}>
                             {dateObj.label}
                           </h1>
-                          {calendarData && new Date(dateObj.value).getTime() < new Date().getTime() && dayData && (
+                          {calendarData && new Date(dateObj?.value).getTime() < new Date().getTime() && dayData && (
                             <h1 className={`text-[10px] font-medium whitespace-nowrap text-[${percentageColor}]`}>
                               ({percentageValue || 0 })
                             </h1>

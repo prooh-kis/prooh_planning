@@ -380,7 +380,7 @@ export const SiteMapViewDetailsPopup = ({
             <Map
               defaultCenter={viewState.center}
               defaultZoom={viewState.zoom}
-              mapId="96194b21d9fc00de"
+              mapId="b10d18ff9dd84d5c"
               gestureHandling="greedy"
               disableDefaultUI={true}
               className="h-full w-full"
