@@ -69,16 +69,7 @@ export const AdsPlaySelectedSummaryTable = ({
         <h1 className="w-full text-center "> Evening </h1>
         <h1 className="w-full text-center "> Night </h1>
       </div>
-      <div className="flex w-full align-center py-2 text-[14px] border">
-        <h1 className="w-full text-center ">Selected</h1>
-        <h1 className="w-full text-center ">{resultData?.length || 0}</h1>
-        <h1 className="w-full text-center ">{totals.totalScreens || 0}</h1>
-        <h1 className="w-full text-center ">{getUpto2Decimal(totals.selected.morning)}</h1>
-        <h1 className="w-full text-center ">{getUpto2Decimal(totals.selected.afternoon)}</h1>
-        <h1 className="w-full text-center ">{getUpto2Decimal(totals.selected.evening)}</h1>
-        <h1 className="w-full text-center ">{getUpto2Decimal(totals.selected.night)}</h1>
-      </div>
-      <div className="rounded-b flex w-full align-center border-b border-x bg-[#E8F6FF] text-[#1297E2] py-2 text-[14px]">
+      <div className="rounded-b flex w-full align-center border-b border-x py-2 text-[14px]">
         <h1 className="w-full text-center ">Total</h1>
         <h1 className="w-full text-center ">{resultData?.length || 0}</h1>
         <h1 className="w-full text-center ">{resultData?.reduce((total: any, touchPoint: any) => total + touchPoint.screenData.length, 0) || 0}</h1>
@@ -86,6 +77,15 @@ export const AdsPlaySelectedSummaryTable = ({
         <h1 className="w-full text-center ">100.00%</h1>
         <h1 className="w-full text-center ">100.00%</h1>
         <h1 className="w-full text-center ">100.00%</h1>
+      </div>
+      <div className="flex w-full align-center py-2 bg-[#E8F6FF] text-[#1297E2] text-[14px] border">
+        <h1 className="w-full text-center ">Selected</h1>
+        <h1 className="w-full text-center ">{resultData?.length || 0}</h1>
+        <h1 className="w-full text-center ">{totals.totalScreens || 0}</h1>
+        <h1 className="w-full text-center ">{getUpto2Decimal(totals.selected.morning)}</h1>
+        <h1 className="w-full text-center ">{getUpto2Decimal(totals.selected.afternoon)}</h1>
+        <h1 className="w-full text-center ">{getUpto2Decimal(totals.selected.evening)}</h1>
+        <h1 className="w-full text-center ">{getUpto2Decimal(totals.selected.night)}</h1>
       </div>
     </div>
   );
