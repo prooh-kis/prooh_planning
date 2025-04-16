@@ -210,7 +210,6 @@ export const SetAdsPlayTime = ({
   const mainTableStats = calculateSelectionStats(data).byDayType[currentTab];
   
   const handleSaveAndContinue = async (e: any) => {
-    // e.preventDefault();
     if (!pathname.split("/").includes("view")) {
       dispatch(
         addDetailsToCreateCampaign({
@@ -236,7 +235,6 @@ export const SetAdsPlayTime = ({
       id: campaignId,
       pageName: "Set Ad Play time Page",
     }));
-
   }, [dispatch, campaignDetails, campaignId, errorAddDetails, errorTableData]);
 
   useEffect(() => {
@@ -251,7 +249,6 @@ export const SetAdsPlayTime = ({
   // Update local data state when tableData changes
   useEffect(() => {
     if (tableData?.result) {
-     
       const dayWiseDetails = campaignDetails?.screenWiseSlotDetails?.map((s: any) => {
         return {
           screenName: s.screenName,
@@ -265,31 +262,66 @@ export const SetAdsPlayTime = ({
           screenData: d.screenData.map((d1: any) => ({
             ...d1,
             dayWiseData: {
-              ...d1.dayWiseData,
-              [currentTab]: {
+              weekdays: {
                 morning: { 
-                  ...d1.dayWiseData[currentTab].morning, 
-                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "morning")?.length === 0 ? false : d1.dayWiseData[currentTab].morning.included 
+                  ...d1.dayWiseData.weekdays.morning, 
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === "weekdays" && s.slot === "morning")?.length === 0 ? false : d1.dayWiseData.weekdays.morning.included 
                 },
                 afternoon: { 
-                  ...d1.dayWiseData[currentTab].afternoon,
-                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "afternoon")?.length === 0 ? false : d1.dayWiseData[currentTab].afternoon.included
+                  ...d1.dayWiseData.weekdays.afternoon,
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === "weekdays" && s.slot === "afternoon")?.length === 0 ? false : d1.dayWiseData.weekdays.afternoon.included
                 },
                 evening: {
-                  ...d1.dayWiseData[currentTab].evening,
-                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "evening")?.length === 0 ? false : d1.dayWiseData[currentTab].evening.included   
+                  ...d1.dayWiseData.weekdays.evening,
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === "weekdays" && s.slot === "evening")?.length === 0 ? false : d1.dayWiseData.weekdays.evening.included   
                 },
                 night: {
-                    ...d1.dayWiseData[currentTab].night,
-                    included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "night")?.length === 0 ? false : d1.dayWiseData[currentTab].night.included  
+                  ...d1.dayWiseData.weekdays.night,
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === "weekdays" && s.slot === "night")?.length === 0 ? false : d1.dayWiseData.weekdays.night.included  
+                },
+              },
+              saturdays: {
+                morning: { 
+                  ...d1.dayWiseData.saturdays.morning, 
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === "saturdays" && s.slot === "morning")?.length === 0 ? false : d1.dayWiseData.saturdays.morning.included 
+                },
+                afternoon: { 
+                  ...d1.dayWiseData.saturdays.afternoon,
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === "saturdays" && s.slot === "afternoon")?.length === 0 ? false : d1.dayWiseData.saturdays.afternoon.included
+                },
+                evening: {
+                  ...d1.dayWiseData.saturdays.evening,
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === "saturdays" && s.slot === "evening")?.length === 0 ? false : d1.dayWiseData.saturdays.evening.included   
+                },
+                night: {
+                  ...d1.dayWiseData.saturdays.night,
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === "saturdays" && s.slot === "night")?.length === 0 ? false : d1.dayWiseData.saturdays.night.included  
+                },
+              },
+              sundays: {
+                morning: { 
+                  ...d1.dayWiseData.sundays.morning, 
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === "sundays" && s.slot === "morning")?.length === 0 ? false : d1.dayWiseData.sundays.morning.included 
+                },
+                afternoon: { 
+                  ...d1.dayWiseData.sundays.afternoon,
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === "sundays" && s.slot === "afternoon")?.length === 0 ? false : d1.dayWiseData.sundays.afternoon.included
+                },
+                evening: {
+                  ...d1.dayWiseData.sundays.evening,
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === "sundays" && s.slot === "evening")?.length === 0 ? false : d1.dayWiseData.sundays.evening.included   
+                },
+                night: {
+                  ...d1.dayWiseData.sundays.night,
+                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === "sundays" && s.slot === "night")?.length === 0 ? false : d1.dayWiseData.sundays.night.included  
                 },
               },
             },
           })),
-        }))
+        }));
       });
     }
-  }, [campaignDetails?.screenWiseSlotDetails, currentTab, tableData]);
+  }, [campaignDetails?.screenWiseSlotDetails, tableData]);
 
   const toggleAllIncludesByCurrentTab = (
     included: boolean,
@@ -323,8 +355,8 @@ export const SetAdsPlayTime = ({
                 included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "evening")?.length === 0 ? false : !d1.dayWiseData[currentTab].evening.included   
               },
               night: {
-                  ...d1.dayWiseData[currentTab].night,
-                  included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "night")?.length === 0 ? false : !d1.dayWiseData[currentTab].night.included  
+                ...d1.dayWiseData[currentTab].night,
+                included: dayWiseDetails?.filter((d: any) => d.screenName === d1.screenName)[0]?.slots?.filter((s: any) => s.day === currentTab && s.slot === "night")?.length === 0 ? false : !d1.dayWiseData[currentTab].night.included  
               },
             },
           },

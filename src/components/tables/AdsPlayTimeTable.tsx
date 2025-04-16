@@ -86,6 +86,31 @@ export const AdsPlayTimeTable = ({
     });
   };
 
+  const handleSelectTimeZone = (dayData: keyof DayData, included: boolean) => {
+    setData((prevData: any) => {
+      return prevData.map((d: ResultData) => {
+        return {
+          ...d,
+          screenData: d.screenData.map((d1: ScreenData) => {
+            return {
+              ...d1,
+              dayWiseData: {
+                ...d1.dayWiseData,
+                [currentTab]: {
+                  ...d1.dayWiseData[currentTab],
+                  [dayData]: {
+                    ...d1.dayWiseData[currentTab][dayData],
+                    included: !included,
+                  },
+                },
+              },
+            };
+          }),
+        };
+      });
+    });
+  };
+
   function countKeys(keys: any) {
     let count = 0;
     for (const key in keys) {
@@ -102,18 +127,124 @@ export const AdsPlayTimeTable = ({
       <div className="flex w-full align-center grid grid-cols-12 bg-[#C9E9FF] py-2 rounded-t">
         <h1 className="w-full text-center col-span-2 ">TouchPoint</h1>
         <h1 className="w-full text-center col-span-2 ">Screen</h1>
-        <Tooltip title="Morning time includes morning hours from">
-          <h1 className="w-full text-center col-span-2 ">Morning</h1>
-        </Tooltip>
-        <Tooltip title="Afternoon time includes afternoon hours from">
-          <h1 className="w-full text-center col-span-2 ">Afternoon</h1>
-        </Tooltip>
-        <Tooltip title="Evening time includes evening hours from">
-          <h1 className="w-full text-center col-span-2 ">Evening</h1>
-        </Tooltip>
-        <Tooltip title="Night time includes night hours from">
-          <h1 className="w-full text-center col-span-2 ">Night</h1>
-        </Tooltip>
+        <div className="w-full flex items-center justify-center gap-4 col-span-2">
+          <Tooltip title="Morning time includes morning hours from">
+            <h1 className="text-center  ">Morning</h1>
+          </Tooltip>
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              const allMorningIncluded = data?.flatMap((d) => 
+                d.screenData?.flatMap((d1) => 
+                  d1.dayWiseData[currentTab]?.morning?.included
+                )
+              ).every((da) => da === true);
+              
+              handleSelectTimeZone("morning", allMorningIncluded);
+            }}
+          >
+            <i
+              className={`fi ${
+                data?.flatMap(d => 
+                  d.screenData?.flatMap(d1 => 
+                    d1.dayWiseData[currentTab]?.morning?.included
+                  )
+                ).every(included => included === true)
+                  ? "fi-br-check text-[#358E0B]"
+                  : "fi-br-cross text-[#FF0808]"
+              } flex items-center text-[12px]`}
+            ></i>
+          </div>
+        </div>
+        <div className="w-full flex items-center justify-center gap-4 col-span-2">
+          <Tooltip title="Afternoon time includes afternoon hours from">
+            <h1 className="text-center">Afternoon</h1>
+          </Tooltip>
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              const allAfternoonIncluded = data?.flatMap((d) => 
+                d.screenData?.flatMap((d1) => 
+                  d1.dayWiseData[currentTab]?.afternoon?.included
+                )
+              ).every((da) => da === true);
+              
+              handleSelectTimeZone("afternoon", allAfternoonIncluded);
+            }}            
+          >
+            <i
+              className={`fi ${
+                data?.flatMap(d => 
+                  d.screenData?.flatMap(d1 => 
+                    d1.dayWiseData[currentTab]?.afternoon?.included
+                  )
+                ).every(included => included === true)
+                  ? "fi-br-check text-[#358E0B]"
+                  : "fi-br-cross text-[#FF0808]"
+              } flex items-center text-[12px]`}
+            ></i>
+          </div>
+        </div>
+        <div className="w-full flex items-center justify-center gap-4 col-span-2">
+          <Tooltip title="Evening time includes evening hours from">
+            <h1 className="text-center">Evening</h1>
+          </Tooltip>
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              const allEveningIncluded = data?.flatMap((d) => 
+                d.screenData?.flatMap((d1) => 
+                  d1.dayWiseData[currentTab]?.evening?.included
+                )
+              ).every((da) => da === true);
+              
+              handleSelectTimeZone("evening", allEveningIncluded);
+            }}
+          >
+            <i
+              className={`fi ${
+                data?.flatMap(d => 
+                  d.screenData?.flatMap(d1 => 
+                    d1.dayWiseData[currentTab]?.evening?.included
+                  )
+                ).every(included => included === true)
+                  ? "fi-br-check text-[#358E0B]"
+                  : "fi-br-cross text-[#FF0808]"
+              } flex items-center text-[12px]`}
+            ></i>
+
+          </div>
+        </div>
+        <div className="w-full flex items-center justify-center gap-4 col-span-2">
+          <Tooltip title="Night time includes night hours from">
+            <h1 className="text-center">Night</h1>
+          </Tooltip>
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              const allNightIncluded = data?.flatMap((d) => 
+                d.screenData?.flatMap((d1) => 
+                  d1.dayWiseData[currentTab]?.night?.included
+                )
+              ).every((da) => da === true);
+              
+              handleSelectTimeZone("night", allNightIncluded);
+            }}
+            
+          >
+            <i
+              className={`fi ${
+                data?.flatMap(d => 
+                  d.screenData?.flatMap(d1 => 
+                    d1.dayWiseData[currentTab]?.night?.included
+                  )
+                ).every(included => included === true)
+                  ? "fi-br-check text-[#358E0B]"
+                  : "fi-br-cross text-[#FF0808]"
+              } flex items-center text-[12px]`}
+            ></i>
+          </div>
+        </div>
       </div>
       <div
         className={`overflow-y-auto h-[${countKeys(data) > 10 ? "35vh" : ""}]`}
@@ -134,6 +265,11 @@ export const AdsPlayTimeTable = ({
                   </div>
                   <div className={`col-span-2 py-2 px-4 border-b border-l`}>
                     <div className="flex justify-around items-center ">
+                      <h1 className="text-[14px]">
+                        {getUpto2Decimal(
+                          d1?.dayWiseData[currentTab]?.morning?.percentage
+                        )}
+                      </h1>
                       <div
                         className="cursor-pointer"
                         onClick={() => {
@@ -153,15 +289,15 @@ export const AdsPlayTimeTable = ({
                           } flex items-center text-[12px]`}
                         ></i>
                       </div>
-                      <h1 className="text-[14px]">
-                        {getUpto2Decimal(
-                          d1?.dayWiseData[currentTab]?.morning?.percentage
-                        )}
-                      </h1>
                     </div>
                   </div>
                   <div className={`col-span-2 py-2 px-4 border-b border-l`}>
                     <div className="flex justify-around items-center ">
+                      <h1 className="text-[14px]">
+                        {getUpto2Decimal(
+                          d1?.dayWiseData[currentTab]?.afternoon?.percentage
+                        )}
+                      </h1>
                       <div
                         className="cursor-pointer"
                         onClick={() => {
@@ -176,15 +312,15 @@ export const AdsPlayTimeTable = ({
                           } flex items-center text-[12px]`}
                         ></i>
                       </div>
-                      <h1 className="text-[14px]">
-                        {getUpto2Decimal(
-                          d1?.dayWiseData[currentTab]?.afternoon?.percentage
-                        )}
-                      </h1>
                     </div>
                   </div>
                   <div className={`col-span-2 py-2 px-4 border-b border-l`}>
                     <div className="flex justify-around items-center ">
+                      <h1 className="text-[14px]">
+                        {getUpto2Decimal(
+                          d1?.dayWiseData[currentTab]?.evening?.percentage
+                        )}
+                      </h1>
                       <div
                         className="cursor-pointer"
                         onClick={() => {
@@ -204,15 +340,15 @@ export const AdsPlayTimeTable = ({
                           } flex items-center text-[12px]`}
                         ></i>
                       </div>
-                      <h1 className="text-[14px]">
-                        {getUpto2Decimal(
-                          d1?.dayWiseData[currentTab]?.evening?.percentage
-                        )}
-                      </h1>
                     </div>
                   </div>
                   <div className={`col-span-2 py-2 px-4 border-b border-x`}>
                     <div className="flex justify-around items-center ">
+                      <h1 className="text-[14px]">
+                        {getUpto2Decimal(
+                          d1?.dayWiseData[currentTab]?.night?.percentage
+                        )}
+                      </h1>
                       <div
                         className="cursor-pointer"
                         onClick={() => {
@@ -232,11 +368,6 @@ export const AdsPlayTimeTable = ({
                           } flex items-center text-[12px]`}
                         ></i>
                       </div>
-                      <h1 className="text-[14px]">
-                        {getUpto2Decimal(
-                          d1?.dayWiseData[currentTab]?.night?.percentage
-                        )}
-                      </h1>
                     </div>
                   </div>
                 </div>
