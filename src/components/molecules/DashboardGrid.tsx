@@ -73,14 +73,10 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
           </Tooltip>
         </div>
         {dataValue && (
-          <div className="flex items-center truncate">
-            {dataValue}
-          </div>
+          <div className="flex items-center truncate">{dataValue}</div>
         )}
       </div>
-      {subHeading && (
-        <p className="text-[9px] truncate">{subHeading}</p>
-      )}
+      {subHeading && <p className="text-[9px] truncate">{subHeading}</p>}
     </div>
   </div>
 );
@@ -100,7 +96,7 @@ const ValueBelowGraph: React.FC<ValueDisplayProps> = ({
   right,
   isPositive = true,
   value,
-  textSize="text-[14px]"
+  textSize = "text-[14px]",
 }) => (
   <div className="mt-1">
     <h1 className={`${textSize} font-medium leading-[32.68px] text-[#9bb3c9]`}>
@@ -223,12 +219,15 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
   };
 
   const renderScreenSection = () => {
-    const screenPerformance = screenLevelData?.hardwarePerformanceDelivered || 0;
-    const percentage = Number(getPercentageDifference(
-      screenPerformance,
-      100,
-      screenLevelData?.durationDelivered || 0
-    ).toFixed(0));
+    const screenPerformance =
+      screenLevelData?.hardwarePerformanceDelivered || 0;
+    const percentage = Number(
+      getPercentageDifference(
+        screenPerformance,
+        screenLevelData?.hardwarePerformancePromisedTillDate,
+        screenLevelData?.durationDelivered || 0
+      ).toFixed(0)
+    );
 
     return (
       <>
@@ -238,20 +237,30 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
           bgColor=" bg-[#6982FF]"
         />
         <ValueAboveGraph
-          left={`${formatNumber(screenLevelData?.hardwarePerformanceDelivered?.toFixed(0))}%`}
+          left={`${formatNumber(
+            screenLevelData?.hardwarePerformanceDelivered?.toFixed(0)
+          )}%`}
           right="100%"
         />
         <div className="mt-1">
           <MultiColorLinearBar2
-            delivered={screenLevelData?.hardwarePerformanceDelivered?.toFixed(0)}
-            expected={screenLevelData?.hardwarePerformancePromisedTillDate?.toFixed(0)}
+            delivered={screenLevelData?.hardwarePerformanceDelivered?.toFixed(
+              0
+            )}
+            expected={screenLevelData?.hardwarePerformancePromisedTillDate?.toFixed(
+              0
+            )}
             total={screenLevelData?.hardwarePerformancePromised?.toFixed(0)}
             deliveredColor="bg-[#6982FF]"
           />
         </div>
         <ValueBelowGraph
-          left={`${formatNumber(screenLevelData?.hardwarePerformanceDelivered?.toFixed(0))}%`}
-          right={`${formatNumber(screenLevelData?.hardwarePerformancePromisedTillDate?.toFixed(0))}%`}
+          left={`${formatNumber(
+            screenLevelData?.hardwarePerformanceDelivered?.toFixed(0)
+          )}%`}
+          right={`${formatNumber(
+            screenLevelData?.hardwarePerformancePromisedTillDate?.toFixed(0)
+          )}%`}
           value={percentage}
           isPositive={percentage > 0}
         />
@@ -325,7 +334,6 @@ export const DashboardGrid: React.FC<BarChartProps> = ({
             expected={(costTaken * daysPlayed) / durationPromised}
             total={costTaken}
             deliveredColor="bg-[#6DBC48]"
-
           />
         </div>
         <ValueBelowGraph

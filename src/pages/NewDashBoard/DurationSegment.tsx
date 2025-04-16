@@ -82,7 +82,7 @@ export const DurationSegment = ({
             <div className="flex items-center gap-4 pt-4 pb-2 truncate">
               <div className="flex items-center gap-2 truncate">
                 <i className="fi fi-rr-calendar-lines text-[#DC6700] text-[12px] flex items-center" />
-                <h1 className="text-[12px] truncate">{new Date().toLocaleDateString()}</h1>
+                <h1 className="text-[12px] truncate">{new Date(currentDate)?.toLocaleDateString()}</h1>
               </div>
               <div className="flex items-center gap-2 truncate">
                 <i className="fi fi-br-clock text-[#DC6700] text-[12px] flex items-center" />
