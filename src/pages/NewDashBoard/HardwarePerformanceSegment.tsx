@@ -18,7 +18,6 @@ export const HardwarePerformanceSegment = ({
   setFilters,
   dataToShow,
 }: any) => {
-console.log(dataToShow);
   const dispatch = useDispatch<any>();
   const {
     loading: loadingHardwarePerformanceData,

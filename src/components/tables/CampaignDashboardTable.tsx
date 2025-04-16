@@ -237,7 +237,6 @@ export const CampaignDashboardTable = ({
     calculateDaysPlayed(campaignDetails?.startDate, campaignDetails?.endDate) ||
     1;
   const totalDays = campaignDetails?.duration || 1;
-  console.log("campaignDays , totaldays :", campaignDays, totalDays);
 
   return (
     <div>
