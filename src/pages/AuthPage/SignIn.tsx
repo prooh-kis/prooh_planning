@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 
-import { Checkbox, Form, Input, message } from "antd";
+import { Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { signin } from "../../actions/userAction";
 import { useSelector } from "react-redux";
-import { FORGET_PASSWORD, SIGN_UP } from "../../routes/routes";
+import { FORGET_PASSWORD } from "../../routes/routes";
 
 export const SignIn: React.FC = () => {
   const navigate = useNavigate();
@@ -126,7 +126,7 @@ export const SignIn: React.FC = () => {
             <Form.Item style={{ marginBottom: "0", paddingTop: "20px" }}>
               <div className="pt-2 flex flex-col gap-4">
                 <button
-                  className="w-full bg-[#129BFF] rounded text-[#ffffff] text-xl py-2 "
+                  className="w-full bg-[#129BFF] hover:bg-[#107ACC] rounded text-[#ffffff] text-xl py-2 "
                   type={"submit"}
                 >
                   {loading ? "Please wait..." : "Sign In"}

@@ -1,7 +1,6 @@
-import { PrimaryButton } from "../../components/atoms/PrimaryButton";
-import React from "react";
 import { useNavigate } from "react-router-dom";
-import { AUTH } from "../../routes/routes";
+
+import ButtonInput from "../../components/atoms/ButtonInput";
 
 export const Section1 = () => {
   const navigate = useNavigate();
@@ -35,17 +34,12 @@ export const Section1 = () => {
 
         {/* CTA Button - Centered */}
         <div className="mt-8 md:mt-8 w-full flex justify-center">
-          <PrimaryButton
-            title="Create"
-            rounded="rounded-full"
-            action={() => navigate(AUTH)}
-            icon={
-              <i className="fi fi-sr-megaphone mx-2 flex items-center justify-center"></i>
-            }
-            textSize="text-[16px]"
-            height="h-12"
-            width="w-[200px]"
-          />
+          <ButtonInput
+            icon={<i className="fi fi-sr-megaphone flex items-center" />}
+            rounded="full"
+          >
+            Create
+          </ButtonInput>
         </div>
       </div>
     </div>

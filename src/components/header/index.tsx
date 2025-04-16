@@ -15,6 +15,7 @@ import {
   CAMPAIGN_MANAGER,
   CAMPAIGN_PLANNER,
 } from "../../constants/userConstants";
+import ButtonInput from "../../components/atoms/ButtonInput";
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -115,18 +116,17 @@ export const Header: React.FC = () => {
         </div>
       ) : (
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => navigate(AUTH)}
-            className="hidden md:block bg-[#129BFF] text-white rounded-full px-4 py-2 text-sm sm:text-base font-bold hover:bg-white hover:text-[#129BFF] border hover:border-[#129BFF]"
-          >
+          <ButtonInput onClick={() => navigate(AUTH)} rounded="full">
             Login
-          </button>
-          <button
+          </ButtonInput>
+          <ButtonInput
             onClick={() => navigate(SIGN_UP)}
-            className="hidden md:block bg-white text-gray-700 border border-gray-300 rounded-full px-4 py-2 text-sm sm:text-base font-bold hover:bg-gray-700 hover:text-white"
+            variant="outline"
+            rounded="full"
           >
-            Sign Up
-          </button>
+            SignUp
+          </ButtonInput>
+
           {/* Mobile Menu Icon */}
           <div className="md:hidden">
             <button

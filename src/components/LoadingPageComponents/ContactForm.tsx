@@ -1,3 +1,4 @@
+import ButtonInput from "../../components/atoms/ButtonInput";
 import { RadioInput } from "../../components/atoms/RadioInput";
 import { message } from "antd";
 import { useState } from "react";
@@ -179,13 +180,7 @@ export const ContactForm = () => {
 
                 {/* Submit Button */}
                 <div className="w-full flex justify-end">
-                  <button
-                    type="submit"
-                    onClick={sendEmail}
-                    className="font-custom w-full sm:w-1/2 md:w-1/3 lg:w-1/4 bg-primaryButton text-[#FFFFFF] font-regular py-4 md:py-3 lg:py-2 rounded-lg hover:bg-primaryButtonHover transition"
-                  >
-                    Send Message
-                  </button>
+                  <ButtonInput onClick={sendEmail}>Send Message</ButtonInput>
                 </div>
               </form>
             </div>

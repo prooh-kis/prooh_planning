@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { sendEmailToResetPassword } from "../../actions/userAction";
 import { SEND_EMAIL_TO_RESET_PASSWORD_RESET } from "../../constants/userConstants";
 import { AUTH, SIGN_UP } from "../../routes/routes";
-import { Checkbox, Form, Input, message } from "antd";
+import { Form, Input } from "antd";
 
 export function ForgetPassword(props: any) {
   const navigate = useNavigate();
@@ -84,7 +84,7 @@ export function ForgetPassword(props: any) {
 
             <Form.Item>
               <button
-                className="w-full rounded border-2 border-[#129BFF]  bg-[#129BFF] text-[#ffffff] text-xl py-2  hover:bg-[#ffffff] hover:text-[#129BFF] "
+                className="w-full rounded border-2 border-[#129BFF]  bg-[#129BFF] text-[#ffffff] text-xl py-2  hover:bg-[#107ACC]"
                 type={"submit"}
               >
                 {loading ? "Please wait" : "Send Email"}
@@ -94,7 +94,7 @@ export function ForgetPassword(props: any) {
 
           <div className="pt-2">
             <button
-              className="w-full py-3 bg-white text-[#2C2C2C]  font-semibold border border-gray-300 hover:bg-[#2C2C2C] hover:text-white"
+              className="w-full py-3 font-semibold border border-gray-300  hover:bg-[#2C2C2C] bg-[#2C2C2C90] text-white rounded-md"
               onClick={() => navigate(SIGN_UP)}
             >
               Create a new account
