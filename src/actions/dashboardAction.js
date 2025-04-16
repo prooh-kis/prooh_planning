@@ -24,6 +24,9 @@ import {
   GET_SITE_MONITORING_PICS_PERCENTAGE_ERROR,
   GET_SITE_MONITORING_PICS_PERCENTAGE_REQUEST,
   GET_SITE_MONITORING_PICS_PERCENTAGE_SUCCESS,
+  GET_SLOT_DELIVERY_DATA_DAYWISE_FOR_PLANNER_DASHBOARD_ERROR,
+  GET_SLOT_DELIVERY_DATA_DAYWISE_FOR_PLANNER_DASHBOARD_REQUEST,
+  GET_SLOT_DELIVERY_DATA_DAYWISE_FOR_PLANNER_DASHBOARD_SUCCESS,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
@@ -49,6 +52,33 @@ export const getBasicDataForPlannerDashboard =
     } catch (error) {
       dispatch({
         type: GET_BASIC_DATA_FOR_PLANNER_DASHBOARD_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
+
+export const getSlotDeliveryGraphDateWiseForPlannerDashboard =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_SLOT_DELIVERY_DATA_DAYWISE_FOR_PLANNER_DASHBOARD_REQUEST,
+      payload: input,
+    });
+    try {
+      const { data } = await axios.post(
+        `${newDashboardURL}/getSlotDeliveryGraphDateWiseForPlannerDashboard`,
+        input
+      );
+      dispatch({
+        type: GET_SLOT_DELIVERY_DATA_DAYWISE_FOR_PLANNER_DASHBOARD_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_SLOT_DELIVERY_DATA_DAYWISE_FOR_PLANNER_DASHBOARD_ERROR,
         payload: {
           message: error.message,
           status: error.response?.status,

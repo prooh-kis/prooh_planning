@@ -3,6 +3,10 @@ import { SectionHeader } from "../../components/molecules/DashboardGrid";
 import { CalenderScaleStepper } from "../../components/molecules/CalenderScale2";
 import { DurationGraphPerDay } from "../../components/segments/DurationGraphPerDay";
 import { Tooltip } from "antd";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getSlotDeliveryGraphDateWiseForPlannerDashboard } from "../../actions/dashboardAction";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 export const DurationSegment = ({
   calendarData = [],
@@ -17,8 +21,22 @@ export const DurationSegment = ({
   openSiteMapView,
   loading,
   openInvoice,
+  campaignId,
 }: any) => {
+  const dispatch = useDispatch<any>();
+  const { loading: loadingHourlySpotDelivery, data: hourlySpotDelivery } = useSelector(
+    (state: any) => state.slotDeliveryGraphDateWiseForPlannerDashboard
+  );
 
+  useEffect(() => {
+    const date = new Date(currentDate);
+    date.setMinutes(date.getMinutes() + 29);
+    dispatch(getSlotDeliveryGraphDateWiseForPlannerDashboard({
+      id: campaignId,
+      // date: "2025-04-16T06:29:00.000+00:00",
+      date: date.toISOString().replace('Z', '+00:00'),
+    }))
+  },[campaignId, currentDate, dispatch]);
   return (
     <div className="relative grid grid-cols-12 gap-2">
       {calendarData && Object.keys(calendarData).length > 0 && (
@@ -72,13 +90,20 @@ export const DurationSegment = ({
               </div>
             </div>
           </div>
-          <DurationGraphPerDay
-            currentData={screenLevelData?.slotDataHourWise}
-            additionalLegends={[
-              { label: "Hourly Delivery", values: [1500], color: "rgba(16, 185, 129, 1)" },
-              { label: "Extra Delivery", values: [1200], color: "rgba(245, 158, 11, 1)" },
-            ]}
-          />
+          {loadingHourlySpotDelivery ? (
+            <div>
+              <LoadingScreen />
+            </div>
+          ) : (
+            <DurationGraphPerDay
+              // currentData={screenLevelData.slotDataHourWise}
+              currentData={hourlySpotDelivery}
+              additionalLegends={[
+                { label: "Hourly Delivery", values: [1500], color: "rgba(16, 185, 129, 1)" },
+                { label: "Extra Delivery", values: [1200], color: "rgba(245, 158, 11, 1)" },
+              ]}
+            />
+          )}
         </div>
       )}
     </div>

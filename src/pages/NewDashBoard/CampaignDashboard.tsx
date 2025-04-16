@@ -373,6 +373,7 @@ export const CampaignDashboard = ({
         <div className="mt-2">
           {clicked === "1" ? (
             <DurationSegment
+              campaignId={campaignDetails?._id}
               screenLevelData={screenLevelData}
               calendarData={calendarData}
               setCurrentWeek={setCurrentWeek}

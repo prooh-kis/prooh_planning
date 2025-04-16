@@ -48,7 +48,7 @@ export const CalenderScaleStepper = ({
   const { pathname } = useLocation();
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
-  const [showTooltip, setShowTooltip] = useState<any>(!openSiteMapView);
+  const [showTooltip, setShowTooltip] = useState<any>(false);
   const [currentWeekMinusValue, setCurrentWeekMinusValue] = useState<any>(1);
 
   const groupDatesByWeek = useCallback((dates: Array<{value: string, label: string}>) => {
@@ -231,8 +231,10 @@ export const CalenderScaleStepper = ({
         setShowTooltip(isInMiddle);
         if (openSiteMapView) return setShowTooltip(false);
         if (openInvoice) return setShowTooltip(false);
+        if (logsPopup) return setShowTooltip(false);
       }
     };
+
 
     // Initial check
     checkVisibility();
@@ -244,7 +246,6 @@ export const CalenderScaleStepper = ({
       window.removeEventListener('scroll', checkVisibility);
     };
   }, [logsPopup, openInvoice, openSiteMapView]);
-  
 
   useEffect(() => {
     if (currentDate && allDates.length > 0) {

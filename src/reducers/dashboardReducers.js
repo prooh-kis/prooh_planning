@@ -23,6 +23,9 @@ import {
   GET_SITE_MONITORING_PICS_PERCENTAGE_ERROR,
   GET_SITE_MONITORING_PICS_PERCENTAGE_REQUEST,
   GET_SITE_MONITORING_PICS_PERCENTAGE_SUCCESS,
+  GET_SLOT_DELIVERY_DATA_DAYWISE_FOR_PLANNER_DASHBOARD_ERROR,
+  GET_SLOT_DELIVERY_DATA_DAYWISE_FOR_PLANNER_DASHBOARD_REQUEST,
+  GET_SLOT_DELIVERY_DATA_DAYWISE_FOR_PLANNER_DASHBOARD_SUCCESS,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
@@ -38,6 +41,25 @@ export function getBasicDataForPlannerDashboardReducer(state = {}, action) {
         data: action.payload,
       };
     case GET_BASIC_DATA_FOR_PLANNER_DASHBOARD_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function getSlotDeliveryGraphDateWiseForPlannerDashboardReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_SLOT_DELIVERY_DATA_DAYWISE_FOR_PLANNER_DASHBOARD_REQUEST:
+      return { loading: true };
+    case GET_SLOT_DELIVERY_DATA_DAYWISE_FOR_PLANNER_DASHBOARD_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_SLOT_DELIVERY_DATA_DAYWISE_FOR_PLANNER_DASHBOARD_ERROR:
       return {
         loading: false,
         error: action.payload,

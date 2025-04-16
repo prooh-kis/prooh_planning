@@ -89,6 +89,7 @@ import {
   getSiteLevelPerformanceTabWiseForPlannerDashboardReducer,
   getSiteMonitoringPicsPercentageReducer,
   getSitesDataMapViewForPlannerDashboardReducer,
+  getSlotDeliveryGraphDateWiseForPlannerDashboardReducer,
   getSpotDeliveryDataForPlannerDashboardReducer,
 } from "../reducers/dashboardReducers";
 
@@ -195,6 +196,7 @@ const store = configureStore({
     getAllBrandAndNetwork: getAllBrandAndNetworkReducer,
     // New Dashboard
     basicDataForPlannerDashboard: getBasicDataForPlannerDashboardReducer,
+    slotDeliveryGraphDateWiseForPlannerDashboard: getSlotDeliveryGraphDateWiseForPlannerDashboardReducer,
     audienceDataForPlannerDashboard: getAudienceDataForPlannerDashboardReducer,
     hardwarePerformanceDataForPlannerDashboard:
       getHardwarePerformanceDataForPlannerDashboardReducer,
