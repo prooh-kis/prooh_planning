@@ -45,18 +45,16 @@ export const calculatePercentageDifference = (
 ): { value: number; isPositive: boolean } => {
   if (promised === 0) return { value: 0, isPositive: false };
 
-  const effectiveDelivered = options?.isTillDate
-    ? delivered / (options.campaignDays || 1)
-    : delivered;
+  // const effectiveDelivered = options?.isTillDate
+  //   ? delivered / (options.campaignDays || 1)
+  //   : delivered;
 
-  const effectivePromised = options?.isTillDate
-    ? promised / (options.totalDays || 1)
-    : promised;
+  // const effectivePromised = options?.isTillDate
+  //   ? promised / (options.totalDays || 1)
+  //   : promised;
 
-  const difference = effectiveDelivered - effectivePromised;
-  const percentage = Number(
-    ((difference / effectivePromised) * 100).toFixed(2)
-  );
+  const difference = delivered - promised;
+  const percentage = Number(((difference / promised) * 100).toFixed(2));
 
   return {
     value: percentage,
@@ -239,6 +237,7 @@ export const CampaignDashboardTable = ({
     calculateDaysPlayed(campaignDetails?.startDate, campaignDetails?.endDate) ||
     1;
   const totalDays = campaignDetails?.duration || 1;
+  console.log("campaignDays , totaldays :", campaignDays, totalDays);
 
   return (
     <div>
