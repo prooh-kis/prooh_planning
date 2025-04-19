@@ -1,5 +1,6 @@
 import { SiteMapViewDetailsPopup } from "../../components/popup/SiteMapViewDetailsPopup";
 import React, { useCallback, useState } from "react";
+import { MonitoringPicturesAllSitesPopup } from "./MonitoringPicturesAllSitesPopup";
 
 interface MonitoringProps {
   bg: string;
@@ -45,14 +46,21 @@ const Monitoring = ({ bg, text, label }: MonitoringProps) => {
   );
 };
 
-export const SiteMonitoringPic = ({ sitesDataMapViewData, openSiteMapView, setOpenSiteMapView, }: any) => {
+export const SiteMonitoringPic = ({ sitesDataMapViewData, openSiteMapView, setOpenSiteMapView, openMonitoringView, setOpenMonitoringView}: any) => {
 
   const handleCancel = () => {
     setOpenSiteMapView(false);
   };
   const handleOpenSiteMapView = useCallback(() => {
     setOpenSiteMapView(true);
-  }, [openSiteMapView]);
+  }, [setOpenSiteMapView]);
+
+  const handleCancelMonitoringPopup = () => {
+    setOpenMonitoringView(false);
+  };
+  const handleOpenMonitoringPicsView = useCallback(() => {
+    setOpenMonitoringView(true)
+  },[setOpenMonitoringView]);
 
   const updatedData = sitesDataMapViewData?.map((data: any) => {
     return {
@@ -71,6 +79,12 @@ export const SiteMonitoringPic = ({ sitesDataMapViewData, openSiteMapView, setOp
           sitesDataMapViewData={updatedData}
         />
       )}
+      {openMonitoringView && (
+        <MonitoringPicturesAllSitesPopup
+          handleCancel={handleCancelMonitoringPopup}
+
+        />
+      )}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <h1 className="text-[15px] sm:text-[16px] py-2 font-semibold leading-[19.36px] text-[#0E212E]">
           Site Monitoring Pics - <span className="text-[#129BFF]">70%</span>
@@ -83,7 +97,9 @@ export const SiteMonitoringPic = ({ sitesDataMapViewData, openSiteMapView, setOp
             <i className="fi fi-sr-marker"></i>
             <p>Campaign On Map</p>
           </div>
-          <div className="flex font-normal text-[13px] sm:text-[14px] text-[#637D90] gap-1 items-center">
+          <div className="cursor-pointer flex font-normal text-[13px] sm:text-[14px] text-[#637D90] gap-1 items-center"
+            onClick={handleOpenMonitoringPicsView}
+          >
             <p>View All Pics</p>
             <i className="fi fi-br-angle-small-right"></i>
           </div>

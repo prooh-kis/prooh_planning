@@ -265,3 +265,25 @@ export const allpois = {
       "bakery"
     ]
   }
+
+export const monitoringTypes = [
+  {
+    label: "Digital Dated Picture",
+    value: "digitalDatedPicture"
+  },
+  {
+    label: "Without Digital date",
+    value: "wihoutDigitalDate"
+  },
+  {
+    label: "With Newspaper",
+    value: "withNewsPaper"
+  },
+  {
+    label: "Full Loop Video",
+    value: "fullLoopVideo"
+  },{
+    label: "With Geo Tag",
+    value: "withGeoTag"
+  }
+];

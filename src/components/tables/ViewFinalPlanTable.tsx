@@ -2,8 +2,6 @@ import { message, Tooltip } from "antd";
 import { formatNumber } from "../../utils/formatValue";
 import { convertDateIntoDateMonthYear } from "../../utils/dateAndTimeUtils";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
-import { removeCouponForCampaign } from "../../actions/couponAction";
-import { useDispatch } from "react-redux";
 
 function MyDiv({ left, right }: any) {
   return (
@@ -25,9 +23,7 @@ export const ViewFinalPlanTable = ({
   handleApplyCoupon,
   handleRemoveCoupon,
   coupons,
-  campaignId,
 }: any) => {
-  const dispatch = useDispatch<any>();
   return (
     <div>
       <h1 className="font-semibold py-2	">Client Information</h1>
@@ -80,15 +76,15 @@ export const ViewFinalPlanTable = ({
             : "None"
         }
       />
-      <div className="flex font-normal text-[#2B2B2B] mt-4">
+      <div className="flex items-center font-normal text-[#2B2B2B] mt-4">
         <h1 className="text-left text-[14px] basis-1/2">Apply Discount%</h1>
-        <div className="flex gap-4">
+        <div className="flex items-center gap-4">
           <DropdownInput
             border="border-gray-100"
             height="h-8"
-            width="w-auto"
-            placeHolder="-----Select coupon-----"
-            selectedOption={currentCoupon}
+            width="w-full"
+            placeHolder="---Select coupon---"
+            selectedOption={coupons?.find((coupon: any) => coupon._id === currentCoupon) || ""}
             setSelectedOption={(e: any) => {
               setCurrentCoupon(e);
               handleApplyCoupon(e);
@@ -137,8 +133,6 @@ export const ViewFinalPlanTable = ({
             {Number(poTableData?.totalCampaignBudget)?.toFixed(2)}
             *
           </h1>
-
-         
         </div>
       </div>
       {poTableData?.couponId && poTableData?.couponId !== "NA" && (

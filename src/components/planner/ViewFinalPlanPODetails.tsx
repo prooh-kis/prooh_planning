@@ -26,15 +26,16 @@ import {
   getCouponList,
   removeCouponForCampaign,
 } from "../../actions/couponAction";
-import { APPLY_COUPON_RESET } from "../../constants/couponConstants";
+import { APPLY_COUPON_RESET, REMOVE_COUPON_RESET } from "../../constants/couponConstants";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { ViewFinalPlanTable } from "../../components/tables/ViewFinalPlanTable";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import ButtonInput from "../../components/atoms/ButtonInput";
-import { ChoseMonitoringType } from "../../components/segments/ChoseMonitoringType";
 import { format } from "date-fns";
 import { PrimaryInput } from "../../components/atoms/PrimaryInput";
 import { isValidEmail } from "../../utils/valueValidate";
+import { ChoseMonitoringTypeFive } from "../../components/segments/ChoseMonitoringTypeFive";
+import { monitoringTypes } from "../../constants/helperConstants";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -45,8 +46,7 @@ interface ViewFinalPlanPODetailsProps {
 
 interface MonitoringTypeData {
   dates: string[];
-  dayMonitoringType: string[];
-  nightMonitoringType: string[];
+  monitoringTypes: any[];
 }
 
 interface InitialData {
@@ -76,8 +76,8 @@ export const ViewFinalPlanPODetails = ({
   const [loadingEmailReady, setLoadingEmailReady] = useState<any>(false);
 
   const [pdfDownload, setPdfDownload] = useState<any>({});
-  const [summaryChecked, setSummaryChecked] = useState<any>(false);
-  const [picturesChecked, setPicturesChecked] = useState<any>(false);
+  const [summaryChecked, setSummaryChecked] = useState<any>(true);
+  const [picturesChecked, setPicturesChecked] = useState<any>(true);
 
   const [poInput, setPoInput] = useState<any>({
     pageName: "View Final Plan Page",
@@ -110,8 +110,7 @@ export const ViewFinalPlanPODetails = ({
     success: successAddDetails,
   } = detailsToCreateCampaignAdd;
 
-  const couponList = useSelector((state: any) => state.couponList);
-  const { data: coupons } = couponList;
+  const { data: coupons } = useSelector((state: any) => state.couponList);
 
   const couponApplyForCampaign = useSelector(
     (state: any) => state.couponApplyForCampaign
@@ -166,22 +165,19 @@ export const ViewFinalPlanPODetails = ({
   const [initialData, setInitialData] = useState<InitialData>({
     startDate: {
       dates: [
-        format(new Date(poTableData?.startDate || new Date()), "yyyy-MM-dd"),
+        format(new Date(), "yyyy-MM-dd"),
       ],
-      dayMonitoringType: [],
-      nightMonitoringType: [],
+      monitoringTypes: [],
     },
     endDate: {
       dates: [
-        format(new Date(poTableData?.endDate || new Date()), "yyyy-MM-dd"),
+        format(new Date(), "yyyy-MM-dd"),
       ],
-      dayMonitoringType: [],
-      nightMonitoringType: [],
+      monitoringTypes: [],
     },
     midDate: {
       dates: [],
-      dayMonitoringType: [],
-      nightMonitoringType: [],
+      monitoringTypes: [],
     },
   });
 
@@ -367,7 +363,6 @@ export const ViewFinalPlanPODetails = ({
         }
 
         setConfirmToProceed(true);
-
         dispatch(
           addDetailsToCreateCampaign({
             pageName: "View Final Plan Page",
@@ -407,21 +402,21 @@ export const ViewFinalPlanPODetails = ({
       }
       dispatch(
         applyCouponForCampaign({
-          campaignCreationId: campaignId,
+          campaignCreationId: campaignDetails?._id,
           couponId: couponId || currentCoupon,
         })
       );
     },
-    [campaignId, currentCoupon, poTableData, dispatch]
+    [campaignDetails, currentCoupon, poTableData, dispatch]
   );
 
-  const handleRemoveCoupon = () => {
+  const handleRemoveCoupon = useCallback(() => {
     dispatch(
       removeCouponForCampaign({
-        campaignCreationId: campaignId,
+        campaignCreationId: campaignDetails?._id,
       })
     );
-  };
+  },[dispatch, campaignDetails]);
 
   useEffect(() => {
     if (errorApply) {
@@ -443,8 +438,9 @@ export const ViewFinalPlanPODetails = ({
       setCurrentCoupon("");
       setConfirmToProceed(false);
       dispatch({ type: APPLY_COUPON_RESET });
+      dispatch({ type: REMOVE_COUPON_RESET });
       dispatch(getFinalPlanPOTableData(poInput));
-      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
+      // dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
     if (couponRemoveSuccess) {
       setSummaryChecked(false);
@@ -452,9 +448,14 @@ export const ViewFinalPlanPODetails = ({
       setCurrentCoupon("");
       setConfirmToProceed(false);
       dispatch({ type: APPLY_COUPON_RESET });
+      dispatch({ type: REMOVE_COUPON_RESET });
       dispatch(getFinalPlanPOTableData(poInput));
-      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
+
+      // dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
+
+    
+
   }, [couponRemoveSuccess, couponApplySuccess, dispatch, campaignId, poInput]);
 
   useEffect(() => {
@@ -537,7 +538,53 @@ export const ViewFinalPlanPODetails = ({
         setCurrentStep(step + 1);
       }
     }
-  }, [successAddDetails, step, setCurrentStep, confirmToProceed, dispatch]);
+    if (poTableData) {
+
+      setInitialData({
+        startDate: {
+          dates: [
+            format(new Date(poTableData?.startDate), "yyyy-MM-dd"),
+          ],
+          monitoringTypes: monitoringTypes.map((type: any) => type.value),
+        },
+        endDate: {
+          dates: [
+            format(new Date(poTableData?.endDate), "yyyy-MM-dd"),
+          ],
+          monitoringTypes: monitoringTypes.map((type: any) => type.value)
+        },
+        midDate: {
+          dates: [],
+          monitoringTypes: monitoringTypes.map((type: any) => type.value)
+        },
+      })
+
+      setPdfDownload({
+        "summary" : {
+          heading: "CAMPAIGN SUMMARY",
+          pdfData: {
+            approach: [campaignDetails],
+            costSummary: [screenSummaryPlanTableData],
+            creativeRatio: countScreensByResolutionAndCity(
+              campaignDetails?.screenWiseSlotDetails
+            ),
+          },
+          fileName: `${campaignDetails?.brandName} Campaign Summary`,
+        },
+        "screen-pictures" : {
+          heading: "SCREEN PICTURES",
+          pdfData: campaignDetails?.screenWiseSlotDetails
+            ?.filter((s: any) =>
+              campaignDetails?.screenIds.includes(s.screenId)
+            )
+            ?.map((screen: any) => {
+              return screen;
+            }),
+          fileName: `${campaignDetails?.brandName} Campaign Screen Pictures`,
+        }
+      })
+    }
+  }, [poTableData, screenSummaryPlanTableData, campaignDetails, successAddDetails, step, setCurrentStep, confirmToProceed, dispatch]);
 
   const skipFunction = () => {
     dispatch(
@@ -545,6 +592,7 @@ export const ViewFinalPlanPODetails = ({
         pageName: "View Final Plan Page",
         id: campaignId,
         clientApprovalImgs: [],
+        monitoringSelection: initialData,
       })
     );
   };
@@ -586,7 +634,7 @@ export const ViewFinalPlanPODetails = ({
         <LoadingScreen />
       ) : (
         <div>
-          <div className="grid grid-cols-2 gap-4 pb-20 mt-4">
+          <div className="grid grid-cols-2 gap-2 pb-20 mt-4">
             <div
               ref={pageRef}
               className="col-span-1 p-4 border border-1 border-#C3C3C3 rounded-2xl w-full"
@@ -598,113 +646,101 @@ export const ViewFinalPlanPODetails = ({
                 handleApplyCoupon={handleApplyCoupon}
                 handleRemoveCoupon={handleRemoveCoupon}
                 coupons={coupons}
-                campaignId={campaignId}
               />
             </div>
             <div
               ref={pageRef}
-              className="col-span-1 p-4 border border-1 border-#C3C3C3 rounded-2xl w-full"
+              className="col-span-1 w-full"
             >
-              <h1 className="font-semibold text-lg">
-                1.Download or share your campaign plan
-              </h1>
-              <div className="flex flex-wrap gap-6 py-4">
-                <div className="flex items-center gap-2">
-                  <h1 className="text-[14px] truncate">Campaign Summary</h1>
-                  <input
-                    title="summary"
-                    type="checkbox"
-                    checked={summaryChecked}
-                    disabled={loadingPOData}
-                    onChange={(e) => {
-                      setSummaryChecked(e.target.checked);
-
-                      const pdfToDownload = pdfDownload;
-                      if (e.target.checked) {
-                        pdfToDownload["summary"] = {
-                          heading: "CAMPAIGN SUMMARY",
-                          pdfData: {
-                            approach: [campaignDetails],
-                            costSummary: [screenSummaryPlanTableData],
-                            creativeRatio: countScreensByResolutionAndCity(
-                              campaignDetails?.screenWiseSlotDetails
-                            ),
-                          },
-                          fileName: `${poInput?.brandName} Campaign Summary`,
-                        };
-                      } else {
-                        delete pdfToDownload["summary"];
-                      }
-                      setPdfDownload(pdfToDownload);
-                    }}
-                  />
+              <div className="p-4 border border-1 border-#C3C3C3 rounded-2xl">
+                <div className="flex justify-between items-center">
+                  <h1 className="font-semibold text-lg">
+                    Download or share your campaign plan
+                  </h1>
+                  <div className="cursor-pointer flex items-center gap-2" onClick={handleDownload}>
+                    <i className="fi fi-sr-file-download text-[12px] text-[#129BFF] flex items-center"></i>
+                    <h1 className="text-[12px] text-[#129BFF]">
+                      Download
+                    </h1>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-[14px] truncate">Screen Picture</h1>
-                  <input
-                    title="screen-pictures"
-                    type="checkbox"
-                    checked={picturesChecked}
-                    disabled={loadingPOData}
-                    onChange={(e) => {
-                      setPicturesChecked(e.target.checked);
-                      const pdfToDownload = pdfDownload;
+                <div className="flex flex-wrap gap-6 pt-4">
+                  <div className="flex items-center gap-2">
+                    <input
+                      title="summary"
+                      type="checkbox"
+                      checked={summaryChecked}
+                      disabled={loadingPOData}
+                      onChange={(e) => {
+                        setSummaryChecked(e.target.checked);
 
-                      if (e.target.checked) {
-                        pdfToDownload["screen-pictures"] = {
-                          heading: "SCREEN PICTURES",
-                          pdfData: campaignDetails?.screenWiseSlotDetails
-                            ?.filter((s: any) =>
-                              campaignDetails?.screenIds.includes(s.screenId)
-                            )
-                            ?.map((screen: any) => {
-                              return screen;
-                            }),
-                          fileName: `${poInput?.brandName} Campaign Screen Pictures`,
-                        };
-                      } else {
-                        delete pdfToDownload["screen-pictures"];
-                      }
+                        const pdfToDownload = pdfDownload;
+                        if (e.target.checked) {
+                          pdfToDownload["summary"] = {
+                            heading: "CAMPAIGN SUMMARY",
+                            pdfData: {
+                              approach: [campaignDetails],
+                              costSummary: [screenSummaryPlanTableData],
+                              creativeRatio: countScreensByResolutionAndCity(
+                                campaignDetails?.screenWiseSlotDetails
+                              ),
+                            },
+                            fileName: `${poInput?.brandName} Campaign Summary`,
+                          };
+                        } else {
+                          delete pdfToDownload["summary"];
+                        }
+                        setPdfDownload(pdfToDownload);
+                      }}
+                    />
+                    <h1 className="text-[14px] truncate">Campaign Summary</h1>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      title="screen-pictures"
+                      type="checkbox"
+                      checked={picturesChecked}
+                      disabled={loadingPOData}
+                      onChange={(e) => {
+                        setPicturesChecked(e.target.checked);
+                        const pdfToDownload = pdfDownload;
 
-                      setPdfDownload(pdfToDownload);
-                    }}
-                  />
+                        if (e.target.checked) {
+                          pdfToDownload["screen-pictures"] = {
+                            heading: "SCREEN PICTURES",
+                            pdfData: campaignDetails?.screenWiseSlotDetails
+                              ?.filter((s: any) =>
+                                campaignDetails?.screenIds.includes(s.screenId)
+                              )
+                              ?.map((screen: any) => {
+                                return screen;
+                              }),
+                            fileName: `${poInput?.brandName} Campaign Screen Pictures`,
+                          };
+                        } else {
+                          delete pdfToDownload["screen-pictures"];
+                        }
+
+                        setPdfDownload(pdfToDownload);
+                      }}
+                    />
+                    <h1 className="text-[14px] truncate">Screen Picture</h1>
+                  </div>
                 </div>
               </div>
-              <div className="flex gap-2 pb-4">
-                <i className="fi fi-sr-lightbulb-on flex items-top justify-center text-[#b3b3b3]"></i>
-                <h1 className="text-[12px] text-[#b3b3b3]">
-                  Check the document that you wish to see, Campaign Summary
-                  contains Campaign Details, Plan Summary and Creative Ratios,
-                  while Screen Pictures have all the inventory pictures for your
-                  references...
-                </h1>
-              </div>
-              <ButtonInput
-                className={"w-40"}
-                variant="outline"
-                rounded="full"
-                disabled={loadingPOData}
-                loadingText="Downloading...."
-                icon={<i className="fi fi-sr-file-download"></i>}
-                onClick={handleDownload}
-              >
-                Download
-              </ButtonInput>
 
-              <Divider />
-              <div className="">
+              <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-2xl">
                 <h1 className="font-semibold text-lg pb-4">
-                  2. Choose Monitoring Pics Type
+                  Choose Monitoring Pics Type
                 </h1>
-                <ChoseMonitoringType
+                <ChoseMonitoringTypeFive
                   initialData={initialData}
                   setInitialData={setInitialData}
                 />
               </div>
-              <Divider />
-              <div className="">
-                <h1 className="font-semibold text-lg">3. Share this plan</h1>
+
+              <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-2xl">
+                <h1 className="font-semibold text-lg">Share this plan</h1>
                 <div className="grid grid-cols-6 gap-2 pt-4">
                   <div className="col-span-4">
                     <PrimaryInput
@@ -731,19 +767,19 @@ export const ViewFinalPlanPODetails = ({
                   </div>
                 </div>
               </div>
-
-              <Divider />
-              <EmailConfirmationImage
-                files={confirmationImageFiles}
-                handleAddNewFile={handleAddNewFile}
-                removeImage={removeImage}
-                setSkipEmailConfirmation={(e: any) => {
-                  setConfirmToProceed(true);
-                  setSkipEmailConfirmation(e);
-                }}
-                skipFunction={skipFunction}
-                skipEmailConfirmation={skipEmailConfirmation}
-              />
+              <div className="mt-2 p-4 border border-1 border-#C3C3C3 h-auto rounded-2xl">
+                <EmailConfirmationImage
+                  files={confirmationImageFiles}
+                  handleAddNewFile={handleAddNewFile}
+                  removeImage={removeImage}
+                  setSkipEmailConfirmation={(e: any) => {
+                    setConfirmToProceed(true);
+                    setSkipEmailConfirmation(e);
+                  }}
+                  skipFunction={skipFunction}
+                  skipEmailConfirmation={skipEmailConfirmation}
+                />
+              </div>
             </div>
           </div>
           <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">

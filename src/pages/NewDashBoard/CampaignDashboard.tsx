@@ -84,6 +84,8 @@ export const CampaignDashboard = ({
   });
 
   const [openSiteMapView, setOpenSiteMapView] = useState<boolean>(false);
+  const [openMonitoringView, setOpenMonitoringView] = useState<boolean>(false);
+
 
   const gridItems: GridItem[] = [
     {
@@ -428,7 +430,13 @@ export const CampaignDashboard = ({
             />
           ): null}
         </div>
-        <SiteMonitoringPic sitesDataMapViewData={sitesDataMapViewData} openSiteMapView={openSiteMapView} setOpenSiteMapView={setOpenSiteMapView} />
+        <SiteMonitoringPic
+          sitesDataMapViewData={sitesDataMapViewData}
+          openSiteMapView={openSiteMapView}
+          setOpenSiteMapView={setOpenSiteMapView}
+          openMonitoringView={openMonitoringView}
+          setOpenMonitoringView={setOpenMonitoringView}
+        />
 
         <SiteLevelPerformance
           loadingSiteLevel={loadingSiteLevel}
