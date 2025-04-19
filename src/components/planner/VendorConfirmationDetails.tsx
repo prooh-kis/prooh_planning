@@ -61,6 +61,9 @@ export const VendorConfirmationDetails = ({
   const [isDisabled, setIsDisabled] = useState<any>(true);
 
   const [selectedCampaignIds, setSelectedCampaignIds] = useState<any>([]);
+  const [skipEmailConfirmation, setSkipEmailConfirmation] =
+    useState<any>(false);
+  const [confirmToProceed, setConfirmToProceed] = useState<any>(false);
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -97,7 +100,7 @@ export const VendorConfirmationDetails = ({
       "message",
       `
         <div style='max-width: 720px; margin: auto; padding: 16px; background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;'>
-          <a href={https://plan.prooh.ai/campaignDetails/${campaignId}}>View Dashboard</a>
+          <a href="https://plan.prooh.ai/campaignDetails/${campaignId}">View Dashboard</a>
         </div>
       `
     );
@@ -141,34 +144,16 @@ export const VendorConfirmationDetails = ({
             <tbody>
               ${statusTableData
                 ?.filter((s: any) => s.screenVendorEmail === email)
-                ?.map((d: any) => {
-                  return {
-                    screenName: d.screenName,
-                    touchPoint: d.touchPoint,
-                    startDate: convertDateIntoDateMonthYear(d.startDate),
-                    endDate: convertDateIntoDateMonthYear(d.endDate),
-                    cost: `${"\u20B9"}${d.cost.toFixed(0)}`,
-                  };
-                })
                 ?.map(
-                  (c: any, i: any) =>
-                    `<tr key=${i} style='background-color: #F8F9FA;'>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${
-                    c.screenName
-                  }</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${
-                    c.touchPoint
-                  }</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${convertDateIntoDateMonthYear(
-                    c.startDate
-                  )}</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${convertDateIntoDateMonthYear(
-                    c.endDate
-                  )}</td>
-                  <td style='padding: 8px; border: 1px solid #E0E0E0;'>${
-                    c.cost
-                  }</td>
-                </tr>`
+                  (d: any, i: any) => `
+                    <tr key=${i} style='background-color: #F8F9FA;'>
+                      <td style='padding: 8px; border: 1px solid #E0E0E0;'>${d.screenName}</td>
+                      <td style='padding: 8px; border: 1px solid #E0E0E0;'>${d.touchPoint}</td>
+                      <td style='padding: 8px; border: 1px solid #E0E0E0;'>${convertDateIntoDateMonthYear(d.startDate)}</td>
+                      <td style='padding: 8px; border: 1px solid #E0E0E0;'>${convertDateIntoDateMonthYear(d.endDate)}</td>
+                      <td style='padding: 8px; border: 1px solid #E0E0E0;'>₹${d.cost.toFixed(0)}</td>
+                    </tr>
+                  `
                 )}
             </tbody>
           </table>
@@ -197,7 +182,7 @@ export const VendorConfirmationDetails = ({
         sendEmailForVendorConfirmation({
           toEmail: email,
           cc: cc,
-          emailContent: JSON.stringify(emailContent),
+          emailContent: emailContent,
         })
       );
     });
@@ -240,25 +225,27 @@ export const VendorConfirmationDetails = ({
   };
 
   const handleSaveAndContinue = async () => {
-    let imageArr: string[] = [];
-    for (let data of files) {
-      let url = await getAWSUrl(data);
-      imageArr.push(url);
-    }
-    dispatch(
-      addDetailsToCreateCampaign({
-        pageName: "Vendor Confirmation Page",
-        id: campaignId,
-        vendorApprovalImgs: imageArr, // return url array
-      })
-    );
+   
 
     if (isDisabled) {
       message.error(
         "You will be redirected to campaign dashboard, once the campaign has started. Please wait..."
       );
     } else {
-      navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignId}`);
+      // let imageArr: any[] = [];
+      // for (let data of files) {
+      //   let url = await getAWSUrl(data);
+      //   imageArr.push(url);
+      // }
+      const imageArr = await Promise.all(files.map(getAWSUrl));
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "Vendor Confirmation Page",
+          id: campaignDetails?._id,
+          vendorApprovalImgs: imageArr, // return url array
+        })
+      );
+      navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignDetails?._id}`);
     }
   };
 
@@ -274,7 +261,7 @@ export const VendorConfirmationDetails = ({
     }
     dispatch(
       getVendorConfirmationStatusTableDetails({
-        id: campaignId,
+        id: campaignDetails?._id,
       })
     );
     dispatch(
@@ -295,11 +282,11 @@ export const VendorConfirmationDetails = ({
     );
     dispatch(
       getPlanningPageFooterData({
-        id: campaignId,
+        id: campaignDetails?._id,
         pageName: "Vendor Confirmation Page",
       })
     );
-  }, [campaignDetails, campaignId, dispatch]);
+  }, [campaignDetails, campaignId, dispatch, errorAddDetails, errorStatusTableData, errorVendorConfirmationData]);
 
   useEffect(() => {
     if (successAddDetails) {
@@ -311,7 +298,7 @@ export const VendorConfirmationDetails = ({
   }, [successAddDetails, step, setCurrentStep, dispatch]);
 
   const handleOpenStatusModel = () => {
-    setOpen((pre: boolean) => !open);
+    setOpen(!open);
   };
   const handleOpenMediaModel = () => {
     setOpenMedia((pre: boolean) => !pre);
@@ -365,6 +352,17 @@ export const VendorConfirmationDetails = ({
     "Third Party": 0,
   };
 
+  const skipFunction = () => {
+    dispatch(
+      addDetailsToCreateCampaign({
+        pageName: "Vendor Confirmation Page",
+        id: campaignDetails?._id,
+        vendorApprovalImgs: [], // return url array
+      })
+    );
+    navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignDetails?._id}`);
+  };
+
   return (
     <div className="w-full">
       {loadingStatusTableData || loadingVendorConfirmationData ? (
@@ -391,7 +389,7 @@ export const VendorConfirmationDetails = ({
                 Check and confirm media availability for your campaign plan
               </p>
             </div>
-            <CountdownTimer createdAt={vendorConfirmationData?.createdAt} />
+            <CountdownTimer createdAt={vendorConfirmationData?.createdAt || new Date().toISOString()} />
           </div>
           <VendorConfirmationBasicTable
             vendorConfirmationData={vendorConfirmationData}
@@ -492,6 +490,12 @@ export const VendorConfirmationDetails = ({
                     files={files}
                     handleAddNewFile={handleAddNewFile}
                     removeImage={removeImage}
+                    setSkipEmailConfirmation={(e: any) => {
+                      setConfirmToProceed(true);
+                      setSkipEmailConfirmation(e);
+                    }}
+                    skipFunction={skipFunction}
+                    skipEmailConfirmation={skipEmailConfirmation}
                   />
                 </div>
               </div>

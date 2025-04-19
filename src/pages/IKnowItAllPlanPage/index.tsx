@@ -34,7 +34,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
 
   const [campaignDetails, setCampaingDetails] = useState<any>(null);
   const campaignId: any = pathname.split("/")[2] || null;
-  const [currentStep, setCurrentStep] = useState<number>(
+  const [currentStep, setCurrentStep] = useState<any>(
     campaignId ? getDataFromLocalStorage(CURRENT_STEP)?.[campaignId] ?? 1 : 1
   );
 
@@ -90,7 +90,7 @@ export const IKnowItAllPlanPage: React.FC = () => {
     7: VendorConfirmationDetails,
   };
 
-  const StepComponent = stepComponents[currentStep] || null;
+  const StepComponent = stepComponents[currentStep] || (() => <div>Invalid step</div>);
 
   return (
     <div className="w-full">

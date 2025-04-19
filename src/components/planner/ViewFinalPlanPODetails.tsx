@@ -433,25 +433,20 @@ export const ViewFinalPlanPODetails = ({
 
   useEffect(() => {
     if (couponApplySuccess) {
-      setSummaryChecked(false);
-      setPicturesChecked(false);
       setCurrentCoupon("");
       setConfirmToProceed(false);
       dispatch({ type: APPLY_COUPON_RESET });
       dispatch({ type: REMOVE_COUPON_RESET });
       dispatch(getFinalPlanPOTableData(poInput));
-      // dispatch(addDetailsToCreateCampaign({ id: campaignId }));
+      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
     if (couponRemoveSuccess) {
-      setSummaryChecked(false);
-      setPicturesChecked(false);
       setCurrentCoupon("");
       setConfirmToProceed(false);
       dispatch({ type: APPLY_COUPON_RESET });
       dispatch({ type: REMOVE_COUPON_RESET });
       dispatch(getFinalPlanPOTableData(poInput));
-
-      // dispatch(addDetailsToCreateCampaign({ id: campaignId }));
+      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
 
     

@@ -93,7 +93,8 @@ export const TriggerBasedPlanPage: React.FC = () => {
     8: NewCreativeUpload,
     9: VendorConfirmationDetails,
   };
-  const StepComponent = stepComponents[currentStep] || null;
+  
+  const StepComponent = stepComponents[currentStep] || (() => <div>Invalid step</div>);
 
   return (
     <div className="w-full">

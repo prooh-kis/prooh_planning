@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 interface MultiBarProps {
   values: number[]; // Define the expected types for values and colors
-  colors: string[];
+  colors: any[];
   totalValue: number;
   showPercentage: boolean; // New prop to control display mode
 }
