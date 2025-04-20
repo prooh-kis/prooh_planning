@@ -47,6 +47,7 @@ import { PlayLiveUrl } from "../pages/PageNotFound/PlayLiveUrl";
 import { MyCreativesPage } from "../pages/MyCreativesPage";
 import { CampaignDetailsPage } from "../pages/CampaignDetailsPage";
 import { NewDashBoard } from "../pages/NewDashBoard";
+import Engagement from "../pages/Engagement";
 
 const Routers: React.FC = () => {
   return (
@@ -215,6 +216,14 @@ const Routers: React.FC = () => {
             <PrivateRoute layout={HomePageLayout}>
               <PowerPointGenerator />
             </PrivateRoute>
+          }
+        />
+         <Route
+          path={"/engagement"}
+          element={
+            <AppDashBoardLayout className="bg-[#D3D3D310] pt-16">
+              <Engagement />
+            </AppDashBoardLayout>
           }
         />
         <Route path={PLAY_LIVE_URL} element={<PlayLiveUrl />} />
