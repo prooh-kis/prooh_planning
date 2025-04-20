@@ -1,6 +1,7 @@
 'use client';
 
 import {useState, useEffect} from 'react';
+import { isMobileDevice } from '../../utils';
 
 const PUZZLE_IMAGE_URL = 'https://static.startuptalky.com/2022/02/Mudrex-Logo-Success-Story-Startuptalky.jpg';
 
@@ -26,7 +27,8 @@ function shuffle<T>(array: T[]): T[] {
 
 export default function Engagement() {
   const gridSize = 3;
-  const [pieceSize, setPieceSize] = useState(512 / gridSize);
+  const puzzlePieceSize = isMobileDevice() ? 256 : 512;
+  const [pieceSize, setPieceSize] = useState(puzzlePieceSize / gridSize);
   const [imageURL] = useState(PUZZLE_IMAGE_URL);
   const [puzzlePieces, setPuzzlePieces] = useState<number[]>([]);
   const [solution, setSolution] = useState<number[]>([]);
@@ -36,12 +38,12 @@ export default function Engagement() {
     const initialPieces = Array.from({length: gridSize * gridSize}, (_, i) => i);
     setSolution([...initialPieces]);
     setPuzzlePieces(shuffle([...initialPieces]));
-    setPieceSize(512 / gridSize);
+    setPieceSize(puzzlePieceSize / gridSize);
   }, [gridSize]);
 
   // Update piece size when grid size changes
   useEffect(() => {
-    setPieceSize(512 / gridSize);
+    setPieceSize(puzzlePieceSize / gridSize);
   }, [gridSize]);
 
   const handlePieceDrop = (dragIndex: number, dropIndex: number) => {
@@ -80,7 +82,7 @@ export default function Engagement() {
       <h1 className="text-2xl font-bold mb-4">PuzzleSolve</h1>
 
       <div
-        className="grid"
+        className="border border-black grid"
         style={{
           gridTemplateColumns: `repeat(${gridSize}, ${pieceSize}px)`,
           gridTemplateRows: `repeat(${gridSize}, ${pieceSize}px)`,
