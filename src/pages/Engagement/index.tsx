@@ -82,7 +82,7 @@ export default function Engagement() {
       <h1 className="text-2xl font-bold mb-4">PuzzleSolve</h1>
 
       <div
-        className="border border-black grid"
+        className="grid"
         style={{
           gridTemplateColumns: `repeat(${gridSize}, ${pieceSize}px)`,
           gridTemplateRows: `repeat(${gridSize}, ${pieceSize}px)`,
