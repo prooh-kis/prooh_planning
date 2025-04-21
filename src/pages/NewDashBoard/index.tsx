@@ -28,6 +28,8 @@ export const NewDashBoard: React.FC = () => {
   const { pathname } = useLocation();
   const campaignId = pathname.split("/").pop() || "";
 
+  const [aiInsight, setAiInsight] = useState<string>("");
+  const [isAnalyzing, setIsAnalysing] = useState<boolean>(false);
   // State for filters
   const [filters, setFilters] = useState<{
     cities: FilterState;
@@ -76,6 +78,7 @@ export const NewDashBoard: React.FC = () => {
 
   const { loading: loadingSitesDataMapView, data: sitesDataMapViewData } =
     useSelector((state: any) => state.sitesDataMapViewForPlannerDashboard);
+
 
   // Set up initial data fetch and refresh interval
   useEffect(() => {

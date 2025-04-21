@@ -33,7 +33,7 @@ export const Section1 = () => {
         </p>
 
         {/* CTA Button - Centered */}
-        <div className="mt-8 md:mt-8 w-full flex justify-center">
+        <div className="mt-8 md:mt-8 w-full flex items-center justify-center">
           <ButtonInput
             icon={<i className="fi fi-sr-megaphone flex items-center" />}
             rounded="full"

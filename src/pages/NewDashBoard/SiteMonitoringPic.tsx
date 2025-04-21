@@ -11,34 +11,33 @@ interface MonitoringProps {
 const Monitoring = ({ bg, text, label }: MonitoringProps) => {
   return (
     <div
-      style={{ backgroundColor: bg, color: text }}
-      className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 w-full p-4 rounded-[9.51px]"
+      // style={{ backgroundColor: bg, color: text }}
+      className="col-span-1 border border-gray gap-2 sm:gap-4 w-full p-2 rounded-md"
     >
-      <p className="text-[12px] sm:text-[12.68px] font-medium leading-[100%] m-0 p-0">
-        {label}
-      </p>
-      <div
-        style={{ borderColor: text }}
-        className="sm:h-full sm:border sm:border-l sm:border-r hidden sm:block"
-      ></div>
-      <p className="text-[14px] sm:text-[15.84px] font-bold leading-[100%] m-0 p-0">
-        70%
-      </p>
-      <div
-        style={{ borderColor: text }}
-        className="sm:h-full sm:border sm:border-l sm:border-r hidden sm:block"
-      ></div>
-      <div className="flex flex-wrap gap-2 sm:gap-4 items-center">
+      <div style={{ backgroundColor: bg, color: text }}
+        className="p-2 rounded-md flex items-center justify-center gap-2"
+      >
+        <div
+          style={{ background: text }}
+        className="h-2 w-2 rounded-full"></div>
+        <p className="text-[12px] font-medium leading-[100%] m-0 p-0">
+          {label}
+        </p>
+        <p className="text-[12px] font-bold leading-[100%] m-0 p-0">
+          70%
+        </p>
+      </div>
+      <div className="flex flex-wrap gap-2 sm:gap-4 items-center justify-center p-2">
         {[
-          { icon: "fi fi-ss-brightness", value: "70%" },
-          { icon: "fi fi-ss-moon", value: "70%" },
-          { icon: "fi fi-ss-map-marker-check", value: "70%" },
-          { icon: "fi fi-sr-video-camera-alt", value: "70%" },
-          { icon: "fi fi-sr-newspaper", value: "70%" },
+          { icon: "fi fi-ss-brightness flex items-center", value: "70%" },
+          { icon: "fi fi-ss-moon flex items-center", value: "70%" },
+          { icon: "fi fi-ss-map-marker-check flex items-center", value: "70%" },
+          { icon: "fi fi-sr-video-camera-alt flex items-center", value: "70%" },
+          { icon: "fi fi-sr-newspaper flex items-center", value: "70%" },
         ].map((item, index) => (
           <div key={index} className="flex gap-1 text-[11px] items-center">
-            <i className={item.icon}></i>
-            <p className="font-bold m-0 p-0">{item.value}</p>
+            <i style={{color: text}} className={item.icon}></i>
+            <p className="font-bold m-0 p-0 text-[#00000090]">{item.value}</p>
           </div>
         ))}
       </div>
@@ -87,7 +86,7 @@ export const SiteMonitoringPic = ({ sitesDataMapViewData, openSiteMapView, setOp
       )}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <h1 className="text-[15px] sm:text-[16px] py-2 font-semibold leading-[19.36px] text-[#0E212E]">
-          Site Monitoring Pics - <span className="text-[#129BFF]">70%</span>
+          Site Monitoring Pics <span className="text-[#D7D7D7]">(70%)</span>
         </h1>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-start sm:items-center">
           <div
@@ -105,10 +104,10 @@ export const SiteMonitoringPic = ({ sitesDataMapViewData, openSiteMapView, setOp
           </div>
         </div>
       </div>
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-4">
-        <Monitoring bg="#F5F9FF" text="#79B2DB" label="Start" />
-        <Monitoring bg="#F4FFFA" text="#6EAD94" label="Mid" />
-        <Monitoring bg="#F8F8FF" text="#AB90D2" label="End" />
+      <div className="mt-4 grid grid-cols-3 sm:grid-cols-1 lg:grid-cols-3 gap-4">
+        <Monitoring bg="#F4FFF6" text="#5AAF69" label="Start" />
+        <Monitoring bg="#FFF9F3" text="#FF8D22" label="Mid" />
+        <Monitoring bg="#FFF8F4" text="#E43535" label="End" />
       </div>
     </div>
   );

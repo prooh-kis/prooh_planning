@@ -46,7 +46,7 @@ interface ViewFinalPlanPODetailsProps {
 
 interface MonitoringTypeData {
   dates: string[];
-  monitoringTypes: any[];
+  monitoringType: any[];
 }
 
 interface InitialData {
@@ -167,17 +167,17 @@ export const ViewFinalPlanPODetails = ({
       dates: [
         format(new Date(), "yyyy-MM-dd"),
       ],
-      monitoringTypes: [],
+      monitoringType: monitoringTypes?.map((type: any) => type.value),
     },
     endDate: {
       dates: [
         format(new Date(), "yyyy-MM-dd"),
       ],
-      monitoringTypes: [],
+      monitoringType: monitoringTypes?.map((type: any) => type.value),
     },
     midDate: {
       dates: [],
-      monitoringTypes: [],
+      monitoringType: []
     },
   });
 
@@ -540,17 +540,17 @@ export const ViewFinalPlanPODetails = ({
           dates: [
             format(new Date(poTableData?.startDate), "yyyy-MM-dd"),
           ],
-          monitoringTypes: monitoringTypes.map((type: any) => type.value),
+          monitoringType: monitoringTypes.map((type: any) => type.value),
         },
         endDate: {
           dates: [
             format(new Date(poTableData?.endDate), "yyyy-MM-dd"),
           ],
-          monitoringTypes: monitoringTypes.map((type: any) => type.value)
+          monitoringType: monitoringTypes.map((type: any) => type.value)
         },
         midDate: {
           dates: [],
-          monitoringTypes: monitoringTypes.map((type: any) => type.value)
+          monitoringType: []
         },
       })
 
@@ -617,6 +617,7 @@ export const ViewFinalPlanPODetails = ({
     });
   };
 
+  console.log(initialData)
   return (
     <div className="w-full">
       <div>

@@ -268,21 +268,26 @@ export const allpois = {
 
 export const monitoringTypes = [
   {
-    label: "Digital Dated Picture",
-    value: "digitalDatedPicture"
+    icon: "fi fi-ss-brightness flex items-center",
+    label: "Day Shot",
+    value: "dayShot"
   },
   {
-    label: "Without Digital date",
-    value: "wihoutDigitalDate"
-  },
-  {
+    icon: "fi fi-sr-newspaper flex items-center",
     label: "With Newspaper",
-    value: "withNewsPaper"
+    value: "withNewspaper"
   },
   {
-    label: "Full Loop Video",
-    value: "fullLoopVideo"
+    icon: "fi fi-sr-video-camera-alt flex items-center",
+    label: "Loop Video",
+    value: "loopVideo"
+  },
+  {
+    icon: "fi fi-ss-moon flex items-center",
+    label: "Night Shot",
+    value: "nightShot"
   },{
+    icon: "fi fi-ss-map-marker-check flex items-center",
     label: "With Geo Tag",
     value: "withGeoTag"
   }

@@ -83,13 +83,13 @@ export const ChoseMonitoringTypeFive = ({ initialData, setInitialData }: any) =>
         const currentOption: any = newData[date];
 
         if (checked) {
-          currentOption.monitoringTypes = [
-            ...currentOption.monitoringTypes,
+          currentOption.monitoringType = [
+            ...currentOption.monitoringType,
             value,
           ];
         } else {
-          currentOption.monitoringTypes =
-            currentOption.monitoringTypes.filter((item: any) => item !== value);
+          currentOption.monitoringType =
+            currentOption.monitoringType.filter((item: any) => item !== value);
         }
       }
      
@@ -103,6 +103,7 @@ export const ChoseMonitoringTypeFive = ({ initialData, setInitialData }: any) =>
       [option]: {
         ...prev[option],
         dates: dates,
+        monitoringType: monitoringTypes?.map((type: any) => type.value)
       },
     }));
   };
@@ -208,7 +209,6 @@ export const ChoseMonitoringTypeFive = ({ initialData, setInitialData }: any) =>
             max={initialData["endDate"].dates[0]}
           />
           
-          
         </div>
         <div className="col-span-1">
           <label className="text-[12px]">End Date</label>
@@ -225,21 +225,14 @@ export const ChoseMonitoringTypeFive = ({ initialData, setInitialData }: any) =>
       
       <div className="w-full grid grid-cols-3 gap-4 my-4">
         {monitoringTypes
-          ?.filter(
-            (value) => !(value.label === "With Newspaper")
-          )
           ?.map((value: any, i: any) => (
-            <div key={i} className="col-span-1">
-              <Checkbox
-                key={i}
-                // checked={currentTypes.includes(value)}
-                defaultChecked={true}
-                onChange={(e) =>
-                  handleCheckboxChange(e.target.checked, value.value)
-                }
-              >
-                {value.label}
-              </Checkbox>
+            <div key={i} className="col-span-1 flex items-center gap-4">
+              <div className="flex items-center gap-2 truncate">
+                <i className={`text-[#129BFF] text-[12px] ${value.icon}`}></i>
+                <h1 className="text-[12px] truncate">{value.label}</h1>
+              </div>
+
+              <i className="fi fi-br-check flex items-center text-[12px] text-[#1FA523]"></i>
             </div>
           ))}
       </div>
