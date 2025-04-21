@@ -617,9 +617,8 @@ export const ViewFinalPlanPODetails = ({
     });
   };
 
-  console.log(initialData)
   return (
-    <div className="w-full">
+    <div className="w-full font-custom">
       <div>
         <h1 className="text-2xl font-semibold">View Final Plan & Share</h1>
         <h1 className="text-sm text-gray-500">
@@ -629,7 +628,7 @@ export const ViewFinalPlanPODetails = ({
       {loadingPOData ? (
         <LoadingScreen />
       ) : (
-        <div>
+        <div className="">
           <div className="grid grid-cols-2 gap-2 pb-20 mt-4">
             <div
               ref={pageRef}
@@ -738,7 +737,7 @@ export const ViewFinalPlanPODetails = ({
               <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-2xl">
                 <h1 className="font-semibold text-lg">Share this plan</h1>
                 <div className="grid grid-cols-6 gap-2 pt-4">
-                  <div className="col-span-4">
+                  <div className="col-span-3">
                     <PrimaryInput
                       placeholder="Enter Email"
                       value={toEmail}
@@ -747,19 +746,22 @@ export const ViewFinalPlanPODetails = ({
                       rounded="rounded-[8px]"
                     />
                   </div>
-                  <div className="col-span-2">
+                  <div className="col-span-1">
                     <ButtonInput
                       variant="primary"
                       size="large"
                       loadingText="Sending...."
-                      icon={<i className="fi fi-rs-paper-plane"></i>}
+                      // icon={<i className="fi fi-rs-paper-plane"></i>}
                       onClick={() => {
                         if (isValidEmail(toEmail)) sendEmail(toEmail);
                         else message.error("Please Enter valid email");
                       }}
                     >
-                      Send Email
+                      Send
                     </ButtonInput>
+                  </div>
+                  <div className="col-span-2 flex items-center">
+                    <h1 className="text-[12px] text-[#6F7F8E]">Plan highlights will go as pdf</h1>
                   </div>
                 </div>
               </div>

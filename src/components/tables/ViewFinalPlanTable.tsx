@@ -5,9 +5,9 @@ import { DropdownInput } from "../../components/atoms/DropdownInput";
 
 function MyDiv({ left, right }: any) {
   return (
-    <div className="flex font-normal text-[#2B2B2B]">
+    <div className="flex text-[#2B2B2B]">
       <h1 className="text-left text-[14px] basis-1/2">{left}</h1>
-      <h1 className="text-left text-[14px] basis-1/2">{right}</h1>
+      <h1 className="text-left text-[14px] basis-1/2 font-semibold">{right}</h1>
     </div>
   );
 }
@@ -76,7 +76,7 @@ export const ViewFinalPlanTable = ({
             : "None"
         }
       />
-      <div className="flex items-center font-normal text-[#2B2B2B] mt-4">
+      <div className="flex items-center text-[#2B2B2B] mt-4">
         <h1 className="text-left text-[14px] basis-1/2">Apply Discount%</h1>
         <div className="flex items-center gap-4">
           <DropdownInput

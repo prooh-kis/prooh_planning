@@ -27,7 +27,7 @@ const Monitoring = ({ bg, text, label }: MonitoringProps) => {
           70%
         </p>
       </div>
-      <div className="flex flex-wrap gap-2 sm:gap-4 items-center justify-center p-2">
+      <div className="flex flex-wrap gap-2 sm:gap-4 items-center justify-center pt-2">
         {[
           { icon: "fi fi-ss-brightness flex items-center", value: "70%" },
           { icon: "fi fi-ss-moon flex items-center", value: "70%" },

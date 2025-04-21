@@ -16,9 +16,56 @@ export const EmailConfirmationImage = ({page, skipEmailConfirmation, setSkipEmai
     <div className="p-2 h-auto">
       <div className="flex flex-col">
         <div className="flex justify-between items-center">
-          <h1 className="font-semibold text-lg">
-            {page === "VendorApproval" && "3."}Upload email approval screenshot
-          </h1>
+          <div>          
+            <h1 className="font-semibold text-lg">
+              Upload client approval screenshot
+            </h1>
+            <p className="text-[12px] text-[#6F7F8E]">Plan highlights to be sent on email</p>
+          </div>
+
+          {files?.length === 0 && (
+            <div className="flex justify-end items-bottom px-2 cursor-pointer"
+              onClick={() => {
+                setSkipEmailConfirmation(true);
+                skipFunction();
+              }}
+            >
+              <p className="text-[12px]">
+                Or{" "}
+                <span className=" text-primaryButton underline">
+                  {skipEmailConfirmation ? "Skipped" :
+                    "Skip"
+                  }
+                </span>
+                {" "}this step
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div className="flex justify-between pt-2">
+          <div className="flex gap-4">
+            {files?.map((file: any, index: number) => (
+              <ImageViewCloseButton
+                file={file}
+                key={index}
+                removeImage={removeImage}
+              />
+            ))}
+            <div className="flex items-center gap-4">
+              {[1]?.map((_: any, i: any) => (
+                <div key={i} className="relative inline-block">
+                  <div
+                    className="w-20 h-20 object-cover rounded-lg shadow-md flex items-center justify-center"
+                    
+                  >
+                    <i className="fi fi-br-plus-small flex items-center text-[36px] text-[#D7D7D7]"></i>
+                  </div>
+                </div>
+              ))}
+              
+            </div>
+          </div>
           <div className="flex items-center">
             <FileUploadButton
               handleFile={handleAddNewFile}
@@ -27,31 +74,7 @@ export const EmailConfirmationImage = ({page, skipEmailConfirmation, setSkipEmai
             />
           </div>
         </div>
-
-        <div className="flex gap-4 pt-2">
-          {files?.map((file: any, index: number) => (
-            <ImageViewCloseButton
-              file={file}
-              key={index}
-              removeImage={removeImage}
-            />
-          ))}
-        </div>
       </div>
-      {files?.length === 0 && (
-        <div className="flex justify-end items-bottom px-2 cursor-pointer"
-          onClick={() => {
-            setSkipEmailConfirmation(true);
-            skipFunction();
-          }}
-        >
-          <p className="text-[12px] text-primaryButton underline">
-            {skipEmailConfirmation ? "Skipped" :
-              "Skip"
-            }
-          </p>
-        </div>
-      )}
     </div>
   );
 }
