@@ -52,6 +52,10 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
               src={image}
               alt={`Slide ${index}`}
               className="h-32 w-32 object-contain"
+              style={{
+                filter: isHovered ? 'grayscale(0)' : 'grayscale(100%)', // Grayscale effect
+                transition: 'filter 0.3s ease', // Smooth transition for grayscale effect
+              }}
             />
           </div>
         ))}

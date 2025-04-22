@@ -7,4 +7,5 @@ export { FeedBack } from "./FeedBack";
 export { ProohCreator } from "./ProohCreator";
 export { ContactForm } from "./ContactForm";
 export { FindUsOnGoogle } from "./FindUsOnGoogle";
-export { FlowDiagram } from "./FlowDiagram";
+export { FlowDiagramWeb } from "./FlowDiagramWeb";
+

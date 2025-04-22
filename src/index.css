@@ -148,3 +148,25 @@ code {
   animation: slideIn 1s ease-out;
 }
 
+.clip-trapezium-left {
+  clip-path: polygon(6% 0%, 100% 0%, 100% 100%, 0% 100%);
+  margin-left: 1px;
+}
+
+.clip-trapezium-both {
+  clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
+  margin-left: -10px;
+  margin-right: -10px;
+
+}
+
+.clip-trapezium-right {
+  clip-path: polygon(0% 0%, 100% 0%, 94% 100%, 0% 100%);
+  margin-right: 1px;
+}
+
+/* Style for sections */
+section {
+  /* height: 100vh; */
+  scroll-snap-align: start; /* Optional: Adds a snap effect */
+}

@@ -52,6 +52,8 @@ export const MonitoringPictures = ({
                   }
                 />
                 <button
+                  title="buttonB"
+                  type="button"
                   className="absolute top-1 right-1 bg-white p-1 h-8 w-8 rounded-full shadow-md  hover:bg-[#129BFF] hover:text-[#FFFFFF] text-gray-600 "
                   onClick={(e) => {
                     e.stopPropagation();
@@ -95,6 +97,8 @@ export const MonitoringPictures = ({
                   className="w-full h-full"
                 />
                 <button
+                  title="buttonA"
+                  type="button"
                   className="absolute top-1 right-1 bg-white p-1 h-8 w-8 rounded-full shadow-md  hover:bg-[#129BFF] hover:text-[#FFFFFF] text-gray-600 "
                   onClick={(e) => {
                     e.stopPropagation();
@@ -138,6 +142,8 @@ export const MonitoringPictures = ({
                   className="w-full h-full"
                 />
                 <button
+                  title="buttonC"
+                  type="button"
                   className="absolute top-1 right-1 bg-white p-1 h-8 w-8 rounded-full shadow-md  hover:bg-[#129BFF] hover:text-[#FFFFFF] text-gray-600 "
                   onClick={(e) => {
                     e.stopPropagation();
@@ -184,6 +190,8 @@ export const MonitoringPictures = ({
                     className="w-full h-full"
                   />
                   <button
+                    title="buttonD"
+                    type="button"
                     className="absolute top-1 right-1 bg-white p-1 h-8 w-8 rounded-full shadow-md  hover:bg-[#129BFF] hover:text-[#FFFFFF] text-gray-600 "
                     onClick={(e) => {
                       e.stopPropagation();

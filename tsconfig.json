@@ -6,7 +6,7 @@
       "@utils/*": ["utils/*"],
       "@styles/*": ["styles/*"]
     },
-    "target": "es5",
+    "target": "es6",
     "lib": ["dom", "dom.iterable", "es6", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,

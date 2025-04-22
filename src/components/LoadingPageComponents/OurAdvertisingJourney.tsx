@@ -57,6 +57,7 @@ export const OurAdvertisingJourney = ({ data }: any) => {
   const [landingPageData, setLandingPageData] = useState<any>({});
 
   const [currentOfferIndex, setCurrentOfferIndex] = useState(3);
+  const [currentTab, setCurrentTab] = useState("Demand");
 
   useEffect(() => {
     if (getDataFromLocalStorage(LANDING_PAGE_DATA)) {
@@ -299,14 +300,37 @@ export const OurAdvertisingJourney = ({ data }: any) => {
           Our Advertising Journey
         </h1>
         <p className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[16px] font-[300] leading-[20px] sm:leading-[24px] md:leading-[28px] lg:leading-[32px] tracking-normal text-[#667D8C] text-center font-inter">
-          Our platform helps your business in managing expenses. These are some
-          of the reasons why you
+          We have had an exciting journey till now, take a look at our recent history
         </p>
+      </div>
+      <div className="py-4 flex justify-center items-center">
+        {["Demand", "Supply"]?.map((tab: any, i: any) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => {
+              if (i == 0) {
+                setCurrentTab("Demand");
+              }
+              if (i == 1) {
+                setCurrentTab("Supply");
+              }
+            }}
+            className={`${
+              tab === currentTab
+                ? "bg-primaryButton text-white font-semibold"
+                : "bg-[#F6F6F6] text-gray-700"
+            } border border-[#D7D7D7] py-2 px-8 ${i == 0 ? "clip-trapezium-right mr-[-2px]" : i == ["Demand", "Supply"].length-1 ? "clip-trapezium-left ml-[-2px]" : "clip-trapezium-both"}`}
+          >
+            <span className="text-[12px]">{tab}</span>
+          </button>
+        ))}
       </div>
 
       {/* Progress Bar */}
-      <div className="flex items-center justify-between my-6 pt-4 px-12">
-        <div className="flex-1 h-1 bg-gray-200 relative">
+      <div className="flex items-center justify-between my-6 pt-4 grid grid-cols-4">
+        <div className="col-span-1"></div>
+        <div className="col-span-2 flex-1 h-1 bg-gray-200 relative">
           <div className="absolute inset-x-0 flex justify-between p">
             <div
               className="absolute h-1 inset-x-0 bg-primaryButton transition-all duration-500"
@@ -337,8 +361,9 @@ export const OurAdvertisingJourney = ({ data }: any) => {
             ))}
           </div>
         </div>
+        <div className="col-span-1"></div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-8 pt-4">
         <div className="col-span-1 sm:col-span-2 lg:col-span-2">
           {/* <YearSlider /> */}
           <div className="relative">

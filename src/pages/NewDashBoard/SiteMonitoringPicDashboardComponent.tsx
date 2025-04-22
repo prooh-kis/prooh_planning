@@ -45,7 +45,7 @@ const Monitoring = ({ bg, text, label }: MonitoringProps) => {
   );
 };
 
-export const SiteMonitoringPic = ({ sitesDataMapViewData, openSiteMapView, setOpenSiteMapView, openMonitoringView, setOpenMonitoringView}: any) => {
+export const SiteMonitoringPicDashboardComponent = ({ sitesDataMapViewData, openSiteMapView, setOpenSiteMapView, openMonitoringView, setOpenMonitoringView}: any) => {
 
   const handleCancel = () => {
     setOpenSiteMapView(false);

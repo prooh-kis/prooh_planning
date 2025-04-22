@@ -22,7 +22,6 @@ export const HowItsWork = () => {
   const [currentDataHeroTab, setCurrentDataHeroTab] = useState<any>("0");
 
   const CampaignStep = ({ step, image, title, description }: any) => {
-    console.log(step);
     return (
       <div className="relative">
         {(currentTab === "1" && Number(currentAdvertiserTab) > 1) ||
@@ -139,7 +138,6 @@ export const HowItsWork = () => {
           {}
         : [];
 
-        console.log(step)
     return <CampaignStep {...step} />;
   };
 
@@ -156,7 +154,7 @@ export const HowItsWork = () => {
       </h1>
 
       {/* Tabs */}
-      <div className="my-4 flex justify-center items-center gap-4 w-full overflow-scroll-x ">
+      <div className="my-4 flex justify-center items-center">
         {tabData?.map((tab: any, i: any) => (
           <button
             key={i}
@@ -171,7 +169,7 @@ export const HowItsWork = () => {
               tab.id === currentTab
                 ? "bg-primaryButton text-white font-semibold"
                 : "bg-[#F6F6F6] text-gray-700"
-            } rounded-[8px] py-2 px-4 transition-all duration-300 w-full`}
+            } border border-[#D7D7D7] py-2 px-8 ${i == 0 ? "clip-trapezium-right" : i == tabData.length-1 ? "clip-trapezium-left" : "clip-trapezium-both"}`}
           >
             <span className="text-[12px]">{tab.label}</span>
           </button>

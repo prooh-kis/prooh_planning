@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import "./index.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getLandingPageData } from "../../../actions/screenAction";
 import {
-  getDataFromLocalStorage,
   removeAllKeyFromLocalStorage,
 } from "../../../utils/localStorageUtils";
-import { LANDING_PAGE_DATA } from "../../../constants/localStorageConstants";
 import { CreateCampaignOption } from "../../../components";
 import { PageFooter } from "../../../components/PageFooter";
 import {
@@ -18,39 +16,82 @@ import {
   ProohCreator,
   ContactForm,
   FindUsOnGoogle,
-  FlowDiagram,
+  FlowDiagramWeb,
 } from "../../../components/LoadingPageComponents";
+import landingPageGrid from "../../../assets/images/landingPageGrid.png";
+// eslint-disable-next-line import/no-named-as-default
+import ScrollTrigger from "gsap/ScrollTrigger";
+// eslint-disable-next-line import/no-named-as-default
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const Landing: React.FC = () => {
+  const isMobile = window.innerWidth <= 768;
+  const width = window.innerWidth;
+
   const dispatch = useDispatch<any>();
-
-  const auth = useSelector((state: any) => state.auth);
-  const { userInfo } = auth;
-
   const landingPageDataGet = useSelector(
     (state: any) => state.landingPageDataGet
   );
-  const { loading, error, data } = landingPageDataGet;
+  const { data } = landingPageDataGet;
 
   useEffect(() => {
     dispatch(getLandingPageData());
     removeAllKeyFromLocalStorage();
   }, [dispatch]);
+
   return (
-    <div className="w-screen h-full bg-white">
-      <Section1 />
-      <FloatingBrandIcon />
-      <div className="h-[480px] shadow-t overflow-auto no-scrollbar">
-        <FlowDiagram />
+    <div className="w-screen h-full bg-white overflow-y-auto overflow-x-hidden">
+      <div className="relative w-full">
+        <img
+          className="absolute h-full w-full"
+          style={{ opacity: "50%" }}
+          src={landingPageGrid}
+          alt={"grid"}
+        />
+        <div className="px-8 ">
+          <Section1 />
+          <FloatingBrandIcon />
+        </div>
       </div>
-      <OurAdvertisingJourney data={data} />
-      <HowItsWork />
-      <ProohCreator />
-      <FeedBack />
-      <ContactForm />
-      <FindUsOnGoogle />
-      <CreateCampaignOption />
-      <PageFooter />
+     
+      <div className="px-8">
+          <FlowDiagramWeb />
+      </div>
+      
+      <div className="px-8 ">
+        <HowItsWork />
+      </div>
+      
+      <div className="px-8 ">
+        <OurAdvertisingJourney data={data} />
+      </div>
+      
+      <div className="px-8 ">
+        <ProohCreator />
+      </div>
+      
+      <div className="px-8 ">
+        <FeedBack />
+      </div>
+      
+      <div className="px-8 ">
+        <ContactForm />
+      </div>
+      
+      <div className="px-8 ">
+        <FindUsOnGoogle />
+      </div>
+      
+      <div className="">
+        <CreateCampaignOption />
+      </div>
+      
+      <div className="">
+        <PageFooter />
+      </div>
     </div>
   );
 };

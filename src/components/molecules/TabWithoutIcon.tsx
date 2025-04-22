@@ -44,7 +44,7 @@ export const TabWithoutIcon: React.FC<any> = ({
     }`;
 
   return (
-    <div className="inline-flex items-center gap-4 cursor-pointer border-b-2 border-gray-100 w-full overflow-x-auto">
+    <div className="inline-flex items-center gap-8 cursor-pointer border-b-2 border-gray-100 w-full overflow-x-auto">
       {tabData?.map((tab: TabInterface) => (
         <div
           key={tab.id}

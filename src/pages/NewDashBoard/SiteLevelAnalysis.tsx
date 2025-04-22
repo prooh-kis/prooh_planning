@@ -1,54 +1,15 @@
-import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
-import React, { useEffect, useState } from "react";
-import { DurationGraphPerDay } from "./DurationGraphPerDay";
-import { useDispatch, useSelector } from "react-redux";
-import { getSiteLevelPerformanceTabWiseForPlannerDashboard } from "../../actions/dashboardAction";
-import { siteLevelPerformanceTabData } from "../../constants/tabDataConstant";
-import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-import { DashBoardHardwarePerformanceGraph } from "./DashBoardHardwarePerformanceGraph";
-import { DashBoardSlotGraph } from "./DashBoardSlotGraph";
-import { DashBoardCostGraph } from "./DashBoardCostGraph";
-import { MultiColorLinearBar2 } from "../../components/molecules/MultiColorLinearBar2";
-import { formatNumber } from "../../utils/formatValue";
+import { LoadingScreen } from '../../components/molecules/LoadingScreen'
+import { MultiColorLinearBar2 } from '../../components/molecules/MultiColorLinearBar2'
+import { DashBoardCostGraph } from '../../components/segments/DashBoardCostGraph'
+import { DashBoardHardwarePerformanceGraph } from '../../components/segments/DashBoardHardwarePerformanceGraph'
+import { DashBoardSlotGraph } from '../../components/segments/DashBoardSlotGraph'
+import { DurationGraphPerDay } from '../../components/segments/DurationGraphPerDay'
+import { formatNumber } from '../../utils/formatValue'
+import React from 'react'
 
-const SiteLevelAnalysis = ({ screenData, screenLevelData }: any) => {
-  const dispatch = useDispatch<any>();
-  const [currentTab, setCurrentTab] = useState<string>("1");
-  const tabData = siteLevelPerformanceTabData
-
-  const {
-    loading: loadingTabWiseSiteData,
-    error: errorTabWiseSiteData,
-    data: tabWiseSiteData
-  } = useSelector((state: any) => state.siteLevelPerformanceTabWiseForPlannerDashboard);
-
-  const getData = () => {
-    const datesArray = Object.keys(tabWiseSiteData)?.map((date: any) => date);
-    const countsArray = Object.values(tabWiseSiteData)?.map((slot: any) => slot);
-    return { datesArray, countsArray };
-  };
-
-  useEffect(() => {
-      dispatch(getSiteLevelPerformanceTabWiseForPlannerDashboard({
-        campaignId: screenData.campaignId,
-        tab: tabData.find((tab: any) => tab.id == currentTab)?.value
-      }))
-  },[dispatch, screenData, tabData, currentTab]);
-
+export function SiteLevelAnalysis({screenLevelData, getData, currentTab, loadingTabWiseSiteData, tabWiseSiteData }: any) {
   return (
-    <div className="w-full h-full truncate">
-      <h1 className="text-[20px] font-semibold font-inter text-[#0E212E] pb-2">
-        {screenData?.screenName}
-      </h1>
-      <div className="w-full">
-        <TabWithoutIcon
-          tabData={tabData}
-          currentTab={currentTab}
-          setCurrentTab={setCurrentTab}
-          textSize="text-[14px]"
-        />
-      </div>
-
+    <div>
       {currentTab == "1" ? (
         <div className="w-full">
           {loadingTabWiseSiteData ? (
@@ -198,7 +159,6 @@ const SiteLevelAnalysis = ({ screenData, screenLevelData }: any) => {
               </div>
             </div>
           )}
-
         </div>
       ) : currentTab == "3" ? (
         <div className="pt-4">
@@ -240,9 +200,6 @@ const SiteLevelAnalysis = ({ screenData, screenLevelData }: any) => {
           )}
         </div>
       ) : null}
-      <div className="mt-2">{currentTab === "1" ? "" : ""}</div>
     </div>
-  );
-};
-
-export default SiteLevelAnalysis;
+  )
+}

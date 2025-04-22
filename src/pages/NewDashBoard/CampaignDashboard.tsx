@@ -12,7 +12,7 @@ import { CostSegment } from "./CostSegment";
 import { AudienceSegment } from "./AudienceSegment";
 import { DurationSegment } from "./DurationSegment";
 import { HardwarePerformanceSegment } from "./HardwarePerformanceSegment";
-import { SiteMonitoringPic } from "./SiteMonitoringPic";
+import { SiteMonitoringPicDashboardComponent } from "./SiteMonitoringPicDashboardComponent";
 import { getAudienceDataForPlannerDashboard, getCostDataForPlannerDashboard, getHardwarePerformanceDataForPlannerDashboard, getSiteLevelPerformanceForPlannerDashboard, getSpotDeliveryDataForPlannerDashboard } from "../../actions/dashboardAction";
 
 interface GridItem {
@@ -430,7 +430,7 @@ export const CampaignDashboard = ({
             />
           ): null}
         </div>
-        <SiteMonitoringPic
+        <SiteMonitoringPicDashboardComponent
           sitesDataMapViewData={sitesDataMapViewData}
           openSiteMapView={openSiteMapView}
           setOpenSiteMapView={setOpenSiteMapView}

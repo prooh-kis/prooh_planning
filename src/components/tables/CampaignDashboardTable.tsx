@@ -13,7 +13,7 @@ import { message, Tooltip } from "antd";
 import { downloadExcel2 } from "../../utils/excelUtils";
 import axios from "axios";
 import { LinearBar } from "../../components/molecules/linearbar";
-import SiteLevelAnalysis from "../../components/segments/SiteLevelAnalysis";
+import SiteLevelComponent from "../../pages/NewDashBoard/SiteLevelComponent";
 
 const analyticsV1 = `${process.env.REACT_APP_PROOH_SERVER}/api/v1/analytics`;
 
@@ -466,7 +466,7 @@ export const CampaignDashboardTable = ({
               {currentIndex === screenData?.campaignId && (
                 <tr className="">
                   <td className="w-full p-4 rounded-[8px] shadow-md">
-                    <SiteLevelAnalysis
+                    <SiteLevelComponent
                       screenData={screenData}
                       screenLevelData={screenLevelData}
                     />

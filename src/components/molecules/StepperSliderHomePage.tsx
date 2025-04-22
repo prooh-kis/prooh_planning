@@ -28,7 +28,6 @@ export const StepperSliderHomePage = ({ campaignId, setStep, steps, step }: Step
       setStep(String(step));
     }
   };
-  console.log(step);
 
   // Example Flaticon SVG URLs (replace these with actual SVG URLs or import local SVGs)
   const icons = campaignId === "advertisersSteps" ? [
@@ -78,39 +77,35 @@ export const StepperSliderHomePage = ({ campaignId, setStep, steps, step }: Step
 
             />
             {[...Array(steps)].map((_, i) => (
-              <div 
-                key={i}
-                onClick={() => handleStepClick(i)}
-                className={`relative w-4 h-4 rounded-full -mt-1.5 flex flex-col items-center
-                  ${i <= step ? 'bg-primaryButton' : 'border border-primaryButton bg-gray-200'}
-                `}
-              >
-              <Tooltip
-                title={stepLabels[i]}
-              >
-                {/* Icon or Text for each step */}
-                <div className="relative mt-[-32px] w-full">
-                  
-                  <div
-                      className={`fi ${
-                        i <= step
-                          ? "text-primaryButton" // Blue for selected steps
-                          : "text-[#D6D2D2]" // Gray for unselected steps
-                      }`}
-                    >
-                    {icons[i]}
-                  </div>
+              <div className="-mt-1.5 relative" key={i} onClick={() => handleStepClick(i)}>
+                <div 
+                  className={`relative w-4 h-4 rounded-full flex flex-col items-center
+                    ${i <= step ? 'bg-primaryButton' : 'border border-primaryButton bg-gray-200'}
+                  `}
+                >
+                  <Tooltip
+                    title={stepLabels[i]}
+                  >
+                    <div className="relative mt-[-28px] w-full">
+                      <div
+                          className={`${
+                            i <= step
+                              ? "text-primaryButton" // Blue for selected steps
+                              : "text-[#D6D2D2]" // Gray for unselected steps
+                          }`}
+                        >
+                        {i !== step && icons[i]}
+                      </div>
+                    </div>
+                  </Tooltip>
                 </div>
-              </Tooltip>
+                {/* {i == step && (
+                  <h1 className={`mt-[-44px] text-primaryButton border right-[0]`}>{stepLabels[step]}</h1>
+                )} */}
               </div>
             ))}
           </div>
-          <div
-            className={
-              `flex justify-center w-full mt-4 text-primaryButton text-[14px] font-medium truncate`
-          }>
-            {stepLabels[step]} {/* Show the label text for the current step */}
-          </div>
+          
         </div>
       </div>
       
