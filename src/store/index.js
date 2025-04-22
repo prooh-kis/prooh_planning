@@ -52,6 +52,7 @@ import {
   campaignStatusChangeReducer,
   editCampaignCreativeEndDateReducer,
   campaignCreationsDetailsGetReducer,
+  cloneCampaignReducer,
 } from "../reducers/campaignReducers";
 import {
   cricketMatchesListGetReducer,
@@ -153,7 +154,7 @@ const store = configureStore({
     updateCampaignDuration: campaignDurationChangeReducer,
     campaignLogsGet: campaignLogsGetReducer,
     campaignMonitoringPicsGet: campaignMonitoringPicsGetReducer,
-
+    cloneCampaign: cloneCampaignReducer,
     // external apis
     cricketMatchesListGet: cricketMatchesListGetReducer,
     playersListGet: playersListGetReducer,
@@ -196,7 +197,8 @@ const store = configureStore({
     getAllBrandAndNetwork: getAllBrandAndNetworkReducer,
     // New Dashboard
     basicDataForPlannerDashboard: getBasicDataForPlannerDashboardReducer,
-    slotDeliveryGraphDateWiseForPlannerDashboard: getSlotDeliveryGraphDateWiseForPlannerDashboardReducer,
+    slotDeliveryGraphDateWiseForPlannerDashboard:
+      getSlotDeliveryGraphDateWiseForPlannerDashboardReducer,
     audienceDataForPlannerDashboard: getAudienceDataForPlannerDashboardReducer,
     hardwarePerformanceDataForPlannerDashboard:
       getHardwarePerformanceDataForPlannerDashboardReducer,

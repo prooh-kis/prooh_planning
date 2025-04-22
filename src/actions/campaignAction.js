@@ -55,6 +55,9 @@ import {
   GET_CAMPAIGN_CREATIONS_DETAILS_REQUEST,
   GET_CAMPAIGN_CREATIONS_DETAILS_SUCCESS,
   GET_CAMPAIGN_CREATIONS_DETAILS_ERROR,
+  CLONE_CAMPAIGN_REQUEST,
+  CLONE_CAMPAIGN_SUCCESS,
+  CLONE_CAMPAIGN_FAIL,
 } from "../constants/campaignConstants";
 import { removeAllKeyFromLocalStorage } from "../utils/localStorageUtils";
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/campaigns`;
@@ -547,6 +550,35 @@ export const editCampaignCreativesEndDateAction =
     } catch (error) {
       dispatch({
         type: EDIT_CAMPAIGN_CREATIVE_END_DATE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const cloneCampaignAction =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: CLONE_CAMPAIGN_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
+
+      const { data } = await axios.post(`${url}/createClone`, input, {
+        headers: { authorization: `Bearer ${userInfo.token}` },
+      });
+      dispatch({
+        type: CLONE_CAMPAIGN_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: CLONE_CAMPAIGN_FAIL,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message

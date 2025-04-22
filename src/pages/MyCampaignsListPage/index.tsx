@@ -2,7 +2,10 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Loading } from "../../components/Loading";
-import { getAllCampaignsDetailsAction } from "../../actions/campaignAction";
+import {
+  cloneCampaignAction,
+  getAllCampaignsDetailsAction,
+} from "../../actions/campaignAction";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import {
   NoDataView,
@@ -10,11 +13,17 @@ import {
   SearchInputField,
 } from "../../components/index";
 import { campaignCreationTypeTabs } from "../../constants/tabDataConstant";
-import { CAMPAIGN_STATUS_ACTIVE } from "../../constants/campaignConstants";
+import {
+  CAMPAIGN_STATUS_ACTIVE,
+  CLONE_CAMPAIGN_RESET,
+  EDIT_CAMPAIGN,
+} from "../../constants/campaignConstants";
 import { CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE } from "../../constants/userConstants";
 import { CampaignsListModel } from "../../components/molecules/CampaignsListModel";
 import { GET_CAMPAIGN_DASHBOARD_DATA_RESET } from "../../constants/screenConstants";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
+import { notification } from "antd";
+// import CampaignCreationModal from "../../components/popup/CampaignCreationModal";
 
 export const MyCampaignsListPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -24,6 +33,7 @@ export const MyCampaignsListPage: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<any>("1");
   const [searchQuery, setSearchQuery] = useState<any>("");
   const [selectedCard, setSelectedCard] = useState<any>(null);
+  const [open, setOpen] = useState<boolean>(false);
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
@@ -32,6 +42,14 @@ export const MyCampaignsListPage: React.FC = () => {
     (state: any) => state.allCampaignsDataGet
   );
   const { loading, error, data: allCampaigns } = allCampaignsDataGet;
+
+  const cloneCampaign = useSelector((state: any) => state.cloneCampaign);
+  const {
+    loading: loadingClone,
+    error: errorClone,
+    success: successClone,
+    data: campaignData,
+  } = cloneCampaign;
 
   useEffect(() => {
     if (userInfo && !userInfo?.isMaster) {
@@ -91,6 +109,37 @@ export const MyCampaignsListPage: React.FC = () => {
     navigate(`/campaignDashboard/${id}`);
   };
 
+  const handleClone = (id: string) => {
+    // setOpen(true);
+    dispatch(cloneCampaignAction({ id }));
+  };
+
+  const handleCreate = (value: any) => {
+    console.log("value :", value);
+  };
+
+  useEffect(() => {
+    if (successClone) {
+      notification.success({
+        message: "Clone Create Success",
+        description: "Clone create successfully",
+      });
+      const data = campaignData?.clonedCampaign;
+      console.log("data : ", data);
+      navigate(`/${data?.campaignType?.toLowerCase()}plan/${data._id}`, {
+        state: { from: EDIT_CAMPAIGN },
+      });
+      dispatch({ type: CLONE_CAMPAIGN_RESET });
+    }
+    if (errorClone) {
+      notification.error({
+        message: "Clone Create Error",
+        description: errorClone,
+      });
+      dispatch({ type: CLONE_CAMPAIGN_RESET });
+    }
+  }, [errorClone, successClone]);
+
   useEffect(() => {
     handleGetCampaignByStatus(currentTab);
     // Restore scroll position when coming back to this page
@@ -103,6 +152,11 @@ export const MyCampaignsListPage: React.FC = () => {
 
   return (
     <div className="w-full">
+      {/* <CampaignCreationModal
+        visible={open}
+        onCancel={() => setOpen(false)}
+        onCreate={handleCreate}
+      /> */}
       <div className="bg-white w-auto rounded-[4px] mr-2">
         <div className="flex justify-between pr-8 border-b">
           <div className="flex gap-4 items-center p-4 ">
@@ -172,12 +226,14 @@ export const MyCampaignsListPage: React.FC = () => {
                   campaign?.brandName?.toUpperCase().includes(searchQuery)
               )
               ?.map((data: any, index: any) => (
-                <div
-                  key={index}
-                  className="pointer-cursor"
-                  onClick={() => navigate(`/new-dashboard/${data._id}`)}
-                >
-                  <CampaignsListModel data={data} />
+                <div key={index} className="pointer-cursor">
+                  <CampaignsListModel
+                    data={data}
+                    handleClone={handleClone}
+                    handleGoToDashBoard={(id: string) =>
+                      navigate(`/new-dashboard/${id}`)
+                    }
+                  />
                 </div>
               ))}
           </div>

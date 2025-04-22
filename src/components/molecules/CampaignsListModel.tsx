@@ -1,10 +1,15 @@
+import { Tooltip } from "antd";
 import {
   convertDataTimeToLocale,
   getCampaignEndingStatus,
 } from "../../utils/dateAndTimeUtils";
 import { FirstCharForBrandName } from "./FirstCharForBrandName";
 
-export const CampaignsListModel = ({ data }: any) => {
+export const CampaignsListModel = ({
+  data,
+  handleClone,
+  handleGoToDashBoard,
+}: any) => {
   return (
     <div
       className="flex items-center justify-between w-full rounded-[12px] bg-white p-4 
@@ -14,7 +19,32 @@ export const CampaignsListModel = ({ data }: any) => {
       <div className="flex items-top gap-4">
         <FirstCharForBrandName brandName={data.brandName} />
         <div>
-          <h1 className="text-[16px] text-[#092A41]">{data?.name || data?.campaignName}</h1>
+          <div className="flex gap-4 item-center">
+            <h1 className="text-[16px] text-[#092A41]">
+              {data?.name || data?.campaignName}
+            </h1>
+            <Tooltip title="GO to dashboard">
+              <i
+                className="fi fi-rr-dashboard"
+                onClick={() => handleGoToDashBoard(data?._id)}
+              ></i>
+            </Tooltip>
+            <Tooltip title="Clone the campaign">
+              <i
+                className="fi fi-br-clone"
+                onClick={() => {
+                  if (
+                    confirm(
+                      "Do you really want to use this campaign as a template for creating a new campaign?"
+                    )
+                  ) {
+                    handleClone(data?._id);
+                  }
+                }}
+              ></i>
+            </Tooltip>
+          </div>
+
           <div className="flex gap-2 items-center my-1">
             <div className="bg-[#FF5D2710] px-2 py-1 rounded-[8px]">
               <h1 className="text-[#FF5D27] text-[12px] truncate">

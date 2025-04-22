@@ -61,8 +61,15 @@ import {
   GET_CAMPAIGN_CREATIONS_DETAILS_SUCCESS,
   GET_CAMPAIGN_CREATIONS_DETAILS_ERROR,
   GET_CAMPAIGN_CREATIONS_DETAILS_RESET,
+  CLONE_CAMPAIGN_REQUEST,
+  CLONE_CAMPAIGN_SUCCESS,
+  CLONE_CAMPAIGN_FAIL,
+  CLONE_CAMPAIGN_RESET,
 } from "../constants/campaignConstants";
-import { ALL_CAMPAIGNS_LIST, FULL_CAMPAIGN_PLAN } from "../constants/localStorageConstants";
+import {
+  ALL_CAMPAIGNS_LIST,
+  FULL_CAMPAIGN_PLAN,
+} from "../constants/localStorageConstants";
 
 export function campaignCreationsDetailsGetReducer(state = {}, action) {
   switch (action.type) {
@@ -79,9 +86,9 @@ export function campaignCreationsDetailsGetReducer(state = {}, action) {
         loading: false,
         success: false,
         error: action.payload,
-      }
+      };
     case GET_CAMPAIGN_CREATIONS_DETAILS_RESET:
-      return {}
+      return {};
     default:
       return state;
   }
@@ -281,7 +288,6 @@ export function campaignDurationChangeReducer(state = [], action) {
   }
 }
 
-
 export function campaignLogsGetReducer(state = [], action) {
   switch (action.type) {
     case CAMPAIGN_LOGS_REQUEST:
@@ -412,6 +418,25 @@ export function editCampaignCreativeEndDateReducer(state = {}, action) {
     case EDIT_CAMPAIGN_CREATIVE_END_DATE_FAIL:
       return { loading: false, error: action.payload };
     case EDIT_CAMPAIGN_CREATIVE_END_DATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function cloneCampaignReducer(state = {}, action) {
+  switch (action.type) {
+    case CLONE_CAMPAIGN_REQUEST:
+      return { loading: true };
+    case CLONE_CAMPAIGN_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        data: action.payload,
+      };
+    case CLONE_CAMPAIGN_FAIL:
+      return { loading: false, error: action.payload };
+    case CLONE_CAMPAIGN_RESET:
       return {};
     default:
       return state;
