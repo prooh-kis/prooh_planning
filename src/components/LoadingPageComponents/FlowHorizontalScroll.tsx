@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+// import { useGSAP } from "@gsap/react";
 
 // Define type for card data
 type CardData = {
@@ -137,61 +137,61 @@ export default function HorizontalScrollCards() {
   const triggerRef = useRef<HTMLElement>(null);
   const contextualRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
-    const container = containerRef.current;
-    const trigger = triggerRef.current;
+  // useGSAP(() => {
+  //   const container = containerRef.current;
+  //   const trigger = triggerRef.current;
 
-    if (!container || !trigger) return;
-    gsap.registerPlugin(ScrollTrigger);
+  //   if (!container || !trigger) return;
+  //   gsap.registerPlugin(ScrollTrigger);
 
-    ScrollTrigger.defaults({
-      scroller: document.documentElement,
-    });
+  //   ScrollTrigger.defaults({
+  //     scroller: document.documentElement,
+  //   });
 
-    ScrollTrigger.config({
-      limitCallbacks: true,
-      ignoreMobileResize: true,
-    });
+  //   ScrollTrigger.config({
+  //     limitCallbacks: true,
+  //     ignoreMobileResize: true,
+  //   });
 
-    gsap.from(contextualRef.current, {
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.4,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".contextual-targeting",
-        start: "top 70%",
-        toggleActions: "play none none reset",
-      },
-    });
+  //   gsap.from(contextualRef.current, {
+  //     y: 50,
+  //     opacity: 0,
+  //     duration: 0.8,
+  //     stagger: 0.4,
+  //     ease: "power2.out",
+  //     scrollTrigger: {
+  //       trigger: ".contextual-targeting",
+  //       start: "top 70%",
+  //       toggleActions: "play none none reset",
+  //     },
+  //   });
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: trigger,
-        pin: true,
-        scrub: 1,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const progress = self.progress;
-          if (container) {
-            container.scrollTo(
-              (container.scrollWidth - window.innerWidth) * progress,
-              0
-            );
-          }
-        },
-        start: "top 30vh",
-        end: () => `+=${container.scrollWidth - window.innerWidth}`,
-      },
-    });
+  //   const tl = gsap.timeline({
+  //     scrollTrigger: {
+  //       trigger: trigger,
+  //       pin: true,
+  //       scrub: 1,
+  //       invalidateOnRefresh: true,
+  //       onUpdate: (self) => {
+  //         const progress = self.progress;
+  //         if (container) {
+  //           container.scrollTo(
+  //             (container.scrollWidth - window.innerWidth) * progress,
+  //             0
+  //           );
+  //         }
+  //       },
+  //       start: "top 30vh",
+  //       end: () => `+=${container.scrollWidth - window.innerWidth}`,
+  //     },
+  //   });
 
-    return () => {
-      tl.kill();
-      const triggers = ScrollTrigger.getAll();
-      triggers.forEach((trigger: any) => trigger.kill());
-    };
-  }, []);
+  //   return () => {
+  //     tl.kill();
+  //     const triggers = ScrollTrigger.getAll();
+  //     triggers.forEach((trigger: any) => trigger.kill());
+  //   };
+  // }, []);
 
   return (
     <section

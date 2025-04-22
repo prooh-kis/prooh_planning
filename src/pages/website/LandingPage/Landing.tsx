@@ -20,12 +20,12 @@ import {
 } from "../../../components/LoadingPageComponents";
 import landingPageGrid from "../../../assets/images/landingPageGrid.png";
 // eslint-disable-next-line import/no-named-as-default
-import ScrollTrigger from "gsap/ScrollTrigger";
+// import ScrollTrigger from "gsap/ScrollTrigger";
 // eslint-disable-next-line import/no-named-as-default
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+// import gsap from "gsap";
+// import { useGSAP } from "@gsap/react";
 
-gsap.registerPlugin(ScrollTrigger);
+// gsap.registerPlugin(ScrollTrigger);
 
 export const Landing: React.FC = () => {
   const isMobile = window.innerWidth <= 768;
