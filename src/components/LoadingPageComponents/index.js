@@ -8,4 +8,6 @@ export { ProohCreator } from "./ProohCreator";
 export { ContactForm } from "./ContactForm";
 export { FindUsOnGoogle } from "./FindUsOnGoogle";
 export { FlowDiagramWeb } from "./FlowDiagramWeb";
+export {FlowHorizontalScroll} from "./FlowHorizontalScroll";
+
 

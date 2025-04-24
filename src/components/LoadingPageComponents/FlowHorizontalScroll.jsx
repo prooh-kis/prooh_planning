@@ -1,5 +1,69 @@
-import React, { useRef } from "react";
-export const FlowDiagramWeb = () => {
+import { useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+
+export function FlowHorizontalScroll() {
+  const containerRef = useRef(null);
+  const triggerRef = useRef(null);
+
+  const contextualRef = useRef(null);
+
+  useGSAP(() => {
+    const container = containerRef.current;
+    const trigger = triggerRef.current;
+
+    if (!container || !trigger) return;
+
+    ScrollTrigger.defaults({
+      scroller: document.documentElement,
+    });
+
+    ScrollTrigger.config({
+      limitCallbacks: true,
+      ignoreMobileResize: true,
+    });
+
+    gsap.from(contextualRef.current, {
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.4,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".contextual-targeting",
+        start: "top 70%",
+        toggleActions: "play none none reset",
+      },
+    });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: trigger,
+        pin: true,
+        scrub: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          if (container) {
+            container.scrollTo(
+              (container.scrollWidth - window.innerWidth) * progress,
+              0
+            );
+          }
+        },
+        start: "top 30vh",
+        end: () => `+=${container?.scrollWidth ?? 0 - window.innerWidth}`,
+      },
+    });
+
+    return () => {
+      tl.kill();
+      ScrollTrigger.getAll().forEach((st) => st.kill());
+    };
+  }, []);
+
   return (
     <div className={`relative py-16 px-4 w-full h-[1920px] flex justify-center items-center`}>
       <div className="absolute top-0 w-full h-full">
@@ -2061,4 +2125,5 @@ export const FlowDiagramWeb = () => {
       </div>
     </div>
   );
-};
+}
+

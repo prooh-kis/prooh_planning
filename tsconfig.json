@@ -23,6 +23,9 @@
     "noFallthroughCasesInSwitch": true,
     "sourceMap": false
   },
+  "files": [
+    "node_modules/gsap/types/index.d.ts"
+  ],
   "include": ["src", "src/types"],
   "exclude": ["node_modules"]
 }

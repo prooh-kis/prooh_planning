@@ -91,7 +91,6 @@ export const ScreenSummaryTableIKnowItAll = ({
               const screenId = screen._id;
               const localScreenData = getDataFromLocalStorage(SCREEN_SUMMARY_SELECTION)?.[campaignId]?.[city]?.[screenId];
               const localCampaign = campaignDetails;
-
               screens[city][screenId] = {
                 status: localScreenData ? localScreenData.status : 
                   localCampaign?.screenIds?.length > 0 && !localCampaign?.screenIds.includes(screenId) ? false :

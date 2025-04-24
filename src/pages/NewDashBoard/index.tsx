@@ -35,6 +35,8 @@ export const NewDashBoard: React.FC = () => {
     cities: FilterState;
     touchPoints: FilterState;
     screenTypes: FilterState;
+    dayTypes: FilterState;
+    timezones: FilterState;
   }>({
     cities: {
       audience: [],
@@ -57,6 +59,20 @@ export const NewDashBoard: React.FC = () => {
       costConsumption: [],
       siteLevel: [],
     },
+    dayTypes: {
+      audience: [],
+      screenPerformance: [],
+      spotDelivery: [],
+      costConsumption: [],
+      siteLevel: [],
+    },
+    timezones: {
+      audience: [],
+      screenPerformance: [],
+      spotDelivery: [],
+      costConsumption: [],
+      siteLevel: [],
+    }
   });
 
   // Selectors for Redux state

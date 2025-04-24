@@ -4,7 +4,7 @@ import PptxGenJS from "pptxgenjs";
 export const generatePPT = async ({ data, fileName, download }) => {
     try {
         const ppt = new PptxGenJS();
-
+        console.log(data);
         // Create slides with data
         data.forEach((item) => {
             const slide = ppt.addSlide();
@@ -21,7 +21,7 @@ export const generatePPT = async ({ data, fileName, download }) => {
 
             slide.addText(`
                 Name: ${item.screenName}
-                Location: ${item?.location?.address}, ${item?.location?.city}
+                Location: ${item?.location?.address}
                 Coordinates: ${item?.location?.geographicalLocation?.latitude}, ${item?.location?.geographicalLocation?.longitude}
             `, {
                 x: 0,
@@ -39,7 +39,7 @@ export const generatePPT = async ({ data, fileName, download }) => {
                 Size: ${item?.screenLength} ft x ${item?.screenWidth} ft
                 Ratio: ${item?.screenDimensions}
             `, {
-                x: 2.3,
+                x: 4,
                 y: 4.6,
                 w: "100%",
                 h: 1,
@@ -53,7 +53,7 @@ export const generatePPT = async ({ data, fileName, download }) => {
                 Loop Length: ${item?.loopLengthSeconds} seconds
                 Deliverable: ${item?.totalSlotForOneBrand} Slots/Day
             `, {
-                x: 4.6,
+                x: 5,
                 y: 4.6,
                 w: "100%",
                 h: 1,
@@ -67,7 +67,7 @@ export const generatePPT = async ({ data, fileName, download }) => {
                 On Time: ${item?.operationalDuration?.onTime}
                 Off Time: ${item?.operationalDuration?.offTime}
             `, {
-                x: 6.9,
+                x: 7,
                 y: 4.6,
                 w: "100%",
                 h: 1,

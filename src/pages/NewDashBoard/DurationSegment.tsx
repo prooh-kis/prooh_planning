@@ -10,7 +10,6 @@ import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 export const DurationSegment = ({
   calendarData = [],
-  screenLevelData,
   setCurrentDay,
   currentDay,
   setCurrentWeek,
@@ -63,7 +62,7 @@ export const DurationSegment = ({
           />
         </div>
       )}
-      {screenLevelData && Object.keys(screenLevelData.slotDataHourWise).length > 0 && (
+      {hourlySpotDelivery && Object.keys(hourlySpotDelivery).length > 0 && (
         <div className="col-span-4 bg-[#FFFFFF] rounded-[12px] border border-gray-100 h-full shadow-sm">
           <div className="flex items-center justify-between border-b mx-4">
             <div className="flex items-center gap-2 pt-4 pb-2 truncate">
@@ -96,7 +95,6 @@ export const DurationSegment = ({
             </div>
           ) : (
             <DurationGraphPerDay
-              // currentData={screenLevelData.slotDataHourWise}
               currentData={hourlySpotDelivery}
               additionalLegends={[
                 { label: "Hourly Delivery", values: [1500], color: "rgba(16, 185, 129, 1)" },

@@ -17,6 +17,7 @@ import {
   ContactForm,
   FindUsOnGoogle,
   FlowDiagramWeb,
+  FlowHorizontalScroll
 } from "../../../components/LoadingPageComponents";
 import landingPageGrid from "../../../assets/images/landingPageGrid.png";
 // eslint-disable-next-line import/no-named-as-default
@@ -58,7 +59,7 @@ export const Landing: React.FC = () => {
       </div>
      
       <div className="px-8">
-          <FlowDiagramWeb />
+          <FlowHorizontalScroll />
       </div>
       
       <div className="px-8 ">

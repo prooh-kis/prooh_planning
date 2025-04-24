@@ -66,6 +66,28 @@ export const CostSegment = ({
             filters.screenTypes.costConsumption.filter((f: any) => f !== value) :
           filters.screenTypes.costConsumption,
       },
+      dayTypes: {
+        ...prev.dayTypes,
+        costConsumption:
+          type == "dayType" && checked ?
+            [...prev.dayTypes.costConsumption, value] :
+          type == "dayType" && checked && value == "all" ? 
+            [] :
+          type == "dayType" && !checked ?
+            filters.dayTypes.costConsumption.filter((f: any) => f !== value) :
+          filters.dayTypes.costConsumption,
+      },
+      timezones: {
+        ...prev.timezones,
+        costConsumption:
+          type == "timezone" && checked ?
+            [...prev.timezones.costConsumption, value] :
+          type == "timezone" && checked && value == "all" ? 
+            [] :
+          type == "timezone" && !checked ?
+            filters.timezones.costConsumption.filter((f: any) => f !== value) :
+          filters.timezone.costConsumption,
+      },
     }));
   }
     // Initialize filters based on spot data
@@ -85,6 +107,14 @@ export const CostSegment = ({
           ...prev.screenTypes,
           costConsumption: Object.keys(costData.screenTypeWiseData),
         },
+        dayTypes: {
+          ...prev.dayTypes,
+          costConsumption: Object.keys(costData.dayWiseData),
+        },
+        timezones: {
+          ...prev.timezones,
+          costConsumption: Object.keys(costData.timeWiseData),
+        },
       }));
     }
   }, [costData, filters, setFilters]);
@@ -97,6 +127,8 @@ export const CostSegment = ({
           cities: filters.cities.costConsumption?.filter((f: any) => f !== "all"),
           touchPoints: filters.touchPoints.costConsumption?.filter((f: any) => f !== "all"),
           screenTypes: filters.screenTypes.costConsumption?.filter((f: any) => f !== "all"),
+          dayTypes: filters.dayTypes.costConsumption?.filter((f: any) => f !== "all"),
+          timezones: filters.timezones.costConsumption?.filter((f: any) => f !== "all"),
         })
       );
     }
@@ -111,8 +143,8 @@ export const CostSegment = ({
         </div>
       )}
       {costData && (
-        <div className="grid grid-cols-5 gap-2 ">
-          <div className="col-span-2 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
+        <div className="w-full">
+          <div className="w-full bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
             <div className="border-b">
               <SectionHeader
                 iconClass="fi-ss-sack"
@@ -136,8 +168,8 @@ export const CostSegment = ({
               />
             </div>
           </div>
-          <div className="col-span-3 grid grid-cols-3 gap-2">
-            <div className="col-span-1 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
+          <div className="grid grid-cols-12 gap-2 pt-2">
+            <div className="col-span-2 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
               <div className="border-b">
                 <SectionHeaderWithSwitch
                   iconClass="fi-sr-marker"
@@ -145,11 +177,10 @@ export const CostSegment = ({
                   bgColor=" bg-[#6DBC48]"
                   showPercent={showPercent?.[1]}
                   setShowPercent={() => {
-                    setShowPercent(() => {
+                    setShowPercent((pre: any) => {
                       return {
+                        ...pre,
                         1: !showPercent?.[1],
-                        2: showPercent?.[2],
-                        3: showPercent?.[3]
                       }
                     });
                   }}
@@ -190,7 +221,7 @@ export const CostSegment = ({
                 ))}
               </div>
             </div>
-            <div className="col-span-1 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
+            <div className="col-span-3 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
               <div className="border-b">
                 <SectionHeaderWithSwitch
                   iconClass="fi-sr-land-location"
@@ -198,11 +229,10 @@ export const CostSegment = ({
                   bgColor=" bg-[#6DBC48]"
                   showPercent={showPercent?.[2]}
                   setShowPercent={() => {
-                    setShowPercent(() => {
+                    setShowPercent((pre: any) => {
                       return {
-                        1: showPercent?.[1],
+                        ...pre,
                         2: !showPercent?.[2],
-                        3: showPercent?.[3]
                       }
                     });
                   }}
@@ -243,7 +273,7 @@ export const CostSegment = ({
                 ))}
               </div>
             </div>
-            <div className="col-span-1 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
+            <div className="col-span-2 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
               <div className="border-b">
                 <SectionHeaderWithSwitch
                   iconClass="fi-sr-land-location"
@@ -251,10 +281,9 @@ export const CostSegment = ({
                   bgColor=" bg-[#6DBC48]"
                   showPercent={showPercent?.[3]}
                   setShowPercent={() => {
-                    setShowPercent(() => {
+                    setShowPercent((pre: any) => {
                       return {
-                        1: showPercent?.[1],
-                        2: showPercent?.[2],
+                        ...pre,
                         3: !showPercent?.[3]
                       }
                     });
@@ -290,6 +319,110 @@ export const CostSegment = ({
                       />
                       <h1 className="text-[10px]">
                         {showPercent[3] ? `${(costData.screenTypeWiseData[stKey]?.costConsumed*100/costData.screenTypeWiseData[stKey]?.costPromised).toFixed(0)}%` : formatNumber(costData.screenTypeWiseData[stKey]?.costConsumed)}
+                      </h1>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="col-span-3 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
+              <div className="border-b">
+                <SectionHeaderWithSwitch
+                  iconClass="fi-sr-land-location"
+                  title="Day Types"
+                  bgColor="bg-[#6DBC48]"
+                  showPercent={showPercent?.[4]}
+                  setShowPercent={() => {
+                    setShowPercent((pre: any) => {
+                      return {
+                        ...pre,
+                        4: !showPercent?.[4],
+                      }
+                    });
+                  }}
+                />
+              </div>
+              <div className="py-2">
+                {Object.keys(costData.dayWiseData)?.map((dayKey: any, i: any) => (
+                  <div key={i} className="flex items-center gap-2 pt-1">
+                    <div>
+                      <CheckboxInput
+                        disabled={false}
+                        label={dayKey.toUpperCase()}
+                        checked={filters.dayTypes["costConsumption"]?.includes(dayKey)}
+                        textSize={"10px"}
+                        color={"#0E212E"}
+                        onChange={(checked) => handleClick({
+                          type: "dayType",
+                          value: dayKey,
+                          checked: checked
+                        })}
+                      />
+                    </div>
+                    <div className="flex items-center w-full gap-2">
+                      <MultiColorLinearBar2
+                        delivered={costData.dayWiseData[dayKey]?.costConsumed}
+                        expected={costData.dayWiseData[dayKey]?.costPromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
+                        total={costData.dayWiseData[dayKey]?.costPromised}
+                        deliveredColor="bg-[#64AB42]"
+                        expectedColor="bg-[#CFC7FF]"
+                        totalColor="bg-[#E1FFD3]"
+                        height="h-[5px]"
+                      />
+                      <h1 className="text-[10px]">
+                        {showPercent[4] ? `${(costData.dayWiseData[dayKey]?.costConsumed*100/costData.dayWiseData[dayKey]?.costPromised).toFixed(0)}%` : formatNumber(costData.dayWiseData[dayKey]?.costConsumed)}
+                      </h1>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="col-span-2 bg-[#FFFFFF] p-4 rounded-[12px] border border-gray-100 shadow-sm">
+              <div className="border-b">
+                <SectionHeaderWithSwitch
+                  iconClass="fi-sr-land-location"
+                  title="Time Zones"
+                  bgColor=" bg-[#6DBC48]"
+                  showPercent={showPercent?.[5]}
+                  setShowPercent={() => {
+                    setShowPercent((pre: any) => {
+                      return {
+                        ...pre,
+                        5: !showPercent?.[5]
+                      }
+                    });
+                  }}
+                />
+              </div>
+              <div className="py-2">
+                {Object.keys(costData.timeWiseData)?.map((timeKey: any, i: any) => (
+                  <div key={i} className="flex items-center gap-2 pt-1">
+                    <div>
+                      <CheckboxInput
+                        disabled={false}
+                        label={timeKey.toUpperCase()}
+                        checked={filters.timezones["costConsumption"]?.includes(timeKey)}
+                        textSize={"10px"}
+                        color={"#0E212E"}
+                        onChange={(checked) => handleClick({
+                          type: "timezone",
+                          value: timeKey,
+                          checked: checked
+                        })}
+                      />
+                    </div>
+                    <div className="flex items-center w-full gap-2">
+                      <MultiColorLinearBar2
+                        delivered={costData.timeWiseData[timeKey]?.costConsumed}
+                        expected={costData.timeWiseData[timeKey]?.costPromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
+                        total={costData.timeWiseData[timeKey]?.costPromised}
+                        deliveredColor="bg-[#64AB42]"
+                        expectedColor="bg-[#CFC7FF]"
+                        totalColor="bg-[#E1FFD3]"
+                        height="h-[5px]"
+                      />
+                      <h1 className="text-[10px]">
+                        {showPercent[5] ? `${(costData.timeWiseData[timeKey]?.costConsumed*100/costData.timeWiseData[timeKey]?.costPromised).toFixed(0)}%` : formatNumber(costData.timeWiseData[timeKey]?.costConsumed)}
                       </h1>
                     </div>
                   </div>

@@ -53,7 +53,6 @@ export const CalenderScaleStepper = ({
 
   const groupDatesByWeek = useCallback((dates: Array<{value: string, label: string}>) => {
     const weeks: { [key: string]: Array<{value: string, label: string}> } = {};
-
     dates.forEach((date, index) => {
       const weekIndex = Math.floor(index / 7) + 1;
       const weekKey = `Week ${weekIndex}`;
@@ -90,7 +89,7 @@ export const CalenderScaleStepper = ({
     return calendarData?.reduce(
       (totals: any, entry: any) => {
         if (matchingDates.has(entry.date)) {
-          totals.totalCount += entry.count;
+          totals.totalCount += entry.countDelivered;
           totals.totalCountPromised += entry.countPromised;
         }
         return totals;
@@ -461,7 +460,7 @@ export const CalenderScaleStepper = ({
               const dayData = calendarData?.find((s: any) => 
                 new Date(s.date).toDateString() === new Date(dateObj?.value).toDateString()
               );
-              const percentageValue = dayData ? getPercentageValue(dayData.count, dayData.countPromised) : "";
+              const percentageValue = dayData ? getPercentageValue(dayData.countDelivered, dayData.countPromised) : "";
               const percentageColor = dayData?.count / dayData?.countPromised > 1 ? "#2A892D" : "#FF4747";
               return (
                 <div

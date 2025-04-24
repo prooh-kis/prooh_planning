@@ -275,37 +275,40 @@ export const generateCampaignSummaryPdfFromJSON = ({
   yOffset = doc.lastAutoTable.finalY + 10;
   checkPageBreak();
 
-  // Selected Touchpoints
-  doc.setFontSize(12);
-  doc.text("Selected Touchpoints", 10, yOffset);
-  yOffset += 10;
-  checkPageBreak();
+  if (campaignApproach?.type !== "IKnowItAll") {
 
-  campaignApproach.touchPoints.forEach((point, idx) => {
-    doc.setFontSize(10);
-    doc.text(`${idx + 1}. ${point}`, 15, yOffset);
+    // Selected Touchpoints
+    doc.setFontSize(12);
+    doc.text("Selected Touchpoints", 10, yOffset);
+    yOffset += 10;
+    checkPageBreak();
+
+    campaignApproach.touchPoints.forEach((point, idx) => {
+      doc.setFontSize(10);
+      doc.text(`${idx + 1}. ${point}`, 15, yOffset);
+      yOffset += 5;
+      checkPageBreak();
+    });
+
     yOffset += 5;
     checkPageBreak();
-  });
 
-  yOffset += 5;
-  checkPageBreak();
+    // Selected Audience Cohorts
+    doc.setFontSize(12);
+    doc.text("Selected Audience Cohorts", 10, yOffset);
+    yOffset += 10;
+    checkPageBreak();
 
-  // Selected Audience Cohorts
-  doc.setFontSize(12);
-  doc.text("Selected Audience Cohorts", 10, yOffset);
-  yOffset += 10;
-  checkPageBreak();
+    campaignApproach.cohorts.forEach((cohort, idx) => {
+      doc.setFontSize(10);
+      doc.text(`${idx + 1}. ${cohort}`, 15, yOffset);
+      yOffset += 5;
+      checkPageBreak();
+    });
 
-  campaignApproach.cohorts.forEach((cohort, idx) => {
-    doc.setFontSize(10);
-    doc.text(`${idx + 1}. ${cohort}`, 15, yOffset);
     yOffset += 5;
     checkPageBreak();
-  });
-
-  yOffset += 5;
-  checkPageBreak();
+  }
 
   // Cost Summary
   doc.setFontSize(14);

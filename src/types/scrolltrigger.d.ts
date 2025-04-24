@@ -7,10 +7,8 @@ declare module "@gsap/react" {
   export const useGSAP: any;
 }
 
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-declare module "gsap/ScrollTrigger" {
-  interface ScrollTrigger {
-    getAll(): ScrollTrigger[];
-  }
-}
+// declare module "gsap/ScrollTrigger" {
+//   interface ScrollTrigger {
+//     getAll(): ScrollTrigger[];
+//   }
+// }

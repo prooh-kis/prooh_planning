@@ -81,6 +81,8 @@ export const CampaignDashboard = ({
     1: false,
     2: false,
     3: false,
+    4: false,
+    5: false,
   });
 
   const [openSiteMapView, setOpenSiteMapView] = useState<boolean>(false);
@@ -149,30 +151,19 @@ export const CampaignDashboard = ({
     let currentDate = new Date(startDate);
     const lastDate = new Date(endDate);
 
-    if (currentDate.getMonth() == lastDate.getMonth()) {
-      while (currentDate.getDate() <= lastDate.getDate()) {
-        // dates.push(currentDate.toISOString().split("T")[0]); // Format as YYYY-MM-DD
+    // Reset time components to avoid time-of-day affecting the comparison
+    currentDate.setHours(0, 0, 0, 0);
+    lastDate.setHours(0, 0, 0, 0);
+
+    while (currentDate <= lastDate) {
         dates.push({
-          value: currentDate.toISOString().split("T")[0],
-          label: currentDate.toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-          }),
+            value: currentDate.toISOString().split("T")[0],
+            label: currentDate.toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+            }),
         });
         currentDate.setDate(currentDate.getDate() + 1); // Move to next day
-      }
-    } else {
-      while (currentDate <= lastDate) {
-        // dates.push(currentDate.toISOString().split("T")[0]); // Format as YYYY-MM-DD
-        dates.push({
-          value: currentDate.toISOString().split("T")[0],
-          label: currentDate.toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-          }),
-        });
-        currentDate.setDate(currentDate.getDate() + 1); // Move to next day
-      }
     }
 
     return dates;
@@ -194,6 +185,8 @@ export const CampaignDashboard = ({
         cities: filters.cities.audience?.filter((f: any) => f !== "all"),
         touchPoints: filters.touchPoints.audience?.filter((f: any) => f !== "all"),
         screenTypes: filters.screenTypes.audience?.filter((f: any) => f !== "all"),
+        dayTypes: filters.dayTypes.audience?.filter((f: any) => f !== "all"),
+        timezones: filters.timezones.audience?.filter((f: any) => f !== "all")
       })
     );
 
@@ -203,6 +196,8 @@ export const CampaignDashboard = ({
         cities: filters.cities.screenPerformance?.filter((f: any) => f !== "all"),
         touchPoints: filters.touchPoints.screenPerformance?.filter((f: any) => f !== "all"),
         screenTypes: filters.screenTypes.screenPerformance?.filter((f: any) => f !== "all"),
+        dayTypes: filters.dayTypes.screenPerformance?.filter((f: any) => f !== "all"),
+        timezones: filters.timezones.screenPerformance?.filter((f: any) => f !== "all")
       })
     );
 
@@ -212,6 +207,8 @@ export const CampaignDashboard = ({
         cities: filters.cities.spotDelivery?.filter((f: any) => f !== "all"),
         touchPoints: filters.touchPoints.spotDelivery?.filter((f: any) => f !== "all"),
         screenTypes: filters.screenTypes.spotDelivery?.filter((f: any) => f !== "all"),
+        dayTypes: filters.dayTypes.spotDelivery?.filter((f: any) => f !== "all"),
+        timezones: filters.timezones.spotDelivery?.filter((f: any) => f !== "all")
       })
     );
 
@@ -221,6 +218,8 @@ export const CampaignDashboard = ({
         cities: filters.cities.costConsumption?.filter((f: any) => f !== "all"),
         touchPoints: filters.touchPoints.costConsumption?.filter((f: any) => f !== "all"),
         screenTypes: filters.screenTypes.costConsumption?.filter((f: any) => f !== "all"),
+        dayTypes: filters.dayTypes.costConsumption?.filter((f: any) => f !== "all"),
+        timezones: filters.timezones.costConsumption?.filter((f: any) => f !== "all")
       })
     );
 
@@ -230,6 +229,8 @@ export const CampaignDashboard = ({
         cities: filters.cities.siteLevel,
         touchPoints: filters.touchPoints.siteLevel,
         screenTypes: filters.screenTypes.siteLevel,
+        // dayTypes: filters.dayTypes.audience?.filter((f: any) => f !== "all"),
+        // timezones: filters.timezones.audience?.filter((f: any) => f !== "all")
       })
     );
 
@@ -356,12 +357,10 @@ export const CampaignDashboard = ({
             <div
               key={item.id}
               className={`${commonClasses}
-              ${
-                clicked === item.id
+              ${clicked === item.id
                   ? "border border-[#129BFF] border-2"
                   : "border border-gray-100 "
-              }
-              `}
+              }`}
               onClick={() => setClicked(item.id)}
             >
               <DashboardGrid
@@ -376,7 +375,6 @@ export const CampaignDashboard = ({
           {clicked === "1" ? (
             <DurationSegment
               campaignId={campaignDetails?._id}
-              screenLevelData={screenLevelData}
               calendarData={calendarData}
               setCurrentWeek={setCurrentWeek}
               currentWeek={currentWeek}
