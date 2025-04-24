@@ -6,6 +6,7 @@ import { CalendarInput } from "../atoms/CalendarInput";
 import { getAllDatesBetween } from "../../utils/dateAndTimeUtils";
 import { format } from "date-fns";
 import { monitoringTypes } from "../../constants/helperConstants";
+import moment from "moment";
 
 interface MonitoringTypeData {
   dates: string[];
@@ -28,17 +29,15 @@ function ShowCalenderInput({ label, onClick, isActive }: CalenderInputProps) {
   return (
     <div
       onClick={isActive ? onClick : undefined}
-      className={`cols-span-1 p-2 border rounded-[5px] flex justify-between items-center ${
-        isActive
+      className={`cols-span-1 p-2 border rounded-[5px] flex justify-between items-center ${isActive
           ? "cursor-pointer border-[#D2D2D2]"
           : "cursor-not-allowed border-[#E0E0E0] bg-gray-50 opacity-70"
-      }`}
+        }`}
     >
       <div className="flex gap-2 items-center">
         <i
-          className={`fi fi-rr-calendar flex items-center ${
-            isActive ? "text-[#129BFF]" : "text-gray-400"
-          }`}
+          className={`fi fi-rr-calendar flex items-center ${isActive ? "text-[#129BFF]" : "text-gray-400"
+            }`}
         ></i>
         <p
           className={!isActive ? "text-gray-500 text-[14px]" : "text-[14px] text-[#000000]"}
@@ -47,9 +46,8 @@ function ShowCalenderInput({ label, onClick, isActive }: CalenderInputProps) {
         </p>
       </div>
       <i
-        className={`fi fi-ss-angle-small-down ${
-          !isActive ? "text-gray-400" : "text-[#000000]"
-        }`}
+        className={`fi fi-ss-angle-small-down ${!isActive ? "text-gray-400" : "text-[#000000]"
+          }`}
       ></i>
     </div>
   );
@@ -65,7 +63,7 @@ export const ChoseMonitoringTypeFive = ({ initialData, setInitialData }: any) =>
   const [option, setOption] = useState<keyof InitialData>("midDate");
 
   const currentMonitoringData = initialData[option];
- 
+
 
   const [selectedDates, setSelectedDates] = useState<string[]>(
     currentMonitoringData.dates || []
@@ -92,7 +90,7 @@ export const ChoseMonitoringTypeFive = ({ initialData, setInitialData }: any) =>
             currentOption.monitoringType.filter((item: any) => item !== value);
         }
       }
-     
+
       return newData;
     });
   };
@@ -169,23 +167,23 @@ export const ChoseMonitoringTypeFive = ({ initialData, setInitialData }: any) =>
                 <option value={""} label={"Select Mid Date"} />
                 <option
                   value={
-                    `${format(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0])[Math.round(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0]).length/2 - 1)], "yyyy-mm-dd")}`
+                    `${moment(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0])[Math.round(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0]).length / 2 - 1)]).format("YYYY-MM-DD")}`
                   } label={
-                    `${format(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0])[Math.round(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0]).length/2 - 1)], "yyyy-mm-dd")}`
+                    `${moment(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0])[Math.round(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0]).length / 2 - 1)]).format("YYYY-MM-DD")}`
                   }
                 />
                 <option
                   value={
-                    `${format(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0])[Math.round(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0]).length/2)], "yyyy-mm-dd")}`
+                    `${moment(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0])[Math.round(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0]).length / 2)]).format("YYYY-MM-DD")}`
                   } label={
-                  `${format(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0])[Math.round(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0]).length/2)], "yyyy-mm-dd")}`
+                    `${moment(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0])[Math.round(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0]).length / 2)]).format("YYYY-MM-DD")}`
                   }
                 />
                 <option
                   value={
-                    `${format(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0])[Math.round(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0]).length/2 + 1)], "yyyy-mm-dd")}`
+                    `${moment(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0])[Math.round(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0]).length / 2 + 1)]).format("YYYY-MM-DD")}`
                   } label={
-                    `${format(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0])[Math.round(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0]).length/2 + 1)], "yyyy-mm-dd")}`
+                    `${moment(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0])[Math.round(getAllDatesBetween(initialData["startDate"].dates[0], initialData["endDate"].dates[0]).length / 2 + 1)]).format("YYYY-MM-DD")}`
                   }
                 />
               </select>
@@ -208,7 +206,7 @@ export const ChoseMonitoringTypeFive = ({ initialData, setInitialData }: any) =>
             min={initialData["startDate"].dates[0]}
             max={initialData["endDate"].dates[0]}
           />
-          
+
         </div>
         <div className="col-span-1">
           <label className="text-[12px]">End Date</label>
@@ -222,7 +220,7 @@ export const ChoseMonitoringTypeFive = ({ initialData, setInitialData }: any) =>
           />
         </div>
       </div>
-      
+
       <div className="w-full grid grid-cols-3 gap-4 my-4">
         {monitoringTypes
           ?.map((value: any, i: any) => (
@@ -237,7 +235,7 @@ export const ChoseMonitoringTypeFive = ({ initialData, setInitialData }: any) =>
           ))}
       </div>
 
-      
+
     </div>
   );
 };

@@ -56,10 +56,8 @@ export const EmailConfirmationImage = ({page, skipEmailConfirmation, setSkipEmai
               {[1]?.map((_: any, i: any) => (
                 <div key={i} className="relative inline-block">
                   <div
-                    className="w-20 h-20 object-cover rounded-lg shadow-md flex items-center justify-center"
-                    
-                  >
-                    <i className="fi fi-br-plus-small flex items-center text-[36px] text-[#D7D7D7]"></i>
+                    className="w-20 h-20 object-cover rounded-lg shadow-md flex items-center justify-center">
+                    <i className="fi fi-rr-picture flex items-center text-[36px] text-[#D7D7D7]"></i>
                   </div>
                 </div>
               ))}
