@@ -100,23 +100,21 @@ export const MonitoringPicCard = ({
   };
 
   return (
-    <div className="relative group rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-gray-800 h-[150px]">
+    <div className="relative group rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-gray-800 h-[168px]">
       <div className="aspect-video bg-gray-100 dark:bg-gray-700 flex items-center justify-center relative">
         {renderMedia()}
       </div>
 
       <div className="px-2 py-2">
-        <div className="flex justify-between items-center">
-          <div className="flex gap-1 item-center">
-            {iconType && <i className={`fi ${colorCode} ${iconType} `} />}
-            <span className=" gap-4 inline-block text-sm font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-              {displayType}
-            </span>
-          </div>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            {formattedDate}
+        <div className="flex gap-1 item-center">
+          {iconType && <i className={`fi ${colorCode} ${iconType} `} />}
+          <span className=" gap-4 inline-block text-sm font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+            {displayType}
           </span>
         </div>
+        <span className="text-sm text-gray-500 dark:text-gray-400 p-0 m-0">
+          {formattedDate}
+        </span>
       </div>
     </div>
   );
