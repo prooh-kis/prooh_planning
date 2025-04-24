@@ -5,7 +5,7 @@ import { testimonials } from "./../../data/LandingPageData";
 import ScrollTrigger from "gsap/ScrollTrigger";
 // eslint-disable-next-line import/no-named-as-default
 import gsap from "gsap";
-import { useGSAP } from '@gsap/react';
+import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 interface Testimonial {
@@ -55,11 +55,12 @@ export const FeedBack: React.FC<FeedBackProps> = (props) => {
   };
 
   useGSAP(() => {
-    gsap.to('#feedback', {
+    gsap.to("#feedback", {
       y: -10,
       opacity: 1,
       duration: 1,
-      stagger: { // implemeting the stagger effect
+      stagger: {
+        // implemeting the stagger effect
         amount: 2,
         from: "start",
       },
@@ -69,8 +70,8 @@ export const FeedBack: React.FC<FeedBackProps> = (props) => {
         start: "top 90%",
         end: "bottom 60%",
         scrub: true,
-        toggleActions: "play none none reverse"
-      }
+        toggleActions: "play none none reverse",
+      },
     });
   }, []);
 
@@ -129,6 +130,7 @@ export const FeedBack: React.FC<FeedBackProps> = (props) => {
                 <img
                   src={testimonial.avatar}
                   alt={testimonial.name}
+                  loading="lazy"
                   className="w-12 h-12 rounded-full object-cover"
                 />
                 <div>

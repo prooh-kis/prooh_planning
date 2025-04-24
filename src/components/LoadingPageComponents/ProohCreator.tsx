@@ -86,6 +86,7 @@ export const ProohCreator = ({
                     <img
                       src={member.image}
                       alt={member.name}
+                      loading="lazy"
                       className="w-full aspect-square object-cover rounded-2xl grayscale hover:grayscale-0 transition-all duration-300"
                     />
                     {member.linkedin && (
@@ -96,7 +97,9 @@ export const ProohCreator = ({
                       </div>
                     )}
                   </div>
-                  <h3 className="mt-4 text-xl font-semibold text-gray-900">{member.name}</h3>
+                  <h3 className="mt-4 text-xl font-semibold text-gray-900">
+                    {member.name}
+                  </h3>
                   <p className="text-gray-600 text-[12px]">{member.role}</p>
                   {member.location && (
                     <p className="text-gray-600">{member.location}</p>

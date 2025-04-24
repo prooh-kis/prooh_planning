@@ -83,6 +83,7 @@ export const CircleImageCarousel: React.FC<Users> = ({ heroData }) => {
                       className={`w-[72px] h-[72px] lg:w-[84px] lg:h-[84px] object-cover rounded-[100%] ${
                         isActive ? "filter-none" : "filter grayscale"
                       }`}
+                      loading="lazy"
                     />
                   </div>
                   {isActive && (

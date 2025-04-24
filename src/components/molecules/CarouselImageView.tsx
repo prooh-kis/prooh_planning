@@ -40,6 +40,7 @@ const MyCarousel = ({ images, showThumbnails = true }: Props) => {
                 src={image}
                 alt={`carousel-img-${index}`}
                 className="h-full w-full object-cover rounded-md"
+                loading="lazy"
               />
             )}
           </div>

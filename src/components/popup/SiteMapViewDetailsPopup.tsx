@@ -5,7 +5,7 @@ import { NewCustomMarker } from "../../components/map/NewCustomMarker";
 import { getTimeDifferenceInMin } from "../../utils/dateAndTimeUtils";
 import { formatNumber } from "../../utils/formatValue";
 import { LinearBar } from "../../components/molecules/linearbar";
-import ButtonInput from "../../components/atoms/ButtonInput";
+import { MonitoringPic } from "../../components/segments/MonitoringPic";
 
 interface SiteMapViewDetailsPopupProps {
   handleCancel: () => void;
@@ -247,43 +247,6 @@ export const SiteInfoHeader = ({
   </div>
 );
 
-export const MonitoringPic = () => {
-  const [currentTab, setCurrentTab] = useState<string>("Start Date");
-  const data = ["Start Date", "Mid Monitoring", "End Date"];
-
-  return (
-    <div className="overflow-auto">
-      <div className="flex gap-4">
-        {data?.map((value: string) => {
-          if (currentTab === value)
-            return (
-              <ButtonInput
-                key="value"
-                rounded="full"
-                size="small"
-                onClick={() => setCurrentTab(value)}
-              >
-                {value}
-              </ButtonInput>
-            );
-          else
-            return (
-              <ButtonInput
-                variant="outline"
-                rounded="full"
-                size="small"
-                onClick={() => setCurrentTab(value)}
-                key="value"
-              >
-                {value}
-              </ButtonInput>
-            );
-        })}
-      </div>
-    </div>
-  );
-};
-
 export const SiteMapViewDetailsPopup = ({
   handleCancel,
   geometry,
@@ -343,11 +306,6 @@ export const SiteMapViewDetailsPopup = ({
       colors: ["#EDEDED", "#01A227"],
     },
   ];
-
-  // console.log(
-  //   "sitesDataMapViewData : ",
-  //   JSON.stringify(sitesDataMapViewData || {})
-  // );
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 font-inter">
@@ -438,7 +396,7 @@ export const SiteMapViewDetailsPopup = ({
                 </div>
               ) : (
                 <div className="mt-4">
-                  <MonitoringPic />
+                  <MonitoringPic result={currentSite?.monitoringData || []} />
                 </div>
               )}
             </div>

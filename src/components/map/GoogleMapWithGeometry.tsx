@@ -114,27 +114,39 @@ export function GoogleMapWithGeometry(props: any) {
     <div className="relative h-full w-full items-top">
       <div className="flex flex-col items-end gap-2 right-2 bottom-4 pt-2 absolute z-10">
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#00A0FA] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Selected Screens</h1>
+          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#00A0FA] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
+            Selected Screens
+          </h1>
           <div className="h-4 w-4 bg-[#00A0FA] rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#F94623] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Unselected Screens</h1>
+          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#F94623] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
+            Unselected Screens
+          </h1>
           <div className="h-4 w-4 bg-[#F94623] rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#22C55E] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Near Brand Store</h1>
+          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#22C55E] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
+            Near Brand Store
+          </h1>
           <div className="h-4 w-4 bg-[#22C55E] rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#F59E0B] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Near Competitor Store</h1>
+          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#F59E0B] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
+            Near Competitor Store
+          </h1>
           <div className="h-4 w-4 bg-[#F59E0B] rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#8B5CF6] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Route Starting Point</h1>
+          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#8B5CF6] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
+            Route Starting Point
+          </h1>
           <div className="h-4 w-4 bg-[#8B5CF6] rounded-full"></div>
         </div>
         <div className="flex items-center gap-2 group">
-          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#FF77E9] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">Route Ending Point</h1>
+          <h1 className="text-[10px] text-white group-hover:opacity-100 group-hover:bg-[#FF77E9] group-hover:p-1 group-hover:rounded opacity-0 transition-opacity duration-300">
+            Route Ending Point
+          </h1>
           <div className="h-4 w-4 bg-[#FF77E9] rounded-full"></div>
         </div>
       </div>
@@ -151,7 +163,7 @@ export function GoogleMapWithGeometry(props: any) {
         defaultZoom={viewState.zoom}
         // onLoad={(map: any) => (mapRef.current = map)}
         mapId="96194b21d9fc00de"
-        gestureHandling={'greedy'}
+        gestureHandling={"greedy"}
         disableDefaultUI={true}
       >
         {/* circle */}
@@ -161,10 +173,10 @@ export function GoogleMapWithGeometry(props: any) {
             radius={props?.circleRadius}
             center={coor}
             // onRadiusChanged={props?.setCircleRadius}
-            strokeColor={'#22C55E'}
+            strokeColor={"#22C55E"}
             strokeOpacity={1}
             strokeWeight={3}
-            fillColor={'#22C55E90'}
+            fillColor={"#22C55E90"}
             fillOpacity={0.3}
             // editable
             // draggable
@@ -176,16 +188,16 @@ export function GoogleMapWithGeometry(props: any) {
             radius={props?.circleRadius}
             center={coor}
             // onRadiusChanged={props?.setCircleRadius}
-            strokeColor={'#F59E0B'}
+            strokeColor={"#F59E0B"}
             strokeOpacity={1}
             strokeWeight={3}
-            fillColor={'#F59E0B90'}
+            fillColor={"#F59E0B90"}
             fillOpacity={0.3}
             // editable
             // draggable
           />
         ))}
-        
+
         {/* <Directions allRoutes={mapRoutes} /> */}
         <Directions
           allRoutes={props?.routes}
@@ -196,7 +208,7 @@ export function GoogleMapWithGeometry(props: any) {
           setRouteFilteredScreens={props?.setRouteFilteredScreens}
           handleFinalSelectedScreens={props?.handleFinalSelectedScreens}
         />
-        
+
         <DrawPolygon
           allScreens={props?.allScreens}
           setPolygonScreens={props?.setPolygonFilteredScreens}
@@ -213,15 +225,19 @@ export function GoogleMapWithGeometry(props: any) {
           />
         )}
 
-        
-        
         {selectedMarkers.map((marker: any) => (
           <CustomAdvancedMarker
             key={marker.id}
             marker={marker}
             color={"#00A0FA"}
             // color={marker.screenType === "Spectacular" ? "#00A0FA" : marker.screenType === "Large" ? "#00A0FA60" : "#00A0FA20"}
-            size={marker.screenType == "Spectacular" ? 60 : marker.screenType == "Large" ? 44 : 36}
+            size={
+              marker.screenType == "Spectacular"
+                ? 60
+                : marker.screenType == "Large"
+                ? 44
+                : 36
+            }
             action={(e: any) => setScreenData(e)}
           />
         ))}
@@ -231,7 +247,13 @@ export function GoogleMapWithGeometry(props: any) {
             key={marker.id}
             marker={marker}
             color="#F94623"
-            size={marker.screenType == "Spectacular" ? 44 : marker.screenType == "Large" ? 36 : 28}
+            size={
+              marker.screenType == "Spectacular"
+                ? 44
+                : marker.screenType == "Large"
+                ? 36
+                : 28
+            }
             action={(e: any) => setScreenData(e)}
           />
         ))}
@@ -240,18 +262,23 @@ export function GoogleMapWithGeometry(props: any) {
           <InfoWindow
             position={{
               lat: screenData?.lat || 28.495,
-              lng: screenData?.lng
+              lng: screenData?.lng,
             }}
             onCloseClick={() => {
               setScreenData(null);
             }}
           >
-            <div className={clsx("rounded-[4px] p-1 transition-colors cursor-pointer bg-white")}>
+            <div
+              className={clsx(
+                "rounded-[4px] p-1 transition-colors cursor-pointer bg-white"
+              )}
+            >
               <div className="relative rounded w-full h-40">
                 <img
                   className="h-40 w-full rounded-lg object-cover"
                   src={screenData.images[0]}
                   alt={screenData.name}
+                  loading="lazy"
                 />
               </div>
               <div className="flex flex-col justify-center truncate mt-4 gap-1">

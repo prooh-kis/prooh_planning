@@ -18,7 +18,7 @@ export const GetOnboardOption = () => {
         </button>
       </div>
       <div className="w-full sm:w-auto mt-8 sm:mt-0">
-        <img src={image9} alt="" className="w-full h-full" />
+        <img src={image9} alt="" className="w-full h-full" loading="lazy" />
       </div>
     </div>
   );
