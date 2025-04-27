@@ -14,18 +14,18 @@ const Monitoring = ({ bg, text, label }: MonitoringProps) => {
       // style={{ backgroundColor: bg, color: text }}
       className="col-span-1 border border-gray gap-2 sm:gap-4 w-full p-2 rounded-md"
     >
-      <div style={{ backgroundColor: bg, color: text }}
+      <div
+        style={{ backgroundColor: bg, color: text }}
         className="p-2 rounded-md flex items-center justify-center gap-2"
       >
         <div
           style={{ background: text }}
-        className="h-2 w-2 rounded-full"></div>
+          className="h-2 w-2 rounded-full"
+        ></div>
         <p className="text-[12px] font-medium leading-[100%] m-0 p-0">
           {label}
         </p>
-        <p className="text-[12px] font-bold leading-[100%] m-0 p-0">
-          70%
-        </p>
+        <p className="text-[12px] font-bold leading-[100%] m-0 p-0">70%</p>
       </div>
       <div className="flex flex-wrap gap-2 sm:gap-4 items-center justify-center pt-2">
         {[
@@ -36,7 +36,7 @@ const Monitoring = ({ bg, text, label }: MonitoringProps) => {
           { icon: "fi fi-sr-newspaper flex items-center", value: "70%" },
         ].map((item, index) => (
           <div key={index} className="flex gap-1 text-[11px] items-center">
-            <i style={{color: text}} className={item.icon}></i>
+            <i style={{ color: text }} className={item.icon}></i>
             <p className="font-bold m-0 p-0 text-[#00000090]">{item.value}</p>
           </div>
         ))}
@@ -45,8 +45,15 @@ const Monitoring = ({ bg, text, label }: MonitoringProps) => {
   );
 };
 
-export const SiteMonitoringPicDashboardComponent = ({ sitesDataMapViewData, openSiteMapView, setOpenSiteMapView, openMonitoringView, setOpenMonitoringView}: any) => {
-
+export const SiteMonitoringPicDashboardComponent = ({
+  sitesDataMapViewData,
+  openSiteMapView,
+  setOpenSiteMapView,
+  openMonitoringView,
+  setOpenMonitoringView,
+  siteLevelData,
+  loadingSiteLevel,
+}: any) => {
   const handleCancel = () => {
     setOpenSiteMapView(false);
   };
@@ -58,8 +65,8 @@ export const SiteMonitoringPicDashboardComponent = ({ sitesDataMapViewData, open
     setOpenMonitoringView(false);
   };
   const handleOpenMonitoringPicsView = useCallback(() => {
-    setOpenMonitoringView(true)
-  },[setOpenMonitoringView]);
+    setOpenMonitoringView(true);
+  }, [setOpenMonitoringView]);
 
   const updatedData = sitesDataMapViewData?.map((data: any) => {
     return {
@@ -81,7 +88,8 @@ export const SiteMonitoringPicDashboardComponent = ({ sitesDataMapViewData, open
       {openMonitoringView && (
         <MonitoringPicturesAllSitesPopup
           handleCancel={handleCancelMonitoringPopup}
-
+          siteLevelData={siteLevelData}
+          loadingSiteLevel={loadingSiteLevel}
         />
       )}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
@@ -96,7 +104,8 @@ export const SiteMonitoringPicDashboardComponent = ({ sitesDataMapViewData, open
             <i className="fi fi-sr-marker"></i>
             <p>Campaign On Map</p>
           </div>
-          <div className="cursor-pointer flex font-normal text-[13px] sm:text-[14px] text-[#637D90] gap-1 items-center"
+          <div
+            className="cursor-pointer flex font-normal text-[13px] sm:text-[14px] text-[#637D90] gap-1 items-center"
             onClick={handleOpenMonitoringPicsView}
           >
             <p>View All Pics</p>

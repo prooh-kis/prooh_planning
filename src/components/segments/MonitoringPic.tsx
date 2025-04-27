@@ -1,9 +1,6 @@
 import { useMemo, useState } from "react";
 import ButtonInput from "../../components/atoms/ButtonInput";
-import {
-  MonitoringData,
-  MonitoringTypeWiseData,
-} from "../../types/monitoringTypes";
+import { MonitoringData } from "../../types/monitoringTypes";
 import { MonitoringPicCard } from "../../components/molecules/MonitoringPicCard";
 import { NoDataView } from "../../components/molecules/NoDataView";
 
@@ -30,28 +27,31 @@ interface TransformedData {
 
 interface MonitoringPicProps {
   result?: MonitoringData[];
+  className?: string;
+  cardHeight?: string;
 }
 
-export const MonitoringPic = ({ result = [] }: MonitoringPicProps) => {
+export const MonitoringPic = ({
+  result = [],
+  className = "grid-cols-2",
+  cardHeight = "h-[200px]",
+}: MonitoringPicProps) => {
   const [currentTab, setCurrentTab] =
     useState<keyof TransformedData>("startDate");
 
-  // Define the order of tabs and their labels
   const tabOrder = ["startDate", "midDate", "endDate"] as const;
   const tabLabels = {
     startDate: "Start Date",
     midDate: "Mid Monitoring",
     endDate: "End Date",
-  } as const;
+  };
 
-  // Get available date types from the result
   const availableDateTypes = result
     .map((d) => d.dateType)
     .filter((value): value is keyof TransformedData =>
       ["startDate", "midDate", "endDate"].includes(value)
     );
 
-  // Filter and map tabs based on available data
   const getTabData = () => {
     return tabOrder
       .filter((key) => availableDateTypes.includes(key))
@@ -61,7 +61,6 @@ export const MonitoringPic = ({ result = [] }: MonitoringPicProps) => {
       }));
   };
 
-  // Transform the data into the desired format
   const transformData = (): TransformedData => {
     const output: TransformedData = {
       startDate: [],
@@ -71,20 +70,18 @@ export const MonitoringPic = ({ result = [] }: MonitoringPicProps) => {
 
     result.forEach((item) => {
       const dateType = item.dateType as keyof TransformedData;
-      if (!output.hasOwnProperty(dateType)) return;
+      if (!output[dateType]) return;
 
-      item.monitoringTypeWiseData.forEach(
-        (monitoringTypeData: MonitoringTypeWiseData) => {
-          monitoringTypeData.monitoringUrls.forEach((urlData) => {
-            output[dateType].push({
-              url: urlData.awsUrl || "",
-              uploadedDate: urlData.uploadedDate,
-              fileType: urlData.fileType,
-              monitoringType: monitoringTypeData.monitoringType,
-            });
+      item.monitoringTypeWiseData.forEach((monitoringTypeData) => {
+        monitoringTypeData.monitoringUrls.forEach((urlData) => {
+          output[dateType].push({
+            url: urlData.awsUrl || "",
+            uploadedDate: urlData.uploadedDate,
+            fileType: urlData.fileType,
+            monitoringType: monitoringTypeData.monitoringType,
           });
-        }
-      );
+        });
+      });
     });
 
     return output;
@@ -93,15 +90,15 @@ export const MonitoringPic = ({ result = [] }: MonitoringPicProps) => {
   const transformedData = transformData();
   const currentTabData = transformedData[currentTab] || [];
   const colorCode = useMemo(() => {
-    return currentTab === "startDate"
-      ? "text-[#5AAF69]"
-      : currentTab === "midDate"
-      ? "text-[#FF8D22]"
-      : "text-[#E43535]";
+    return {
+      startDate: "text-[#5AAF69]",
+      midDate: "text-[#FF8D22]",
+      endDate: "text-[#E43535]",
+    }[currentTab];
   }, [currentTab]);
 
   return (
-    <div className="overflow-auto">
+    <div className="h-full">
       <div className="flex gap-4">
         {getTabData().map((data) => (
           <ButtonInput
@@ -115,18 +112,20 @@ export const MonitoringPic = ({ result = [] }: MonitoringPicProps) => {
           </ButtonInput>
         ))}
       </div>
-      {currentTabData?.length === 0 ? (
+
+      {currentTabData.length === 0 ? (
         <NoDataView />
       ) : (
-        <div className="grid grid-cols-2 gap-4  h-[38vh] overflow-auto mt-4">
+        <div className={`grid ${className} gap-4 h-[80vh] overflow-auto py-4`}>
           {currentTabData.map((data, index) => (
             <MonitoringPicCard
               key={`${data.monitoringType}-${index}`}
-              url={data.url || ""}
+              url={data.url}
               fileType={data.fileType}
               monitoringType={data.monitoringType}
               uploadedDate={data.uploadedDate}
               colorCode={colorCode}
+              cardHeight={cardHeight}
             />
           ))}
         </div>

@@ -211,10 +211,7 @@ export const ShowMonitoringPicsPopup = (props: any) => {
         <div className="flex justify-between">
           <div className="w-full flex items-center justify-between">
             <h1 className="text-[16px] font-semibold">Campaign Monitoring</h1>
-            <i
-              className="fi fi-br-circle-xmark"
-              onClick={() => props?.onClose()}
-            ></i>
+            <i className="fi fi-br-cross" onClick={() => props?.onClose()}></i>
           </div>
         </div>
         {isShow && (

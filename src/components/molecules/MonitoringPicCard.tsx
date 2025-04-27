@@ -1,6 +1,5 @@
 import { format } from "date-fns";
 import { FileTypeIcon } from "./FileTypeIcon";
-import { useState } from "react";
 
 interface MonitoringTypeConfig {
   label: string;
@@ -14,12 +13,13 @@ interface MonitoringPicCardProps {
   monitoringType: string;
   uploadedDate: string;
   colorCode: string;
+  cardHeight?: string;
 }
 
 const MONITORING_TYPE_CONFIGS: MonitoringTypeConfig[] = [
   { label: "Day Shots", value: "dayShot", iconType: "fi-rs-brightness" },
   {
-    label: "With News paper",
+    label: "With Newspaper",
     value: "withNewspaper",
     iconType: "fi-rr-newspaper",
   },
@@ -50,12 +50,12 @@ export const MonitoringPicCard = ({
   monitoringType,
   uploadedDate,
   colorCode,
+  cardHeight = "h-[200px]", // Increased default height
 }: MonitoringPicCardProps) => {
-  const [typeConfigs] = useState(MONITORING_TYPE_CONFIGS);
   const isImage = fileType.startsWith("image/");
   const isVideo = fileType.startsWith("video/");
   const formattedDate = format(new Date(uploadedDate), "yyyy-MM-dd");
-  const iconType = typeConfigs.find(
+  const iconType = MONITORING_TYPE_CONFIGS.find(
     (config) => config.value === monitoringType
   )?.iconType;
   const displayType = MONITORING_TYPE_LABELS[monitoringType] || monitoringType;
@@ -100,19 +100,23 @@ export const MonitoringPicCard = ({
   };
 
   return (
-    <div className="relative group rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-gray-800 h-[168px]">
-      <div className="aspect-video bg-gray-100 dark:bg-gray-700 flex items-center justify-center relative">
+    <div
+      className={`relative flex flex-col rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-gray-800 ${cardHeight}`}
+    >
+      {/* Media container - takes about 70% of card height */}
+      <div className="flex-1 bg-gray-100 dark:bg-gray-700 relative h-[70%]">
         {renderMedia()}
       </div>
 
-      <div className="px-2 py-2">
-        <div className="flex gap-1 item-center">
-          {iconType && <i className={`fi ${colorCode} ${iconType} `} />}
-          <span className=" gap-4 inline-block text-sm font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+      {/* Info container - takes about 30% of card height */}
+      <div className="p-2 h-[30%] ">
+        <div className="flex items-center gap-2 ">
+          {iconType && <i className={`fi ${colorCode} ${iconType} text-sm`} />}
+          <span className="text-sm font-medium text-blue-800 dark:text-blue-200 line-clamp-1">
             {displayType}
           </span>
         </div>
-        <span className="text-sm text-gray-500 dark:text-gray-400 p-0 m-0">
+        <span className="text-xs text-gray-500 dark:text-gray-400 p-0 m-0">
           {formattedDate}
         </span>
       </div>

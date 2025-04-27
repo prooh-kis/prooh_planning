@@ -241,7 +241,7 @@ export const SiteInfoHeader = ({
       </div>
     </div>
     <i
-      className="fi fi-br-circle-xmark text-[20px] cursor-pointer"
+      className="fi fi-br-cross text-[14px] cursor-pointer"
       onClick={onClose}
     />
   </div>
@@ -312,10 +312,6 @@ export const SiteMapViewDetailsPopup = ({
       <div className="border bg-[#FFFFFF] rounded-[10px] h-[80vh] w-[95%] p-4">
         <div className="relative inset-0 flex items-center justify-between gap-4 py-2 pr-5">
           <div className="flex gap-2 items-center">
-            <i
-              className="fi fi-sr-angle-small-left text-[#B0B0B0]"
-              onClick={handleCancel}
-            ></i>
             <h1 className="text-[#0E212E] font-semibold text-[20px] font-inter">
               Site Map View{" "}
               <span className="text-[#B0B0B0] text-[14px]">
@@ -325,7 +321,7 @@ export const SiteMapViewDetailsPopup = ({
           </div>
 
           <i
-            className="fi fi-br-circle-xmark text-[20px] cursor-pointer"
+            className="fi fi-br-cross text-[14px] cursor-pointer"
             onClick={handleCancel}
           />
         </div>
@@ -396,7 +392,11 @@ export const SiteMapViewDetailsPopup = ({
                 </div>
               ) : (
                 <div className="mt-4">
-                  <MonitoringPic result={currentSite?.monitoringData || []} />
+                  <MonitoringPic
+                    result={currentSite?.monitoringData || []}
+                    className="grid-cols-2"
+                    cardHeight="h-[200px]"
+                  />
                 </div>
               )}
             </div>

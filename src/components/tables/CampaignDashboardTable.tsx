@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { formatNumber } from "../../utils/formatValue";
 import { useDispatch, useSelector } from "react-redux";
-import { GetCampaignMonitoringPicsAction } from "../../actions/campaignAction";
 import { ShowCampaignLogsPopup } from "../../components/popup/ShowCampaignLogsPopup";
-import { ShowMonitoringPicsPopup } from "../../components/popup/ShowMonitoringPics";
 import {
   calculateDaysPlayed,
   convertIntoDateAndTime,
@@ -14,6 +12,7 @@ import { downloadExcel2 } from "../../utils/excelUtils";
 import axios from "axios";
 import { LinearBar } from "../../components/molecules/linearbar";
 import SiteLevelComponent from "../../pages/NewDashBoard/SiteLevelComponent";
+import { ShowMonitoringPicPopup } from "../../components/popup/ShowMonitoringPicPopup";
 
 const analyticsV1 = `${process.env.REACT_APP_PROOH_SERVER}/api/v1/analytics`;
 
@@ -144,7 +143,7 @@ export const CampaignDashboardTable = ({
   const [openLogsPopup, setOpenLogsPopup] = useState<any>(false);
   const [openMonitoringPicsPopup, setOpenMonitoringPicsPopup] =
     useState<any>(false);
-  const [screenId, setScreenId] = useState<any>(null);
+  const [currentScreen, setCurrentScreen] = useState<any>(null);
   const [currentIndex, setCurrentIndex] = useState<any>(null);
   const [calendarData, setCalendarData] = useState<any>({});
   const [currentWeek, setCurrentWeek] = useState<any>(1);
@@ -180,7 +179,7 @@ export const CampaignDashboardTable = ({
   const onClose = () => {
     setOpenLogsPopup(false);
     setOpenMonitoringPicsPopup(false);
-    setScreenId(null);
+    setCurrentScreen(null);
   };
 
   const downloadLogs = async (campaignId: string) => {
@@ -240,12 +239,10 @@ export const CampaignDashboardTable = ({
 
   return (
     <div>
-      <ShowMonitoringPicsPopup
-        campaign={filteredScreenLevelData?.[screenId]}
-        screenId={screenId}
-        campaignCreation={campaignDetails}
+      <ShowMonitoringPicPopup
         onClose={onClose}
         open={openMonitoringPicsPopup}
+        currentSite={currentScreen || []}
       />
       <ShowCampaignLogsPopup
         logs={logs}
@@ -254,7 +251,7 @@ export const CampaignDashboardTable = ({
         onClose={onClose}
         calendarData={calendarData}
         campaignDetails={campaignDetails}
-        screenCampaignData={screenId}
+        screenCampaignData={currentScreen}
         setCurrentDay={setCurrentDay}
         setCurrentWeek={setCurrentWeek}
         currentDay={currentDay}
@@ -265,7 +262,6 @@ export const CampaignDashboardTable = ({
         isDownLoad={isDownLoad}
         downloadLogs={downloadLogs}
       />
-
       <table className="table-auto w-full">
         <thead className="bg-[#EFF9FF] text-[#707070] font-medium rounded-[6px] w-full flex justify-between items-center">
           <tr className="overflow-auto no-scrollbar flex grid grid-cols-12 w-full items-center h-[40px] border-b truncate">
@@ -409,14 +405,7 @@ export const CampaignDashboardTable = ({
                     <i
                       className="fi fi-sr-picture text-[12px] text-[#129BFF]"
                       onClick={() => {
-                        dispatch(
-                          GetCampaignMonitoringPicsAction({
-                            campaignId: screenData?.campaignId,
-                            screenId: screenData,
-                            date: campaignDetails.startDate,
-                          })
-                        );
-                        setScreenId(screenData);
+                        setCurrentScreen(screenData);
                         setOpenMonitoringPicsPopup(true);
                       }}
                     ></i>
@@ -428,7 +417,7 @@ export const CampaignDashboardTable = ({
                       <i
                         className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}
                         onClick={() => {
-                          setScreenId(screenData);
+                          setCurrentScreen(screenData);
                           setCalendarData(screenData.slotDataDateWise);
                           setOpenLogsPopup(true);
                         }}

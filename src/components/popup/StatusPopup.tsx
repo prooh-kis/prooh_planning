@@ -50,7 +50,7 @@ export function StatusPopup({ onClose, open, myData }: CalendarPopupProps) {
           className="relative inset-0 flex items-center justify-end gap-4 p-3"
           onClick={() => onClose(false)}
         >
-          <i className="fi fi-br-circle-xmark"></i>
+          <i className="fi fi-br-cross"></i>
         </div>
         <div className="px-2 overflow-scroll no-scrollbar h-[40vh]">
           <div className="flex justify-between">

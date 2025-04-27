@@ -137,7 +137,7 @@ export const ShowCampaignLogsPopup = ({
         style={{ height: "90vh", width: "95vw" }}
       >
         <div className="flex justify-end">
-          <i className="fi fi-br-circle-xmark" onClick={() => onClose()}></i>
+          <i className="fi fi-br-cross" onClick={() => onClose()}></i>
         </div>
         <div className="flex justify-between p-2">
           <div>

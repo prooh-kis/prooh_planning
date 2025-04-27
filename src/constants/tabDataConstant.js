@@ -70,7 +70,7 @@ export const siteLevelPerformanceTabData = [
 export const siteLevelAnalysisTabData = [
   { id: "1", label: "Site Analysis", value: "siteAnalysis" },
   { id: "2", label: "Site Monitoring", value: "siteMonitoring" },
-  { id: "3", label: "Site Logs", value: "siteLogs" },
+  // { id: "3", label: "Site Logs", value: "siteLogs" },
 ];
 
 export const siteLevelMonitoringTabData = [

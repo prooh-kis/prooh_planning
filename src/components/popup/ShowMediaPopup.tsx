@@ -59,7 +59,7 @@ export function ShowMediaPopup({
           className="relative inset-0 flex items-center justify-end gap-4 p-3"
           onClick={() => onClose()}
         >
-          <i className="fi fi-br-circle-xmark"></i>
+          <i className="fi fi-br-cross"></i>
         </div>
         <div className="p-2 overflow-scroll no-scrollbar h-[65vh]">
           <div className="flex flex-wrap justify-center items-center gap-2">

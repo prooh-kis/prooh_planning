@@ -120,7 +120,7 @@ export const EditCreativesForCampaigns = (props: any) => {
                   rounded="rounded"
                 />
                 <i
-                  className="fi fi-br-circle-xmark"
+                  className="fi fi-br-cross"
                   onClick={() => props?.setOpenEdit(false)}
                 ></i>
               </div>
