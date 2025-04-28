@@ -1,48 +1,16 @@
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getSiteLevelPerformanceTabWiseForPlannerDashboard } from "../../actions/dashboardAction";
+import React, { useState } from "react";
 import {
   siteLevelPerformanceTabData,
-  siteLevelAnalysisTabData,
 } from "../../constants/tabDataConstant";
 import { SiteLevelAnalysis } from "./SiteLevelAnalysis";
-import { SiteLevelLogReport } from "./SiteLevelLogReport";
-import { MonitoringPic } from "../../components/segments/MonitoringPic";
+import { useDispatch } from "react-redux";
+import { GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_RESET } from "../../constants/dashboardConstant";
 
-const SiteLevelComponent = ({ screenData, screenLevelData }: any) => {
+const SiteLevelComponent = ({ screenData, screenLevelData, currentDate }: any) => {
   const dispatch = useDispatch<any>();
+
   const [currentAnalysisTab, setCurrentAnalysisTab] = useState<string>("1");
-  const [currentTab1, setCurrentTab1] = useState<string>("1");
-
-  const siteAnalysisTabData = siteLevelPerformanceTabData;
-
-  const {
-    loading: loadingTabWiseSiteData,
-    error: errorTabWiseSiteData,
-    data: tabWiseSiteData,
-  } = useSelector(
-    (state: any) => state.siteLevelPerformanceTabWiseForPlannerDashboard
-  );
-
-  const getData = () => {
-    const datesArray = Object.keys(tabWiseSiteData)?.map((date: any) => date);
-    const countsArray = Object.values(tabWiseSiteData)?.map(
-      (slot: any) => slot
-    );
-    return { datesArray, countsArray };
-  };
-
-  useEffect(() => {
-    dispatch(
-      getSiteLevelPerformanceTabWiseForPlannerDashboard({
-        campaignId: screenData.campaignId,
-        tab: siteAnalysisTabData.find(
-          (tab: any) => tab.id == currentAnalysisTab
-        )?.value,
-      })
-    );
-  }, [dispatch, screenData, siteAnalysisTabData, currentAnalysisTab]);
 
   return (
     <div className="w-full h-full truncate">
@@ -61,17 +29,22 @@ const SiteLevelComponent = ({ screenData, screenLevelData }: any) => {
       {currentTab1 == "1" ? ( */}
       <div className="w-full">
         <TabWithoutIcon
-          tabData={siteAnalysisTabData}
+          tabData={siteLevelPerformanceTabData}
           currentTab={currentAnalysisTab}
-          setCurrentTab={setCurrentAnalysisTab}
+          setCurrentTab={(e: any) => {
+            dispatch({
+              type: GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_RESET
+            })
+            setCurrentAnalysisTab(e);
+          }}
           textSize="text-[14px]"
         />
         <SiteLevelAnalysis
-          currentTab={currentAnalysisTab}
+          currentAnalysisTab={currentAnalysisTab}
           screenLevelData={screenLevelData}
-          getData={getData}
-          loadingTabWiseSiteData={loadingTabWiseSiteData}
-          tabWiseSiteData={tabWiseSiteData}
+          screenData={screenData}
+          currentDate={currentDate}
+          siteAnalysisTabData={siteLevelPerformanceTabData}
         />
       </div>
       {/* ) : currentTab1 == "2" ? (

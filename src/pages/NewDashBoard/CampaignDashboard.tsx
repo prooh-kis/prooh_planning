@@ -34,6 +34,8 @@ export const CampaignDashboard = ({
   sitesDataMapViewData,
   siteLevelData,
   loadingSiteLevel,
+  setOpenInvoice,
+  openInvoice,
 }: any) => {
   const dropdownRef = useRef<any>(null);
   const navigate = useNavigate();
@@ -41,35 +43,7 @@ export const CampaignDashboard = ({
 
   const [clicked, setClicked] = useState<any>("1");
   const [showMenu, setShowMenu] = useState<boolean>(false);
-  const [openInvoice, setOpenInvoice] = useState<any>(false);
-  const [poNumber, setPoNumber] = useState<any>("");
-  const [poDate, setPoDate] = useState<any>("");
-  const [clientAgencyName, setClientAgencyName] = useState<any>("");
-  const [address, setAddress] = useState<any>("");
-  const [city, setCity] = useState<any>("");
-  const [stateName, setStateName] = useState<any>("");
-  const [country, setCountry] = useState<any>("");
-  const [zipCode, setZipCode] = useState<any>("");
-  const [phone, setPhone] = useState<any>("");
-  const [email, setEmail] = useState<any>("");
-  const [website, setWebsite] = useState<any>("");
-  const [gst, setGst] = useState<any>("");
-  const [pan, setPan] = useState<any>("");
-  const [pocName, setPocName] = useState<any>("");
-  const [pocContact, setPocContact] = useState<any>("");
-  const [pocEmail, setPocEmail] = useState<any>("");
-  const [pocDesignation, setPocDesignation] = useState<any>("");
-  const [invoiceDescription, setInvoiceDescription] = useState<any>("");
-  const [invoiceQuantity, setInvoiceQuantity] = useState<any>("");
-  const [invoiceCurrency, setInvoiceCurrency] = useState<any>("INR");
-  const [invoiceAmount, setInvoiceAmount] = useState<any>(
-    campaignDetails?.discount === 0 || campaignDetails?.discount === undefined
-      ? Number(campaignDetails?.totalCampaignBudget)
-      : Number(campaignDetails?.finalCampaignBudget)
-  );
-
-  const [jsonDataForInvoice, setJsonDataForInvoice] = useState<any>({});
-
+  
   const [calendarData, setCalendarData] = useState<any>({});
   const [currentWeek, setCurrentWeek] = useState<any>(1);
   const [currentDay, setCurrentDay] = useState<any>(1);
@@ -151,23 +125,29 @@ export const CampaignDashboard = ({
     let currentDate = new Date(startDate);
     const lastDate = new Date(endDate);
 
-    // Reset time components to avoid time-of-day affecting the comparison
+    // Normalize to LOCAL midnight (ignore timezones for calendar dates)
     currentDate.setHours(0, 0, 0, 0);
     lastDate.setHours(0, 0, 0, 0);
 
     while (currentDate <= lastDate) {
+        // Format date in LOCAL time (YYYY-MM-DD)
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const dateString = `${year}-${month}-${day}`;
+
         dates.push({
-            value: currentDate.toISOString().split("T")[0],
+            value: dateString, // Local date, no timezone shifts
             label: currentDate.toLocaleDateString("en-GB", {
                 day: "2-digit",
                 month: "short",
             }),
         });
-        currentDate.setDate(currentDate.getDate() + 1); // Move to next day
+        currentDate.setDate(currentDate.getDate() + 1);
     }
 
     return dates;
-  };
+};
 
   const allDates: any = getAllDates({
     startDate: campaignDetails?.startDate,
@@ -176,9 +156,7 @@ export const CampaignDashboard = ({
 
   // Fetch all dashboard data
   const fetchDashboardData = useCallback(() => {
-
     const commonParams = { id: campaignDetails?._id };
-
     dispatch(
       getAudienceDataForPlannerDashboard({
         ...commonParams,
@@ -189,7 +167,6 @@ export const CampaignDashboard = ({
         timezones: filters.timezones.audience?.filter((f: any) => f !== "all")
       })
     );
-
     dispatch(
       getHardwarePerformanceDataForPlannerDashboard({
         ...commonParams,
@@ -200,7 +177,6 @@ export const CampaignDashboard = ({
         timezones: filters.timezones.screenPerformance?.filter((f: any) => f !== "all")
       })
     );
-
     dispatch(
       getSpotDeliveryDataForPlannerDashboard({
         ...commonParams,
@@ -211,7 +187,6 @@ export const CampaignDashboard = ({
         timezones: filters.timezones.spotDelivery?.filter((f: any) => f !== "all")
       })
     );
-
     dispatch(
       getCostDataForPlannerDashboard({
         ...commonParams,
@@ -222,7 +197,6 @@ export const CampaignDashboard = ({
         timezones: filters.timezones.costConsumption?.filter((f: any) => f !== "all")
       })
     );
-
     dispatch(
       getSiteLevelPerformanceForPlannerDashboard({
         ...commonParams,
@@ -233,7 +207,6 @@ export const CampaignDashboard = ({
         // timezones: filters.timezones.audience?.filter((f: any) => f !== "all")
       })
     );
-
   }, [campaignDetails, dispatch, filters]);
 
 
@@ -244,62 +217,7 @@ export const CampaignDashboard = ({
   },[fetchDashboardData, campaignDetails?._id]);
   return (
     <div className="absolute w-full h-full mt-12 flex flex-col gap-2 bg-[] font-custom">
-      <BillingAndInvoice
-        open={openInvoice}
-        onClose={() => {
-          setOpenInvoice(false);
-          dispatch({
-            type: GET_CLIENT_AGENCY_DETAILS_RESET,
-          });
-        }}
-        invoiceBill={campaignDetails}
-        // loading={loadingBillInvoice}
-        jsonDataForInvoice={jsonDataForInvoice}
-        poNumber={poNumber}
-        setPoNumber={setPoNumber}
-        clientAgencyName={clientAgencyName}
-        setClientAgencyName={setClientAgencyName}
-        setAddress={setAddress}
-        address={address}
-        city={city}
-        setCity={setCity}
-        setStateName={setStateName}
-        stateName={stateName}
-        setCountry={setCountry}
-        country={country}
-        phone={phone}
-        setPhone={setPhone}
-        email={email}
-        setEmail={setEmail}
-        website={website}
-        setWebsite={setWebsite}
-        zipCode={zipCode}
-        setZipCode={setZipCode}
-        gst={gst}
-        setGst={setGst}
-        pan={pan}
-        setPan={setPan}
-        pocName={pocName}
-        setPocName={setPocName}
-        pocEmail={pocEmail}
-        setPocEmail={setPocEmail}
-        pocContact={pocContact}
-        setPocContact={setPocContact}
-        setPocDesignation={setPocDesignation}
-        pocDesignation={pocDesignation}
-        setJsonDataForInvoice={setJsonDataForInvoice}
-        campaignDetails={campaignDetails}
-        invoiceDescription={invoiceDescription}
-        setInvoiceDescription={setInvoiceDescription}
-        invoiceQuantity={invoiceQuantity}
-        setInvoiceQuantity={setInvoiceQuantity}
-        poDate={poDate}
-        setPoDate={setPoDate}
-        invoiceCurrency={invoiceCurrency}
-        setInvoiceCurrency={setInvoiceCurrency}
-        invoiceAmount={invoiceAmount}
-        setInvoiceAmount={setInvoiceAmount}
-      />
+
       {/* Dashboard header Section */}
       <div className="bg-[#FFFFFF] p-2 py-4 px-2  pr-14 flex justify-between mt-4 fixed z-10 shadow-sm w-full">
         <div className="px-2 flex justify-between items-center">
@@ -435,12 +353,19 @@ export const CampaignDashboard = ({
           openMonitoringView={openMonitoringView}
           setOpenMonitoringView={setOpenMonitoringView}
         />
-
         <SiteLevelPerformance
           loadingSiteLevel={loadingSiteLevel}
           siteLevelData={siteLevelData}
           campaignDetails={campaignDetails}
           screenLevelData={screenLevelData}
+          setCurrentDay={setCurrentDay}
+          currentDay={currentDay}
+          setCurrentWeek={setCurrentWeek}
+          currentWeek={currentWeek}
+          setCurrentDate={setCurrentDate}
+          currentDate={currentDate}
+          setCalendarData={setCalendarData}
+          calendarData={calendarData}
         />
       </div>
     </div>

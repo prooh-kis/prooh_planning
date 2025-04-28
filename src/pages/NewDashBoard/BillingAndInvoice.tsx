@@ -215,6 +215,11 @@ export const BillingAndInvoice = (props: any) => {
         endDate: moment(campaignDetails?.endDate).format("YYYY-MM-DD"),
 
       });
+      setInvoiceAmount(() => {
+        return campaignDetails?.discount === 0 || campaignDetails?.discount === undefined
+        ? Number(campaignDetails?.totalCampaignBudget)
+        : Number(campaignDetails?.finalCampaignBudget)
+      });
     }
   },[clientAgencyNamesList, setClientAgencyName, clientAgencyDetailsData, setAddress, setCity, setStateName, setCountry, setPhone, setEmail, setWebsite, setZipCode, setGst, setPan, setPocName, setPocEmail, setPocContact, setPocDesignation, setJsonDataForInvoice, clientAgencyName, pocName, pocEmail, pocContact, pocDesignation, address, city, stateName, country, phone, email, website, zipCode, gst, pan, poNumber, campaignDetails, invoiceQuantity, invoiceDescription]);
 

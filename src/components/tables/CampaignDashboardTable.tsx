@@ -20,6 +20,18 @@ interface CostSummaryTableProps {
   filteredScreenLevelData?: any;
   campaignDetails?: any;
   screenLevelData?: any;
+  setFilters?: any;
+  filters?: any;
+  setCurrentDay?: any;
+  currentDay?: any;
+  setCurrentWeek?: any;
+  currentWeek?: any;
+  setCurrentDate?: any;
+  currentDate?: any;
+  setCalendarData?: any;
+  calendarData?: any;
+  showPercent?: any;
+  setShowPercent?: any;
 }
 
 interface PercentageDisplayProps {
@@ -137,6 +149,14 @@ export const CampaignDashboardTable = ({
   filteredScreenLevelData,
   campaignDetails,
   screenLevelData,
+  setCurrentDay,
+  currentDay,
+  setCurrentWeek,
+  currentWeek,
+  setCurrentDate,
+  currentDate,
+  setCalendarData,
+  calendarData,
 }: CostSummaryTableProps) => {
   const dispatch = useDispatch<any>();
   const [isDownLoad, setIsDownload] = useState<string>("");
@@ -145,10 +165,6 @@ export const CampaignDashboardTable = ({
     useState<any>(false);
   const [currentScreen, setCurrentScreen] = useState<any>(null);
   const [currentIndex, setCurrentIndex] = useState<any>(null);
-  const [calendarData, setCalendarData] = useState<any>({});
-  const [currentWeek, setCurrentWeek] = useState<any>(1);
-  const [currentDay, setCurrentDay] = useState<any>(1);
-  const [currentDate, setCurrentDate] = useState<any>(new Date().toUTCString());
 
   const campaignLogsGet = useSelector((state: any) => state.campaignLogsGet);
   const {
@@ -458,6 +474,7 @@ export const CampaignDashboardTable = ({
                     <SiteLevelComponent
                       screenData={screenData}
                       screenLevelData={screenLevelData}
+                      currentDate={currentDate}
                     />
                   </td>
                 </tr>

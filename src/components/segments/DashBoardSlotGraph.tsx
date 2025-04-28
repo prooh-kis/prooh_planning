@@ -46,11 +46,28 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
   labels,
   percent = true,
 }) => {
-  const requiredToPlayed: number[] = currentData?.map(
-    (played: any) =>
-      played.slotsPromised - played.slotsDelivered  > 0 ? played.slotsPromised - played.slotsDelivered: 0
-  );
-  requiredToPlayed[requiredToPlayed.length - 1] = 0;
+
+  // Find the first index where slotsDelivered = 0
+  const zeroIndex = currentData?.findIndex((item) => item.slotsDelivered === 0);
+
+  // requiredToPlayed calculation
+  const requiredToPlayed: number[] = currentData.map((item, index) => {
+    // Apply special handling for last index (100) as in your original code
+    const delivered = index === currentData.length - 1 ? 100 : item.slotsDelivered;
+    const promised = item.slotsPromised;
+    
+    // Calculate the original value
+    const originalValue = Math.max(promised - delivered, 0);
+    
+    // If before zeroIndex, keep original value, else set to 0
+    return (zeroIndex === -1 || index < zeroIndex) ? originalValue : 0;
+  });
+
+  // If zeroIndex is found and not the first element (i-1 exists), set the previous index to 0
+  if (zeroIndex !== -1 && zeroIndex > 0) {
+    requiredToPlayed[zeroIndex - 1] = 0;
+  }
+  
 
   const extraSlots: number[] = currentData?.map(
     (played: any) =>
@@ -62,14 +79,14 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
       played.slotsDelivered
   );
 
-  const currentDayRemaining: number [] = currentData?.map(
-    (played: any) =>
-      played.slotsPromised - played.slotsDelivered  > 0 ? played.slotsPromised - played.slotsDelivered: 0
-  ).map((value, index) => index === currentData?.map(
-    (played: any) =>
-      played.slotsPromised - played.slotsDelivered  > 0 ? played.slotsPromised - played.slotsDelivered: 0
-  ).length - 1 ? value : 0);
-  
+  const currentDayRemaining: number[] = currentData?.map((played, index) => 
+    index === zeroIndex - 1 ? Math.max(played.slotsPromised - played.slotsDelivered, 0) : 0
+  );
+
+  const futurePerformanceData: number[] = currentData.map((item, index) => 
+    (zeroIndex !== -1 && index < zeroIndex) ? 0 : item.slotsPromised
+  );
+
   const newLabel = labels?.map((date: string) => formatDate(date));
 
   const chartData = {
@@ -88,7 +105,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           align: "center" as const,
           font: { size: 8 },
           formatter: (value: number) =>
-            value > 75 ? formatNumber(value.toFixed(0)) : "", // Hide
+            value > 75 ? formatNumber(value?.toFixed(0)) : "", // Hide
         },
       },
       {
@@ -104,7 +121,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           align: "center" as const,
           font: { size: 8 },
           formatter: (value: number) =>
-            value > 75 ? formatNumber(value.toFixed(0)) : "", // Hide
+            value > 75 ? formatNumber(value?.toFixed(0)) : "", // Hide
         },
       },
       {
@@ -120,14 +137,14 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           align: "center" as const,
           font: { size: 8 },
           formatter: (value: number) =>
-            value > 10 ? formatNumber(value.toFixed(0)) : "", // Hide
+            value > 10 ? formatNumber(value?.toFixed(0)) : "", // Hide
         },
       },
       {
         label: "Adjustment Delivery",
         data: extraSlots,
         backgroundColor: "#CDC5FF",
-        borderColor: "#CDC5FF50",
+        // borderColor: "#CDC5FF50",
         borderWidth: 0,
         borderRadius: 5,
         datalabels: {
@@ -136,7 +153,23 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           align: "center" as const,
           font: { size: 8 },
           formatter: (value: number) =>
-            value > 75 ? formatNumber(value.toFixed(0)) : "", // Hide
+            value > 75 ? formatNumber(value?.toFixed(0)) : "", // Hide
+        },
+      },
+      {
+        label: "Still To Come",
+        data: futurePerformanceData,
+        backgroundColor: "#D7D7D750",
+        // borderColor: "#CDC5FF50",
+        borderWidth: 0,
+        borderRadius: 5,
+        datalabels: {
+          color: "#fff",
+          anchor: "center" as const,
+          align: "center" as const,
+          font: { size: 8 },
+          formatter: (value: number) =>
+            value > 75 ? formatNumber(value?.toFixed(0)) : "", // Hide
         },
       },
     ],
@@ -166,7 +199,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
             if (label == "Current Day" && value == 0) {
               return null;
             }
-            return `${label}: ${value.toFixed(0)}`;
+            return `${label}: ${value?.toFixed(0) || 0}`;
           },
         },
       },

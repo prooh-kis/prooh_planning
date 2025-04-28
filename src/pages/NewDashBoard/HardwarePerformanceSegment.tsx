@@ -482,7 +482,7 @@ export const HardwarePerformanceSegment = ({
               <div className="border-b">
                 <SectionHeaderWithSwitch
                   iconClass="fi-sr-computer"
-                  title="Type Zone"
+                  title="Time Zone"
                   bgColor=" bg-[#6982FF]"
                   showPercent={showPercent?.[5]}
                   setShowPercent={() => {

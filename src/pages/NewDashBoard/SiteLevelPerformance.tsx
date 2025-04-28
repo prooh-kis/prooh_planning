@@ -17,6 +17,14 @@ interface SiteLevelPerformanceProps {
   campaignDetails?: any;
   screenLevelData?: any;
   loadingSiteLevel?: any;
+  setCurrentDay?: any;
+  currentDay?: any;
+  setCurrentWeek?: any;
+  currentWeek?: any;
+  setCurrentDate?: any;
+  currentDate?: any;
+  setCalendarData?: any;
+  calendarData?: any;
 }
 
 export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
@@ -24,8 +32,16 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
   campaignDetails,
   screenLevelData,
   loadingSiteLevel,
+  setCurrentDay,
+  currentDay,
+  setCurrentWeek,
+  currentWeek,
+  setCurrentDate,
+  currentDate,
+  setCalendarData,
+  calendarData,
 }) => {
-  const [filters, setFilters] = useState({
+  const [siteLevelFilters, setSiteLevelFilters] = useState({
     city: "",
     touchPoint: "",
     screenType: "",
@@ -62,12 +78,12 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
     }));
   };
 
-  const handleFilterChange = (key: keyof typeof filters, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+  const handleFilterChange = (key: keyof typeof siteLevelFilters, value: string) => {
+    setSiteLevelFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const resetFilters = () => {
-    setFilters({
+    setSiteLevelFilters({
       city: "",
       touchPoint: "",
       screenType: "",
@@ -76,9 +92,9 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
 
   const filteredResults = siteLevelData?.filter((item: any) => {
     return (
-      (!filters.city || item.city === filters.city) &&
-      (!filters.touchPoint || item.touchPoint === filters.touchPoint) &&
-      (!filters.screenType || item.screenType === filters.screenType)
+      (!siteLevelFilters.city || item.city === siteLevelFilters.city) &&
+      (!siteLevelFilters.touchPoint || item.touchPoint === siteLevelFilters.touchPoint) &&
+      (!siteLevelFilters.screenType || item.screenType === siteLevelFilters.screenType)
     );
   });
 
@@ -94,21 +110,21 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
               options={getUniqueOptions("city") as any}
               onChange={(val) => handleFilterChange("city", val)}
               placeholder="Filter by city"
-              value={filters.city}
+              value={siteLevelFilters.city}
               size="sm"
             />
             <EnhancedSelect
               options={getUniqueOptions("touchPoint") as any}
               onChange={(val) => handleFilterChange("touchPoint", val)}
               placeholder="Filter by touchPoint"
-              value={filters.touchPoint}
+              value={siteLevelFilters.touchPoint}
               size="sm"
             />
             <EnhancedSelect
               options={getUniqueOptions1("screenType") as any}
               onChange={(val) => handleFilterChange("screenType", val)}
               placeholder="Filter by Screen Type"
-              value={filters.screenType}
+              value={siteLevelFilters.screenType}
               size="sm"
             />
             <ButtonInput variant="outline" size="small" onClick={resetFilters}>
@@ -128,6 +144,14 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
             campaignDetails={campaignDetails}
             filteredScreenLevelData={filteredResults}
             screenLevelData={screenLevelData}
+            setCurrentDay={setCurrentDay}
+            currentDay={currentDay}
+            setCurrentWeek={setCurrentWeek}
+            currentWeek={currentWeek}
+            setCurrentDate={setCurrentDate}
+            currentDate={currentDate}
+            setCalendarData={setCalendarData}
+            calendarData={calendarData}
           />
         )}
 

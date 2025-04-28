@@ -39,24 +39,43 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
   labels,
   percent = true,
 }) => {
-  const requiredToPlayed: number[] = currentData.map((item: any, index: any, arr: any) => ({
-    ...item,
-    hardwarePerformanceDelivered: index === arr.length - 1 ? 100 : item.hardwarePerformanceDelivered
-  }))?.map(
-    (played: any) =>
-      played.hardwarePerformancePromised - played.hardwarePerformanceDelivered > 0 ? played.hardwarePerformancePromised - played.hardwarePerformanceDelivered : 0
+
+  // Find the first index where hardwarePerformanceDelivered = 0
+  const zeroIndex = currentData.findIndex((item) => item.hardwarePerformanceDelivered === 0);
+
+  // requiredToPlayed calculation
+  const requiredToPlayed: number[] = currentData.map((item, index) => {
+    // Apply special handling for last index (100) as in your original code
+    const delivered = index === currentData.length - 1 ? 100 : item.hardwarePerformanceDelivered;
+    const promised = item.hardwarePerformancePromised;
+    
+    // Calculate the original value
+    const originalValue = Math.max(promised - delivered, 0);
+    
+    // If before zeroIndex, keep original value, else set to 0
+    return (zeroIndex === -1 || index < zeroIndex) ? originalValue : 0;
+  });
+
+  // Apply zeroIndex adjustment to requiredToPlayed
+  if (zeroIndex !== -1 && zeroIndex > 0) {
+    requiredToPlayed[zeroIndex - 1] = 0;
+  }
+  
+  // dailyPlayedSlots remains unchanged (just mapping the values)
+  const dailyPlayedSlots: number[] = currentData.map(
+    (played: any) => played.hardwarePerformanceDelivered
   );
 
- 
-  const dailyPlayedSlots: number[] = currentData?.map(
-    (played: any) =>
-      played.hardwarePerformanceDelivered
-  );
-  const currentDayRemaining: number [] = currentData.map((item: any, index: any, arr: any) => ({
+  // currentDayRemaining calculation
+  const currentDayRemaining: number[] = currentData.map((item: any, index: any, arr: any) => ({
     ...item,
-    hardwarePerformanceDelivered: index === arr.length - 1 ? item.hardwarePerformanceDelivered : 100
-  }))?.map((played: any) => 100 - played.hardwarePerformanceDelivered);
-  
+    hardwarePerformanceDelivered: index === zeroIndex - 1 ? item.hardwarePerformanceDelivered : 100
+  })).map((played: any) => 100 - played.hardwarePerformanceDelivered);
+
+  const futurePerformanceData: number[] = currentData.map((item, index) => 
+    (zeroIndex !== -1 && index < zeroIndex) ? 0 : item.hardwarePerformancePromised
+  );
+
   const newLabel = labels?.map((date: string) => formatDate(date));
 
   const chartData = {
@@ -76,7 +95,7 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
           font: { size: 8 },
           rotation: 270,
           formatter: (value: number) =>
-            value > 20 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
+            value > 20 ? `${formatNumber(value?.toFixed(0))}%` : "", // Hide
         },
       },
       {
@@ -93,7 +112,7 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
           font: { size: 8 },
           rotation: 270,
           formatter: (value: number) =>
-            value > 20 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
+            value > 20 ? `${formatNumber(value?.toFixed(0))}%` : "", // Hide
         },
       },
       {
@@ -110,10 +129,26 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
           font: { size: 8 },
           rotation: 270,
           formatter: (value: number) =>
-            value > 20 ? `${formatNumber(value.toFixed(0))}%` : "", // Hide
+            value > 20 ? `${formatNumber(value?.toFixed(0))}%` : "", // Hide
         },
       },
-    
+      {
+        label: "Still To Come",
+        data: futurePerformanceData,
+        backgroundColor: "#D7D7D750",
+        // borderColor: "#DFE5FF50",
+        // borderWidth: 1,
+        borderRadius: 5,
+        datalabels: {
+          color: "#00000050",
+          anchor: "center" as const,
+          align: "center" as const,
+          font: { size: 8 },
+          rotation: 270,
+          formatter: (value: number) =>
+            value > 20 ? `${formatNumber(value?.toFixed(0))}%` : "", // Hide
+        },
+      },
     ],
   };
 
@@ -141,7 +176,7 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
             if (label == "Current Day" && value == 0) {
               return null;
             }
-            return `${label}: ${value.toFixed(0)}%`;
+            return `${label}: ${value?.toFixed(0) || 0}%`;
           },
         },
       },

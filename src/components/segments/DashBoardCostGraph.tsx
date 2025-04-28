@@ -39,25 +39,40 @@ export const DashBoardCostGraph: React.FC<BarChartProps> = ({
   labels,
   percent = true,
 }) => {
-  const requiredToPlayed: number[] = currentData?.map(
-    (played: any) =>
-      played.costPromised - played.costConsumed > 0 ? played.costPromised - played.costConsumed : 0
-  );
-  requiredToPlayed[requiredToPlayed.length - 1] = 0;
 
- 
+  // Find the first index where slotsDelivered = 0
+  const zeroIndex = currentData?.findIndex((item) => item.costConsumed === 0);
+
+  // requiredToPlayed calculation
+  const requiredToPlayed: number[] = currentData.map((item, index) => {
+    // Apply special handling for last index (100) as in your original code
+    const delivered = index === currentData.length - 1 ? 100 : item.costConsumed;
+    const promised = item.costPromised;
+    
+    // Calculate the original value
+    const originalValue = Math.max(promised - delivered, 0);
+    
+    // If before zeroIndex, keep original value, else set to 0
+    return (zeroIndex === -1 || index < zeroIndex) ? originalValue : 0;
+  });
+  
+  // If zeroIndex is found and not the first element (i-1 exists), set the previous index to 0
+  if (zeroIndex !== -1 && zeroIndex > 0) {
+    requiredToPlayed[zeroIndex - 1] = 0;
+  }
+  
   const dailyPlayedSlots: number[] = currentData?.map(
     (played: any) =>
       played.costConsumed
   );
 
-  const currentDayRemaining: number [] = currentData?.map(
-    (played: any) =>
-      played.costPromised - played.costConsumed > 0 ? played.costPromised - played.costConsumed : 0
-  ).map((value, index) => index === currentData?.map(
-    (played: any) =>
-      played.costPromised - played.costConsumed > 0 ? played.costPromised - played.costConsumed : 0
-  ).length - 1 ? value : 0);
+  const currentDayRemaining: number[] = currentData?.map((played, index) => 
+    index === zeroIndex - 1 ? Math.max(played.costPromised - played.costConsumed, 0) : 0
+  );
+
+  const futurePerformanceData: number[] = currentData.map((item, index) => 
+    (zeroIndex !== -1 && index < zeroIndex) ? 0 : item.costPromised
+  );
   
   const newLabel = labels?.map((date: string) => formatDate(date));
 
@@ -112,6 +127,22 @@ export const DashBoardCostGraph: React.FC<BarChartProps> = ({
             value > 1000 ? formatNumber(value.toFixed(0)) : "", // Hide
         },
       },
+      {
+        label: "Still To Come",
+        data: futurePerformanceData,
+        backgroundColor: "#D7D7D750",
+        // borderColor: "#E1FFD350",
+        // borderWidth: 1,
+        borderRadius: 5,
+        datalabels: {
+          color: "#00000050",
+          anchor: "center" as const,
+          align: "center" as const,
+          font: { size: 8 },
+          formatter: (value: number) =>
+            value > 1000 ? formatNumber(value.toFixed(0)) : "", // Hide
+        },
+      },
     ],
   };
 
@@ -139,7 +170,7 @@ export const DashBoardCostGraph: React.FC<BarChartProps> = ({
             if (label == "Current Day" && value == 0) {
               return null;
             }
-            return `${label}: INR ${value.toFixed(0)}`;
+            return `${label}: INR ${value?.toFixed(0) || 0}`;
           },
         },
       },
