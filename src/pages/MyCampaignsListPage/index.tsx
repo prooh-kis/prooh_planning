@@ -231,7 +231,7 @@ export const MyCampaignsListPage: React.FC = () => {
                     data={data}
                     handleClone={handleClone}
                     handleGoToDashBoard={(id: string) =>
-                      navigate(`/new-dashboard/${id}`)
+                      navigate(`/campaignDashboard/${id}`)
                     }
                   />
                 </div>

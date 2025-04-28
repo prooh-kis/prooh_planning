@@ -275,7 +275,8 @@ export const CampaignDashboard = ({
             <div
               key={item.id}
               className={`${commonClasses}
-              ${clicked === item.id
+              ${
+                clicked === item.id
                   ? "border border-[#129BFF] border-2"
                   : "border border-gray-100 "
               }`}
@@ -322,7 +323,9 @@ export const CampaignDashboard = ({
               setShowPercent={setShowPercent}
               filters={filters}
               setFilters={setFilters}
-              dataToShow={gridItems?.find((item: any) => item.id === "3")?.screenLevelData}
+              dataToShow={
+                gridItems?.find((item: any) => item.id === "3")?.screenLevelData
+              }
             />
           ) : clicked === "4" ? (
             <SlotSegment
@@ -332,7 +335,9 @@ export const CampaignDashboard = ({
               setShowPercent={setShowPercent}
               filters={filters}
               setFilters={setFilters}
-              dataToShow={gridItems?.find((item: any) => item.id === "4")?.screenLevelData}
+              dataToShow={
+                gridItems?.find((item: any) => item.id === "4")?.screenLevelData
+              }
             />
           ) : clicked === "5" ? (
             <CostSegment
@@ -342,9 +347,11 @@ export const CampaignDashboard = ({
               setShowPercent={setShowPercent}
               filters={filters}
               setFilters={setFilters}
-              dataToShow={gridItems?.find((item: any) => item.id === "5")?.screenLevelData}
+              dataToShow={
+                gridItems?.find((item: any) => item.id === "5")?.screenLevelData
+              }
             />
-          ): null}
+          ) : null}
         </div>
         <SiteMonitoringPicDashboardComponent
           sitesDataMapViewData={sitesDataMapViewData}
@@ -352,6 +359,7 @@ export const CampaignDashboard = ({
           setOpenSiteMapView={setOpenSiteMapView}
           openMonitoringView={openMonitoringView}
           setOpenMonitoringView={setOpenMonitoringView}
+          campaignId={campaignDetails?._id}
         />
         <SiteLevelPerformance
           loadingSiteLevel={loadingSiteLevel}

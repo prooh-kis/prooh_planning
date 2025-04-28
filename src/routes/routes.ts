@@ -9,7 +9,7 @@ export const MY_CAMPAIGNS_LIST = "/myCampaignsList";
 export const CAMPAIGN_DETAILS = "/campaignDetails";
 export const MY_REQUESTS_LIST = "/myRequestsList";
 export const PLAY_CAMPAIGN = "/start-plan";
-export const NEW_DASHBOARD = "/new-dashboard/:id";
+export const NEW_DASHBOARD = "/campaignDashboard/:id";
 
 export const MY_PLANS_LIST = "/myPlansList";
 

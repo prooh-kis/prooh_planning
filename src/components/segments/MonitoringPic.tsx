@@ -47,7 +47,7 @@ export const MonitoringPic = ({
   };
 
   const availableDateTypes = result
-    .map((d) => d.dateType)
+    ?.map((d) => d.dateType)
     .filter((value): value is keyof TransformedData =>
       ["startDate", "midDate", "endDate"].includes(value)
     );
@@ -68,7 +68,7 @@ export const MonitoringPic = ({
       midDate: [],
     };
 
-    result.forEach((item) => {
+    result?.forEach((item) => {
       const dateType = item.dateType as keyof TransformedData;
       if (!output[dateType]) return;
 
@@ -116,7 +116,7 @@ export const MonitoringPic = ({
       {currentTabData.length === 0 ? (
         <NoDataView />
       ) : (
-        <div className={`grid ${className} gap-4 h-[80vh] overflow-auto py-4`}>
+        <div className={`grid ${className} gap-4 py-4`}>
           {currentTabData.map((data, index) => (
             <MonitoringPicCard
               key={`${data.monitoringType}-${index}`}

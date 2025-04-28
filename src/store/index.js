@@ -82,6 +82,7 @@ import {
   getAllBrandAndNetworkReducer,
 } from "../reducers/creativeReducers";
 import {
+  getAllSitesMonitoringDataReducer,
   getAudienceDataForPlannerDashboardReducer,
   getBasicDataForPlannerDashboardReducer,
   getCostDataForPlannerDashboardReducer,
@@ -212,6 +213,7 @@ const store = configureStore({
     sitesDataMapViewForPlannerDashboard:
       getSitesDataMapViewForPlannerDashboardReducer,
     siteMonitoringPicsPercentage: getSiteMonitoringPicsPercentageReducer,
+    allSitesMonitoringData: getAllSitesMonitoringDataReducer,
   },
 
   // middleware: thunk

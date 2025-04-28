@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+  GET_ALL_SITE_MONITORING_DATA_FAIL,
+  GET_ALL_SITE_MONITORING_DATA_REQUEST,
+  GET_ALL_SITE_MONITORING_DATA_SUCCESS,
   GET_AUDIENCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_AUDIENCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_AUDIENCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
@@ -223,7 +226,7 @@ export const getSiteLevelPerformanceForPlannerDashboard =
     }
   };
 
-  export const getSiteLevelPerformanceTabWiseForPlannerDashboard =
+export const getSiteLevelPerformanceTabWiseForPlannerDashboard =
   (input) => async (dispatch, getState) => {
     dispatch({
       type: GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_REQUEST,
@@ -295,6 +298,33 @@ export const getSiteMonitoringPicsPercentage =
     } catch (error) {
       dispatch({
         type: GET_SITE_MONITORING_PICS_PERCENTAGE_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
+// { id, cities, touchPoints, screenTypes , screenName }
+export const getAllSitesMonitoringData =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_ALL_SITE_MONITORING_DATA_REQUEST,
+      payload: input,
+    });
+    try {
+      const { data } = await axios.post(
+        `${newDashboardURL}/getAllSitesMonitoringData`,
+        input
+      );
+      dispatch({
+        type: GET_ALL_SITE_MONITORING_DATA_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_ALL_SITE_MONITORING_DATA_FAIL,
         payload: {
           message: error.message,
           status: error.response?.status,

@@ -53,6 +53,7 @@ export const SiteMonitoringPicDashboardComponent = ({
   setOpenMonitoringView,
   siteLevelData,
   loadingSiteLevel,
+  campaignId,
 }: any) => {
   const handleCancel = () => {
     setOpenSiteMapView(false);
@@ -87,9 +88,9 @@ export const SiteMonitoringPicDashboardComponent = ({
       )}
       {openMonitoringView && (
         <MonitoringPicturesAllSitesPopup
+          open={openMonitoringView}
           handleCancel={handleCancelMonitoringPopup}
-          siteLevelData={siteLevelData}
-          loadingSiteLevel={loadingSiteLevel}
+          campaignId={campaignId}
         />
       )}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">

@@ -1,4 +1,7 @@
 import {
+  GET_ALL_SITE_MONITORING_DATA_FAIL,
+  GET_ALL_SITE_MONITORING_DATA_REQUEST,
+  GET_ALL_SITE_MONITORING_DATA_SUCCESS,
   GET_AUDIENCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_AUDIENCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_AUDIENCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
@@ -51,7 +54,10 @@ export function getBasicDataForPlannerDashboardReducer(state = {}, action) {
   }
 }
 
-export function getSlotDeliveryGraphDateWiseForPlannerDashboardReducer(state = {}, action) {
+export function getSlotDeliveryGraphDateWiseForPlannerDashboardReducer(
+  state = {},
+  action
+) {
   switch (action.type) {
     case GET_SLOT_DELIVERY_DATA_DAYWISE_FOR_PLANNER_DASHBOARD_REQUEST:
       return { loading: true };
@@ -174,7 +180,6 @@ export function getSiteLevelPerformanceForPlannerDashboardReducer(
   }
 }
 
-
 export function getSiteLevelPerformanceTabWiseForPlannerDashboardReducer(
   state = {},
   action
@@ -231,6 +236,25 @@ export function getSiteMonitoringPicsPercentageReducer(state = {}, action) {
         data: action.payload,
       };
     case GET_SITE_MONITORING_PICS_PERCENTAGE_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function getAllSitesMonitoringDataReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_ALL_SITE_MONITORING_DATA_REQUEST:
+      return { loading: true };
+    case GET_ALL_SITE_MONITORING_DATA_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_ALL_SITE_MONITORING_DATA_FAIL:
       return {
         loading: false,
         error: action.payload,
