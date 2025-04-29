@@ -1,5 +1,5 @@
 import { message, Skeleton, Tooltip } from "antd";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   formatDateForLogs,
   getTimeFromDate,
@@ -7,14 +7,17 @@ import {
 } from "../../utils/dateAndTimeUtils";
 import { NoDataView } from "../../components/molecules/NoDataView";
 import { CalenderScaleStepper } from "../../components/molecules/CalenderScale2";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { GetCampaignLogsAction } from "../../actions/campaignAction";
 import { downloadExcel2 } from "../../utils/excelUtils";
+import { getSiteBasedDataOnLogsPageAction } from "../../actions/dashboardAction";
+import { MetricCard, SiteInfoHeader } from "./SiteMapViewDetailsPopup";
 
 export const ShowCampaignLogsPopup = ({
   open,
   onClose,
   logs,
+  siteBasedDataOnLogs,
   loading,
   calendarData,
   campaignDetails,
@@ -29,7 +32,7 @@ export const ShowCampaignLogsPopup = ({
 }: any) => {
   const dispatch = useDispatch<any>();
   const scrollRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-
+  
   const newData = useMemo(() => {
     return logs?.reduce((accum: any, current: any) => {
       const key: any = formatDateForLogs(current?.logTime)?.logDate;
@@ -107,6 +110,9 @@ export const ShowCampaignLogsPopup = ({
           // date: "13/03/2025"
         })
       );
+      dispatch(getSiteBasedDataOnLogsPageAction({
+        campaignId: screenCampaignData?.campaignId
+      }));
     }
   }, [dispatch, screenCampaignData, currentDate]);
 
@@ -129,6 +135,39 @@ export const ShowCampaignLogsPopup = ({
   const handelDownloadLogs = () => {
     downloadExcel2({ campaign: campaignDetails, campaignLog: logs });
   };
+
+  const metrics = [
+    {
+      id: "1",
+      label: "Spots Delivery",
+      delivered: siteBasedDataOnLogs?.slotsDelivered || 0,
+      promised: siteBasedDataOnLogs?.slotsPromisedTillDate || 1,
+      colors: ["#EDEDED", "#FFAC26"],
+    },
+    {
+      id: "2",
+      label: "Hardware Performance",
+      delivered: siteBasedDataOnLogs?.hardwarePerformanceDelivered?.toFixed(2) || 0,
+      promised:
+        siteBasedDataOnLogs?.hardwarePerformancePromisedTillDate?.toFixed(2) || 1,
+      colors: ["#EDEDED", "#6982FF"],
+      inPercentage: true,
+    },
+    {
+      id: "3",
+      label: "Impressions",
+      delivered: siteBasedDataOnLogs?.impressionsDelivered || 0,
+      promised: siteBasedDataOnLogs?.impressionsPromisedTillDate || 1,
+      colors: ["#EDEDED", "#129BFF"],
+    },
+    {
+      id: "4",
+      label: "Cost Consumed",
+      delivered: siteBasedDataOnLogs?.costConsumed || 0,
+      promised: siteBasedDataOnLogs?.costTakenTillDate || 1,
+      colors: ["#EDEDED", "#01A227"],
+    },
+  ];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 mt-16">
@@ -163,6 +202,7 @@ export const ShowCampaignLogsPopup = ({
           </div>
         </div>
         <div className="">
+          
           <CalenderScaleStepper
             setCurrentDay={setCurrentDay}
             setCurrentWeek={setCurrentWeek}
@@ -174,6 +214,7 @@ export const ShowCampaignLogsPopup = ({
             calendarData={calendarData}
             loading={loading}
             openSiteMapView={false}
+            openMonitoringView={false}
             logsPopup={true}
           />
         </div>
@@ -188,186 +229,221 @@ export const ShowCampaignLogsPopup = ({
                 Hourly Based Logs{" "}
               </h1>
             </div>
-            <div className="mx-auto p-6">
-              <div className="grid grid-cols-12">
-                <div className="col-span-1 p-2 border flex justify-center items-center">
-                  <h2 className="text-sm font-bold text-gray-700 ">{"Date"}</h2>
-                </div>
-                <div className="col-span-11 grid grid-cols-12">
-                  <div className="col-span-3 p-2 border flex justify-center items-center">
-                    <h2 className="text-sm font-semibold text-gray-600">
-                      {"Hour"}
-                    </h2>
-                  </div>
-                  <div className="col-span-6 grid grid-cols-12 border">
-                    <div className="col-span-3 py-2 flex items-center justify-center">
-                      <h2 className="text-sm font-semibold text-gray-600">
-                        {"Time"}
-                      </h2>
-                    </div>
-                    <div className="col-span-4 py-2 flex items-center justify-center">
-                      <h2 className="text-sm font-semibold text-gray-600">
-                        {"Creative"}
-                      </h2>
-                    </div>
-                    <div className="col-span-3 py-2 flex items-center justify-center">
-                      <h2 className="text-sm font-semibold text-gray-600">
-                        {"Brand"}
-                      </h2>
-                    </div>
-                    <div className="col-span-2 py-2 flex justify-center">
-                      <i className="fi fi-br-wifi text-[#22C55E] flex items-center justify-center"></i>
-                    </div>
-                  </div>
-                  <div className="col-span-3 grid grid-cols-3 border">
-                    <div className="col-span-1 py-2 border flex items-center justify-center">
-                      <h2 className="text-sm font-semibold text-gray-600">
-                        {"Delivered"}
-                      </h2>
-                    </div>
-                    <div className="col-span-1 py-2 border flex items-center justify-center">
-                      <h2 className="text-sm font-semibold text-gray-600">
-                        {"Promised"}
-                      </h2>
-                    </div>
-                    <div className="col-span-1 py-2 px-4 border flex items-center justify-center">
-                      <h2 className="text-sm font-semibold text-gray-600">
-                        {"Av. Loop Time"}
-                      </h2>
-                    </div>
-                  </div>
+            <div className="mx-auto grid grid-cols-12 gap-2">
+              <div className="col-span-4 border rounded-[12px] border-gray-100">
+                <SiteInfoHeader
+                  screenName={siteBasedDataOnLogs?.screenName}
+                  address={siteBasedDataOnLogs?.address}
+                  lastActive={siteBasedDataOnLogs?.lastActive}
+                  onClose={() => {}}
+                  images={siteBasedDataOnLogs?.images}
+                  showCloseIcon={false}
+                />
+                <div className="flex flex-col mt-4 p-2">
+                  {metrics.map((metric, i: any) => (
+                    <MetricCard
+                      key={i}
+                      label={metric.label}
+                      delivered={metric.delivered}
+                      promised={metric.promised}
+                      colors={metric?.colors}
+                      inPercentage={metric?.inPercentage}
+                    />
+                  ))}
                 </div>
               </div>
-              {Object.entries(newCombinedData?.hrWiseLogs).map(
-                ([date, hours]: any) => (
-                  <div key={date}>
-                    {formatDateForLogs(`${date} 00:00:00 GMT`).apiDate !==
-                      formatDateForLogs(`${currentDate} 00:00:00 GMT`)
-                        .apiDate && (
-                      <div className="flex items-center gap-2 py-2">
-                        <h1 className="font-custom text-[16px]">
-                          Logs from previous day being saved on this day
-                        </h1>
-                        <Tooltip title="If the screen is switched of without saving the last logs on the server, the date is saved next day when the device is online after being started again...">
-                          <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
-                        </Tooltip>
-                      </div>
-                    )}
-                    <div className="grid grid-cols-12 mb-6 w-full border-b">
-                      <div className="col-span-1 p-2 border flex justify-center items-center h-[50vh]">
-                        <h2 className="text-xl font-bold text-gray-700">
-                          {date}
+              <div className="col-span-8 border rounded-[12px] border-gray-100">
+                <div className="grid grid-cols-12">
+                  {/* <div className="col-span-1 p-2 flex justify-center items-center">
+                    <h2 className="text-sm font-bold text-gray-700 ">{"Date"}</h2>
+                  </div> */}
+                  <div className="col-span-12 grid grid-cols-9">
+                    {/* <div className="col-span-3 p-2 border flex justify-center items-center">
+                      <h2 className="text-sm font-semibold text-gray-600">
+                        {"Hour"}
+                      </h2>
+                    </div> */}
+                    <div className="col-span-6 grid grid-cols-12 border-b ">
+                      <div className="col-span-3 py-1 flex items-center justify-center">
+                        <h2 className="text-sm font-semibold text-gray-600">
+                          {"Time"}
                         </h2>
                       </div>
-                      <div className="col-span-11 h-[50vh] overflow-scroll no-scrollbar">
-                        {Object.keys(hours)
-                          .sort((a, b) => Number(a) - Number(b))
-                          .map((key) => [key, hours[key]])
-                          .map(([hour, entries]: any) => (
-                            <div
-                              key={hour}
-                              className="grid grid-cols-12 h-[50vh]"
-                            >
-                              <div className="col-span-3 p-2 border flex justify-center items-center h-[50vh]">
-                                <h3 className="text-md font-semibold text-gray-600 truncate">
-                                  {transformToAmPm(`${hour}:00:00`)} to{" "}
-                                  {transformToAmPm(`${hour}:59:59`)}
-                                </h3>
-                              </div>
+                      <div className="col-span-4 py-1 flex items-center justify-center">
+                        <h2 className="text-sm font-semibold text-gray-600">
+                          {"Creative"}
+                        </h2>
+                      </div>
+                      <div className="col-span-3 py-1 flex items-center justify-center">
+                        <h2 className="text-sm font-semibold text-gray-600">
+                          {"Brand"}
+                        </h2>
+                      </div>
+                      <div className="col-span-2 py-1 flex justify-center">
+                        <i className="fi fi-br-wifi text-[#22C55E] flex items-center justify-center"></i>
+                      </div>
+                    </div>
+                    <div className="col-span-3 border-b grid grid-cols-3">
+                      <div className="col-span-1 py-1 flex items-center justify-center">
+                        <h2 className="text-sm font-semibold text-gray-600">
+                          {"Delivered"}
+                        </h2>
+                      </div>
+                      <div className="col-span-1 py-1 flex items-center justify-center">
+                        <h2 className="text-sm font-semibold text-gray-600">
+                          {"Promised"}
+                        </h2>
+                      </div>
+                      <div className="col-span-1 py-1 flex items-center justify-center">
+                        <h2 className="text-sm font-semibold text-gray-600">
+                          {"Av. Loop Time"}
+                        </h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {Object.entries(newCombinedData?.hrWiseLogs).map(
+                  ([date, hours]: any) => (
+                    <div key={date}>
+                      {formatDateForLogs(`${date} 00:00:00 GMT`).apiDate !==
+                        formatDateForLogs(`${currentDate} 00:00:00 GMT`)
+                          .apiDate && (
+                        <div className="flex items-center gap-2 py-2">
+                          <h1 className="font-custom text-[16px]">
+                            Logs from previous day being saved on this day
+                          </h1>
+                          <Tooltip title="If the screen is switched of without saving the last logs on the server, the date is saved next day when the device is online after being started again...">
+                            <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                          </Tooltip>
+                        </div>
+                      )}
+                      <div className="grid grid-cols-12 w-full border-b rounded">
+                        {/* <div className="col-span-1 p-2 border flex justify-center items-center h-[50vh]">
+                          <h2 className="text-xl font-bold text-gray-700">
+                            {date}
+                          </h2>
+                        </div> */}
+                        <div className="col-span-12 overflow-scroll no-scrollbar h-[90vh]">
+                          {Object.keys(hours)
+                            .sort((a, b) => Number(a) - Number(b))
+                            .map((key) => [key, hours[key]])
+                            .map(([hour, entries]: any) => (
                               <div
-                                className="col-span-6 overflow-scroll no-scrollbar h-[50vh]"
-                                ref={(el) => (scrollRefs.current[hour] = el)}
+                                key={hour}
+                                className="grid grid-cols-9"
                               >
-                                <table className="min-w-full bg-white">
-                                  <tbody>
-                                    {entries.map((entry: any, index: any) => (
-                                      <tr
-                                        key={index}
-                                        className="grid grid-cols-12 border hover:bg-gray-50 text-gray-700 p-1"
-                                      >
-                                        <td className="col-span-3 py-2 flex items-center justify-center">
-                                          {new Date(
-                                            entry.logTime
-                                          ).toLocaleTimeString()}
-                                        </td>
-                                        <td className="col-span-4 py-2 flex items-center justify-center">
-                                          {entry.mediaId.split("_")[1]}
-                                        </td>
-                                        <td className="col-span-3 py-2 flex items-center justify-center">
-                                          {entry.brandName}
-                                        </td>
-                                        <td
-                                          className={`col-span-2 py-2 flex items-center justify-center ${
-                                            entry.screenStatus === "online"
-                                              ? "text-green-600"
-                                              : "text-red-600"
-                                          }`}
+                                {/* <div className="col-span-3 p-2 border flex justify-center items-center h-[50vh]">
+                                  <h3 className="text-md font-semibold text-gray-600 truncate">
+                                    {transformToAmPm(`${hour}:00:00`)} to{" "}
+                                    {transformToAmPm(`${hour}:59:59`)}
+                                  </h3>
+                                </div> */}
+                                <div
+                                  className="col-span-6 overflow-scroll no-scrollbar h-[80vh]"
+                                  ref={(el) => (scrollRefs.current[hour] = el)}
+                                >
+                                  <table className="min-w-full bg-white">
+                                    <tbody>
+                                      {entries.map((entry: any, index: any) => (
+                                        <tr
+                                          key={index}
+                                          className="grid grid-cols-12 bg-[#00A0FA10] border-b border-r border-gray-100 hover:bg-gray-50 text-gray-700 p-1"
                                         >
-                                          {entry.screenStatus}
-                                        </td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                              <div className="col-span-3 h-auto grid grid-cols-3">
-                                <div className="col-span-1 border flex justify-center items-center gap-2 p-2">
-                                  <h1
-                                    className={
-                                      entries.length /
-                                        (17 * campaignDetails?.sov) >=
-                                      1
-                                        ? "text-[#2A892D]"
-                                        : "text-[#CC0000]"
-                                    }
-                                  >
-                                    {entries.length}
-                                  </h1>
-                                  <p
-                                    className={
-                                      entries.length /
-                                        (17 * campaignDetails?.sov) >=
-                                      1
-                                        ? "text-[#2A892D] text-sm"
-                                        : "text-[#CC0000] text-sm"
-                                    }
-                                  >
-                                    {entries.length /
-                                      (17 * campaignDetails?.sov) >
-                                    1
-                                      ? `(+${Number(
-                                          (entries.length /
-                                            (17 * campaignDetails?.sov)) *
-                                            100
-                                        ).toFixed(0)}%)`
-                                      : entries.length /
-                                          (17 * campaignDetails?.sov) <
+                                          <td className="col-span-3 py-2 flex items-center justify-center">
+                                            <h1 className="text-[12px]">
+                                              {new Date(entry.logTime).toLocaleTimeString()}
+                                            </h1>
+                                          </td>
+                                          <td className="col-span-4 py-2 flex items-center justify-center">
+                                            <h1 className="text-[12px]">
+                                              {entry.mediaId.split("_")[1]}
+                                            </h1>
+                                          </td>
+                                          <td className="col-span-3 py-2 flex items-center justify-center">
+                                            <h1 className="text-[12px]">
+                                              {entry.brandName}
+                                            </h1>
+                                          </td>
+                                          <td
+                                            className={`col-span-2 py-2 flex items-center justify-center ${
+                                              entry.screenStatus === "online"
+                                                ? "text-green-600"
+                                                : "text-red-600"
+                                            }`}
+                                          >
+                                            <h1 className="text-[12px]">
+                                              {entry.screenStatus}
+                                            </h1>
+                                          </td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <div className="col-span-3 h-auto grid grid-cols-3">
+                                  <div className="col-span-1 bg-[#00A0FA10] flex justify-center items-center gap-2 p-2">
+                                    <h1
+                                      className={
+                                        entries.length /
+                                          (17 * campaignDetails?.sov) >=
                                         1
-                                      ? `(-${Number(
-                                          100 -
+                                          ? "text-[#2A892D] text-[12px]"
+                                          : "text-[#CC0000] text-[12px]"
+                                      }
+                                    >
+                                      {entries.length}
+                                    </h1>
+                                    <p
+                                      className={
+                                        entries.length /
+                                          (17 * campaignDetails?.sov) >=
+                                        1
+                                          ? "text-[#2A892D] text-[12px]"
+                                          : "text-[#CC0000] text-[12px]"
+                                      }
+                                    >
+                                      {entries.length /
+                                        (17 * campaignDetails?.sov) >
+                                      1
+                                        ? `(+${Number(
                                             (entries.length /
                                               (17 * campaignDetails?.sov)) *
                                               100
-                                        ).toFixed(0)}%)`
-                                      : `✔`}
-                                  </p>
-                                </div>
-                                <div className="col-span-1 border flex justify-center items-center p-2">
-                                  {17 * campaignDetails?.sov}
-                                </div>
-                                <div className="col-span-1 border flex justify-center items-center p-2">
-                                  {calculateAvgTimeGap(entries) === "N/A"
-                                    ? "--"
-                                    : calculateAvgTimeGap(entries)}
+                                          ).toFixed(0)}%)`
+                                        : entries.length /
+                                            (17 * campaignDetails?.sov) <
+                                          1
+                                        ? `(-${Number(
+                                            100 -
+                                              (entries.length /
+                                                (17 * campaignDetails?.sov)) *
+                                                100
+                                          ).toFixed(0)}%)`
+                                        : `✔`}
+                                    </p>
+                                  </div>
+                                  <div className="col-span-1 bg-[#00A0FA10] border-x border-gray-100 flex justify-center items-center p-2">
+                                    <h1 className="text-[12px]">
+                                      {17 * campaignDetails?.sov}
+                                    </h1>
+                                  </div>
+                                  <div className="col-span-1 bg-[#00A0FA10] flex justify-center items-center p-2">
+                                    <h1 className="text-[12px]">
+                                      {calculateAvgTimeGap(entries) === "N/A"
+                                        ? "--"
+                                        : calculateAvgTimeGap(entries)}
+                                    </h1>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          ))}
+                            ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )
-              )}
+                  )
+                )}
+              </div>
+              
             </div>
           </div>
         ) : (

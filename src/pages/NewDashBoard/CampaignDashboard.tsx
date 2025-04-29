@@ -304,6 +304,7 @@ export const CampaignDashboard = ({
               allDates={allDates}
               loading={loading}
               openSiteMapView={openSiteMapView}
+              openMonitoringView={openMonitoringView}
               openInvoice={openInvoice}
             />
           ) : clicked === "2" ? (
@@ -374,6 +375,7 @@ export const CampaignDashboard = ({
           currentDate={currentDate}
           setCalendarData={setCalendarData}
           calendarData={calendarData}
+          allDates={allDates}
         />
       </div>
     </div>

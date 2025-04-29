@@ -32,6 +32,7 @@ interface CostSummaryTableProps {
   calendarData?: any;
   showPercent?: any;
   setShowPercent?: any;
+  allDates?: any
 }
 
 interface PercentageDisplayProps {
@@ -157,6 +158,7 @@ export const CampaignDashboardTable = ({
   currentDate,
   setCalendarData,
   calendarData,
+  allDates,
 }: CostSummaryTableProps) => {
   const dispatch = useDispatch<any>();
   const [isDownLoad, setIsDownload] = useState<string>("");
@@ -166,12 +168,17 @@ export const CampaignDashboardTable = ({
   const [currentScreen, setCurrentScreen] = useState<any>(null);
   const [currentIndex, setCurrentIndex] = useState<any>(null);
 
-  const campaignLogsGet = useSelector((state: any) => state.campaignLogsGet);
   const {
     loading: loadingLogs,
     error: errorLogs,
     data: logs,
-  } = campaignLogsGet;
+  } = useSelector((state: any) => state.campaignLogsGet);
+
+  const {
+    loading: loadingSiteBasedDataOnLogs,
+    error: errorSiteBasedDataOnLogs,
+    data: siteBasedData,
+  } = useSelector((state: any) => state.siteBasedDataOnLogsPage);
 
   useEffect(() => {
     if (campaignDetails?.startDate && campaignDetails?.endDate) {
@@ -243,11 +250,6 @@ export const CampaignDashboardTable = ({
     document.body.removeChild(link);
   };
 
-  const allDates: any = getAllDates({
-    startDate: campaignDetails?.startDate,
-    endDate: campaignDetails?.endDate,
-  });
-
   const campaignDays =
     calculateDaysPlayed(campaignDetails?.startDate, campaignDetails?.endDate) ||
     1;
@@ -262,7 +264,8 @@ export const CampaignDashboardTable = ({
       />
       <ShowCampaignLogsPopup
         logs={logs}
-        loading={loadingLogs}
+        siteBasedDataOnLogs={siteBasedData}
+        loading={loadingLogs || loadingSiteBasedDataOnLogs}
         open={openLogsPopup}
         onClose={onClose}
         calendarData={calendarData}

@@ -15,6 +15,9 @@ import {
   GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
+  GET_SITE_BASED_DATA_ON_LOGS_PAGE_FAIL,
+  GET_SITE_BASED_DATA_ON_LOGS_PAGE_REQUEST,
+  GET_SITE_BASED_DATA_ON_LOGS_PAGE_SUCCESS,
   GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_ERROR,
   GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_SUCCESS,
@@ -325,6 +328,34 @@ export const getAllSitesMonitoringData =
     } catch (error) {
       dispatch({
         type: GET_ALL_SITE_MONITORING_DATA_FAIL,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
+
+
+export const getSiteBasedDataOnLogsPageAction =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_SITE_BASED_DATA_ON_LOGS_PAGE_REQUEST,
+      payload: input,
+    });
+    try {
+      const { data } = await axios.post(
+        `${newDashboardURL}/getSiteBasedDataOnLogsPage`,
+        input
+      );
+      dispatch({
+        type: GET_SITE_BASED_DATA_ON_LOGS_PAGE_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_SITE_BASED_DATA_ON_LOGS_PAGE_FAIL,
         payload: {
           message: error.message,
           status: error.response?.status,

@@ -23,6 +23,7 @@ interface StepSliderProps {
   calendarData?: any;
   loading?: boolean;
   openSiteMapView?: any;
+  openMonitoringView?: any;
   logsPopup?: any;
   openInvoice?: any;
 }
@@ -38,6 +39,7 @@ export const CalenderScaleStepper = ({
   calendarData,
   loading,
   openSiteMapView,
+  openMonitoringView,
   logsPopup=false,
   openInvoice,
 
@@ -229,6 +231,7 @@ export const CalenderScaleStepper = ({
         const isInMiddle = Math.abs(componentMiddle - viewportMiddle) < viewportHeight * 0.25;
         setShowTooltip(isInMiddle);
         if (openSiteMapView) return setShowTooltip(false);
+        if (openMonitoringView) return setShowTooltip(false);
         if (openInvoice) return setShowTooltip(false);
         if (logsPopup) return setShowTooltip(false);
       }
@@ -244,7 +247,7 @@ export const CalenderScaleStepper = ({
     return () => {
       window.removeEventListener('scroll', checkVisibility);
     };
-  }, [logsPopup, openInvoice, openSiteMapView]);
+  }, [logsPopup, openInvoice, openSiteMapView, openMonitoringView]);
 
   useEffect(() => {
     if (currentDate && allDates?.length > 0) {
@@ -288,9 +291,6 @@ export const CalenderScaleStepper = ({
       };
     });
   }, [weeks, getWeekPercentageValue]);
-  // Then you can access the current week's data like this:
-  const currentWeekPercentage = allWeekPercentages[currentWeek - 1]?.percentage || 0;
-  const currentWeekPercentageColor = allWeekPercentages[currentWeek - 1]?.color || "#FF4747";
 
   useEffect(() => {
     document.documentElement.scrollTop = document.documentElement.clientHeight;
@@ -391,7 +391,7 @@ export const CalenderScaleStepper = ({
                           {week}
                         </h1>
                         {(isPastWeek || isCurrentWeek) && weekPercentageData && week !== "End" && (
-                          <h1 className={`text-[12px] font-medium whitespace-nowrap text-[${currentWeekPercentageColor}]`}>
+                          <h1 className={`text-[12px] font-medium whitespace-nowrap text-[${weekPercentageData.color}]`}>
                             ({weekPercentageData.percentage}%)
                           </h1>
                         )}
@@ -461,7 +461,7 @@ export const CalenderScaleStepper = ({
                 new Date(s.date).toDateString() === new Date(dateObj?.value).toDateString()
               );
               const percentageValue = dayData ? getPercentageValue(dayData.countDelivered, dayData.countPromised) : "";
-              const percentageColor = dayData?.count / dayData?.countPromised > 1 ? "#2A892D" : "#FF4747";
+              const percentageColor = dayData?.countDelivered / dayData?.countPromised > 1 ? "#2A892D" : "#FF4747";
               return (
                 <div
                   key={i}
@@ -488,7 +488,7 @@ export const CalenderScaleStepper = ({
                           <h1 className={`text-[12px] text-nowrap ${dayColor}`}>
                             {dateObj.label}
                           </h1>
-                          {calendarData && new Date(dateObj?.value).getTime() < new Date().getTime() && dayData && (
+                          {calendarData && new Date(dateObj?.value).getTime() < new Date().getTime() && dayData && dateObj.label !== "End" && (
                             <h1 className={`text-[10px] font-medium whitespace-nowrap text-[${percentageColor}]`}>
                               ({percentageValue || 0 })
                             </h1>

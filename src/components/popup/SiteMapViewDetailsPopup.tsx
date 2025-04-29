@@ -30,6 +30,7 @@ interface SiteInfoHeaderProps {
   lastActive?: Date | string;
   onClose: () => void;
   images: string[];
+  showCloseIcon?: any;
 }
 
 interface StatusIndicatorProps {
@@ -214,36 +215,68 @@ export const SiteInfoHeader = ({
   lastActive,
   onClose,
   images,
+  showCloseIcon=true,
 }: SiteInfoHeaderProps) => (
-  <div className="flex justify-between">
-    <div className="flex gap-2">
-      <div className={`h-16 w-16 rounded-[7px] overflow-hidden`}>
-        <img
-          src={images[0]}
-          alt={screenName}
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            (e.target as HTMLImageElement).style.display = "none";
-            (e.target as HTMLImageElement).parentElement!.classList.add(
-              "bg-[#e3e3e3]"
-            );
-          }}
-        />
+  <div>
+    {showCloseIcon ? (
+      <div className="flex justify-between">
+        <div className="flex gap-2">
+          <div className={`h-16 w-16 rounded-[7px] overflow-hidden`}>
+            <img
+              src={images[0]}
+              alt={screenName}
+              className="w-full h-full object-cover rounded-[7px]"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+                (e.target as HTMLImageElement).parentElement!.classList.add(
+                  "bg-[#e3e3e3]"
+                );
+              }}
+            />
+          </div>
+          <div>
+            <div className="flex gap-2 items-center">
+              <h1 className="text-[#0E212E] text-[16px] font-semibold m-0 p-0">
+                {screenName}
+              </h1>
+              {showCloseIcon && (
+                <StatusIndicator lastActive={lastActive} />
+              )}
+            </div>
+            <p className="text-[#667D8C] font-normal text-[12px]">{address}</p>
+          </div>
+        </div>
+        {showCloseIcon && (
+          <i
+            className="fi fi-br-cross text-[14px] cursor-pointer"
+            onClick={onClose}
+          />
+        )}
       </div>
+    ) : (
       <div>
-        <div className="flex gap-2 items-center">
+        <div className="rounded-[7px] p-2">
+          <img
+            src={images[0]}
+            alt={screenName}
+            className="w-full h-full object-cover rounded-[7px]"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = "none";
+              (e.target as HTMLImageElement).parentElement!.classList.add(
+                "bg-[#e3e3e3]"
+              );
+            }}
+          />
+        </div>
+        <div className="px-2 pt-2">
           <h1 className="text-[#0E212E] text-[16px] font-semibold m-0 p-0">
             {screenName}
           </h1>
-          <StatusIndicator lastActive={lastActive} />
+          <p className="text-[#667D8C] font-normal text-[12px]">{address}</p>
         </div>
-        <p className="text-[#667D8C] font-normal text-[12px]">{address}</p>
       </div>
-    </div>
-    <i
-      className="fi fi-br-cross text-[14px] cursor-pointer"
-      onClick={onClose}
-    />
+    )}
+
   </div>
 );
 
@@ -379,9 +412,9 @@ export const SiteMapViewDetailsPopup = ({
               </div>
               {currentTab === "1" ? (
                 <div className="flex flex-col mt-4">
-                  {metrics.map((metric) => (
+                  {metrics.map((metric, i: any) => (
                     <MetricCard
-                      key={metric.id}
+                      key={i}
                       label={metric.label}
                       delivered={metric.delivered}
                       promised={metric.promised}

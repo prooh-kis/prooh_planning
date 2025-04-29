@@ -210,7 +210,7 @@ export const SlotSegment = ({
                     <div className="grid grid-cols-4 flex items-center w-full gap-2">
                       <div className="col-span-3">
                         <MultiColorLinearBar2
-                          delivered={spotData.cityWiseData[cityKey]?.slotsDelivered}
+                          delivered={spotData.cityWiseData[cityKey]?.totalSlotsDelivered}
                           expected={spotData.cityWiseData[cityKey]?.slotsPromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
                           total={spotData.cityWiseData[cityKey]?.slotsPromised}
                           deliveredColor="bg-[#77BFEF]"
@@ -220,7 +220,7 @@ export const SlotSegment = ({
                         />
                       </div>
                       <h1 className="text-[10px] col-span-1">
-                        {showPercent[1] ? `${(spotData.cityWiseData[cityKey]?.slotsDelivered*100/spotData.cityWiseData[cityKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.cityWiseData[cityKey]?.slotsDelivered)}
+                        {showPercent[1] ? `${(spotData.cityWiseData[cityKey]?.totalSlotsDelivered*100/spotData.cityWiseData[cityKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.cityWiseData[cityKey]?.totalSlotsDelivered)}
                       </h1>
                     </div>
                   </div>
@@ -264,7 +264,7 @@ export const SlotSegment = ({
                     <div className="grid grid-cols-4 flex items-center w-full gap-2">
                       <div className="col-span-3">
                         <MultiColorLinearBar2
-                          delivered={spotData.touchPointWiseData[tpKey]?.slotsDelivered}
+                          delivered={spotData.touchPointWiseData[tpKey]?.totalSlotsDelivered}
                           expected={spotData.touchPointWiseData[tpKey]?.slotsPromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
                           total={spotData.touchPointWiseData[tpKey]?.slotsPromised}
                           deliveredColor="bg-[#77BFEF]"
@@ -274,7 +274,7 @@ export const SlotSegment = ({
                         />
                       </div>
                       <h1 className="text-[10px] col-span-1">
-                        {showPercent[2] ? `${(spotData.touchPointWiseData[tpKey]?.slotsDelivered*100/spotData.touchPointWiseData[tpKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.touchPointWiseData[tpKey]?.slotsDelivered)}
+                        {showPercent[2] ? `${(spotData.touchPointWiseData[tpKey]?.totalSlotsDelivered*100/spotData.touchPointWiseData[tpKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.touchPointWiseData[tpKey]?.totalSlotsDelivered)}
                       </h1>
                     </div>
                   </div>
@@ -318,7 +318,7 @@ export const SlotSegment = ({
                     <div className="grid grid-cols-4 flex items-center w-full gap-2">
                       <div className="col-span-3">
                         <MultiColorLinearBar2
-                          delivered={spotData.screenTypeWiseData[stKey]?.slotsDelivered}
+                          delivered={spotData.screenTypeWiseData[stKey]?.totalSlotsDelivered}
                           expected={spotData.screenTypeWiseData[stKey]?.slotsPromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
                           total={spotData.screenTypeWiseData[stKey]?.slotsPromised}
                           deliveredColor="bg-[#77BFEF]"
@@ -328,7 +328,7 @@ export const SlotSegment = ({
                         />
                       </div>
                       <h1 className="text-[10px] col-span-1">
-                        {showPercent[3] ? `${(spotData.screenTypeWiseData[stKey]?.slotsDelivered*100/spotData.screenTypeWiseData[stKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.screenTypeWiseData[stKey]?.slotsDelivered)}
+                        {showPercent[3] ? `${(spotData.screenTypeWiseData[stKey]?.totalSlotsDelivered*100/spotData.screenTypeWiseData[stKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.screenTypeWiseData[stKey]?.totalSlotsDelivered)}
                       </h1>
                     </div>
                   </div>
@@ -373,7 +373,7 @@ export const SlotSegment = ({
                     <div className="grid grid-cols-4 flex items-center w-full gap-2">
                       <div className="col-span-3">
                         <MultiColorLinearBar2
-                          delivered={spotData.dayWiseData[dayKey]?.slotsDelivered}
+                          delivered={spotData.dayWiseData[dayKey]?.totalSlotsDelivered}
                           expected={spotData.dayWiseData[dayKey]?.slotsPromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
                           total={spotData.dayWiseData[dayKey]?.slotsPromised}
                           deliveredColor="bg-[#77BFEF]"
@@ -383,7 +383,7 @@ export const SlotSegment = ({
                         />
                       </div>
                       <h1 className="text-[10px] col-span-1">
-                        {showPercent[4] ? `${(spotData.dayWiseData[dayKey]?.slotsDelivered*100/spotData.dayWiseData[dayKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.dayWiseData[dayKey]?.slotsDelivered)}
+                        {showPercent[4] ? `${(spotData.dayWiseData[dayKey]?.totalSlotsDelivered*100/spotData.dayWiseData[dayKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.dayWiseData[dayKey]?.totalSlotsDelivered)}
                       </h1>
                     </div>
                   </div>
@@ -427,7 +427,7 @@ export const SlotSegment = ({
                     <div className="grid grid-cols-4 flex items-center w-full gap-2">
                       <div className="col-span-3">
                         <MultiColorLinearBar2
-                          delivered={spotData.timeWiseData[timeKey]?.slotsDelivered}
+                          delivered={spotData.timeWiseData[timeKey]?.totalSlotsDelivered}
                           expected={spotData.timeWiseData[timeKey]?.slotsPromised * (screenLevelData?.data?.durationDelivered || 1)/ screenLevelData?.data?.durationPromised}
                           total={spotData.timeWiseData[timeKey]?.slotsPromised}
                           deliveredColor="bg-[#77BFEF]"
@@ -437,7 +437,7 @@ export const SlotSegment = ({
                         />
                       </div>
                       <h1 className="text-[10px] col-span-1">
-                        {showPercent[5] ? `${(spotData.timeWiseData[timeKey]?.slotsDelivered*100/spotData.timeWiseData[timeKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.timeWiseData[timeKey]?.slotsDelivered)}
+                        {showPercent[5] ? `${(spotData.timeWiseData[timeKey]?.totalSlotsDelivered*100/spotData.timeWiseData[timeKey]?.slotsPromised).toFixed(0)}%` : formatNumber(spotData.timeWiseData[timeKey]?.totalSlotsDelivered)}
                       </h1>
                     </div>
                   </div>

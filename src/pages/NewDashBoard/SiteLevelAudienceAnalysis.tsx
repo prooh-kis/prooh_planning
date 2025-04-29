@@ -355,7 +355,6 @@ export const SiteLevelAudienceAnalysis = ({
                               timeKey
                             ]?.impressionDelivered.toFixed(0)
                           )}
-                          %
                         </h1>
                       </div>
                     </div>

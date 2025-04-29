@@ -21,6 +21,7 @@ export const DurationSegment = ({
   loading,
   openInvoice,
   campaignId,
+  openMonitoringView,
 }: any) => {
   const dispatch = useDispatch<any>();
   const { loading: loadingHourlySpotDelivery, data: hourlySpotDelivery } = useSelector(
@@ -58,6 +59,7 @@ export const DurationSegment = ({
             calendarData={calendarData}
             loading={loading}
             openSiteMapView={openSiteMapView}
+            openMonitoringView={openMonitoringView}
             openInvoice={openInvoice}
           />
         </div>

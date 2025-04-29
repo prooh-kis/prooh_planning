@@ -25,6 +25,7 @@ interface SiteLevelPerformanceProps {
   currentDate?: any;
   setCalendarData?: any;
   calendarData?: any;
+  allDates?: any;
 }
 
 export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
@@ -40,6 +41,7 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
   currentDate,
   setCalendarData,
   calendarData,
+  allDates
 }) => {
   const [siteLevelFilters, setSiteLevelFilters] = useState({
     city: "",
@@ -152,6 +154,7 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
             currentDate={currentDate}
             setCalendarData={setCalendarData}
             calendarData={calendarData}
+            allDates={allDates}
           />
         )}
 

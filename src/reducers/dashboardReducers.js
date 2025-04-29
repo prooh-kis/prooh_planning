@@ -14,6 +14,9 @@ import {
   GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_HARDWARE_PERFORMANCE_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
+  GET_SITE_BASED_DATA_ON_LOGS_PAGE_FAIL,
+  GET_SITE_BASED_DATA_ON_LOGS_PAGE_REQUEST,
+  GET_SITE_BASED_DATA_ON_LOGS_PAGE_SUCCESS,
   GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_ERROR,
   GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SITE_DATA_MAP_VIEW_FOR_PLANNER_DASHBOARD_SUCCESS,
@@ -255,6 +258,26 @@ export function getAllSitesMonitoringDataReducer(state = {}, action) {
         data: action.payload,
       };
     case GET_ALL_SITE_MONITORING_DATA_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+
+export function getSiteBasedDataOnLogsPageReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_SITE_BASED_DATA_ON_LOGS_PAGE_REQUEST:
+      return { loading: true };
+    case GET_SITE_BASED_DATA_ON_LOGS_PAGE_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_SITE_BASED_DATA_ON_LOGS_PAGE_FAIL:
       return {
         loading: false,
         error: action.payload,
