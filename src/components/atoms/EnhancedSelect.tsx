@@ -1,7 +1,7 @@
 import React from "react";
 // Variants.ts
 const selectVariants = {
-  primary: "border-gray-300 focus:ring-blue-500 focus:border-blue-500",
+  primary: "border-gray-100 focus:ring-blue-500 focus:border-blue-500",
   secondary: "border-purple-300 focus:ring-purple-500 focus:border-purple-500",
   danger: "border-red-300 focus:ring-red-500 focus:border-red-500",
   success: "border-green-300 focus:ring-green-500 focus:border-green-500",
@@ -49,7 +49,7 @@ export const EnhancedSelect = ({
         disabled={disabled}
         className={`block w-full ${selectSizes[size]} ${
           icon ? "pl-10" : "pl-3"
-        } pr-10 text-gray-700 bg-white border rounded-md shadow-sm focus:outline-none focus:ring-2 ${
+        } pr-10 text-gray-700 bg-white border border-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-2 ${
           selectVariants[variant]
         } ${className} ${
           disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"

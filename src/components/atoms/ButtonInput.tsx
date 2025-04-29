@@ -36,7 +36,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
 
   // Size classes
   const sizeClasses = {
-    small: `text-sm ${icon ? "pl-3 pr-3" : "px-3"} py-1.5 gap-1.5`,
+    small: `text-sm ${icon ? "pl-3 pr-3" : "px-3"} py-1 gap-1.5`,
     medium: `text-base ${icon ? "pl-5 pr-5" : "px-5"} py-2 gap-2`,
     large: `text-lg ${icon ? "pl-7 pr-7" : "px-7"} py-3 gap-3`,
   };

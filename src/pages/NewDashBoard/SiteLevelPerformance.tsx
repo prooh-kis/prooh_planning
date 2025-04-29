@@ -99,9 +99,9 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
   });
 
   return (
-    <div className="bg-white mt-2 w-full border border-gray-100 rounded-xl flex justify-between px-2">
-      <div className="w-full">
-        <div className="flex justify-between items-center">
+    <div className="mt-2 w-full flex justify-between">
+      <div className="w-full pb-4">
+        <div className="flex justify-between items-center bg-white border-t border-x border-gray-100 rounded-t-xl px-2">
           <h1 className="text-base py-4 px-2 font-semibold leading-5 text-gray-900">
             Site Level Performance
           </h1>

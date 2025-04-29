@@ -29,8 +29,6 @@ export const SiteLevelHardwarePerformanceAnalysis = ({
     (state: any) => state.siteLevelPerformanceTabWiseForPlannerDashboard
   );
 
-  console.log("filters: ", tabWiseSiteData);
-
   const getHardwarePerformanceData = () => {
     const datesArray = tabWiseSiteData?.hardwarePerformanceData && Object.keys(tabWiseSiteData?.hardwarePerformanceData)?.length !== 0 ? Object.keys(tabWiseSiteData?.hardwarePerformanceData)?.map((date: any) => date) : [];
     const countsArray = tabWiseSiteData?.hardwarePerformanceData && Object.values(tabWiseSiteData?.hardwarePerformanceData)?.length !== 0 ? Object.values(tabWiseSiteData?.hardwarePerformanceData)?.map((slot: any) => slot) : [];
@@ -100,15 +98,15 @@ export const SiteLevelHardwarePerformanceAnalysis = ({
   return (
     <div className="">
       {!loadingTabWiseSiteData && tabWiseSiteData && tabWiseSiteData.hardwarePerformanceData && Object.keys(tabWiseSiteData.hardwarePerformanceData).length > 0 ? (
-        <div className="grid grid-cols-5 gap-4 flex items-center">
-          <div className="col-span-3 flex items-center">
+        <div className="grid grid-cols-5 gap-2 flex items-center">
+          <div className="col-span-3 flex items-center border rounded-[12px] border-gray-100 shadow-sm p-4">
             <DashBoardHardwarePerformanceGraph
               currentData={getHardwarePerformanceData()?.countsArray}
               labels={getHardwarePerformanceData()?.datesArray}
             />
           </div>
-          <div className="col-span-2 grid grid-cols-9 flex items-top pt-4">
-            <div className="col-span-5 bg-[#FFFFFF] p-4 border-r">
+          <div className="col-span-2 grid grid-cols-9 gap-2 h-full">
+            <div className="col-span-5 bg-[#FFFFFF] h-full p-4 border rounded-[12px] border-gray-100 shadow-sm ">
               <div className="border-b">
                 <SectionHeaderWithSwitch
                   iconClass="fi-sr-computer"
@@ -183,7 +181,7 @@ export const SiteLevelHardwarePerformanceAnalysis = ({
                 )}
               </div>
             </div>
-            <div className="col-span-4 bg-[#FFFFFF] p-4 border-l">
+            <div className="col-span-4 bg-[#FFFFFF] h-full p-4 border rounded-[12px] border-gray-100 shadow-sm ">
               <div className="border-b">
                 <SectionHeaderWithSwitch
                   iconClass="fi-sr-computer"

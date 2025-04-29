@@ -14,10 +14,7 @@ const SiteLevelComponent = ({ screenData, screenLevelData, currentDate }: any) =
 
   return (
     <div className="w-full h-full truncate">
-      {/* <h1 className="text-[20px] font-semibold font-inter text-[#0E212E] pb-2">
-        {screenData?.screenName}
-      </h1>
-      <div className="w-full">
+      {/* <div className="w-full">
         <TabWithoutIcon
           tabData={siteLevelAnalysisTabData}
           currentTab={currentTab1}
@@ -28,24 +25,32 @@ const SiteLevelComponent = ({ screenData, screenLevelData, currentDate }: any) =
 
       {currentTab1 == "1" ? ( */}
       <div className="w-full">
-        <TabWithoutIcon
-          tabData={siteLevelPerformanceTabData}
-          currentTab={currentAnalysisTab}
-          setCurrentTab={(e: any) => {
-            dispatch({
-              type: GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_RESET
-            })
-            setCurrentAnalysisTab(e);
-          }}
-          textSize="text-[14px]"
-        />
-        <SiteLevelAnalysis
-          currentAnalysisTab={currentAnalysisTab}
-          screenLevelData={screenLevelData}
-          screenData={screenData}
-          currentDate={currentDate}
-          siteAnalysisTabData={siteLevelPerformanceTabData}
-        />
+        <div className="rounded-[12px] border border-gray-100 shadow-sm px-4 pt-4 mt-2">
+          <h1 className="text-[20px] font-semibold font-inter text-[#0E212E] pb-2">
+            {screenData?.screenName}
+          </h1>
+          <TabWithoutIcon
+            tabData={siteLevelPerformanceTabData}
+            currentTab={currentAnalysisTab}
+            setCurrentTab={(e: any) => {
+              dispatch({
+                type: GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_RESET
+              })
+              setCurrentAnalysisTab(e);
+            }}
+            textSize="text-[14px]"
+          />
+        </div>
+        <div className="w-full my-2">
+          <SiteLevelAnalysis
+            currentAnalysisTab={currentAnalysisTab}
+            screenLevelData={screenLevelData}
+            screenData={screenData}
+            currentDate={currentDate}
+            siteAnalysisTabData={siteLevelPerformanceTabData}
+          />
+        </div>
+        
       </div>
       {/* ) : currentTab1 == "2" ? (
         <div className="w-full">

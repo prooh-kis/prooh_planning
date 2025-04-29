@@ -158,12 +158,13 @@ export const DashBoardHardwarePerformanceGraph: React.FC<BarChartProps> = ({
     plugins: {
       legend: {
         position: "bottom" as const,
+        align: "end" as const,
         labels: {
           color: "#6B7280",
           font: {
             size: 10,
           },
-          padding: 12,
+          padding: 10,
           usePointStyle: true,
           pointStyle: "circle",
         },

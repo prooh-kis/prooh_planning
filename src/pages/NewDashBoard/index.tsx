@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { CampaignDashboard } from "./CampaignDashboard";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { getCampaignCreationsDetails } from "../../actions/campaignAction";
 import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
 import {
   getBasicDataForPlannerDashboard,
@@ -11,6 +11,7 @@ import {
 } from "../../actions/dashboardAction";
 import { BillingAndInvoice } from "./BillingAndInvoice";
 import { GET_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyConstants";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 interface FilterState {
   audience: string[];
@@ -103,7 +104,7 @@ export const NewDashBoard: React.FC = () => {
     loading: loadingCampaignDetails,
     error: errorCampaignDetails,
     data: campaignDetails,
-  } = useSelector((state: any) => state.detailsToCreateCampaignAdd);
+  } = useSelector((state: any) => state.campaignCreationsDetailsGet);
 
   const {
     loading: loadingDashboard,
@@ -123,7 +124,7 @@ export const NewDashBoard: React.FC = () => {
   useEffect(() => {
     // fetchDashboardData();
 
-    dispatch(addDetailsToCreateCampaign({ id: campaignId }));
+    dispatch(getCampaignCreationsDetails({ id: campaignId }));
     dispatch(getBasicDataForPlannerDashboard({ id: campaignId }));
 
     dispatch(getSiteMonitoringPicsPercentage({ id: campaignId }));
@@ -217,18 +218,23 @@ export const NewDashBoard: React.FC = () => {
         invoiceAmount={invoiceAmount}
         setInvoiceAmount={setInvoiceAmount}
       />
-      <CampaignDashboard
-        loading={isLoading}
-        campaignDetails={campaignDetails}
-        screenLevelData={dashboardData}
-        filters={filters}
-        setFilters={setFilters}
-        sitesDataMapViewData={sitesDataMapViewData}
-        siteLevelData={siteLevelData}
-        loadingSiteLevel={loadingSiteLevel}
-        setOpenInvoice={setOpenInvoice}
-        openInvoice={openInvoice}
-      />
+      {!loadingCampaignDetails && campaignDetails ? (
+        <CampaignDashboard
+          loading={isLoading}
+          campaignDetails={campaignDetails}
+          screenLevelData={dashboardData}
+          filters={filters}
+          setFilters={setFilters}
+          sitesDataMapViewData={sitesDataMapViewData}
+          siteLevelData={siteLevelData}
+          loadingSiteLevel={loadingSiteLevel}
+          setOpenInvoice={setOpenInvoice}
+          openInvoice={openInvoice}
+        />
+      ) : (
+        <LoadingScreen />
+      )}
+      
     </div>
   );
 };

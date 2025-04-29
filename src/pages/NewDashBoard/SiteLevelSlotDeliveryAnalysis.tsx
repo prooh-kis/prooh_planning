@@ -96,19 +96,18 @@ export const SiteLevelSlotDeliveryAnalysis = ({
     }));
   }, [dispatch, campaignId, currentDate, dayTimeFilters]); 
 
-  console.log(dayTimeFilters);
   return (
     <div className="">
       {!loadingTabWiseSiteData && tabWiseSiteData && tabWiseSiteData.spotDeliveryData && Object.keys(tabWiseSiteData.spotDeliveryData).length > 0 ? (
-        <div className="grid grid-cols-5 gap-4 flex items-center">
-          <div className="col-span-3 flex items-center">
+        <div className="grid grid-cols-5 gap-2 flex items-center">
+          <div className="col-span-3 flex items-center p-4 border rounded-[12px] border-gray-100 shadow-sm">
             <DashBoardSlotGraph
               currentData={getSlotDeliveryData()?.countsArray}
               labels={getSlotDeliveryData()?.datesArray}
             />
           </div>
-          <div className="col-span-2 grid grid-cols-9 flex items-top pt-4">
-            <div className="col-span-5 bg-[#FFFFFF] p-4 border-r">
+          <div className="col-span-2 grid grid-cols-9 gap-2 h-full">
+            <div className="col-span-5 bg-[#FFFFFF] h-full p-4 border rounded-[12px] border-gray-100 shadow-sm">
               <div className="border-b">
                 <SectionHeaderWithSwitch
                   iconClass="fi-sr-computer"
@@ -185,7 +184,7 @@ export const SiteLevelSlotDeliveryAnalysis = ({
                 )}
               </div>
             </div>
-            <div className="col-span-4 bg-[#FFFFFF] p-4 border-l">
+            <div className="col-span-4 bg-[#FFFFFF] h-full p-4 border rounded-[12px] border-gray-100 shadow-sm">
               <div className="border-b">
                 <SectionHeaderWithSwitch
                   iconClass="fi-sr-computer"

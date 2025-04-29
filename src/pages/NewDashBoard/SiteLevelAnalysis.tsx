@@ -33,7 +33,7 @@ export function SiteLevelAnalysis({
     },
   });
   return (
-    <div>
+    <div className="w-full">
       {currentAnalysisTab == "1" ? (
         <SiteLevelDurationGraphAnalysis
           campaignId={screenData?.campaignId}

@@ -63,7 +63,7 @@ export const CalenderScaleStepper = ({
     Object.keys(weeks)?.forEach((weekKey: any) => {
 
       if (weekKey !== "End") {
-        const dateToAdd = new Date(weeks[weekKey][weeks[weekKey].length-1]?.value);
+        const dateToAdd = new Date(weeks[weekKey][weeks[weekKey]?.length-1]?.value);
         dateToAdd.setDate(dateToAdd.getDate() + 1);
  
         const resultDate = dateToAdd.toISOString().split('T')[0];
@@ -108,8 +108,8 @@ export const CalenderScaleStepper = ({
 
     if (input.type === "week") {
       setCurrentWeek?.(input.step + 1);
-      if (currentDay > weeks[input.step][1].length) {
-        setCurrentDay?.(weeks[input.step][1].length);
+      if (currentDay > weeks[input.step][1]?.length) {
+        setCurrentDay?.(weeks[input.step][1]?.length);
       }
       setCurrentDate?.(weeks[input.step][1][currentDay - 1]?.value);
     } else if (input.type === "day") {
@@ -126,12 +126,12 @@ export const CalenderScaleStepper = ({
   const getCurrentTime = useCallback(() => {
     let weekDates = weeks?.[currentWeek - 1]?.[1] || [];
 
-    if (currentWeek == weeks.length) {
+    if (currentWeek == weeks?.length) {
       // setCurrentWeekMinusValue(2)
       weekDates = weeks?.[currentWeek-2]?.[1]
     }
     
-    const numberOfGaps = weekDates.length - 1;
+    const numberOfGaps = weekDates?.length - 1;
     let timeMarkerPosition = 0;
 
     for (let i = 0; i < numberOfGaps; i++) {
@@ -152,14 +152,14 @@ export const CalenderScaleStepper = ({
     const today = moment();
     let todayMarkerLeft = 0;
     
-    const lastDate = new Date(allDates[allDates.length - 1]?.value)
+    const lastDate = new Date(allDates[allDates?.length - 1]?.value)
     if (getNumberOfDaysBetweenTwoDates(new Date(), lastDate) < 0) {
       todayMarkerLeft = 0
       return todayMarkerLeft
     }
 
-    if (weeks.length > 1) {
-      const totalWeeks = weeks.length - 1;
+    if (weeks?.length > 1) {
+      const totalWeeks = weeks?.length - 1;
       weeks.forEach(([_, dates], weekIndex) => {
         const match = dates?.find((d) =>
           moment(d?.value).isSame(today, "day")
@@ -197,10 +197,10 @@ export const CalenderScaleStepper = ({
 
     const currentWeekDates = weeks?.[currentWeek - 1]?.[1] || [];
     
-    if (currentWeekDates.length < 2) return "0.0"; // Need at least start and end dates
+    if (currentWeekDates?.length < 2) return "0.0"; // Need at least start and end dates
     
     const weekStart = new Date(currentWeekDates[0]?.value);
-    const weekEnd = new Date(currentWeekDates[currentWeekDates.length - 1]?.value);
+    const weekEnd = new Date(currentWeekDates[currentWeekDates?.length - 1]?.value);
     
     // Calculate total milliseconds in the week
     const totalWeekMs = weekEnd.getTime() - weekStart.getTime();
@@ -247,7 +247,7 @@ export const CalenderScaleStepper = ({
   }, [logsPopup, openInvoice, openSiteMapView]);
 
   useEffect(() => {
-    if (currentDate && allDates.length > 0) {
+    if (currentDate && allDates?.length > 0) {
       // Find the index of the currentDate in allDates
       const dateIndex = allDates.findIndex(date => 
         new Date(date?.value).toDateString() === new Date(currentDate).toDateString()
@@ -266,8 +266,8 @@ export const CalenderScaleStepper = ({
       if (dateIndex < 0) {
         setCurrentWeekMinusValue(2)
         setShowTooltip(false);
-        setCurrentWeek?.(weeks.length)
-        setCurrentDay?.(weeks[weeks.length-2][1].length)
+        setCurrentWeek?.(weeks?.length)
+        setCurrentDay?.(weeks[weeks?.length-2][1]?.length)
       }
     }
   }, [currentDate, allDates, setCurrentWeek, setCurrentDay, weeks]);
@@ -300,13 +300,13 @@ export const CalenderScaleStepper = ({
   return (
     <div className="w-full cursor-pointer" ref={componentRef}>
       <div className={`pt-16 ${logsPopup ? "mb-12" : "mb-20"} flex justify-center`}>
-        <div className={`flex-${weeks.length === 1 ? 0 : 1} h-1 bg-[#D1E5F7] relative mx-1`}>
+        <div className={`flex-${weeks?.length === 1 ? 0 : 1} h-1 bg-[#D1E5F7] relative mx-1`}>
           <div className="absolute inset-x-0 flex justify-between">
             <div
               className="absolute h-1 inset-x-0 bg-[#DC6700] rounded transition-all duration-500"
               style={{
                 width: `${weeks?.length === 1 ? 0 :
-                  Number((currentWeek - 1) / (weeks.length - 1)) * 100
+                  Number((currentWeek - 1) / (weeks?.length - 1)) * 100
                 }%`,
               }}
             />
@@ -314,9 +314,9 @@ export const CalenderScaleStepper = ({
               <div
                 className="absolute z-1 absolute h-1 inset-x-0 bg-[#FFD700] rounded transition-all duration-500"
                 style={{
-                  width: `${getCurrentDay() - (Number((currentWeek - 1) / (weeks.length - 1)) * 100)}%`,
+                  width: `${getCurrentDay() - (Number((currentWeek - 1) / (weeks?.length - 1)) * 100)}%`,
                   left: `${weeks?.length === 1 ? 0 :
-                  Number((currentWeek - 1) / (weeks.length - 1)) * 100
+                  Number((currentWeek - 1) / (weeks?.length - 1)) * 100
                 }%`
                 }}
               >
@@ -352,11 +352,11 @@ export const CalenderScaleStepper = ({
               const weekPercentageData = allWeekPercentages[i];
   
               let labelPosition = "";
-              if (i === 0 && weeks.length !== 1) {
+              if (i === 0 && weeks?.length !== 1) {
                 labelPosition = "left-0";
-              } else if (i === 0 && weeks.length === 1) {
+              } else if (i === 0 && weeks?.length === 1) {
                 labelPosition = "-left-1/2";
-              } else if (i + 1 === weeks.length) {
+              } else if (i + 1 === weeks?.length) {
                 labelPosition = "right-0";
               } else {
                 labelPosition = "left-1/2 transform ";

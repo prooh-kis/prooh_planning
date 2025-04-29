@@ -29,7 +29,7 @@ export const SiteLevelDurationGraphAnalysis = ({
   }, [dispatch, campaignId, currentDate]);
 
   return (
-    <div className="h-auto">
+    <div className="h-auto border rounded-[12px] border-gray-100 shadow-sm p-1">
       {loadingTabWiseSiteData ? (
         <LoadingScreen />
       ) : (

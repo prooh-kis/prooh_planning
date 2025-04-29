@@ -279,8 +279,8 @@ export const CampaignDashboardTable = ({
         downloadLogs={downloadLogs}
       />
       <table className="table-auto w-full">
-        <thead className="bg-[#EFF9FF] text-[#707070] font-medium rounded-[6px] w-full flex justify-between items-center">
-          <tr className="overflow-auto no-scrollbar flex grid grid-cols-12 w-full items-center h-[40px] border-b truncate">
+        <thead className="bg-[#EFF9FF] text-[#707070] font-medium rounded-[6px] w-full flex justify-between items-center border-x border-gray-100">
+          <tr className="overflow-auto no-scrollbar flex grid grid-cols-12 w-full items-center h-[40px] truncate">
             <th className="w-full flex items-center justify-center truncate col-span-3 truncate">
               <h1 className="text-[14px] truncate">Screen Name</h1>
             </th>
@@ -302,10 +302,7 @@ export const CampaignDashboardTable = ({
             <th className="w-full flex items-center justify-center col-span-1 truncate">
               <h1 className="text-[14px] truncate">Delivery</h1>
             </th>
-            <th className="w-full flex items-center justify-center col-span-1 truncate">
-              <h1 className="text-[14px] truncate">Monitoring</h1>
-            </th>
-            <th className="w-full flex items-center justify-center col-span-1 truncate">
+            <th className="w-full flex items-center justify-center col-span-2 truncate">
               <h1 className="text-[14px] truncate">Action</h1>
             </th>
           </tr>
@@ -315,7 +312,7 @@ export const CampaignDashboardTable = ({
             <React.Fragment key={index}>
               <tr
                 key={screenData}
-                className="grid grid-cols-12 flex w-full h-[40px] hover:bg-gray-100 hover:rounded-[6px] border-b text-[#0E212E] truncate"
+                className="grid grid-cols-12 flex w-full h-[40px] hover:bg-gray-100 hover:rounded-[6px] border-b border-x border-gray-100 rounded-b-xl shadow-sm text-[#0E212E] truncate"
               >
                 <td className="w-full flex items-center justify-start gap-4 col-span-3 grid grid-cols-8 pl-4 truncate">
                   <p className="text-[12px] col-span-1">
@@ -416,19 +413,30 @@ export const CampaignDashboardTable = ({
                     %
                   </p>
                 </td>
-                <td className="w-full flex items-center justify-center col-span-1 truncate">
-                  <Tooltip title="View Monitoring Pics">
-                    <i
-                      className="fi fi-sr-picture text-[12px] text-[#129BFF]"
-                      onClick={() => {
-                        setCurrentScreen(screenData);
-                        setOpenMonitoringPicsPopup(true);
-                      }}
-                    ></i>
-                  </Tooltip>
-                </td>
-                <td className="w-full flex items-center justify-center col-span-1 truncate">
+                <td className="w-full flex items-center justify-center col-span-2 truncate">
                   <div className="flex gap-4">
+                    <Tooltip title="Show site level analysis">
+                      <i
+                        className="fi fi-rs-chart-histogram text-[12px] text-[#129BFF]"
+                        title="Analytic"
+                        onClick={() => {
+                          setCurrentIndex(
+                            currentIndex === screenData?.campaignId
+                              ? null
+                              : screenData?.campaignId
+                          );
+                        }}
+                      ></i>
+                    </Tooltip>
+                    <Tooltip title="View Monitoring Pics">
+                      <i
+                        className="fi fi-sr-picture text-[12px] text-[#129BFF]"
+                        onClick={() => {
+                          setCurrentScreen(screenData);
+                          setOpenMonitoringPicsPopup(true);
+                        }}
+                      ></i>
+                    </Tooltip>
                     <Tooltip title="View Logs">
                       <i
                         className={`fi fi-sr-eye text-[12px] text-[#129BFF]`}
@@ -454,23 +462,12 @@ export const CampaignDashboardTable = ({
                         }}
                       ></i>
                     </Tooltip>
-                    <i
-                      className="fi fi-rs-chart-histogram text-[12px] text-[#129BFF]"
-                      title="Analytic"
-                      onClick={() => {
-                        setCurrentIndex(
-                          currentIndex === screenData?.campaignId
-                            ? null
-                            : screenData?.campaignId
-                        );
-                      }}
-                    ></i>
                   </div>
                 </td>
               </tr>
               {currentIndex === screenData?.campaignId && (
                 <tr className="">
-                  <td className="w-full p-4 rounded-[8px] shadow-md">
+                  <td className="w-full">
                     <SiteLevelComponent
                       screenData={screenData}
                       screenLevelData={screenLevelData}

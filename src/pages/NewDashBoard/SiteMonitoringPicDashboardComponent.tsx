@@ -12,7 +12,7 @@ const Monitoring = ({ bg, text, label }: MonitoringProps) => {
   return (
     <div
       // style={{ backgroundColor: bg, color: text }}
-      className="col-span-1 border border-gray gap-2 sm:gap-4 w-full p-2 rounded-md"
+      className="col-span-1 border border-gray-100 gap-2 sm:gap-4 w-full p-2 rounded-md"
     >
       <div
         style={{ backgroundColor: bg, color: text }}
@@ -79,7 +79,7 @@ export const SiteMonitoringPicDashboardComponent = ({
     };
   });
   return (
-    <div className="bg-[#FFFFFF] mt-2 w-full border border-gray-100 rounded-[12px] p-4">
+    <div className="bg-[#FFFFFF] mt-2 w-full border border-gray-100 rounded-[12px] shadow-sm p-4">
       {openSiteMapView && (
         <SiteMapViewDetailsPopup
           handleCancel={handleCancel}

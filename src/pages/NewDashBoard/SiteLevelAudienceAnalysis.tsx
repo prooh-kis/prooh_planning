@@ -90,8 +90,8 @@ export const SiteLevelAudienceAnalysis = ({
   return (
     <div className="">
       {!loadingTabWiseSiteData && tabWiseSiteData && tabWiseSiteData.audienceTypeData && Object.keys(tabWiseSiteData.audienceTypeData).length > 0 ? (
-        <div className="grid grid-cols-5 py-2">
-          <div className="col-span-3 border-r pr-4 pt-2">
+        <div className="grid grid-cols-5 gap-2">
+          <div className="col-span-3 p-4 border rounded-[12px] border-gray-100 shadow-sm pr-4 pt-2">
             <div className="">
               <h1 className="text-[14px] font-semibold">
                 Gender Wise Impressions
@@ -213,8 +213,8 @@ export const SiteLevelAudienceAnalysis = ({
               </div>
             </div>
           </div>
-          <div className="col-span-2 grid grid-cols-9 flex items-top pt-4">
-            <div className="col-span-5 bg-[#FFFFFF] p-4 border-r">
+          <div className="col-span-2 grid grid-cols-9 h-full gap-2">
+            <div className="col-span-5 bg-[#FFFFFF] h-full border rounded-[12px] border-gray-100 shadow-sm p-4">
               <div className="border-b">
                 <SectionHeaderWithSwitch
                   iconClass="fi-sr-computer"
@@ -288,7 +288,7 @@ export const SiteLevelAudienceAnalysis = ({
                 )}
               </div>
             </div>
-            <div className="col-span-4 bg-[#FFFFFF] p-4 border-l">
+            <div className="col-span-4 bg-[#FFFFFF] h-full border rounded-[12px] border-gray-100 shadow-sm p-4">
               <div className="border-b">
                 <SectionHeaderWithSwitch
                   iconClass="fi-sr-computer"
