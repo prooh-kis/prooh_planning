@@ -292,3 +292,11 @@ export const monitoringTypes = [
     value: "withGeoTag"
   }
 ];
+
+
+export const TIME_ZONES = {
+  "t1": [2, 3, 4, 5, 6, 7, 8, 9, 10], // 2-10
+  "t2": [11, 12, 13, 14, 15], // 11-3
+  "t3": [16, 17, 18, 19, 20], // 4-8
+  "t4": [21, 22, 23, 0, 1] // 9-1
+}

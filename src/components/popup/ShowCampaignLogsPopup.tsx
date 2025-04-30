@@ -12,6 +12,7 @@ import { GetCampaignLogsAction } from "../../actions/campaignAction";
 import { downloadExcel2 } from "../../utils/excelUtils";
 import { getSiteBasedDataOnLogsPageAction } from "../../actions/dashboardAction";
 import { MetricCard, SiteInfoHeader } from "./SiteMapViewDetailsPopup";
+import { TIME_ZONES } from "../../constants/helperConstants";
 
 export const ShowCampaignLogsPopup = ({
   open,
@@ -352,11 +353,18 @@ export const ShowCampaignLogsPopup = ({
                                       {entries.map((entry: any, index: any) => (
                                         <tr
                                           key={index}
-                                          className="grid grid-cols-12 bg-[#00A0FA10] border-b border-r hover:bg-gray-50 text-gray-700 p-1"
+                                          className={`
+                                            grid grid-cols-12 border-b border-r hover:bg-gray-50 text-gray-700 p-1
+                                            ${TIME_ZONES?.["t1"].includes(Number(hour)) ? "bg-[#F9E39650]" : 
+                                              TIME_ZONES?.["t2"].includes(Number(hour)) ? "bg-[#BCFFA650]" :
+                                              TIME_ZONES?.["t3"].includes(Number(hour)) ? "bg-[#D2CAFF50]" :
+                                              TIME_ZONES?.["t4"].includes(Number(hour)) ? "bg-[#EBFAFF50]" :
+                                              "bg-[#00A0FA10]"}
+                                          `}
                                         >
                                           <td className="col-span-1 py-2 flex items-center justify-center">
                                             <h1 className="text-[12px]">
-                                              {index+1} {JSON.stringify(hours[i])}
+                                              {index+1}
                                             </h1>
                                           </td>
                                           <td className="col-span-2 py-2 flex items-center justify-center">
@@ -377,12 +385,12 @@ export const ShowCampaignLogsPopup = ({
                                           <td
                                             className={`col-span-2 py-2 flex items-center justify-center ${
                                               entry.screenStatus === "online"
-                                                ? "text-green-600"
-                                                : "text-red-600"
+                                                ? "text-[#59A237]"
+                                                : "text-[#EFEFEF]"
                                             }`}
                                           >
                                             <h1 className="text-[12px]">
-                                              {entry.screenStatus}
+                                              {entry.screenStatus.toUpperCase()}
                                             </h1>
                                           </td>
                                         </tr>
@@ -453,7 +461,37 @@ export const ShowCampaignLogsPopup = ({
                   )
                 )}
               </div>
-              
+            </div>
+
+            <div className="grid grid-cols-12">
+              <div className="col-span-8 pt-4 flex items-center gap-4">
+                <div className="flex items-center justify-start gap-2">
+                  <div className="h-4 w-4 bg-[#F9E396] rounded-full" />
+                  <h1 className="text-[12px]">T1 (2:00 AM to 10:59 AM)</h1>
+                </div>
+                <div className="flex items-center justify-start gap-2">
+                  <div className="h-4 w-4 bg-[#BCFFA6] rounded-full" />
+                  <h1 className="text-[12px]">T2 (11:00 AM to 3:59 PM)</h1>
+                </div>
+                <div className="flex items-center justify-start gap-2">
+                  <div className="h-4 w-4 bg-[#D2CAFF] rounded-full" />
+                  <h1 className="text-[12px]">T3 (04:00 PM to 08:59 PM)</h1>
+                </div>
+                <div className="flex items-center justify-start gap-2">
+                  <div className="h-4 w-4 bg-[#EBFAFF] rounded-full" />
+                  <h1 className="text-[12px]">T4 (09:00 PM to 01:59 AM)</h1>
+                </div>
+              </div>
+              <div className="col-span-4 pt-4 flex items-center justify-end gap-4">
+                <div className="flex items-center justify-start gap-2">
+                  <div className="h-4 w-4 bg-[#59A237] rounded-full" />
+                  <h1 className="text-[12px]">Online</h1>
+                </div>
+                <div className="flex items-center justify-start gap-2">
+                  <div className="h-4 w-4 bg-[#EFEFEF] rounded-full" />
+                  <h1 className="text-[12px]">Offline</h1>
+                </div>
+              </div>
             </div>
           </div>
         ) : (

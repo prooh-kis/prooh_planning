@@ -157,13 +157,10 @@ export const HardwarePerformanceSegment = ({
                 bgColor=" bg-[#6982FF]"
                 dataValue={
                   <h1 className="text-[12px] font-semibold truncate">
-                    Total-{dataToShow.hardwarePerformanceDelivered.toFixed(0)}%
+                    Total-{dataToShow?.hardwarePerformanceDelivered?.toFixed(0)}%
                     <span className="text-[#0E212E]">
                       /
-                      {dataToShow.hardwarePerformancePromisedTillDate.toFixed(
-                        0
-                      )}
-                      %
+                      {dataToShow?.hardwarePerformancePromisedTillDate?.toFixed(0)}%
                     </span>
                   </h1>
                 }
@@ -241,9 +238,9 @@ export const HardwarePerformanceSegment = ({
                         />
                         <h1 className="text-[10px]">
                           {formatNumber(
-                            hardwarePerformanceData.cityWiseData[
+                            hardwarePerformanceData?.cityWiseData[
                               cityKey
-                            ]?.hardwarePerformanceDelivered.toFixed(0)
+                            ]?.hardwarePerformanceDelivered?.toFixed(0)
                           )}
                           %
                         </h1>
@@ -316,9 +313,9 @@ export const HardwarePerformanceSegment = ({
                         />
                         <h1 className="text-[10px]">
                           {formatNumber(
-                            hardwarePerformanceData.touchPointWiseData[
+                            hardwarePerformanceData?.touchPointWiseData[
                               tpKey
-                            ]?.hardwarePerformanceDelivered.toFixed(0)
+                            ]?.hardwarePerformanceDelivered?.toFixed(0)
                           )}
                           %
                         </h1>
@@ -391,9 +388,9 @@ export const HardwarePerformanceSegment = ({
                         />
                         <h1 className="text-[10px]">
                           {formatNumber(
-                            hardwarePerformanceData.screenTypeWiseData[
+                            hardwarePerformanceData?.screenTypeWiseData[
                               stKey
-                            ]?.hardwarePerformanceDelivered.toFixed(0)
+                            ]?.hardwarePerformanceDelivered?.toFixed(0)
                           )}
                           %
                         </h1>
@@ -466,9 +463,9 @@ export const HardwarePerformanceSegment = ({
                         />
                         <h1 className="text-[10px]">
                           {formatNumber(
-                            hardwarePerformanceData.dayWiseData[
+                            hardwarePerformanceData?.dayWiseData[
                               dayKey
-                            ]?.hardwarePerformanceDelivered.toFixed(0)
+                            ]?.hardwarePerformanceDelivered?.toFixed(0)
                           )}
                           %
                         </h1>
@@ -541,9 +538,9 @@ export const HardwarePerformanceSegment = ({
                         />
                         <h1 className="text-[10px]">
                           {formatNumber(
-                            hardwarePerformanceData.timeWiseData[
+                            hardwarePerformanceData?.timeWiseData[
                               timeKey
-                            ]?.hardwarePerformanceDelivered.toFixed(0)
+                            ]?.hardwarePerformanceDelivered?.toFixed(0)
                           )}
                           %
                         </h1>

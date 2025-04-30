@@ -84,19 +84,21 @@ export const AudienceSegment = ({
   
 
   useEffect(() => {
-    if (filters && campaignId && !audienceData) {
+    if (filters && campaignId) {
       dispatch(
         getAudienceDataForPlannerDashboard({
           id: campaignId,
           cities: filters.cities.audience?.filter((f: any) => f !== "all"),
           touchPoints: filters.touchPoints.audience?.filter((f: any) => f !== "all"),
           screenTypes: filters.screenTypes.audience?.filter((f: any) => f !== "all"),
+          dayTypes: filters.dayTypes.audience?.filter((f: any) => f !== "all"),
+          timezones: filters.timezones.audience?.filter((f: any) => f !== "all"),
         })
       );
     }
 
-  },[dispatch, campaignId, filters, audienceData])
-
+  },[dispatch, campaignId, filters])
+console.log(audienceData)
   return (
     <div className="w-full h-full">
       {loadingAudienceData && (

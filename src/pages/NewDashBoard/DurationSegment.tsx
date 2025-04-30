@@ -29,7 +29,6 @@ export const DurationSegment = ({
     (state: any) => state.slotDeliveryGraphDateWiseForPlannerDashboard
   );
 
-  console.log("khi", logsPopup)
   useEffect(() => {
     const date = new Date(currentDate);
     date.setMinutes(date.getMinutes() + 29);
