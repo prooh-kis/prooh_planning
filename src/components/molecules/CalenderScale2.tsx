@@ -228,12 +228,12 @@ export const CalenderScaleStepper = ({
         // Check if the component is in the middle of the viewport
         const componentMiddle = rect.top + rect.height / 4;
         const viewportMiddle = viewportHeight / 2;
-        const isInMiddle = Math.abs(componentMiddle - viewportMiddle) < viewportHeight * 0.25;
+        const isInMiddle = Math.abs(componentMiddle - viewportMiddle) < viewportHeight * 0.15;
         setShowTooltip(isInMiddle);
+        if (logsPopup) return setShowTooltip(false);
         if (openSiteMapView) return setShowTooltip(false);
         if (openMonitoringView) return setShowTooltip(false);
         if (openInvoice) return setShowTooltip(false);
-        if (logsPopup) return setShowTooltip(false);
       }
     };
 

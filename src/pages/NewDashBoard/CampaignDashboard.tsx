@@ -51,6 +51,10 @@ export const CampaignDashboard = ({
     new Date().toISOString().split("T")[0]
   );
 
+  const [openSiteLevelLogsPopup, setOpenSiteLevelLogsPopup] = useState<any>(false);
+  const [openSiteLevelMonitoringPicsPopup, setOpenSiteLevelMonitoringPicsPopup] =
+    useState<any>(false);
+
   const [showPercent, setShowPercent] = useState<any>({
     1: false,
     2: false,
@@ -306,6 +310,7 @@ export const CampaignDashboard = ({
               openSiteMapView={openSiteMapView}
               openMonitoringView={openMonitoringView}
               openInvoice={openInvoice}
+              logsPopup={openSiteLevelLogsPopup}
             />
           ) : clicked === "2" ? (
             <AudienceSegment
@@ -376,6 +381,10 @@ export const CampaignDashboard = ({
           setCalendarData={setCalendarData}
           calendarData={calendarData}
           allDates={allDates}
+          openSiteLevelLogsPopup={openSiteLevelLogsPopup}
+          setOpenSiteLevelLogsPopup={setOpenSiteLevelLogsPopup}
+          openSiteLevelMonitoringPicsPopup={openSiteLevelMonitoringPicsPopup}
+          setOpenSiteLevelMonitoringPicsPopup={setOpenSiteLevelMonitoringPicsPopup}
         />
       </div>
     </div>

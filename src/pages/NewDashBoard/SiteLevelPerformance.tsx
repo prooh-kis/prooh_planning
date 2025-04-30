@@ -26,6 +26,10 @@ interface SiteLevelPerformanceProps {
   setCalendarData?: any;
   calendarData?: any;
   allDates?: any;
+  openSiteLevelLogsPopup?: any;
+  setOpenSiteLevelLogsPopup?: any;
+  openSiteLevelMonitoringPicsPopup?: any;
+  setOpenSiteLevelMonitoringPicsPopup?: any;
 }
 
 export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
@@ -41,7 +45,11 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
   currentDate,
   setCalendarData,
   calendarData,
-  allDates
+  allDates,
+  openSiteLevelLogsPopup,
+  setOpenSiteLevelLogsPopup,
+  openSiteLevelMonitoringPicsPopup,
+  setOpenSiteLevelMonitoringPicsPopup,
 }) => {
   const [siteLevelFilters, setSiteLevelFilters] = useState({
     city: "",
@@ -155,6 +163,10 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
             setCalendarData={setCalendarData}
             calendarData={calendarData}
             allDates={allDates}
+            openSiteLevelLogsPopup={openSiteLevelLogsPopup}
+            setOpenSiteLevelLogsPopup={setOpenSiteLevelLogsPopup}
+            openSiteLevelMonitoringPicsPopup={openSiteLevelMonitoringPicsPopup}
+            setOpenSiteLevelMonitoringPicsPopup={setOpenSiteLevelMonitoringPicsPopup}
           />
         )}
 

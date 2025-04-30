@@ -33,6 +33,10 @@ interface CostSummaryTableProps {
   showPercent?: any;
   setShowPercent?: any;
   allDates?: any
+  openSiteLevelLogsPopup?: any;
+  setOpenSiteLevelLogsPopup?: any;
+  openSiteLevelMonitoringPicsPopup?: any;
+  setOpenSiteLevelMonitoringPicsPopup?: any;
 }
 
 interface PercentageDisplayProps {
@@ -159,12 +163,14 @@ export const CampaignDashboardTable = ({
   setCalendarData,
   calendarData,
   allDates,
+  openSiteLevelLogsPopup,
+  setOpenSiteLevelLogsPopup,
+  openSiteLevelMonitoringPicsPopup,
+  setOpenSiteLevelMonitoringPicsPopup,
 }: CostSummaryTableProps) => {
   const dispatch = useDispatch<any>();
   const [isDownLoad, setIsDownload] = useState<string>("");
-  const [openLogsPopup, setOpenLogsPopup] = useState<any>(false);
-  const [openMonitoringPicsPopup, setOpenMonitoringPicsPopup] =
-    useState<any>(false);
+  
   const [currentScreen, setCurrentScreen] = useState<any>(null);
   const [currentIndex, setCurrentIndex] = useState<any>(null);
 
@@ -197,11 +203,11 @@ export const CampaignDashboardTable = ({
         setCurrentWeek(Math.ceil(daysPassed / 7));
       }
     }
-  }, [campaignDetails]);
+  }, [campaignDetails, setCurrentDay, setCurrentWeek]);
 
   const onClose = () => {
-    setOpenLogsPopup(false);
-    setOpenMonitoringPicsPopup(false);
+    setOpenSiteLevelLogsPopup(false);
+    setOpenSiteLevelMonitoringPicsPopup(false);
     setCurrentScreen(null);
   };
 
@@ -259,14 +265,14 @@ export const CampaignDashboardTable = ({
     <div>
       <ShowMonitoringPicPopup
         onClose={onClose}
-        open={openMonitoringPicsPopup}
+        open={openSiteLevelMonitoringPicsPopup}
         currentSite={currentScreen || []}
       />
       <ShowCampaignLogsPopup
         logs={logs}
         siteBasedDataOnLogs={siteBasedData}
         loading={loadingLogs || loadingSiteBasedDataOnLogs}
-        open={openLogsPopup}
+        open={openSiteLevelLogsPopup}
         onClose={onClose}
         calendarData={calendarData}
         campaignDetails={campaignDetails}
@@ -436,7 +442,7 @@ export const CampaignDashboardTable = ({
                         className="fi fi-sr-picture text-[12px] text-[#129BFF]"
                         onClick={() => {
                           setCurrentScreen(screenData);
-                          setOpenMonitoringPicsPopup(true);
+                          setOpenSiteLevelMonitoringPicsPopup(true);
                         }}
                       ></i>
                     </Tooltip>
@@ -446,7 +452,7 @@ export const CampaignDashboardTable = ({
                         onClick={() => {
                           setCurrentScreen(screenData);
                           setCalendarData(screenData.slotDataDateWise);
-                          setOpenLogsPopup(true);
+                          setOpenSiteLevelLogsPopup(true);
                         }}
                       ></i>
                     </Tooltip>

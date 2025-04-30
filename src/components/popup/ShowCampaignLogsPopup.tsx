@@ -215,7 +215,7 @@ export const ShowCampaignLogsPopup = ({
             loading={loading}
             openSiteMapView={false}
             openMonitoringView={false}
-            logsPopup={true}
+            logsPopup={open}
           />
         </div>
         {loading ? (
@@ -264,7 +264,12 @@ export const ShowCampaignLogsPopup = ({
                       </h2>
                     </div> */}
                     <div className="col-span-6 grid grid-cols-12 border-b ">
-                      <div className="col-span-3 py-1 flex items-center justify-center">
+                      <div className="col-span-1 py-1 flex items-center justify-center">
+                        <h2 className="text-sm font-semibold text-gray-600">
+                          {"Spot"}
+                        </h2>
+                      </div>
+                      <div className="col-span-2 py-1 flex items-center justify-center">
                         <h2 className="text-sm font-semibold text-gray-600">
                           {"Time"}
                         </h2>
@@ -323,11 +328,11 @@ export const ShowCampaignLogsPopup = ({
                             {date}
                           </h2>
                         </div> */}
-                        <div className="col-span-12 overflow-scroll no-scrollbar h-[90vh]">
+                        <div className="col-span-12 overflow-scroll no-scrollbar h-[70vh]">
                           {Object.keys(hours)
                             .sort((a, b) => Number(a) - Number(b))
                             .map((key) => [key, hours[key]])
-                            .map(([hour, entries]: any) => (
+                            .map(([hour, entries]: any, i: any) => (
                               <div
                                 key={hour}
                                 className="grid grid-cols-9"
@@ -339,7 +344,7 @@ export const ShowCampaignLogsPopup = ({
                                   </h3>
                                 </div> */}
                                 <div
-                                  className="col-span-6 overflow-scroll no-scrollbar h-[80vh]"
+                                  className="col-span-6 overflow-scroll no-scrollbar h-[60vh]"
                                   ref={(el) => (scrollRefs.current[hour] = el)}
                                 >
                                   <table className="min-w-full bg-white">
@@ -347,9 +352,14 @@ export const ShowCampaignLogsPopup = ({
                                       {entries.map((entry: any, index: any) => (
                                         <tr
                                           key={index}
-                                          className="grid grid-cols-12 bg-[#00A0FA10] border-b border-r border-gray-100 hover:bg-gray-50 text-gray-700 p-1"
+                                          className="grid grid-cols-12 bg-[#00A0FA10] border-b border-r hover:bg-gray-50 text-gray-700 p-1"
                                         >
-                                          <td className="col-span-3 py-2 flex items-center justify-center">
+                                          <td className="col-span-1 py-2 flex items-center justify-center">
+                                            <h1 className="text-[12px]">
+                                              {index+1} {JSON.stringify(hours[i])}
+                                            </h1>
+                                          </td>
+                                          <td className="col-span-2 py-2 flex items-center justify-center">
                                             <h1 className="text-[12px]">
                                               {new Date(entry.logTime).toLocaleTimeString()}
                                             </h1>
@@ -380,7 +390,7 @@ export const ShowCampaignLogsPopup = ({
                                     </tbody>
                                   </table>
                                 </div>
-                                <div className="col-span-3 h-auto grid grid-cols-3">
+                                <div className="col-span-3 h-auto border-b grid grid-cols-3">
                                   <div className="col-span-1 bg-[#00A0FA10] flex justify-center items-center gap-2 p-2">
                                     <h1
                                       className={

@@ -22,12 +22,14 @@ export const DurationSegment = ({
   openInvoice,
   campaignId,
   openMonitoringView,
+  logsPopup,
 }: any) => {
   const dispatch = useDispatch<any>();
   const { loading: loadingHourlySpotDelivery, data: hourlySpotDelivery } = useSelector(
     (state: any) => state.slotDeliveryGraphDateWiseForPlannerDashboard
   );
 
+  console.log("khi", logsPopup)
   useEffect(() => {
     const date = new Date(currentDate);
     date.setMinutes(date.getMinutes() + 29);
@@ -61,6 +63,7 @@ export const DurationSegment = ({
             openSiteMapView={openSiteMapView}
             openMonitoringView={openMonitoringView}
             openInvoice={openInvoice}
+            logsPopup={logsPopup}
           />
         </div>
       )}
