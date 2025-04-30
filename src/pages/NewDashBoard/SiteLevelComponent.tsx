@@ -1,13 +1,16 @@
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import React, { useState } from "react";
-import {
-  siteLevelPerformanceTabData,
-} from "../../constants/tabDataConstant";
+import { siteLevelPerformanceTabData } from "../../constants/tabDataConstant";
 import { SiteLevelAnalysis } from "./SiteLevelAnalysis";
 import { useDispatch } from "react-redux";
 import { GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_RESET } from "../../constants/dashboardConstant";
 
-const SiteLevelComponent = ({ screenData, screenLevelData, currentDate }: any) => {
+const SiteLevelComponent = ({
+  screenData,
+  screenLevelData,
+  currentDate,
+  handleCancel,
+}: any) => {
   const dispatch = useDispatch<any>();
 
   const [currentAnalysisTab, setCurrentAnalysisTab] = useState<string>("1");
@@ -26,16 +29,24 @@ const SiteLevelComponent = ({ screenData, screenLevelData, currentDate }: any) =
       {currentTab1 == "1" ? ( */}
       <div className="w-full">
         <div className="rounded-[12px] bg-[#FFFFFF] border border-gray-100 shadow-sm px-4 pt-4 mt-2">
-          <h1 className="text-[20px] font-semibold font-inter text-[#0E212E] pb-2">
-            {screenData?.screenName}
-          </h1>
+          <div className="flex justify-between items-center">
+            <h1 className="text-[20px] font-semibold font-inter text-[#0E212E] pb-2">
+              {screenData?.screenName}
+            </h1>
+            <i
+              className="fi fi-br-cross text-[10px] cursor-pointer"
+              title="Close"
+              onClick={handleCancel}
+            />
+          </div>
+
           <TabWithoutIcon
             tabData={siteLevelPerformanceTabData}
             currentTab={currentAnalysisTab}
             setCurrentTab={(e: any) => {
               dispatch({
-                type: GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_RESET
-              })
+                type: GET_SITE_LEVEL_PERFORMANCE_DATA_TAB_WISE_FOR_PLANNER_DASHBOARD_RESET,
+              });
               setCurrentAnalysisTab(e);
             }}
             textSize="text-[14px]"
@@ -50,7 +61,6 @@ const SiteLevelComponent = ({ screenData, screenLevelData, currentDate }: any) =
             siteAnalysisTabData={siteLevelPerformanceTabData}
           />
         </div>
-        
       </div>
       {/* ) : currentTab1 == "2" ? (
         <div className="w-full">

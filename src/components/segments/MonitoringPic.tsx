@@ -99,18 +99,24 @@ export const MonitoringPic = ({
 
   return (
     <div className="h-full">
-      <div className="flex gap-4">
-        {getTabData().map((data) => (
-          <ButtonInput
-            variant={currentTab === data.id ? "primary" : "outline"}
-            rounded="full"
-            size="small"
-            onClick={() => setCurrentTab(data.id)}
-            key={data.id}
-          >
-            {data.label}
-          </ButtonInput>
-        ))}
+      <div className="flex justify-between items-center">
+        <div className="flex gap-4">
+          {getTabData().map((data) => (
+            <ButtonInput
+              variant={currentTab === data.id ? "primary" : "outline"}
+              rounded="full"
+              size="small"
+              onClick={() => setCurrentTab(data.id)}
+              key={data.id}
+            >
+              {data.label}
+            </ButtonInput>
+          ))}
+        </div>
+        <div className="flex gap-1 items-center text-[14px]">
+          <i className="fi fi-rr-calendar flex item-center text-[#129BFF]"></i>
+          <span>{result?.find((d) => d.dateType == currentTab)?.date}</span>
+        </div>
       </div>
 
       {currentTabData.length === 0 ? (

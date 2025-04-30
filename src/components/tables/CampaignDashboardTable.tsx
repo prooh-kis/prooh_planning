@@ -32,7 +32,7 @@ interface CostSummaryTableProps {
   calendarData?: any;
   showPercent?: any;
   setShowPercent?: any;
-  allDates?: any
+  allDates?: any;
   openSiteLevelLogsPopup?: any;
   setOpenSiteLevelLogsPopup?: any;
   openSiteLevelMonitoringPicsPopup?: any;
@@ -170,7 +170,7 @@ export const CampaignDashboardTable = ({
 }: CostSummaryTableProps) => {
   const dispatch = useDispatch<any>();
   const [isDownLoad, setIsDownload] = useState<string>("");
-  
+
   const [currentScreen, setCurrentScreen] = useState<any>(null);
   const [currentIndex, setCurrentIndex] = useState<any>(null);
 
@@ -481,6 +481,13 @@ export const CampaignDashboardTable = ({
                       screenData={screenData}
                       screenLevelData={screenLevelData}
                       currentDate={currentDate}
+                      handleCancel={() => {
+                        setCurrentIndex(
+                          currentIndex === screenData?.campaignId
+                            ? null
+                            : screenData?.campaignId
+                        );
+                      }}
                     />
                   </td>
                 </tr>
