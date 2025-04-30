@@ -311,6 +311,7 @@ export const CampaignDashboard = ({
               openMonitoringView={openMonitoringView}
               openInvoice={openInvoice}
               logsPopup={openSiteLevelLogsPopup}
+              monitoringPopup={openSiteLevelMonitoringPicsPopup}
             />
           ) : clicked === "2" ? (
             <AudienceSegment
