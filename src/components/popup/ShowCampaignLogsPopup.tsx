@@ -230,8 +230,59 @@ export const ShowCampaignLogsPopup = ({
                 Hourly Based Logs{" "}
               </h1>
             </div>
-            <div className="mx-auto grid grid-cols-12 gap-2">
-              <div className="col-span-4 border rounded-[12px] border-gray-100">
+            <div className="grid grid-cols-12 bg-[#129BFF] rounded-t-[12px]">
+              <div className="col-span-4 py-1 flex items-center justify-center">
+                <h2 className="text-sm font-semibold text-white">
+                  {"Screen Details"}
+                </h2>
+              </div>
+              <div className="col-span-8 grid grid-cols-9">
+                <div className="col-span-6 grid grid-cols-12">
+                  <div className="col-span-1 py-1 flex items-center justify-center">
+                    <h2 className="text-sm font-semibold text-white">
+                      {"Spot"}
+                    </h2>
+                  </div>
+                  <div className="col-span-2 py-1 flex items-center justify-center">
+                    <h2 className="text-sm font-semibold text-white">
+                      {"Time"}
+                    </h2>
+                  </div>
+                  <div className="col-span-4 py-1 flex items-center justify-center">
+                    <h2 className="text-sm font-semibold text-white">
+                      {"Creative"}
+                    </h2>
+                  </div>
+                  <div className="col-span-3 py-1 flex items-center justify-center">
+                    <h2 className="text-sm font-semibold text-white">
+                      {"Brand"}
+                    </h2>
+                  </div>
+                  <div className="col-span-2 py-1 flex justify-center">
+                    <i className="fi fi-br-wifi text-[#FFFFFF] flex items-center justify-center"></i>
+                  </div>
+                </div>
+                <div className="col-span-3 border-b grid grid-cols-3">
+                  <div className="col-span-1 py-1 flex items-center justify-center">
+                    <h2 className="text-sm font-semibold text-white">
+                      {"Delivered"}
+                    </h2>
+                  </div>
+                  <div className="col-span-1 py-1 flex items-center justify-center">
+                    <h2 className="text-sm font-semibold text-white">
+                      {"Promised"}
+                    </h2>
+                  </div>
+                  <div className="col-span-1 py-1 flex items-center justify-center">
+                    <h2 className="text-sm font-semibold text-white">
+                      {"Av. Loop Time"}
+                    </h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="mx-auto grid grid-cols-12">
+              <div className="col-span-4 border border-gray-100 rounded-bl-[12px] border-gray-100">
                 <SiteInfoHeader
                   screenName={siteBasedDataOnLogs?.screenName}
                   address={siteBasedDataOnLogs?.address}
@@ -253,61 +304,7 @@ export const ShowCampaignLogsPopup = ({
                   ))}
                 </div>
               </div>
-              <div className="col-span-8 border rounded-[12px] border-gray-100">
-                <div className="grid grid-cols-12">
-                  {/* <div className="col-span-1 p-2 flex justify-center items-center">
-                    <h2 className="text-sm font-bold text-gray-700 ">{"Date"}</h2>
-                  </div> */}
-                  <div className="col-span-12 grid grid-cols-9">
-                    {/* <div className="col-span-3 p-2 border flex justify-center items-center">
-                      <h2 className="text-sm font-semibold text-gray-600">
-                        {"Hour"}
-                      </h2>
-                    </div> */}
-                    <div className="col-span-6 grid grid-cols-12 border-b ">
-                      <div className="col-span-1 py-1 flex items-center justify-center">
-                        <h2 className="text-sm font-semibold text-gray-600">
-                          {"Spot"}
-                        </h2>
-                      </div>
-                      <div className="col-span-2 py-1 flex items-center justify-center">
-                        <h2 className="text-sm font-semibold text-gray-600">
-                          {"Time"}
-                        </h2>
-                      </div>
-                      <div className="col-span-4 py-1 flex items-center justify-center">
-                        <h2 className="text-sm font-semibold text-gray-600">
-                          {"Creative"}
-                        </h2>
-                      </div>
-                      <div className="col-span-3 py-1 flex items-center justify-center">
-                        <h2 className="text-sm font-semibold text-gray-600">
-                          {"Brand"}
-                        </h2>
-                      </div>
-                      <div className="col-span-2 py-1 flex justify-center">
-                        <i className="fi fi-br-wifi text-[#22C55E] flex items-center justify-center"></i>
-                      </div>
-                    </div>
-                    <div className="col-span-3 border-b grid grid-cols-3">
-                      <div className="col-span-1 py-1 flex items-center justify-center">
-                        <h2 className="text-sm font-semibold text-gray-600">
-                          {"Delivered"}
-                        </h2>
-                      </div>
-                      <div className="col-span-1 py-1 flex items-center justify-center">
-                        <h2 className="text-sm font-semibold text-gray-600">
-                          {"Promised"}
-                        </h2>
-                      </div>
-                      <div className="col-span-1 py-1 flex items-center justify-center">
-                        <h2 className="text-sm font-semibold text-gray-600">
-                          {"Av. Loop Time"}
-                        </h2>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div className="col-span-8 border-b rounded-br-[12px] border-gray-100">
                 {Object.entries(newCombinedData?.hrWiseLogs).map(
                   ([date, hours]: any) => (
                     <div key={date}>
@@ -323,153 +320,134 @@ export const ShowCampaignLogsPopup = ({
                           </Tooltip>
                         </div>
                       )}
-                      <div className="grid grid-cols-12 w-full border-b rounded">
-                        {/* <div className="col-span-1 p-2 border flex justify-center items-center h-[50vh]">
-                          <h2 className="text-xl font-bold text-gray-700">
-                            {date}
-                          </h2>
-                        </div> */}
-                        <div className="col-span-12 overflow-scroll no-scrollbar h-[80vh]">
-                          {Object.keys(hours)
-                            .sort((a, b) => Number(a) - Number(b))
-                            .map((key) => [key, hours[key]])
-                            .map(([hour, entries]: any, i: any) => (
+                      <div className="overflow-scroll no-scrollbar h-[75vh] border-r border-gray-100 rounded-br-[12px]">
+                        {Object.keys(hours)
+                          .sort((a, b) => Number(a) - Number(b))
+                          .map((key) => [key, hours[key]])
+                          .map(([hour, entries]: any, i: any) => (
+                            <div
+                              key={hour}
+                              className="grid grid-cols-9 "
+                            >
                               <div
-                                key={hour}
-                                className="grid grid-cols-9"
+                                className="col-span-6 overflow-scroll no-scrollbar h-[75vh] border-b"
+                                ref={(el) => (scrollRefs.current[hour] = el)}
                               >
-                                {/* <div className="col-span-3 p-2 border flex justify-center items-center h-[50vh]">
-                                  <h3 className="text-md font-semibold text-gray-600 truncate">
-                                    {transformToAmPm(`${hour}:00:00`)} to{" "}
-                                    {transformToAmPm(`${hour}:59:59`)}
-                                  </h3>
-                                </div> */}
-                                <div
-                                  className="col-span-6 overflow-scroll no-scrollbar h-[80vh] border-b"
-                                  ref={(el) => (scrollRefs.current[hour] = el)}
-                                >
-                                  <table className="min-w-full bg-white">
-                                    <tbody>
-                                      {entries.map((entry: any, index: any) => (
-                                        <tr
-                                          key={index}
-                                          className={`
-                                            grid grid-cols-12 border-b border-r hover:bg-gray-50 text-gray-700 p-1
-                                            ${TIME_ZONES?.["t1"].includes(Number(hour)) ? "bg-[#F9E39650]" : 
-                                              TIME_ZONES?.["t2"].includes(Number(hour)) ? "bg-[#BCFFA650]" :
-                                              TIME_ZONES?.["t3"].includes(Number(hour)) ? "bg-[#D2CAFF50]" :
-                                              TIME_ZONES?.["t4"].includes(Number(hour)) ? "bg-[#EBFAFF50]" :
-                                              "bg-[#00A0FA10]"}
-                                          `}
+                                <table className="min-w-full bg-white">
+                                  <tbody>
+                                    {entries.map((entry: any, index: any) => (
+                                      <tr
+                                        key={index}
+                                        className={`
+                                          grid grid-cols-12 border-b border-gray-100 hover:bg-gray-50 text-gray-700 p-1
+                                          ${TIME_ZONES?.["t1"].includes(Number(hour)) ? "bg-[#F9E39650]" : 
+                                            TIME_ZONES?.["t2"].includes(Number(hour)) ? "bg-[#BCFFA650]" :
+                                            TIME_ZONES?.["t3"].includes(Number(hour)) ? "bg-[#D2CAFF50]" :
+                                            TIME_ZONES?.["t4"].includes(Number(hour)) ? "bg-[#EBFAFF50]" :
+                                            "bg-[#00A0FA10]"}
+                                        `}
+                                      >
+                                        <td className="col-span-1 py-2 flex items-center justify-center">
+                                          <h1 className="text-[12px]">
+                                            {index+1}
+                                          </h1>
+                                        </td>
+                                        <td className="col-span-2 py-2 flex items-center justify-center">
+                                          <h1 className="text-[12px]">
+                                            {new Date(entry.logTime).toLocaleTimeString()}
+                                          </h1>
+                                        </td>
+                                        <td className="col-span-4 py-2 flex items-center justify-center">
+                                          <h1 className="text-[12px]">
+                                            {entry.mediaId.split("_")[1]}
+                                          </h1>
+                                        </td>
+                                        <td className="col-span-3 py-2 flex items-center justify-center">
+                                          <h1 className="text-[12px]">
+                                            {entry.brandName}
+                                          </h1>
+                                        </td>
+                                        <td
+                                          className={`col-span-2 py-2 flex items-center justify-center ${
+                                            entry.screenStatus === "online"
+                                              ? "text-[#59A237]"
+                                              : "text-gray-500"
+                                          }`}
                                         >
-                                          <td className="col-span-1 py-2 flex items-center justify-center">
-                                            <h1 className="text-[12px]">
-                                              {index+1}
-                                            </h1>
-                                          </td>
-                                          <td className="col-span-2 py-2 flex items-center justify-center">
-                                            <h1 className="text-[12px]">
-                                              {new Date(entry.logTime).toLocaleTimeString()}
-                                            </h1>
-                                          </td>
-                                          <td className="col-span-4 py-2 flex items-center justify-center">
-                                            <h1 className="text-[12px]">
-                                              {entry.mediaId.split("_")[1]}
-                                            </h1>
-                                          </td>
-                                          <td className="col-span-3 py-2 flex items-center justify-center">
-                                            <h1 className="text-[12px]">
-                                              {entry.brandName}
-                                            </h1>
-                                          </td>
-                                          <td
-                                            className={`col-span-2 py-2 flex items-center justify-center ${
-                                              entry.screenStatus === "online"
-                                                ? "text-[#59A237]"
-                                                : "text-[#EFEFEF]"
-                                            }`}
-                                          >
-                                            <h1 className="text-[12px]">
-                                              {entry.screenStatus.toUpperCase()}
-                                            </h1>
-                                          </td>
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </table>
-                                </div>
-                                <div className={`
-                                  col-span-3 h-auto border-b grid grid-cols-3      
-                                  ${TIME_ZONES?.["t1"].includes(Number(hour)) ? "bg-[#F9E39650]" : 
-                                    TIME_ZONES?.["t2"].includes(Number(hour)) ? "bg-[#BCFFA650]" :
-                                    TIME_ZONES?.["t3"].includes(Number(hour)) ? "bg-[#D2CAFF50]" :
-                                    TIME_ZONES?.["t4"].includes(Number(hour)) ? "bg-[#EBFAFF50]" :
-                                    "bg-[#00A0FA10]"}`
-                                }>
-                                  <div className="col-span-1 flex justify-center items-center gap-2 p-2">
-                                    <h1
-                                      className={
-                                        entries.length /
-                                          (17 * campaignDetails?.sov) >=
-                                        1
-                                          ? "text-[#2A892D] text-[12px]"
-                                          : "text-[#CC0000] text-[12px]"
-                                      }
-                                    >
-                                      {entries.length}
-                                    </h1>
-                                    <p
-                                      className={
-                                        entries.length /
-                                          (17 * campaignDetails?.sov) >=
-                                        1
-                                          ? "text-[#2A892D] text-[12px]"
-                                          : "text-[#CC0000] text-[12px]"
-                                      }
-                                    >
-                                      {entries.length /
-                                        (17 * campaignDetails?.sov) >
+                                          <h1 className="text-[12px]">
+                                            {entry.screenStatus.toUpperCase()}
+                                          </h1>
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                              <div className={`
+                                col-span-3 h-auto border-b border-l border-gray-100 grid grid-cols-3 bg-[#FFFFFF]
+                              `}>
+                                <div className="col-span-1 flex justify-center items-center gap-2 p-2">
+                                  <h1
+                                    className={
+                                      entries.length /
+                                        (17 * campaignDetails?.sov) >=
                                       1
-                                        ? `(+${Number(
+                                        ? "text-[#2A892D] text-[12px]"
+                                        : "text-[#CC0000] text-[12px]"
+                                    }
+                                  >
+                                    {entries.length}
+                                  </h1>
+                                  <p
+                                    className={
+                                      entries.length /
+                                        (17 * campaignDetails?.sov) >=
+                                      1
+                                        ? "text-[#2A892D] text-[12px]"
+                                        : "text-[#CC0000] text-[12px]"
+                                    }
+                                  >
+                                    {entries.length /
+                                      (17 * campaignDetails?.sov) >
+                                    1
+                                      ? `(+${Number(
+                                          (entries.length /
+                                            (17 * campaignDetails?.sov)) *
+                                            100
+                                        ).toFixed(0)}%)`
+                                      : entries.length /
+                                          (17 * campaignDetails?.sov) <
+                                        1
+                                      ? `(-${Number(
+                                          100 -
                                             (entries.length /
                                               (17 * campaignDetails?.sov)) *
                                               100
-                                          ).toFixed(0)}%)`
-                                        : entries.length /
-                                            (17 * campaignDetails?.sov) <
-                                          1
-                                        ? `(-${Number(
-                                            100 -
-                                              (entries.length /
-                                                (17 * campaignDetails?.sov)) *
-                                                100
-                                          ).toFixed(0)}%)`
-                                        : `✔`}
-                                    </p>
-                                  </div>
-                                  <div className="col-span-1 border-x border-gray-100 flex justify-center items-center p-2">
-                                    <h1 className="text-[12px]">
-                                      {17 * campaignDetails?.sov}
-                                    </h1>
-                                  </div>
-                                  <div className="col-span-1 flex justify-center items-center p-2">
-                                    <h1 className="text-[12px]">
-                                      {calculateAvgTimeGap(entries) === "N/A"
-                                        ? "--"
-                                        : calculateAvgTimeGap(entries)}
-                                    </h1>
-                                  </div>
+                                        ).toFixed(0)}%)`
+                                      : `✔`}
+                                  </p>
+                                </div>
+                                <div className="col-span-1 border-x border-gray-100 flex justify-center items-center p-2">
+                                  <h1 className="text-[12px]">
+                                    {17 * campaignDetails?.sov}
+                                  </h1>
+                                </div>
+                                <div className="col-span-1 flex justify-center items-center p-2">
+                                  <h1 className="text-[12px]">
+                                    {calculateAvgTimeGap(entries) === "N/A"
+                                      ? "--"
+                                      : calculateAvgTimeGap(entries)}
+                                  </h1>
                                 </div>
                               </div>
-                            ))}
-                        </div>
+                            </div>
+                          ))}
                       </div>
                     </div>
                   )
                 )}
               </div>
             </div>
-
             <div className="grid grid-cols-12">
               <div className="col-span-8 pt-4 flex items-center gap-4">
                 <div className="flex items-center justify-start gap-2">
