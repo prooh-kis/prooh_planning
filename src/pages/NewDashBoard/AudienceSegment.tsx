@@ -102,7 +102,7 @@ console.log(audienceData)
   return (
     <div className="w-full h-full">
       {loadingAudienceData && (
-        <div className="h-[240px] border border-gray-100 rounded-[12px] shadow-sm">
+        <div className="h-[240px] bg-[#FFFFFF] border border-gray-100 rounded-[12px] shadow-sm">
           <LoadingScreen />
         </div>
       )}
