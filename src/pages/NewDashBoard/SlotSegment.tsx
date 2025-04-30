@@ -167,6 +167,7 @@ export const SlotSegment = ({
             </div>
             <div className="p-2">
               <DashBoardSlotGraph
+                allData={spotData?.spotDeliveryData}
                 currentData={getSpotDeliveryData().countsArray}
                 labels={getSpotDeliveryData().datesArray}
               />

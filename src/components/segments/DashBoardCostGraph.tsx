@@ -13,7 +13,7 @@ import {
   Filler,
 } from "chart.js";
 import { formatNumber } from "../../utils/formatValue";
-import { formatDate } from "../../utils/dateAndTimeUtils";
+import { formatDate, isDateAfter } from "../../utils/dateAndTimeUtils";
 
 ChartJS.register(
   CategoryScale,
@@ -32,48 +32,71 @@ interface BarChartProps {
   currentData: any[];
   labels: string[];
   percent?: boolean;
+  allData?: any;
 }
 
 export const DashBoardCostGraph: React.FC<BarChartProps> = ({
   currentData,
   labels,
   percent = true,
+  allData
 }) => {
 
-  // Find the first index where slotsDelivered = 0
-  const zeroIndex = currentData?.findIndex((item) => item.costConsumed === 0);
+  const sortedDates = Object.keys(allData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
-  // requiredToPlayed calculation
-  const requiredToPlayed: number[] = currentData.map((item, index) => {
-    // Apply special handling for last index (100) as in your original code
-    const delivered = index === currentData.length - 1 ? 100 : item.costConsumed;
-    const promised = item.costPromised;
-    
-    // Calculate the original value
-    const originalValue = Math.max(promised - delivered, 0);
-    
-    // If before zeroIndex, keep original value, else set to 0
-    return (zeroIndex === -1 || index < zeroIndex) ? originalValue : 0;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  let zeroIndex = -1;
+  for (let i = 0; i < sortedDates.length; i++) {
+    const dateStr = sortedDates[i];
+    const dateObj = new Date(dateStr);
+    dateObj.setHours(0, 0, 0, 0);
+
+    if (dateObj > today && allData[dateStr].costConsumed === 0) {
+      zeroIndex = i;
+      break;
+    }
+  }
+
+  const formattedToday = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+  const currentDateIndex = sortedDates.findIndex(date => date === formattedToday);
+  const currentDayRemaining: number[] = currentData.map((item, index) => {
+    if (index === currentDateIndex) {
+      return Math.max(item.costPromised - item.costConsumed, 0);
+    }
+    return 0;
   });
   
-  // If zeroIndex is found and not the first element (i-1 exists), set the previous index to 0
-  if (zeroIndex !== -1 && zeroIndex > 0) {
-    requiredToPlayed[zeroIndex - 1] = 0;
-  }
+  const requiredToPlayed: number[] = currentData.map((item, index) => {
+    const promised = item.costPromised;
+    const consumed = item.costConsumed;
+    const originalValue = Math.max(promised - consumed, 0);
+  
+    if (zeroIndex !== -1) {
+      if (index === zeroIndex - 1 || index >= zeroIndex) {
+        return 0;
+      }
+      return originalValue;
+    } else {
+      // zeroIndex === -1
+      if (index === currentData.length - 1 && currentDateIndex !== zeroIndex) {
+        return 0;
+      }
+      return originalValue;
+    }
+  });
   
   const dailyPlayedSlots: number[] = currentData?.map(
-    (played: any) =>
-      played.costConsumed
+    (played: any) => played.costConsumed
   );
 
-  const currentDayRemaining: number[] = currentData?.map((played, index) => 
-    index === zeroIndex - 1 ? Math.max(played.costPromised - played.costConsumed, 0) : 0
-  );
 
-  const futurePerformanceData: number[] = currentData.map((item, index) => 
-    (zeroIndex !== -1 && index < zeroIndex) ? 0 : item.costPromised
-  );
-  
+  const futurePerformanceData: number[] = currentData.map((item, index) => {
+    if (zeroIndex === -1) return 0;
+    return index < zeroIndex ? 0 : item.costPromised;
+  });
+
   const newLabel = labels?.map((date: string) => formatDate(date));
 
   const chartData = {

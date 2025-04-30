@@ -365,7 +365,9 @@ export const SiteLevelAudienceAnalysis = ({
           </div>
         </div>
       ) : (
-        <LoadingScreen />
+        <div className="bg-[#FFFFFF] h-[200px] rounded-[12px]">
+          <LoadingScreen />
+        </div>
       )}
     </div>
 

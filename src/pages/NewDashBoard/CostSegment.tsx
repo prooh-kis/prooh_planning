@@ -163,6 +163,7 @@ export const CostSegment = ({
             </div>
             <div className="p-2">
               <DashBoardCostGraph
+                allData={costData?.costData}
                 currentData={getCostData().countsArray}
                 labels={getCostData().datesArray}
               />

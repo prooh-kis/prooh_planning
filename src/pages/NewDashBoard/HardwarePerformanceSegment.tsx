@@ -171,6 +171,7 @@ export const HardwarePerformanceSegment = ({
               <DashBoardHardwarePerformanceGraph
                 currentData={getHardwarePerformanceData().countsArray}
                 labels={getHardwarePerformanceData().datesArray}
+                allData={hardwarePerformanceData?.hardwarePerformanceData}
               />
             </div>
           </div>

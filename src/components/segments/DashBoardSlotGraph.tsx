@@ -39,35 +39,61 @@ interface BarChartProps {
   color2?: string;
   bgColor2?: string;
   percent?: boolean;
+  allData?: any
 }
 
 export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
   currentData,
   labels,
   percent = true,
+  allData
 }) => {
 
-  // Find the first index where slotsDelivered = 0
-  const zeroIndex = currentData?.findIndex((item) => item.slotsDelivered === 0);
+  const sortedDates = Object.keys(allData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
-  // requiredToPlayed calculation
-  const requiredToPlayed: number[] = currentData.map((item, index) => {
-    // Apply special handling for last index (100) as in your original code
-    const delivered = index === currentData.length - 1 ? 100 : item.slotsDelivered;
-    const promised = item.slotsPromised;
-    
-    // Calculate the original value
-    const originalValue = Math.max(promised - delivered, 0);
-    
-    // If before zeroIndex, keep original value, else set to 0
-    return (zeroIndex === -1 || index < zeroIndex) ? originalValue : 0;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  let zeroIndex = -1;
+  for (let i = 0; i < sortedDates.length; i++) {
+    const dateStr = sortedDates[i];
+    const dateObj = new Date(dateStr);
+    dateObj.setHours(0, 0, 0, 0);
+
+    if (dateObj > today && allData[dateStr].slotsDelivered === 0) {
+      zeroIndex = i;
+      break;
+    }
+  }
+
+  const formattedToday = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+  const currentDateIndex = sortedDates.findIndex(date => date === formattedToday);
+  const currentDayRemaining: number[] = currentData.map((item, index) => {
+    if (index === currentDateIndex) {
+      return Math.max(item.slotsPromised - item.slotsDelivered, 0);
+    }
+    return 0;
   });
 
-  // If zeroIndex is found and not the first element (i-1 exists), set the previous index to 0
-  if (zeroIndex !== -1 && zeroIndex > 0) {
-    requiredToPlayed[zeroIndex - 1] = 0;
-  }
+  const requiredToPlayed: number[] = currentData.map((item, index) => {
+    const promised = item.slotsPromised;
+    const consumed = item.slotsDelivered;
+    const originalValue = Math.max(promised - consumed, 0);
   
+    if (zeroIndex !== -1) {
+      if (index === zeroIndex - 1 || index >= zeroIndex) {
+        return 0;
+      }
+      return originalValue;
+    } else {
+      // zeroIndex === -1
+      if (index === currentData.length - 1 && currentDateIndex !== zeroIndex) {
+        return 0;
+      }
+      return originalValue;
+    }
+  });
+
 
   const extraSlots: number[] = currentData?.map(
     (played: any) =>
@@ -79,13 +105,10 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
       played.slotsDelivered
   );
 
-  const currentDayRemaining: number[] = currentData?.map((played, index) => 
-    index === zeroIndex - 1 ? Math.max(played.slotsPromised - played.slotsDelivered, 0) : 0
-  );
-
-  const futurePerformanceData: number[] = currentData.map((item, index) => 
-    (zeroIndex !== -1 && index < zeroIndex) ? 0 : item.slotsPromised
-  );
+  const futurePerformanceData: number[] = currentData.map((item, index) => {
+    if (zeroIndex === -1) return 0;
+    return index < zeroIndex ? 0 : item.slotsPromised;
+  });
 
   const newLabel = labels?.map((date: string) => formatDate(date));
 

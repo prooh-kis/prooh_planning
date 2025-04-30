@@ -30,9 +30,7 @@ export const SiteLevelDurationGraphAnalysis = ({
 
   return (
     <div className="h-auto border rounded-[12px] border-gray-100 shadow-sm">
-      {loadingTabWiseSiteData ? (
-        <LoadingScreen />
-      ) : (
+      {!loadingTabWiseSiteData && tabWiseSiteData ? (
         <DurationGraphPerDay
           currentData={tabWiseSiteData}
           additionalLegends={[
@@ -40,6 +38,10 @@ export const SiteLevelDurationGraphAnalysis = ({
             { label: "Extra Delivery", values: [1200], color: "rgba(245, 158, 11, 1)" },
           ]}
         />
+      ) : (
+        <div className="bg-[#FFFFFF] h-[200px] rounded-[12px]">
+          <LoadingScreen />
+        </div>
       )}
     </div>
   )

@@ -66,7 +66,7 @@ export const MonitoringPicCard = ({
         <img
           src={url}
           alt={displayType}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover rounded-t-[12px]"
           loading="lazy"
         />
       );
@@ -77,7 +77,7 @@ export const MonitoringPicCard = ({
         <video
           src={url}
           controls
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover rounded-t-[12px]"
           aria-label={displayType}
         >
           Your browser does not support the video tag.
@@ -101,10 +101,10 @@ export const MonitoringPicCard = ({
 
   return (
     <div
-      className={`relative flex flex-col rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-gray-800 ${cardHeight}`}
+      className={`relative flex flex-col rounded-[12px] shadow-md hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-gray-800 ${cardHeight}`}
     >
       {/* Media container - takes about 70% of card height */}
-      <div className="flex-1 bg-gray-100 dark:bg-gray-700 relative h-[70%]">
+      <div className="flex-1 relative h-[70%]">
         {renderMedia()}
       </div>
 

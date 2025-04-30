@@ -103,6 +103,7 @@ export const SiteLevelHardwarePerformanceAnalysis = ({
             <DashBoardHardwarePerformanceGraph
               currentData={getHardwarePerformanceData()?.countsArray}
               labels={getHardwarePerformanceData()?.datesArray}
+              allData={tabWiseSiteData?.hardwarePerformanceData}
             />
           </div>
           <div className="col-span-2 grid grid-cols-9 gap-2 h-full">
@@ -171,7 +172,7 @@ export const SiteLevelHardwarePerformanceAnalysis = ({
                           {formatNumber(
                             tabWiseSiteData?.dayWiseData[
                               dayKey
-                            ]?.hardwarePerformanceDelivered.toFixed(0)
+                            ]?.hardwarePerformanceDelivered?.toFixed(0)
                           )}
                           %
                         </h1>
@@ -246,7 +247,7 @@ export const SiteLevelHardwarePerformanceAnalysis = ({
                           {formatNumber(
                             tabWiseSiteData?.timeWiseData[
                               timeKey
-                            ]?.hardwarePerformanceDelivered.toFixed(0)
+                            ]?.hardwarePerformanceDelivered?.toFixed(0)
                           )}
                           %
                         </h1>
@@ -259,7 +260,9 @@ export const SiteLevelHardwarePerformanceAnalysis = ({
           </div>
         </div>
       ) : (
-        <LoadingScreen />
+        <div className="bg-[#FFFFFF] h-[200px] rounded-[12px]">
+          <LoadingScreen />
+        </div>
       )}
     </div>
   );

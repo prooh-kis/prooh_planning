@@ -194,3 +194,10 @@ export function convertTo12Hour(hour24) {
   const hour12 = hour24 % 12 || 12; // Converts 0 to 12
   return `${hour12} ${period}`;
 }
+
+  // Helper function to compare dates in mm/dd/yyyy format
+export function isDateAfter(dateStr1, dateStr2) {
+    const date1 = new Date(dateStr1);
+    const date2 = new Date(dateStr2);
+    return date1 > date2;
+  }

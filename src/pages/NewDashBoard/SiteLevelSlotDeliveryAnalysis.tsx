@@ -104,6 +104,7 @@ export const SiteLevelSlotDeliveryAnalysis = ({
             <DashBoardSlotGraph
               currentData={getSlotDeliveryData()?.countsArray}
               labels={getSlotDeliveryData()?.datesArray}
+              allData={tabWiseSiteData?.spotDeliveryData}
             />
           </div>
           <div className="col-span-2 grid grid-cols-9 gap-2 h-full">
@@ -272,7 +273,9 @@ export const SiteLevelSlotDeliveryAnalysis = ({
           </div>
         </div>
       ) : (
-        <LoadingScreen />
+        <div className="bg-[#FFFFFF] h-[200px] rounded-[12px]">
+          <LoadingScreen />
+        </div>
       )}
     </div>
   );

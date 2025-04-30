@@ -156,7 +156,7 @@ export const MonitoringPicturesAllSitesPopup = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 font-inter">
-      <div className="border bg-[#FFFFFF] rounded-[10px] h-[80vh] w-[99%] p-4 flex flex-col">
+      <div className="bg-[#FFFFFF] rounded-[10px] h-[80vh] w-[99%] p-4 flex flex-col">
         <div className="relative inset-0 flex items-center justify-between gap-4 py-2 pr-5">
           <div className="flex gap-2 items-center">
             <h1 className="text-[#0E212E] font-semibold text-[20px]">
@@ -173,7 +173,7 @@ export const MonitoringPicturesAllSitesPopup = ({
         </div>
         <div className="my-4 grid grid-cols-6 max-h-[65vh] gap-1">
           {/* Cities Filter */}
-          <div className="border rounded-[12px] col-span-1 max-h-[65vh] overflow-auto">
+          <div className="border border-gray-100 rounded-[12px] col-span-1 max-h-[65vh] overflow-auto">
             <Header title={"City"} icon="fi-sr-marker" />
             <div className="px-2 py-2 flex flex-col">
               <div className="grid grid-cols-4 items-center">
@@ -235,7 +235,7 @@ export const MonitoringPicturesAllSitesPopup = ({
           </div>
 
           {/* Touch Points Filter */}
-          <div className="border rounded-[12px] col-span-1 max-h-[65vh] overflow-auto">
+          <div className="border border-gray-100 rounded-[12px] col-span-1 max-h-[65vh] overflow-auto">
             <Header title={"Touch points"} icon="fi-sr-land-location" />
             <div className="px-2 py-2 flex flex-col">
               <div className="grid grid-cols-4 items-center">
@@ -299,7 +299,7 @@ export const MonitoringPicturesAllSitesPopup = ({
           </div>
 
           {/* Screen Types Filter */}
-          <div className="border rounded-[12px] col-span-1 max-h-[65vh] overflow-auto">
+          <div className="border border-gray-100 rounded-[12px] col-span-1 max-h-[65vh] overflow-auto">
             <Header title={"Screen Types"} icon="fi-sr-screen" />
             <div className="px-2 py-2 flex flex-col">
               <div className="grid grid-cols-4 items-center">
@@ -366,7 +366,7 @@ export const MonitoringPicturesAllSitesPopup = ({
           </div>
 
           {/* Screen List */}
-          <div className="border rounded-[12px] col-span-1 max-h-[65vh] overflow-auto">
+          <div className="border border-gray-100 rounded-[12px] col-span-1 max-h-[65vh] overflow-auto">
             <Header title={"Screens"} icon="fi-sr-screen" />
             <List
               items={data?.screenList || []}
@@ -385,7 +385,7 @@ export const MonitoringPicturesAllSitesPopup = ({
           </div>
 
           {/* Monitoring Pictures */}
-          <div className="border rounded-[12px] max-h-[65vh] overflow-auto col-span-2 px-2 py-2">
+          <div className="border border-gray-100 rounded-[12px] max-h-[65vh] overflow-auto col-span-2 px-2 py-2">
             {loading ? (
               <div className="flex items-center justify-center h-full">
                 Loading...

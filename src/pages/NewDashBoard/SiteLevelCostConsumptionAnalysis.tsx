@@ -104,6 +104,7 @@ export const SiteLevelCostConsumptionAnalysis = ({
             <DashBoardCostGraph
               currentData={getCostConsumptionData()?.countsArray}
               labels={getCostConsumptionData()?.datesArray}
+              allData={tabWiseSiteData?.costData}
             />
           </div>
           <div className="col-span-2 grid grid-cols-9 gap-2 h-full">
@@ -272,7 +273,9 @@ export const SiteLevelCostConsumptionAnalysis = ({
           </div>
         </div>
       ) : (
-        <LoadingScreen />
+        <div className="bg-[#FFFFFF] h-[200px] rounded-[12px]">
+          <LoadingScreen />
+        </div>
       )}
     </div>
   );
