@@ -100,7 +100,7 @@ export const SiteLevelSlotDeliveryAnalysis = ({
     <div className="">
       {!loadingTabWiseSiteData && tabWiseSiteData && tabWiseSiteData.spotDeliveryData && Object.keys(tabWiseSiteData.spotDeliveryData).length > 0 ? (
         <div className="grid grid-cols-5 gap-2 flex items-center">
-          <div className="col-span-3 flex items-center p-4 border rounded-[12px] border-gray-100 shadow-sm">
+          <div className="col-span-3 flex items-center p-4 border bg-[#FFFFFF] rounded-[12px] border-gray-100 shadow-sm">
             <DashBoardSlotGraph
               currentData={getSlotDeliveryData()?.countsArray}
               labels={getSlotDeliveryData()?.datesArray}

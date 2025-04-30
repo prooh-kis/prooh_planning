@@ -99,7 +99,7 @@ export const SiteLevelHardwarePerformanceAnalysis = ({
     <div className="">
       {!loadingTabWiseSiteData && tabWiseSiteData && tabWiseSiteData.hardwarePerformanceData && Object.keys(tabWiseSiteData.hardwarePerformanceData).length > 0 ? (
         <div className="grid grid-cols-5 gap-2 flex items-center">
-          <div className="col-span-3 flex items-center border rounded-[12px] border-gray-100 shadow-sm p-4">
+          <div className="col-span-3 flex items-center border rounded-[12px] bg-[#FFFFFF] border-gray-100 shadow-sm p-4">
             <DashBoardHardwarePerformanceGraph
               currentData={getHardwarePerformanceData()?.countsArray}
               labels={getHardwarePerformanceData()?.datesArray}

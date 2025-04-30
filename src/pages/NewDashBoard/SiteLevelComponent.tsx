@@ -25,7 +25,7 @@ const SiteLevelComponent = ({ screenData, screenLevelData, currentDate }: any) =
 
       {currentTab1 == "1" ? ( */}
       <div className="w-full">
-        <div className="rounded-[12px] border border-gray-100 shadow-sm px-4 pt-4 mt-2">
+        <div className="rounded-[12px] bg-[#FFFFFF] border border-gray-100 shadow-sm px-4 pt-4 mt-2">
           <h1 className="text-[20px] font-semibold font-inter text-[#0E212E] pb-2">
             {screenData?.screenName}
           </h1>

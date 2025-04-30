@@ -149,7 +149,7 @@ export const DurationGraphPerDay: React.FC<LineChartProps> = ({
           },
           // Format the title (x-axis label) if needed
           title: (context: any) => {
-            return `Time: ${convertTo12Hour(context[0]?.dataIndex - 1)} to ${context[0].label?.split(",")?.join(" ")}`;
+            return `Time: ${context[0].label?.split(",")?.join(" ")} to ${convertTo12Hour(context[0]?.dataIndex + 1)}`;
           },
         },
       },
@@ -227,7 +227,7 @@ export const DurationGraphPerDay: React.FC<LineChartProps> = ({
   };
 
   return (
-    <div className="w-auto h-auto p-4 bg-white">
+    <div className="w-auto h-auto p-4 bg-white rounded-[12px]">
       <div className="w-full h-[200px]">
         <Line data={chartData} options={options as any} />
       </div>

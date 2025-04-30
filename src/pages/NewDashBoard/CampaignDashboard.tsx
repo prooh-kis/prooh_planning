@@ -220,7 +220,7 @@ export const CampaignDashboard = ({
     }
   },[fetchDashboardData, campaignDetails?._id]);
   return (
-    <div className="absolute w-full h-full mt-12 flex flex-col gap-2 bg-[] font-custom">
+    <div className="absolute w-full bg-[#F2F4F7] h-full mt-12 flex flex-col gap-2 font-custom">
 
       {/* Dashboard header Section */}
       <div className="bg-[#FFFFFF] p-2 py-4 px-2  pr-14 flex justify-between mt-4 fixed z-10 shadow-sm w-full">
@@ -272,7 +272,7 @@ export const CampaignDashboard = ({
           </div>
         </div>
       </div>
-      <div className="px-10 max-h-[360px] mt-32">
+      <div className="px-10 bg-[#F2F4F7] mt-32">
         {/* campaign dashboard grid view */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
           {gridItems.map((item) => (

@@ -329,7 +329,7 @@ export const ShowCampaignLogsPopup = ({
                             {date}
                           </h2>
                         </div> */}
-                        <div className="col-span-12 overflow-scroll no-scrollbar h-[70vh]">
+                        <div className="col-span-12 overflow-scroll no-scrollbar h-[80vh]">
                           {Object.keys(hours)
                             .sort((a, b) => Number(a) - Number(b))
                             .map((key) => [key, hours[key]])
@@ -345,7 +345,7 @@ export const ShowCampaignLogsPopup = ({
                                   </h3>
                                 </div> */}
                                 <div
-                                  className="col-span-6 overflow-scroll no-scrollbar h-[60vh]"
+                                  className="col-span-6 overflow-scroll no-scrollbar h-[80vh] border-b"
                                   ref={(el) => (scrollRefs.current[hour] = el)}
                                 >
                                   <table className="min-w-full bg-white">
@@ -398,8 +398,15 @@ export const ShowCampaignLogsPopup = ({
                                     </tbody>
                                   </table>
                                 </div>
-                                <div className="col-span-3 h-auto border-b grid grid-cols-3">
-                                  <div className="col-span-1 bg-[#00A0FA10] flex justify-center items-center gap-2 p-2">
+                                <div className={`
+                                  col-span-3 h-auto border-b grid grid-cols-3      
+                                  ${TIME_ZONES?.["t1"].includes(Number(hour)) ? "bg-[#F9E39650]" : 
+                                    TIME_ZONES?.["t2"].includes(Number(hour)) ? "bg-[#BCFFA650]" :
+                                    TIME_ZONES?.["t3"].includes(Number(hour)) ? "bg-[#D2CAFF50]" :
+                                    TIME_ZONES?.["t4"].includes(Number(hour)) ? "bg-[#EBFAFF50]" :
+                                    "bg-[#00A0FA10]"}`
+                                }>
+                                  <div className="col-span-1 flex justify-center items-center gap-2 p-2">
                                     <h1
                                       className={
                                         entries.length /
@@ -440,12 +447,12 @@ export const ShowCampaignLogsPopup = ({
                                         : `✔`}
                                     </p>
                                   </div>
-                                  <div className="col-span-1 bg-[#00A0FA10] border-x border-gray-100 flex justify-center items-center p-2">
+                                  <div className="col-span-1 border-x border-gray-100 flex justify-center items-center p-2">
                                     <h1 className="text-[12px]">
                                       {17 * campaignDetails?.sov}
                                     </h1>
                                   </div>
-                                  <div className="col-span-1 bg-[#00A0FA10] flex justify-center items-center p-2">
+                                  <div className="col-span-1 flex justify-center items-center p-2">
                                     <h1 className="text-[12px]">
                                       {calculateAvgTimeGap(entries) === "N/A"
                                         ? "--"

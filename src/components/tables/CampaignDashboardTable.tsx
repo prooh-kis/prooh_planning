@@ -321,7 +321,7 @@ export const CampaignDashboardTable = ({
             <React.Fragment key={index}>
               <tr
                 key={screenData}
-                className="grid grid-cols-12 flex w-full h-[40px] hover:bg-gray-100 hover:rounded-[6px] border-b border-x border-gray-100 rounded-b-xl shadow-sm text-[#0E212E] truncate"
+                className="grid grid-cols-12 bg-[#FFFFFF] flex w-full h-[40px] hover:bg-gray-100 hover:rounded-[6px] border-b border-x border-gray-100 rounded-b-xl shadow-sm text-[#0E212E] truncate"
               >
                 <td className="w-full flex items-center justify-start gap-4 col-span-3 grid grid-cols-8 pl-4 truncate">
                   <p className="text-[12px] col-span-1">

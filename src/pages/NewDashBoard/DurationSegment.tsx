@@ -29,6 +29,7 @@ export const DurationSegment = ({
     (state: any) => state.slotDeliveryGraphDateWiseForPlannerDashboard
   );
 
+  console.log(hourlySpotDelivery);
   useEffect(() => {
     const date = new Date(currentDate);
     date.setMinutes(date.getMinutes() + 29);

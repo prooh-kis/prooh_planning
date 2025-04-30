@@ -91,7 +91,7 @@ export const SiteLevelAudienceAnalysis = ({
     <div className="">
       {!loadingTabWiseSiteData && tabWiseSiteData && tabWiseSiteData.audienceTypeData && Object.keys(tabWiseSiteData.audienceTypeData).length > 0 ? (
         <div className="grid grid-cols-5 gap-2">
-          <div className="col-span-3 p-4 border rounded-[12px] border-gray-100 shadow-sm pr-4 pt-2">
+          <div className="col-span-3 p-4 border rounded-[12px] border-gray-100 bg-[#FFFFFF] shadow-sm pr-4 pt-2">
             <div className="">
               <h1 className="text-[14px] font-semibold">
                 Gender Wise Impressions
