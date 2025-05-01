@@ -18,7 +18,7 @@ import {
   CLONE_CAMPAIGN_RESET,
   EDIT_CAMPAIGN,
 } from "../../constants/campaignConstants";
-import { CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE } from "../../constants/userConstants";
+import { CAMPAIGN_CREATION_CREATE_CLONE_PLANNING_PAGE, CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE } from "../../constants/userConstants";
 import { CampaignsListModel } from "../../components/molecules/CampaignsListModel";
 import { GET_CAMPAIGN_DASHBOARD_DATA_RESET } from "../../constants/screenConstants";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
@@ -111,7 +111,7 @@ export const MyCampaignsListPage: React.FC = () => {
 
   const handleClone = (id: string) => {
     // setOpen(true);
-    dispatch(cloneCampaignAction({ id }));
+    dispatch(cloneCampaignAction({ id: id, event: CAMPAIGN_CREATION_CREATE_CLONE_PLANNING_PAGE }));
   };
 
   const handleCreate = (value: any) => {

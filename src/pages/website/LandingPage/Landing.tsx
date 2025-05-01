@@ -47,13 +47,17 @@ export const Landing: React.FC = () => {
     <div className="w-screen h-full bg-white overflow-y-auto overflow-x-hidden">
       <div className="relative w-full">
         <img
-          className="absolute h-full w-full"
-          style={{ opacity: "50%" }}
+          className="absolute h-full w-full p-20"
+          style={{ opacity: "75%" }}
           src={landingPageGrid}
           alt={"grid"}
         />
-        <div className="px-8 ">
-          <Section1 />
+        <div className="px-8 pt-36 ">
+          {/* <Section1 /> */}
+          <div className="z-10">
+            <h1 className="font-custom text-gray-500 text-center">END - TO - END CAMPAIGN MANAGEMENT PLATFORM</h1>
+            <h1 className="font-custom text-[80px] w-3/4 text-center">experience the most <span>advanced</span> dooh advertising...</h1>
+          </div>
           <FloatingBrandIcon />
         </div>
       </div>
