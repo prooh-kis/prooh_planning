@@ -38,6 +38,7 @@ import {
   VERIFY_EMAIL,
   MY_CREATIVES,
   NEW_DASHBOARD,
+  BRAND_AGENCY_PAGE,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 import { PublicRoute } from "../layout/PublicRoute";
@@ -48,6 +49,7 @@ import { MyCreativesPage } from "../pages/MyCreativesPage";
 import { CampaignDetailsPage } from "../pages/CampaignDetailsPage";
 import { NewDashBoard } from "../pages/NewDashBoard";
 import Engagement from "../pages/Engagement";
+import { BrandAgencyPage } from "../pages/PageNotFound/BrandAgency";
 
 const Routers: React.FC = () => {
   return (
@@ -227,6 +229,7 @@ const Routers: React.FC = () => {
           }
         />
         <Route path={PLAY_LIVE_URL} element={<PlayLiveUrl />} />
+        <Route path={BRAND_AGENCY_PAGE} element={<BrandAgencyPage />} />
 
         <Route path="*" element={<PageNotFound />} />
       </Routes>

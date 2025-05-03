@@ -149,12 +149,12 @@ export const HowItsWork = () => {
         </code>
       </div>
 
-      <h1 className="text-center font-custom font-bold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">
-        Where Collaboration Meets Innovation
+      <h1 className="text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">
+        From Collective Thinking To <br/> Breakthrough <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">Solutions</span>
       </h1>
 
       {/* Tabs */}
-      <div className="my-4 flex justify-center items-center">
+      <div className="my-8 flex justify-center items-center">
         {tabData?.map((tab: any, i: any) => (
           <button
             key={i}
@@ -169,7 +169,7 @@ export const HowItsWork = () => {
               tab.id === currentTab
                 ? "bg-primaryButton text-white font-semibold"
                 : "bg-[#F6F6F6] text-gray-700"
-            } border border-[#D7D7D7] py-2 px-8 ${i == 0 ? "clip-trapezium-right" : i == tabData.length-1 ? "clip-trapezium-left" : "clip-trapezium-both"}`}
+            } w-full border border-[#D7D7D7] py-2 px-8 ${i == 0 ? "clip-trapezium-right" : i == tabData.length-1 ? "clip-trapezium-left" : "clip-trapezium-both"}`}
           >
             <span className="text-[12px]">{tab.label}</span>
           </button>
@@ -178,7 +178,7 @@ export const HowItsWork = () => {
 
       {/* Stepper Section */}
       <div className="py-4">
-        <div className="py-4 flex items-center gap-4">
+        <div className="pt-4 flex items-center gap-4">
           <StepperSliderHomePage
             campaignId={
               currentTab === "1"

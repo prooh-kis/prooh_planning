@@ -28,3 +28,7 @@ export { default as dataHeroImg } from "./images/dataheroimg.png";
 
 export { default as Reward } from "./icons/Reward.svg";
 export { default as icon33 } from "./icons/Icon33.png";
+
+export {default as Fly } from "./icons/Asset.svg";
+export {default as Planner } from "./icons/campaign.svg";
+export {default as Layer } from "./icons/layers.svg";

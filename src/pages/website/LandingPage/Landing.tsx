@@ -11,22 +11,19 @@ import {
   FloatingBrandIcon,
   HowItsWork,
   OurAdvertisingJourney,
-  Section1,
+  NewSection1,
   FeedBack,
   ProohCreator,
   ContactForm,
   FindUsOnGoogle,
   FlowDiagramWeb,
-  FlowHorizontalScroll
+  FlowHorizontalScroll,
+  NewSection2,
+  NewSection3
 } from "../../../components/LoadingPageComponents";
 import landingPageGrid from "../../../assets/images/landingPageGrid.png";
-// eslint-disable-next-line import/no-named-as-default
-// import ScrollTrigger from "gsap/ScrollTrigger";
-// eslint-disable-next-line import/no-named-as-default
-// import gsap from "gsap";
-// import { useGSAP } from "@gsap/react";
+import ButtonInput from "../../../components/atoms/ButtonInput";
 
-// gsap.registerPlugin(ScrollTrigger);
 
 export const Landing: React.FC = () => {
   const isMobile = window.innerWidth <= 768;
@@ -47,23 +44,23 @@ export const Landing: React.FC = () => {
     <div className="w-screen h-full bg-white overflow-y-auto overflow-x-hidden">
       <div className="relative w-full">
         <img
-          className="absolute h-full w-full p-20"
+          className="absolute h-full w-full px-20 pt-48"
           style={{ opacity: "75%" }}
           src={landingPageGrid}
           alt={"grid"}
         />
         <div className="px-8 pt-36 ">
           {/* <Section1 /> */}
-          <div className="z-10">
-            <h1 className="font-custom text-gray-500 text-center">END - TO - END CAMPAIGN MANAGEMENT PLATFORM</h1>
-            <h1 className="font-custom text-[80px] w-3/4 text-center">experience the most <span>advanced</span> dooh advertising...</h1>
-          </div>
-          <FloatingBrandIcon />
+          <NewSection1 />
+          {/* <FloatingBrandIcon /> */}
         </div>
       </div>
      
-      <div className="px-8">
-          <FlowHorizontalScroll />
+      <div className="p-8">
+        <NewSection2 />
+        <NewSection3 />
+        {/* <FlowHorizontalScroll /> */}
+        <i className="" />
       </div>
       
       <div className="px-8 ">

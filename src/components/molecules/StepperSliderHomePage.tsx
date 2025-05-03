@@ -89,19 +89,25 @@ export const StepperSliderHomePage = ({ campaignId, setStep, steps, step }: Step
                     <div className="relative mt-[-28px] w-full">
                       <div
                           className={`${
-                            i <= step
+                            i < step
                               ? "text-primaryButton" // Blue for selected steps
                               : "text-[#D6D2D2]" // Gray for unselected steps
-                          }`}
+                          }
+                          ${
+                            i === steps - 1 
+                                ? "absolute right-0 translate-x-1/4" // For last step, align to right
+                            : i === 0
+                                ? "absolute"
+                                : "absolute left-1/2 -translate-x-1/2" // For other steps, center
+                          }
+                          whitespace-wrap`}
                         >
                         {i !== step && icons[i]}
+                        {i === step && (<h1 className={`text-[12px] text-primaryButton ${i== 0 ? "text-start" : "text-center"} text-wrap w-[240px]`}>{stepLabels[i]}</h1>)}
                       </div>
                     </div>
                   </Tooltip>
                 </div>
-                {/* {i == step && (
-                  <h1 className={`mt-[-44px] text-primaryButton border right-[0]`}>{stepLabels[step]}</h1>
-                )} */}
               </div>
             ))}
           </div>

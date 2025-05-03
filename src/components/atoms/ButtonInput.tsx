@@ -5,7 +5,7 @@ interface ButtonProps {
   onClick?: () => void;
   disabled?: boolean;
   loading?: boolean;
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "knowMore";
   size?: "small" | "medium" | "large";
   rounded?: "none" | "small" | "medium" | "large" | "full";
   fullWidth?: boolean;
@@ -13,6 +13,7 @@ interface ButtonProps {
   loadingText?: string;
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
+  textColor?: string;
 }
 
 const ButtonInput: React.FC<ButtonProps> = ({
@@ -28,6 +29,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
   loadingText = "Please Wait...",
   icon,
   iconPosition = "left",
+  textColor
 }) => {
   // Base classes
   const baseClasses = `font-semibold transition flex items-center justify-center ${
@@ -69,13 +71,14 @@ const ButtonInput: React.FC<ButtonProps> = ({
     danger: `text-white bg-red-500 hover:bg-red-600 ${
       disabled || loading ? "bg-red-300" : ""
     }`,
+    knowMore: `bg-white hover:bg-gray-100`
   };
 
   // Icon size classes
   const iconSizeClasses = {
-    small: "h-4 w-4",
-    medium: "h-5 w-5",
-    large: "h-6 w-6",
+    small: "h-4 w-4 p-1 flex items-center",
+    medium: "h-5 w-5 p-1 flex items-center",
+    large: "h-6 w-6 p-1 flex items-center",
   };
 
   const handleClick = (e: React.MouseEvent) => {
@@ -122,7 +125,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
           {loadingText}
         </>
       ) : (
-        <>
+        <div className={`flex items-center justify-center ${textColor}`}>
           {icon && iconPosition === "left" && (
             <span className={iconSizeClasses[size]}>{icon}</span>
           )}
@@ -130,7 +133,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
           {icon && iconPosition === "right" && (
             <span className={iconSizeClasses[size]}>{icon}</span>
           )}
-        </>
+        </div>
       )}
     </div>
   );

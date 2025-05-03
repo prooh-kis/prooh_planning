@@ -11,3 +11,7 @@ export { FlowDiagramWeb } from "./FlowDiagramWeb";
 export {FlowHorizontalScroll} from "./FlowHorizontalScroll";
 
 
+export { NewSection1 } from "./NewSection1";
+export { NewSection2 } from "./NewSection2";
+export { NewSection3 } from "./NewSection3";
+

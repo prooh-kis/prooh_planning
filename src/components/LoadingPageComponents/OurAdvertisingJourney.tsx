@@ -277,8 +277,8 @@ export const OurAdvertisingJourney = ({ data }: any) => {
     return { markers: newMarkers, touchPoints: tpColors };
   }, [data]);
 
-  const { markers: memoizedMarkers, touchPoints: memoizedTouchPoints } =
-    markers;
+  const { markers: memoizedMarkers, touchPoints: memoizedTouchPoints } = markers;
+  
   useEffect(() => {
     if (memoizedMarkers?.length > 0 && landingMapRef.current) {
       const latitudes = memoizedMarkers.map((marker: any) => marker[0]);
@@ -295,13 +295,10 @@ export const OurAdvertisingJourney = ({ data }: any) => {
 
   return (
     <div className="px-4 sm:px-2 md:px-8 w-full mt-16">
-      <div className="flex flex-col gap-4 py-2 w-full">
-        <h1 className="font-custom text-[32px] sm:text-[40px] md:text-[48px] lg:text-[56px] font-semibold leading-[40px] sm:leading-[48px] md:leading-[57.6px] lg:leading-[64px] tracking-normal text-[#0E212E] text-center font-inter">
-          Our Advertising Journey
-        </h1>
-        <p className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[16px] font-[300] leading-[20px] sm:leading-[24px] md:leading-[28px] lg:leading-[32px] tracking-normal text-[#667D8C] text-center font-inter">
-          We have had an exciting journey till now, take a look at our recent history
-        </p>
+      <div className="flex flex-col justify-center items-center gap-4 py-2 w-full">
+        <p className="text-[12px] text-[#2D5087]">Our Journey</p>
+        <h1 className="text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">From Bold Ideas To Lasting <br/> Impact In <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">advertising</span></h1>
+
       </div>
       <div className="py-4 flex justify-center items-center">
         {["Demand", "Supply"]?.map((tab: any, i: any) => (
@@ -328,10 +325,9 @@ export const OurAdvertisingJourney = ({ data }: any) => {
       </div>
 
       {/* Progress Bar */}
-      <div className="flex items-center justify-between my-6 pt-4 grid grid-cols-4">
-        <div className="col-span-1"></div>
-        <div className="col-span-2 flex-1 h-1 bg-gray-200 relative">
-          <div className="absolute inset-x-0 flex justify-between p">
+      <div className="px-12">
+        <div className="relative flex items-center justify-between my-6 py-4">
+          <div className="absolute inset-x-0 flex justify-between">
             <div
               className="absolute h-1 inset-x-0 bg-primaryButton transition-all duration-500"
               // style={{ width: `${((currentOfferIndex) / [2022, 2023, 2024, 2025].length) * 100}%` }}
@@ -361,81 +357,103 @@ export const OurAdvertisingJourney = ({ data }: any) => {
             ))}
           </div>
         </div>
-        <div className="col-span-1"></div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-8 pt-4">
-        <div className="col-span-1 sm:col-span-2 lg:col-span-2">
-          {/* <YearSlider /> */}
-          <div className="relative">
-            <LandingPageMapHeader
-              scrollToTarget={scrollToTarget}
-              setView={setView}
-              view={view}
-            />
-          </div>
-          <div className="h-[500px] w-full z-0">
-            {view === "list" ? (
-              <div className="w-full h-full">
-                <LandingPageListView screens={landingPageData?.screens} />
-              </div>
-            ) : view === "table" ? (
-              <div className="w-full h-full">
-                <LandingPageTableView
-                  data={screenData}
-                  stateCities={stateCities}
-                  cityTouchpoints={cityTouchpoints}
-                  touchpointsCities={touchpointsCities}
-                  defCnt={defCnt}
-                  setDefCnt={setDefCnt}
-                  defSt={defSt}
-                  setDefSt={setDefSt}
-                  defCt={defCt}
-                  getTotalCountryCount={getTotalCountryCount}
-                  handleCntClick={handleCntClick}
-                  getTotalStatesCounts={getTotalStatesCounts}
-                  handleStClick={handleStClick}
-                  getTotalCityCount={getTotalCityCount}
-                  getTotalScreensCountTouchpointWise={
-                    getTotalScreensCountTouchpointWise
-                  }
-                  getTotalScreensCount={getTotalScreensCount}
-                  getTotalScreensCountCityWise={getTotalScreensCountCityWise}
+
+      {currentTab === "Supply" && (
+        <div className="">
+    
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-8 pt-4">
+            <div className="col-span-1 sm:col-span-2 lg:col-span-2">
+              {/* <YearSlider /> */}
+              <div className="relative">
+                <LandingPageMapHeader
+                  scrollToTarget={scrollToTarget}
+                  setView={setView}
+                  view={view}
                 />
               </div>
-            ) : (
-              <div className="w-full h-full">
-                <LandingPageMap data={landingPageData} />
+              <div className="h-[500px] w-full z-0">
+                {view === "list" ? (
+                  <div className="w-full h-full">
+                    <LandingPageListView screens={landingPageData?.screens} />
+                  </div>
+                ) : view === "table" ? (
+                  <div className="w-full h-full">
+                    <LandingPageTableView
+                      data={screenData}
+                      stateCities={stateCities}
+                      cityTouchpoints={cityTouchpoints}
+                      touchpointsCities={touchpointsCities}
+                      defCnt={defCnt}
+                      setDefCnt={setDefCnt}
+                      defSt={defSt}
+                      setDefSt={setDefSt}
+                      defCt={defCt}
+                      getTotalCountryCount={getTotalCountryCount}
+                      handleCntClick={handleCntClick}
+                      getTotalStatesCounts={getTotalStatesCounts}
+                      handleStClick={handleStClick}
+                      getTotalCityCount={getTotalCityCount}
+                      getTotalScreensCountTouchpointWise={
+                        getTotalScreensCountTouchpointWise
+                      }
+                      getTotalScreensCount={getTotalScreensCount}
+                      getTotalScreensCountCityWise={getTotalScreensCountCityWise}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-full h-full">
+                    <LandingPageMap data={landingPageData} />
+                  </div>
+                )}
+              </div>
+            </div>
+            {landingPageData?.screens?.length > 0 && (
+              <div className="col-span-1 sm:col-span-2 lg:col-span-1 flex items-center">
+                <LandingPageMapStats data={landingPageData} />
               </div>
             )}
-          </div>
-        </div>
-        {landingPageData?.screens?.length > 0 && (
-          <div className="col-span-1 sm:col-span-2 lg:col-span-1 flex items-center">
-            <LandingPageMapStats data={landingPageData} />
-          </div>
-        )}
 
-      </div>
+          </div>
 
-      {view === "map" && (
-        <div className="flex justify-around flex-wrap justify-start gap-2 py-4 px-8">
-          {memoizedTouchPoints?.map((tp: any, i: any) => (
-            <div
-              key={i}
-              className="cursor-pointer flex items-center gap-1 group"
-            >
-              <div className={clsx(`h-3 w-3 ${colors[i]} rounded-full`)}></div>
-              <h1
-                className={clsx(
-                  `text-[10px] sm:text-[12px] md:text-[12px] leading-[18.1px] tracking-[0.01em] ${colorsbg[i]} p-1 rounded-[4px]`
-                )}
-              >
-                {tp?.tp}
-              </h1>
+          {view === "map" && (
+            <div className="flex justify-around flex-wrap justify-start gap-2 py-4 px-8">
+              {memoizedTouchPoints?.map((tp: any, i: any) => (
+                <div
+                  key={i}
+                  className="cursor-pointer flex items-center gap-1 group"
+                >
+                  <div className={clsx(`h-3 w-3 ${colors[i]} rounded-full`)}></div>
+                  <h1
+                    className={clsx(
+                      `text-[10px] sm:text-[12px] md:text-[12px] leading-[18.1px] tracking-[0.01em] ${colorsbg[i]} p-1 rounded-[4px]`
+                    )}
+                  >
+                    {tp?.tp}
+                  </h1>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </div>
       )}
+      {currentTab === "Demand" && (
+        <div className="bg-[#F5FBFF] rounded-[12px] mx-8">
+          <div className="grid grid-cols-12 gap-2 p-2">
+            <div className="col-span-2 bg-[#FFFFFF] rounded-[12px]">
+              <div className="p-4">
+                <h1 className="font-custom font-semibold text-[16px]">Category</h1>
+              </div>
+            </div>
+            <div className="col-span-10 bg-[#FFFFFF] rounded-[12px]">
+              <div className="p-4">
+                <h1 className="font-custom font-semibold text-[16px]">Brands & Agency</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
