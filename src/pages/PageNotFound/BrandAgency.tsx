@@ -312,6 +312,7 @@ export const BrandAgencyPage = () => {
                   ) : (
                     <div className="mt-4 space-y-3">
                       <div className="flex justify-between items-center">
+                        <p className="text-gray-700">PAN: {brand.officeAddress?.pan || 'Not specified'}</p>
                         <p className="text-gray-700">GST: {brand.officeAddress?.gst || 'Not specified'}</p>
                       </div>
 

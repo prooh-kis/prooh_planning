@@ -298,7 +298,6 @@ export const OurAdvertisingJourney = ({ data }: any) => {
       <div className="flex flex-col justify-center items-center gap-4 py-2 w-full">
         <p className="text-[12px] text-[#2D5087]">Our Journey</p>
         <h1 className="text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">From Bold Ideas To Lasting <br/> Impact In <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">advertising</span></h1>
-
       </div>
       <div className="py-4 flex justify-center items-center">
         {["Demand", "Supply"]?.map((tab: any, i: any) => (

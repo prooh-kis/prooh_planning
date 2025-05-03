@@ -1,3 +1,4 @@
+import ButtonInput from "../../components/atoms/ButtonInput";
 import { RightSideArrowsImageCarousel } from "../../components/molecules/RightSideArrowsImageCrousel";
 import { meetArchitects } from "../../data/LandingPageData";
 import React, { useState } from "react";
@@ -9,7 +10,16 @@ export const ProohCreator = ({
 }) => {
   const [teamMembers, setTeamMembers] = useState<any>(meetArchitects);
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  const [currentTab, setCurrentTab] = useState("Management");
+  const [hoverImage, setHoverImage] = useState(-1);
+  const teamTab = [
+    "Management",
+    "Tech Team",
+    "Sales Team",
+    "Operations Team",
+    "Finance Team",
+    "Data Heroes",
+  ]
   const nextSlide = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex + 1 >= teamMembers.length - 3 ? 0 : prevIndex + 1
@@ -23,122 +33,77 @@ export const ProohCreator = ({
   };
 
   return (
-    <div className="py-16 px-4 sm:px-6 lg:px-8 mt-24 lg:mt-0">
-      <div className="max-w-7xl mx-auto">
-        {/* Team Header */}
-        <div className="text-center mb-16">
-          <div className="flex justify-center items-center gap-2 mb-4">
-            <i className="fi fi-sr-heart w-5 h-5 text-primaryButton"></i>
-            <span className="text-gray-600">our team</span>
-          </div>
-          <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4">
-            Meet The Creators Behind Our Vision
-          </h2>
-          <p className="text-[16px] text-gray-600 max-w-3xl mx-auto">
-            Meet the passionate leaders driving our mission. Their expertise and
-            commitment to excellence propel us forward, creating lasting impact
-            and inspiring success
-          </p>
-
-          {/* Team Filter Buttons */}
-          <div className="flex justify-center flex-wrap gap-4 mt-8 flex-wrap">
-            {[
-              "Management",
-              "Tech Team",
-              "Sales Team",
-              "Operations Team",
-              "Finance Team",
-              "Data Heroes",
-            ].map((data, index) => (
-              <button
-                key={index}
-                className="text-[16px] leading-[19.68px] tracking-[-0.02em] text-[#667D8C] px-6 h-[40px] bg-[#F6F6F6] rounded-full hover:bg-gray-200"
-              >
-                {data}
-              </button>
-            ))}
+    <div className="py-16 px-12 sm:px-8 lg:px-16 mt-24 lg:mt-0 font-custom">
+      <div className="grid grid-cols-12 gap-2">
+        <div className="col-span-4 pt-8">
+          <p className="text-[12px] text-[#2D5087] tracking-[0.5rem] px-1 pb-2">OUR TEAM</p>
+          <h1 className="py-4 text-start font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">Behind The <br/><span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">Visioners</span></h1>
+          <p className="text-[20px] py-4 text-[#2D5087]">Our platform helps your business in <br /> managing expenses. These are some of <br/> the reasons why you</p>
+          <div className="flex justify-center items-center w-1/3 py-4">
+            <ButtonInput
+              // icon={<i className="fi fi-sr-megaphone flex items-center" />}
+              rounded="small"
+              fullWidth={true}
+            >
+              Join Our Team
+            </ButtonInput>
           </div>
         </div>
-
-        {/* Team Members Carousel */}
-        <div className="relative">
-          <button
-            id=""
-            title="previous"
-            type="button"
-            onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center z-10 hover:bg-gray-50"
-          >
-            <i className="fi fi-br-angle-left"></i>
-          </button>
-
-          <div className="overflow-hidden">
-            <div
-              className="flex gap-6 transition-transform duration-500 ease-out"
-              style={{ transform: `translateX(-${currentIndex * (100 / 4)}%)` }}
-            >
-              {teamMembers.map((member: any) => (
-                <div
-                  key={member.id}
-                  className="min-w-[calc(25%-1.25rem)] animate-fade-in"
-                >
-                  <div className="relative group">
+        <div className="col-span-8 w-full">
+          <div className="mt-8 mb-4 w-full flex justify-around items-center cursor-pointer">
+            {teamTab?.map((tab: any, i: any) => (
+              <div
+                key={i}
+                // type="button"
+                onClick={() => {
+                  setCurrentTab(tab);
+                  // setCurrentAdvertiserTab("0");
+                  // setCurrentMediaOwnerTab("0");
+                  // setCurrentDataHeroTab("0");
+                }}
+                className={`${
+                  tab === currentTab
+                    ? "bg-primaryButton text-white font-semibold"
+                    : "bg-[#F6F6F6] text-gray-700"
+                } truncate w-full py-2 px-8 ${i == 0 ? "clip-trapezium-right" : i == teamTab.length-1 ? "clip-trapezium-left" : "clip-trapezium-both"}`}
+              >
+                <span className="text-[12px]">{tab}</span>
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-12 gap-4">
+            {teamMembers.map((member: any) => (
+              <div
+                key={member.id}
+                className="col-span-4 shadow-lg hover:shadow-xl transition-shadow duration-300 group flip-card w-full aspect-[1] overflow-hidden"
+              >
+                <div className="relative flip-card-inner w-full h-full">
+                  <div className="flip-card-front rounded-[2px] h-full overflow-hidden">
                     <img
                       src={member.image}
                       alt={member.name}
                       loading="lazy"
-                      className="w-full aspect-square object-cover rounded-2xl grayscale hover:grayscale-0 transition-all duration-300"
+                      className="object-cover h-full"
                     />
-                    {member.linkedin && (
-                      <div className="absolute top-4 right-4">
-                        <div className="bg-blue-500 p-2 rounded-full">
-                          <i className="fi fi-brands-linkedin"></i>
-                        </div>
-                      </div>
-                    )}
                   </div>
-                  <h3 className="mt-4 text-xl font-semibold text-gray-900">
-                    {member.name}
-                  </h3>
-                  <p className="text-gray-600 text-[12px]">{member.role}</p>
-                  {member.location && (
-                    <p className="text-gray-600">{member.location}</p>
-                  )}
+                  
+                  <div className="p-8 flip-card-back bg-[#129BFF] flex flex-col items-start justify-center rounded-lg overflow-hidden">
+                    <h3 className="my-4 text-[24px] font-semibold text-white">
+                      {member.name}
+                    </h3>
+                    <p className="text-white text-[16px]">{member.role}</p>
+                    {member.location && (
+                      <p className="text-white text-[16px]">{member.location}</p>
+                    )}
+                    <div className="h-8 w-8 flex items-center justify-center bg-white rounded-full my-4">
+                      <i className="fi fi-brands-linkedin flex items-center justify-center text-[#129BFF]"></i>
+                    </div>
+                  </div>
+                  
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-
-          <button
-            id=""
-            title="next"
-            type="button"
-            onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center z-10 hover:bg-gray-50"
-          >
-            <i className="fi fi-br-angle-right"></i>
-          </button>
-        </div>
-
-        {/* Join Our Team Section */}
-        <div className="mt-24 bg-[#129BFF] rounded-2xl p-6 text-center flex justify-between items-center">
-          <div className="">
-            <h2 className="text-4xl font-custom font-bold text-white mb-4 text-start">
-              Join Our Team
-            </h2>
-            <p className="text-white font-custom mb-8 text-start">
-              Be part of a dynamic team that values creativity, collaboration,
-              and growth. Explore opportunities with us today!
-            </p>
-          </div>
-
-          <button
-            id=""
-            type="button"
-            className="bg-white text-[#129BFF] px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition-colors"
-          >
-            Apply Now
-          </button>
         </div>
       </div>
     </div>
