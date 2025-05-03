@@ -14,6 +14,33 @@ interface FlyPageProps {
 }
 
 export const FlyPage: React.FC<FlyPageProps> = ({products, selected, setSelected}) => {
+
+  const secondSection = [{
+    name: "Instant Campaign Deployment",
+    icon: <i className="text-white text-[24px] fi fi-sr-camera-cctv flex items-center justify-center"></i>,
+    bg: "bg-[#129BFF]",
+  }, {
+    name: "Third Party Campaigns",
+    icon: <i className="text-white text-[24px] fi fi-sr-camera-cctv flex items-center justify-center"></i>,
+    bg: "bg-[#FF0707]",
+  }, {
+    name: "Multiple Creative Optimization",
+    icon: <i className="text-white text-[24px] fi fi-sr-camera-cctv flex items-center justify-center"></i>,
+    bg: "bg-[#129BFF]"
+  }, {
+    name: "Campaign Monitoring",
+    icon: <i className="text-white text-[24px] fi fi-sr-camera-cctv flex items-center justify-center"></i>,
+    bg: "bg-[#FF960C]"
+  }, {
+    name: "Inventory Management",
+    icon: <i className="text-white text-[24px] fi fi-sr-camera-cctv flex items-center justify-center"></i>,
+    bg: "bg-[#4418A4]"
+  }, {
+    name: "Proof Of Play",
+    icon: <i className="text-white text-[24px] fi fi-sr-camera-cctv flex items-center justify-center"></i>,
+    bg: "bg-[#B408BD]"
+  }];
+
   return (
     <div className="w-full h-full pt-4">
       <div className="w-full grid grid-cols-12 bg-gradient-to-b from-[#F3F5FF] to-[#FFFFFF] p-12">
@@ -72,6 +99,27 @@ export const FlyPage: React.FC<FlyPageProps> = ({products, selected, setSelected
           </div>
         </div>
         
+      </div>
+
+      <div className="py-8">
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-[12px] text-[#2D5087] tracking-[0.5rem] px-1 pb-2">TYPES OF DATA SOURCES</p>
+          <h1 className="py-4 text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">End To End Solution <br/>For <span className="font-cursive font-regular tracking-[-0.2rem] text-[#4E64EE]">Media Owner</span></h1>
+          <p className="text-[20px] py-4 text-[#2D5087] text-center">  Respondents input their real-world demographics, interests, and behaviours <br/>directly into your system.
+          </p>
+        </div>
+        <div className="grid grid-cols-12 gap-4 px-20 py-8">
+          {secondSection?.map((content: any, i: any) => (
+            <div key={i} className="col-span-4 rounded-[12px] border border-gray-100 p-4 flex items-center gap-2 h-[120px]">
+              <div className={`${content.bg} rounded-full p-4`}>
+                {content.icon}
+              </div>
+              <h1 className="text-[24px] text-[#2A3856] font-semibold">
+                {content.name}
+              </h1>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

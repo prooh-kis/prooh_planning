@@ -15,8 +15,34 @@ interface PlannerPageProps {
 }
 
 export const PlannerPage: React.FC<PlannerPageProps> = ({products, selected, setSelected}) => {
+  const secondSection = [{
+    name: "Audience Selection",
+    icon: <i className="text-white text-[24px] fi fi-sr-camera-cctv flex items-center justify-center"></i>,
+    bg: "bg-[#129BFF]",
+  }, {
+    name: "Cohort TimePlay",
+    icon: <i className="text-white text-[24px] fi fi-sr-camera-cctv flex items-center justify-center"></i>,
+    bg: "bg-[#FF0707]",
+  }, {
+    name: "Advance Filters",
+    icon: <i className="text-white text-[24px] fi fi-sr-camera-cctv flex items-center justify-center"></i>,
+    bg: "bg-[#129BFF]"
+  }, {
+    name: "Campaign Monitoring",
+    icon: <i className="text-white text-[24px] fi fi-sr-camera-cctv flex items-center justify-center"></i>,
+    bg: "bg-[#FF960C]"
+  }, {
+    name: "Inventory Management",
+    icon: <i className="text-white text-[24px] fi fi-sr-camera-cctv flex items-center justify-center"></i>,
+    bg: "bg-[#4418A4]"
+  }, {
+    name: "Sync Creatives In Loop",
+    icon: <i className="text-white text-[24px] fi fi-sr-camera-cctv flex items-center justify-center"></i>,
+    bg: "bg-[#B408BD]"
+  }];
+
   return (
-<div className="w-full h-full pt-4">
+    <div className="w-full h-full pt-4 font-custom">
       <div className="w-full grid grid-cols-12 bg-gradient-to-b from-[#F0F9FF] to-[#FFFFFF] p-12">
         <div className="w-full col-span-8">
           <div className="flex items-center justify-start gap-4">
@@ -70,7 +96,26 @@ export const PlannerPage: React.FC<PlannerPageProps> = ({products, selected, set
             <img src={Planner} className="h-1/2 w-1/2 -rotate-[0.542rad]" alt="fly" />
           </div>
         </div>
-        
+      </div>
+      <div className="py-8">
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-[12px] text-[#2D5087] tracking-[0.5rem] px-1 pb-2">TYPES OF DATA SOURCES</p>
+          <h1 className="py-4 text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">Real-Time Campaign <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">Intelligence</span></h1>
+          <p className="text-[20px] py-4 text-[#2D5087] text-center"> Respondents input their real-world demographics, interests, and behaviours <br/>directly into your system.
+          </p>
+        </div>
+        <div className="grid grid-cols-12 gap-4 px-20 py-8">
+          {secondSection?.map((content: any, i: any) => (
+            <div key={i} className="col-span-4 rounded-[12px] border border-gray-100 p-4 flex items-center gap-2 h-[120px]">
+              <div className={`${content.bg} rounded-full p-4`}>
+                {content.icon}
+              </div>
+              <h1 className="text-[24px] text-[#2A3856] font-semibold">
+                {content.name}
+              </h1>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
