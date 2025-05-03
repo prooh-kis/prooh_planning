@@ -1,4 +1,4 @@
-import { Layer } from '../../../assets';
+import { Fly, Layer, Planner } from '../../../assets';
 import ButtonInput from '../../../components/atoms/ButtonInput';
 import React from 'react';
 
@@ -43,8 +43,45 @@ export const LayerPage: React.FC<LayerPageProps> = ({products, selected, setSele
     bg: "bg-[#129BFF]"
   }];
 
+  const thirdSection = [{
+    color: "bg-[#3A9868]",
+    icon: <i className="text-white text-[24px] fi fi-sr-users-alt flex items-center justify-center"></i>,
+    heading: "Time Zone",
+    subHeading: "Respondents input their real-world demographics, interests, and behaviours directly into your system.",
+  },{
+    color: "bg-[#3A9868]",
+    icon: <i className="text-white text-[24px] fi fi-sr-digital-tachograph flex items-center justify-center"></i>,
+    heading: "T1, T2, T3, T4",
+    subHeading: "Respondents input their real-world demographics, interests, and behaviours directly into your system.",
+  },{
+    color: "bg-[#3A9868]",
+    icon: <i className="text-white text-[24px] fi fi-sr-loan flex items-center justify-center"></i>,
+    heading: "Weekdays/Weekend Ratio",
+    subHeading: "Respondents input their real-world demographics, interests, and behaviours directly into your system.",
+  }];
+
+  const otherProducts = [{
+    id: 2,
+    icon: <img src={Fly} alt="fly" />,
+    textColor: "text-[#4E64EE]",
+    bgColor: "bg-[#F2F4FF]",
+    heading: "Fly",
+    subHeading: "CONTENT MANAGEMENT SYSTEM",
+    para: "Unprecedented access to 800+ OOH &DOOH media units via multiple purchase agreements media owners & through programmatic SSP integrations.",
+    redirect: "",
+  },{
+    id: 3,
+    icon: <img src={Planner} alt="planner" />,
+    textColor: "text-[#129BFF]",
+    bgColor: "bg-[#EEFAFF]",
+    heading: "Planner",
+    subHeading: "DOOH PLANNING TOOL",
+    para: "Unprecedented access to 800+ OOH &DOOH media units via multiple purchase agreements media owners & through programmatic SSP integrations.",
+    redirect: "",
+  }];
+
   return (
-    <div className="w-full h-full pt-4">
+    <div className="w-full h-full font-custom pt-4 px-4">
       <div className="w-full grid grid-cols-12 bg-gradient-to-b from-[#F6FFFA] to-[#FFFFFF] p-12">
         <div className="w-full col-span-8">
           <div className="flex items-center justify-start gap-4">
@@ -122,6 +159,79 @@ export const LayerPage: React.FC<LayerPageProps> = ({products, selected, setSele
             </div>
           ))}
         </div>
+      </div>
+
+      <div className="py-8">
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-[12px] text-[#2D5087] tracking-[0.5rem] px-1 pb-2">DEMOGRAPHIC & MOVEMENT PATTERNS</p>
+          <h1 className="py-4 text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">Unlock With Demographic<br/>And Movement <span className="font-cursive font-regular tracking-[-0.2rem] text-[#3A9868]">Analysis</span></h1>
+          <p className="text-[20px] py-4 text-[#2D5087] text-center"> Respondents input their real-world demographics, interests, and behaviours directly into your system.
+          </p>
+        </div>
+        <div className="grid grid-cols-12 gap-4 px-36 py-8">
+          {thirdSection?.map((content: any, i: any) => (
+            <div key={i} className="col-span-4 border border-gray-100 rounded-[12px] px-4 py-8">
+              <div className={`${content.color} h-12 w-12 flex items-center justify-center rounded-full p-2`}>
+                {content.icon}
+              </div>
+              <h1 className="py-4 text-[#2A3856] text-[24px] font-semibold">{content.heading}</h1>
+              <p className="py-2 text-[16px] text-[#2D5087]">{content.subHeading}</p>
+              <p></p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="py-8">
+        <div className="flex flex-col items-center justify-center">
+          <h1 className="py-4 text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">Impact Factors On Visit <span className="font-cursive font-regular tracking-[-0.2rem] text-[#3A9868]">Patterns</span></h1>
+          <p className="text-[20px] py-4 text-[#2D5087] text-center">find out how our user are spreading the word</p>
+        </div>
+        <div className="grid grid-cols-12 gap-4 px-36 py-8">
+          
+        </div>
+      </div>
+
+      <div className="py-8">
+        <div className="flex flex-col items-center justify-center">
+          <h1 className="py-4 text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">Our Data Heroes <span className="font-cursive font-regular tracking-[-0.2rem] text-[#3A9868]">Factors</span></h1>
+          <p className="text-[20px] py-4 text-[#2D5087] text-center">find out how our user are spreading the word</p>
+        </div>
+        <div className="grid grid-cols-12 gap-4 px-36 py-8">
+          
+        </div>
+      </div>
+
+      <div className="grid grid-cols-10 gap-4 px-16">
+        <div className="col-span-4">
+          <h1 className="py-4 text-start font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">See Our Other <span className="font-cursive font-regular tracking-[-0.2rem] text-[#3A9868]">Products</span></h1>
+          <p className="text-[20px] py-4 text-[#2D5087] text-start">find out how our user are spreading the word</p>
+        </div>
+        <div className="col-span-6 grid grid-cols-12 gap-4">
+          {otherProducts?.map((product: any) => (
+            <div key={product.id} className={`${product.bgColor} col-span-6 w-full rounded-[12px] shadow-sm border border-gray-100 p-8`}>
+              {product.icon}
+              <h1 className="my-4 text-[24px] text-[#2A3856] font-semibold">{product.heading}</h1>
+              <h1 className="my-4 text-[16px] text-[#2A3856]">{product.subHeading}</h1>
+              <p className="my-2 text-[16px] text-[#2D5087]">{product.para}</p>
+              <div className="w-1/2 pt-4">
+                <ButtonInput
+                  variant="knowMore"
+                  icon={<i className="fi fi-br-arrow-up-right flex items-center" />}
+                  iconPosition="right"
+                  rounded="full"
+                  size="small"
+                  textColor={product.textColor}
+                >
+                  <span className={`${product.textColor} py-1`}>
+                    Know More
+                  </span>
+                </ButtonInput>
+              </div>
+            </div>
+          ))}
+        </div>
+
       </div>
     </div>
   );
