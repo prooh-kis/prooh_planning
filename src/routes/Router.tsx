@@ -20,6 +20,7 @@ import {
   SignIn,
   SignUp,
   MyUsers,
+  ProductsPage,
 } from "../pages";
 
 import { PrivateRoute } from "./PrivateRoute";
@@ -39,6 +40,7 @@ import {
   MY_CREATIVES,
   NEW_DASHBOARD,
   BRAND_AGENCY_PAGE,
+  PRODUCTS,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 import { PublicRoute } from "../layout/PublicRoute";
@@ -111,6 +113,14 @@ const Routers: React.FC = () => {
           element={
             <PublicRoute>
               <LandingPage />
+            </PublicRoute>
+          }
+        />
+          <Route
+          path={PRODUCTS}
+          element={
+            <PublicRoute>
+              <ProductsPage />
             </PublicRoute>
           }
         />

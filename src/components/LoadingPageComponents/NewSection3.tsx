@@ -4,7 +4,7 @@ import { Fly, Planner, Layer } from "../../assets";
 export const NewSection3 = () => {
   const products = [{
     id: 1,
-    icon: <img src={Layer} alt="fly" />,
+    icon: <img src={Layer} alt="layer" />,
     textColor: "text-[#438061]",
     bgColor: "bg-[#F0FFEB]",
     heading: "Layer",
@@ -22,7 +22,7 @@ export const NewSection3 = () => {
     redirect: "",
   },{
     id: 3,
-    icon: <img src={Planner} alt="fly" />,
+    icon: <img src={Planner} alt="planner" />,
     textColor: "text-[#129BFF]",
     bgColor: "bg-[#EEFAFF]",
     heading: "Planner",

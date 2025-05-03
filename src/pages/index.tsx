@@ -20,5 +20,7 @@ export { IKnowItAllPlanPage } from "./IKnowItAllPlanPage";
 export { MediaOwnerPage } from "./website/MediaOwnerPage";
 export { MarketersPage } from "./website/MarketersPage";
 export { LandingPage } from "./website/LandingPage";
+export { ProductsPage } from "./website/ProductsPage";
+
 
 export { MyUsers } from "./MyUsers";

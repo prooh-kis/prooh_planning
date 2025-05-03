@@ -5,7 +5,7 @@ interface ButtonProps {
   onClick?: () => void;
   disabled?: boolean;
   loading?: boolean;
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "knowMore";
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "knowMore" | "custom";
   size?: "small" | "medium" | "large";
   rounded?: "none" | "small" | "medium" | "large" | "full";
   fullWidth?: boolean;
@@ -14,6 +14,7 @@ interface ButtonProps {
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
   textColor?: string;
+  custom?: any;
 }
 
 const ButtonInput: React.FC<ButtonProps> = ({
@@ -29,7 +30,8 @@ const ButtonInput: React.FC<ButtonProps> = ({
   loadingText = "Please Wait...",
   icon,
   iconPosition = "left",
-  textColor
+  textColor,
+  custom
 }) => {
   // Base classes
   const baseClasses = `font-semibold transition flex items-center justify-center ${
@@ -71,7 +73,8 @@ const ButtonInput: React.FC<ButtonProps> = ({
     danger: `text-white bg-red-500 hover:bg-red-600 ${
       disabled || loading ? "bg-red-300" : ""
     }`,
-    knowMore: `bg-white hover:bg-gray-100`
+    knowMore: `bg-white hover:bg-gray-100`,
+    custom: custom
   };
 
   // Icon size classes
