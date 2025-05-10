@@ -184,12 +184,100 @@ export const PlannerPage: React.FC<PlannerPageProps> = ({products, selected, set
           <p className="text-[20px] py-4 text-[#2D5087] text-center"> Respondents input their real-world demographics, interests, and <br/>behaviours directly into your system.
           </p>
         </div>
-        <div className="grid grid-cols-12 gap-4 px-36 py-8">
-          
+        <div className="grid grid-cols-12 gap-4 ml-[-15px] py-8">
+          <div className="col-span-6 bg-[#F7FCFF] flex items-center justify-center mr-12">
+            <img src={Planner} className="h-1/2 w-1/2" alt="planner" />
+          </div>
+          <div className="col-span-6 font-custom px-16">
+            <h1 className="font-semibold text-[28px] md:text-[40px] leading-[42px] md:leading-[54.72px] tracking-normal">
+              Real-Time Campaign Intelligence
+            </h1>
+            <p className="text-[20px] text-[#2D5087] py-4">
+              Monitor your outdoor advertising performance as it happens. Track impressions, hardware status, and campaign costs with live dashboards that give you the power to optimize on the fly.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-12 gap-4 ml-[-15px] py-8">
+          <div className="col-span-6 font-custom px-16">
+            <h1 className="font-semibold text-[28px] md:text-[40px] leading-[42px] md:leading-[54.72px] tracking-normal">
+              Precision Audience Targeting
+            </h1>
+            <p className="text-[20px] text-[#2D5087] py-4">
+              {"Why pay for every passing glance? Our platform ensures you only invest in the impressions that reach your specific audience segments, maximizing your ROI with every display."}
+            </p>
+          </div>
+          <div className="col-span-6 bg-[#F7FCFF] flex items-center justify-center ml-12">
+            <img src={Planner} className="h-1/2 w-1/2" alt="planner" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-12 gap-4 ml-[-15px] py-8">
+          <div className="col-span-6 bg-[#F7FCFF] flex items-center justify-center mr-12">
+            <img src={Planner} className="h-1/2 w-1/2" alt="planner" />
+          </div>
+          <div className="col-span-6 font-custom px-16">
+            <h1 className="font-semibold text-[28px] md:text-[40px] leading-[42px] md:leading-[54.72px] tracking-normal">
+              Smart Contextual Activation
+            </h1>
+            <p className="text-[20px] text-[#2D5087] py-4">
+              {"Deploy dynamic content triggered by real-world events. Weather changes, sports outcomes, traffic patterns—your displays respond automatically to what's happening around them."}
+            </p>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-12 gap-4 ml-[-15px] py-8">
+          <div className="col-span-6 font-custom px-16">
+            <h1 className="font-semibold text-[28px] md:text-[40px] leading-[42px] md:leading-[54.72px] tracking-normal">
+              Strategic Location Intelligence
+            </h1>
+            <p className="text-[20px] text-[#2D5087] py-4">
+              {"Position your message where it matters most. Target displays near your retail locations, intercept customers near competitor sites, or dominate high-traffic commuter routes for maximum visibility."}
+            </p>
+          </div>
+          <div className="col-span-6 bg-[#F7FCFF] flex items-center justify-center ml-12">
+            <img src={Planner} className="h-1/2 w-1/2" alt="planner" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-12 gap-4 ml-[-15px] py-8">
+          <div className="col-span-6 bg-[#F7FCFF] flex items-center justify-center mr-12">
+            <img src={Planner} className="h-1/2 w-1/2" alt="planner" />
+          </div>
+          <div className="col-span-6 font-custom px-16">
+            <h1 className="font-semibold text-[28px] md:text-[40px] leading-[42px] md:leading-[54.72px] tracking-normal">
+              Calendar-Optimized Campaigns
+            </h1>
+            <p className="text-[20px] text-[#2D5087] py-4">
+              Position your message where it matters most. Target displays near your retail locations, intercept customers near competitor sites, or dominate high-traffic commuter routes for maximum visibility.
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-10 gap-4 px-16">
+      <div className="px-12 pb-24">
+        <div className="grid grid-cols-12 gap-4 py-8">
+          <div className="col-span-6 p-16">
+            <p className="text-[12px] text-[#2D5087] tracking-[0.5rem] px-1 pb-2">HOW WE USE</p>
+            <h1 className="py-4 font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">Using Data insights to <br/> Optimize <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">Performance</span></h1>
+            <p className="text-[20px] py-4 text-[#2D5087]"> We use the insights to spot trends, improve performance, and guide smarter decisions
+            </p>
+          </div>
+          <div className="col-span-6 font-custom p-16 bg-[#EDF8FF] rounded-[12px]">
+            <img src={Planner} className="h-1/2 w-1/2" alt="planner" />
+
+            <h1 className="font-semibold text-[28px] md:text-[40px] leading-[42px] md:leading-[54.72px] tracking-normal">
+              Built for Marketers, Researchers, and Media Owners
+            </h1>
+            <p className="text-[20px] text-[#2D5087] py-4">
+              {"Prooh accurately converts vehicle numbers into audience impressions using google's speed data, R.T.O vehicles circulation data & D.U.L.T audience approximation data. Such aggregated data goes through "}
+            </p>
+          </div>
+         
+        </div>  
+      </div>
+
+      <div className="grid grid-cols-10 gap-4 px-16 py-8">
         <div className="col-span-4">
           <h1 className="py-4 text-start font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">See Our Other <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">Products</span></h1>
           <p className="text-[20px] py-4 text-[#2D5087] text-start">find out how our user are spreading the word</p>

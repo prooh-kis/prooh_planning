@@ -202,7 +202,7 @@ export const LayerPage: React.FC<LayerPageProps> = ({products, selected, setSele
         </div>
       </div>
 
-      <div className="grid grid-cols-10 gap-4 px-16">
+      <div className="grid grid-cols-10 gap-4 px-16 py-8">
         <div className="col-span-4">
           <h1 className="py-4 text-start font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">See Our Other <span className="font-cursive font-regular tracking-[-0.2rem] text-[#3A9868]">Products</span></h1>
           <p className="text-[20px] py-4 text-[#2D5087] text-start">find out how our user are spreading the word</p>

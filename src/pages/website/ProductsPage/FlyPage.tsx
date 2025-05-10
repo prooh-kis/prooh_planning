@@ -180,18 +180,86 @@ export const FlyPage: React.FC<FlyPageProps> = ({products, selected, setSelected
         </div>
       </div>
 
-      <div className="py-8">
+      <div className="pt-8 pb-32">
         <div className="flex flex-col items-center justify-center">
           <p className="text-[12px] text-[#2D5087] tracking-[0.5rem] px-1 pb-2">TYPES OF DATA SOURCES</p>
           <h1 className="py-4 text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">Extracting Data And Calculating <br/>Averages For <span className="font-cursive font-regular tracking-[-0.2rem] text-[#4E64EE]">Performance Insights</span></h1>
           <p className="text-[20px] py-4 text-[#2D5087] text-center"> Respondents input their real-world demographics, interests, and <br/>behaviours directly into your system.</p>
         </div>
-        <div className="grid grid-cols-12 gap-4 px-36 py-8">
-          
+        
+        <div className="grid grid-cols-12 gap-4 ml-[-15px] py-8">
+          <div className="col-span-6 bg-[#F2F3FF] flex items-center justify-center mr-12">
+            <img src={Fly} className="h-1/2 w-1/2" alt="fly" />
+          </div>
+          <div className="col-span-6 font-custom px-16">
+            <h1 className="font-semibold text-[28px] md:text-[40px] leading-[42px] md:leading-[54.72px] tracking-normal">
+              Advanced Programmatic Ad Deployment
+            </h1>
+            <p className="text-[20px] text-[#2D5087] py-4">
+              Take control of your digital signage network with sophisticated scheduling options. Deploy content based on share-of-voice requirements, timezone-specific targeting, and multi-creative rotations. Synchronize displays across screens of varying dimensions for cohesive brand experiences. 
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-12 gap-4 ml-[-15px] py-8">
+          <div className="col-span-6 font-custom px-16">
+            <h1 className="font-semibold text-[28px] md:text-[40px] leading-[42px] md:leading-[54.72px] tracking-normal">
+              Comprehensive Campaign Monitoring
+            </h1>
+            <p className="text-[20px] text-[#2D5087] py-4">
+              {"Track performance with precision through detailed media asset analytics. Our live log reporting gives you immediate insights into which assets are performing, when they're displaying, and how they're engaging your audience."}
+            </p>
+          </div>
+          <div className="col-span-6 bg-[#F2F3FF] flex items-center justify-center ml-12">
+            <img src={Fly} className="h-1/2 w-1/2" alt="fly" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-12 gap-4 ml-[-15px] py-8">
+          <div className="col-span-6 bg-[#F2F3FF] flex items-center justify-center mr-12">
+            <img src={Fly} className="h-1/2 w-1/2" alt="fly" />
+          </div>
+          <div className="col-span-6 font-custom px-16">
+            <h1 className="font-semibold text-[28px] md:text-[40px] leading-[42px] md:leading-[54.72px] tracking-normal">
+              Intelligent Media Asset Management
+            </h1>
+            <p className="text-[20px] text-[#2D5087] py-4">
+              Maintain complete visibility of your digital assets in real time. Monitor the status of each creative, adjust loop lengths on the fly, and ensure optimal performance across your entire network.
+            </p>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-12 gap-4 ml-[-15px] py-8">
+          <div className="col-span-6 font-custom px-16">
+            <h1 className="font-semibold text-[28px] md:text-[40px] leading-[42px] md:leading-[54.72px] tracking-normal">
+              Dynamic Campaign Control Center
+            </h1>
+            <p className="text-[20px] text-[#2D5087] py-4">
+              {"Manage every aspect of your campaigns without delay. Play, pause, or remove campaigns instantly. Swap creative assets, adjust default campaign settings, and fine-tune your content loops—all from a single, intuitive interface"}
+            </p>
+          </div>
+          <div className="col-span-6 bg-[#F2F3FF] flex items-center justify-center ml-12">
+            <img src={Fly} className="h-1/2 w-1/2" alt="fly" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-12 gap-4 ml-[-15px] py-8">
+          <div className="col-span-6 bg-[#F2F3FF] flex items-center justify-center mr-12">
+            <img src={Fly} className="h-1/2 w-1/2" alt="fly" />
+          </div>
+          <div className="col-span-6 font-custom px-16">
+            <h1 className="font-semibold text-[28px] md:text-[40px] leading-[42px] md:leading-[54.72px] tracking-normal">
+              AI-Powered Ad Delivery Optimization
+            </h1>
+            <p className="text-[20px] text-[#2D5087] py-4">
+              Let our intelligent algorithms maximize your display effectiveness. Our system continuously analyzes performance data to recommend optimal placement, timing, and creative combinations for superior audience engagement.
+              Streamline your DOOH operations with our enterprise-grade CMS platform—built for media owners who demand reliability, flexibility, and results.
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-10 gap-4 px-16">
+      <div className="grid grid-cols-10 gap-4 px-16 py-8">
         <div className="col-span-4">
           <h1 className="py-4 text-start font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">See Our Other <span className="font-cursive font-regular tracking-[-0.2rem] text-[#4E64EE]">Products</span></h1>
           <p className="text-[20px] py-4 text-[#2D5087] text-start">find out how our user are spreading the word</p>

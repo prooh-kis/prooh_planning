@@ -3,6 +3,8 @@ import { FlyPage } from './FlyPage';
 import { LayerPage } from './LayerPage';
 import { PlannerPage } from './PlannerPage';
 import { Fly, Planner, Layer } from '../../../assets';
+import { CreateCampaignOption } from '../../../components';
+import { PageFooter } from '../../../components/PageFooter';
 
 export const ProductsPage: React.FC = () => {
   const [selected, setSelected] = useState<any>("Fly");
@@ -27,16 +29,28 @@ export const ProductsPage: React.FC = () => {
 
 
    return (
-     <div className="w-full h-full pt-12">
-       {selected === "Fly" && (
-         <FlyPage products={products} selected={selected} setSelected={setSelected} />
-       )}
-       {selected === "Layer" && (
-         <LayerPage products={products} selected={selected} setSelected={setSelected} />
-       )}
-       {selected === "Planner" && (
-         <PlannerPage products={products} selected={selected} setSelected={setSelected} />
-       )}
+     <div className="w-full h-full pt-12 absolute">
+      <div className="relative">
+
+        {selected === "Fly" && (
+          <FlyPage products={products} selected={selected} setSelected={setSelected} />
+        )}
+        {selected === "Layer" && (
+          <LayerPage products={products} selected={selected} setSelected={setSelected} />
+        )}
+        {selected === "Planner" && (
+          <PlannerPage products={products} selected={selected} setSelected={setSelected} />
+        )}
+      </div>
+
+
+        <div className="relative">
+          <CreateCampaignOption />
+        </div>
+        
+        <div className="relative">
+          <PageFooter />
+        </div>
      </div>
    )
 };

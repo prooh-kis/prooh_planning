@@ -124,14 +124,7 @@ const Routers: React.FC = () => {
             </PublicRoute>
           }
         />
-        <Route
-          path={"/campaignDetails/:id?"}
-          element={
-            <AppDashBoardLayout className="bg-[#D3D3D310] pt-16">
-              <CampaignDetailsPage />
-            </AppDashBoardLayout>
-          }
-        />
+        
         <Route
           path={MEDIA_OWNER_PAGE}
           element={
@@ -150,6 +143,14 @@ const Routers: React.FC = () => {
           }
         />
 
+        <Route
+          path={"/campaignDetails/:id?"}
+          element={
+            <AppDashBoardLayout className="bg-[#D3D3D310] pt-16">
+              <CampaignDetailsPage />
+            </AppDashBoardLayout>
+          }
+        />
         <Route
           path={MY_CAMPAIGNS_LIST}
           element={
