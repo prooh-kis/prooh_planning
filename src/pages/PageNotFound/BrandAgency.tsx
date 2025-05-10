@@ -23,6 +23,7 @@ interface Brand {
     zipCode?: string;
   };
   isEditing?: boolean;
+  industry?: any;
 }
 
 interface FileData {
@@ -131,7 +132,6 @@ export const BrandAgencyPage = () => {
             }
           };
         }
-        
         return {
           ...prev,
           [field]: value
@@ -150,6 +150,7 @@ export const BrandAgencyPage = () => {
     dispatch(addClientAgencyDetails({
       clientAgencyName: brandToEdit.clientAgencyName,
       logo: brandToEdit.logo[0],
+      industry: brandToEdit.industry,
       officeAddress: {
         address: brandToEdit.officeAddress.address,
         city: brandToEdit.officeAddress.city,
@@ -238,15 +239,26 @@ export const BrandAgencyPage = () => {
                               removeImage={removeImage}
                             />
                           ))}
-                          <div className="flex items-center gap-4">
-                            {[1].map((_, i) => (
-                              <div key={i} className="relative inline-block">
+                          {brandToEdit?.logo && brandToEdit?.logo !== "" ? (
+                            <div className="flex items-center gap-4">
+                              <div className="relative inline-block">
                                 <div className="w-20 h-20 object-cover rounded-lg shadow-md flex items-center justify-center">
-                                  <i className="fi fi-rr-picture flex items-center text-[36px] text-[#D7D7D7]"></i>
+                                  <img src={brandToEdit?.logo as string} alt={brandToEdit?.clientAgencyName} />
                                 </div>
                               </div>
-                            ))}
-                          </div>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-4">
+                              {[1].map((_, i) => (
+                                <div key={i} className="relative inline-block">
+                                  <div className="w-20 h-20 object-cover rounded-lg shadow-md flex items-center justify-center">
+                                    <i className="fi fi-rr-picture flex items-center text-[36px] text-[#D7D7D7]"></i>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
                         </div>
                         <div className="flex items-center">
                           <FileUploadButton
@@ -255,6 +267,15 @@ export const BrandAgencyPage = () => {
                             fileType={"image"}
                           />
                         </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Industry</label>
+                        <input
+                          title="in"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          value={brandToEdit?.industry || ''}
+                          onChange={(e) => handleInputChange(brand._id, 'industry', e.target.value)}
+                        />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">PAN</label>
@@ -317,6 +338,16 @@ export const BrandAgencyPage = () => {
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div>
+                          <span className="text-sm font-medium text-gray-500">Industry:</span>{' '}
+                          {brand.industry ? (
+                            <h1 className="text-sm text-[#129BFF] hover:underline">
+                              {brand.industry}
+                            </h1>
+                          ) : (
+                            <span className="text-sm text-gray-700">Not specified</span>
+                          )}
+                        </div>
                         <div>
                           <span className="text-sm font-medium text-gray-500">Website:</span>{' '}
                           {brand.officeAddress?.website ? (

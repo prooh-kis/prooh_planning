@@ -41,7 +41,8 @@ const colorsbg = [
   "group-hover:bg-[#EF444430]",
   "group-hover:bg-[#FF77E9]",
 ];
-export const OurAdvertisingJourney = ({ data }: any) => {
+export const OurAdvertisingJourney = ({ data, clientAgencyData }: any) => {
+  const dispatch = useDispatch<any>();
   const targetDivRef = useRef<HTMLDivElement>(null);
   const landingMapRef = useRef<any>(null);
 
@@ -58,6 +59,10 @@ export const OurAdvertisingJourney = ({ data }: any) => {
 
   const [currentOfferIndex, setCurrentOfferIndex] = useState(3);
   const [currentTab, setCurrentTab] = useState("Demand");
+
+  const [clientAgencyCategories, setClientAgencyCategories] = useState<any>([]);
+  const [selectedCategory, setSelectedCategory] = useState<any>("");
+  const [clientAgencyLogos, setClientAgencyLogos] = useState<any>([]);
 
   useEffect(() => {
     if (getDataFromLocalStorage(LANDING_PAGE_DATA)) {
@@ -233,7 +238,22 @@ export const OurAdvertisingJourney = ({ data }: any) => {
       setCityTouchpoints(fillCityData(landingPageData.screenData));
       setTouchpointsCities(fillTpData(landingPageData.screenData));
     }
-  }, [landingPageData]);
+
+    if (clientAgencyData) {
+      setClientAgencyCategories(() => {
+        return clientAgencyData?.map((data: any) => data.industry)?.reduce((acc: any, current: any) => {
+          if (!acc.includes(current)) {
+            acc.push(current);
+          }
+          return acc;
+        }, [])
+      });
+
+      setClientAgencyLogos(() => {
+        return clientAgencyData?.filter((d: any) => d.industry === selectedCategory)?.map((data: any) => data.logo)
+      });
+    }
+  }, [landingPageData, clientAgencyData, selectedCategory]);
 
   const markers = useMemo(() => {
     const newMarkers: any[] = [];
@@ -293,6 +313,8 @@ export const OurAdvertisingJourney = ({ data }: any) => {
     }
   }, [memoizedMarkers]);
 
+  console.log(clientAgencyCategories);
+  console.log(clientAgencyLogos);
   return (
     <div className="px-4 sm:px-2 md:px-8 w-full mt-16">
       <div className="flex flex-col justify-center items-center gap-4 py-2 w-full">
@@ -440,13 +462,27 @@ export const OurAdvertisingJourney = ({ data }: any) => {
         <div className="bg-[#F5FBFF] rounded-[12px] mx-8">
           <div className="grid grid-cols-12 gap-2 p-2">
             <div className="col-span-2 bg-[#FFFFFF] rounded-[12px]">
-              <div className="p-4">
+              <div className="p-4 truncate cursor-pointer" onClick={() => setSelectedCategory("")}>
                 <h1 className="font-custom font-semibold text-[16px]">Category</h1>
+              </div>
+              <div className="grid grid cols-1 pb-4 truncate">
+                {clientAgencyCategories?.map((category: any, i: number) => (
+                  <h1 key={i} onClick={() => setSelectedCategory(category)} className={`col-span-1 ${selectedCategory == category ? "border-l border-[#129BFF]" : ""} font-custom text-[14px] pt-1 pl-4 cursor-pointer`}>
+                    {category}
+                  </h1>
+                ))}
               </div>
             </div>
             <div className="col-span-10 bg-[#FFFFFF] rounded-[12px]">
               <div className="p-4">
                 <h1 className="font-custom font-semibold text-[16px]">Brands & Agency</h1>
+              </div>
+              <div className="grid grid-cols-12 gap-2 px-4 pb-4">
+                {clientAgencyLogos?.slice(0, 30)?.map((logo: any, j: number) => (
+                  <div key={j} className="p-1 col-span-2 flex items-center justify-center">
+                    <img className="" src={logo} alt="logo" />
+                  </div>
+                ))}
               </div>
             </div>
           </div>

@@ -23,6 +23,7 @@ import {
 } from "../../../components/LoadingPageComponents";
 import landingPageGrid from "../../../assets/images/landingPageGrid.png";
 import ButtonInput from "../../../components/atoms/ButtonInput";
+import { getAllClientAgencyNames } from "../../../actions/clientAgencyAction";
 
 
 export const Landing: React.FC = () => {
@@ -33,10 +34,17 @@ export const Landing: React.FC = () => {
   const landingPageDataGet = useSelector(
     (state: any) => state.landingPageDataGet
   );
-  const { data } = landingPageDataGet;
+  const { data: landingPageData } = landingPageDataGet;
+
+  const {
+    loading: loadingClientAgencyData,
+    error: errorClientAgencyData,
+    data: clientAgencyData
+  } = useSelector((state: any) => state.allClientAgencyNamesListGet);
 
   useEffect(() => {
     dispatch(getLandingPageData());
+    dispatch(getAllClientAgencyNames());
     removeAllKeyFromLocalStorage();
   }, [dispatch]);
 
@@ -68,7 +76,7 @@ export const Landing: React.FC = () => {
       </div>
       
       <div className="px-8 ">
-        <OurAdvertisingJourney data={data} />
+        <OurAdvertisingJourney data={landingPageData} clientAgencyData={clientAgencyData} />
       </div>
       
       <div className="px-8 ">
