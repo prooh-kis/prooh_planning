@@ -86,7 +86,7 @@ export const Header: React.FC = () => {
                   navigate(`${item.path}`);
                 }
               }}
-              className={`text-sm lg:text-base flex items-center ${
+              className={`text-sm lg:text-base flex items-center hover:font-bold ${
                 location.pathname === item.path
                   ? "font-semibold text-[#0094FF] border-b-2 border-[#129BFF] py-5"
                   : "py-1"
