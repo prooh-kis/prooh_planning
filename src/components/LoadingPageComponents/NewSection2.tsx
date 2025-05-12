@@ -30,7 +30,7 @@ export const NewSection2 = () => {
 
   return (
     <div className="z-10 font-custom flex flex-col justify-center items-center pt-20">
-      <h1 className="font-semibold text-[48px] text-[#1E376E]">Callenges We Help To <span className="font-cursive font-regular tracking-[-0.5rem] text-[#129BFF]">Solve</span></h1>
+      <h1 className="font-semibold text-[48px] text-[#1E376E]">Challenges We Help To <span className="font-cursive font-regular tracking-[-0.5rem] text-[#129BFF]">Solve</span></h1>
       <p className="text-[20px] py-4 text-[#2D5087]">Our platform helps your business in managing expenses. These are some of the reasons why you</p>
       <div className="grid grid-cols-4 gap-4 pt-8 px-12">
         {challenges?.map((challenge: any) => (
