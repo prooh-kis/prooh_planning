@@ -14,4 +14,6 @@ export {FlowHorizontalScroll} from "./FlowHorizontalScroll";
 export { NewSection1 } from "./NewSection1";
 export { NewSection2 } from "./NewSection2";
 export { NewSection3 } from "./NewSection3";
+export { NewSection4 } from "./NewSection4";
+
 

@@ -256,10 +256,10 @@ export const BrandAgencyPage = () => {
                     src={Array.isArray(brand.logo) ? brand.logo[0] : brand.logo}
                     alt={`${brand.clientAgencyName} logo`}
                     className="max-w-full max-h-full object-contain"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "https://via.placeholder.com/48";
-                    }}
+                    // onError={(e) => {
+                    //   (e.target as HTMLImageElement).src =
+                    //     "https://via.placeholder.com/48";
+                    // }}
                     loading="lazy"
                   />
                 ) : (

@@ -19,7 +19,8 @@ import {
   FlowDiagramWeb,
   FlowHorizontalScroll,
   NewSection2,
-  NewSection3
+  NewSection3,
+  NewSection4
 } from "../../../components/LoadingPageComponents";
 import landingPageGrid from "../../../assets/images/landingPageGrid.png";
 import ButtonInput from "../../../components/atoms/ButtonInput";
@@ -68,10 +69,12 @@ export const Landing: React.FC = () => {
         <NewSection2 />
         <NewSection3 />
         {/* <FlowHorizontalScroll /> */}
-        <i className="" />
+        {/* <i className="fi fi-rr-arrow-trend-up " />
+        <NewSection4 /> */}
       </div>
       
       <div className="px-8 ">
+
         <HowItsWork />
       </div>
       
