@@ -39,6 +39,9 @@ import {
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
+  TAKE_DASHBOARD_SCREENSHOT_FAIL,
+  TAKE_DASHBOARD_SCREENSHOT_REQUEST,
+  TAKE_DASHBOARD_SCREENSHOT_SUCCESS,
 } from "../constants/dashboardConstant";
 
 const newDashboardURL = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/dashboard`;
@@ -312,7 +315,8 @@ export const getSiteMonitoringPicsPercentage =
       });
     }
   };
-// { id, cities, touchPoints, screenTypes , screenName }
+
+
 export const getAllSitesMonitoringData =
   (input) => async (dispatch, getState) => {
     dispatch({
@@ -368,7 +372,7 @@ export const getSiteBasedDataOnLogsPageAction =
     }
   };
 
-  export const getFiltersAndDataForAllLogsPopupAction =
+export const getFiltersAndDataForAllLogsPopupAction =
   (input) => async (dispatch, getState) => {
     dispatch({
       type: GET_ALL_LOGS_FOR_POPUP_REQUEST,
@@ -394,3 +398,29 @@ export const getSiteBasedDataOnLogsPageAction =
       });
     }
   };
+
+export const takeDashboardScreenShotAction = (input) => async (dispatch, getState) => {
+  dispatch({
+    type: TAKE_DASHBOARD_SCREENSHOT_REQUEST,
+    payload: input,
+  });
+  try {
+    const { data } = await axios.post(
+      `${newDashboardURL}/takeDashboardScreenshot`,
+      input
+    );
+    dispatch({
+      type: TAKE_DASHBOARD_SCREENSHOT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: TAKE_DASHBOARD_SCREENSHOT_FAIL,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    });
+  }
+}

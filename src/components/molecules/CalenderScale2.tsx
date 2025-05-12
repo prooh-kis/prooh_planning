@@ -300,8 +300,11 @@ export const CalenderScaleStepper = ({
   }, [weeks, getWeekPercentageValue]);
 
   useEffect(() => {
-    document.documentElement.scrollTop = document.documentElement.clientHeight;
-    document.documentElement.scrollLeft = document.documentElement.clientWidth;
+    // document.documentElement.scrollTop = document.documentElement.clientHeight;
+    // document.documentElement.scrollLeft = document.documentElement.clientWidth;
+    // if (componentRef.current) {
+    //   componentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // }
   }, []);
 
   return (

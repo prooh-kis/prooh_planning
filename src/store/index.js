@@ -95,6 +95,7 @@ import {
   getSitesDataMapViewForPlannerDashboardReducer,
   getSlotDeliveryGraphDateWiseForPlannerDashboardReducer,
   getSpotDeliveryDataForPlannerDashboardReducer,
+  takeDashboardScreenShotReducer,
 } from "../reducers/dashboardReducers";
 
 const initialState = {
@@ -218,6 +219,7 @@ const store = configureStore({
     allSitesMonitoringData: getAllSitesMonitoringDataReducer,
     siteBasedDataOnLogsPage: getSiteBasedDataOnLogsPageReducer,
     getFiltersAndDataForAllLogsPopup: getFiltersAndDataForAllLogsPopupReducer,
+    takeDashboardScreenShot: takeDashboardScreenShotReducer,
   },
 
   // middleware: thunk

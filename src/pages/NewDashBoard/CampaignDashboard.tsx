@@ -26,6 +26,7 @@ interface GridItem {
 }
 
 export const CampaignDashboard = ({
+  pathname,
   loading,
   campaignDetails,
   screenLevelData,
@@ -40,6 +41,10 @@ export const CampaignDashboard = ({
   const dropdownRef = useRef<any>(null);
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
+  const clickedTab = pathname.split("/")[3] || "1";
+  
+  const parentComponentRef = useRef<HTMLDivElement>(null);
+  const aComponentRef = useRef<HTMLDivElement>(null);
 
   const [clicked, setClicked] = useState<any>("1");
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -215,15 +220,25 @@ export const CampaignDashboard = ({
 
 
   useEffect(() => {
+
+    if (Number(clickedTab) !== 1) {
+      setClicked(clickedTab);
+    }
+
     if (campaignDetails?._id) {
       fetchDashboardData()
     }
+
+    if (aComponentRef.current) {
+      aComponentRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
   },[fetchDashboardData, campaignDetails?._id]);
   return (
-    <div className="absolute w-full bg-[#F2F4F7] h-full mt-12 flex flex-col gap-2 font-custom">
+    <div ref={parentComponentRef} className="absolute w-full bg-[#F2F4F7] h-full mt-12 flex flex-col gap-2 font-custom">
 
       {/* Dashboard header Section */}
-      <div className="bg-[#FFFFFF] p-2 py-4 px-2  pr-14 flex justify-between mt-4 fixed z-10 shadow-sm w-full">
+      <div ref={aComponentRef} className="bg-[#FFFFFF] p-2 py-4 px-2  pr-14 flex justify-between mt-4 fixed z-10 shadow-sm w-full">
         <div className="px-2 flex justify-between items-center">
           <div className="flex gap-4">
             <div className="flex gap-4 items-center">
@@ -284,7 +299,10 @@ export const CampaignDashboard = ({
                   ? "border border-[#129BFF] border-2"
                   : "border border-gray-100 "
               }`}
-              onClick={() => setClicked(item.id)}
+              onClick={() => {
+                navigate(`${pathname.split("/").splice(0, 3).join("/")}/${item.id}`)
+                setClicked(item.id)
+              }}
             >
               <DashboardGrid
                 type={item.type}

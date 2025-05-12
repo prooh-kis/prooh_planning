@@ -39,6 +39,9 @@ import {
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_ERROR,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
+  TAKE_DASHBOARD_SCREENSHOT_FAIL,
+  TAKE_DASHBOARD_SCREENSHOT_REQUEST,
+  TAKE_DASHBOARD_SCREENSHOT_SUCCESS,
 } from "../constants/dashboardConstant";
 
 export function getBasicDataForPlannerDashboardReducer(state = {}, action) {
@@ -309,3 +312,21 @@ export function getFiltersAndDataForAllLogsPopupReducer(state = {}, action) {
   }
 }
 
+export function takeDashboardScreenShotReducer(state = {}, action) {
+  switch (action.type) {
+    case TAKE_DASHBOARD_SCREENSHOT_REQUEST:
+      return { loading: true };
+    case TAKE_DASHBOARD_SCREENSHOT_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case TAKE_DASHBOARD_SCREENSHOT_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}

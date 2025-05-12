@@ -1,19 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
-import { getScreenDataUploadCreativeData } from "../../actions/screenAction";
 import { SkeletonLoader } from "../../components/molecules/SkeletonLoader";
-import { PrimaryButton } from "../../components/atoms/PrimaryButton";
-import { CheckboxInput } from "../../components/atoms/CheckboxInput";
-import { TabWithoutIcon } from "../../components";
-import { DropdownInput } from "../../components/atoms/DropdownInput";
-import { PrimaryInput } from "../../components/atoms/PrimaryInput";
-import { Tooltip } from "antd";
-import { SearchableSelect } from "../../components/atoms/SearchableSelect";
-import { addClientAgencyDetails, getAllClientAgencyNames, getClientAgencyDetails } from "../../actions/clientAgencyAction";
+import { BillingAndInvoiceEnterDetails } from "./BillAndInvoiceEnterDetails";
+import { PrimaryButton } from "../../components";
+import { createBillInvoice } from "../../actions/billInvoiceAction";
+import { addClientAgencyDetails } from "../../actions/clientAgencyAction";
 import { generateBillAndInvoicePdf } from "../../utils/generatePdf";
-import { createBillInvoice, getBillInvoiceDetails } from "../../actions/billInvoiceAction";
-import { CalendarInput } from "../../components/atoms/CalendarInput";
+import { BillAndInvoiceSteppers } from "./BillAndInvoiceSteppers";
+import { takeDashboardScreenShotAction } from "../../actions/dashboardAction";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 
 export const BillingAndInvoice = (props: any) => {
@@ -68,119 +64,39 @@ export const BillingAndInvoice = (props: any) => {
     invoiceAmount
   } = props;
 
-  const todayDate = moment(new Date())?.format("YYYY-MM-DD hh:mm:ss");
-  const allClientAgencyNamesListGet = useSelector((state: any) => state.allClientAgencyNamesListGet);
-  const {
-    loading: loadingClientAgencyNames,
-    error: errorClientAgencyNames,
-    data: clientAgencyNamesList,
-  } = allClientAgencyNamesListGet;
+    const [billingStep, setBillingStep] = useState<any>(0);
 
-  const clientAgencyDetailsGet = useSelector((state: any) => state.clientAgencyDetailsGet);
-  const {
-    loading: loadingClientAgencyDetails,
-    error: errorClientAgencyDetails,
-    data: clientAgencyDetailsData,
-  } = clientAgencyDetailsGet;
+    const todayDate = moment(new Date())?.format("YYYY-MM-DD hh:mm:ss");
+  
+    const clientAgencyDetailsGet = useSelector((state: any) => state.clientAgencyDetailsGet);
+    const {
+      loading: loadingClientAgencyDetails,
+      error: errorClientAgencyDetails,
+      data: clientAgencyDetailsData,
+    } = clientAgencyDetailsGet;
+  
+    const billInvoiceDetailsGet = useSelector((state: any) => state.billInvoiceDetailsGet);
+    const {
+      loading: loadingBillInvoiceDetails,
+      error: errorBillInvoiceDetails,
+      data: billInvoiceDetailsData,
+    } = billInvoiceDetailsGet;
 
-  const billInvoiceDetailsGet = useSelector((state: any) => state.billInvoiceDetailsGet);
-  const {
-    loading: loadingBillInvoiceDetails,
-    error: errorBillInvoiceDetails,
-    data: billInvoiceDetailsData,
-  } = billInvoiceDetailsGet;
+    const {
+      loading: loadingScreenshot,
+      error: errorScreenshot,
+      data: screenshot
+    } = useSelector((state: any) => state.takeDashboardScreenShot)
+  
 
-  const saveClientAgencyDetails = () => {
-    
-    dispatch(addClientAgencyDetails({
-      clientAgencyName: clientAgencyName,
-      pocName: pocName,
-      pocEmail: pocEmail,
-      pocContact: pocContact,
-      pocDesignation: pocDesignation,
-      officeAddress: {
-        address: address,
-        city: city,
-        state: stateName,
-        country: country,
-        phone: phone,
-        email: email,
-        website: website,
-        zipCode: zipCode,
-        gst: gst,
-        pan: pan,
-      },
-      poRecieved: poNumber && !clientAgencyDetailsData?.poRecieved?.map((po: any) => po.poNumber)?.includes(poNumber) ? clientAgencyDetailsData?.poRecieved.push({
-        poNumber: poNumber,
-        poDoc: ""
-      }) : clientAgencyDetailsData?.poRecieved
-    }));
+    const generateBillInvoice = useCallback(() => {
+      generateBillAndInvoicePdf({download: true, fileName: `INVOICE_${campaignDetails?.brandName}_${campaignDetails?.name}`, jsonData: jsonDataForInvoice });
+    },[jsonDataForInvoice])
 
-    dispatch(createBillInvoice({
-      campaignCreationId: campaignDetails?._id,
-      invoiceNumber: `PROOH/${campaignDetails?._id}`,
-      invoiceDate: todayDate,
-      internalSoNumber: `PROOH/${campaignDetails?._id}/SO`,
-      clientConfirmation: campaignDetails?.clientApprovalImgs?.length > 0 ? "Mail Confirmation" : "mail confirmation",
-      clientOrderDate: poDate,
-      poRecieved: {
-        poNumber: poNumber,
-        poDoc: "",
-        poDate: poDate
-      },
-      tableContent: {
-        description: invoiceDescription,
-        quantity: invoiceQuantity,
-        amount: invoiceAmount,
-        rate: invoiceAmount,
-        hsnsac: ""
-      },
-      subTotalAmount: invoiceAmount,
-      outPutGstPercent: 18,
-      outPutGstAmount: invoiceAmount * 0.18,
-      totalAmount: invoiceAmount * 1.18,
-      currency: "INR",
-    }));
-  }
-
-
-  const generateBillInvoice = useCallback(() => {
-    generateBillAndInvoicePdf({download: true, fileName: `INVOICE_${campaignDetails?.brandName}_${campaignDetails?.name}`, jsonData: jsonDataForInvoice });
-  },[jsonDataForInvoice])
-
-  useEffect(() => {
-    if (poNumber) {
-      dispatch(getBillInvoiceDetails({campaignCreationId: campaignDetails?._id}))
-    }
-    dispatch(getAllClientAgencyNames());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (clientAgencyNamesList) {
-      setClientAgencyName(clientAgencyNamesList.clientAgencyName);
-    }
-    if (clientAgencyDetailsData) {
-      setClientAgencyName(clientAgencyDetailsData?.clientAgencyName);
-      setAddress(clientAgencyDetailsData?.officeAddress?.address);
-      setCity(clientAgencyDetailsData?.officeAddress?.city);
-      setStateName(clientAgencyDetailsData?.officeAddress?.state);
-      setCountry(clientAgencyDetailsData?.officeAddress?.country);
-      setPhone(clientAgencyDetailsData?.officeAddress?.phone);
-      setEmail(clientAgencyDetailsData?.officeAddress?.email);
-      setWebsite(clientAgencyDetailsData?.officeAddress?.website);
-      setZipCode(clientAgencyDetailsData?.officeAddress?.zipCode);
-      setGst(clientAgencyDetailsData?.officeAddress?.gst);
-      setPan(clientAgencyDetailsData?.officeAddress?.pan);
-      setPocName(clientAgencyDetailsData?.pocName);
-      setPocEmail(clientAgencyDetailsData?.pocEmail);
-      setPocContact(clientAgencyDetailsData?.pocContact);
-      setPocDesignation(clientAgencyDetailsData?.pocDesignation);
-      setJsonDataForInvoice({
-        planner: campaignDetails?.campaignPlannerName,
-        plannerEmail: campaignDetails?.campaignPlannerEmail,
+    const saveClientAgencyDetails = () => {
+      
+      dispatch(addClientAgencyDetails({
         clientAgencyName: clientAgencyName,
-        pan: pan,
-        gst: gst,
         pocName: pocName,
         pocEmail: pocEmail,
         pocContact: pocContact,
@@ -197,38 +113,45 @@ export const BillingAndInvoice = (props: any) => {
           gst: gst,
           pan: pan,
         },
-        invoiceNumber: `PROOH/${String(new Date().getFullYear() - 1)}-${String(new Date().getFullYear())}/${clientAgencyDetailsData?.totalInvoiceNumber || 0}`,
+        poRecieved: poNumber && !clientAgencyDetailsData?.poRecieved?.map((po: any) => po.poNumber)?.includes(poNumber) ? clientAgencyDetailsData?.poRecieved.push({
+          poNumber: poNumber,
+          poDoc: ""
+        }) : clientAgencyDetailsData?.poRecieved
+      }));
+  
+      dispatch(createBillInvoice({
+        campaignCreationId: campaignDetails?._id,
+        invoiceNumber: `PROOH/${campaignDetails?._id}`,
         invoiceDate: todayDate,
-        internalSoNumber: `PROOH/${String(new Date().getFullYear() - 1)}-${String(new Date().getFullYear())}/${clientAgencyDetailsData?.totalInvoiceNumber || 0}/SO`,
-        clientConfirmation: campaignDetails?.clientApprovalImgs?.length > 0? "Mail Confirmation" : "mail confirmation",
+        internalSoNumber: `PROOH/${campaignDetails?._id}/SO`,
+        clientConfirmation: campaignDetails?.clientApprovalImgs?.length > 0 ? "Mail Confirmation" : "mail confirmation",
         clientOrderDate: poDate,
-        poNumber: `${poNumber}`,
-        invoiceDescription: invoiceDescription,
-        invoiceQuantity: invoiceQuantity,
-        invoiceCurrency: invoiceCurrency,
-        invoiceAmount: Number(invoiceAmount.toFixed(0)),
-        subTotalAmount: Number(invoiceAmount.toFixed(0)) * 1.18,
+        poRecieved: {
+          poNumber: poNumber,
+          poDoc: "",
+          poDate: poDate
+        },
+        tableContent: {
+          description: invoiceDescription,
+          quantity: invoiceQuantity,
+          amount: invoiceAmount,
+          rate: invoiceAmount,
+          hsnsac: ""
+        },
+        subTotalAmount: invoiceAmount,
         outPutGstPercent: 18,
-        outPutGstAmount: Number(invoiceAmount.toFixed(0)) * 0.18,
-        campaignName: `${campaignDetails?.name}, ${campaignDetails?.brandName}`,
-        startDate: moment(campaignDetails?.startDate).format("YYYY-MM-DD"),
-        endDate: moment(campaignDetails?.endDate).format("YYYY-MM-DD"),
-
-      });
-      setInvoiceAmount(() => {
-        return campaignDetails?.discount === 0 || campaignDetails?.discount === undefined
-        ? Number(campaignDetails?.totalCampaignBudget)
-        : Number(campaignDetails?.finalCampaignBudget)
-      });
+        outPutGstAmount: invoiceAmount * 0.18,
+        totalAmount: invoiceAmount * 1.18,
+        currency: "INR",
+      }));
     }
-  },[clientAgencyNamesList, setClientAgencyName, clientAgencyDetailsData, setAddress, setCity, setStateName, setCountry, setPhone, setEmail, setWebsite, setZipCode, setGst, setPan, setPocName, setPocEmail, setPocContact, setPocDesignation, setJsonDataForInvoice, clientAgencyName, pocName, pocEmail, pocContact, pocDesignation, address, city, stateName, country, phone, email, website, zipCode, gst, pan, poNumber, campaignDetails, invoiceQuantity, invoiceDescription]);
-
+  
   useEffect(() => {
     if (billInvoiceDetailsData) {
       generateBillInvoice();
     }
   },[billInvoiceDetailsData, generateBillInvoice]);
-  
+
   useEffect(() => {
     if (props?.open) {
       document.body.classList.add("overflow-hidden");
@@ -244,407 +167,150 @@ export const BillingAndInvoice = (props: any) => {
   if (!props?.open) {
     return null;
   }
+
+  const takeScreenShot = () => {
+    dispatch(takeDashboardScreenShotAction({
+      url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
+      tabs: ["1", "2", "3", "4", "5"]
+    }))
+  }
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="font-custom fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div
         className="bg-[#FFFFFF] p-4 rounded-lg shadow-lg w-full max-w-full overflow-auto max-h-auto "
         style={{ height: "90vh", width: "90vw" }}
       >
-        {loading ? (
-          <div>
-            <SkeletonLoader />
-          </div>
-        ) : (
-          <div>
-            <div className="flex items-center justify-between p-2">
-              <div className="flex items-center ">
-                <h1 className="text-[14px] font-bold">Generate Invoice</h1>
-              </div>
-              <div className="flex items-center gap-4">
-                <PrimaryButton
-                  title="Save"
-                  action={saveClientAgencyDetails}
-                  height="h-8"
-                  width="w-20"
-                  textSize="text-[12px]"
-                  rounded="rounded"
-                />
-                <PrimaryButton
-                  title="Generate"
-                  action={generateBillInvoice}
-                  height="h-8"
-                  width="w-20"
-                  textSize="text-[12px]"
-                  rounded="rounded"
-                />
-                <i
-                  className="fi fi-br-circle-xmark"
-                  onClick={onClose}
-                ></i>
-              </div>
-            </div>
-            <div className="p-2 overflow-scroll-y no-scrollbar">
-              <div className="grid grid-cols-12 gap-4 py-2">
-                <div className="col-span-8 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      Purchase Order Number
-                    </label>
-                    <Tooltip title="Enter Purchase Order number for the campaign that you received from your client/agency">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter PO Number"
-                    value={poNumber}
-                    action={setPoNumber}
-                  />
-                </div>
-                <div className="col-span-4 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      Purchase Order Date
-                    </label>
-                    <Tooltip title="Enter Purchase Order date for the campaign that you received from your client/agency">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <CalendarInput
-                    placeholder="PO Date"
-                    value={poDate}
-                    action={setPoDate}
-                    disabled={false}
-                    minDate={campaignDetails?.startDate}
-                  />
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-12 gap-4 py-2">
-                <div className="col-span-8">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      Description
-                    </label>
-                    <Tooltip title="Enter description for the campaign">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter Description"
-                    value={invoiceDescription}
-                    action={setInvoiceDescription}
-                  />
-                </div>
-                <div className="col-span-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      Quantity
-                    </label>
-                    <Tooltip title="Enter quantity of items for the campaign">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter Quantity"
-                    value={invoiceQuantity}
-                    action={setInvoiceQuantity}
-                  />
-                </div>
-                <div className="col-span-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      Currency
-                    </label>
-                    <Tooltip title="Enter currency of payment for the campaign">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <DropdownInput
-                    placeHolder="Enter Currency"
-                    selectedOption={invoiceCurrency}
-                    setSelectedOption={setInvoiceCurrency}
-                    options={[{
-                      label: "INR",
-                      value: "INR"
-                    },{
-                      label: "USD",
-                      value: "USD"
-                    }]}
-                    height="h-[48px]"
-                  />
-                </div>
-              </div> 
-              
-              <div className="py-2 border-b"/>
-              <h1 className="text-[14px] font-semibold pt-4">Enter Client/Agency Details</h1>
-              <div className="py-2">
-                <div className="block flex justify-between gap-2 items-center mb-2">
-                  <label className="block text-secondaryText text-[14px]">
-                    Client/Agency Name
-                  </label>
-                  <Tooltip title="Enter Client/Agency name for the campaign">
-                    <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                  </Tooltip>
-                </div>
-                <SearchableSelect
-                  onChange={(value: any) => {
-                    setClientAgencyName(value?.toUpperCase());
-                    dispatch(getClientAgencyDetails({clientAgencyName: value?.toUpperCase()}));
-                  }}
-                  options={clientAgencyNamesList?.map(
-                    (value: any) => {
-                      return { label: value.clientAgencyName, value: value.clientAgencyName };
-                    }
-                  )}
-                  placeholder="Search by Client/Agency Name"
-                  value={clientAgencyName}
-                />
-              </div>
-              <div className="grid grid-cols-12 gap-4 py-2">
-                <div className="col-span-6 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      GST No.
-                    </label>
-                    <Tooltip title="Enter GST number of client/agency you recieved on purchase Order number for the campaign">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter GST Number"
-                    value={gst}
-                    action={setGst}
-                  />
-                </div>
-                <div className="col-span-6 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      PAN No.
-                    </label>
-                    <Tooltip title="Enter PAN number of client/agency you recieved on purchase Order number for the campaign">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter PAN Number"
-                    value={pan}
-                    action={setPan}
-                  />
-                </div>
-              </div> 
-              <div className="py-2">
-                <div className="block flex justify-between gap-2 items-center mb-2">
-                  <label className="block text-secondaryText text-[14px]">
-                    Full Address
-                  </label>
-                  <Tooltip title="Enter office address for your client/agency">
-                    <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                  </Tooltip>
-                </div>
-                <PrimaryInput
-                  inputType="text"
-                  placeholder="Enter Office Address"
-                  value={address}
-                  action={setAddress}
-                />
-              </div>
-              <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-6 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      City
-                    </label>
-                    <Tooltip title="Enter city of the office of your client/agency">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter City Name"
-                    value={city}
-                    action={setCity}
-                  />
-                </div>
-                <div className="col-span-6 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      State
-                    </label>
-                    <Tooltip title="Enter Purchase Order number for the campaign that you received from your client">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter State Name"
-                    value={stateName}
-                    action={setStateName}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-6 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      Country
-                    </label>
-                    <Tooltip title="Enter country name of the office address of your client/agency">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter Country Name"
-                    value={country}
-                    action={setCountry}
-                  />
-                </div>
-                <div className="col-span-6 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      Postal/Zip Code
-                    </label>
-                    <Tooltip title="Enter postal/zip code for the office address of your client/agency">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter ZIP/Postal Code"
-                    value={zipCode}
-                    action={setZipCode}
-                  />
-                </div>
-              </div>   
-              <div className="grid grid-cols-12 gap-4 py-2">
-                <div className="col-span-4 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      Phone
-                    </label>
-                    <Tooltip title="Enter phone number of your client/agency">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter Phone Number"
-                    value={phone}
-                    action={setPhone}
-                  />
-                </div>
-                <div className="col-span-4 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      Email
-                    </label>
-                    <Tooltip title="Enter email address of your client/agency">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter Email Address"
-                    value={email}
-                    action={setEmail}
-                  />
-                </div>
-                <div className="col-span-4 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      Website
-                    </label>
-                    <Tooltip title="Enter Purchase Order number for the campaign that you received from your client/agency">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter Website"
-                    value={website}
-                    action={setWebsite}
-                  />
-                </div>
-              </div> 
+        <div className="flex justify-between items-center px-2">
+          <h1 className="text-[16px] font-bold">Generate Invoice</h1>
 
-              <div className="py-2 border-b" />
-              <h1 className="text-[14px] font-semibold pt-4">Enter Client/Agency POC Details</h1>
-              <div className="grid grid-cols-12 py-2 gap-4">
-                <div className="col-span-6 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      Name
-                    </label>
-                    <Tooltip title="Enter point of contact name of your client/agency">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
+          <div className="flex gap-4 items-center">
+            <div className="flex items-center gap-4">
+              <PrimaryButton
+                title="Save"
+                action={saveClientAgencyDetails}
+                height="h-8"
+                width="w-20"
+                textSize="text-[12px]"
+                rounded="rounded"
+              />
+              <PrimaryButton
+                title="Generate"
+                action={generateBillInvoice}
+                height="h-8"
+                width="w-20"
+                textSize="text-[12px]"
+                rounded="rounded"
+              />
+            </div>
+            <i
+              className="fi fi-br-cross text-[14px] cursor-pointer"
+              onClick={onClose}
+            />
+          </div>
+        </div>
+        <div className="w-1/2">
+          <BillAndInvoiceSteppers
+            setStep={(e: any) => {
+              if (e == 2) {
+                takeScreenShot()
+              }
+              setBillingStep(e)
+            }}
+            steps={4}
+            step={billingStep}
+          />
+        </div>
+        {billingStep == 0 ? (
+          <BillingAndInvoiceEnterDetails
+            todayDate={todayDate}
+            clientAgencyDetailsData={clientAgencyDetailsData}
+            invoiceBill={campaignDetails}
+            jsonDataForInvoice={jsonDataForInvoice}
+            poNumber={poNumber}
+            setPoNumber={setPoNumber}
+            clientAgencyName={clientAgencyName}
+            setClientAgencyName={setClientAgencyName}
+            setAddress={setAddress}
+            address={address}
+            city={city}
+            setCity={setCity}
+            setStateName={setStateName}
+            stateName={stateName}
+            setCountry={setCountry}
+            country={country}
+            phone={phone}
+            setPhone={setPhone}
+            email={email}
+            setEmail={setEmail}
+            website={website}
+            setWebsite={setWebsite}
+            zipCode={zipCode}
+            setZipCode={setZipCode}
+            gst={gst}
+            setGst={setGst}
+            pan={pan}
+            setPan={setPan}
+            pocName={pocName}
+            setPocName={setPocName}
+            pocEmail={pocEmail}
+            setPocEmail={setPocEmail}
+            pocContact={pocContact}
+            setPocContact={setPocContact}
+            setPocDesignation={setPocDesignation}
+            pocDesignation={pocDesignation}
+            setJsonDataForInvoice={setJsonDataForInvoice}
+            campaignDetails={campaignDetails}
+            invoiceDescription={invoiceDescription}
+            setInvoiceDescription={setInvoiceDescription}
+            invoiceQuantity={invoiceQuantity}
+            setInvoiceQuantity={setInvoiceQuantity}
+            poDate={poDate}
+            setPoDate={setPoDate}
+            invoiceCurrency={invoiceCurrency}
+            setInvoiceCurrency={setInvoiceCurrency}
+            invoiceAmount={invoiceAmount}
+            setInvoiceAmount={setInvoiceAmount}
+          />
+        ) : billingStep === 1 ? (
+          <div className="py-4 px-1">
+            <div className="p-2">
+              <h1 className="text-[14px] font-semibold pt-2">Screenshot Of Client Confirmation</h1>
+              <p className="text-[12px] text-[#6F7F8E]">A verified proof of client approval showcasing our commitment to transparency</p>
+              <div className="grid grid-cols-4 gap-2 py-4">
+                {campaignDetails?.clientApprovalImgs?.map((img: any, i: number) => (
+                  <div key={i} className="col-span-1 border border-gray-200 rounded-[12px] flex items-center justify-center">
+                    <img className="rounded-[12px]" src={img} alt="Approved" />
                   </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter POC name"
-                    value={pocName}
-                    action={setPocName}
-                  />
-                </div>
-                <div className="col-span-6 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      Designation
-                    </label>
-                    <Tooltip title="Enter Purchase Order number for the campaign that you received from your client">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter POC Designation"
-                    value={pocDesignation}
-                    action={setPocDesignation}
-                  />
-                </div>
-              </div>   
-              <div className="grid grid-cols-12 py-2 gap-4">
-                <div className="col-span-6 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      Phone
-                    </label>
-                    <Tooltip title="Enter point of contact's contact details of your client/agency">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter Phone Number"
-                    value={pocContact}
-                    action={setPocContact}
-                  />
-                </div>
-                <div className="col-span-6 py-2">
-                  <div className="block flex justify-between gap-2 items-center mb-2">
-                    <label className="block text-secondaryText text-[14px]">
-                      Email
-                    </label>
-                    <Tooltip title="Enter point of contact's email address of your client/agency">
-                      <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                    </Tooltip>
-                  </div>
-                  <PrimaryInput
-                    inputType="text"
-                    placeholder="Enter email address"
-                    value={pocEmail}
-                    action={setPocEmail}
-                  />
-                </div>
-              </div>   
+                ))}
+              </div>
             </div>
           </div>
-        )}
+        ) : billingStep === 2 ? (
+          <div className="py-4 px-1">
+            {/* <button
+
+              type="button"
+              onClick={takeScreenShot}
+            >
+              take screenshot
+            </button> */}
+            {loadingScreenshot && (
+              <LoadingScreen />
+            )}
+
+            {screenshot && (
+              <div className="grid grid-cols-3 gap-2 rounded-[12px] py-8">
+                {screenshot.images?.map((image: any, i: number) => (
+                  <img className="col-span-1 border rounded-[12px]" key={i} src={`data:image/png;base64,${image}`} alt="image" />
+                ))}
+              </div>
+            )}
+          </div>
+        ) : billingStep === 3 ? (
+          <div></div>
+        ) : null}
+        
       </div>
     </div>
   );

@@ -98,7 +98,6 @@ export const AudienceSegment = ({
     }
 
   },[dispatch, campaignId, filters])
-console.log(audienceData)
   return (
     <div className="w-full h-full">
       {loadingAudienceData && (

@@ -24,7 +24,7 @@ interface FilterState {
 export const NewDashBoard: React.FC = () => {
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
-  const campaignId = pathname.split("/").pop() || "";
+  const campaignId = pathname.split("/")[2] || "";
 
   const [aiInsight, setAiInsight] = useState<string>("");
   const [isAnalyzing, setIsAnalysing] = useState<boolean>(false);
@@ -171,7 +171,6 @@ export const NewDashBoard: React.FC = () => {
           });
         }}
         invoiceBill={campaignDetails}
-        // loading={loadingBillInvoice}
         jsonDataForInvoice={jsonDataForInvoice}
         poNumber={poNumber}
         setPoNumber={setPoNumber}
@@ -220,6 +219,7 @@ export const NewDashBoard: React.FC = () => {
       />
       {!loadingCampaignDetails && campaignDetails ? (
         <CampaignDashboard
+          pathname={pathname}
           loading={isLoading}
           campaignDetails={campaignDetails}
           screenLevelData={dashboardData}
