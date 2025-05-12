@@ -186,7 +186,7 @@ export const ShowCampaignLogsPopup = ({
             </h1>
             {/* <h1>{campaign?.screenName}</h1> */}
             <h1 className="text-[14px] text-[#5B7180] leading-[16.94px] py-1">
-              {logs?.campaign?.name}
+              {campaignDetails?.name}
             </h1>
           </div>
           <div className="flex gap-4 items-center">

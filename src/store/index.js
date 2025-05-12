@@ -86,6 +86,7 @@ import {
   getAudienceDataForPlannerDashboardReducer,
   getBasicDataForPlannerDashboardReducer,
   getCostDataForPlannerDashboardReducer,
+  getFiltersAndDataForAllLogsPopupReducer,
   getHardwarePerformanceDataForPlannerDashboardReducer,
   getSiteBasedDataOnLogsPageReducer,
   getSiteLevelPerformanceForPlannerDashboardReducer,
@@ -216,6 +217,7 @@ const store = configureStore({
     siteMonitoringPicsPercentage: getSiteMonitoringPicsPercentageReducer,
     allSitesMonitoringData: getAllSitesMonitoringDataReducer,
     siteBasedDataOnLogsPage: getSiteBasedDataOnLogsPageReducer,
+    getFiltersAndDataForAllLogsPopup: getFiltersAndDataForAllLogsPopupReducer,
   },
 
   // middleware: thunk

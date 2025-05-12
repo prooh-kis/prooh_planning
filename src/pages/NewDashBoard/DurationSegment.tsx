@@ -24,6 +24,7 @@ export const DurationSegment = ({
   openMonitoringView,
   logsPopup,
   monitoringPopup,
+  viewAllLogsOpen,
 }: any) => {
   const dispatch = useDispatch<any>();
   const { loading: loadingHourlySpotDelivery, data: hourlySpotDelivery } = useSelector(
@@ -65,6 +66,7 @@ export const DurationSegment = ({
             openInvoice={openInvoice}
             logsPopup={logsPopup}
             monitoringPopup={monitoringPopup}
+            viewAllLogsOpen={viewAllLogsOpen}
           />
         </div>
       )}

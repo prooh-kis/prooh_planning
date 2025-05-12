@@ -35,7 +35,7 @@ export const ListItem = ({
   text,
 }: {
   item: any;
-  isActive: boolean;
+  isActive?: boolean;
   onClick: (item: any) => void;
   icon?: string;
   text: string;
@@ -47,6 +47,6 @@ export const ListItem = ({
     }`}
   >
     <i className={`fi fi-rr-${icon} flex items-center`}></i>
-    <h1>{text}</h1>
+    <h1 className="truncate">{text}</h1>
   </div>
 );

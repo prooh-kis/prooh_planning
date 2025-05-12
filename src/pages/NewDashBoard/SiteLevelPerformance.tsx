@@ -4,6 +4,7 @@ import { EnhancedSelect } from "../../components/atoms/EnhancedSelect";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import { useSelector } from "react-redux";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { ViewAllLogsPopup } from "./ViewAllLogsPopup";
 
 interface SiteData {
   city?: string;
@@ -13,6 +14,7 @@ interface SiteData {
 }
 
 interface SiteLevelPerformanceProps {
+  campaignId?: any;
   siteLevelData?: SiteData[];
   campaignDetails?: any;
   screenLevelData?: any;
@@ -30,9 +32,14 @@ interface SiteLevelPerformanceProps {
   setOpenSiteLevelLogsPopup?: any;
   openSiteLevelMonitoringPicsPopup?: any;
   setOpenSiteLevelMonitoringPicsPopup?: any;
+  viewAllLogsOpen?: any;
+  setViewAllLogsOpen?: any;
+  setCurrentScreen?: any;
+  currentScreen?: any;
 }
 
 export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
+  campaignId,
   siteLevelData = [],
   campaignDetails,
   screenLevelData,
@@ -50,6 +57,10 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
   setOpenSiteLevelLogsPopup,
   openSiteLevelMonitoringPicsPopup,
   setOpenSiteLevelMonitoringPicsPopup,
+  viewAllLogsOpen,
+  setViewAllLogsOpen,
+  currentScreen,
+  setCurrentScreen
 }) => {
   const [siteLevelFilters, setSiteLevelFilters] = useState({
     city: "",
@@ -108,8 +119,27 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
     );
   });
 
+  const handleCancel = () => {
+    setViewAllLogsOpen(false);
+  };
+
   return (
     <div className="mt-2 w-full flex justify-between">
+      <ViewAllLogsPopup
+        campaignId={campaignId}
+        handleCancel={handleCancel}
+        open={viewAllLogsOpen}
+        setCurrentDay={setCurrentDay}
+        currentDay={currentDay}
+        setCurrentWeek={setCurrentWeek}
+        currentWeek={currentWeek}
+        allDates={allDates}
+        setCurrentDate={setCurrentDate}
+        currentDate={currentDate}
+        calendarData={calendarData}
+        campaignDetails={campaignDetails}
+      //  loading=
+      />
       <div className="w-full pb-4">
         <div className="flex justify-between items-center bg-white border-t border-x border-gray-100 rounded-t-xl px-2">
           <h1 className="text-base py-4 px-2 font-semibold leading-5 text-gray-900">
@@ -140,7 +170,7 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
             <ButtonInput variant="outline" size="small" onClick={resetFilters}>
               Reset
             </ButtonInput>
-            <ButtonInput variant="outline" size="small">
+            <ButtonInput variant="outline" size="small" onClick={() => setViewAllLogsOpen(!viewAllLogsOpen)}>
               View All Logs
             </ButtonInput>
           </div>

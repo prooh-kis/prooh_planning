@@ -27,6 +27,7 @@ interface StepSliderProps {
   logsPopup?: any;
   monitoringPopup?: any;
   openInvoice?: any;
+  viewAllLogsOpen?: any;
 }
 
 export const CalenderScaleStepper = ({
@@ -44,6 +45,7 @@ export const CalenderScaleStepper = ({
   logsPopup,
   monitoringPopup,
   openInvoice,
+  viewAllLogsOpen,
 
 }: StepSliderProps) => {
 
@@ -238,6 +240,8 @@ export const CalenderScaleStepper = ({
       if (openSiteMapView) return setShowTooltip(false);
       if (openMonitoringView) return setShowTooltip(false);
       if (openInvoice) return setShowTooltip(false);
+      if (viewAllLogsOpen) return setShowTooltip(false);
+
     };
 
 
@@ -250,7 +254,7 @@ export const CalenderScaleStepper = ({
     return () => {
       window.removeEventListener('scroll', checkVisibility);
     };
-  }, [logsPopup, openInvoice, openSiteMapView, openMonitoringView, monitoringPopup]);
+  }, [logsPopup, openInvoice, viewAllLogsOpen, openSiteMapView, openMonitoringView, monitoringPopup]);
 
   useEffect(() => {
     if (currentDate && allDates?.length > 0) {

@@ -65,7 +65,7 @@ export const CampaignDashboard = ({
 
   const [openSiteMapView, setOpenSiteMapView] = useState<boolean>(false);
   const [openMonitoringView, setOpenMonitoringView] = useState<boolean>(false);
-
+  const [viewAllLogsOpen, setViewAllLogsOpen] = useState<boolean>(false)
 
   const gridItems: GridItem[] = [
     {
@@ -312,6 +312,7 @@ export const CampaignDashboard = ({
               openInvoice={openInvoice}
               logsPopup={openSiteLevelLogsPopup}
               monitoringPopup={openSiteLevelMonitoringPicsPopup}
+              viewAllLogsOpen={viewAllLogsOpen}
             />
           ) : clicked === "2" ? (
             <AudienceSegment
@@ -369,6 +370,7 @@ export const CampaignDashboard = ({
           campaignId={campaignDetails?._id}
         />
         <SiteLevelPerformance
+          campaignId={campaignDetails?._id}
           loadingSiteLevel={loadingSiteLevel}
           siteLevelData={siteLevelData}
           campaignDetails={campaignDetails}
@@ -386,6 +388,8 @@ export const CampaignDashboard = ({
           setOpenSiteLevelLogsPopup={setOpenSiteLevelLogsPopup}
           openSiteLevelMonitoringPicsPopup={openSiteLevelMonitoringPicsPopup}
           setOpenSiteLevelMonitoringPicsPopup={setOpenSiteLevelMonitoringPicsPopup}
+          viewAllLogsOpen={viewAllLogsOpen}
+          setViewAllLogsOpen={setViewAllLogsOpen}
         />
       </div>
     </div>

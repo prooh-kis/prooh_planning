@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+  GET_ALL_LOGS_FOR_POPUP_FAIL,
+  GET_ALL_LOGS_FOR_POPUP_REQUEST,
+  GET_ALL_LOGS_FOR_POPUP_SUCCESS,
   GET_ALL_SITE_MONITORING_DATA_FAIL,
   GET_ALL_SITE_MONITORING_DATA_REQUEST,
   GET_ALL_SITE_MONITORING_DATA_SUCCESS,
@@ -356,6 +359,33 @@ export const getSiteBasedDataOnLogsPageAction =
     } catch (error) {
       dispatch({
         type: GET_SITE_BASED_DATA_ON_LOGS_PAGE_FAIL,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
+
+  export const getFiltersAndDataForAllLogsPopupAction =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_ALL_LOGS_FOR_POPUP_REQUEST,
+      payload: input,
+    });
+    try {
+      const { data } = await axios.post(
+        `${newDashboardURL}/getFiltersAndDataForAllLogsPopup`,
+        input
+      );
+      dispatch({
+        type: GET_ALL_LOGS_FOR_POPUP_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_ALL_LOGS_FOR_POPUP_FAIL,
         payload: {
           message: error.message,
           status: error.response?.status,

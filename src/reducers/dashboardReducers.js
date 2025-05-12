@@ -1,4 +1,7 @@
 import {
+  GET_ALL_LOGS_FOR_POPUP_FAIL,
+  GET_ALL_LOGS_FOR_POPUP_REQUEST,
+  GET_ALL_LOGS_FOR_POPUP_SUCCESS,
   GET_ALL_SITE_MONITORING_DATA_FAIL,
   GET_ALL_SITE_MONITORING_DATA_REQUEST,
   GET_ALL_SITE_MONITORING_DATA_SUCCESS,
@@ -286,3 +289,23 @@ export function getSiteBasedDataOnLogsPageReducer(state = {}, action) {
       return state;
   }
 }
+
+export function getFiltersAndDataForAllLogsPopupReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_ALL_LOGS_FOR_POPUP_REQUEST:
+      return { loading: true };
+    case GET_ALL_LOGS_FOR_POPUP_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_ALL_LOGS_FOR_POPUP_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
