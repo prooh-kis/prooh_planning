@@ -69,8 +69,10 @@ export const Landing: React.FC = () => {
         <NewSection2 />
         <NewSection3 />
         {/* <FlowHorizontalScroll /> */}
-        {/* <i className="fi fi-rr-arrow-trend-up " />
-        <NewSection4 /> */}
+        {/* <div className="rotate-210">
+          <i className="fi fi-rr-arrow-trend-up" />
+        </div> */}
+        <NewSection4 />
       </div>
       
       <div className="px-8 ">

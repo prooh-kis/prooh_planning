@@ -25,7 +25,7 @@ export const ContactForm = () => {
       <div className="grid grid-cols-12 p-2 mt-8">
         <div className="col-span-12 sm:col-span-4 rounded">
           <div className="flex flex-col justify-center items-start">
-            <h1 className="text-start font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">
+            <h1 className="text-[#1E376E] text-start font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">
               Let’s Connect & <br/>Grow <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">Together!</span> 
             </h1>
             <p className="text-[20px] py-8 text-[#2D5087]">Our Platform helps your business in <br/> managing expenses. These are some</p>

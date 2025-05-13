@@ -33,7 +33,7 @@ export const NewSection3 = () => {
 
   return (
     <div className="z-10 font-custom flex flex-col justify-center items-center pt-20">
-      <p className="text-[12px] text-[#2D5087]">OUR SERVICES</p>
+      <p className="leading-[18px] tracking-[0.24em] font-normal text-center text-[12px] text-[#667D8C]">OUR SERVICES</p>
       <p className="text-[32px] text-[#2D5087] italic">OUR <span className="text-[#129BFF]">DOOH</span> Lineup</p>
       <h1 className="font-semibold text-[48px] text-[#1E376E]">Built For Modern Advertising</h1>
       <div className="grid grid-cols-3 gap-4 pt-8 px-36">

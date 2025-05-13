@@ -37,7 +37,7 @@ export const ProohCreator = ({
       <div className="grid grid-cols-12 gap-2">
         <div className="col-span-4 pt-8">
           <p className="text-[12px] text-[#2D5087] tracking-[0.5rem] px-1 pb-2">OUR TEAM</p>
-          <h1 className="py-4 text-start font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">Behind The <br/><span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">Visioners</span></h1>
+          <h1 className="text-[#1E376E] py-4 text-start font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">Behind The <br/><span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">Visioners</span></h1>
           <p className="text-[20px] py-4 text-[#2D5087]">Our platform helps your business in <br /> managing expenses. These are some of <br/> the reasons why you</p>
           <div className="flex justify-center items-center w-1/3 py-4">
             <ButtonInput

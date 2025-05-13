@@ -297,15 +297,45 @@ export const meetArchitects = [
   },
   {
     id: "3",
-    image: anuj,
-    name: "Anuj Bhandari",
-    role: "CEO, All About Outdoor, India",
-  },
-  {
-    id: "4",
     image: partha,
     name: "Partha Sinha",
     role: "Advisory Board, Prooh Technologies, India",
+  },
+  {
+    id: "4",
+    image: vishnu,
+    name: "Vishnu Mohan",
+    role: "Founder, Avyan Holdings, Singapore",
+  },
+  {
+    id: "5",
+    image: partha,
+    name: "Partha Sinha",
+    role: "Advisory Board, Prooh Technologies, India",
+  },
+  {
+    id: "6",
+    image: ankur,
+    name: "Ankur Rastogi",
+    role: "Founder, All About Outdoor, India",
+  },
+  {
+    id: "7",
+    image: partha,
+    name: "Partha Sinha",
+    role: "Advisory Board, Prooh Technologies, India",
+  },
+  {
+    id: "8",
+    image: ankur,
+    name: "Ankur Rastogi",
+    role: "Founder, All About Outdoor, India",
+  },
+  {
+    id: "9",
+    image: vishnu,
+    name: "Vishnu Mohan",
+    role: "Founder, Avyan Holdings, Singapore",
   },
 ];
 

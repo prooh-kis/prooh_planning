@@ -8,7 +8,7 @@ export const FindUsOnGoogle = ({
   return (
     <div className="grid grid-cols-12 gap-4 font-custom pt-16 px-12 sm:px-8 lg:px-16">
       <div className="col-span-4">
-        <h1 className="text-start font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">
+        <h1 className="text-[#1E376E] text-start font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">
           Find Us On<br/>Google <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">Map!</span> 
         </h1>
         <p className="text-[20px] py-8 text-[#2D5087]">Our Platform helps your business in managing <br/>expenses. These are some</p>

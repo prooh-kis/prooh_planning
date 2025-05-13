@@ -122,7 +122,6 @@ export const HowItsWork = () => {
   };
 
   const CampaignSteps = ({ currentSubTab }: { currentSubTab: string }) => {
-    console.log(currentSubTab);
     const step =
       tabData?.filter((tab: any) => tab.id === currentTab)[0]?.label ===
       "Are You An Advertiser?"
@@ -144,12 +143,12 @@ export const HowItsWork = () => {
   return (
     <div ref={secondDivRef} className="px-6 lg:px-16 mt-16">
       <div className="flex items-center justify-center">
-        <code className="text-[16px] leading-[18px] tracking-[0.24em] font-normal text-center text-[#667D8C]">
+        <code className="font-custom text-[12px] leading-[18px] tracking-[0.24em] font-normal text-center text-[#667D8C]">
           {`ENGAGE WITH US`}
         </code>
       </div>
 
-      <h1 className="text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">
+      <h1 className="text-[#1E376E] text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">
         From Collective Thinking To <br/> Breakthrough <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">Solutions</span>
       </h1>
 

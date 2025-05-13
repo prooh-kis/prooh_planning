@@ -61,7 +61,7 @@ export const OurAdvertisingJourney = ({ data, clientAgencyData }: any) => {
   const [currentTab, setCurrentTab] = useState("Demand");
 
   const [clientAgencyCategories, setClientAgencyCategories] = useState<any>([]);
-  const [selectedCategory, setSelectedCategory] = useState<any>("");
+  const [selectedCategory, setSelectedCategory] = useState<any>("All");
   const [clientAgencyLogos, setClientAgencyLogos] = useState<any>([]);
 
   useEffect(() => {
@@ -313,13 +313,11 @@ export const OurAdvertisingJourney = ({ data, clientAgencyData }: any) => {
     }
   }, [memoizedMarkers]);
 
-  console.log(clientAgencyCategories);
-  console.log(clientAgencyLogos);
   return (
     <div className="px-4 sm:px-2 md:px-8 w-full mt-16">
       <div className="flex flex-col justify-center items-center gap-4 py-2 w-full">
-        <p className="text-[12px] text-[#2D5087]">Our Journey</p>
-        <h1 className="text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">From Bold Ideas To Lasting <br/> Impact In <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">advertising</span></h1>
+        <p className="font-custom leading-[18px] tracking-[0.24em] font-normal text-center text-[12px] text-[#667D8C]">OUR JOURNEY</p>
+        <h1 className="text-[#1E376E] text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">From Bold Ideas To Lasting <br/> Impact In <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">advertising</span></h1>
       </div>
       <div className="py-4 flex justify-center items-center">
         {["Demand", "Supply"]?.map((tab: any, i: any) => (
@@ -477,10 +475,14 @@ export const OurAdvertisingJourney = ({ data, clientAgencyData }: any) => {
               <div className="p-4">
                 <h1 className="font-custom font-semibold text-[16px]">Brands & Agency</h1>
               </div>
-              <div className="grid grid-cols-12 gap-2 px-4 pb-4">
+              <div className="grid grid-cols-12 pb-4">
                 {clientAgencyLogos?.slice(0, 30)?.map((logo: any, j: number) => (
-                  <div key={j} className="p-1 col-span-2 flex items-center justify-center">
-                    <img className="" src={logo} alt="logo" />
+                  <div key={j} className="p-4 col-span-2 border border-gray-50 flex items-center justify-center">
+                    {logo && logo !== "" ? (
+                      <img className="" src={logo} alt="logo" />
+                    ) : (
+                      <span className="text-gray-400">Logo</span>
+                    )}
                   </div>
                 ))}
               </div>

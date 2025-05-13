@@ -78,7 +78,7 @@ export const FeedBack: React.FC<FeedBackProps> = (props) => {
   return (
     <div className="font-custom py-16 px-12 sm:px-8 lg:px-16">
       <div className="flex flex-col justify-center items-center">
-        <h1 className="text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">
+        <h1 className="text-[#1E376E] text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">
           Public <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">Cheers</span> For Us
         </h1>
         <p className="text-[20px] py-4 text-[#2D5087]">find out how our user are spreading the word</p>
