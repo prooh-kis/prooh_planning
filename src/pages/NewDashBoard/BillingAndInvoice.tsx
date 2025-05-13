@@ -12,6 +12,7 @@ import { takeDashboardScreenShotAction } from "../../actions/dashboardAction";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 
+const dashboardScreenshotName = ["Campaign Duration", "Audience Impression", "Hardware Performance", "Daily Impression", "Cost Consumption"]
 export const BillingAndInvoice = (props: any) => {
   const dispatch = useDispatch<any>();
   const { 
@@ -64,7 +65,11 @@ export const BillingAndInvoice = (props: any) => {
     invoiceAmount
   } = props;
 
+    const [magnifiedImageView, setMagnifiedImageView] = useState<any>(false);
+    const [magnifiedImage, setMagnifiedImage] = useState<any>(null);
+
     const [billingStep, setBillingStep] = useState<any>(0);
+    const [dashboardScreenshots, setDashboardScreenshots] = useState<any>([]);
 
     const todayDate = moment(new Date())?.format("YYYY-MM-DD hh:mm:ss");
   
@@ -85,7 +90,7 @@ export const BillingAndInvoice = (props: any) => {
     const {
       loading: loadingScreenshot,
       error: errorScreenshot,
-      data: screenshot
+      data: screenshots
     } = useSelector((state: any) => state.takeDashboardScreenShot)
   
 
@@ -150,7 +155,10 @@ export const BillingAndInvoice = (props: any) => {
     if (billInvoiceDetailsData) {
       generateBillInvoice();
     }
-  },[billInvoiceDetailsData, generateBillInvoice]);
+    if (screenshots) {
+      setDashboardScreenshots(screenshots.images)
+    }
+  },[billInvoiceDetailsData, generateBillInvoice, screenshots]);
 
   useEffect(() => {
     if (props?.open) {
@@ -170,148 +178,180 @@ export const BillingAndInvoice = (props: any) => {
 
   const takeScreenShot = () => {
     dispatch(takeDashboardScreenShotAction({
-      url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
+      // url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
+      url: `http://localhost:3000/campaignDashboard/${campaignDetails?._id}`,
       tabs: ["1", "2", "3", "4", "5"]
     }))
   }
 
   return (
     <div className="font-custom fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div
-        className="bg-[#FFFFFF] p-4 rounded-lg shadow-lg w-full max-w-full overflow-auto max-h-auto "
-        style={{ height: "90vh", width: "90vw" }}
-      >
-        <div className="flex justify-between items-center px-2">
-          <h1 className="text-[16px] font-bold">Generate Invoice</h1>
+      {magnifiedImageView ? (
+        <div
+          className="bg-[#FFFFFF] p-2 rounded-lg shadow-lg w-full max-w-full overflow-auto max-h-auto "
+          style={{ height: "100vh", width: "100vw" }}
+          onClick={() => {
+            setMagnifiedImage(null);
+            setMagnifiedImageView(!magnifiedImageView);
+          }} 
+        >
+          <div className="w-full p-1">
+            <i className="fi fi-br-cross text-[12px] cursor-pointer flex justify-end " />
+          </div>
+          <img
+            className="w-full h-full border border-gray-100 rounded-[12px]"
+            src={`data:image/png;base64,${magnifiedImage}`}
+            alt="image"
+          />
+        </div>
+      ) : (
+        <div
+          className="bg-[#FFFFFF] p-4 rounded-lg shadow-lg w-full max-w-full overflow-auto max-h-auto "
+          style={{ height: "90vh", width: "90vw" }}
+        >
+          <div className="flex justify-between items-center px-2">
+            <h1 className="text-[16px] font-bold">Generate Invoice</h1>
 
-          <div className="flex gap-4 items-center">
-            <div className="flex items-center gap-4">
-              <PrimaryButton
-                title="Save"
-                action={saveClientAgencyDetails}
-                height="h-8"
-                width="w-20"
-                textSize="text-[12px]"
-                rounded="rounded"
-              />
-              <PrimaryButton
-                title="Generate"
-                action={generateBillInvoice}
-                height="h-8"
-                width="w-20"
-                textSize="text-[12px]"
-                rounded="rounded"
+            <div className="flex gap-4 items-center">
+              <div className="flex items-center gap-4">
+                <PrimaryButton
+                  title="Save"
+                  action={saveClientAgencyDetails}
+                  height="h-8"
+                  width="w-20"
+                  textSize="text-[12px]"
+                  rounded="rounded"
+                />
+                <PrimaryButton
+                  title="Generate"
+                  action={generateBillInvoice}
+                  height="h-8"
+                  width="w-20"
+                  textSize="text-[12px]"
+                  rounded="rounded"
+                />
+              </div>
+              <i
+                className="fi fi-br-cross text-[14px] cursor-pointer"
+                onClick={onClose}
               />
             </div>
-            <i
-              className="fi fi-br-cross text-[14px] cursor-pointer"
-              onClick={onClose}
+          </div>
+          <div className="w-1/2">
+            <BillAndInvoiceSteppers
+              setStep={(e: any) => {
+                if (e == 2) {
+                  takeScreenShot()
+                }
+                setBillingStep(e)
+              }}
+              steps={4}
+              step={billingStep}
             />
           </div>
-        </div>
-        <div className="w-1/2">
-          <BillAndInvoiceSteppers
-            setStep={(e: any) => {
-              if (e == 2) {
-                takeScreenShot()
-              }
-              setBillingStep(e)
-            }}
-            steps={4}
-            step={billingStep}
-          />
-        </div>
-        {billingStep == 0 ? (
-          <BillingAndInvoiceEnterDetails
-            todayDate={todayDate}
-            clientAgencyDetailsData={clientAgencyDetailsData}
-            invoiceBill={campaignDetails}
-            jsonDataForInvoice={jsonDataForInvoice}
-            poNumber={poNumber}
-            setPoNumber={setPoNumber}
-            clientAgencyName={clientAgencyName}
-            setClientAgencyName={setClientAgencyName}
-            setAddress={setAddress}
-            address={address}
-            city={city}
-            setCity={setCity}
-            setStateName={setStateName}
-            stateName={stateName}
-            setCountry={setCountry}
-            country={country}
-            phone={phone}
-            setPhone={setPhone}
-            email={email}
-            setEmail={setEmail}
-            website={website}
-            setWebsite={setWebsite}
-            zipCode={zipCode}
-            setZipCode={setZipCode}
-            gst={gst}
-            setGst={setGst}
-            pan={pan}
-            setPan={setPan}
-            pocName={pocName}
-            setPocName={setPocName}
-            pocEmail={pocEmail}
-            setPocEmail={setPocEmail}
-            pocContact={pocContact}
-            setPocContact={setPocContact}
-            setPocDesignation={setPocDesignation}
-            pocDesignation={pocDesignation}
-            setJsonDataForInvoice={setJsonDataForInvoice}
-            campaignDetails={campaignDetails}
-            invoiceDescription={invoiceDescription}
-            setInvoiceDescription={setInvoiceDescription}
-            invoiceQuantity={invoiceQuantity}
-            setInvoiceQuantity={setInvoiceQuantity}
-            poDate={poDate}
-            setPoDate={setPoDate}
-            invoiceCurrency={invoiceCurrency}
-            setInvoiceCurrency={setInvoiceCurrency}
-            invoiceAmount={invoiceAmount}
-            setInvoiceAmount={setInvoiceAmount}
-          />
-        ) : billingStep === 1 ? (
-          <div className="py-4 px-1">
-            <div className="p-2">
-              <h1 className="text-[14px] font-semibold pt-2">Screenshot Of Client Confirmation</h1>
-              <p className="text-[12px] text-[#6F7F8E]">A verified proof of client approval showcasing our commitment to transparency</p>
-              <div className="grid grid-cols-4 gap-2 py-4">
-                {campaignDetails?.clientApprovalImgs?.map((img: any, i: number) => (
-                  <div key={i} className="col-span-1 border border-gray-200 rounded-[12px] flex items-center justify-center">
-                    <img className="rounded-[12px]" src={img} alt="Approved" />
-                  </div>
-                ))}
+          {billingStep == 0 ? (
+            <BillingAndInvoiceEnterDetails
+              todayDate={todayDate}
+              clientAgencyDetailsData={clientAgencyDetailsData}
+              invoiceBill={campaignDetails}
+              jsonDataForInvoice={jsonDataForInvoice}
+              poNumber={poNumber}
+              setPoNumber={setPoNumber}
+              clientAgencyName={clientAgencyName}
+              setClientAgencyName={setClientAgencyName}
+              setAddress={setAddress}
+              address={address}
+              city={city}
+              setCity={setCity}
+              setStateName={setStateName}
+              stateName={stateName}
+              setCountry={setCountry}
+              country={country}
+              phone={phone}
+              setPhone={setPhone}
+              email={email}
+              setEmail={setEmail}
+              website={website}
+              setWebsite={setWebsite}
+              zipCode={zipCode}
+              setZipCode={setZipCode}
+              gst={gst}
+              setGst={setGst}
+              pan={pan}
+              setPan={setPan}
+              pocName={pocName}
+              setPocName={setPocName}
+              pocEmail={pocEmail}
+              setPocEmail={setPocEmail}
+              pocContact={pocContact}
+              setPocContact={setPocContact}
+              setPocDesignation={setPocDesignation}
+              pocDesignation={pocDesignation}
+              setJsonDataForInvoice={setJsonDataForInvoice}
+              campaignDetails={campaignDetails}
+              invoiceDescription={invoiceDescription}
+              setInvoiceDescription={setInvoiceDescription}
+              invoiceQuantity={invoiceQuantity}
+              setInvoiceQuantity={setInvoiceQuantity}
+              poDate={poDate}
+              setPoDate={setPoDate}
+              invoiceCurrency={invoiceCurrency}
+              setInvoiceCurrency={setInvoiceCurrency}
+              invoiceAmount={invoiceAmount}
+              setInvoiceAmount={setInvoiceAmount}
+            />
+          ) : billingStep === 1 ? (
+            <div className="py-4 px-1">
+              <div className="p-2">
+                <h1 className="text-[14px] font-semibold pt-2">Screenshot Of Client Confirmation</h1>
+                <p className="text-[12px] text-[#6F7F8E]">A verified proof of client approval showcasing our commitment to transparency</p>
+                <div className="grid grid-cols-4 gap-2 py-4">
+                  {campaignDetails?.clientApprovalImgs?.map((img: any, i: number) => (
+                    <div key={i} className="col-span-1 border border-gray-200 rounded-[12px] flex items-center justify-center">
+                      <img className="rounded-[12px]" src={img} alt="Approved" />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        ) : billingStep === 2 ? (
-          <div className="py-4 px-1">
-            {/* <button
+          ) : billingStep === 2 ? (
+            <div className="py-4 px-1">
+              {/* <button
 
-              type="button"
-              onClick={takeScreenShot}
-            >
-              take screenshot
-            </button> */}
-            {loadingScreenshot && (
-              <LoadingScreen />
-            )}
+                type="button"
+                onClick={takeScreenShot}
+              >
+                take screenshot
+              </button> */}
+              {loadingScreenshot && (
+                <LoadingScreen />
+              )}
 
-            {screenshot && (
-              <div className="grid grid-cols-3 gap-2 rounded-[12px] py-8">
-                {screenshot.images?.map((image: any, i: number) => (
-                  <img className="col-span-1 border rounded-[12px]" key={i} src={`data:image/png;base64,${image}`} alt="image" />
-                ))}
-              </div>
-            )}
-          </div>
-        ) : billingStep === 3 ? (
-          <div></div>
-        ) : null}
-        
-      </div>
+              {dashboardScreenshots.length > 0 && (
+                <div className="grid grid-cols-3 gap-2 rounded-[12px] py-8">
+                  {dashboardScreenshots?.reverse()?.map((image: any, i: number) => (
+                    <div key={i} className="col-span-1 py-4">
+                      <img 
+                        onClick={() => {
+                          setMagnifiedImage(image);
+                          setMagnifiedImageView(!magnifiedImageView);
+                        }} 
+                        className="h-full border border-gray-100 rounded-[12px]"
+                        src={`data:image/png;base64,${image}`}
+                        alt="image"
+                      />
+                      <h1 className="p-1 text-[14px] font-semibold">{dashboardScreenshotName[i]}</h1>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : billingStep === 3 ? (
+            <div></div>
+          ) : null}
+        </div>
+      )}
+
     </div>
   );
 };

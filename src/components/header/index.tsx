@@ -56,7 +56,7 @@ export const Header: React.FC = () => {
   }, []);
 
   return (
-    <div className="fixed top-0 w-full h-16 flex items-center border-b border-gray-50 justify-between px-4 sm:px-10 bg-[#FFFFFF] z-50 font-custom">
+    <header className="fixed top-0 w-full h-16 flex items-center border-b border-gray-50 justify-between px-4 sm:px-10 bg-[#FFFFFF] z-50 font-custom">
       {/* Logo Section */}
       <div className="flex items-center">
         <div
@@ -193,6 +193,6 @@ export const Header: React.FC = () => {
           )}
         </div>
       )}
-    </div>
+    </header>
   );
 };

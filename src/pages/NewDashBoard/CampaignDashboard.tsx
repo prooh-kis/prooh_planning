@@ -106,7 +106,7 @@ export const CampaignDashboard = ({
   ];
 
   const commonClasses =
-    "cursor-pointer rounded-[21px] shadow-sm col-span-1 bg-white p-4 rounded-[12px] h-auto ";
+    "cursor-pointer rounded-[12px] shadow-sm col-span-1 bg-white p-4 h-auto ";
 
   useEffect(() => {
     setCalendarData(screenLevelData?.slotDataDateWiseArray);

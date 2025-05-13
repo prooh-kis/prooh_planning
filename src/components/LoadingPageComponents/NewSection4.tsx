@@ -46,7 +46,7 @@ export const NewSection4 = () => {
     bgColor: "bg-[#EEFAFF]",
     heading: "Hassle Free Pre-Deployment Approvals",
     bulletPoints: ["Bulk Creative Uploads", "Easy Vendor Approval Process On Creative And Media Cost"],
-    products: [Fly],
+    products: [Fly, Planner],
   },{
     id: 4,
     icon: <img src={Carousel5} alt="Carousel5" />,
@@ -54,7 +54,7 @@ export const NewSection4 = () => {
     bgColor: "bg-[#EEFAFF]",
     heading: "Real Time Campaign Deployment",
     bulletPoints: ["Ads Served Through Fly:- Our Robust Content Management System", "Each Ad Spot Deployed Programmatically In Real Time Through PROOH Ad Server"],
-    products: [Fly],
+    products: [Fly, Planner],
   },{
     id: 5,
     icon: <img src={Carousel6} alt="Carousel6" />,
@@ -62,7 +62,7 @@ export const NewSection4 = () => {
     bgColor: "bg-[#EEFAFF]",
     heading: "Real-Time Campaign Reporting And Impression Adjustment",
     bulletPoints: ["View Live Performance Through Dedicated Dashboard", "Easy Access To Log Reports And Monitoring Pictures/Videos", "Auto Fulfilment Of Undelivered Slots Through Fly", "Seamless Extension/Termination Of Active Campaigns"],
-    products: [Layer],
+    products: [Fly, Planner],
   },{
     id: 6,
     icon: <img src={Carousel7} alt="Carousel7" />,
@@ -70,7 +70,7 @@ export const NewSection4 = () => {
     bgColor: "bg-[#EEFAFF]",
     heading: "Auto Invoicing And Archiving",
     bulletPoints: ["Invoice Generation For Client With Campaign Performance History On A Single Click", "Archiving Campaigns For Future References", "Purchase Order Generation For Publisher With Campaign Performance History On A Single Click"],
-    products: [Planner],
+    products: [Fly, Planner],
   }];
 
    // Scroll to center when ctab changes
