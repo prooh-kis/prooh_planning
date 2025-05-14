@@ -26,7 +26,10 @@ import {
   getCouponList,
   removeCouponForCampaign,
 } from "../../actions/couponAction";
-import { APPLY_COUPON_RESET, REMOVE_COUPON_RESET } from "../../constants/couponConstants";
+import {
+  APPLY_COUPON_RESET,
+  REMOVE_COUPON_RESET,
+} from "../../constants/couponConstants";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { ViewFinalPlanTable } from "../../components/tables/ViewFinalPlanTable";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
@@ -164,20 +167,16 @@ export const ViewFinalPlanPODetails = ({
 
   const [initialData, setInitialData] = useState<InitialData>({
     startDate: {
-      dates: [
-        format(new Date(), "yyyy-MM-dd"),
-      ],
+      dates: [format(new Date(), "yyyy-MM-dd")],
       monitoringType: monitoringTypes?.map((type: any) => type.value),
     },
     endDate: {
-      dates: [
-        format(new Date(), "yyyy-MM-dd"),
-      ],
+      dates: [format(new Date(), "yyyy-MM-dd")],
       monitoringType: monitoringTypes?.map((type: any) => type.value),
     },
     midDate: {
       dates: [],
-      monitoringType: []
+      monitoringType: [],
     },
   });
 
@@ -350,28 +349,28 @@ export const ViewFinalPlanPODetails = ({
         message.info(
           "Please skip the email confirmation or upload an email confirmation screenshot to continue"
         );
-      } else {
-        let imageArr: string[] = [];
-        for (let data of confirmationImageFiles) {
-          if (data.awsURL) {
-            imageArr.push(data.awsURL);
-            console.log("no need to save again");
-          } else {
-            let url = await getAWSUrl(data);
-            imageArr.push(url);
-          }
-        }
-
-        setConfirmToProceed(true);
-        dispatch(
-          addDetailsToCreateCampaign({
-            pageName: "View Final Plan Page",
-            id: campaignId,
-            clientApprovalImgs: imageArr,
-            monitoringSelection: initialData,
-          })
-        );
+        return;
       }
+      let imageArr: string[] = [];
+      for (let data of confirmationImageFiles) {
+        if (data.awsURL) {
+          imageArr.push(data.awsURL);
+          console.log("no need to save again");
+        } else {
+          let url = await getAWSUrl(data);
+          imageArr.push(url);
+        }
+      }
+
+      setConfirmToProceed(true);
+      dispatch(
+        addDetailsToCreateCampaign({
+          pageName: "View Final Plan Page",
+          id: campaignId,
+          clientApprovalImgs: imageArr,
+          monitoringSelection: initialData,
+        })
+      );
     } else {
       setCurrentStep(step + 1);
     }
@@ -416,7 +415,7 @@ export const ViewFinalPlanPODetails = ({
         campaignCreationId: campaignDetails?._id,
       })
     );
-  },[dispatch, campaignDetails]);
+  }, [dispatch, campaignDetails]);
 
   useEffect(() => {
     if (errorApply) {
@@ -448,9 +447,6 @@ export const ViewFinalPlanPODetails = ({
       dispatch(getFinalPlanPOTableData(poInput));
       dispatch(addDetailsToCreateCampaign({ id: campaignId }));
     }
-
-    
-
   }, [couponRemoveSuccess, couponApplySuccess, dispatch, campaignId, poInput]);
 
   useEffect(() => {
@@ -534,28 +530,23 @@ export const ViewFinalPlanPODetails = ({
       }
     }
     if (poTableData) {
-
       setInitialData({
         startDate: {
-          dates: [
-            format(new Date(poTableData?.startDate), "yyyy-MM-dd"),
-          ],
+          dates: [format(new Date(poTableData?.startDate), "yyyy-MM-dd")],
           monitoringType: monitoringTypes.map((type: any) => type.value),
         },
         endDate: {
-          dates: [
-            format(new Date(poTableData?.endDate), "yyyy-MM-dd"),
-          ],
-          monitoringType: monitoringTypes.map((type: any) => type.value)
+          dates: [format(new Date(poTableData?.endDate), "yyyy-MM-dd")],
+          monitoringType: monitoringTypes.map((type: any) => type.value),
         },
         midDate: {
           dates: [],
-          monitoringType: []
+          monitoringType: [],
         },
-      })
+      });
 
       setPdfDownload({
-        "summary" : {
+        summary: {
           heading: "CAMPAIGN SUMMARY",
           pdfData: {
             approach: [campaignDetails],
@@ -566,7 +557,7 @@ export const ViewFinalPlanPODetails = ({
           },
           fileName: `${campaignDetails?.brandName} Campaign Summary`,
         },
-        "screen-pictures" : {
+        "screen-pictures": {
           heading: "SCREEN PICTURES",
           pdfData: campaignDetails?.screenWiseSlotDetails
             ?.filter((s: any) =>
@@ -576,10 +567,19 @@ export const ViewFinalPlanPODetails = ({
               return screen;
             }),
           fileName: `${campaignDetails?.brandName} Campaign Screen Pictures`,
-        }
-      })
+        },
+      });
     }
-  }, [poTableData, screenSummaryPlanTableData, campaignDetails, successAddDetails, step, setCurrentStep, confirmToProceed, dispatch]);
+  }, [
+    poTableData,
+    screenSummaryPlanTableData,
+    campaignDetails,
+    successAddDetails,
+    step,
+    setCurrentStep,
+    confirmToProceed,
+    dispatch,
+  ]);
 
   const skipFunction = () => {
     dispatch(
@@ -643,89 +643,92 @@ export const ViewFinalPlanPODetails = ({
                 coupons={coupons}
               />
             </div>
-            <div
-              ref={pageRef}
-              className="col-span-1 w-full"
-            >
-              {!loadingScreenSummaryPlanTable && !errorScreenSummaryPlanTable && (
-                <div className="p-4 border border-1 border-#C3C3C3 rounded-2xl">
-                  <div className="flex justify-between items-center">
-                    <h1 className="font-semibold text-lg">
-                      Download or share your campaign plan
-                    </h1>
-                    <div className="cursor-pointer flex items-center gap-2" onClick={handleDownload}>
-                      <i className="fi fi-sr-file-download text-[12px] text-[#129BFF] flex items-center"></i>
-                      <h1 className="text-[12px] text-[#129BFF]">
-                        Download
+            <div ref={pageRef} className="col-span-1 w-full">
+              {!loadingScreenSummaryPlanTable &&
+                !errorScreenSummaryPlanTable && (
+                  <div className="p-4 border border-1 border-#C3C3C3 rounded-2xl">
+                    <div className="flex justify-between items-center">
+                      <h1 className="font-semibold text-lg">
+                        Download or share your campaign plan
                       </h1>
+                      <div
+                        className="cursor-pointer flex items-center gap-2"
+                        onClick={handleDownload}
+                      >
+                        <i className="fi fi-sr-file-download text-[12px] text-[#129BFF] flex items-center"></i>
+                        <h1 className="text-[12px] text-[#129BFF]">Download</h1>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-6 pt-4">
+                      <div className="flex items-center gap-2">
+                        <input
+                          title="summary"
+                          type="checkbox"
+                          checked={summaryChecked}
+                          disabled={loadingPOData}
+                          onChange={(e) => {
+                            setSummaryChecked(e.target.checked);
+
+                            const pdfToDownload = pdfDownload;
+                            if (e.target.checked) {
+                              pdfToDownload["summary"] = {
+                                heading: "CAMPAIGN SUMMARY",
+                                pdfData: {
+                                  approach: [campaignDetails],
+                                  costSummary: [screenSummaryPlanTableData],
+                                  creativeRatio:
+                                    countScreensByResolutionAndCity(
+                                      campaignDetails?.screenWiseSlotDetails
+                                    ),
+                                },
+                                fileName: `${poInput?.brandName} Campaign Summary`,
+                              };
+                            } else {
+                              delete pdfToDownload["summary"];
+                            }
+                            setPdfDownload(pdfToDownload);
+                          }}
+                        />
+                        <h1 className="text-[14px] truncate">
+                          Campaign Summary
+                        </h1>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <input
+                          title="screen-pictures"
+                          type="checkbox"
+                          checked={picturesChecked}
+                          disabled={loadingPOData}
+                          onChange={(e) => {
+                            setPicturesChecked(e.target.checked);
+                            const pdfToDownload = pdfDownload;
+
+                            if (e.target.checked) {
+                              pdfToDownload["screen-pictures"] = {
+                                heading: "SCREEN PICTURES",
+                                pdfData: campaignDetails?.screenWiseSlotDetails
+                                  ?.filter((s: any) =>
+                                    campaignDetails?.screenIds.includes(
+                                      s.screenId
+                                    )
+                                  )
+                                  ?.map((screen: any) => {
+                                    return screen;
+                                  }),
+                                fileName: `${poInput?.brandName} Campaign Screen Pictures`,
+                              };
+                            } else {
+                              delete pdfToDownload["screen-pictures"];
+                            }
+
+                            setPdfDownload(pdfToDownload);
+                          }}
+                        />
+                        <h1 className="text-[14px] truncate">Screen Picture</h1>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-6 pt-4">
-                    <div className="flex items-center gap-2">
-                      <input
-                        title="summary"
-                        type="checkbox"
-                        checked={summaryChecked}
-                        disabled={loadingPOData}
-                        onChange={(e) => {
-                          setSummaryChecked(e.target.checked);
-
-                          const pdfToDownload = pdfDownload;
-                          if (e.target.checked) {
-                            pdfToDownload["summary"] = {
-                              heading: "CAMPAIGN SUMMARY",
-                              pdfData: {
-                                approach: [campaignDetails],
-                                costSummary: [screenSummaryPlanTableData],
-                                creativeRatio: countScreensByResolutionAndCity(
-                                  campaignDetails?.screenWiseSlotDetails
-                                ),
-                              },
-                              fileName: `${poInput?.brandName} Campaign Summary`,
-                            };
-                          } else {
-                            delete pdfToDownload["summary"];
-                          }
-                          setPdfDownload(pdfToDownload);
-                        }}
-                      />
-                      <h1 className="text-[14px] truncate">Campaign Summary</h1>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <input
-                        title="screen-pictures"
-                        type="checkbox"
-                        checked={picturesChecked}
-                        disabled={loadingPOData}
-                        onChange={(e) => {
-                          setPicturesChecked(e.target.checked);
-                          const pdfToDownload = pdfDownload;
-
-                          if (e.target.checked) {
-                            pdfToDownload["screen-pictures"] = {
-                              heading: "SCREEN PICTURES",
-                              pdfData: campaignDetails?.screenWiseSlotDetails
-                                ?.filter((s: any) =>
-                                  campaignDetails?.screenIds.includes(s.screenId)
-                                )
-                                ?.map((screen: any) => {
-                                  return screen;
-                                }),
-                              fileName: `${poInput?.brandName} Campaign Screen Pictures`,
-                            };
-                          } else {
-                            delete pdfToDownload["screen-pictures"];
-                          }
-
-                          setPdfDownload(pdfToDownload);
-                        }}
-                      />
-                      <h1 className="text-[14px] truncate">Screen Picture</h1>
-                    </div>
-                  </div>
-                </div>
-
-              )}
+                )}
 
               <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-2xl">
                 <h1 className="font-semibold text-lg pb-4">
@@ -736,40 +739,42 @@ export const ViewFinalPlanPODetails = ({
                   setInitialData={setInitialData}
                 />
               </div>
-              {!loadingScreenSummaryPlanTable && !errorScreenSummaryPlanTable && (
-
-                <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-2xl">
-                  <h1 className="font-semibold text-lg">Share this plan</h1>
-                  <div className="grid grid-cols-6 gap-2 pt-4">
-                    <div className="col-span-3">
-                      <PrimaryInput
-                        placeholder="Enter Email"
-                        value={toEmail}
-                        inputType="text"
-                        action={setToEmail}
-                        rounded="rounded-[8px]"
-                      />
-                    </div>
-                    <div className="col-span-1">
-                      <ButtonInput
-                        variant="primary"
-                        size="large"
-                        loadingText="Sending...."
-                        // icon={<i className="fi fi-rs-paper-plane"></i>}
-                        onClick={() => {
-                          if (isValidEmail(toEmail)) sendEmail(toEmail);
-                          else message.error("Please Enter valid email");
-                        }}
-                      >
-                        Send
-                      </ButtonInput>
-                    </div>
-                    <div className="col-span-2 flex items-center">
-                      <h1 className="text-[12px] text-[#6F7F8E]">Plan highlights will go as pdf</h1>
+              {!loadingScreenSummaryPlanTable &&
+                !errorScreenSummaryPlanTable && (
+                  <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-2xl">
+                    <h1 className="font-semibold text-lg">Share this plan</h1>
+                    <div className="grid grid-cols-6 gap-2 pt-4">
+                      <div className="col-span-3">
+                        <PrimaryInput
+                          placeholder="Enter Email"
+                          value={toEmail}
+                          inputType="text"
+                          action={setToEmail}
+                          rounded="rounded-[8px]"
+                        />
+                      </div>
+                      <div className="col-span-1">
+                        <ButtonInput
+                          variant="primary"
+                          size="large"
+                          loadingText="Sending...."
+                          // icon={<i className="fi fi-rs-paper-plane"></i>}
+                          onClick={() => {
+                            if (isValidEmail(toEmail)) sendEmail(toEmail);
+                            else message.error("Please Enter valid email");
+                          }}
+                        >
+                          Send
+                        </ButtonInput>
+                      </div>
+                      <div className="col-span-2 flex items-center">
+                        <h1 className="text-[12px] text-[#6F7F8E]">
+                          Plan highlights will go as pdf
+                        </h1>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
               <div className="mt-2 p-4 border border-1 border-#C3C3C3 h-auto rounded-2xl">
                 <EmailConfirmationImage
                   files={confirmationImageFiles}

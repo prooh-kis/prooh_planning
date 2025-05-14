@@ -30,7 +30,6 @@ import partha from "../assets/images/partha.jpg";
 import vishnu from "../assets/images/vishnu.jpg";
 
 import UserImage from "../assets/userImage.png";
-import { testO11, testO12, testO13, testO14 } from "../assets";
 
 export const advertisersStepsDetails = [
   {
@@ -80,7 +79,7 @@ export const advertisersStepsDetails = [
     title: "Campaing Monitoring Report",
     description:
       "Monitor your campaign in real time with your campaign dedicated dashboard and optmize your campaign by analysing data in real-time.",
-  }
+  },
 ];
 
 export const mediaOwnersStepsDetails = [
@@ -117,7 +116,6 @@ export const mediaOwnersStepsDetails = [
       "Get campaigns and Creative approval requests for your screens in real time and earn more by selling your screens' unsold slots.",
   },
 ];
-
 
 export const dataHeroStepsDetails = [
   {
@@ -231,7 +229,7 @@ export const mediaOwnersSteps = [
   {
     id: "5",
     label: "Creative Confirmation",
-  }
+  },
 ];
 
 export const dataHeroSteps = [
@@ -250,7 +248,7 @@ export const dataHeroSteps = [
   {
     id: "4",
     label: "Data Dashboard",
-  }
+  },
 ];
 
 export const dataHeroTabs = [
@@ -349,100 +347,116 @@ export const meetArchitects = [
 export const testimonials = [
   {
     id: 1,
-    name: 'Corina McCoy',
+    name: "Corina McCoy",
     type: "Media Owner",
-    role: '@sales head at icons',
-    date: 'Jan 28, 2025',
+    role: "@sales head at icons",
+    date: "Jan 28, 2025",
     rating: 5,
-    comment: 'looks like an angel to me',
-    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
-    experienceDate: 'January 27, 2025',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=faces',
+    comment: "looks like an angel to me",
+    description:
+      "Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.",
+    experienceDate: "January 27, 2025",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=faces",
   },
   {
     id: 2,
-    name: 'Autumn Phillips',
+    name: "Autumn Phillips",
     type: "Advertiser",
-    role: '@media buying head at kinetic',
-    date: 'Jan 28, 2025',
+    role: "@media buying head at kinetic",
+    date: "Jan 28, 2025",
     rating: 5,
-    comment: 'looks like an angel to me',
-    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
-    experienceDate: 'January 27, 2025',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=faces',
+    comment: "looks like an angel to me",
+    description:
+      "Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.",
+    experienceDate: "January 27, 2025",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=faces",
   },
   {
     id: 3,
-    name: 'Mary Freund',
+    name: "Mary Freund",
     type: "Media Owner",
-    role: '@sales head at AAO',
-    date: 'Jan 28, 2025',
+    role: "@sales head at AAO",
+    date: "Jan 28, 2025",
     rating: 5,
-    comment: 'looks like an angel to me',
-    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
-    experienceDate: 'January 27, 2025',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=faces',
+    comment: "looks like an angel to me",
+    description:
+      "Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.",
+    experienceDate: "January 27, 2025",
+    avatar:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=faces",
   },
   {
     id: 4,
-    name: 'Bhawna Talwar',
+    name: "Bhawna Talwar",
     type: "Advertiser",
-    role: '@gloabal head of product marketing at blinkit',
-    date: 'Jan 28, 2025',
+    role: "@gloabal head of product marketing at blinkit",
+    date: "Jan 28, 2025",
     rating: 4,
-    comment: 'looks like an angel to me',
-    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
-    experienceDate: 'January 27, 2025',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces',
+    comment: "looks like an angel to me",
+    description:
+      "Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.",
+    experienceDate: "January 27, 2025",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces",
   },
   {
     id: 5,
-    name: 'Ankit Kumar',
+    name: "Ankit Kumar",
     type: "Advertiser",
-    role: '@head brand and marketing at magicpin',
-    date: 'Jan 28, 2025',
+    role: "@head brand and marketing at magicpin",
+    date: "Jan 28, 2025",
     rating: 5,
-    comment: 'looks like an angel to me',
-    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
-    experienceDate: 'January 27, 2025',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=faces',
+    comment: "looks like an angel to me",
+    description:
+      "Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.",
+    experienceDate: "January 27, 2025",
+    avatar:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=faces",
   },
   {
     id: 6,
-    name: 'Frances Swann',
+    name: "Frances Swann",
     type: "Data Heroes",
-    role: '@liasoning officer at m3m',
-    date: 'Jan 28, 2025',
+    role: "@liasoning officer at m3m",
+    date: "Jan 28, 2025",
     rating: 5,
-    comment: 'looks like an angel to me',
-    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
-    experienceDate: 'January 27, 2025',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=faces',
+    comment: "looks like an angel to me",
+    description:
+      "Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.",
+    experienceDate: "January 27, 2025",
+    avatar:
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=faces",
   },
   {
     id: 7,
-    name: 'Akriti Thakur',
+    name: "Akriti Thakur",
     type: "Advertiser",
-    role: '@avp - branding and communication at healthians',
-    date: 'Jan 28, 2025',
+    role: "@avp - branding and communication at healthians",
+    date: "Jan 28, 2025",
     rating: 5,
-    comment: 'looks like an angel to me',
-    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
-    experienceDate: 'January 27, 2025',
-    avatar: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?w=150&h=150&fit=crop&crop=faces',
+    comment: "looks like an angel to me",
+    description:
+      "Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.",
+    experienceDate: "January 27, 2025",
+    avatar:
+      "https://images.unsplash.com/photo-1554151228-14d9def656e4?w=150&h=150&fit=crop&crop=faces",
   },
   {
     id: 8,
-    name: 'David Elson',
+    name: "David Elson",
     type: "Data Heroes",
-    role: '@lease head at dlf',
-    date: 'Jan 28, 2025',
+    role: "@lease head at dlf",
+    date: "Jan 28, 2025",
     rating: 5,
-    comment: 'looks like an angel to me',
-    description: 'Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.',
-    experienceDate: 'January 27, 2025',
-    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=faces',
-  }
+    comment: "looks like an angel to me",
+    description:
+      "Their support is crazy fast and amazing. They are very understand and able to help 24/7. Its just in another league.",
+    experienceDate: "January 27, 2025",
+    avatar:
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=faces",
+  },
 ];
 
 export const heroData = [
@@ -569,5 +583,3 @@ export const heroData = [
     aboutMe: "I automate the deployment pipeline for faster releases.",
   },
 ];
-
-
