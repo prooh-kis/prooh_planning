@@ -5,7 +5,14 @@ interface ButtonProps {
   onClick?: () => void;
   disabled?: boolean;
   loading?: boolean;
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "knowMore" | "custom";
+  variant?:
+    | "primary"
+    | "secondary"
+    | "outline"
+    | "ghost"
+    | "danger"
+    | "knowMore"
+    | "custom";
   size?: "small" | "medium" | "large";
   rounded?: "none" | "small" | "medium" | "large" | "full";
   fullWidth?: boolean;
@@ -31,7 +38,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
   icon,
   iconPosition = "left",
   textColor,
-  custom
+  custom,
 }) => {
   // Base classes
   const baseClasses = `font-semibold transition flex items-center justify-center ${
@@ -40,9 +47,9 @@ const ButtonInput: React.FC<ButtonProps> = ({
 
   // Size classes
   const sizeClasses = {
-    small: `text-sm ${icon ? "pl-3 pr-3" : "px-3"} py-1 gap-1.5`,
-    medium: `text-base ${icon ? "pl-5 pr-5" : "px-5"} py-2 gap-2`,
-    large: `text-lg ${icon ? "pl-7 pr-7" : "px-7"} py-3 gap-3`,
+    small: `text-[12px] ${icon ? "pl-3 pr-3" : "px-3"} py-1 gap-1.5`,
+    medium: `text-[16px] ${icon ? "pl-5 pr-5" : "px-5"} py-2 gap-2`,
+    large: `text-[20px] ${icon ? "pl-7 pr-7" : "px-7"} py-3 gap-3`,
   };
 
   // Rounded classes
@@ -62,7 +69,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
     secondary: `text-white bg-gray-600 hover:bg-gray-700 ${
       disabled || loading ? "bg-gray-400" : ""
     }`,
-    outline: `border bg-transparent ${
+    outline: `border-2 bg-transparent ${
       disabled || loading
         ? "border-gray-300 text-gray-400"
         : "border-[#129BFF] text-[#129BFF] hover:bg-[#129BFF] hover:text-white"
@@ -74,7 +81,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
       disabled || loading ? "bg-red-300" : ""
     }`,
     knowMore: `bg-white hover:bg-gray-100`,
-    custom: custom
+    custom: custom,
   };
 
   // Icon size classes
@@ -128,7 +135,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
           {loadingText}
         </>
       ) : (
-        <div className={`flex items-center justify-center ${textColor}`}>
+        <div className={`flex items-center gap-2 ${textColor}`}>
           {icon && iconPosition === "left" && (
             <span className={iconSizeClasses[size]}>{icon}</span>
           )}

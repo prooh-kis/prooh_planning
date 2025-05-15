@@ -97,6 +97,12 @@ import {
   getSpotDeliveryDataForPlannerDashboardReducer,
   takeDashboardScreenShotReducer,
 } from "../reducers/dashboardReducers";
+import {
+  audienceDataGetReducer,
+  audienceDataSaveReducer,
+  getHeroDataDetailsReducer,
+  heroDataRegisterReducer,
+} from "../reducers/dataHeroReducers";
 
 const initialState = {
   userSignin: {
@@ -220,6 +226,11 @@ const store = configureStore({
     siteBasedDataOnLogsPage: getSiteBasedDataOnLogsPageReducer,
     getFiltersAndDataForAllLogsPopup: getFiltersAndDataForAllLogsPopupReducer,
     takeDashboardScreenShot: takeDashboardScreenShotReducer,
+    // hero Data
+    heroDataRegister: heroDataRegisterReducer,
+    heroDataDetails: getHeroDataDetailsReducer,
+    audienceDataSave: audienceDataSaveReducer,
+    audienceDataGet: audienceDataGetReducer,
   },
 
   // middleware: thunk

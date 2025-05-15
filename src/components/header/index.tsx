@@ -11,6 +11,7 @@ import {
   MEDIA_OWNER_PAGE,
   SIGN_UP,
   PRODUCTS,
+  DATA_HERO,
 } from "../../routes/routes";
 import {
   CAMPAIGN_MANAGER,
@@ -38,7 +39,7 @@ export const Header: React.FC = () => {
     { title: "Products", path: `${PRODUCTS}` },
     { title: "Advertisers", path: `${ADVERTISERS_PAGE}` },
     { title: "Media Owner", path: `${MEDIA_OWNER_PAGE}` },
-    { title: "Research", path: `${"https://prooh-dmp.vercel.app"}` },
+    { title: "Data Hero", path: `${DATA_HERO}` },
   ];
 
   useEffect(() => {
@@ -76,9 +77,8 @@ export const Header: React.FC = () => {
       {!userInfo && (
         <div className="hidden md:flex items-center gap-4">
           {navLink.map((item) => (
-            <button
+            <div
               key={item.title}
-              type="button"
               onClick={() => {
                 if (item.title === "Research") {
                   window.open(`${item.path}`);
@@ -86,14 +86,14 @@ export const Header: React.FC = () => {
                   navigate(`${item.path}`);
                 }
               }}
-              className={`text-sm lg:text-base flex items-center hover:font-bold ${
+              className={`cursor-pointer text-sm lg:text-base flex items-center hover:font-bold ${
                 location.pathname === item.path
-                  ? "font-semibold text-[#0094FF] border-b-2 border-[#129BFF] py-5"
+                  ? "font-semibold text-[#0094FF] border-b-4 border-[#129BFF] py-5"
                   : "py-1"
               }`}
             >
               {item.title}
-            </button>
+            </div>
           ))}
         </div>
       )}

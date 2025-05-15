@@ -29,7 +29,7 @@ export const ProductsPage: React.FC = () => {
 
 
    return (
-     <div className="w-full h-full pt-12 absolute">
+     <div className="w-screen h-full pt-12 absolute">
       <div className="relative">
 
         {selected === "Fly" && (

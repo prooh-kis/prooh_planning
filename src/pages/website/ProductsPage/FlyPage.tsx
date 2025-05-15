@@ -79,7 +79,7 @@ export const FlyPage: React.FC<FlyPageProps> = ({products, selected, setSelected
   }];
 
   return (
-    <div className="w-full h-full font-custom pt-4 px-4">
+    <div className="w-full h-full font-custom pt-4">
       <div className="w-full grid grid-cols-12 bg-gradient-to-b from-[#F3F5FF] to-[#FFFFFF] p-12">
         <div className="w-full col-span-8">
           <div className="flex items-center justify-start gap-4">

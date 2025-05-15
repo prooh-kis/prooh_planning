@@ -41,6 +41,7 @@ import {
   NEW_DASHBOARD,
   BRAND_AGENCY_PAGE,
   PRODUCTS,
+  DATA_HERO,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 import { PublicRoute } from "../layout/PublicRoute";
@@ -52,6 +53,7 @@ import { CampaignDetailsPage } from "../pages/CampaignDetailsPage";
 import { NewDashBoard } from "../pages/NewDashBoard";
 import Engagement from "../pages/Engagement";
 import { BrandAgencyPage } from "../pages/PageNotFound/BrandAgency";
+import { DataHeroPage } from "../pages/website/DataHeroPage";
 
 const Routers: React.FC = () => {
   return (
@@ -116,7 +118,7 @@ const Routers: React.FC = () => {
             </PublicRoute>
           }
         />
-          <Route
+        <Route
           path={PRODUCTS}
           element={
             <PublicRoute>
@@ -124,7 +126,7 @@ const Routers: React.FC = () => {
             </PublicRoute>
           }
         />
-        
+
         <Route
           path={MEDIA_OWNER_PAGE}
           element={
@@ -139,6 +141,15 @@ const Routers: React.FC = () => {
           element={
             <PublicRoute>
               <MarketersPage />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path={DATA_HERO}
+          element={
+            <PublicRoute>
+              <DataHeroPage />
             </PublicRoute>
           }
         />
@@ -231,7 +242,7 @@ const Routers: React.FC = () => {
             </PrivateRoute>
           }
         />
-         <Route
+        <Route
           path={"/engagement"}
           element={
             <AppDashBoardLayout className="bg-[#D3D3D310] pt-16">
