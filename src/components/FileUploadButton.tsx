@@ -3,7 +3,7 @@ import React, { useRef, ChangeEvent } from "react";
 interface FileUploaderProps {
   handleFile: (files: any) => void;
   width: string;
-  fileType: string;
+  fileType?: string;
 }
 
 export const FileUploadButton: React.FC<FileUploaderProps> = ({

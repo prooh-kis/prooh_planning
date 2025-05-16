@@ -30,30 +30,7 @@ export const NewDashBoard: React.FC = () => {
   const [isAnalyzing, setIsAnalysing] = useState<boolean>(false);
 
   const [openInvoice, setOpenInvoice] = useState<any>(false);
-  const [poNumber, setPoNumber] = useState<any>("");
-  const [poDate, setPoDate] = useState<any>("");
-  const [clientAgencyName, setClientAgencyName] = useState<any>("");
-  const [address, setAddress] = useState<any>("");
-  const [city, setCity] = useState<any>("");
-  const [stateName, setStateName] = useState<any>("");
-  const [country, setCountry] = useState<any>("");
-  const [zipCode, setZipCode] = useState<any>("");
-  const [phone, setPhone] = useState<any>("");
-  const [email, setEmail] = useState<any>("");
-  const [website, setWebsite] = useState<any>("");
-  const [gst, setGst] = useState<any>("");
-  const [pan, setPan] = useState<any>("");
-  const [pocName, setPocName] = useState<any>("");
-  const [pocContact, setPocContact] = useState<any>("");
-  const [pocEmail, setPocEmail] = useState<any>("");
-  const [pocDesignation, setPocDesignation] = useState<any>("");
-  const [invoiceDescription, setInvoiceDescription] = useState<any>("");
-  const [invoiceQuantity, setInvoiceQuantity] = useState<any>("");
-  const [invoiceCurrency, setInvoiceCurrency] = useState<any>("INR");
-  const [invoiceAmount, setInvoiceAmount] = useState<any>(0);
-
-  const [jsonDataForInvoice, setJsonDataForInvoice] = useState<any>({});
-
+  
   // State for filters
   const [filters, setFilters] = useState<{
     cities: FilterState;
@@ -170,52 +147,8 @@ export const NewDashBoard: React.FC = () => {
             type: GET_CLIENT_AGENCY_DETAILS_RESET,
           });
         }}
-        invoiceBill={campaignDetails}
-        jsonDataForInvoice={jsonDataForInvoice}
-        poNumber={poNumber}
-        setPoNumber={setPoNumber}
-        clientAgencyName={clientAgencyName}
-        setClientAgencyName={setClientAgencyName}
-        setAddress={setAddress}
-        address={address}
-        city={city}
-        setCity={setCity}
-        setStateName={setStateName}
-        stateName={stateName}
-        setCountry={setCountry}
-        country={country}
-        phone={phone}
-        setPhone={setPhone}
-        email={email}
-        setEmail={setEmail}
-        website={website}
-        setWebsite={setWebsite}
-        zipCode={zipCode}
-        setZipCode={setZipCode}
-        gst={gst}
-        setGst={setGst}
-        pan={pan}
-        setPan={setPan}
-        pocName={pocName}
-        setPocName={setPocName}
-        pocEmail={pocEmail}
-        setPocEmail={setPocEmail}
-        pocContact={pocContact}
-        setPocContact={setPocContact}
-        setPocDesignation={setPocDesignation}
-        pocDesignation={pocDesignation}
-        setJsonDataForInvoice={setJsonDataForInvoice}
         campaignDetails={campaignDetails}
-        invoiceDescription={invoiceDescription}
-        setInvoiceDescription={setInvoiceDescription}
-        invoiceQuantity={invoiceQuantity}
-        setInvoiceQuantity={setInvoiceQuantity}
-        poDate={poDate}
-        setPoDate={setPoDate}
-        invoiceCurrency={invoiceCurrency}
-        setInvoiceCurrency={setInvoiceCurrency}
-        invoiceAmount={invoiceAmount}
-        setInvoiceAmount={setInvoiceAmount}
+        siteLevelData={siteLevelData}
       />
       {!loadingCampaignDetails && campaignDetails ? (
         <CampaignDashboard

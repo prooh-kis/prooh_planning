@@ -12,7 +12,7 @@ export const getAWSUrlToUploadFile = async (contentType: String, fileName: strin
     // console.log("response : ", data);
     return data;
   } catch (error) {
-    console.log("Not able to get aws file url");
+    console.error("Not able to get aws file url");
     throw new Error("Error while getting aws url");
   }
 };

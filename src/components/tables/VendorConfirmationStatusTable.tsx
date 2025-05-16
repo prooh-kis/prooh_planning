@@ -215,7 +215,7 @@ export const VendorConfirmationStatusTable = ({
                           ? "text-[#EF4444]"
                           : status.status === "Pending"
                           ? "text-[#22C55E]"
-                          : "text-[#3B82F6"
+                          : "text-[#3B82F6]"
                       }`}
                     >
                       {status.status === "PleaRequestBudgetSent"

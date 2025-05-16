@@ -411,7 +411,10 @@ export const takeDashboardScreenShotAction = (input) => async (dispatch, getStat
     );
     dispatch({
       type: TAKE_DASHBOARD_SCREENSHOT_SUCCESS,
-      payload: data,
+      payload: {
+        ...data,
+        images: data.images ? [...data.images] : []
+      }
     });
   } catch (error) {
     dispatch({

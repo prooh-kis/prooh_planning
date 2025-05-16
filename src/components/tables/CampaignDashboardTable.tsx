@@ -13,6 +13,7 @@ import axios from "axios";
 import { LinearBar } from "../../components/molecules/linearbar";
 import SiteLevelComponent from "../../pages/NewDashBoard/SiteLevelComponent";
 import { ShowMonitoringPicPopup } from "../../components/popup/ShowMonitoringPicPopup";
+import { getSiteBasedDataOnLogsPageAction } from "../../actions/dashboardAction";
 
 const analyticsV1 = `${process.env.REACT_APP_PROOH_SERVER}/api/v1/analytics`;
 
@@ -429,6 +430,9 @@ export const CampaignDashboardTable = ({
                         onClick={() => {
                           setCurrentScreen(screenData);
                           setCalendarData(screenData.slotDataDateWise);
+                          dispatch(getSiteBasedDataOnLogsPageAction({
+                            campaignId: screenData?.campaignId
+                          }));
                           setOpenSiteLevelLogsPopup(true);
                         }}
                       ></i>

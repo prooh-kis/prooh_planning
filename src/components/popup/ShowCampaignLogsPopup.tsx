@@ -10,7 +10,6 @@ import { CalenderScaleStepper } from "../../components/molecules/CalenderScale2"
 import { useDispatch, useSelector } from "react-redux";
 import { GetCampaignLogsAction } from "../../actions/campaignAction";
 import { downloadExcel2 } from "../../utils/excelUtils";
-import { getSiteBasedDataOnLogsPageAction } from "../../actions/dashboardAction";
 import { MetricCard, SiteInfoHeader } from "./SiteMapViewDetailsPopup";
 import { TIME_ZONES } from "../../constants/helperConstants";
 
@@ -111,9 +110,7 @@ export const ShowCampaignLogsPopup = ({
           // date: "13/03/2025"
         })
       );
-      dispatch(getSiteBasedDataOnLogsPageAction({
-        campaignId: screenCampaignData?.campaignId
-      }));
+
     }
   }, [dispatch, screenCampaignData, currentDate]);
 

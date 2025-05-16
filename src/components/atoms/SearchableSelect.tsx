@@ -7,11 +7,11 @@ export const SearchableSelect: React.FC<{
   value: string;
 }> = ({ options, onChange, placeholder, value }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState<string>(value || "");
+  const [searchTerm, setSearchTerm] = useState<string>(value);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [selectedOption, setSelectedOption] = useState<string | null>(value || "");
-  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const [selectedOption, setSelectedOption] = useState<string | null>(value);
 
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
   const filteredOptions =
     searchTerm.length === 0
       ? []

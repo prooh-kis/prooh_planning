@@ -4,24 +4,29 @@ import { CREATE_BILL_INVOICE_FAIL, CREATE_BILL_INVOICE_REQUEST, CREATE_BILL_INVO
 export function billInvoiceCreationReducer(state = [], action) {
   switch (action.type) {
     case CREATE_BILL_INVOICE_REQUEST:
-      return { loading: true };
+      return { ...state, loading: true };
     case CREATE_BILL_INVOICE_SUCCESS:
       return {
+        ...state,
         loading: false,
         success: true,
-        data: action.payload,
+        data: {
+         ...action.payload
+        },
       };
     case CREATE_BILL_INVOICE_FAIL:
       return {
+        ...state,
         loading: false,
         success: false,
-        error: action.payload,
+        error: {...action.payload},
       };
     case CREATE_BILL_INVOICE_RESET:
       return {
+        ...state,
         loading: false,
         success: false,
-        data: state,
+        data: {...state},
       };
     default:
       return state;

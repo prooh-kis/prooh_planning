@@ -36,13 +36,13 @@ export const createBillInvoice = (input) => async (dispatch, getState) => {
 
 
 
-export const getBillInvoiceDetails = ({campaignCreationId}) => async (dispatch, getState) => {
+export const getBillInvoiceDetails = ({ campaignCreationId, invoiceId }) => async (dispatch, getState) => {
   dispatch({
     type: GET_BILL_INVOICE_REQUEST,
-    payload: {campaignCreationId},
+    payload: { campaignCreationId, invoiceId },
   });
   try {
-    const { data } = await axios.get(`${url}/details?campaignCreationId=${campaignCreationId}`);
+    const { data } = await axios.get(`${url}/details?campaignCreationId=${campaignCreationId}${invoiceId ?? `?invoiceId=${invoiceId}`}`);
     dispatch({
       type: GET_BILL_INVOICE_SUCCESS,
       payload: data,

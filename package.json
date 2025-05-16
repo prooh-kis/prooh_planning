@@ -45,6 +45,8 @@
     "mapbox-gl": "^3.6.0",
     "moment": "^2.30.1",
     "npm": "^10.8.3",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^5.2.133",
     "pptxgenjs": "^3.12.0",
     "preline": "^3.0.1",
     "react": "^18.3.1",
