@@ -11,13 +11,9 @@ import { FORGET_PASSWORD } from "../../routes/routes";
 export const SignIn: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-
-  const [email, setEmail] = useState<any>(
-    localStorage.getItem("myapp-email") || ""
-  );
-  const [password, setPassword] = useState<any>(
-    localStorage.getItem("myapp-password") || ""
-  );
+  // localStorage.getItem("myapp-email") ||
+  const [email, setEmail] = useState<any>("");
+  const [password, setPassword] = useState<any>("");
   const userSignin = useSelector((state: any) => state.userSignin);
   const { loading, error: errorSignIn, success, userInfo } = userSignin;
 
@@ -34,21 +30,6 @@ export const SignIn: React.FC = () => {
     dispatch(signin(email, password));
   };
 
-  useEffect(() => {
-    localStorage.setItem("myapp-email", email);
-    localStorage.setItem("myapp-password", password);
-  }, [email, password]);
-
-  const rememberMe = (e: any) => {
-    if (e.target.checked) {
-      localStorage.setItem("myapp-email", email);
-      localStorage.setItem("myapp-password", password);
-    } else {
-      localStorage.setItem("myapp-email", "");
-      localStorage.setItem("myapp-password", "");
-    }
-  };
-
   return (
     <div className="flex flex-col justify-center items-center h-full bg-gray-100">
       <div className="w-[90%] lg:w-[400px] rounded-[15px] bg-white px-5 lg:px-8 py-6 lg:py-10 shadow-lg">
@@ -58,11 +39,7 @@ export const SignIn: React.FC = () => {
             layout="vertical"
             initialValues={{ remember: true }}
             onFinish={onFinish}
-            autoComplete="off"
-            fields={[
-              { name: ["email"], value: email },
-              { name: ["password"], value: password },
-            ]}
+            autoComplete="on" // Changed to "on"
           >
             <Form.Item
               label={
@@ -76,8 +53,11 @@ export const SignIn: React.FC = () => {
               ]}
             >
               <Input
+                name="email" // Standard name
+                type="email" // Proper type
+                autoComplete="username" // Standard autocomplete value
                 value={email}
-                placeholder="Enter username or email"
+                placeholder="Enter your email"
                 onChange={(e) => setEmail(e.target.value)}
                 size="large"
                 style={{ borderColor: "#DDDDDD", padding: "6px 12px" }}
@@ -95,6 +75,9 @@ export const SignIn: React.FC = () => {
               ]}
             >
               <Input.Password
+                name="password" // Standard name
+                type="password" // Proper type
+                autoComplete="current-password" // Standard autocomplete value
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -107,7 +90,6 @@ export const SignIn: React.FC = () => {
                 <input
                   title="q"
                   type="checkbox"
-                  onClick={rememberMe}
                   id="rememberMe"
                   defaultChecked
                 />
