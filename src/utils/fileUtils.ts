@@ -91,3 +91,14 @@ export const convertBlobToDataURL = (blob: any) => {
     reader.readAsDataURL(blob);
   });
 };
+
+
+export const getCanvasBlob = (canvas: HTMLCanvasElement): Promise<Blob> => {
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      if (blob) {
+        resolve(blob);
+      }
+    }, 'image/png');
+  });
+};

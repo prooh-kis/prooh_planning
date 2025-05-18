@@ -171,8 +171,13 @@ export const BillAndInvoiceMonitoringPicsSegment = ({ previewSample, campaignDet
      <tbody className="w-full">
       {previewSample?.monitoringData?.map((data: any, index: any) => (
        <tr className="grid grid-cols-10 gap-1 pt-1" key={index}>
-        <td className="col-span-2 h-[120px] border border-gray-100 rounded-[4px] text-[12px] flex items-center justify-center">
-         {data.dateType.split("Date")[0].toUpperCase()}
+        <td className="col-span-2 h-[120px] border border-gray-100 rounded-[4px] text-[12px] flex flex-col items-center justify-center">
+          <h1>
+            {data.dateType.split("Date")[0].toUpperCase()}
+          </h1>
+          <h1>
+            {convertDateIntoDateMonthYear(data.date)}
+          </h1>
         </td>
         <td className="col-span-2 h-[120px]">
          {data?.monitoringTypeWiseData?.find((d: any) => d?.monitoringType === "dayShot")?.monitoringUrls?.[0]?.awsUrl ? (

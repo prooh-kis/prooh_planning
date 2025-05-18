@@ -65,6 +65,8 @@ export const BillingAndInvoice = (props: any) => {
 
   const [disabledGenerate, setDisabledGenerate] = useState<boolean>(true);
 
+  const [billLoading, setBillLoading] = useState<any>(false);
+  
   const todayDate = moment(new Date())?.format("YYYY-MM-DD hh:mm:ss");
 
   const {
@@ -115,6 +117,7 @@ export const BillingAndInvoice = (props: any) => {
   };
 
   const generateBillInvoice = useCallback(() => {
+    setBillLoading(true);
     generateBillAndInvoicePdf({
       download: true,
       fileName: `INVOICE_${campaignDetails?.brandName}_${campaignDetails?.name}`,
@@ -159,8 +162,9 @@ export const BillingAndInvoice = (props: any) => {
       },
       billInvoiceDetailsData: billInvoiceDetailsData,
       campaignDetails: campaignDetails,
+      siteLevelData:siteLevelData,
     });
-  },[address, billInvoiceDetailsData, campaignDetails, city, clientAgencyDetailsData, clientAgencyName, country, email, gst, invoiceAmount, invoiceCurrency, invoiceDescription, invoiceQuantity, pan, phone, poDate, poNumber, pocContact, pocDesignation, pocEmail, pocName, stateName, todayDate, website, zipCode])
+  },[address, billInvoiceDetailsData, siteLevelData, campaignDetails, city, clientAgencyDetailsData, clientAgencyName, country, email, gst, invoiceAmount, invoiceCurrency, invoiceDescription, invoiceQuantity, pan, phone, poDate, poNumber, pocContact, pocDesignation, pocEmail, pocName, stateName, todayDate, website, zipCode])
 
   const saveClientAgencyDetails = async () => {
     if (
