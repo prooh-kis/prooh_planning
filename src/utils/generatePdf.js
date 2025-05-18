@@ -575,7 +575,9 @@ export const generateBillAndInvoicePdf = async ({
   billInvoiceDetailsData,
   campaignDetails,
   siteLevelData,
+  setBillLoading,
 }) => {
+  setBillLoading(true);
   const doc = new jsPDF("portrait", "pt", "a4");
   // Generate first page
   const pageWidth = doc.internal.pageSize.width;
@@ -1283,6 +1285,7 @@ export const generateBillAndInvoicePdf = async ({
     const pdfBlob = doc.output("blob");
     return pdfBlob;
   }
+  setBillLoading(false);
 };
 
 

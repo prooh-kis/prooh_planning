@@ -117,7 +117,6 @@ export const BillingAndInvoice = (props: any) => {
   };
 
   const generateBillInvoice = useCallback(() => {
-    setBillLoading(true);
     generateBillAndInvoicePdf({
       download: true,
       fileName: `INVOICE_${campaignDetails?.brandName}_${campaignDetails?.name}`,
@@ -163,7 +162,9 @@ export const BillingAndInvoice = (props: any) => {
       billInvoiceDetailsData: billInvoiceDetailsData,
       campaignDetails: campaignDetails,
       siteLevelData:siteLevelData,
+      setBillLoading: setBillLoading,
     });
+
   },[address, billInvoiceDetailsData, siteLevelData, campaignDetails, city, clientAgencyDetailsData, clientAgencyName, country, email, gst, invoiceAmount, invoiceCurrency, invoiceDescription, invoiceQuantity, pan, phone, poDate, poNumber, pocContact, pocDesignation, pocEmail, pocName, stateName, todayDate, website, zipCode])
 
   const saveClientAgencyDetails = async () => {
@@ -443,6 +444,11 @@ export const BillingAndInvoice = (props: any) => {
 
             <div className="flex gap-4 items-center">
               <div className="flex items-center gap-4">
+                {billLoading && (
+                  <div className="flex items-center justify-center">
+                    <i className="fi fi-br-spinner text-gray-500 flex items-center animate-spin"></i>
+                  </div>
+                )}
                 {billingStep !== 3 && (
                   <PrimaryButton
                     title="Save"
