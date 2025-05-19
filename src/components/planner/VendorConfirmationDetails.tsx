@@ -32,6 +32,7 @@ import { convertDateIntoDateMonthYear } from "../../utils/dateAndTimeUtils";
 import { StatusPopup } from "../../components/popup/StatusPopup";
 import { ShowMediaTypePopup } from "../../components/popup/ShowMediaTypePopup";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -240,6 +241,7 @@ export const VendorConfirmationDetails = ({
       const imageArr = await Promise.all(files.map(getAWSUrl));
       dispatch(
         addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
           pageName: "Vendor Confirmation Page",
           id: campaignDetails?._id,
           vendorApprovalImgs: imageArr, // return url array
@@ -355,6 +357,7 @@ export const VendorConfirmationDetails = ({
   const skipFunction = () => {
     dispatch(
       addDetailsToCreateCampaign({
+        event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
         pageName: "Vendor Confirmation Page",
         id: campaignDetails?._id,
         vendorApprovalImgs: [], // return url array

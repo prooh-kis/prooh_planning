@@ -16,6 +16,7 @@ import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { useLocation } from "react-router-dom";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
 export const RegularCohortComparisonDetails = ({
   campaignId,
@@ -202,6 +203,7 @@ export const RegularCohortComparisonDetails = ({
                 } else {
                   dispatch(
                     addDetailsToCreateCampaign({
+                      event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
                       pageName: "Compare Plan Page",
                       id: campaignId,
                       regularTouchPointWiseSlotDetails:

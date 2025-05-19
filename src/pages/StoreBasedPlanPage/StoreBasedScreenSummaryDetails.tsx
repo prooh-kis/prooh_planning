@@ -32,6 +32,7 @@ import {
 } from "../../constants/localStorageConstants";
 import { saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import ButtonInput from "../../components/atoms/ButtonInput";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
 interface ScreenSummaryDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -247,6 +248,7 @@ export const StoreBasedScreenSummaryDetails = ({
 
       dispatch(
         addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
           pageName: "Select Screens Page",
           id: campaignId,
           screenIds: getSelectedScreenIdsFromAllCities(screensBuyingCount),

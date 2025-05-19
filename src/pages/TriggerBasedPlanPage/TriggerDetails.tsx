@@ -27,6 +27,7 @@ import {
   getTableDataForSelectTriggerPage,
 } from "../../actions/screenAction";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET, CAMPAIGN_PLAN_TYPE_TRIGGER } from "../../constants/campaignConstants";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 interface TriggerProps {
   setCurrentStep: (step: number) => void;
   step: number;
@@ -235,6 +236,7 @@ export const TriggerDetails = ({
           console.log(tableDataForSelectTrigger["Total Cities"]);
           dispatch(
             addDetailsToCreateCampaign({
+              event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
               pageName: "Add Triggers Page",
               id: campaignId,
               triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
@@ -250,6 +252,7 @@ export const TriggerDetails = ({
         } else {
           dispatch(
             addDetailsToCreateCampaign({
+              event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
               pageName: "Add Triggers Page",
               id: campaignId,
               triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],
@@ -273,6 +276,7 @@ export const TriggerDetails = ({
       setIsDisabled(false);
       dispatch(
         addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
           pageName: "Add Triggers Page",
           id: pathname.split("/").splice(-1)[0],
           triggers: getDataFromLocalStorage(SELECTED_TRIGGER)?.[campaignId],

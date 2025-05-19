@@ -19,7 +19,7 @@ import {
 } from "../../utils/awsUtils";
 import { generateCampaignSummaryPdfFromJSON } from "../../utils/generatePdf";
 import { sendEmailForConfirmation } from "../../actions/userAction";
-import { SEND_EMAIL_FOR_CONFIRMATION_RESET } from "../../constants/userConstants";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE, SEND_EMAIL_FOR_CONFIRMATION_RESET } from "../../constants/userConstants";
 import { generatePPT } from "../../utils/generatePPT";
 import {
   applyCouponForCampaign,
@@ -365,6 +365,7 @@ export const ViewFinalPlanPODetails = ({
       setConfirmToProceed(true);
       dispatch(
         addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
           pageName: "View Final Plan Page",
           id: campaignId,
           clientApprovalImgs: imageArr,
@@ -437,7 +438,7 @@ export const ViewFinalPlanPODetails = ({
       dispatch({ type: APPLY_COUPON_RESET });
       dispatch({ type: REMOVE_COUPON_RESET });
       dispatch(getFinalPlanPOTableData(poInput));
-      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
+      dispatch(addDetailsToCreateCampaign({ event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE, id: campaignId }));
     }
     if (couponRemoveSuccess) {
       setCurrentCoupon("");
@@ -445,7 +446,7 @@ export const ViewFinalPlanPODetails = ({
       dispatch({ type: APPLY_COUPON_RESET });
       dispatch({ type: REMOVE_COUPON_RESET });
       dispatch(getFinalPlanPOTableData(poInput));
-      dispatch(addDetailsToCreateCampaign({ id: campaignId }));
+      dispatch(addDetailsToCreateCampaign({ event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE, id: campaignId }));
     }
   }, [couponRemoveSuccess, couponApplySuccess, dispatch, campaignId, poInput]);
 
@@ -584,6 +585,7 @@ export const ViewFinalPlanPODetails = ({
   const skipFunction = () => {
     dispatch(
       addDetailsToCreateCampaign({
+        event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
         pageName: "View Final Plan Page",
         id: campaignId,
         clientApprovalImgs: [],

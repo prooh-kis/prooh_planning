@@ -16,6 +16,7 @@ import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignCo
 import { CustomTabWithSelectAll } from "../../components/molecules/CustomTabWithSelectAll";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { message } from "antd";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
 interface SelectionStats {
   selected: {
@@ -213,6 +214,7 @@ export const SetAdsPlayTime = ({
     if (!pathname.split("/").includes("view")) {
       dispatch(
         addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
           pageName: "Set Ad Play time Page",
           id: campaignId,
           touchPointWiseDetails: data,

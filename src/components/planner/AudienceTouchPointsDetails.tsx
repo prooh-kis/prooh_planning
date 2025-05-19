@@ -18,6 +18,7 @@ import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { message } from "antd";
 import { saveDataOnLocalStorage } from "../../utils/localStorageUtils";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
 interface EnterAudienceTouchpointDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -207,6 +208,7 @@ export const AudienceTouchPointsDetails = ({
     if (!pathname.split("/").includes("view")) {
       dispatch(
         addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
           pageName: "Audience And TouchPoint Page",
           id: campaignId,
           markets: Object.keys(screensAudiences)?.filter(

@@ -26,6 +26,7 @@ import {
   VIEW_CAMPAIGN,
 } from "../../constants/campaignConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
 export const SpecialDayPlanPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -69,7 +70,7 @@ export const SpecialDayPlanPage: React.FC = () => {
   }, [campaignDetails, campaignId, state, pathname, dispatch]);
 
   useEffect(() => {
-    if (campaignId) dispatch(addDetailsToCreateCampaign({ id: campaignId }));
+    if (campaignId) dispatch(addDetailsToCreateCampaign({ event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE, id: campaignId }));
   }, [dispatch, campaignId]);
 
   const stepComponents: Record<number, React.FC<any>> = {

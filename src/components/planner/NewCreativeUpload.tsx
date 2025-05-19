@@ -26,6 +26,7 @@ import { NoDataView } from "../index";
 import { ConformationModelForCreative } from "../popup/ConformationModelForCreative";
 import { TriggerBasedIndication } from "../molecules/TriggerBasedIndication";
 import ButtonInput from "../../components/atoms/ButtonInput";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -391,6 +392,7 @@ export const NewCreativeUpload = ({
 
     dispatch(
       addDetailsToCreateCampaign({
+        event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
         pageName: "Upload Creative Page",
         id: campaignId,
         creatives: requestBody,

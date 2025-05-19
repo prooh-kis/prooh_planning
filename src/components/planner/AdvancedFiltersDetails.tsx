@@ -14,6 +14,7 @@ import {
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { getUniqueScreens } from "../../utils/screenRanking";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
 interface AdvanceFiltersDetailsProps {
   step?: any;
@@ -199,6 +200,7 @@ export const AdvanceFiltersDetails = ({
       }
       dispatch(
         addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
           pageName: "Advance Filter Page",
           id: campaignId,
           screenIds: finalSelectedScreens.map((s: any) => s._id),

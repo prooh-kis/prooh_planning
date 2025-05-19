@@ -14,6 +14,7 @@ import { SingleCalenderData } from "../../components/molecules/SingleCalenderDat
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { formatNumber } from "../../utils/formatValue";
 import { CAMPAIGN_PLAN_TYPE_TOPICAL } from "../../constants/campaignConstants";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
 interface SpecialDayProps {
   setCurrentStep: (step: number) => void;
@@ -108,6 +109,7 @@ export const SpecialDay = ({
   const handleSaveData = (data: any) => {
     dispatch(
       addDetailsToCreateCampaign({
+        event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
         ...data,
         startDate: moment(selectedDate).format(),
         endDate: moment(selectedDate).add(1, "days").format(),

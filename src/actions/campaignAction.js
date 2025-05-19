@@ -96,8 +96,13 @@ export const addDetailsToCreateCampaign =
     });
     try {
       removeAllKeyFromLocalStorage();
-
-      const { data } = await axios.post(`${url}/addDataForCampaign`, input);
+      const {
+        auth: { userInfo },
+      } = getState();
+      const { data } = await axios.post(`${url}/addDataForCampaign`, input, {
+        headers: { Authorization: `Bearer ${userInfo.token}` },
+      });
+      
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_SUCCESS,
         payload: data,

@@ -30,6 +30,7 @@ import { getVideoDurationFromVideoURL } from "../../utils/fileUtils";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import SearchInputField from "../../components/molecules/SearchInputField";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -388,6 +389,7 @@ export const CreativeUpload = ({
 
     dispatch(
       addDetailsToCreateCampaign({
+        event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
         pageName: "Upload Creative Page",
         id: campaignId,
         creatives: requestBody,

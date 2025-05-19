@@ -27,6 +27,7 @@ import { ScreenFilters } from "../../components/segments/ScreenFilters";
 import { ScreenSummaryTable } from "./ScreenSummaryTable";
 import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import { SCREEN_SUMMARY_SELECTION, SCREEN_TYPE_TOGGLE_SELECTION } from "../../constants/localStorageConstants";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
 interface ScreenSummaryDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -236,6 +237,7 @@ export const ScreenSummaryDetails = ({
         setCurrentTab("2");
       } else {
         dispatch(addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
           pageName: "Screen Summary Page",
           id: campaignId,
           totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),

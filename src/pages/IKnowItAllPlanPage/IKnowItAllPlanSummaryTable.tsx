@@ -12,6 +12,7 @@ import { addDetailsToCreateCampaign, getCampaignCreationsDetails } from "../../a
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { message } from "antd";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
 interface ScreenSummaryDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -56,6 +57,7 @@ export const IKnowItAllPlanSummaryTable = ({
     if (!pathname.split("/").includes("view")) {
       dispatch(
         addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
           pageName: "Screen Summary Page",
           id: campaignDetails?._id,
           totalScreens: campaignDetails?.screenIds,

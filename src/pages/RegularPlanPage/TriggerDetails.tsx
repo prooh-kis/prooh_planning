@@ -20,6 +20,7 @@ import {
   getTableDataForSelectTriggerPage,
 } from "../../actions/screenAction";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
 
 interface TriggerProps {
@@ -206,6 +207,7 @@ export const TriggerDetails = ({
       } else {
         dispatch(
           addDetailsToCreateCampaign({
+            event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
             pageName: "Add Triggers Page",
             id: campaignId,
             triggers: selectedTriggerData,
@@ -220,6 +222,7 @@ export const TriggerDetails = ({
       setIsDisabled(false);
       dispatch(
         addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
           pageName: "Add Triggers Page",
           id: campaignId,
           triggers: {

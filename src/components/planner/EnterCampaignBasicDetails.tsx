@@ -20,6 +20,7 @@ import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { ALL_BRAND_LIST } from "../../constants/localStorageConstants";
 import { getAllBrandAndNetworkAction } from "../../actions/creativeAction";
 import ButtonInput from "../../components/atoms/ButtonInput";
+import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -158,6 +159,7 @@ export const EnterCampaignBasicDetails = ({
       handleAddNewClient(clientName);
       dispatch(
         addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
           id: campaignId,
           pageName: "Basic Details Page",
           name: campaignName,
