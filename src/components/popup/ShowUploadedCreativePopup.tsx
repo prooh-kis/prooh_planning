@@ -25,7 +25,7 @@ export const ShowUploadedCreativePopup = ({
       open={open}
       onCancel={onClose}
       footer={[]}
-      width={800}
+      width={900}
       maskClosable={false}
     >
       <h1 className="text-[14px] font-semibold">
@@ -95,7 +95,7 @@ export const ShowSelectedCreativePopup = ({
           Save Files
         </Button>,
       ]}
-      width={800}
+      width={900}
       maskClosable={false}
     >
       <div className="border-t">

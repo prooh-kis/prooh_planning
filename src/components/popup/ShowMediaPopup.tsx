@@ -102,20 +102,20 @@ export function ShowMediaPopup({
                               {cr.type?.split("/")[0] === "image" ? (
                                 <ImageContainer
                                   url={cr?.url}
-                                  className=" rounded-lg"
+                                  className="rounded-lg"
                                   height="207px"
                                   width="full"
                                   showIcon={false}
-                                  // removeFile={() => removeFile(files[0]?.url)}
+                                  removeFile={() => {}}
                                 />
                               ) : (
                                 <VideoContainer
                                   url={cr?.url}
-                                  className=" rounded-lg"
+                                  className="rounded-lg"
                                   height="207px"
                                   width="full"
                                   showIcon={false}
-                                  // removeFile={() => removeFile(files[0]?.url)}
+                                  removeFile={() => {}}
                                 />
                               )}
                             </div>

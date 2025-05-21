@@ -127,8 +127,9 @@ UploadCreativesFromBucketPopupPropsV2) {
                               (file: any) => file._id === creative?._id
                             )
                           ) {
-                            message.info("Already added");
-                            return [...prev];
+                            return mediaFiles?.filter(
+                              (file: any) => file._id !== creative._id
+                            );
                           } else {
                             return [...prev, creative];
                           }
@@ -144,8 +145,9 @@ UploadCreativesFromBucketPopupPropsV2) {
                         if (
                           prev?.find((file: any) => file._id === creative?._id)
                         ) {
-                          message.info("Already added");
-                          return [...prev];
+                          return mediaFiles?.filter(
+                            (file: any) => file._id !== creative._id
+                          );
                         } else {
                           return [...prev, creative];
                         }
