@@ -33,6 +33,22 @@ export const saveFileOnAWS = async (url: string, file: File) => {
   }
 };
 
+export const getAWSUrl = async (file: any) => {
+  console.log("getAWSUrl : ", file);
+  try {
+    const aws = await getAWSUrlToUploadFile(
+      file.type?.split(".")[0],
+      file?.name?.split(".")[0]
+    );
+    const successAWSUploadFile = await saveFileOnAWS(aws?.url, file);
+    return aws?.awsURL;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+
+
 export const getDocUrlToSaveOnAWS = async (fileName: any, fileType: any) => {
   try {
     const { data } = await Axios.post(

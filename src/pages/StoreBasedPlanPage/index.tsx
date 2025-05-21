@@ -5,10 +5,10 @@ import { SetAdsPlayTime } from "./SetAdsPlayTime";
 import { StoreBasedPlanSummaryTable } from "./StoreBasedPlanSummaryTable";
 import {
   EnterCampaignBasicDetails,
-  NewCreativeUpload,
   ViewFinalPlanPODetails,
   VendorConfirmationDetails,
   AdvanceFiltersDetails,
+  CreativeUploadV4,
 } from "../../components/planner";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -89,11 +89,12 @@ export const StoreBasedPlanPage: React.FC = () => {
     4: SetAdsPlayTime,
     5: StoreBasedPlanSummaryTable,
     6: ViewFinalPlanPODetails,
-    7: NewCreativeUpload,
+    7: CreativeUploadV4,
     8: VendorConfirmationDetails,
   };
 
-  const StepComponent = stepComponents[currentStep] || (() => <div>Invalid step</div>);
+  const StepComponent =
+    stepComponents[currentStep] || (() => <div>Invalid step</div>);
 
   return (
     <div className="w-full">

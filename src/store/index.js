@@ -21,6 +21,8 @@ import {
   tableDataSetAdPlayTimeReducer,
   screenSummaryDataIKnowItAllGetReducer,
   poiBasedAudienceDataAdvanceFilterGetReducer,
+  getAllFiltersDetailsForUploadCreativePageReducer,
+  getCreativesFromCreativeBucketForUploadPageReducer,
 } from "../reducers/screenReducers";
 import {
   emailSendForConfirmationReducer,
@@ -141,7 +143,10 @@ const store = configureStore({
       tableDataForSelectTopicalDayPageGetReducer,
     tableDataForSelectTriggerPageGet: tableDataForSelectTriggerPageGetReducer,
     tableDataSetAdPlayTimeStore: tableDataSetAdPlayTimeReducer,
-
+    allFiltersDetailsForUploadCreativePage:
+      getAllFiltersDetailsForUploadCreativePageReducer,
+    creativesFromCreativeBucketForUploadPage:
+      getCreativesFromCreativeBucketForUploadPageReducer,
     // campaign
     campaignCreationsDetailsGet: campaignCreationsDetailsGetReducer,
     allCampaignsDataGet: allCampaignsDataGetReducer,

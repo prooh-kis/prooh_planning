@@ -68,3 +68,93 @@ export const ViewMediaForUploadCreatives = ({
     </div>
   );
 };
+
+export const ViewMediaForUploadCreatives2 = ({
+  files,
+  removeFile,
+  viewCreativeType,
+}: any) => {
+  const showIcon = viewCreativeType === "0" ? false : true;
+
+  return (
+    <div className="pt-4">
+      <div className="flex flex-wrap gap-4 pt-4">
+        {files?.map((file: any, index: any) => {
+          if (file.fileType.split("/")[0] === "image")
+            return (
+              <div className="w-[150px]" key={file?.url}>
+                <ImageContainer
+                  key={index}
+                  url={file?.awsURL}
+                  className="rounded-lg "
+                  height="102px"
+                  width="150px"
+                  showIcon={showIcon}
+                  removeFile={removeFile}
+                />
+              </div>
+            );
+          else
+            return (
+              <div className="w-[150px]" key={file?.url}>
+                <VideoContainer
+                  key={index}
+                  url={file?.awsURL}
+                  className="rounded-lg "
+                  height="102px"
+                  width="150px"
+                  showIcon={showIcon}
+                  removeFile={removeFile}
+                />
+              </div>
+            );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export const ViewMediaForUploadCreatives3 = ({
+  files,
+  removeFile,
+  viewCreativeType,
+}: any) => {
+  const showIcon = viewCreativeType === "0" ? false : true;
+
+  return (
+    <div className="pt-4">
+      <div className="flex flex-wrap gap-4 pt-4">
+        {files?.map((file: any, index: any) => {
+          if (file.type.split("/")[0] === "image")
+            return (
+              <div className="w-[150px]" key={file?.url}>
+                <ImageContainer
+                  key={index}
+                  url={file.url}
+                  className="rounded-lg "
+                  height="102px"
+                  width="150px"
+                  showIcon={showIcon}
+                  removeFile={removeFile}
+                />
+              </div>
+            );
+          else
+            return (
+              <div className="w-[150px]" key={file.url}>
+                <VideoContainer
+                  key={index}
+                  url={file?.url}
+                  className="rounded-lg "
+                  height="110px"
+                  width="150px"
+                  showIcon={showIcon}
+                  removeFile={removeFile}
+                />
+              </div>
+            );
+        })}
+      </div>
+    </div>
+  );
+};

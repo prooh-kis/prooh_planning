@@ -4,11 +4,11 @@ import { SpecialDay } from "./SpecialDay";
 import { RegularCohortComparisonDetails } from "./RegularCohortComparisonDetails";
 import { ScreenSummaryDetails } from "./ScreenSummaryDetails";
 import {
-  NewCreativeUpload,
   ViewFinalPlanPODetails,
   VendorConfirmationDetails,
   AdvanceFiltersDetails,
   AudienceTouchPointsDetails,
+  CreativeUploadV4,
 } from "../../components/planner";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -70,7 +70,13 @@ export const SpecialDayPlanPage: React.FC = () => {
   }, [campaignDetails, campaignId, state, pathname, dispatch]);
 
   useEffect(() => {
-    if (campaignId) dispatch(addDetailsToCreateCampaign({ event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE, id: campaignId }));
+    if (campaignId)
+      dispatch(
+        addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
+          id: campaignId,
+        })
+      );
   }, [dispatch, campaignId]);
 
   const stepComponents: Record<number, React.FC<any>> = {
@@ -80,11 +86,12 @@ export const SpecialDayPlanPage: React.FC = () => {
     4: RegularCohortComparisonDetails,
     5: ScreenSummaryDetails,
     6: ViewFinalPlanPODetails,
-    7: NewCreativeUpload,
+    7: CreativeUploadV4,
     8: VendorConfirmationDetails,
   };
 
-  const StepComponent = stepComponents[currentStep] || (() => <div>Invalid step</div>);
+  const StepComponent =
+    stepComponents[currentStep] || (() => <div>Invalid step</div>);
 
   return (
     <div className="w-full">

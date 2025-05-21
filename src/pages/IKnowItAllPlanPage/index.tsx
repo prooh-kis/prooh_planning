@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
 import {
   EnterCampaignBasicDetails,
-  NewCreativeUpload,
   ViewFinalPlanPODetails,
   VendorConfirmationDetails,
+  CreativeUploadV4,
 } from "../../components/planner";
 import { IKnowItAllScreenSummaryDetails } from "./IKnowItAllScreenSummaryDetails";
 import { SetAdsPlayTime } from "./SetAdsPlayTime";
@@ -86,11 +86,12 @@ export const IKnowItAllPlanPage: React.FC = () => {
     3: SetAdsPlayTime,
     4: IKnowItAllPlanSummaryTable,
     5: ViewFinalPlanPODetails,
-    6: NewCreativeUpload,
+    6: CreativeUploadV4,
     7: VendorConfirmationDetails,
   };
 
-  const StepComponent = stepComponents[currentStep] || (() => <div>Invalid step</div>);
+  const StepComponent =
+    stepComponents[currentStep] || (() => <div>Invalid step</div>);
 
   return (
     <div className="w-full">

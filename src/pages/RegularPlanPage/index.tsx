@@ -5,11 +5,11 @@ import { ScreenSummaryDetails } from "./ScreenSummaryDetails";
 import { TriggerDetails } from "./TriggerDetails";
 import {
   EnterCampaignBasicDetails,
-  NewCreativeUpload,
   ViewFinalPlanPODetails,
   VendorConfirmationDetails,
   AdvanceFiltersDetails,
   AudienceTouchPointsDetails,
+  CreativeUploadV4,
 } from "../../components/planner";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -90,10 +90,11 @@ export const RegularPlanPage: React.FC = () => {
     5: ScreenSummaryDetails,
     6: TriggerDetails,
     7: ViewFinalPlanPODetails,
-    8: NewCreativeUpload,
+    8: CreativeUploadV4,
     9: VendorConfirmationDetails,
   };
-  const StepComponent = stepComponents[currentStep] || (() => <div>Invalid step</div>);
+  const StepComponent =
+    stepComponents[currentStep] || (() => <div>Invalid step</div>);
 
   return (
     <div className="w-full font-custom">

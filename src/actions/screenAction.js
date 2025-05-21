@@ -1,11 +1,17 @@
 import axios from "axios";
 import {
+  GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_ERROR,
+  GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_REQUEST,
+  GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_SUCCESS,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_ERROR,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_REQUEST,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS,
   GET_CAMPAIGN_DASHBOARD_DATA_ERROR,
   GET_CAMPAIGN_DASHBOARD_DATA_REQUEST,
   GET_CAMPAIGN_DASHBOARD_DATA_SUCCESS,
+  GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_ERROR,
+  GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_REQUEST,
+  GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_SUCCESS,
   GET_FINAL_PLAN_PO_DATA_ERROR,
   GET_FINAL_PLAN_PO_DATA_REQUEST,
   GET_FINAL_PLAN_PO_DATA_SUCCESS,
@@ -85,236 +91,239 @@ export const getLandingPageData = () => async (dispatch, getState) => {
 
 export const getScreensAudiencesData =
   ({ id, markets }) =>
-    async (dispatch, getState) => {
-      dispatch({
-        type: GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
-        payload: markets,
-      });
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
+      payload: markets,
+    });
 
-      try {
-        const { data } = await axios.post(`${url}/audienceData`, {
-          id,
-          markets,
-        });
-        dispatch({
-          type: GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
-          payload: data,
-        });
-      } catch (error) {
-        dispatch({
-          type: GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
-          payload: {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-          },
-        });
-      }
-    };
+    try {
+      const { data } = await axios.post(`${url}/audienceData`, {
+        id,
+        markets,
+      });
+      dispatch({
+        type: GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
 export const getScreensCostData =
   ({ id, cohorts, gender, touchPoints, duration }) =>
-    async (dispatch, getState) => {
-      dispatch({
-        type: GET_SCREENS_COST_DATA_REQUEST,
-        payload: { cohorts, gender, touchPoints, duration },
-      });
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_SCREENS_COST_DATA_REQUEST,
+      payload: { cohorts, gender, touchPoints, duration },
+    });
 
-      try {
-        const { data } = await axios.post(`${url}/tableAudienceTouchPointPage`, {
-          id,
-          cohorts,
-          gender,
-          touchPoints,
-          duration,
-        });
-        dispatch({
-          type: GET_SCREENS_COST_DATA_SUCCESS,
-          payload: data,
-        });
-      } catch (error) {
-        dispatch({
-          type: GET_SCREENS_COST_DATA_ERROR,
-          payload: {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-          },
-        });
-      }
-    };
+    try {
+      const { data } = await axios.post(`${url}/tableAudienceTouchPointPage`, {
+        id,
+        cohorts,
+        gender,
+        touchPoints,
+        duration,
+      });
+      dispatch({
+        type: GET_SCREENS_COST_DATA_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_SCREENS_COST_DATA_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
 export const getScreenDataForAdvanceFilters =
   ({ id, touchPoints }) =>
-    async (dispatch, getState) => {
-      dispatch({
-        type: GET_SCREENS_DATA_ADVANCE_FILTER_REQUEST,
-        payload: { touchPoints },
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_SCREENS_DATA_ADVANCE_FILTER_REQUEST,
+      payload: { touchPoints },
+    });
+
+    try {
+      const { data } = await axios.post(`${url}/screenDataFilterPage`, {
+        id,
+        touchPoints,
       });
+      dispatch({
+        type: GET_SCREENS_DATA_ADVANCE_FILTER_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_SCREENS_DATA_ADVANCE_FILTER_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
-      try {
-        const { data } = await axios.post(`${url}/screenDataFilterPage`, {
-          id,
-          touchPoints,
-        });
-        dispatch({
-          type: GET_SCREENS_DATA_ADVANCE_FILTER_SUCCESS,
-          payload: data,
-        });
-      } catch (error) {
-        dispatch({
-          type: GET_SCREENS_DATA_ADVANCE_FILTER_ERROR,
-          payload: {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-          },
-        });
-      }
-    };
+export const getPoiBasedAudienceDataForAdvanceFilters =
+  ({ id }) =>
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_AUDIENCES_DATA_ADVANCE_FILTER_REQUEST,
+      payload: { id },
+    });
 
-  export const getPoiBasedAudienceDataForAdvanceFilters =
-    ({ id }) =>
-      async (dispatch, getState) => {
-        dispatch({
-          type: GET_AUDIENCES_DATA_ADVANCE_FILTER_REQUEST,
-          payload: { id },
-        });
-  
-        try {
-          const { data } = await axios.post(`${url}/poiBasedAudienceData`, {
-            id,
-          });
-          dispatch({
-            type: GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS,
-            payload: data,
-          });
-        } catch (error) {
-          dispatch({
-            type: GET_AUDIENCES_DATA_ADVANCE_FILTER_ERROR,
-            payload: {
-              message: error.message,
-              status: error.response?.status,
-              data: error.response?.data,
-            },
-          });
-        }
-      };
+    try {
+      const { data } = await axios.post(`${url}/poiBasedAudienceData`, {
+        id,
+      });
+      dispatch({
+        type: GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_AUDIENCES_DATA_ADVANCE_FILTER_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
 export const getRegularVsCohortPriceData =
   ({ id, screenIds, cohorts, gender, duration }) =>
-    async (dispatch, getState) => {
-      dispatch({
-        type: GET_SCREENS_PRICE_FOR_REGULAR_COHORT_REQUEST,
-        payload: { screenIds, cohorts, gender, duration },
-      });
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_SCREENS_PRICE_FOR_REGULAR_COHORT_REQUEST,
+      payload: { screenIds, cohorts, gender, duration },
+    });
 
-      try {
-        const { data } = await axios.post(`${url}/tableDataComparePlanPage`, {
-          id,
-          screenIds,
-          cohorts,
-          gender,
-          duration,
-        });
-        dispatch({
-          type: GET_SCREENS_PRICE_FOR_REGULAR_COHORT_SUCCESS,
-          payload: data,
-        });
-      } catch (error) {
-        dispatch({
-          type: GET_SCREENS_PRICE_FOR_REGULAR_COHORT_ERROR,
-          payload: {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-          },
-        });
-      }
-    };
+    try {
+      const { data } = await axios.post(`${url}/tableDataComparePlanPage`, {
+        id,
+        screenIds,
+        cohorts,
+        gender,
+        duration,
+      });
+      dispatch({
+        type: GET_SCREENS_PRICE_FOR_REGULAR_COHORT_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_SCREENS_PRICE_FOR_REGULAR_COHORT_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
 export const getScreenSummaryData =
   ({ id, type = "regular" }) =>
-    async (dispatch, getState) => {
-      dispatch({
-        type: GET_SCREEN_SUMMARY_DATA_REQUEST,
-        payload: { id, type },
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_SCREEN_SUMMARY_DATA_REQUEST,
+      payload: { id, type },
+    });
+    try {
+      const { data } = await axios.post(`${url}/screenDataScreenSummaryPage`, {
+        id,
+        type,
       });
-      try {
-        const { data } = await axios.post(`${url}/screenDataScreenSummaryPage`, {
-          id,
-          type,
-        });
-        dispatch({
-          type: GET_SCREEN_SUMMARY_DATA_SUCCESS,
-          payload: data,
-        });
-      } catch (error) {
-        dispatch({
-          type: GET_SCREEN_SUMMARY_DATA_ERROR,
-          payload: {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-          },
-        });
-      }
-    };
+      dispatch({
+        type: GET_SCREEN_SUMMARY_DATA_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_SCREEN_SUMMARY_DATA_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
 export const getScreenSummaryDataIKnowItAll =
   ({ id }) =>
-    async (dispatch, getState) => {
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_REQUEST,
+      payload: { id },
+    });
+    try {
+      const { data } = await axios.post(
+        `${url}/screenDataScreenSummaryPageIKnowItAll`,
+        {
+          id,
+        }
+      );
       dispatch({
-        type: GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_REQUEST,
-        payload: { id },
+        type: GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_SUCCESS,
+        payload: data,
       });
-      try {
-        const { data } = await axios.post(`${url}/screenDataScreenSummaryPageIKnowItAll`, {
-          id
-        });
-        dispatch({
-          type: GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_SUCCESS,
-          payload: data,
-        });
-      } catch (error) {
-        dispatch({
-          type: GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_ERROR,
-          payload: {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-          },
-        });
-      }
-    };
+    } catch (error) {
+      dispatch({
+        type: GET_SCREEN_SUMMARY_DATA_I_KNOW_IT_ALL_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
 export const getScreenSummaryPlanTableData =
   ({ id, screenIds }) =>
-    async (dispatch, getState) => {
-      dispatch({
-        type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_REQUEST,
-        payload: { id, screenIds },
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_REQUEST,
+      payload: { id, screenIds },
+    });
+    try {
+      const { data } = await axios.post(`${url}/tableDataScreenSummaryPage`, {
+        id,
+        screenIds,
       });
-      try {
-        const { data } = await axios.post(`${url}/tableDataScreenSummaryPage`, {
-          id,
-          screenIds,
-        });
-        dispatch({
-          type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_SUCCESS,
-          payload: data,
-        });
-      } catch (error) {
-        dispatch({
-          type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_ERROR,
-          payload: {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-          },
-        });
-      }
-    };
+      dispatch({
+        type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
 export const getFinalPlanPOTableData =
   (poInput) => async (dispatch, getState) => {
@@ -345,36 +354,36 @@ export const getFinalPlanPOTableData =
 
 export const getScreenDataUploadCreativeData =
   ({ id }) =>
-    async (dispatch, getState) => {
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_REQUEST,
+      payload: { id },
+    });
+    try {
+      // const { data } = await axios.post(`${url}/screenDataUploadCreativePage`, {
+      //   id,
+      // });
+      const { data } = await axios.post(
+        `${url}/screenDataUploadCreativePageNew`,
+        {
+          id,
+        }
+      );
       dispatch({
-        type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_REQUEST,
-        payload: { id },
+        type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_SUCCESS,
+        payload: data,
       });
-      try {
-        // const { data } = await axios.post(`${url}/screenDataUploadCreativePage`, {
-        //   id,
-        // });
-           const { data } = await axios.post(
-             `${url}/screenDataUploadCreativePageNew`,
-             {
-               id,
-             }
-           );
-        dispatch({
-          type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_SUCCESS,
-          payload: data,
-        });
-      } catch (error) {
-        dispatch({
-          type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_ERROR,
-          payload: {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-          },
-        });
-      }
-    };
+    } catch (error) {
+      dispatch({
+        type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
 export const getVendorConfirmationDetails =
   (vendorInput) => async (dispatch, getState) => {
@@ -405,55 +414,55 @@ export const getVendorConfirmationDetails =
 
 export const getVendorConfirmationStatusTableDetails =
   ({ id }) =>
-    async (dispatch, getState) => {
-      dispatch({
-        type: GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_REQUEST,
-        payload: { id },
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_REQUEST,
+      payload: { id },
+    });
+    try {
+      const { data } = await axios.post(`${url}/statusTableVendorCnfPage`, {
+        id,
       });
-      try {
-        const { data } = await axios.post(`${url}/statusTableVendorCnfPage`, {
-          id,
-        });
-        dispatch({
-          type: GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_SUCCESS,
-          payload: data,
-        });
-      } catch (error) {
-        dispatch({
-          type: GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_ERROR,
-          payload: {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-          },
-        });
-      }
-    };
+      dispatch({
+        type: GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
 export const getCampaignDashboardData =
   ({ id }) =>
-    async (dispatch, getState) => {
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_CAMPAIGN_DASHBOARD_DATA_REQUEST,
+      payload: { id },
+    });
+    try {
+      const { data } = await axios.post(`${url}/campaignDashboard`, { id });
       dispatch({
-        type: GET_CAMPAIGN_DASHBOARD_DATA_REQUEST,
-        payload: { id },
+        type: GET_CAMPAIGN_DASHBOARD_DATA_SUCCESS,
+        payload: data,
       });
-      try {
-        const { data } = await axios.post(`${url}/campaignDashboard`, { id });
-        dispatch({
-          type: GET_CAMPAIGN_DASHBOARD_DATA_SUCCESS,
-          payload: data,
-        });
-      } catch (error) {
-        dispatch({
-          type: GET_CAMPAIGN_DASHBOARD_DATA_ERROR,
-          payload: {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-          },
-        });
-      }
-    };
+    } catch (error) {
+      dispatch({
+        type: GET_CAMPAIGN_DASHBOARD_DATA_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
 export const getTableDataForSelectTopicalDayPage =
   (input) => async (dispatch, getState) => {
@@ -484,59 +493,59 @@ export const getTableDataForSelectTopicalDayPage =
 
 export const getPlanningPageFooterData =
   ({ id, pageName }) =>
-    async (dispatch, getState) => {
-      dispatch({
-        type: PLANNING_PAGE_FOOTER_DATA_REQUEST,
-        payload: { id, pageName },
+  async (dispatch, getState) => {
+    dispatch({
+      type: PLANNING_PAGE_FOOTER_DATA_REQUEST,
+      payload: { id, pageName },
+    });
+    try {
+      const { data } = await axios.post(`${url}/planningPageFooter`, {
+        id,
+        pageName,
       });
-      try {
-        const { data } = await axios.post(`${url}/planningPageFooter`, {
-          id,
-          pageName,
-        });
-        dispatch({
-          type: PLANNING_PAGE_FOOTER_DATA_SUCCESS,
-          payload: data,
-        });
-      } catch (error) {
-        dispatch({
-          type: PLANNING_PAGE_FOOTER_DATA_ERROR,
-          payload: {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-          },
-        });
-      }
-    };
+      dispatch({
+        type: PLANNING_PAGE_FOOTER_DATA_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: PLANNING_PAGE_FOOTER_DATA_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
 export const getTableDataScreenWiseAdPlayTime =
   ({ id }) =>
-    async (dispatch, getState) => {
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_REQUEST,
+      payload: { id },
+    });
+    try {
+      const { data } = await axios.post(
+        `${url}/tableDataScreenWiseAdPLayTime`,
+        { id }
+      );
       dispatch({
-        type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_REQUEST,
-        payload: { id },
+        type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_SUCCESS,
+        payload: data,
       });
-      try {
-        const { data } = await axios.post(
-          `${url}/tableDataScreenWiseAdPLayTime`,
-          { id }
-        );
-        dispatch({
-          type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_SUCCESS,
-          payload: data,
-        });
-      } catch (error) {
-        dispatch({
-          type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_ERROR,
-          payload: {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-          },
-        });
-      }
-    };
+    } catch (error) {
+      dispatch({
+        type: GET_TABLE_DATA_SCREEN_WISE_AD_PLAY_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
 export const getTableDataForSelectTriggerPage =
   (input) => async (dispatch, getState) => {
@@ -587,3 +596,98 @@ export const tableDataSetAdPlayTime = (input) => async (dispatch, getState) => {
     });
   }
 };
+
+export const getAllFiltersDetailsForUploadCreativePage =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
+
+      const { data } = await axios.post(
+        `${url}/filterDataUploadCreativePage`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({
+        type: GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_ERROR,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const getScreenDataForUploadCreativePageV3 =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
+
+      const { data } = await axios.post(
+        `${url}/screenDataUploadCreativePageV3`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({
+        type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_ERROR,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+
+  export const getCreativesFromCreativeBucketForUploadPage =
+    (input) => async (dispatch, getState) => {
+      dispatch({
+        type: GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_REQUEST,
+        payload: input,
+      });
+      try {
+        const {
+          auth: { userInfo },
+        } = getState();
+
+        const { data } = await axios.post(
+          `${url}/getCreativesFromCreativeBucketForUploadPage`,
+          input,
+          { headers: { authorization: `Bearer ${userInfo.token}` } }
+        );
+        dispatch({
+          type: GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_SUCCESS,
+          payload: data,
+        });
+      } catch (error) {
+        dispatch({
+          type: GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_ERROR,
+          payload:
+            error.response && error.response.data.message
+              ? error.response.data.message
+              : error.message,
+        });
+      }
+    };
+

@@ -3,6 +3,9 @@ import {
   saveDataOnLocalStorage,
 } from "../utils/localStorageUtils";
 import {
+  GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_ERROR,
+  GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_REQUEST,
+  GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_SUCCESS,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_ERROR,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_REQUEST,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS,
@@ -10,6 +13,9 @@ import {
   GET_CAMPAIGN_DASHBOARD_DATA_REQUEST,
   GET_CAMPAIGN_DASHBOARD_DATA_RESET,
   GET_CAMPAIGN_DASHBOARD_DATA_SUCCESS,
+  GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_ERROR,
+  GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_REQUEST,
+  GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_SUCCESS,
   GET_FINAL_PLAN_PO_DATA_ERROR,
   GET_FINAL_PLAN_PO_DATA_REQUEST,
   GET_FINAL_PLAN_PO_DATA_SUCCESS,
@@ -316,15 +322,14 @@ export function finalPlanPOTableDataGetReducer(state = [], action) {
   }
 }
 
-export function screenDataUploadCreativeReducer(state = {}, action) {
+export function screenDataUploadCreativeReducer(state = [], action) {
   switch (action.type) {
     case GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_REQUEST:
       return { loading: true };
     case GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_SUCCESS:
-      const { id, ...campaign } = action.payload;
       return {
         loading: false,
-        data: campaign,
+        data: action.payload,
       };
     case GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_ERROR:
       return {
@@ -492,6 +497,54 @@ export function tableDataSetAdPlayTimeReducer(state = {}, action) {
     case TABLE_DATA_SET_AD_PLAY_TIME_ERROR:
       return {
         loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function getAllFiltersDetailsForUploadCreativePageReducer(
+  state = [],
+  action
+) {
+  switch (action.type) {
+    case GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_REQUEST:
+      return { loading: true };
+    case GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_ERROR:
+      return {
+        loading: false,
+        success: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function getCreativesFromCreativeBucketForUploadPageReducer(
+  state = [],
+  action
+) {
+  switch (action.type) {
+    case GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_REQUEST:
+      return { loading: true };
+    case GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_ERROR:
+      return {
+        loading: false,
+        success: false,
         error: action.payload,
       };
     default:

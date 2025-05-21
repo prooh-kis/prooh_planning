@@ -6,6 +6,13 @@ interface FileUploaderProps {
   fileType?: string;
 }
 
+interface FileUploaderProps2 {
+  handleFile: (files: any) => void;
+  width: string;
+  fileType?: string;
+  title: string;
+}
+
 export const FileUploadButton: React.FC<FileUploaderProps> = ({
   handleFile,
   width,
@@ -55,6 +62,46 @@ export const FileUploadButton: React.FC<FileUploaderProps> = ({
         ref={hiddenFileInput}
         style={{ display: "none" }} // Make the file input element invisible
         multiple={false}
+        content="video/mp4"
+      />
+    </div>
+  );
+};
+
+export const MultipleFileUpload: React.FC<FileUploaderProps2> = ({
+  handleFile,
+  width,
+  fileType,
+  title,
+}) => {
+  const hiddenFileInput = useRef<HTMLInputElement>(null);
+
+  const handleClick = () => {
+    hiddenFileInput.current?.click();
+  };
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const fileUploaded = event.target.files;
+    if (fileUploaded) handleFile(fileUploaded);
+    event.target.value = "";
+  };
+
+  return (
+    <div className="">
+      <button
+        onClick={handleClick}
+        className={`border border-dashed border-2 border-[#129BFF] text-[#129BFF] rounded-sm  bg-[#F4F9FF] py-1 ${width}`}
+      >
+        + {title}
+      </button>
+      <input
+        accept={fileType}
+        title="select media"
+        type="file"
+        onChange={handleChange}
+        ref={hiddenFileInput}
+        style={{ display: "none" }} // Make the file input element invisible
+        multiple={true}
         content="video/mp4"
       />
     </div>

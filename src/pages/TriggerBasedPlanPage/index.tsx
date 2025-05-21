@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { StepperSlider } from "../../components/molecules/StepperSlider";
-// import { TriggerDetails } from "./TriggerDetails";
 import { RegularCohortComparisonDetails } from "./RegularCohortComparisonDetails";
 import { ScreenSummaryDetails } from "./ScreenSummaryDetails";
 import {
   EnterCampaignBasicDetails,
-  NewCreativeUpload,
   ViewFinalPlanPODetails,
   VendorConfirmationDetails,
   AdvanceFiltersDetails,
   AudienceTouchPointsDetails,
-  TriggerDetails
+  TriggerDetails,
+  CreativeUploadV4,
 } from "../../components/planner";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -90,11 +89,12 @@ export const TriggerBasedPlanPage: React.FC = () => {
     5: RegularCohortComparisonDetails,
     6: ScreenSummaryDetails,
     7: ViewFinalPlanPODetails,
-    8: NewCreativeUpload,
+    8: CreativeUploadV4,
     9: VendorConfirmationDetails,
   };
-  
-  const StepComponent = stepComponents[currentStep] || (() => <div>Invalid step</div>);
+
+  const StepComponent =
+    stepComponents[currentStep] || (() => <div>Invalid step</div>);
 
   return (
     <div className="w-full">
