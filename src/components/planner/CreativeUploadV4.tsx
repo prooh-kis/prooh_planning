@@ -209,7 +209,7 @@ export const CreativeUploadV4 = ({
   };
 
   const isTriggerAvailable = () => {
-    const triggers = campaignDetails.triggers;
+    const triggers = campaignDetails?.triggers || [];
     return (
       triggers?.weatherTriggers?.length > 0 ||
       triggers?.sportsTriggers?.length > 0 ||
@@ -675,7 +675,7 @@ export const CreativeUploadV4 = ({
 
       <div className="mx-auto">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-semibold">Upload Creative v4</h1>
+          <h1 className="text-2xl font-semibold">Upload Creative</h1>
         </div>
         <h2 className="text-sm text-gray-500">
           Upload your creatives for the campaigns for your selected screens

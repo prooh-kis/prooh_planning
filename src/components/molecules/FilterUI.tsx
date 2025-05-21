@@ -181,10 +181,10 @@ const FilterUI: React.FC<Props> = ({
             {/* Other options */}
             {options
               .filter((option) => option.lable !== "All")
-              .map((option) => (
+              .map((option, index) => (
                 <div
                   className="flex justify-between items-center border-b pb-2"
-                  key={option.lable}
+                  key={index}
                 >
                   <div className="flex items-center truncate">
                     <input
