@@ -427,7 +427,7 @@ export const CreativeUploadV4 = ({
       setFileUploadLoading(false);
       setCurrentScreens([]);
       setFiles([]);
-      setLabel("");
+      setLabel("standardDayTimeCreatives");
       setOpenSelected(false);
     } catch (error: any) {
       console.error("Error:", error);
@@ -531,7 +531,7 @@ export const CreativeUploadV4 = ({
 
     setCreativeUploadData((prev) =>
       prev.map((screen: any) =>
-        currentScreens.includes(screen.screenId)
+        screen.screenId === screenId
           ? { ...screen, [label]: [...screen[label], ...files] }
           : screen
       )

@@ -1,4 +1,4 @@
-import { Tooltip } from "antd";
+import { message, Tooltip } from "antd";
 import {
   convertDataTimeToLocale,
   getCampaignEndingStatus,
@@ -9,6 +9,7 @@ export const CampaignsListModel = ({
   data,
   handleClone,
   handleGoToDashBoard,
+  handleEditCampaign,
 }: any) => {
   return (
     <div
@@ -23,24 +24,36 @@ export const CampaignsListModel = ({
             <h1 className="text-[16px] text-[#092A41]">
               {data?.name || data?.campaignName}
             </h1>
-            <Tooltip title="GO to dashboard">
+            <Tooltip title="Go to dashboard">
               <i
                 className="fi fi-rr-dashboard"
                 onClick={() => handleGoToDashBoard(data?._id)}
               ></i>
             </Tooltip>
+            <Tooltip title="Edit Creatives">
+              <i
+                className="fi fi-sr-file-edit"
+                onClick={() =>
+                  handleEditCampaign(data?._id, data?.campaignType)
+                }
+              ></i>
+            </Tooltip>
             <Tooltip title="Clone the campaign">
               <i
-                className="fi fi-br-clone"
+                className="fi fi-br-clone text-gray-200"
                 onClick={() => {
-                  if (
-                    confirm(
-                      "Do you really want to use this campaign as a template for creating a new campaign?"
-                    )
-                  ) {
-                    handleClone(data?._id);
-                  }
+                  message.info("Coming sone");
                 }}
+
+                // onClick={() => {
+                //   if (
+                //     confirm(
+                //       "Do you really want to use this campaign as a template for creating a new campaign?"
+                //     )
+                //   ) {
+                //     handleClone(data?._id);
+                //   }
+                // }}
               ></i>
             </Tooltip>
           </div>

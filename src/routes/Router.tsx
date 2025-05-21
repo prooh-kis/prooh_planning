@@ -54,6 +54,7 @@ import { NewDashBoard } from "../pages/NewDashBoard";
 import Engagement from "../pages/Engagement";
 import { BrandAgencyPage } from "../pages/PageNotFound/BrandAgency";
 import { DataHeroPage } from "../pages/website/DataHeroPage";
+import { EditCampaignFlow } from "../pages/EditCampaignFlow";
 
 const Routers: React.FC = () => {
   return (
@@ -192,6 +193,14 @@ const Routers: React.FC = () => {
             <PublicRoute layout={HomePageLayout}>
               <NewDashBoard />
             </PublicRoute>
+          }
+        />
+        <Route
+          path={"/editCampaign/:id?"}
+          element={
+            <AppDashBoardLayout>
+              <EditCampaignFlow />
+            </AppDashBoardLayout>
           }
         />
         <Route
