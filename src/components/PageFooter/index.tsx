@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 export const PageFooter = () => {
+  const navigate = useNavigate();
   return (
     <div className="bg-[#1F1F1F] text-[#FFFFFF]">
       {/* Main Footer Section */}
@@ -12,17 +15,11 @@ export const PageFooter = () => {
             </h1>
             <div className="flex flex-wrap md:flex-nowrap gap-8 mt-6 text-[14px] leading-[19.6px]">
               <div>
-                <p>Home</p>
-                <p>Features</p>
-                <p>Terms</p>
-                <p>F.A.Q</p>
-                <p>Product</p>
-              </div>
-              <div>
-                <p>Research</p>
-                <p>Media Owner</p>
-                <p>About us</p>
-                <p>Contact Us</p>
+                <p onClick={() => navigate("/")}>Home</p>
+                <p onClick={() => navigate("/products")}>Product</p>
+                <p onClick={() => navigate("/advertisers")}>Advertiser</p>
+                <p onClick={() => navigate("/media-owner")}>Media Owner</p>
+                <p onClick={() => navigate("/data-hero")}>Data Hero</p>
               </div>
             </div>
           </div>
@@ -52,17 +49,27 @@ export const PageFooter = () => {
                 </h1>
                 <div className="flex gap-4 mt-8">
                   {[
-                    "fi fi-brands-facebook",
-                    "fi fi-brands-google",
-                    "fi fi-brands-linkedin",
-                    "fi fi-brands-youtube",
+                    {
+                      icon: "fi fi-brands-facebook",
+                      path: "https://facebook.com",
+                    },
+                    { icon: "fi fi-brands-google", path: "https://google.com" },
+                    {
+                      icon: "fi fi-brands-linkedin",
+                      path: "https://linkedin.com",
+                    },
+                    {
+                      icon: "fi fi-brands-youtube",
+                      path: "https://youtube.com",
+                    },
                   ].map((value, index) => (
                     <div
                       key={index}
+                      onClick={() => window.open(value.path)}
                       className="border rounded-full h-[50px] w-[50px] flex items-center justify-center hover:bg-green-200 transition-colors duration-300"
                     >
                       <i
-                        className={`${value} text-[24px] text-[#FFFFFF] leading-none`}
+                        className={`${value.icon} text-[24px] text-[#FFFFFF] leading-none`}
                       ></i>
                     </div>
                   ))}

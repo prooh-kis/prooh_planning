@@ -105,6 +105,7 @@ import {
   getHeroDataDetailsReducer,
   heroDataRegisterReducer,
 } from "../reducers/dataHeroReducers";
+import { saveContactDetailsForQueryReducer } from "../reducers/landingReducers";
 
 const initialState = {
   userSignin: {
@@ -205,6 +206,9 @@ const store = configureStore({
     //USER
     userList: userListReducer,
     userDelete: userDeleteReducer,
+
+    // Landing
+    saveContactDetails: saveContactDetailsForQueryReducer,
 
     // creative
     creativesMediaUpload: creativesMediaUploadReducer,
