@@ -18,6 +18,7 @@ interface UploadCreativesFromBucketPopupPropsV2 {
   creatives: any[];
   setLabel: any;
   // ratio: string;
+  tabData: any[];
 }
 export function UploadCreativesFromBucketPopupV2({
   onClose,
@@ -30,6 +31,7 @@ export function UploadCreativesFromBucketPopupV2({
   label,
   creatives,
   setLabel,
+  tabData,
 }: // ratio,
 UploadCreativesFromBucketPopupPropsV2) {
   const handleSave = () => {
@@ -72,11 +74,14 @@ UploadCreativesFromBucketPopupPropsV2) {
             <Radio.Group
               value={label}
               onChange={onChange1}
-              options={[
-                { value: "standardDayTimeCreatives", label: "Day" },
-                { value: "standardNightTimeCreatives", label: "Night" },
-                { value: "triggerCreatives", label: "Trigger" },
-              ]}
+              // options={[
+              //   { value: "standardDayTimeCreatives", label: "Day" },
+              //   { value: "standardNightTimeCreatives", label: "Night" },
+              //   { value: "triggerCreatives", label: "Trigger" },
+              // ]}
+              options={tabData?.map((tab: any) => {
+                return { value: tab.id, label: tab.label?.split("(")[0] };
+              })}
             />
           </div>
         </div>

@@ -3,7 +3,7 @@ import {
   ViewMediaForUploadCreatives3,
 } from "../../components/molecules/ViewMediaForUploadCreatives";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
-import { Button, Modal } from "antd";
+import { Button, message, Modal } from "antd";
 import React, { useState } from "react";
 import { NoDataView } from "../../components/molecules/NoDataView";
 
@@ -80,11 +80,20 @@ export const ShowSelectedCreativePopup = ({
   return (
     <Modal
       title={`Preview Selected files`}
-      closable={true}
+      closable={false}
       open={open}
       onCancel={onClose}
       footer={[
-        <Button key="back" onClick={onClose} className="mr-2" loading={loading}>
+        <Button
+          key="back"
+          onClick={() => {
+            setFiles([]);
+            message.info("Removed all selected files, please upload again");
+            onClose();
+          }}
+          className="mr-2"
+          loading={loading}
+        >
           Cancel
         </Button>,
         <Button
@@ -101,12 +110,24 @@ export const ShowSelectedCreativePopup = ({
       maskClosable={false}
     >
       <div className="border-t">
-        <h1 className="text-[14px] font-medium py-2">
-          Total Screens Selected:{" "}
-          <span className="font-semibold">{screensName?.length} </span>
-          Total Media Selected:{" "}
-          <span className="font-semibold">{files?.length}</span>
-        </h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-[14px] font-medium py-2">
+            Total Screens Selected:{" "}
+            <span className="font-semibold">{screensName?.length} </span>
+            Total Media Selected:{" "}
+            <span className="font-semibold">{files?.length}</span>
+          </h1>
+          <button
+            className="text-[#000000] opacity-[50%] text-[14px] font-normal hover:text-[#129BFF] cursor-pointer"
+            onClick={() => {
+              setFiles([]);
+              message.info("Removed all selected files, please upload again");
+              onClose();
+            }}
+          >
+            Clear All
+          </button>
+        </div>
 
         <div className="h-[60vh] overflow-scroll scrollbar-minimal border-t">
           {updatedFiles?.length > 0 ? (

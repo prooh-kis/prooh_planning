@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Checkbox, message } from "antd";
+import { Checkbox, message, Tooltip } from "antd";
 import type { CheckboxProps } from "antd";
 import { LoadingScreen } from "../molecules/LoadingScreen";
 import { Footer } from "../footer";
@@ -100,7 +100,7 @@ export const CreativeUploadV4 = ({
   const [isBucketPopupOpen, setIsBucketPopupOpen] = useState<boolean>(false);
   const [mediaFiles, setMediaFiles] = useState<any[]>([]);
 
-  const [tabData, setViewPlayCreativeTime] = useState<any[]>([]);
+  const [tabData, setTabData] = useState<any[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [openSelected, setOpenSelected] = useState<boolean>(false);
   const [label, setLabel] = useState<string>("standardDayTimeCreatives");
@@ -220,7 +220,7 @@ export const CreativeUploadV4 = ({
   const handleSetValue = () => {
     const triggerAvailable = isTriggerAvailable();
 
-    setViewPlayCreativeTime(
+    setTabData(
       isTriggerBasedCampaign
         ? [{ label: "Trigger", id: "triggerCreatives" }]
         : [
@@ -370,6 +370,13 @@ export const CreativeUploadV4 = ({
       message.error("No Creative uploaded yet");
       return;
     }
+    setTabData((pre: any) => {
+      let sss = [...pre];
+      for (let d of sss) {
+        d.label = `${d.label?.split("(")[0]} (${screen[d.id]?.length}) `;
+      }
+      return sss;
+    });
     setCurrentScreen(screen);
     setOpen(true);
   };
@@ -433,6 +440,18 @@ export const CreativeUploadV4 = ({
       console.error("Error:", error);
       message.error(error.message);
     }
+  };
+
+  const creativeCountScreenWise = (screenId: string) => {
+    const screen = creativeUploadData?.find(
+      (screen: Screen) => screen.screenId === screenId
+    );
+    if (!screen) return 0;
+    return (
+      screen?.standardDayTimeCreatives?.length +
+      screen?.standardNightTimeCreatives?.length +
+      screen?.triggerCreatives?.length
+    );
   };
 
   const getCount = (key: keyof Screen, label: string): number => {
@@ -557,9 +576,10 @@ export const CreativeUploadV4 = ({
     currentScreens.forEach((screenId) => {
       handleSaveFiles(processFile, screenId);
     });
-    setCurrentScreens([]);
+    // setCurrentScreens([]);
     setMediaFiles([]);
-    setIsBucketPopupOpen(false);
+    // setIsBucketPopupOpen(false);
+    message.success(`Add creative successfully for ${label}`);
   };
 
   const handleOpenBucketPopup = () => {
@@ -670,6 +690,7 @@ export const CreativeUploadV4 = ({
           setLabel={setLabel}
           loading={loadingCreatives}
           creatives={creatives}
+          tabData={tabData}
         />
       )}
 
@@ -723,7 +744,7 @@ export const CreativeUploadV4 = ({
                       "TouchPoint",
                       "Ratio",
                       "ScreenType",
-                      "Status",
+                      "Count",
                       "Preview",
                     ].map((d, i) => (
                       <div
@@ -757,6 +778,9 @@ export const CreativeUploadV4 = ({
                         singleData.screenId
                       );
                       const status = isUploaded ? "Completed" : "Pending";
+                      const creativeCount = creativeCountScreenWise(
+                        singleData?.screenId
+                      );
                       const statusColor = isUploaded
                         ? "text-[#3A9868]"
                         : "text-[#FD7E00]";
@@ -781,7 +805,7 @@ export const CreativeUploadV4 = ({
                             singleData.touchPoint,
                             singleData.ratio,
                             singleData.screenType,
-                            status,
+                            creativeCount,
                           ].map((item, i) => (
                             <div
                               className={`col-span-${
@@ -802,13 +826,23 @@ export const CreativeUploadV4 = ({
                                   className="mr-2"
                                 />
                               )}
-                              <span
-                                className={`text-sm truncate ${
-                                  i === 5 ? `${statusColor} font-medium` : ""
-                                }`}
-                              >
-                                {item}
-                              </span>
+                              {i === 0 ? (
+                                <Tooltip title={item}>
+                                  <span
+                                    className={`text-sm truncate  font-medium`}
+                                  >
+                                    {item}
+                                  </span>
+                                </Tooltip>
+                              ) : (
+                                <span
+                                  className={`text-sm truncate ${
+                                    i === 5 ? `${statusColor} font-medium` : ""
+                                  }`}
+                                >
+                                  {item}
+                                </span>
+                              )}
                             </div>
                           ))}
                           <div className="col-span-1 flex justify-center">
