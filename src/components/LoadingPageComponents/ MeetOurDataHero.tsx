@@ -3,6 +3,7 @@ import { CircleImageCarousel } from "../../components/molecules/CircleImageCrous
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import { dataHeroTabs, heroData } from "../../data/LandingPageData";
 import { useNavigate } from "react-router-dom";
+import { dmpURL } from "../../constants/urlConstant";
 
 export const MeetOurDataHero = () => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ export const MeetOurDataHero = () => {
   // Event handler for the Participate button
   const handleParticipateClick = () => {
     alert("Participation action triggered!");
-    window.location.replace("https://prooh-dmp.vercel.app/");
+    window.location.replace(dmpURL);
   };
 
   return (

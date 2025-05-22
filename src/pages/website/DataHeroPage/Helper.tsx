@@ -7,6 +7,7 @@ import { registerHeroData } from "../../../actions/dataHeroAction";
 import { useSelector } from "react-redux";
 import { notification } from "antd";
 import { ADD_HERO_DATA_DETAILS_RESET } from "../../../constants/dataHeroConstants";
+import { dmpURL } from "../../../constants/urlConstant";
 
 const MyDiv = ({ title, bgColor }: { title: string; bgColor: string }) => {
   return (
@@ -184,7 +185,7 @@ const Helper = () => {
                 size="large"
                 rounded="large"
                 variant="outline"
-                onClick={() => window.open("https://prooh-dmp.vercel.app/")}
+                onClick={() => window.open(dmpURL)}
               >
                 See Historical Data
               </ButtonInput>

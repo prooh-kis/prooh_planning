@@ -16,7 +16,7 @@ export const PageFooter = () => {
             <div className="flex flex-wrap md:flex-nowrap gap-8 mt-6 text-[14px] leading-[19.6px]">
               <div>
                 <p onClick={() => navigate("/")}>Home</p>
-                <p onClick={() => navigate("/products")}>Product</p>
+                <p onClick={() => navigate("/products/Fly")}>Product</p>
                 <p onClick={() => navigate("/advertisers")}>Advertiser</p>
                 <p onClick={() => navigate("/media-owner")}>Media Owner</p>
                 <p onClick={() => navigate("/data-hero")}>Data Hero</p>
