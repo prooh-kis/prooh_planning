@@ -1,3 +1,4 @@
+import { ShowMediaFile } from "./ShowMediaFIle";
 import { ImageContainer, VideoContainer } from "./ShowMyFile";
 
 export const ViewMediaForUploadCreatives = ({
@@ -81,23 +82,25 @@ export const ViewMediaForUploadCreatives2 = ({
   const showIcon = viewCreativeType === "0" ? false : true;
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-12 gap-4">
       {files?.map((file, index) => (
-        <div className="col-span-1" key={`${file.awsURL}-${index}`}>
-          {file.fileType.split("/")[0] === "image" ? (
-            <ImageContainer
-              url={file?.awsURL}
-              className="rounded-lg"
-              removeFile={removeFile}
-              showIcon={showIcon}
-            />
-          ) : (
-            <VideoContainer
-              url={file?.awsURL}
-              className="rounded-lg"
-              removeFile={removeFile}
-              showIcon={showIcon}
-            />
+        <div className="col-span-4 relative" key={`${file.awsURL}-${index}`}>
+          <ShowMediaFile
+            url={file?.awsURL}
+            mediaType={file.fileType.split("/")[0]}
+            key={index}
+            height="h-[160]"
+            width="w-full"
+          />
+          {showIcon && (
+            <button
+              type="button"
+              aria-label="Remove video"
+              onClick={() => removeFile(file?.awsURL)}
+              className="absolute top-2 right-2 bg-[#FF0808] text-[#FFFFFF] px-2 rounded-full focus:outline-none hover:bg-red-700"
+            >
+              &times;
+            </button>
           )}
         </div>
       ))}
@@ -117,23 +120,25 @@ export const ViewMediaForUploadCreatives3 = ({
   const showIcon = viewCreativeType !== "0";
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-12 gap-4">
       {files?.map((file, index) => (
-        <div className="col-span-1" key={`${file.url}-${index}`}>
-          {file.type.split("/")[0] === "image" ? (
-            <ImageContainer
-              url={file.url}
-              className="rounded-lg"
-              removeFile={removeFile}
-              showIcon={showIcon}
-            />
-          ) : (
-            <VideoContainer
-              url={file.url}
-              className="rounded-lg"
-              removeFile={removeFile}
-              showIcon={showIcon}
-            />
+        <div className="col-span-4 relative" key={`${file.url}-${index}`}>
+          <ShowMediaFile
+            url={file?.url}
+            mediaType={file.type.split("/")[0]}
+            key={index}
+            height="h-[160]"
+            width="w-full"
+          />
+          {showIcon && (
+            <button
+              type="button"
+              aria-label="Remove video"
+              onClick={() => removeFile(file?.url)}
+              className="absolute top-2 right-2 bg-[#FF0808] text-[#FFFFFF] px-2 rounded-full focus:outline-none hover:bg-red-700"
+            >
+              &times;
+            </button>
           )}
         </div>
       ))}

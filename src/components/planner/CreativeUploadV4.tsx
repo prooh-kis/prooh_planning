@@ -714,55 +714,67 @@ export const CreativeUploadV4 = ({
                   />
                 </div>
 
-                <div className="flex w-full bg-[#F8F8F8] py-2 rounded-md">
-                  {[
-                    "Screens",
-                    "City",
-                    "TouchPoint",
-                    "Ratio",
-                    "ScreenType",
-                    "Status",
-                    "Preview",
-                  ].map((d, i) => (
-                    <div className="flex gap-1 w-24 justify-center" key={i}>
-                      {i === 0 && (
-                        <Checkbox
-                          checked={
-                            currentScreens.length === filteredScreens.length
-                          }
-                          onChange={handleSelectAllFilteredScreens}
-                        />
-                      )}
-                      <h1 className="text-center text-[#858585] font-[500] text-[14px]">
-                        {d}
-                      </h1>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="h-[45vh] overflow-auto scrollbar-minimal">
-                  {filteredScreens?.map((singleData: any, index: number) => {
-                    const isUploaded = isCreativeUploaded(singleData.screenId);
-                    const status = isUploaded ? "Completed" : "Pending";
-                    const statusColor = isUploaded
-                      ? "text-[#3A9868]"
-                      : "text-[#FD7E00]";
-
-                    return (
+                <div className="w-full">
+                  {/* Table Header */}
+                  <div className="grid grid-cols-8 w-full bg-gray-100 py-2 rounded-md">
+                    {[
+                      "Screens",
+                      "City",
+                      "TouchPoint",
+                      "Ratio",
+                      "ScreenType",
+                      "Status",
+                      "Preview",
+                    ].map((d, i) => (
                       <div
-                        key={index}
-                        title={
-                          isUploaded
-                            ? "Click to select row"
-                            : "This row has no creative"
-                        }
-                        className={`hover:bg-[#129BFF80] truncate border-b cursor-pointer px-1 ${
-                          currentScreen === singleData.screenId
-                            ? "bg-[#129BFF80]"
-                            : ""
+                        className={`col-span-${
+                          i === 0 ? "2" : "1"
+                        } flex items-center ${
+                          i === 0 ? "pl-4" : "justify-center"
                         }`}
+                        key={i}
                       >
-                        <div className="flex text-[13px] items-center">
+                        {i === 0 && (
+                          <Checkbox
+                            checked={
+                              currentScreens.length === filteredScreens.length
+                            }
+                            onChange={handleSelectAllFilteredScreens}
+                            className="mr-2"
+                          />
+                        )}
+                        <span className="text-sm font-medium text-gray-600 whitespace-nowrap">
+                          {d}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Table Body */}
+                  <div className="h-[45vh] overflow-auto scrollbar-minimal">
+                    {filteredScreens?.map((singleData: any, index: number) => {
+                      const isUploaded = isCreativeUploaded(
+                        singleData.screenId
+                      );
+                      const status = isUploaded ? "Completed" : "Pending";
+                      const statusColor = isUploaded
+                        ? "text-[#3A9868]"
+                        : "text-[#FD7E00]";
+
+                      return (
+                        <div
+                          key={index}
+                          title={
+                            isUploaded
+                              ? "Click to select row"
+                              : "This row has no creative"
+                          }
+                          className={`grid grid-cols-8 w-full items-center border-b hover:bg-blue-50 cursor-pointer ${
+                            currentScreen === singleData.screenId
+                              ? "bg-blue-100"
+                              : ""
+                          }`}
+                        >
                           {[
                             singleData.screenName,
                             singleData.city,
@@ -772,7 +784,11 @@ export const CreativeUploadV4 = ({
                             status,
                           ].map((item, i) => (
                             <div
-                              className="flex gap-1 w-24 justify-center"
+                              className={`col-span-${
+                                i === 0 ? "2" : "1"
+                              } flex items-center ${
+                                i === 0 ? "pl-4" : "justify-center"
+                              } py-2`}
                               key={i}
                             >
                               {i === 0 && (
@@ -783,29 +799,30 @@ export const CreativeUploadV4 = ({
                                   onChange={(e) =>
                                     handleSelectScreen(e, singleData.screenId)
                                   }
+                                  className="mr-2"
                                 />
                               )}
-                              <h1
-                                className={`p-2 text-center truncate ${
-                                  i === 5
-                                    ? `${statusColor} text-[12px] font-medium`
-                                    : ""
+                              <span
+                                className={`text-sm truncate ${
+                                  i === 5 ? `${statusColor} font-medium` : ""
                                 }`}
                               >
                                 {item}
-                              </h1>
+                              </span>
                             </div>
                           ))}
-                          <i
-                            className={`fi fi-sr-picture ${statusColor}`}
-                            onClick={() =>
-                              handleViewCreative(singleData.screenId)
-                            }
-                          />
+                          <div className="col-span-1 flex justify-center">
+                            <i
+                              className={`fi fi-sr-picture cursor-pointer ${statusColor}`}
+                              onClick={() =>
+                                handleViewCreative(singleData.screenId)
+                              }
+                            />
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             )}

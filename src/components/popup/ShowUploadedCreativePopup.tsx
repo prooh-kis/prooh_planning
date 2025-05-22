@@ -25,7 +25,7 @@ export const ShowUploadedCreativePopup = ({
       open={open}
       onCancel={onClose}
       footer={[]}
-      width={900}
+      width={1000}
       maskClosable={false}
     >
       <h1 className="text-[14px] font-semibold">
@@ -38,15 +38,17 @@ export const ShowUploadedCreativePopup = ({
           setCurrentTab={setCurrentTab}
         />
       )}
-      {screenData?.[currentTab]?.length > 0 ? (
-        <ViewMediaForUploadCreatives2
-          files={screenData?.[currentTab]}
-          removeFile={removeFile}
-          viewCreativeType="1"
-        />
-      ) : (
-        <NoDataView title="Creative Not Uploaded yet" />
-      )}
+      <div className="h-[60vh] overflow-scroll scrollbar-minimal border-t">
+        {screenData?.[currentTab]?.length > 0 ? (
+          <ViewMediaForUploadCreatives2
+            files={screenData?.[currentTab]}
+            removeFile={removeFile}
+            viewCreativeType="1"
+          />
+        ) : (
+          <NoDataView title="Creative Not Uploaded yet" />
+        )}
+      </div>
     </Modal>
   );
 };
@@ -95,7 +97,7 @@ export const ShowSelectedCreativePopup = ({
           Save Files
         </Button>,
       ]}
-      width={900}
+      width={1000}
       maskClosable={false}
     >
       <div className="border-t">
