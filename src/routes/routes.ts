@@ -5,7 +5,7 @@ export const UPDATE_PASSWORD = "/update-password";
 export const SIGN_UP = "/sign-up";
 
 export const HOME = "/";
-export const PRODUCTS = "/products/:id"
+export const PRODUCTS = "/products/:id";
 export const MY_CAMPAIGNS_LIST = "/myCampaignsList";
 export const CAMPAIGN_DETAILS = "/campaignDetails";
 export const MY_REQUESTS_LIST = "/myRequestsList";
@@ -31,4 +31,4 @@ export const TRIGGERBASEDPLAN = "/triggerbasedplan/:id?";
 export const IKNOWITALLPLAN = "/iknowitallplan/:id?";
 
 export const PLAY_LIVE_URL = "/play-live-url";
-export const BRAND_AGENCY_PAGE = "/brand-agency"
+export const BRAND_AGENCY_PAGE = "/brand-agency";
