@@ -145,8 +145,6 @@ export const CreativeUploadV4 = ({
     data: creatives,
   } = creativesFromCreativeBucketForUploadPage;
 
-  console.log("creatives  : ", creatives);
-
   const screenDataUploadCreative = useSelector(
     (state: any) => state.screenDataUploadCreative
   );
@@ -625,7 +623,11 @@ export const CreativeUploadV4 = ({
     if (!screenData) return;
 
     handleSetValue();
-
+    if (creativeUploadData?.length > 0) {
+      setPageLoading(false);
+      return;
+    }
+    console.log("move next, no creativeUploadData ");
     const storedCampaignData = campaignDetails;
     const storedCreatives = storedCampaignData?.creatives;
     const transformedCreatives = transformData(storedCreatives || []);
@@ -634,7 +636,6 @@ export const CreativeUploadV4 = ({
       transformedCreatives,
       transformedScreenData
     );
-
     setCreativeUploadData(combinedData);
 
     setPageLoading(false);
