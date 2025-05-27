@@ -19,7 +19,10 @@ import {
 } from "../../utils/awsUtils";
 import { generateCampaignSummaryPdfFromJSON } from "../../utils/generatePdf";
 import { sendEmailForConfirmation } from "../../actions/userAction";
-import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE, SEND_EMAIL_FOR_CONFIRMATION_RESET } from "../../constants/userConstants";
+import {
+  CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
+  SEND_EMAIL_FOR_CONFIRMATION_RESET,
+} from "../../constants/userConstants";
 import { generatePPT } from "../../utils/generatePPT";
 import {
   applyCouponForCampaign,
@@ -189,7 +192,7 @@ export const ViewFinalPlanPODetails = ({
       `Please find the files at the following links:\n${fileLinks}`
     );
 
-    dispatch(sendEmailForConfirmation(formData));
+    dispatch(sendEmailForConfirmation({ ...formData, id: campaignId }));
   };
 
   const handleBlob = async (pdf: any) => {
@@ -438,7 +441,12 @@ export const ViewFinalPlanPODetails = ({
       dispatch({ type: APPLY_COUPON_RESET });
       dispatch({ type: REMOVE_COUPON_RESET });
       dispatch(getFinalPlanPOTableData(poInput));
-      dispatch(addDetailsToCreateCampaign({ event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE, id: campaignId }));
+      dispatch(
+        addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
+          id: campaignId,
+        })
+      );
     }
     if (couponRemoveSuccess) {
       setCurrentCoupon("");
@@ -446,7 +454,12 @@ export const ViewFinalPlanPODetails = ({
       dispatch({ type: APPLY_COUPON_RESET });
       dispatch({ type: REMOVE_COUPON_RESET });
       dispatch(getFinalPlanPOTableData(poInput));
-      dispatch(addDetailsToCreateCampaign({ event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE, id: campaignId }));
+      dispatch(
+        addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
+          id: campaignId,
+        })
+      );
     }
   }, [couponRemoveSuccess, couponApplySuccess, dispatch, campaignId, poInput]);
 
