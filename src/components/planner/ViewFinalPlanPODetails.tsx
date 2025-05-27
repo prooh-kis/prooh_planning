@@ -191,8 +191,9 @@ export const ViewFinalPlanPODetails = ({
       "message",
       `Please find the files at the following links:\n${fileLinks}`
     );
+    formData.append("id", campaignId);
 
-    dispatch(sendEmailForConfirmation({ ...formData, id: campaignId }));
+    dispatch(sendEmailForConfirmation(formData));
   };
 
   const handleBlob = async (pdf: any) => {
@@ -279,6 +280,7 @@ export const ViewFinalPlanPODetails = ({
         console.error("No files were uploaded to S3.");
         return;
       }
+      console.log("uploadedFiles", uploadedFiles)
 
       // Step 4: Prepare email content with file URLs
       const fileLinks = uploadedFiles
@@ -289,6 +291,8 @@ export const ViewFinalPlanPODetails = ({
             )}" target="_blank">${fileName?.replace(/_/g, " ")}</a><br></br>`
         )
         .join("\n");
+
+      console.log("fileLinks", fileLinks)
       // Step 5: Send email with file links
       sendEmail(fileLinks);
     } catch (error) {
@@ -775,7 +779,7 @@ export const ViewFinalPlanPODetails = ({
                           loadingText="Sending...."
                           // icon={<i className="fi fi-rs-paper-plane"></i>}
                           onClick={() => {
-                            if (isValidEmail(toEmail)) sendEmail(toEmail);
+                            if (isValidEmail(toEmail)) sendMultipleAttachments();
                             else message.error("Please Enter valid email");
                           }}
                         >

@@ -147,6 +147,7 @@ export const NewDashBoard: React.FC = () => {
             type: GET_CLIENT_AGENCY_DETAILS_RESET,
           });
         }}
+        pathname={pathname}
         campaignDetails={campaignDetails}
         siteLevelData={siteLevelData}
       />

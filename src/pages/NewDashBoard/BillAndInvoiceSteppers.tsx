@@ -1,11 +1,8 @@
-import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { signout } from "../../actions/userAction";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CURRENT_STEP } from "../../constants/localStorageConstants";
 import { useLocation } from "react-router-dom";
 import { Tooltip } from "antd";
-import { advertisersSteps, dataHeroSteps, mediaOwnersSteps } from "../../data/LandingPageData";
 
 interface StepSliderHomePageProps {
   steps: number;

@@ -64,9 +64,8 @@ export const BillingAndInvoiceEnterDetails = (props: any) => {
 
 
   useEffect(() => {
-    dispatch(getBillInvoiceDetails({campaignCreationId: campaignDetails?._id, invoiceId: campaignDetails?.invoiceId }))
     dispatch(getAllClientAgencyNames());
-  }, [dispatch, campaignDetails]);
+  }, [dispatch]);
 
   return (
     <div className="py-4 px-1">

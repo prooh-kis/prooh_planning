@@ -92,6 +92,16 @@ export const convertBlobToDataURL = (blob: any) => {
   });
 };
 
+export const blobToBase64 = (blob: any) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      resolve(reader.result); // This is the base64 string
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob); // Converts blob to base64
+  });
+}
 
 export const getCanvasBlob = (canvas: HTMLCanvasElement): Promise<Blob> => {
   return new Promise((resolve) => {

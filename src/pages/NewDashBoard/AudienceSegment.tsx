@@ -62,7 +62,7 @@ export const AudienceSegment = ({
   }
 
      // Initialize filters based on spot data
-     useEffect(() => {
+    useEffect(() => {
       if (audienceData && (filters.cities.audience.length == 0 || filters.cities.audience.length == 0 || filters.cities.audience.length == 0)) {
         setFilters((prev: any) => ({
           ...prev,

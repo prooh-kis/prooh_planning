@@ -1,13 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { BillingAndInvoiceEnterDetails } from "./BillAndInvoiceEnterDetails";
 import { FileUploadButton, PrimaryButton } from "../../components";
-import { createBillInvoice } from "../../actions/billInvoiceAction";
+import { createBillInvoice, getBillInvoiceDetails, getBillInvoiceJobStatusAction, handleInvoicePdfGenerationAction, takeDashboardScreenShotAction } from "../../actions/billInvoiceAction";
 import { addClientAgencyDetails, getClientAgencyDetails } from "../../actions/clientAgencyAction";
-import { generateBillAndInvoicePdf } from "../../utils/generatePdf";
+import { generateBillAndInvoicePdf } from "../../utils/generateInvoicePdf";
 import { BillAndInvoiceSteppers } from "./BillAndInvoiceSteppers";
-import { takeDashboardScreenShotAction } from "../../actions/dashboardAction";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { message, Tooltip } from "antd";
 import { ADD_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyConstants";
@@ -19,11 +18,13 @@ import {
 import { handleBase64ImageUpload } from "../../utils/fileUtils";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import { BillAndInvoiceMonitoringPicsSegment } from "./BillAndInvoiceMonitoringPicsSegment";
+import { generateImageFromPdf } from "../../utils/generatePdf";
 
 const dashboardScreenshotName = ["Cost Consumption", "Daily Impression", "Hardware Performance", "Audience Impression", "Campaign Duration"]
 export const BillingAndInvoice = (props: any) => {
   const dispatch = useDispatch<any>();
-  const { loading, onClose, campaignDetails, siteLevelData } = props;
+
+  const { loading, onClose, campaignDetails, siteLevelData, pathname } = props;
 
   // po data
   const [poNumber, setPoNumber] = useState<string>("");
@@ -61,8 +62,6 @@ export const BillingAndInvoice = (props: any) => {
   const [dashboardScreenshots, setDashboardScreenshots] = useState<any>([]);
   const [updateScreenshots, setUpdateScreenshots] = useState<boolean>(false);
 
-  const [previewSample, setPreviewSample] = useState<any>({});
-
   const [disabledGenerate, setDisabledGenerate] = useState<boolean>(true);
 
   const [billLoading, setBillLoading] = useState<any>(false);
@@ -72,7 +71,7 @@ export const BillingAndInvoice = (props: any) => {
   const {
     loading: loadingAddClientAgencyDetails,
     error: errorAddClientAgencyDetails,
-    success: successClientAgencyDetails,
+    success: successAddClientAgencyDetails,
   } = useSelector((state: any) => state.clientAgencyDetailsAdd);
 
   const {
@@ -102,6 +101,19 @@ export const BillingAndInvoice = (props: any) => {
     data: screenshots
   } = useSelector((state: any) => state.takeDashboardScreenShot)
 
+  const {
+    loading: loadingInvoicePdf,
+    error: errorInvoicePdf,
+    data: invoicePdf
+  } = useSelector((state: any) => state.handleInvoicePdfGeneration);
+
+  const {
+    loading: loadingJobStatus,
+    error: errorJobStatus,
+    data: jobStatus
+  } = useSelector((state: any) => state.getBillInvoiceJobStatus);
+  
+  
   const getAWSUrl = async (data: any) => {
     try {
       const aws = await getAWSUrlToUploadFile(
@@ -116,41 +128,47 @@ export const BillingAndInvoice = (props: any) => {
     }
   };
 
-  const generateBillInvoice = useCallback(() => {
-    generateBillAndInvoicePdf({
-      download: true,
+  console.log("bill Invoice details Data: ", billInvoiceDetailsData)
+  const generateBillInvoice = useCallback(async () => {
+    let poImage;
+    if (billInvoiceDetailsData?.uploadedPO) {
+      poImage = await generateImageFromPdf(billInvoiceDetailsData?.uploadedPO);
+    }
+
+    console.log("billInvoiceDetailsData: ", billInvoiceDetailsData);
+    dispatch(handleInvoicePdfGenerationAction({
       fileName: `INVOICE_${campaignDetails?.brandName}_${campaignDetails?.name}`,
       jsonData: {
         planner: campaignDetails?.campaignPlannerName,
         plannerEmail: campaignDetails?.campaignPlannerEmail,
-        clientAgencyName: clientAgencyName,
-        pan: pan,
-        gst: gst,
-        pocName: pocName,
-        pocEmail: pocEmail,
-        pocContact: pocContact,
-        pocDesignation: pocDesignation,
+        clientAgencyName,
+        pan,
+        gst,
+        pocName,
+        pocEmail,
+        pocContact,
+        pocDesignation,
         officeAddress: {
-          address: address,
-          city: city,
+          address,
+          city,
           state: stateName,
-          country: country,
-          phone: phone,
-          email: email,
-          website: website,
-          zipCode: zipCode,
-          gst: gst,
-          pan: pan,
+          country,
+          phone,
+          email,
+          website,
+          zipCode,
+          gst,
+          pan,
         },
         invoiceNumber: `PROOH/${String(new Date().getFullYear() - 1)}-${String(new Date().getFullYear())}/${clientAgencyDetailsData?.totalInvoiceNumber || 0}`,
         invoiceDate: todayDate,
         internalSoNumber: `PROOH/${String(new Date().getFullYear() - 1)}-${String(new Date().getFullYear())}/${clientAgencyDetailsData?.totalInvoiceNumber || 0}/SO`,
-        clientConfirmation: campaignDetails?.clientApprovalImgs?.length > 0? "Mail Confirmation" : "mail confirmation",
+        clientConfirmation: campaignDetails?.clientApprovalImgs?.length > 0 ? "Mail Confirmation" : "mail confirmation",
         clientOrderDate: poDate,
-        poNumber: poNumber,
-        invoiceDescription: invoiceDescription,
-        invoiceQuantity: invoiceQuantity,
-        invoiceCurrency: invoiceCurrency,
+        poNumber,
+        invoiceDescription,
+        invoiceQuantity,
+        invoiceCurrency,
         invoiceAmount: Number(invoiceAmount.toFixed(0)),
         subTotalAmount: Number(invoiceAmount.toFixed(0)) * 1.18,
         outPutGstPercent: 18,
@@ -159,33 +177,51 @@ export const BillingAndInvoice = (props: any) => {
         startDate: moment(campaignDetails?.startDate).format("YYYY-MM-DD"),
         endDate: moment(campaignDetails?.endDate).format("YYYY-MM-DD"),
       },
-      billInvoiceDetailsData: billInvoiceDetailsData,
-      campaignDetails: campaignDetails,
-      siteLevelData:siteLevelData,
-      setBillLoading: setBillLoading,
-    });
-
-  },[address, billInvoiceDetailsData, siteLevelData, campaignDetails, city, clientAgencyDetailsData, clientAgencyName, country, email, gst, invoiceAmount, invoiceCurrency, invoiceDescription, invoiceQuantity, pan, phone, poDate, poNumber, pocContact, pocDesignation, pocEmail, pocName, stateName, todayDate, website, zipCode])
-
-  const saveClientAgencyDetails = async () => {
-    if (
-      poNumber == "" || poNumber == undefined || poNumber == null
-    ) {
+      billInvoiceDetailsData,
+      campaignDetails,
+      siteLevelData,
+      poImage,
+      newInvoice: false,
+    }));
+  }, [
+    billInvoiceDetailsData,
+    campaignDetails,
+    clientAgencyName,
+    pan,
+    gst,
+    pocName,
+    pocEmail,
+    pocContact,
+    pocDesignation,
+    address,
+    city,
+    stateName,
+    country,
+    phone,
+    email,
+    website,
+    zipCode,
+    poDate,
+    poNumber,
+    invoiceDescription,
+    invoiceQuantity,
+    invoiceCurrency,
+    invoiceAmount,
+    clientAgencyDetailsData?.totalInvoiceNumber,
+    siteLevelData,
+    dispatch,
+    todayDate
+  ]);
+  
+  const saveClientAgencyDetails = useCallback(async () => {
+    if (!poNumber) {
       message.info("You have not entered PO Number for this invoice, please take a look...");
-    } else {
-      // setBillingStep(billingStep+1);
+      return;
     }
-
+  
     let shots: any = [];
-    if (dashboardScreenshots.length > 0 && updateScreenshots) {
-      // shots = [
-      //   "https://store-files-in-s3.s3.ap-south-1.amazonaws.com/6826cdacbb7b693c3dfb117e_screenshot-1747373484137.png",
-      //   "https://store-files-in-s3.s3.ap-south-1.amazonaws.com/6826cdacbb7b693c3dfb117f_screenshot-1747373484634.png",
-      //   "https://store-files-in-s3.s3.ap-south-1.amazonaws.com/6826cdacbb7b693c3dfb1180_screenshot-1747373484875.png",
-      //   "https://store-files-in-s3.s3.ap-south-1.amazonaws.com/6826cdadbb7b693c3dfb1181_screenshot-1747373485089.png",
-      //   "https://store-files-in-s3.s3.ap-south-1.amazonaws.com/6826cdadbb7b693c3dfb1182_screenshot-1747373485214.png"
-      // ];
-      for (let image of screenshots.images) {
+    if (dashboardScreenshots.length > 0 && updateScreenshots && screenshots?.images) {
+      for (let image of screenshots?.images) {
         const fileReady = await handleBase64ImageUpload(`${image}`);
         const awsurl = await getAWSUrl({
           name: fileReady.file.name,
@@ -194,38 +230,40 @@ export const BillingAndInvoice = (props: any) => {
           fileType: fileReady.file.type,
           fileSize: fileReady.file.size,
         });
-        shots.push(awsurl)
+        shots.push(awsurl);
       }
     }
-
+    console.log("shots: ", shots);
+  
     dispatch(addClientAgencyDetails({
       _id: clientAgencyDetailsData?._id,
-      clientAgencyName: clientAgencyName,
-      pocName: pocName,
-      pocEmail: pocEmail,
-      pocContact: pocContact,
-      pocDesignation: pocDesignation,
+      clientAgencyName,
+      pocName,
+      pocEmail,
+      pocContact,
+      pocDesignation,
       officeAddress: {
-        address: address,
-        city: city,
+        address,
+        city,
         state: stateName,
-        country: country,
-        phone: phone,
-        email: email,
-        website: website,
-        zipCode: zipCode,
-        gst: gst,
-        pan: pan,
+        country,
+        phone,
+        email,
+        website,
+        zipCode,
+        gst,
+        pan,
       },
-      poRecieved: poNumber && !clientAgencyDetailsData?.poRecieved?.map((po: any) => po.poNumber)?.includes(poNumber) ? 
-        [...clientAgencyDetailsData?.poRecieved, {
-          campaignCreationId: campaignDetails?._id,
-          poNumber: poNumber,
-          poDate: poDate,
-          uploadedPO: poFiles.length > 0 ? poFiles[poFiles.length - 1].awsURL : "",
-        }] : clientAgencyDetailsData?.poRecieved
+      poRecieved: poNumber && !clientAgencyDetailsData?.poRecieved?.map((po: any) => po.poNumber)?.includes(poNumber) 
+        ? [...(clientAgencyDetailsData?.poRecieved || []), {
+            campaignCreationId: campaignDetails?._id,
+            poNumber: poNumber,
+            poDate: poDate,
+            uploadedPO: poFiles.length > 0 ? poFiles[poFiles.length - 1].awsURL : "",
+          }] 
+        : clientAgencyDetailsData?.poRecieved
     }));
-
+  
     dispatch(createBillInvoice({
       campaignCreationId: campaignDetails?._id,
       campaignName: campaignDetails?.name,
@@ -249,14 +287,15 @@ export const BillingAndInvoice = (props: any) => {
       outPutGstAmount: invoiceAmount * 0.18,
       totalAmount: invoiceAmount * 1.18,
       currency: "INR",
-      dashboardScreenshots: billingStep === 2 && updateScreenshots ? { [`${new Date().getTime()}`]: shots } : undefined
+      dashboardScreenshots: billingStep === 2 && updateScreenshots && { [`${new Date().getTime()}`]: shots }
     }));
     setUpdateScreenshots(false);
-  }
+  }, [poNumber, dashboardScreenshots.length, updateScreenshots, screenshots?.images, dispatch, clientAgencyDetailsData?._id, clientAgencyDetailsData?.poRecieved, clientAgencyName, pocName, pocEmail, pocContact, pocDesignation, address, city, stateName, country, phone, email, website, zipCode, gst, pan, campaignDetails?._id, campaignDetails?.name, campaignDetails?.clientName, campaignDetails?.clientApprovalImgs?.length, poDate, poFiles, todayDate, billingStep, invoiceDescription, invoiceQuantity, invoiceAmount]);
 
   const takeScreenShot = () => {
     setUpdateScreenshots(true);
     dispatch(takeDashboardScreenShotAction({
+      // url: `${window.location.origin}/campaignDashboard/${campaignDetails?._id}`,
       url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
       // url: `http://localhost:3000/campaignDashboard/${campaignDetails?._id}`,
       tabs: ["1", "2", "3", "4", "5"]
@@ -303,15 +342,20 @@ export const BillingAndInvoice = (props: any) => {
    if (errorBillInvoiceCreation) {
     message.error("Error in adding invoice details...")
    }
+
   },[errorAddClientAgencyDetails, errorBillInvoiceCreation]);
 
   useEffect(() => {
-    if (successClientAgencyDetails) {
+    if (successAddClientAgencyDetails && billInvoiceDetailsData) {
       message.success("Client/Agency Details Added Successfully...");
+
       dispatch({
         type: ADD_CLIENT_AGENCY_DETAILS_RESET
       });
     }
+  },[successAddClientAgencyDetails, billInvoiceDetailsData, dispatch]);
+console.log(campaignDetails)
+  useEffect(() => {
     if (successBillInvoiceCreation) {
       message.success("Invoice Details Added Successfully...");
       dispatch({
@@ -319,12 +363,11 @@ export const BillingAndInvoice = (props: any) => {
       });
     }
 
-    if (successClientAgencyDetails && successClientAgencyDetails) {
+    if (successBillInvoiceCreation) {
       setBillingStep(billingStep + 1)
     }
 
     if (campaignDetails && !clientAgencyDetailsData) {
-      dispatch(getClientAgencyDetails({clientAgencyName: campaignDetails?.clientName?.toUpperCase()}));
     }
 
     if (campaignDetails) {
@@ -333,12 +376,20 @@ export const BillingAndInvoice = (props: any) => {
         ? Number(campaignDetails?.totalCampaignBudget)
         : Number(campaignDetails?.finalCampaignBudget)
       });
+      console.log(campaignDetails)
+      dispatch(getBillInvoiceDetails({
+        campaignCreationId: campaignDetails?._id,
+        invoiceId: campaignDetails?.invoiceId
+      }));
+
+      if (!clientAgencyDetailsData) {
+        dispatch(getClientAgencyDetails({
+          clientAgencyName: campaignDetails?.clientName?.toUpperCase()
+        }));
+      }
     }
 
-    if (siteLevelData && siteLevelData.length > 0) {
-      setPreviewSample(siteLevelData?.[0]);
-    }
-  },[dispatch, billingStep, campaignDetails, siteLevelData, clientAgencyDetailsData, successClientAgencyDetails, successBillInvoiceCreation]);
+  },[dispatch, billingStep, campaignDetails, siteLevelData, clientAgencyDetailsData, successBillInvoiceCreation]);
   
    useEffect(() => {
 
@@ -385,18 +436,46 @@ export const BillingAndInvoice = (props: any) => {
       setDisabledGenerate(false)
     }
 
-    if (screenshots) {
-      console.log("Snapshots taken...")
-      setDashboardScreenshots([...screenshots.images])
+    if (screenshots?.images?.length > 0) {
+      setDashboardScreenshots((prev: any) => 
+        JSON.stringify(prev) !== JSON.stringify(screenshots?.images) 
+          ? [...screenshots?.images] 
+          : prev
+      );
     }
 
-  },[dispatch, billingStep, screenshots]);
+  },[dispatch, billingStep, screenshots?.images]);
+
   useEffect(() => {
     if (billInvoiceDetailsData) {
       // message.info("Invoice generated, Download bill invoice...")
       // generateBillInvoice();
     }
-  },[billInvoiceDetailsData, generateBillInvoice]);
+
+    if (invoicePdf && invoicePdf?.jobId) {
+      message.info("Invoice in being generated, will be made available in a moment...");
+      dispatch(getBillInvoiceJobStatusAction({
+        campaignCreationId: campaignDetails?._id, 
+        apiUrl: invoicePdf?.statusUrl,
+        jobId: invoicePdf?.jobId,
+      }));
+    }
+  },[billInvoiceDetailsData, campaignDetails?._id, dispatch, invoicePdf]);
+
+  useEffect(() => {
+   
+    // const interval = setTimeout(() => {
+        if (jobStatus && jobStatus.status === "completed") {
+          message.info("Invoice generation completed...")
+        }
+      // }, 10000);
+  
+      // return () => {
+      //   clearInterval(interval);
+      // }
+  },[campaignDetails, dispatch, invoicePdf, jobStatus])
+
+  
 
   useEffect(() => {
     if (props?.open) {
@@ -459,7 +538,13 @@ export const BillingAndInvoice = (props: any) => {
                     rounded="rounded"
                   />
                 )}
-                <PrimaryButton
+                {loadingInvoicePdf && (
+                  <div className="flex items-center justify-center">
+                    <i className="fi fi-br-spinner text-gray-500 flex items-center animate-spin"></i>
+                  </div>
+                )}
+                {!loadingInvoicePdf && (
+                  <PrimaryButton
                   title="Generate"
                   action={generateBillInvoice}
                   height="h-8"
@@ -468,6 +553,7 @@ export const BillingAndInvoice = (props: any) => {
                   rounded="rounded"
                   disabled={disabledGenerate}
                 />
+                )}
               </div>
               <i
                 className="fi fi-br-cross text-[14px] cursor-pointer"
@@ -475,15 +561,68 @@ export const BillingAndInvoice = (props: any) => {
               />
             </div>
           </div>
-          <div className="w-1/2">
-            <BillAndInvoiceSteppers
-              setStep={(e: any) => {
-              
-                setBillingStep(e)
-              }}
-              steps={4}
-              step={billingStep}
-            />
+          <div className="flex justify-between items-center">
+            <div className="w-1/2">
+              <BillAndInvoiceSteppers
+                setStep={(e: any) => {
+                
+                  setBillingStep(e)
+                }}
+                steps={4}
+                step={billingStep}
+              />
+            </div>
+            {loadingBillInvoiceCreation ? (
+              <div>
+                <LoadingScreen />
+              </div>
+            ) : (
+              <div>
+                {loadingJobStatus ? (
+                  <div className="flex items-center justify-center">
+                    <i className="fi fi-br-spinner text-[#22C55E] flex items-center animate-spin"></i>
+                  </div>
+                ) : (
+                  <div>
+                    {billInvoiceDetailsData?.invoiceDocs.length === 0 && jobStatus && jobStatus.status && (
+                      <div className="flex items-center gap-2 cursor-pointer">
+                        {
+                          jobStatus?.status === "active" && (
+                            <div className="border-b-2 border-[#22C55E] rounded-[2px]">
+                              <i className="fi fi-sr-arrow-small-down text-[#22C55E] flex items-center justify-center animate-bounce"></i>
+                            </div>
+                          )
+                        }
+                        {jobStatus.status === "active" && 
+                          <h1 className="text-[12px] text-[#22C55E] animate-pulse">
+                            success {jobStatus.progress}% completed, please wait for it to get downloaded...
+                          </h1>
+                        }
+                        {jobStatus.status === "completed" && (
+                          <div className="flex items-center gap-2 cursor-pointer" onClick={() => (window.location as any).reload()}>
+                              <h1 className="text-[12px] text-[#22C55E]">Invoice generated, please reload to donwload...</h1>
+                              <div className="border-b-2 border-[#22C55E] rounded-[2px]">
+                                <i className="fi fi-sr-arrow-small-down text-[#22C55E] flex items-center justify-center animate-bounce"></i>
+                              </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {billInvoiceDetailsData?.invoiceDocs.length > 0 && (
+                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.open(billInvoiceDetailsData?.invoiceDocs[billInvoiceDetailsData?.invoiceDocs.length - 1].url, "_blank")}>
+                      <h1 className="text-[12px] text-[#22C55E]">Already generated, click to download...</h1>
+                      <div className="border-b-2 border-[#22C55E] rounded-[2px]">
+                        <i className="fi fi-sr-arrow-small-down text-[#22C55E] flex items-center justify-center animate-bounce"></i>
+                      </div>
+                  </div>
+                )}
+              </div>
+            )}
+            
+
           </div>
           {billingStep == 0 ? (
             <div>
@@ -575,19 +714,18 @@ export const BillingAndInvoice = (props: any) => {
                   />
                 </div>
                 <div className="grid grid-cols-4 gap-2 py-4">
-                  {poFiles?.length === 0 && (
+                  {poFiles?.length === 0 || poFiles.includes("") ? (
                     <div className="col-span-1 flex items-center">
                       {[1]?.map((_: any, i: any) => (
                         <div key={i} className="w-full relative inline-block">
                           <div
                             className="w-20 h-20 object-cover rounded-lg shadow-md flex items-center justify-center">
-                            <i className="fi fi-br-file-pdf flex items-center text-[36px] text-[#D7D7D7]"></i>
+                            <i className="fi fi-rr-file-pdf flex items-center text-[36px] text-[#D7D7D7]"></i>
                           </div>
                         </div>
                       ))}
                     </div>
-                  )}
-                  {poFiles?.map((file: any, k: any) => (
+                  ) : poFiles?.map((file: any, k: any) => (
                     <div key={k} className="relative inline-block col-span-1 border border-gray-200 rounded-[12px] flex items-center justify-center shadow-md">
                       <iframe
                         src={file.url ? file.url : file}
@@ -673,13 +811,11 @@ export const BillingAndInvoice = (props: any) => {
                   </Tooltip>
                 </div>
               </div>
-              {Object.keys(previewSample).length > 0 && (
-                <BillAndInvoiceMonitoringPicsSegment
-                  previewSample={previewSample}
-                  campaignDetails={campaignDetails}
-                  currentDate={todayDate}
-                />
-              )}
+              <BillAndInvoiceMonitoringPicsSegment
+                campaignDetails={campaignDetails}
+                currentDate={todayDate}
+                siteLevelData={siteLevelData}
+              />
 
             </div>
           ) : null}

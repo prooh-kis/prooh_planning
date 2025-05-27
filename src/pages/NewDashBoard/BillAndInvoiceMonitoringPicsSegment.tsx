@@ -1,106 +1,128 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { convertDateIntoDateMonthYear, formatDateForLogs, getTimeFromDate } from "../../utils/dateAndTimeUtils";
 import { Skeleton, Tooltip } from "antd";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { TIME_ZONES } from "../../constants/helperConstants";
+import { GetCampaignLogsAction } from "../../actions/campaignAction";
 
 interface BillAndInvoiceMonitoringPicsSegmentProps {
- previewSample?: any;
  campaignDetails?: any;
  currentDate?: any;
+ siteLevelData?: any;
 }
 
-export const BillAndInvoiceMonitoringPicsSegment = ({ previewSample, campaignDetails, currentDate }: BillAndInvoiceMonitoringPicsSegmentProps) => {
+export const BillAndInvoiceMonitoringPicsSegment = ({ siteLevelData, campaignDetails, currentDate }: BillAndInvoiceMonitoringPicsSegmentProps) => {
 
- const scrollRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
- 
- const {
-  loading: loadingLogs,
-  error: errorLogs,
-  data: logs,
- } = useSelector((state: any) => state.campaignLogsGet);
- 
+  const dispatch = useDispatch<any>();
 
- const calculateAvgTimeGap = (entries: any) => {
-  if (entries.length < 2) return "N/A"; // Not enough data to calculate gap
+  const scrollRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  let seq = 0;
 
-  // Sort entries by time
-  const sortedEntries = [...entries].sort((a, b) => a.sortTime - b.sortTime);
+  const {
+    loading: loadingLogs,
+    error: errorLogs,
+    data: logs,
+  } = useSelector((state: any) => state.campaignLogsGet);
+  
+  const calculateAvgTimeGap = (entries: any) => {
+    if (entries.length < 2) return "N/A"; // Not enough data to calculate gap
 
-  // Compute total time gap
-  let totalGap = 0;
-  for (let i = 1; i < sortedEntries.length; i++) {
-   totalGap += sortedEntries[i].sortTime - sortedEntries[i - 1].sortTime;
-  }
+    // Sort entries by time
+    const sortedEntries = [...entries].sort((a, b) => a.sortTime - b.sortTime);
 
-  // Calculate average gap in milliseconds
-  const avgGapMs = totalGap / (sortedEntries.length - 1);
-
-  // Convert to minutes and seconds
-  const minutes = Math.floor(avgGapMs / 60000);
-  const seconds = ((avgGapMs % 60000) / 1000).toFixed(0);
-
-  return minutes > 0 ? `${minutes} m ${seconds} sec` : `${seconds} sec`;
- };
-
- const newData = useMemo(() => {
-  return logs?.reduce((accum: any, current: any) => {
-   const key: any = formatDateForLogs(current?.logTime)?.logDate;
-   if (!accum[key]) {
-    accum[key] = [];
-   }
-   accum[key].push({
-    time: getTimeFromDate(current?.logTime),
-    creativeName: current?.mediaId?.split("_")[1] || "Unknown",
-    status: current?.screenStatus,
-   });
-   return accum;
-  }, {});
- }, [logs]);
-
- const newCombinedData = useMemo(() => {
-  let hrWiseLogs: any;
-
-  if (newData) {
-   hrWiseLogs = logs?.reduce((result: any, item: any) => {
-    const date: any = formatDateForLogs(item?.logTime)?.logDate; // Assuming today's date
-    const [time, period] = item?.logTime?.split(" ");
-    let [hour, minute, second] = time?.split("T")[1]?.split(":");
-
-    if (period === "PM" && hour !== "12") {
-     hour = String(Number(hour) + 12);
-    } else if (period === "AM" && hour === "12") {
-     hour = "00";
+    // Compute total time gap
+    let totalGap = 0;
+    for (let i = 1; i < sortedEntries.length; i++) {
+    totalGap += sortedEntries[i].sortTime - sortedEntries[i - 1].sortTime;
     }
 
-    if (!result[date]) {
-     result[date] = {};
+    // Calculate average gap in milliseconds
+    const avgGapMs = totalGap / (sortedEntries.length - 1);
+
+    // Convert to minutes and seconds
+    const minutes = Math.floor(avgGapMs / 60000);
+    const seconds = ((avgGapMs % 60000) / 1000).toFixed(0);
+
+    return minutes > 0 ? `${minutes} m ${seconds} sec` : `${seconds} sec`;
+  };
+
+  const newData = useMemo(() => {
+    if (logs && logs.length > 0) {
+      return logs?.reduce((accum: any, current: any) => {
+        const key: any = formatDateForLogs(current?.logTime)?.logDate;
+        if (!accum[key]) {
+        accum[key] = [];
+        }
+        accum[key].push({
+        time: getTimeFromDate(current?.logTime),
+        creativeName: current?.mediaId?.split("_")[1] || "Unknown",
+        status: current?.screenStatus,
+        });
+        return accum;
+      }, {});
+    } else {
+      return null;
+    }
+    
+  }, [logs]);
+
+  const newCombinedData = useMemo(() => {
+    let hrWiseLogs: any;
+    if (newData && logs && logs.length) {
+    hrWiseLogs = logs?.reduce((result: any, item: any) => {
+      const date: any = formatDateForLogs(item?.logTime)?.logDate; // Assuming today's date
+      const [time, period] = item?.logTime?.split(" ");
+      let [hour, minute, second] = time?.split("T")[1]?.split(":");
+
+      if (period === "PM" && hour !== "12") {
+      hour = String(Number(hour) + 12);
+      } else if (period === "AM" && hour === "12") {
+      hour = "00";
+      }
+
+      if (!result[date]) {
+      result[date] = {};
+      }
+
+      if (!result[date][hour]) {
+      result[date][hour] = [];
+      }
+
+      result[date][hour].push(item);
+      return result;
+    }, {});
     }
 
-    if (!result[date][hour]) {
-     result[date][hour] = [];
+    return { hrWiseLogs: hrWiseLogs };
+  }, [logs, newData]);
+
+
+  useEffect(() => {
+    if (logs?.length == 0 || !logs?.length) {
+        seq++;
+       
     }
+  },[logs, seq, dispatch]);
 
-    result[date][hour].push(item);
-    return result;
-   }, {});
-  }
-
-  return { hrWiseLogs: hrWiseLogs };
- }, [logs, newData]);
- 
- useEffect(() => {
-
- }, []);
+  useEffect(() => {
+    if (siteLevelData?.[seq].campaignId) {
+      dispatch(
+        GetCampaignLogsAction({
+          campaignId: siteLevelData?.[seq].campaignId,
+          date: formatDateForLogs(currentDate)?.apiDate,
+        }));
+    }
+    
+  }, [dispatch, siteLevelData, currentDate, seq]);
 
  return (
   <div className="w-full border-t my-2 py-2">
    <div className="flex items-top gap-2 w-full">
     <div className="w-[15vw] rounded-[8px]">
-     <img className="rounded-[8px]" src={previewSample?.images?.[0]} alt="screen"/>
+     <img className="rounded-[8px]" src={siteLevelData?.[seq]?.images?.[0]} alt="screen"/>
     </div>
     <div className="w-full">
-     <h1 className="text-[16px] font-bold">{previewSample?.screenName}</h1>
+     <h1 className="text-[16px] font-bold">{siteLevelData?.[seq]?.screenName}</h1>
      <div className="w-full flex items-center justify-between gap-4">
       <div className="py-2">
        <div className="grid grid-cols-3 gap-4">
@@ -108,7 +130,7 @@ export const BillAndInvoiceMonitoringPicsSegment = ({ previewSample, campaignDet
          <p className="text-[12px] text-gray-500 truncate">Touchpoint</p>
         </div>
         <div className="col-span-2">
-         <p className="text-[12px] text-gray-500 truncate">- {previewSample?.touchPoint}</p>
+         <p className="text-[12px] text-gray-500 truncate">- {siteLevelData?.[seq]?.touchPoint}</p>
         </div>
        </div>
        <div className="grid grid-cols-3 gap-4">
@@ -116,7 +138,7 @@ export const BillAndInvoiceMonitoringPicsSegment = ({ previewSample, campaignDet
          <p className="text-[12px] text-gray-500 truncate">Screen Type</p>
         </div>
         <div className="col-span-2">
-         <p className="text-[12px] text-gray-500 truncate">- {previewSample?.screenType}</p>
+         <p className="text-[12px] text-gray-500 truncate">- {siteLevelData?.[seq]?.screenType}</p>
         </div>
        </div>
        <div className="grid grid-cols-3 gap-4">
@@ -124,7 +146,7 @@ export const BillAndInvoiceMonitoringPicsSegment = ({ previewSample, campaignDet
          <p className="text-[12px] text-gray-500 truncate">Location</p>
         </div>
         <div className="col-span-2">
-         <p className="text-[12px] text-gray-500 truncate">- {previewSample?.location}</p>
+         <p className="text-[12px] text-gray-500 truncate">- {siteLevelData?.[seq]?.location}</p>
         </div>
        </div>
       </div>
@@ -169,7 +191,7 @@ export const BillAndInvoiceMonitoringPicsSegment = ({ previewSample, campaignDet
       </tr>
      </thead>
      <tbody className="w-full">
-      {previewSample?.monitoringData?.map((data: any, index: any) => (
+      {siteLevelData?.[seq]?.monitoringData?.map((data: any, index: any) => (
        <tr className="grid grid-cols-10 gap-1 pt-1" key={index}>
         <td className="col-span-2 h-[120px] border border-gray-100 rounded-[4px] text-[12px] flex flex-col items-center justify-center">
           <h1>
@@ -223,7 +245,7 @@ export const BillAndInvoiceMonitoringPicsSegment = ({ previewSample, campaignDet
     </table>
    </div>
    <div className="w-full py-2">
-    <h1 className="text-[12px] font-semibold pt-2 px-1">{previewSample?.screenName}</h1>
+    <h1 className="text-[12px] font-semibold pt-2 px-1">{siteLevelData?.[seq]?.screenName}</h1>
     <div className="col-span-7 border border-gray-100 mt-2">
      <div className="grid grid-cols-10 bg-gray-100">
       <div className="col-span-6 grid grid-cols-12">
@@ -274,12 +296,11 @@ export const BillAndInvoiceMonitoringPicsSegment = ({ previewSample, campaignDet
         </div>
       </div>
      </div>
-     {loadingLogs && (
+     {loadingLogs ? (
       <div className="pt-12">
        <Skeleton active paragraph={{ rows: 12 }} />
       </div>
-     )}
-     {logs && Object.entries(newCombinedData?.hrWiseLogs).map(
+     ) : logs?.length > 0 && Object.entries(newCombinedData?.hrWiseLogs).map(
       ([date, hours]: any) => (
        <div key={date}>
         <div className="border-r border-gray-100 rounded-br-[12px]">

@@ -127,6 +127,7 @@ export const rootReducer = {
     // Bill Invoice
     billInvoiceCreation: billInvoiceReducers.billInvoiceCreationReducer,
     billInvoiceDetailsGet: billInvoiceReducers.billInvoiceDetailsGetReducer,
+    takeDashboardScreenShot: billInvoiceReducers.takeDashboardScreenShotReducer,
 
     // Landing
     saveContactDetails: landingReducers.saveContactDetailsForQueryReducer,
@@ -156,7 +157,6 @@ export const rootReducer = {
     allSitesMonitoringData: dashboardReducers.getAllSitesMonitoringDataReducer,
     siteBasedDataOnLogsPage: dashboardReducers.getSiteBasedDataOnLogsPageReducer,
     getFiltersAndDataForAllLogsPopup: dashboardReducers.getFiltersAndDataForAllLogsPopupReducer,
-    takeDashboardScreenShot: dashboardReducers.takeDashboardScreenShotReducer,
 
     // Data Hero
     heroDataRegister: dataHeroReducers.heroDataRegisterReducer,

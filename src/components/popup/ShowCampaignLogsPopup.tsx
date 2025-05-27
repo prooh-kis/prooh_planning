@@ -34,24 +34,29 @@ export const ShowCampaignLogsPopup = ({
   const scrollRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   
   const newData = useMemo(() => {
-    return logs?.reduce((accum: any, current: any) => {
-      const key: any = formatDateForLogs(current?.logTime)?.logDate;
-      if (!accum[key]) {
-        accum[key] = [];
-      }
-      accum[key].push({
-        time: getTimeFromDate(current?.logTime),
-        creativeName: current?.mediaId?.split("_")[1] || "Unknown",
-        status: current?.screenStatus,
-      });
-      return accum;
-    }, {});
+    if (logs && logs.length > 0) {
+      return logs?.reduce((accum: any, current: any) => {
+        const key: any = formatDateForLogs(current?.logTime)?.logDate;
+        if (!accum[key]) {
+          accum[key] = [];
+        }
+        accum[key].push({
+          time: getTimeFromDate(current?.logTime),
+          creativeName: current?.mediaId?.split("_")[1] || "Unknown",
+          status: current?.screenStatus,
+        });
+        return accum;
+      }, {});
+    } else {
+      return [];
+    }
+
   }, [logs]);
 
   const newCombinedData = useMemo(() => {
     let hrWiseLogs: any;
 
-    if (newData) {
+    if (newData && logs && logs.length > 0) {
       hrWiseLogs = logs?.reduce((result: any, item: any) => {
         const date: any = formatDateForLogs(item?.logTime)?.logDate; // Assuming today's date
         const [time, period] = item?.logTime?.split(" ");
