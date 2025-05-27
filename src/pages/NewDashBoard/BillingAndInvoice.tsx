@@ -101,11 +101,13 @@ export const BillingAndInvoice = (props: any) => {
     data: screenshots
   } = useSelector((state: any) => state.takeDashboardScreenShot)
 
+  const handleInvoicePdfGeneration = useSelector((state: any) => state.handleInvoicePdfGeneration)
+  console.log("handleInvoicePdfGeneration", handleInvoicePdfGeneration)
   const {
     loading: loadingInvoicePdf,
     error: errorInvoicePdf,
     data: invoicePdf
-  } = useSelector((state: any) => state.handleInvoicePdfGeneration);
+  } = handleInvoicePdfGeneration;
 
   const {
     loading: loadingJobStatus,
@@ -538,12 +540,11 @@ console.log(campaignDetails)
                     rounded="rounded"
                   />
                 )}
-                {loadingInvoicePdf && (
+                {loadingInvoicePdf ? (
                   <div className="flex items-center justify-center">
                     <i className="fi fi-br-spinner text-gray-500 flex items-center animate-spin"></i>
                   </div>
-                )}
-                {!loadingInvoicePdf && (
+                ) : (
                   <PrimaryButton
                   title="Generate"
                   action={generateBillInvoice}

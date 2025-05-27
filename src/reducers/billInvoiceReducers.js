@@ -1,7 +1,7 @@
 import { CREATE_BILL_INVOICE_FAIL, CREATE_BILL_INVOICE_REQUEST, CREATE_BILL_INVOICE_RESET, CREATE_BILL_INVOICE_SUCCESS, GENERATE_PDF_GENERATION_FAIL, GENERATE_PDF_GENERATION_REQUEST, GENERATE_PDF_GENERATION_RESET, GENERATE_PDF_GENERATION_SUCCESS, GET_BILL_INVOICE_FAIL, GET_BILL_INVOICE_REQUEST, GET_BILL_INVOICE_RESET, GET_BILL_INVOICE_SUCCESS, PULL_JOB_STATUS_FAIL, PULL_JOB_STATUS_REQUEST, PULL_JOB_STATUS_RESET, PULL_JOB_STATUS_SUCCESS, TAKE_DASHBOARD_SCREENSHOT_FAIL, TAKE_DASHBOARD_SCREENSHOT_REQUEST, TAKE_DASHBOARD_SCREENSHOT_SUCCESS } from "../constants/billInvoiceConstant";
 
 
-export function billInvoiceCreationReducer(state = [], action) {
+export function billInvoiceCreationReducer(state = {}, action) {
   switch (action.type) {
     case CREATE_BILL_INVOICE_REQUEST:
       return { ...state, loading: true };
@@ -63,7 +63,7 @@ export function billInvoiceDetailsGetReducer(state = [], action) {
 }
 
 
-export function handleInvoicePdfGenerationReducer(state = [], action) {
+export function handleInvoicePdfGenerationReducer(state = {}, action) {
   switch (action.type) {
     case GENERATE_PDF_GENERATION_REQUEST:
       return { loading: true };

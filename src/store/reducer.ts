@@ -127,6 +127,8 @@ export const rootReducer = {
     // Bill Invoice
     billInvoiceCreation: billInvoiceReducers.billInvoiceCreationReducer,
     billInvoiceDetailsGet: billInvoiceReducers.billInvoiceDetailsGetReducer,
+    handleInvoicePdfGeneration: billInvoiceReducers.handleInvoicePdfGenerationReducer,
+    getBillInvoiceJobStatus: billInvoiceReducers.getBillInvoiceJobStatusReducer,
     takeDashboardScreenShot: billInvoiceReducers.takeDashboardScreenShotReducer,
 
     // Landing
