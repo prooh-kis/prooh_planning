@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Landing } from "./Landing";
 import {
+  CAMPAIGN_MANAGER,
   CAMPAIGN_PLANNER,
   SCREEN_OWNER,
 } from "../../../constants/userConstants";
@@ -33,9 +34,13 @@ export const MiddleArea: React.FC = () => {
     };
   }, [userInfo]);
 
+  console.log("userInfo?.userRole : ", userInfo?.userRole);
+
   return (
     <div className="w-full h-full flex justify-center items-center">
-      {userInfo && userInfo?.userRole === CAMPAIGN_PLANNER ? (
+      {userInfo &&
+      (userInfo?.userRole === CAMPAIGN_PLANNER ||
+        userInfo?.userRole === CAMPAIGN_MANAGER) ? (
         <CampaignTemplates />
       ) : userInfo && userInfo?.userRole === SCREEN_OWNER ? (
         <div

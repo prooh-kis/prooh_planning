@@ -16,7 +16,12 @@ import {
   SCREEN_OWNER,
 } from "../../constants/userConstants";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
-import { CAMPAIGN_PLAN_TYPE_KNOW, CAMPAIGN_PLAN_TYPE_REGULAR, CAMPAIGN_PLAN_TYPE_STORE, CAMPAIGN_PLAN_TYPE_TOPICAL } from "../../constants/campaignConstants";
+import {
+  CAMPAIGN_PLAN_TYPE_KNOW,
+  CAMPAIGN_PLAN_TYPE_REGULAR,
+  CAMPAIGN_PLAN_TYPE_STORE,
+  CAMPAIGN_PLAN_TYPE_TOPICAL,
+} from "../../constants/campaignConstants";
 
 export const Menu = (props: any) => {
   const { userInfo } = props;
@@ -28,14 +33,15 @@ export const Menu = (props: any) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggleDropdown = () => {
-    if ([
+    if (
+      [
         CAMPAIGN_PLAN_TYPE_KNOW,
         CAMPAIGN_PLAN_TYPE_REGULAR,
         CAMPAIGN_PLAN_TYPE_STORE,
         CAMPAIGN_PLAN_TYPE_TOPICAL,
-        CAMPAIGN_PLAN_TYPE_REGULAR
+        CAMPAIGN_PLAN_TYPE_REGULAR,
       ]?.filter((plan: any) => !pathname.includes(plan)).length === 0
-    ){
+    ) {
       removeAllKeyFromLocalStorage();
     }
     setIsOpen(!isOpen);
@@ -69,8 +75,16 @@ export const Menu = (props: any) => {
 
   const managerArray = [
     {
+      label: "Create New Plan",
+      path: "/",
+    },
+    {
       label: "Campaigns",
       path: MY_CAMPAIGNS_LIST,
+    },
+    {
+      label: "Plans",
+      path: MY_PLANS_LIST,
     },
     {
       label: "Users",
