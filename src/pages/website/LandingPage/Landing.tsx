@@ -51,14 +51,14 @@ export const Landing: React.FC = () => {
 
   return (
     <div className="w-screen h-full bg-white overflow-y-auto overflow-x-hidden">
-      <div className="relative w-full">
+      <div className="relative w-full border-t">
         <img
-          className="absolute h-full w-full px-20 pt-48"
+          className="absolute h-full w-full px-20 mt-28"
           style={{ opacity: "75%" }}
           src={landingPageGrid}
           alt={"grid"}
         />
-        <div className="px-8 pt-36 ">
+        <div className="px-8 pt-32 ">
           {/* <Section1 /> */}
           <NewSection1 />
           {/* <FloatingBrandIcon /> */}

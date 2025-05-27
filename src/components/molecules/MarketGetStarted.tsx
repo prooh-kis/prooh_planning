@@ -29,10 +29,10 @@ export const MarketGetStarted = () => {
             some of the reasons why you should use our platform.
           </h1>
           <button
-            className="bg-[#FFFFFF] text-[#129BFF] rounded-full text-[14px] sm:text-[16px] font-bold 
+            className="bg-[#FFFFFF] text-[#129BFF] rounded-full text-[14px] sm:text-[20px] font-bold 
             hover:bg-black hover:text-[#FFFFFF] hover:text-[18px] w-[163px] h-[50px] mx-auto sm:mx-0"
           >
-            Get Started
+            Know More
           </button>
         </div>
         {/* Hide Image on Mobile */}

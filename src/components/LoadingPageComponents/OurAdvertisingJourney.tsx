@@ -241,16 +241,20 @@ export const OurAdvertisingJourney = ({ data, clientAgencyData }: any) => {
 
     if (clientAgencyData) {
       setClientAgencyCategories(() => {
-        return clientAgencyData?.map((data: any) => data.industry)?.reduce((acc: any, current: any) => {
-          if (!acc.includes(current)) {
-            acc.push(current);
-          }
-          return acc;
-        }, [])
+        return clientAgencyData
+          ?.map((data: any) => data.industry)
+          ?.reduce((acc: any, current: any) => {
+            if (!acc.includes(current)) {
+              acc.push(current);
+            }
+            return acc;
+          }, []);
       });
 
       setClientAgencyLogos(() => {
-        return clientAgencyData?.filter((d: any) => d.industry === selectedCategory)?.map((data: any) => data.logo)
+        return clientAgencyData
+          ?.filter((d: any) => d.industry === selectedCategory)
+          ?.map((data: any) => data.logo);
       });
     }
   }, [landingPageData, clientAgencyData, selectedCategory]);
@@ -297,8 +301,9 @@ export const OurAdvertisingJourney = ({ data, clientAgencyData }: any) => {
     return { markers: newMarkers, touchPoints: tpColors };
   }, [data]);
 
-  const { markers: memoizedMarkers, touchPoints: memoizedTouchPoints } = markers;
-  
+  const { markers: memoizedMarkers, touchPoints: memoizedTouchPoints } =
+    markers;
+
   useEffect(() => {
     if (memoizedMarkers?.length > 0 && landingMapRef.current) {
       const latitudes = memoizedMarkers.map((marker: any) => marker[0]);
@@ -316,8 +321,15 @@ export const OurAdvertisingJourney = ({ data, clientAgencyData }: any) => {
   return (
     <div className="px-4 sm:px-2 md:px-8 w-full mt-16">
       <div className="flex flex-col justify-center items-center gap-4 py-2 w-full">
-        <p className="font-custom leading-[18px] tracking-[0.24em] font-normal text-center text-[12px] text-[#667D8C]">OUR JOURNEY</p>
-        <h1 className="text-[#1E376E] text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">From Bold Ideas To Lasting <br/> Impact In <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">advertising</span></h1>
+        <p className="font-custom leading-[18px] tracking-[0.24em] font-normal text-center text-[12px] text-[#667D8C]">
+          OUR JOURNEY
+        </p>
+        <h1 className="text-[#1E376E] text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">
+          From Bold Ideas To Lasting <br /> Impact In{" "}
+          <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">
+            advertising
+          </span>
+        </h1>
       </div>
       <div className="py-4 flex justify-center items-center">
         {["Demand", "Supply"]?.map((tab: any, i: any) => (
@@ -336,7 +348,13 @@ export const OurAdvertisingJourney = ({ data, clientAgencyData }: any) => {
               tab === currentTab
                 ? "bg-primaryButton text-white font-semibold"
                 : "bg-[#F6F6F6] text-gray-700"
-            } border border-[#D7D7D7] py-2 px-8 ${i == 0 ? "clip-trapezium-right mr-[-2px]" : i == ["Demand", "Supply"].length-1 ? "clip-trapezium-left ml-[-2px]" : "clip-trapezium-both"}`}
+            } border border-[#D7D7D7] py-2 px-8 ${
+              i == 0
+                ? "clip-trapezium-right mr-[-2px]"
+                : i == ["Demand", "Supply"].length - 1
+                ? "clip-trapezium-left ml-[-2px]"
+                : "clip-trapezium-both"
+            }`}
           >
             <span className="text-[12px]">{tab}</span>
           </button>
@@ -380,7 +398,6 @@ export const OurAdvertisingJourney = ({ data, clientAgencyData }: any) => {
 
       {currentTab === "Supply" && (
         <div className="">
-    
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-8 pt-4">
             <div className="col-span-1 sm:col-span-2 lg:col-span-2">
               {/* <YearSlider /> */}
@@ -417,7 +434,9 @@ export const OurAdvertisingJourney = ({ data, clientAgencyData }: any) => {
                         getTotalScreensCountTouchpointWise
                       }
                       getTotalScreensCount={getTotalScreensCount}
-                      getTotalScreensCountCityWise={getTotalScreensCountCityWise}
+                      getTotalScreensCountCityWise={
+                        getTotalScreensCountCityWise
+                      }
                     />
                   </div>
                 ) : (
@@ -432,7 +451,6 @@ export const OurAdvertisingJourney = ({ data, clientAgencyData }: any) => {
                 <LandingPageMapStats data={landingPageData} />
               </div>
             )}
-
           </div>
 
           {view === "map" && (
@@ -442,7 +460,9 @@ export const OurAdvertisingJourney = ({ data, clientAgencyData }: any) => {
                   key={i}
                   className="cursor-pointer flex items-center gap-1 group"
                 >
-                  <div className={clsx(`h-3 w-3 ${colors[i]} rounded-full`)}></div>
+                  <div
+                    className={clsx(`h-3 w-3 ${colors[i]} rounded-full`)}
+                  ></div>
                   <h1
                     className={clsx(
                       `text-[10px] sm:text-[12px] md:text-[12px] leading-[18.1px] tracking-[0.01em] ${colorsbg[i]} p-1 rounded-[4px]`
@@ -460,37 +480,67 @@ export const OurAdvertisingJourney = ({ data, clientAgencyData }: any) => {
         <div className="bg-[#F5FBFF] rounded-[12px] mx-8">
           <div className="grid grid-cols-12 gap-2 p-2">
             <div className="col-span-2 bg-[#FFFFFF] rounded-[12px]">
-              <div className="p-4 truncate cursor-pointer" onClick={() => setSelectedCategory("")}>
-                <h1 className="font-custom font-semibold text-[16px]">Category</h1>
+              <div
+                className="p-4 truncate cursor-pointer"
+                onClick={() => setSelectedCategory("")}
+              >
+                <h1 className="font-custom font-semibold text-[16px]">
+                  Category
+                </h1>
               </div>
-              <div className="grid grid cols-1 pb-4 truncate">
-                {clientAgencyCategories?.map((category: any, i: number) => (
-                  <h1 key={i} onClick={() => setSelectedCategory(category)} className={`col-span-1 ${selectedCategory == category ? "border-l border-[#129BFF]" : ""} font-custom text-[14px] pt-1 pl-4 cursor-pointer`}>
-                    {category}
-                  </h1>
-                ))}
+              <div className="grid grid cols-1 pb-4 truncate h-auto overflow-y-auto scrollbar-minimal pr-4">
+                {clientAgencyCategories
+                  ?.filter((category: string) => category != "")
+                  ?.map((category: any, i: number) => (
+                    <div
+                      className="flex gap-8 items-center col-span-1 "
+                      key={i}
+                      onClick={() => setSelectedCategory(category)}
+                    >
+                      <div
+                        className={`h-12 w-1  ${
+                          selectedCategory == category && "bg-[#129BFF]"
+                        }`}
+                      ></div>
+                      <div
+                        className={` border-b border-gray-200 h-12 w-full font-custom text-[14px] cursor-pointer flex items-center  ${
+                          selectedCategory == category
+                            ? "text-[#129BFF] font-bold"
+                            : "text-[#547082] font-normal"
+                        }`}
+                      >
+                        {category}
+                      </div>
+                    </div>
+                  ))}
               </div>
             </div>
             <div className="col-span-10 bg-[#FFFFFF] rounded-[12px]">
               <div className="p-4">
-                <h1 className="font-custom font-semibold text-[16px]">Brands & Agency</h1>
+                <h1 className="font-custom font-semibold text-[16px]">
+                  Brands & Agency
+                </h1>
               </div>
               <div className="grid grid-cols-12 pb-4">
-                {clientAgencyLogos?.slice(0, 30)?.map((logo: any, j: number) => (
-                  <div key={j} className="p-4 col-span-2 border border-gray-50 flex items-center justify-center">
-                    {logo && logo !== "" ? (
-                      <img className="" src={logo} alt="logo" />
-                    ) : (
-                      <span className="text-gray-400">Logo</span>
-                    )}
-                  </div>
-                ))}
+                {clientAgencyLogos
+                  ?.slice(0, 30)
+                  ?.map((logo: any, j: number) => (
+                    <div
+                      key={j}
+                      className="p-4 col-span-2 border border-gray-50 flex items-center justify-center"
+                    >
+                      {logo && logo !== "" ? (
+                        <img className="" src={logo} alt="logo" />
+                      ) : (
+                        <span className="text-gray-400">Logo</span>
+                      )}
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 };

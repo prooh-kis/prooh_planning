@@ -53,7 +53,15 @@ export const HowItsWork = () => {
           </button>
         ) : null}
 
-        {!["Step 1", "Step 2", "Step 3", "Step 4", "Step 5", "Step 6", "Step 7"]?.includes(step) ? (
+        {![
+          "Step 1",
+          "Step 2",
+          "Step 3",
+          "Step 4",
+          "Step 5",
+          "Step 6",
+          "Step 7",
+        ]?.includes(step) ? (
           <div className="h-auto">
             {currentTab === "1" ? (
               <MarketGetStarted />
@@ -125,16 +133,13 @@ export const HowItsWork = () => {
     const step =
       tabData?.filter((tab: any) => tab.id === currentTab)[0]?.label ===
       "Are You An Advertiser?"
-        ? advertisersStepsDetails.find((s) => s.id === currentSubTab) ||
-          {}
+        ? advertisersStepsDetails.find((s) => s.id === currentSubTab) || {}
         : tabData?.filter((tab: any) => tab.id === currentTab)[0]?.label ===
           "Are You A Media Owner?"
-        ? mediaOwnersStepsDetails.find((s) => s.id === currentSubTab) ||
-          {}
+        ? mediaOwnersStepsDetails.find((s) => s.id === currentSubTab) || {}
         : tabData?.filter((tab: any) => tab.id === currentTab)[0]?.label ===
           "Become A Data Hero"
-        ? dataHeroStepsDetails.find((s) => s.id === currentSubTab) ||
-          {}
+        ? dataHeroStepsDetails.find((s) => s.id === currentSubTab) || {}
         : [];
 
     return <CampaignStep {...step} />;
@@ -143,17 +148,20 @@ export const HowItsWork = () => {
   return (
     <div ref={secondDivRef} className="px-6 lg:px-16 mt-16">
       <div className="flex items-center justify-center">
-        <code className="font-custom text-[12px] leading-[18px] tracking-[0.24em] font-normal text-center text-[#667D8C]">
+        <code className="font-custom text-[12px] leading-[18px] tracking-[0.5em] font-normal text-center text-[#667D8C]">
           {`ENGAGE WITH US`}
         </code>
       </div>
 
       <h1 className="text-[#1E376E] text-center font-custom font-semibold text-[36px] md:text-[48px] leading-[42px] md:leading-[54.72px] tracking-normal">
-        From Collective Thinking To <br/> Breakthrough <span className="font-cursive font-regular tracking-[-0.2rem] text-[#129BFF]">Solutions</span>
+        From Collective Thinking To <br /> Breakthrough{" "}
+        <span className="font-cursive font-normal tracking-[-0.2rem] text-[#129BFF]">
+          Solutions
+        </span>
       </h1>
 
       {/* Tabs */}
-      <div className="my-8 flex justify-center items-center">
+      <div className="my-8 flex justify-center items-center gap-0">
         {tabData?.map((tab: any, i: any) => (
           <button
             key={i}
@@ -166,11 +174,17 @@ export const HowItsWork = () => {
             }}
             className={`${
               tab.id === currentTab
-                ? "bg-primaryButton text-white font-semibold"
-                : "bg-[#F6F6F6] text-gray-700"
-            } w-full border border-[#D7D7D7] py-2 px-8 ${i == 0 ? "clip-trapezium-right" : i == tabData.length-1 ? "clip-trapezium-left" : "clip-trapezium-both"}`}
+                ? "bg-primaryButton text-white font-bold"
+                : "bg-[#F6F6F6] text-[#667D8C]"
+            } w-full border border-[#D7D7D7] py-2 px-8 ${
+              i == 0
+                ? "clip-trapezium-right"
+                : i == tabData.length - 1
+                ? "clip-trapezium-left"
+                : "clip-trapezium-both"
+            }`}
           >
-            <span className="text-[12px]">{tab.label}</span>
+            <span className="text-[20px] tracking-[0.02em]">{tab.label}</span>
           </button>
         ))}
       </div>
