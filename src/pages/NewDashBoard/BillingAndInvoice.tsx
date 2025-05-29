@@ -20,7 +20,8 @@ import ButtonInput from "../../components/atoms/ButtonInput";
 import { BillAndInvoiceMonitoringPicsSegment } from "./BillAndInvoiceMonitoringPicsSegment";
 import { generateImageFromPdf } from "../../utils/generatePdf";
 
-const dashboardScreenshotName = ["Cost Consumption", "Daily Impression", "Hardware Performance", "Audience Impression", "Campaign Duration"]
+const dashboardScreenshotName = [{id: 5, label: "Cost Consumption"}, {id: 4, label: "Daily Impression"}, {id: 3, label: "Hardware Performance"}, {id: 2, label: "Audience Impression"}, {id: 1, label: "Campaign Duration"}]
+
 export const BillingAndInvoice = (props: any) => {
   const dispatch = useDispatch<any>();
 
@@ -101,13 +102,11 @@ export const BillingAndInvoice = (props: any) => {
     data: screenshots
   } = useSelector((state: any) => state.takeDashboardScreenShot)
 
-  const handleInvoicePdfGeneration = useSelector((state: any) => state.handleInvoicePdfGeneration)
-  console.log("handleInvoicePdfGeneration", handleInvoicePdfGeneration)
   const {
     loading: loadingInvoicePdf,
     error: errorInvoicePdf,
     data: invoicePdf
-  } = handleInvoicePdfGeneration;
+  } = useSelector((state: any) => state.handleInvoicePdfGeneration);
 
   const {
     loading: loadingJobStatus,
@@ -130,14 +129,12 @@ export const BillingAndInvoice = (props: any) => {
     }
   };
 
-  console.log("bill Invoice details Data: ", billInvoiceDetailsData)
   const generateBillInvoice = useCallback(async () => {
     let poImage;
     if (billInvoiceDetailsData?.uploadedPO) {
       poImage = await generateImageFromPdf(billInvoiceDetailsData?.uploadedPO);
     }
 
-    console.log("billInvoiceDetailsData: ", billInvoiceDetailsData);
     dispatch(handleInvoicePdfGenerationAction({
       fileName: `INVOICE_${campaignDetails?.brandName}_${campaignDetails?.name}`,
       jsonData: {
@@ -224,15 +221,15 @@ export const BillingAndInvoice = (props: any) => {
     let shots: any = [];
     if (dashboardScreenshots.length > 0 && updateScreenshots && screenshots?.images) {
       for (let image of screenshots?.images) {
-        const fileReady = await handleBase64ImageUpload(`${image}`);
-        const awsurl = await getAWSUrl({
-          name: fileReady.file.name,
-          file: fileReady.file,
-          url: fileReady.fileURL,
-          fileType: fileReady.file.type,
-          fileSize: fileReady.file.size,
-        });
-        shots.push(awsurl);
+        // const fileReady = await handleBase64ImageUpload(`${image}`);
+        // const awsurl = await getAWSUrl({
+        //   name: fileReady.file.name,
+        //   file: fileReady.file,
+        //   url: fileReady.fileURL,
+        //   fileType: fileReady.file.type,
+        //   fileSize: fileReady.file.size,
+        // });
+        shots.push(image);
       }
     }
     console.log("shots: ", shots);
@@ -289,7 +286,6 @@ export const BillingAndInvoice = (props: any) => {
       outPutGstAmount: invoiceAmount * 0.18,
       totalAmount: invoiceAmount * 1.18,
       currency: "INR",
-      dashboardScreenshots: billingStep === 2 && updateScreenshots && { [`${new Date().getTime()}`]: shots }
     }));
     setUpdateScreenshots(false);
   }, [poNumber, dashboardScreenshots.length, updateScreenshots, screenshots?.images, dispatch, clientAgencyDetailsData?._id, clientAgencyDetailsData?.poRecieved, clientAgencyName, pocName, pocEmail, pocContact, pocDesignation, address, city, stateName, country, phone, email, website, zipCode, gst, pan, campaignDetails?._id, campaignDetails?.name, campaignDetails?.clientName, campaignDetails?.clientApprovalImgs?.length, poDate, poFiles, todayDate, billingStep, invoiceDescription, invoiceQuantity, invoiceAmount]);
@@ -297,10 +293,12 @@ export const BillingAndInvoice = (props: any) => {
   const takeScreenShot = () => {
     setUpdateScreenshots(true);
     dispatch(takeDashboardScreenShotAction({
-      // url: `${window.location.origin}/campaignDashboard/${campaignDetails?._id}`,
-      url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
+      campaignId: campaignDetails?._id,
+      url: `${window.location.origin}/campaignDashboard/${campaignDetails?._id}`,
+      // url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
       // url: `http://localhost:3000/campaignDashboard/${campaignDetails?._id}`,
       tabs: ["1", "2", "3", "4", "5"]
+      // tabs: ["1"]
     }))
   }
 
@@ -356,7 +354,7 @@ export const BillingAndInvoice = (props: any) => {
       });
     }
   },[successAddClientAgencyDetails, billInvoiceDetailsData, dispatch]);
-console.log(campaignDetails)
+
   useEffect(() => {
     if (successBillInvoiceCreation) {
       message.success("Invoice Details Added Successfully...");
@@ -366,10 +364,13 @@ console.log(campaignDetails)
     }
 
     if (successBillInvoiceCreation) {
-      setBillingStep(billingStep + 1)
-    }
-
-    if (campaignDetails && !clientAgencyDetailsData) {
+      if (billingStep == 2 && dashboardScreenshots?.length === 0) {
+        message.info("Your dashboard screen is not captured, please capture it first...");
+      } else if (billingStep == 2 && dashboardScreenshots?.length === 1 && dashboardScreenshots[0].status == "processing") {
+        message.info("Your dashboard screen is processing, please wait...");
+      } else {
+        setBillingStep(billingStep + 1)
+      }
     }
 
     if (campaignDetails) {
@@ -378,7 +379,6 @@ console.log(campaignDetails)
         ? Number(campaignDetails?.totalCampaignBudget)
         : Number(campaignDetails?.finalCampaignBudget)
       });
-      console.log(campaignDetails)
       dispatch(getBillInvoiceDetails({
         campaignCreationId: campaignDetails?._id,
         invoiceId: campaignDetails?.invoiceId
@@ -391,7 +391,7 @@ console.log(campaignDetails)
       }
     }
 
-  },[dispatch, billingStep, campaignDetails, siteLevelData, clientAgencyDetailsData, successBillInvoiceCreation]);
+  },[dispatch, billingStep, campaignDetails, siteLevelData, clientAgencyDetailsData, successBillInvoiceCreation, dashboardScreenshots]);
   
    useEffect(() => {
 
@@ -404,9 +404,9 @@ console.log(campaignDetails)
       setInvoiceQuantity(billInvoiceDetailsData.tableContent.quantity);
       setPOFiles([billInvoiceDetailsData.uploadedPO]);
 
-      if (dashboardScreenshots.length === 0 && billInvoiceDetailsData?.dashboardScreenshots) {
-        const screenshots: any = Object.entries({...billInvoiceDetailsData.dashboardScreenshots})?.[0]?.[1] || [];
-        setDashboardScreenshots([...screenshots]);
+      if (dashboardScreenshots.length === 0 && billInvoiceDetailsData?.dashboardScreenshots?.length > 0) {
+        const screenshots: any = billInvoiceDetailsData.dashboardScreenshots[billInvoiceDetailsData.dashboardScreenshots.length - 1]?.screenshots;
+        setDashboardScreenshots(screenshots);
       }
     }
 
@@ -438,15 +438,15 @@ console.log(campaignDetails)
       setDisabledGenerate(false)
     }
 
-    if (screenshots?.images?.length > 0) {
+    if (screenshots?.length > 0) {
       setDashboardScreenshots((prev: any) => 
-        JSON.stringify(prev) !== JSON.stringify(screenshots?.images) 
-          ? [...screenshots?.images] 
+        JSON.stringify(prev) !== JSON.stringify(screenshots) 
+          ? [...screenshots] 
           : prev
       );
     }
 
-  },[dispatch, billingStep, screenshots?.images]);
+  },[dispatch, billingStep, screenshots]);
 
   useEffect(() => {
     if (billInvoiceDetailsData) {
@@ -476,8 +476,6 @@ console.log(campaignDetails)
       //   clearInterval(interval);
       // }
   },[campaignDetails, dispatch, invoicePdf, jobStatus])
-
-  
 
   useEffect(() => {
     if (props?.open) {
@@ -780,7 +778,6 @@ console.log(campaignDetails)
                     <div key={i} className="col-span-1 py-4">
                       <img 
                         onClick={() => {
-                          console.log(image?.split("/"));
                           setMagnifiedImage(image);
                           setMagnifiedImageView(!magnifiedImageView);
                         }} 
@@ -788,7 +785,7 @@ console.log(campaignDetails)
                         src={image?.split("/").includes("https:") ? image : `data:image/png;base64,${image}`}
                         alt="image"
                       />
-                      <h1 className="p-1 text-[12px] truncate">{dashboardScreenshotName[i]}</h1>
+                      <h1 className="p-1 text-[12px] truncate">{dashboardScreenshotName?.find((ds: any) => ds.id === Number(image?.match(/_([0-9]+)\.png$/)?.[1]))?.label}</h1>
                     </div>
                   ))}
                 </div>
