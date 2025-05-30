@@ -130,6 +130,10 @@ export const MonitoringPicturesAllSitesPopup = ({
     }
   };
 
+  const handleDownloadPDF = () => {
+    alert("coming soon")
+  }
+
   // Toggle all cities
   const toggleAllCities = (checked: boolean) => {
     const allCities = Object.keys(data?.cityWiseData || {}).filter(
@@ -166,11 +170,35 @@ export const MonitoringPicturesAllSitesPopup = ({
               </span>
             </h1>
           </div>
-          <i
-            className="fi fi-br-cross text-[14px] cursor-pointer"
-            onClick={handleCancel}
-          />
+
+          <div className="flex items-center gap-3">
+            {/* Download PDF Button */}
+            <i
+              className="fi fi-rr-file-pdf text-[16px] text-[#0E212E] cursor-pointer"
+              title="Download PDF"
+              onClick={handleDownloadPDF}
+            />
+
+            {/* Download ZIP Button as anchor tag */}
+            <a
+              href={`https://api.justmonad.com/api/v2/monitoring/downloadMonitoringPicsZip?id=${campaignId}`}
+              download
+              className="cursor-pointer"
+              title="Download ZIP"
+            >
+              <i className="fi fi-rr-folder-download text-[16px] text-[#0E212E]" />
+            </a>
+
+            {/* Close Button */}
+            <i
+              className="fi fi-br-cross text-[14px] cursor-pointer"
+              title="Close"
+              onClick={handleCancel}
+            />
+          </div>
         </div>
+
+
         <div className="my-4 grid grid-cols-6 max-h-[65vh] gap-1">
           {/* Cities Filter */}
           <div className="border border-gray-100 rounded-[12px] col-span-1 max-h-[65vh] overflow-auto">
@@ -181,7 +209,7 @@ export const MonitoringPicturesAllSitesPopup = ({
                   indeterminate={
                     selectedCities.length > 0 &&
                     selectedCities.length <
-                      Object.keys(data?.cityWiseData || {}).length - 1
+                    Object.keys(data?.cityWiseData || {}).length - 1
                   }
                   onChange={(e) => toggleAllCities(e.target.checked)}
                   checked={
@@ -243,7 +271,7 @@ export const MonitoringPicturesAllSitesPopup = ({
                   indeterminate={
                     selectedTouchPoints.length > 0 &&
                     selectedTouchPoints.length <
-                      Object.keys(data?.touchPointWiseData || {}).length - 1
+                    Object.keys(data?.touchPointWiseData || {}).length - 1
                   }
                   onChange={(e) => toggleAllTouchPoints(e.target.checked)}
                   checked={
@@ -307,7 +335,7 @@ export const MonitoringPicturesAllSitesPopup = ({
                   indeterminate={
                     selectedScreenTypes.length > 0 &&
                     selectedScreenTypes.length <
-                      Object.keys(data?.screenTypeWiseData || {}).length - 1
+                    Object.keys(data?.screenTypeWiseData || {}).length - 1
                   }
                   onChange={(e) => toggleAllScreenTypes(e.target.checked)}
                   checked={
