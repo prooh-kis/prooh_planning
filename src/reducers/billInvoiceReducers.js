@@ -90,9 +90,36 @@ export function handleInvoicePdfGenerationReducer(state = {}, action) {
   }
 }
 
+export function takeDashboardScreenShotReducer(state = {}, action) {
+  switch (action.type) {
+    case TAKE_DASHBOARD_SCREENSHOT_REQUEST:
+      return { 
+        ...state,  // Preserve existing state
+        loading: true 
+      };
+      
+    case TAKE_DASHBOARD_SCREENSHOT_SUCCESS:
+      return {
+        ...state,  // Preserve existing state
+        loading: false,
+        data: action.payload,
+      };
+      
+    case TAKE_DASHBOARD_SCREENSHOT_FAIL:
+      return {
+        ...state,  // Preserve existing state
+        loading: false,
+        error: {
+          ...action.payload  // Create new error object
+        }
+      };
+      
+    default:
+      return state;
+  }
+}
 
-
-export function getBillInvoiceJobStatusReducer(state = [], action) {
+export function getQueueJobStatusReducer(state = [], action) {
   switch (action.type) {
     case PULL_JOB_STATUS_REQUEST:
       return { loading: true };
@@ -114,41 +141,6 @@ export function getBillInvoiceJobStatusReducer(state = [], action) {
         success: false,
         data: state,
       };
-    default:
-      return state;
-  }
-}
-
-
-
-export function takeDashboardScreenShotReducer(state = {}, action) {
-  switch (action.type) {
-    case TAKE_DASHBOARD_SCREENSHOT_REQUEST:
-      return { 
-        ...state,  // Preserve existing state
-        loading: true 
-      };
-      
-    case TAKE_DASHBOARD_SCREENSHOT_SUCCESS:
-      return {
-        ...state,  // Preserve existing state
-        loading: false,
-        data: {
-          ...action.payload,  // Create new object for payload
-          // If images is an array, ensure it's a new array
-          images: action.payload.images ? [...action.payload.images] : []
-        }
-      };
-      
-    case TAKE_DASHBOARD_SCREENSHOT_FAIL:
-      return {
-        ...state,  // Preserve existing state
-        loading: false,
-        error: {
-          ...action.payload  // Create new error object
-        }
-      };
-      
     default:
       return state;
   }

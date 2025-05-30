@@ -3,22 +3,31 @@ import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { BillingAndInvoiceEnterDetails } from "./BillAndInvoiceEnterDetails";
 import { FileUploadButton, PrimaryButton } from "../../components";
-import { createBillInvoice, getBillInvoiceDetails, getBillInvoiceJobStatusAction, handleInvoicePdfGenerationAction, takeDashboardScreenShotAction } from "../../actions/billInvoiceAction";
-import { addClientAgencyDetails, getClientAgencyDetails } from "../../actions/clientAgencyAction";
-import { generateBillAndInvoicePdf } from "../../utils/generateInvoicePdf";
+import { createBillInvoice, getBillInvoiceDetails, getQueueJobStatusAction, handleInvoicePdfGenerationAction, takeDashboardScreenShotAction } from "../../actions/billInvoiceAction";
+import { getClientAgencyDetails } from "../../actions/clientAgencyAction";
 import { BillAndInvoiceSteppers } from "./BillAndInvoiceSteppers";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { message, Tooltip } from "antd";
-import { ADD_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyConstants";
 import { CREATE_BILL_INVOICE_RESET } from "../../constants/billInvoiceConstant";
 import {
   getAWSUrlToUploadFile,
   saveFileOnAWS,
 } from "../../utils/awsUtils";
-import { handleBase64ImageUpload } from "../../utils/fileUtils";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import { BillAndInvoiceMonitoringPicsSegment } from "./BillAndInvoiceMonitoringPicsSegment";
 import { generateImageFromPdf } from "../../utils/generatePdf";
+import { io, Socket } from 'socket.io-client';
+
+// Define types for job status
+type JobStatus = 'stuck' | 'waiting' | 'active' | 'completed' | 'failed' | 'error' | 'not_found' | 'no_job' ;
+
+interface StatusUpdate {
+  jobId: string;
+  status: JobStatus;
+  progress: number;
+  result?: string; // URL or base64 image when completed
+  error?: string;
+}
 
 const dashboardScreenshotName = [{id: 5, label: "Cost Consumption"}, {id: 4, label: "Daily Impression"}, {id: 3, label: "Hardware Performance"}, {id: 2, label: "Audience Impression"}, {id: 1, label: "Campaign Duration"}]
 
@@ -27,53 +36,29 @@ export const BillingAndInvoice = (props: any) => {
 
   const { loading, onClose, campaignDetails, siteLevelData, pathname } = props;
 
-  // po data
-  const [poNumber, setPoNumber] = useState<string>("");
-  const [poDate, setPoDate] = useState<string>("");
-  const [poFiles, setPOFiles] = useState<any[]>([]);
 
-  // client/agency data
-  const [clientAgencyName, setClientAgencyName] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
-  const [city, setCity] = useState<string>("");
-  const [stateName, setStateName] = useState<string>("");
-  const [country, setCountry] = useState<string>("");
-  const [zipCode, setZipCode] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [website, setWebsite] = useState<string>("");
-  const [gst, setGst] = useState<string>("");
-  const [pan, setPan] = useState<string>("");
-  // poc data
-  const [pocName, setPocName] = useState<string>("");
-  const [pocContact, setPocContact] = useState<string>("");
-  const [pocEmail, setPocEmail] = useState<string>("");
-  const [pocDesignation, setPocDesignation] = useState<string>("");
 
-  // invoice data
-  const [invoiceDescription, setInvoiceDescription] = useState<string>("");
-  const [invoiceQuantity, setInvoiceQuantity] = useState<string>("");
-  const [invoiceCurrency, setInvoiceCurrency] = useState<string>("INR");
-  const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
 
   const [magnifiedImageView, setMagnifiedImageView] = useState<boolean>(false);
   const [magnifiedImage, setMagnifiedImage] = useState<any>(null);
 
   const [billingStep, setBillingStep] = useState<number>(0);
+
+  const [poFiles, setPOFiles] = useState<any[]>([]);
   const [dashboardScreenshots, setDashboardScreenshots] = useState<any>([]);
-  const [updateScreenshots, setUpdateScreenshots] = useState<boolean>(false);
+  const [ssLoading, setSSLoading] = useState<boolean>(false);
 
   const [disabledGenerate, setDisabledGenerate] = useState<boolean>(true);
 
-  const [billLoading, setBillLoading] = useState<any>(false);
-  
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [status, setStatus] = useState<StatusUpdate | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [jobId, setJobId] = useState<any>(null);
+  const [jobType, setJobType] = useState<any>(null);
+  const [socketUrl, setSocketUrl] = useState<any>("http://localhost:4444");
+
   const todayDate = moment(new Date())?.format("YYYY-MM-DD hh:mm:ss");
 
-  const {
-    loading: loadingAddClientAgencyDetails,
-    error: errorAddClientAgencyDetails,
-    success: successAddClientAgencyDetails,
-  } = useSelector((state: any) => state.clientAgencyDetailsAdd);
 
   const {
     loading: loadingBillInvoiceCreation,
@@ -112,7 +97,7 @@ export const BillingAndInvoice = (props: any) => {
     loading: loadingJobStatus,
     error: errorJobStatus,
     data: jobStatus
-  } = useSelector((state: any) => state.getBillInvoiceJobStatus);
+  } = useSelector((state: any) => state.getQueueJobStatus);
   
   
   const getAWSUrl = async (data: any) => {
@@ -137,161 +122,67 @@ export const BillingAndInvoice = (props: any) => {
 
     dispatch(handleInvoicePdfGenerationAction({
       fileName: `INVOICE_${campaignDetails?.brandName}_${campaignDetails?.name}`,
-      jsonData: {
-        planner: campaignDetails?.campaignPlannerName,
-        plannerEmail: campaignDetails?.campaignPlannerEmail,
-        clientAgencyName,
-        pan,
-        gst,
-        pocName,
-        pocEmail,
-        pocContact,
-        pocDesignation,
-        officeAddress: {
-          address,
-          city,
-          state: stateName,
-          country,
-          phone,
-          email,
-          website,
-          zipCode,
-          gst,
-          pan,
-        },
-        invoiceNumber: `PROOH/${String(new Date().getFullYear() - 1)}-${String(new Date().getFullYear())}/${clientAgencyDetailsData?.totalInvoiceNumber || 0}`,
-        invoiceDate: todayDate,
-        internalSoNumber: `PROOH/${String(new Date().getFullYear() - 1)}-${String(new Date().getFullYear())}/${clientAgencyDetailsData?.totalInvoiceNumber || 0}/SO`,
-        clientConfirmation: campaignDetails?.clientApprovalImgs?.length > 0 ? "Mail Confirmation" : "mail confirmation",
-        clientOrderDate: poDate,
-        poNumber,
-        invoiceDescription,
-        invoiceQuantity,
-        invoiceCurrency,
-        invoiceAmount: Number(invoiceAmount.toFixed(0)),
-        subTotalAmount: Number(invoiceAmount.toFixed(0)) * 1.18,
-        outPutGstPercent: 18,
-        outPutGstAmount: Number(invoiceAmount.toFixed(0)) * 0.18,
-        campaignName: `${campaignDetails?.name} (${campaignDetails?.brandName})`,
-        startDate: moment(campaignDetails?.startDate).format("YYYY-MM-DD"),
-        endDate: moment(campaignDetails?.endDate).format("YYYY-MM-DD"),
-      },
+      // jsonData: {
+      //   planner: campaignDetails?.campaignPlannerName,
+      //   plannerEmail: campaignDetails?.campaignPlannerEmail,
+      //   clientAgencyName,
+      //   pan,
+      //   gst,
+      //   pocName,
+      //   pocEmail,
+      //   pocContact,
+      //   pocDesignation,
+      //   officeAddress: {
+      //     address,
+      //     city,
+      //     state: stateName,
+      //     country,
+      //     phone,
+      //     email,
+      //     website,
+      //     zipCode,
+      //     gst,
+      //     pan,
+      //   },
+      //   invoiceNumber: `PROOH/${String(new Date().getFullYear() - 1)}-${String(new Date().getFullYear())}/${clientAgencyDetailsData?.totalInvoiceNumber || 0}`,
+      //   invoiceDate: todayDate,
+      //   internalSoNumber: `PROOH/${String(new Date().getFullYear() - 1)}-${String(new Date().getFullYear())}/${clientAgencyDetailsData?.totalInvoiceNumber || 0}/SO`,
+      //   clientConfirmation: campaignDetails?.clientApprovalImgs?.length > 0 ? "Mail Confirmation" : "mail confirmation",
+      //   clientOrderDate: poDate,
+      //   poNumber,
+      //   invoiceDescription,
+      //   invoiceQuantity,
+      //   invoiceCurrency,
+      //   invoiceAmount: Number(invoiceAmount.toFixed(0)),
+      //   subTotalAmount: Number(invoiceAmount.toFixed(0)) * 1.18,
+      //   outPutGstPercent: 18,
+      //   outPutGstAmount: Number(invoiceAmount.toFixed(0)) * 0.18,
+      //   campaignName: `${campaignDetails?.name} (${campaignDetails?.brandName})`,
+      //   startDate: moment(campaignDetails?.startDate).format("YYYY-MM-DD"),
+      //   endDate: moment(campaignDetails?.endDate).format("YYYY-MM-DD"),
+      // },
       billInvoiceDetailsData,
       campaignDetails,
+      clientAgencyDetailsData,
       siteLevelData,
       poImage,
       newInvoice: false,
     }));
-  }, [
-    billInvoiceDetailsData,
-    campaignDetails,
-    clientAgencyName,
-    pan,
-    gst,
-    pocName,
-    pocEmail,
-    pocContact,
-    pocDesignation,
-    address,
-    city,
-    stateName,
-    country,
-    phone,
-    email,
-    website,
-    zipCode,
-    poDate,
-    poNumber,
-    invoiceDescription,
-    invoiceQuantity,
-    invoiceCurrency,
-    invoiceAmount,
-    clientAgencyDetailsData?.totalInvoiceNumber,
-    siteLevelData,
-    dispatch,
-    todayDate
-  ]);
+  }, [billInvoiceDetailsData, dispatch, campaignDetails, clientAgencyDetailsData, siteLevelData]);
   
-  const saveClientAgencyDetails = useCallback(async () => {
-    if (!poNumber) {
-      message.info("You have not entered PO Number for this invoice, please take a look...");
-      return;
+  const saveClientAgencyDetails = () => {
+    setBillingStep(billingStep + 1);
+    if (billingStep === 1) {
+      dispatch(createBillInvoice({
+        campaignCreationId: campaignDetails?._id,
+        uploadedPO: billingStep === 1 && poFiles.length > 0 ? poFiles[poFiles.length - 1].awsURL : undefined,
+      }))
     }
+  };
   
-    let shots: any = [];
-    if (dashboardScreenshots.length > 0 && updateScreenshots && screenshots?.images) {
-      for (let image of screenshots?.images) {
-        // const fileReady = await handleBase64ImageUpload(`${image}`);
-        // const awsurl = await getAWSUrl({
-        //   name: fileReady.file.name,
-        //   file: fileReady.file,
-        //   url: fileReady.fileURL,
-        //   fileType: fileReady.file.type,
-        //   fileSize: fileReady.file.size,
-        // });
-        shots.push(image);
-      }
-    }
-    console.log("shots: ", shots);
-  
-    dispatch(addClientAgencyDetails({
-      _id: clientAgencyDetailsData?._id,
-      clientAgencyName,
-      pocName,
-      pocEmail,
-      pocContact,
-      pocDesignation,
-      officeAddress: {
-        address,
-        city,
-        state: stateName,
-        country,
-        phone,
-        email,
-        website,
-        zipCode,
-        gst,
-        pan,
-      },
-      poRecieved: poNumber && !clientAgencyDetailsData?.poRecieved?.map((po: any) => po.poNumber)?.includes(poNumber) 
-        ? [...(clientAgencyDetailsData?.poRecieved || []), {
-            campaignCreationId: campaignDetails?._id,
-            poNumber: poNumber,
-            poDate: poDate,
-            uploadedPO: poFiles.length > 0 ? poFiles[poFiles.length - 1].awsURL : "",
-          }] 
-        : clientAgencyDetailsData?.poRecieved
-    }));
-  
-    dispatch(createBillInvoice({
-      campaignCreationId: campaignDetails?._id,
-      campaignName: campaignDetails?.name,
-      clientAgencyName: campaignDetails?.clientName,
-      invoiceNumber: `PROOH/${campaignDetails?._id}`,
-      invoiceDate: todayDate,
-      clientConfirmation: campaignDetails?.clientApprovalImgs?.length > 0 ? "Mail Confirmation" : "mail confirmation",
-      clientOrderDate: poDate,
-      poNumber: poNumber,
-      poDate: poDate,
-      uploadedPO: billingStep === 1 && poFiles.length > 0 ? poFiles[poFiles.length - 1].awsURL : undefined,
-      tableContent: {
-        description: invoiceDescription,
-        quantity: invoiceQuantity,
-        amount: invoiceAmount,
-        rate: invoiceAmount,
-        hsnsac: ""
-      },
-      subTotalAmount: invoiceAmount,
-      outPutGstPercent: 18,
-      outPutGstAmount: invoiceAmount * 0.18,
-      totalAmount: invoiceAmount * 1.18,
-      currency: "INR",
-    }));
-    setUpdateScreenshots(false);
-  }, [poNumber, dashboardScreenshots.length, updateScreenshots, screenshots?.images, dispatch, clientAgencyDetailsData?._id, clientAgencyDetailsData?.poRecieved, clientAgencyName, pocName, pocEmail, pocContact, pocDesignation, address, city, stateName, country, phone, email, website, zipCode, gst, pan, campaignDetails?._id, campaignDetails?.name, campaignDetails?.clientName, campaignDetails?.clientApprovalImgs?.length, poDate, poFiles, todayDate, billingStep, invoiceDescription, invoiceQuantity, invoiceAmount]);
 
   const takeScreenShot = () => {
-    setUpdateScreenshots(true);
+    setSSLoading(true);
     dispatch(takeDashboardScreenShotAction({
       campaignId: campaignDetails?._id,
       url: `${window.location.origin}/campaignDashboard/${campaignDetails?._id}`,
@@ -333,29 +224,16 @@ export const BillingAndInvoice = (props: any) => {
     })
   };
 
-
-
   useEffect(() => {
-   if (errorAddClientAgencyDetails) {
-    message.error("Error in adding client/agency details...")
-   }
+
    if (errorBillInvoiceCreation) {
     message.error("Error in adding invoice details...")
    }
 
-  },[errorAddClientAgencyDetails, errorBillInvoiceCreation]);
+  },[errorBillInvoiceCreation]);
 
   useEffect(() => {
-    if (successAddClientAgencyDetails && billInvoiceDetailsData) {
-      message.success("Client/Agency Details Added Successfully...");
 
-      dispatch({
-        type: ADD_CLIENT_AGENCY_DETAILS_RESET
-      });
-    }
-  },[successAddClientAgencyDetails, billInvoiceDetailsData, dispatch]);
-
-  useEffect(() => {
     if (successBillInvoiceCreation) {
       message.success("Invoice Details Added Successfully...");
       dispatch({
@@ -366,19 +244,23 @@ export const BillingAndInvoice = (props: any) => {
     if (successBillInvoiceCreation) {
       if (billingStep == 2 && dashboardScreenshots?.length === 0) {
         message.info("Your dashboard screen is not captured, please capture it first...");
-      } else if (billingStep == 2 && dashboardScreenshots?.length === 1 && dashboardScreenshots[0].status == "processing") {
+      } else if (billingStep == 2 && dashboardScreenshots?.length === 1 && dashboardScreenshots[0].status == "active") {
         message.info("Your dashboard screen is processing, please wait...");
       } else {
-        setBillingStep(billingStep + 1)
       }
     }
 
+  },[dispatch, successBillInvoiceCreation, billingStep, dashboardScreenshots]);
+
+  
+  //  useEffect(() => {
+
+   
+  // },[billInvoiceDetailsData, dashboardScreenshots]);
+    
+  useEffect(() => {
+  
     if (campaignDetails) {
-      setInvoiceAmount(() => {
-        return campaignDetails?.discount === 0 || campaignDetails?.discount === undefined
-        ? Number(campaignDetails?.totalCampaignBudget)
-        : Number(campaignDetails?.finalCampaignBudget)
-      });
       dispatch(getBillInvoiceDetails({
         campaignCreationId: campaignDetails?._id,
         invoiceId: campaignDetails?.invoiceId
@@ -391,78 +273,51 @@ export const BillingAndInvoice = (props: any) => {
       }
     }
 
-  },[dispatch, billingStep, campaignDetails, siteLevelData, clientAgencyDetailsData, successBillInvoiceCreation, dashboardScreenshots]);
-  
-   useEffect(() => {
+  },[campaignDetails, clientAgencyDetailsData, dispatch]);
+
+
+  useEffect(() => {
+    if (billingStep === 2) {
+      setJobType("screenshot");
+    }
+    if (billingStep === 3) {
+      setJobType("invoice");
+      setDisabledGenerate(false);
+    }
+
+    // if (screenshots?.length > 0) {
+    //   setDashboardScreenshots((prev: any) => 
+    //     JSON.stringify(prev) !== JSON.stringify(screenshots) 
+    //       ? [...screenshots] 
+    //       : prev
+    //   );
+    // }
 
     if (billInvoiceDetailsData) {
-
-      setPoNumber(billInvoiceDetailsData?.poNumber);
-      setPoDate(billInvoiceDetailsData?.poDate);
-      setInvoiceDescription(billInvoiceDetailsData.tableContent.description);
-      setInvoiceCurrency(billInvoiceDetailsData.currency);
-      setInvoiceQuantity(billInvoiceDetailsData.tableContent.quantity);
       setPOFiles([billInvoiceDetailsData.uploadedPO]);
-
       if (dashboardScreenshots.length === 0 && billInvoiceDetailsData?.dashboardScreenshots?.length > 0) {
-        const screenshots: any = billInvoiceDetailsData.dashboardScreenshots[billInvoiceDetailsData.dashboardScreenshots.length - 1]?.screenshots;
+        const screenshots: any = billInvoiceDetailsData.dashboardScreenshots[billInvoiceDetailsData.dashboardScreenshots?.length - 1]?.screenshots;
         setDashboardScreenshots(screenshots);
       }
     }
 
-    if (clientAgencyDetailsData) {
-      setClientAgencyName(clientAgencyDetailsData?.clientAgencyName || "");
-      setAddress(clientAgencyDetailsData?.officeAddress?.address || "");
-      setCity(clientAgencyDetailsData?.officeAddress?.city || "");
-      setStateName(clientAgencyDetailsData?.officeAddress?.state || "");
-      setCountry(clientAgencyDetailsData?.officeAddress?.country || "");
-      setPhone(clientAgencyDetailsData?.officeAddress?.phone || "");
-      setEmail(clientAgencyDetailsData?.officeAddress?.email || "");
-      setWebsite(clientAgencyDetailsData?.officeAddress?.website || "");
-      setZipCode(clientAgencyDetailsData?.officeAddress?.zipCode || "");
-      setGst(clientAgencyDetailsData?.officeAddress?.gst || "");
-      setPan(clientAgencyDetailsData?.officeAddress?.pan || "");
-      setPocName(clientAgencyDetailsData?.pocName || "");
-      setPocEmail(clientAgencyDetailsData?.pocEmail || "");
-      setPocContact(clientAgencyDetailsData?.pocContact || "");
-      setPocDesignation(clientAgencyDetailsData?.pocDesignation || "");
+    if (screenshots) {
+      setJobId(screenshots.jobId)
     }
-  },[billInvoiceDetailsData, clientAgencyDetailsData, dashboardScreenshots]);
-    
+
+  },[dispatch, billingStep, screenshots, billInvoiceDetailsData, dashboardScreenshots]);
 
   useEffect(() => {
-    // if (billingStep === 2) {
-    //   takeScreenShot();
-    // }
-    if (billingStep === 3) {
-      setDisabledGenerate(false)
-    }
-
-    if (screenshots?.length > 0) {
-      setDashboardScreenshots((prev: any) => 
-        JSON.stringify(prev) !== JSON.stringify(screenshots) 
-          ? [...screenshots] 
-          : prev
-      );
-    }
-
-  },[dispatch, billingStep, screenshots]);
-
-  useEffect(() => {
-    if (billInvoiceDetailsData) {
-      // message.info("Invoice generated, Download bill invoice...")
-      // generateBillInvoice();
-    }
-
     if (invoicePdf && invoicePdf?.jobId) {
       message.info("Invoice in being generated, will be made available in a moment...");
-      dispatch(getBillInvoiceJobStatusAction({
+      dispatch(getQueueJobStatusAction({
+        type: "invoice",
         campaignCreationId: campaignDetails?._id, 
         apiUrl: invoicePdf?.statusUrl,
         jobId: invoicePdf?.jobId,
       }));
     }
-  },[billInvoiceDetailsData, campaignDetails?._id, dispatch, invoicePdf]);
+  },[campaignDetails?._id, dispatch, invoicePdf]);
 
   useEffect(() => {
    
@@ -475,7 +330,66 @@ export const BillingAndInvoice = (props: any) => {
       // return () => {
       //   clearInterval(interval);
       // }
-  },[campaignDetails, dispatch, invoicePdf, jobStatus])
+  },[invoicePdf, jobStatus]);
+
+  useEffect(() => {
+    if (jobId !== null || jobId !== undefined || jobId !== "") {
+      console.log(jobId);
+      // Establish connection
+      const newSocket = io(socketUrl, {
+        transports: ['websocket']
+      });
+    setSocket(newSocket);
+    // Connection event handlers
+    newSocket.on('connect', () => {
+      setIsConnected(true);
+      console.log('Connected to WebSocket server');
+      
+      // Subscribe to job status
+      if (jobType === "screenshot") {
+        newSocket.emit('subscribeToScreenshotJob', jobId);
+      }
+      if (jobType === "invoice") {
+        newSocket.emit('subscribeToInvoiceJob', jobId);
+      }
+    });
+
+    // Status update handler
+    newSocket.on('screenshotJobStatus', (update: StatusUpdate) => {
+      console.log('Job status update:', update);
+      setStatus(update);
+      if (update.status === "completed" && update.result) {
+        const newScreenshots: any = update?.result;
+         setDashboardScreenshots(newScreenshots.screenshots)
+         setSSLoading(false);
+      }
+
+      if (update.status === "active") {
+        setSSLoading(true);
+      }
+
+      if (update.status === "stuck")  {
+        // dispatch(getScreen)
+      }
+      if (update.status === "not_found") {
+        setSSLoading(false);
+        message.info("Screenshot capture failed, please retry again after reloading...")
+      }
+    });
+
+    // Disconnect handler
+    newSocket.on('disconnect', () => {
+      setIsConnected(false);
+      console.log('Disconnected from WebSocket server');
+    });
+
+    // Cleanup on unmount
+    return () => {
+      newSocket.disconnect();
+    };
+  }
+  }, [jobId, socketUrl, jobType]);
+
 
   useEffect(() => {
     if (props?.open) {
@@ -523,7 +437,7 @@ export const BillingAndInvoice = (props: any) => {
 
             <div className="flex gap-4 items-center">
               <div className="flex items-center gap-4">
-                {billLoading && (
+                {loadingBillInvoiceCreation && (
                   <div className="flex items-center justify-center">
                     <i className="fi fi-br-spinner text-gray-500 flex items-center animate-spin"></i>
                   </div>
@@ -631,49 +545,9 @@ export const BillingAndInvoice = (props: any) => {
               {clientAgencyDetailsData && (
                 <BillingAndInvoiceEnterDetails
                   todayDate={todayDate}
-                  poNumber={poNumber}
-                  setPoNumber={setPoNumber}
-                  clientAgencyName={clientAgencyName}
-                  setClientAgencyName={setClientAgencyName}
-                  setAddress={setAddress}
-                  address={address}
-                  city={city}
-                  setCity={setCity}
-                  setStateName={setStateName}
-                  stateName={stateName}
-                  setCountry={setCountry}
-                  country={country}
-                  phone={phone}
-                  setPhone={setPhone}
-                  email={email}
-                  setEmail={setEmail}
-                  website={website}
-                  setWebsite={setWebsite}
-                  zipCode={zipCode}
-                  setZipCode={setZipCode}
-                  gst={gst}
-                  setGst={setGst}
-                  pan={pan}
-                  setPan={setPan}
-                  pocName={pocName}
-                  setPocName={setPocName}
-                  pocEmail={pocEmail}
-                  setPocEmail={setPocEmail}
-                  pocContact={pocContact}
-                  setPocContact={setPocContact}
-                  setPocDesignation={setPocDesignation}
-                  pocDesignation={pocDesignation}
                   campaignDetails={campaignDetails}
-                  invoiceDescription={invoiceDescription}
-                  setInvoiceDescription={setInvoiceDescription}
-                  invoiceQuantity={invoiceQuantity}
-                  setInvoiceQuantity={setInvoiceQuantity}
-                  poDate={poDate}
-                  setPoDate={setPoDate}
-                  invoiceCurrency={invoiceCurrency}
-                  setInvoiceCurrency={setInvoiceCurrency}
-                  invoiceAmount={invoiceAmount}
-                  setInvoiceAmount={setInvoiceAmount}
+                  clientAgencyDetailsData={clientAgencyDetailsData}
+                  billInvoiceDetailsData={billInvoiceDetailsData}
                 />
               )}
             </div>
@@ -759,7 +633,7 @@ export const BillingAndInvoice = (props: any) => {
                   </Tooltip>
                 </div>
               </div>
-              {loadingScreenshot && (
+              {loadingScreenshot || ssLoading && (
                 <LoadingScreen />
               )}
               {dashboardScreenshots?.length === 0 && (

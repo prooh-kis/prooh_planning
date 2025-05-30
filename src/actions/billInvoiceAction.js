@@ -68,8 +68,6 @@ export const getBillInvoiceDetails = ({ campaignCreationId, invoiceId }) => asyn
   }
 };
 
-
-
 export const handleInvoicePdfGenerationAction = (input) => async (dispatch, getState) => {
   dispatch({
     type: GENERATE_PDF_GENERATION_REQUEST,
@@ -94,24 +92,45 @@ export const handleInvoicePdfGenerationAction = (input) => async (dispatch, getS
   }
 };
 
-export const getBillInvoiceJobStatusAction = (input) => async (dispatch, getState) => {
+export const takeDashboardScreenShotAction = (input) => async (dispatch, getState) => {
+  dispatch({
+    type: TAKE_DASHBOARD_SCREENSHOT_REQUEST,
+    payload: input,
+  });
+  try {
+    const { data } = await axios.post(
+      `${url}/takeDashboardScreenshot`,
+      input
+    );
+    dispatch({
+      type: TAKE_DASHBOARD_SCREENSHOT_SUCCESS,
+      payload: data
+    });
+  } catch (error) {
+    dispatch({
+      type: TAKE_DASHBOARD_SCREENSHOT_FAIL,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    });
+  }
+}
+
+
+export const getQueueJobStatusAction = (input) => async (dispatch, getState) => {
   dispatch({
     type: PULL_JOB_STATUS_REQUEST,
     payload: input,
   });
   try {
-    const { data, status, ...response } = await axios.post(`${url}/invoiceGenerationJobStatus`, input);
-    if (status === 404 && response.data.message === "No invoice generation job found with this id") {
-      dispatch({
-        type: PULL_JOB_STATUS_SUCCESS,
-        payload: {...response, status: "completed"},
-      });
-    } else {
-      dispatch({
-        type: PULL_JOB_STATUS_SUCCESS,
-        payload: data,
-      });
-    }
+    const { data } = await axios.post(`${url}/getQueueJobStatus`, input);
+ 
+    dispatch({
+      type: PULL_JOB_STATUS_SUCCESS,
+      payload: data,
+    });
   } catch (error) {
     dispatch({
       type: PULL_JOB_STATUS_FAIL,
@@ -125,33 +144,3 @@ export const getBillInvoiceJobStatusAction = (input) => async (dispatch, getStat
 
 }
 
-
-
-export const takeDashboardScreenShotAction = (input) => async (dispatch, getState) => {
-  dispatch({
-    type: TAKE_DASHBOARD_SCREENSHOT_REQUEST,
-    payload: input,
-  });
-  try {
-    const { data } = await axios.post(
-      `${url}/takeDashboardScreenshot`,
-      input
-    );
-    dispatch({
-      type: TAKE_DASHBOARD_SCREENSHOT_SUCCESS,
-      payload: {
-        ...data,
-        images: data.images ? [...data.images] : []
-      }
-    });
-  } catch (error) {
-    dispatch({
-      type: TAKE_DASHBOARD_SCREENSHOT_FAIL,
-      payload: {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-      },
-    });
-  }
-}

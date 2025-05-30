@@ -128,8 +128,9 @@ export const rootReducer = {
     billInvoiceCreation: billInvoiceReducers.billInvoiceCreationReducer,
     billInvoiceDetailsGet: billInvoiceReducers.billInvoiceDetailsGetReducer,
     handleInvoicePdfGeneration: billInvoiceReducers.handleInvoicePdfGenerationReducer,
-    getBillInvoiceJobStatus: billInvoiceReducers.getBillInvoiceJobStatusReducer,
     takeDashboardScreenShot: billInvoiceReducers.takeDashboardScreenShotReducer,
+
+    getQueueJobStatus: billInvoiceReducers.getQueueJobStatusReducer,
 
     // Landing
     saveContactDetails: landingReducers.saveContactDetailsForQueryReducer,
