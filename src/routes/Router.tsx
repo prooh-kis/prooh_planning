@@ -15,12 +15,9 @@ import {
   TriggerBasedPlanPage,
   IKnowItAllPlanPage,
   StoreBasedPlanPage,
-  MediaOwnerPage,
-  MarketersPage,
   SignIn,
   SignUp,
   MyUsers,
-  ProductsPage,
 } from "../pages";
 
 import { PrivateRoute } from "./PrivateRoute";
@@ -53,7 +50,6 @@ import { CampaignDetailsPage } from "../pages/CampaignDetailsPage";
 import { NewDashBoard } from "../pages/NewDashBoard";
 import Engagement from "../pages/Engagement";
 import { BrandAgencyPage } from "../pages/PageNotFound/BrandAgency";
-import { DataHeroPage } from "../pages/website/DataHeroPage";
 import { EditCampaignFlow } from "../pages/EditCampaignFlow";
 
 const Routers: React.FC = () => {
@@ -116,41 +112,6 @@ const Routers: React.FC = () => {
           element={
             <PublicRoute>
               <LandingPage />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path={PRODUCTS}
-          element={
-            <PublicRoute>
-              <ProductsPage />
-            </PublicRoute>
-          }
-        />
-
-        <Route
-          path={MEDIA_OWNER_PAGE}
-          element={
-            <PublicRoute>
-              <MediaOwnerPage />
-            </PublicRoute>
-          }
-        />
-
-        <Route
-          path={ADVERTISERS_PAGE}
-          element={
-            <PublicRoute>
-              <MarketersPage />
-            </PublicRoute>
-          }
-        />
-
-        <Route
-          path={DATA_HERO}
-          element={
-            <PublicRoute>
-              <DataHeroPage />
             </PublicRoute>
           }
         />

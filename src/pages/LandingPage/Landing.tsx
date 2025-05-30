@@ -1,24 +1,9 @@
-import { planningURL } from "../../../constants/urlConstant";
-import { Fly, Layer, Planner } from "../../../assets";
-import ButtonInput from "../../../components/atoms/ButtonInput";
+import { cmsURL, dmpURL, planningURL } from "../../constants/urlConstant";
+import { Fly, Layer, Planner } from "../../assets";
+import ButtonInput from "../../components/atoms/ButtonInput";
 import React from "react";
 
-interface PlannerPageProps {
-  products: {
-    name: string;
-    icon: JSX.Element;
-    textColor: string;
-    borderColor?: any;
-  }[];
-  selected?: any;
-  setSelected?: any;
-}
-
-export const PlannerPage: React.FC<PlannerPageProps> = ({
-  products,
-  selected,
-  setSelected,
-}) => {
+export const Landing: React.FC<any> = ({}) => {
   const secondSection = [
     {
       name: "Audience Selection",
@@ -103,7 +88,7 @@ export const PlannerPage: React.FC<PlannerPageProps> = ({
       heading: "Layer",
       subHeading: "DATA MANAGEMENT PLATFORM",
       para: "Unprecedented access to 800+ OOH &DOOH media units via multiple purchase agreements media owners & through programmatic SSP integrations.",
-      redirect: "",
+      redirect: { dmpURL },
     },
     {
       id: 2,
@@ -113,7 +98,7 @@ export const PlannerPage: React.FC<PlannerPageProps> = ({
       heading: "Fly",
       subHeading: "CONTENT MANAGEMENT SYSTEM",
       para: "Unprecedented access to 800+ OOH &DOOH media units via multiple purchase agreements media owners & through programmatic SSP integrations.",
-      redirect: "",
+      redirect: { cmsURL },
     },
   ];
 
@@ -121,29 +106,6 @@ export const PlannerPage: React.FC<PlannerPageProps> = ({
     <div className="w-full h-full font-custom pt-4 px-4">
       <div className="w-full grid grid-cols-12 bg-gradient-to-b from-[#F0F9FF] to-[#FFFFFF] p-12">
         <div className="w-full col-span-8">
-          <div className="flex items-center justify-start gap-4">
-            {products?.map((product, i) => (
-              <div key={i}>
-                <ButtonInput
-                  onClick={() => {
-                    setSelected(product.name);
-                  }}
-                  variant="custom"
-                  custom={`border ${product.borderColor}`}
-                  icon={product.icon}
-                  iconPosition="left"
-                  rounded="full"
-                  size="small"
-                  textColor={product.textColor}
-                  className={`pr-6 `}
-                >
-                  <span className={`${product.textColor} font-regular py-1`}>
-                    {product.name}
-                  </span>
-                </ButtonInput>
-              </div>
-            ))}
-          </div>
           <div>
             <h1
               className="pb-2 word inline-block z-10 font-custom font-semibold text-[24px] sm:text-[20px] md:text-[40px] lg:text-[60px] text-[#1E376E] 
@@ -438,6 +400,7 @@ export const PlannerPage: React.FC<PlannerPageProps> = ({
                   rounded="full"
                   size="small"
                   textColor={product.textColor}
+                  onClick={() => window.open(product.redirect)}
                 >
                   <span className={`${product.textColor} py-1`}>Know More</span>
                 </ButtonInput>

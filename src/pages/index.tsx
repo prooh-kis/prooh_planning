@@ -17,10 +17,6 @@ export { TriggerBasedPlanPage } from "./TriggerBasedPlanPage";
 export { StoreBasedPlanPage } from "./StoreBasedPlanPage";
 export { IKnowItAllPlanPage } from "./IKnowItAllPlanPage";
 
-export { MediaOwnerPage } from "./website/MediaOwnerPage";
-export { MarketersPage } from "./website/MarketersPage";
-export { LandingPage } from "./website/LandingPage";
-export { ProductsPage } from "./website/ProductsPage";
-
+export { LandingPage } from "./LandingPage";
 
 export { MyUsers } from "./MyUsers";

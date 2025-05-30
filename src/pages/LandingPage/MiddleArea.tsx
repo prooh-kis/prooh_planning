@@ -5,10 +5,10 @@ import {
   CAMPAIGN_MANAGER,
   CAMPAIGN_PLANNER,
   SCREEN_OWNER,
-} from "../../../constants/userConstants";
-import { CampaignTemplates } from "../../../components/popup";
-import nothing_here from "../../../assets/icons/nothing_here.svg";
-import { signout } from "../../../actions/userAction";
+} from "../../constants/userConstants";
+import { CampaignTemplates } from "../../components/popup";
+import nothing_here from "../../assets/icons/nothing_here.svg";
+import { signout } from "../../actions/userAction";
 
 export const MiddleArea: React.FC = () => {
   const dispatch = useDispatch<any>();

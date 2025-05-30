@@ -73,31 +73,6 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Navigation Links */}
-      {!userInfo && (
-        <div className="hidden md:flex items-center gap-4">
-          {navLink.map((item) => (
-            <div
-              key={item.title}
-              onClick={() => {
-                if (item.title === "Research") {
-                  window.open(`${item.path}`);
-                } else {
-                  navigate(`${item.path}`);
-                }
-              }}
-              className={`cursor-pointer text-sm lg:text-base flex items-center hover:font-bold ${
-                location.pathname === item.path
-                  ? "font-semibold text-[#0094FF] border-b-4 border-[#129BFF] py-5"
-                  : "py-1"
-              }`}
-            >
-              {item.title}
-            </div>
-          ))}
-        </div>
-      )}
-
       {/* User Info or Auth Buttons */}
       {userInfo ? (
         <div className="flex items-center space-x-2 pr-4">
