@@ -20,7 +20,7 @@ export const USERS = "/users";
 
 export const MY_CREATIVES = "/my-creatives";
 
-export const CAMPAIGN_DETAILS_PAGE = "/campaignDetails";
+export const CAMPAIGN_DETAILS_PAGE = "/campaignDetails/:id";
 
 export const MEDIA_OWNER_PAGE = "/media-owner";
 export const ADVERTISERS_PAGE = "/advertisers";

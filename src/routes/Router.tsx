@@ -34,6 +34,7 @@ import {
   BRAND_AGENCY_PAGE,
   ROUTE,
   MY_PLANS_LIST,
+  CAMPAIGN_DETAILS_PAGE,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 
@@ -45,6 +46,7 @@ import { EditCampaignFlow } from "../pages/EditCampaignFlow";
 import { PublicLayout } from "../components/layout/PublicLayout";
 import { AppDashBoardLayout } from "../components/layout/AppDashBoardLayout";
 import { PrivateLayout } from "../components/layout/PrivateLayout";
+import { CampaignDetailsPage } from "../pages/CampaignDetailsPage";
 
 const Routers: React.FC = () => {
   return (
@@ -158,6 +160,15 @@ const Routers: React.FC = () => {
           element={
             <PrivateLayout>
               <RegularPlanPage />
+            </PrivateLayout>
+          }
+        />
+
+        <Route
+          path={CAMPAIGN_DETAILS_PAGE}
+          element={
+            <PrivateLayout padding="pt-0">
+              <CampaignDetailsPage />
             </PrivateLayout>
           }
         />
