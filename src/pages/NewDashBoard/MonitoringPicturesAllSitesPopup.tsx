@@ -6,6 +6,9 @@ import { Checkbox, notification } from "antd";
 import { List, ListItem } from "../../components/molecules/List";
 import { MonitoringPic } from "../../components/segments/MonitoringPic";
 import { LinearBar } from "../../components/molecules/linearbar";
+import { generateMonitoringPpt, getMonitoringPptJobStatus } from "../../actions/monitoringAction";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { GENERATE_MONITORING_PPT_RESET, GET_MONITORING_PPT_JOB_STATUS_RESET } from "../../constants/monitoringConstant";
 
 interface HeaderProps {
   icon: string;
@@ -44,6 +47,65 @@ export const MonitoringPicturesAllSitesPopup = ({
   const [selectedTouchPoints, setSelectedTouchPoints] = useState<string[]>([]);
   const [selectedScreenTypes, setSelectedScreenTypes] = useState<string[]>([]);
   const [dataInitialized, setDataInitialized] = useState(false);
+  const [pptGeneration, setPptGeneration] = useState(false);
+  const [zipGeneration , setZipGeneration] = useState(false);
+  const [pptJobId, setPptJobId] = useState(1);
+
+  const generateMonitoringPPT = useSelector((state: any) => state.generateMonitoringPpt);
+  const {
+    loading: generateMonitoringPptLoading,
+    error: generateMonitoringPptError,
+    success: generateMonitoringPptSuccess,
+    data: generateMonitoringPptData,
+  } = generateMonitoringPPT;
+
+
+  const getMonitoringPptJobStatusData = useSelector((state: any) => state.getMonitoringPptJobStatus);
+  const {
+    loading: pptJobStatusLoading,
+    error: pptJobStatusError,
+    success: pptJobStatusSuccess,
+    data: pptJobStatusData,
+  } = getMonitoringPptJobStatusData;
+
+  const downloadPPT = (url: any) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'monitoring_ppt.pptx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const getJobStatusInfo = async () => {
+    setTimeout(async () => {
+      try {
+        dispatch(getMonitoringPptJobStatus({ id: pptJobId }))
+      } catch (error) {
+        console.error('API call failed:', error);
+      }
+    }, 10000);
+  }
+
+  useEffect(() => {
+    if (generateMonitoringPptSuccess) {
+      setPptJobId(generateMonitoringPptData.jobId)
+      setPptGeneration(true)
+      getJobStatusInfo()
+      dispatch({ type: GENERATE_MONITORING_PPT_RESET })
+    }
+
+    if (pptJobStatusSuccess) {
+      if (pptJobStatusData.state === "completed") {
+        setPptGeneration(false)
+        downloadPPT(pptJobStatusData.result.url)
+        dispatch({ type: GET_MONITORING_PPT_JOB_STATUS_RESET })
+      }
+      else {
+        getJobStatusInfo()
+      }
+    }
+  }, [generateMonitoringPptError, generateMonitoringPptSuccess, pptJobStatusSuccess, pptJobStatusError])
 
   useEffect(() => {
     if (data && !dataInitialized) {
@@ -130,9 +192,33 @@ export const MonitoringPicturesAllSitesPopup = ({
     }
   };
 
-  const handleDownloadPDF = () => {
-    alert("coming soon")
+  const handleDownloadPPT = () => {
+    dispatch(generateMonitoringPpt({ campaignId: campaignId }))
   }
+
+  const handleDownloadZip = async () => {
+    setZipGeneration(true);
+    try {
+      const res = await fetch(`https://api.justmonad.com/api/v2/monitoring/downloadMonitoringPicsZip?id=${campaignId}`);
+      if (!res.ok) throw new Error('Failed to download');
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'monitoring_pics.zip'; // optional: dynamic name
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Download failed:', err);
+      alert("Download failed. Please try again.");
+      setZipGeneration(false)
+    } finally {
+      setZipGeneration(false);
+    }
+  };
 
   // Toggle all cities
   const toggleAllCities = (checked: boolean) => {
@@ -160,6 +246,11 @@ export const MonitoringPicturesAllSitesPopup = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 font-inter">
+      {(pptGeneration || zipGeneration) && (
+        <div className="absolute inset-0 bg-white bg-opacity-70 z-20 flex items-center justify-center rounded-[10px]">
+          <LoadingScreen title={ pptGeneration === true ? "Generating PPT, Please Wait..." : "Generating Zip , Please Wait..."} />
+        </div>
+      )}
       <div className="bg-[#FFFFFF] rounded-[10px] h-[80vh] w-[99%] p-4 flex flex-col">
         <div className="relative inset-0 flex items-center justify-between gap-4 py-2 pr-5">
           <div className="flex gap-2 items-center">
@@ -174,20 +265,17 @@ export const MonitoringPicturesAllSitesPopup = ({
           <div className="flex items-center gap-3">
             {/* Download PDF Button */}
             <i
-              className="fi fi-rr-file-pdf text-[16px] text-[#0E212E] cursor-pointer"
+              className="fi fi-br-ppt-file text-[16px] text-[#0E212E] cursor-pointer"
               title="Download PDF"
-              onClick={handleDownloadPDF}
+              onClick={handleDownloadPPT}
             />
 
             {/* Download ZIP Button as anchor tag */}
-            <a
-              href={`https://api.justmonad.com/api/v2/monitoring/downloadMonitoringPicsZip?id=${campaignId}`}
-              download
-              className="cursor-pointer"
-              title="Download ZIP"
-            >
-              <i className="fi fi-rr-folder-download text-[16px] text-[#0E212E]" />
-            </a>
+              <i
+              className="fi fi-rr-folder-download text-[16px] text-[#0E212E] cursor-pointer"
+              title="Download PDF"
+              onClick={handleDownloadZip}
+            />
 
             {/* Close Button */}
             <i
