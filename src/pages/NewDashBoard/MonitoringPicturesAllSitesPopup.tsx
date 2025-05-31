@@ -77,10 +77,10 @@ export const MonitoringPicturesAllSitesPopup = ({
     document.body.removeChild(link);
   };
 
-  const getJobStatusInfo = async () => {
+  const getJobStatusInfo = async (id : any) => {
     setTimeout(async () => {
       try {
-        dispatch(getMonitoringPptJobStatus({ id: pptJobId }))
+        dispatch(getMonitoringPptJobStatus({ id: id }))
       } catch (error) {
         console.error('API call failed:', error);
       }
@@ -89,9 +89,10 @@ export const MonitoringPicturesAllSitesPopup = ({
 
   useEffect(() => {
     if (generateMonitoringPptSuccess) {
-      setPptJobId(generateMonitoringPptData.jobId)
+      console.log(generateMonitoringPptData)
+      setPptJobId(Number(generateMonitoringPptData.jobId))
       setPptGeneration(true)
-      getJobStatusInfo()
+      getJobStatusInfo(Number(generateMonitoringPptData.jobId))
       dispatch({ type: GENERATE_MONITORING_PPT_RESET })
     }
 
@@ -102,7 +103,7 @@ export const MonitoringPicturesAllSitesPopup = ({
         dispatch({ type: GET_MONITORING_PPT_JOB_STATUS_RESET })
       }
       else {
-        getJobStatusInfo()
+        getJobStatusInfo(pptJobId)
       }
     }
   }, [generateMonitoringPptError, generateMonitoringPptSuccess, pptJobStatusSuccess, pptJobStatusError])
@@ -266,14 +267,14 @@ export const MonitoringPicturesAllSitesPopup = ({
             {/* Download PDF Button */}
             <i
               className="fi fi-br-ppt-file text-[16px] text-[#0E212E] cursor-pointer"
-              title="Download PDF"
+              title="Download PPT"
               onClick={handleDownloadPPT}
             />
 
             {/* Download ZIP Button as anchor tag */}
               <i
               className="fi fi-rr-folder-download text-[16px] text-[#0E212E] cursor-pointer"
-              title="Download PDF"
+              title="Download ZIP"
               onClick={handleDownloadZip}
             />
 
