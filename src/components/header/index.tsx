@@ -56,17 +56,19 @@ export const Header: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleClick = () => {
+    if (userInfo) {
+      navigate("/");
+    } else {
+      navigate("/home");
+    }
+  };
+
   return (
-    <header className="fixed top-0 w-full h-16 flex items-center border-b border-gray-50 justify-between px-4 sm:px-10 bg-[#FFFFFF] z-50 font-custom">
+    <header className="top-0 w-full h-16 flex items-center border-b border-gray-50 justify-between px-4 sm:px-10 bg-[#FFFFFF] z-50 font-custom">
       {/* Logo Section */}
       <div className="flex items-center">
-        <div
-          className="cursor-pointer p-2"
-          onClick={() => {
-            removeAllKeyFromLocalStorage();
-            navigate("/");
-          }}
-        >
+        <div className="cursor-pointer p-2" onClick={handleClick}>
           <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
             PROOH.AI
           </h1>

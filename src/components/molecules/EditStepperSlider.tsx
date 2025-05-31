@@ -57,7 +57,7 @@ export const EditStepperSlider = ({
   }, [dispatch, userInfo]);
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <div className="flex items-center justify-between pt-0 mb-6">
         <div className="flex-1 h-1 bg-gray-200 relative mx-4">
           <div className="absolute inset-x-0 flex justify-between">

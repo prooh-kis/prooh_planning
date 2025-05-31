@@ -13,7 +13,13 @@ import { AudienceSegment } from "./AudienceSegment";
 import { DurationSegment } from "./DurationSegment";
 import { HardwarePerformanceSegment } from "./HardwarePerformanceSegment";
 import { SiteMonitoringPicDashboardComponent } from "./SiteMonitoringPicDashboardComponent";
-import { getAudienceDataForPlannerDashboard, getCostDataForPlannerDashboard, getHardwarePerformanceDataForPlannerDashboard, getSiteLevelPerformanceForPlannerDashboard, getSpotDeliveryDataForPlannerDashboard } from "../../actions/dashboardAction";
+import {
+  getAudienceDataForPlannerDashboard,
+  getCostDataForPlannerDashboard,
+  getHardwarePerformanceDataForPlannerDashboard,
+  getSiteLevelPerformanceForPlannerDashboard,
+  getSpotDeliveryDataForPlannerDashboard,
+} from "../../actions/dashboardAction";
 
 interface GridItem {
   id: string;
@@ -42,13 +48,13 @@ export const CampaignDashboard = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const clickedTab = pathname.split("/")[3] || "1";
-  
+
   const parentComponentRef = useRef<HTMLDivElement>(null);
   const aComponentRef = useRef<HTMLDivElement>(null);
 
   const [clicked, setClicked] = useState<any>("1");
   const [showMenu, setShowMenu] = useState<boolean>(false);
-  
+
   const [calendarData, setCalendarData] = useState<any>({});
   const [currentWeek, setCurrentWeek] = useState<any>(1);
   const [currentDay, setCurrentDay] = useState<any>(1);
@@ -56,9 +62,12 @@ export const CampaignDashboard = ({
     new Date().toISOString().split("T")[0]
   );
 
-  const [openSiteLevelLogsPopup, setOpenSiteLevelLogsPopup] = useState<any>(false);
-  const [openSiteLevelMonitoringPicsPopup, setOpenSiteLevelMonitoringPicsPopup] =
+  const [openSiteLevelLogsPopup, setOpenSiteLevelLogsPopup] =
     useState<any>(false);
+  const [
+    openSiteLevelMonitoringPicsPopup,
+    setOpenSiteLevelMonitoringPicsPopup,
+  ] = useState<any>(false);
 
   const [showPercent, setShowPercent] = useState<any>({
     1: false,
@@ -70,7 +79,7 @@ export const CampaignDashboard = ({
 
   const [openSiteMapView, setOpenSiteMapView] = useState<boolean>(false);
   const [openMonitoringView, setOpenMonitoringView] = useState<boolean>(false);
-  const [viewAllLogsOpen, setViewAllLogsOpen] = useState<boolean>(false)
+  const [viewAllLogsOpen, setViewAllLogsOpen] = useState<boolean>(false);
 
   const gridItems: GridItem[] = [
     {
@@ -139,24 +148,24 @@ export const CampaignDashboard = ({
     lastDate.setHours(0, 0, 0, 0);
 
     while (currentDate <= lastDate) {
-        // Format date in LOCAL time (YYYY-MM-DD)
-        const year = currentDate.getFullYear();
-        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-        const day = String(currentDate.getDate()).padStart(2, '0');
-        const dateString = `${year}-${month}-${day}`;
+      // Format date in LOCAL time (YYYY-MM-DD)
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+      const day = String(currentDate.getDate()).padStart(2, "0");
+      const dateString = `${year}-${month}-${day}`;
 
-        dates.push({
-            value: dateString, // Local date, no timezone shifts
-            label: currentDate.toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-            }),
-        });
-        currentDate.setDate(currentDate.getDate() + 1);
+      dates.push({
+        value: dateString, // Local date, no timezone shifts
+        label: currentDate.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+        }),
+      });
+      currentDate.setDate(currentDate.getDate() + 1);
     }
 
     return dates;
-};
+  };
 
   const allDates: any = getAllDates({
     startDate: campaignDetails?.startDate,
@@ -170,40 +179,70 @@ export const CampaignDashboard = ({
       getAudienceDataForPlannerDashboard({
         ...commonParams,
         cities: filters.cities.audience?.filter((f: any) => f !== "all"),
-        touchPoints: filters.touchPoints.audience?.filter((f: any) => f !== "all"),
-        screenTypes: filters.screenTypes.audience?.filter((f: any) => f !== "all"),
+        touchPoints: filters.touchPoints.audience?.filter(
+          (f: any) => f !== "all"
+        ),
+        screenTypes: filters.screenTypes.audience?.filter(
+          (f: any) => f !== "all"
+        ),
         dayTypes: filters.dayTypes.audience?.filter((f: any) => f !== "all"),
-        timezones: filters.timezones.audience?.filter((f: any) => f !== "all")
+        timezones: filters.timezones.audience?.filter((f: any) => f !== "all"),
       })
     );
     dispatch(
       getHardwarePerformanceDataForPlannerDashboard({
         ...commonParams,
-        cities: filters.cities.screenPerformance?.filter((f: any) => f !== "all"),
-        touchPoints: filters.touchPoints.screenPerformance?.filter((f: any) => f !== "all"),
-        screenTypes: filters.screenTypes.screenPerformance?.filter((f: any) => f !== "all"),
-        dayTypes: filters.dayTypes.screenPerformance?.filter((f: any) => f !== "all"),
-        timezones: filters.timezones.screenPerformance?.filter((f: any) => f !== "all")
+        cities: filters.cities.screenPerformance?.filter(
+          (f: any) => f !== "all"
+        ),
+        touchPoints: filters.touchPoints.screenPerformance?.filter(
+          (f: any) => f !== "all"
+        ),
+        screenTypes: filters.screenTypes.screenPerformance?.filter(
+          (f: any) => f !== "all"
+        ),
+        dayTypes: filters.dayTypes.screenPerformance?.filter(
+          (f: any) => f !== "all"
+        ),
+        timezones: filters.timezones.screenPerformance?.filter(
+          (f: any) => f !== "all"
+        ),
       })
     );
     dispatch(
       getSpotDeliveryDataForPlannerDashboard({
         ...commonParams,
         cities: filters.cities.spotDelivery?.filter((f: any) => f !== "all"),
-        touchPoints: filters.touchPoints.spotDelivery?.filter((f: any) => f !== "all"),
-        screenTypes: filters.screenTypes.spotDelivery?.filter((f: any) => f !== "all"),
-        dayTypes: filters.dayTypes.spotDelivery?.filter((f: any) => f !== "all"),
-        timezones: filters.timezones.spotDelivery?.filter((f: any) => f !== "all")
+        touchPoints: filters.touchPoints.spotDelivery?.filter(
+          (f: any) => f !== "all"
+        ),
+        screenTypes: filters.screenTypes.spotDelivery?.filter(
+          (f: any) => f !== "all"
+        ),
+        dayTypes: filters.dayTypes.spotDelivery?.filter(
+          (f: any) => f !== "all"
+        ),
+        timezones: filters.timezones.spotDelivery?.filter(
+          (f: any) => f !== "all"
+        ),
       })
     );
     dispatch(
       getCostDataForPlannerDashboard({
         ...commonParams,
         cities: filters.cities.costConsumption?.filter((f: any) => f !== "all"),
-        touchPoints: filters.touchPoints.costConsumption?.filter((f: any) => f !== "all"),
-        screenTypes: filters.screenTypes.costConsumption?.filter((f: any) => f !== "all"),
-        dayTypes: filters.dayTypes.costConsumption?.filter((f: any) => f !== "all"),
-        timezones: filters.timezones.costConsumption?.filter((f: any) => f !== "all")
+        touchPoints: filters.touchPoints.costConsumption?.filter(
+          (f: any) => f !== "all"
+        ),
+        screenTypes: filters.screenTypes.costConsumption?.filter(
+          (f: any) => f !== "all"
+        ),
+        dayTypes: filters.dayTypes.costConsumption?.filter(
+          (f: any) => f !== "all"
+        ),
+        timezones: filters.timezones.costConsumption?.filter(
+          (f: any) => f !== "all"
+        ),
       })
     );
     dispatch(
@@ -218,27 +257,32 @@ export const CampaignDashboard = ({
     );
   }, [campaignDetails, dispatch, filters]);
 
-
   useEffect(() => {
-
     if (Number(clickedTab) !== 1) {
       setClicked(clickedTab);
     }
 
     if (campaignDetails?._id) {
-      fetchDashboardData()
+      fetchDashboardData();
     }
 
     if (aComponentRef.current) {
-      aComponentRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      aComponentRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
-
-  },[fetchDashboardData, campaignDetails?._id]);
+  }, [fetchDashboardData, campaignDetails?._id]);
   return (
-    <div ref={parentComponentRef} className="absolute w-full bg-[#F2F4F7] h-full mt-12 flex flex-col gap-2 font-custom">
-
+    <div
+      ref={parentComponentRef}
+      className="w-full bg-[#F2F4F7] flex flex-col gap-2 font-custom"
+    >
       {/* Dashboard header Section */}
-      <div ref={aComponentRef} className="bg-[#FFFFFF] p-2 py-4 px-2  pr-14 flex justify-between mt-4 fixed z-10 shadow-sm w-full">
+      <div
+        ref={aComponentRef}
+        className="bg-[#FFFFFF] py-4 px-2  pr-14 mt-1 flex justify-between shadow-sm w-full"
+      >
         <div className="px-2 flex justify-between items-center">
           <div className="flex gap-4">
             <div className="flex gap-4 items-center">
@@ -287,7 +331,7 @@ export const CampaignDashboard = ({
           </div>
         </div>
       </div>
-      <div className="px-10 bg-[#F2F4F7] mt-32">
+      <div className="px-10 bg-[#F2F4F7] h-[78vh] overflow-y-auto  pr-2 ">
         {/* campaign dashboard grid view */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
           {gridItems.map((item) => (
@@ -300,8 +344,10 @@ export const CampaignDashboard = ({
                   : "border border-gray-100 "
               }`}
               onClick={() => {
-                navigate(`${pathname.split("/").splice(0, 3).join("/")}/${item.id}`)
-                setClicked(item.id)
+                navigate(
+                  `${pathname.split("/").splice(0, 3).join("/")}/${item.id}`
+                );
+                setClicked(item.id);
               }}
             >
               <DashboardGrid
@@ -405,7 +451,9 @@ export const CampaignDashboard = ({
           openSiteLevelLogsPopup={openSiteLevelLogsPopup}
           setOpenSiteLevelLogsPopup={setOpenSiteLevelLogsPopup}
           openSiteLevelMonitoringPicsPopup={openSiteLevelMonitoringPicsPopup}
-          setOpenSiteLevelMonitoringPicsPopup={setOpenSiteLevelMonitoringPicsPopup}
+          setOpenSiteLevelMonitoringPicsPopup={
+            setOpenSiteLevelMonitoringPicsPopup
+          }
           viewAllLogsOpen={viewAllLogsOpen}
           setViewAllLogsOpen={setViewAllLogsOpen}
         />

@@ -1,16 +1,14 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { HomePageLayout } from "../components";
+import { CampaignTemplates, HomePageLayout } from "../components";
 
 import {
   ForgetPassword,
-  LandingPage,
   PageNotFound,
   RegularPlanPage,
   UpdatePassword,
   VerifyEmail,
   MyCampaignsListPage,
-  MyPlansListPage,
   SpecialDayPlanPage,
   TriggerBasedPlanPage,
   IKnowItAllPlanPage,
@@ -18,39 +16,35 @@ import {
   SignIn,
   SignUp,
   MyUsers,
+  LandingPage,
+  MyPlansListPage,
 } from "../pages";
 
-import { PrivateRoute } from "./PrivateRoute";
 import {
   AUTH,
   FORGET_PASSWORD,
   HOME,
-  ADVERTISERS_PAGE,
-  MEDIA_OWNER_PAGE,
   MY_CAMPAIGNS_LIST,
-  MY_PLANS_LIST,
   PLAY_LIVE_URL,
   SIGN_UP,
   UPDATE_PASSWORD,
   USERS,
   VERIFY_EMAIL,
-  MY_CREATIVES,
   NEW_DASHBOARD,
   BRAND_AGENCY_PAGE,
-  PRODUCTS,
-  DATA_HERO,
+  ROUTE,
+  MY_PLANS_LIST,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
-import { PublicRoute } from "../layout/PublicRoute";
-import { AppDashBoardLayout } from "../layout/AppDashBoardLayout";
 
 import { PlayLiveUrl } from "../pages/PageNotFound/PlayLiveUrl";
-import { MyCreativesPage } from "../pages/MyCreativesPage";
-import { CampaignDetailsPage } from "../pages/CampaignDetailsPage";
 import { NewDashBoard } from "../pages/NewDashBoard";
 import Engagement from "../pages/Engagement";
 import { BrandAgencyPage } from "../pages/PageNotFound/BrandAgency";
 import { EditCampaignFlow } from "../pages/EditCampaignFlow";
+import { PublicLayout } from "../components/layout/PublicLayout";
+import { AppDashBoardLayout } from "../components/layout/AppDashBoardLayout";
+import { PrivateLayout } from "../components/layout/PrivateLayout";
 
 const Routers: React.FC = () => {
   return (
@@ -59,49 +53,50 @@ const Routers: React.FC = () => {
         <Route
           path={AUTH}
           element={
-            <PublicRoute>
+            <PublicLayout>
               <SignIn />
-            </PublicRoute>
+            </PublicLayout>
           }
         />
 
         <Route
           path={SIGN_UP}
           element={
-            <PublicRoute>
+            <PublicLayout>
               <SignUp />
-            </PublicRoute>
+            </PublicLayout>
           }
         />
 
         <Route
           path={VERIFY_EMAIL}
           element={
-            <PublicRoute>
+            <PublicLayout>
               <VerifyEmail />
-            </PublicRoute>
+            </PublicLayout>
           }
         />
         <Route
           path={FORGET_PASSWORD}
           element={
-            <PublicRoute>
+            <PublicLayout>
               <ForgetPassword />
-            </PublicRoute>
+            </PublicLayout>
           }
         />
         <Route
           path={UPDATE_PASSWORD}
           element={
-            <PublicRoute>
+            <PublicLayout>
               <UpdatePassword />
-            </PublicRoute>
+            </PublicLayout>
           }
         />
+
         <Route
           path={USERS}
           element={
-            <AppDashBoardLayout>
+            <AppDashBoardLayout value="Users">
               <MyUsers />
             </AppDashBoardLayout>
           }
@@ -110,119 +105,126 @@ const Routers: React.FC = () => {
         <Route
           path={HOME}
           element={
-            <PublicRoute>
+            <PublicLayout>
               <LandingPage />
-            </PublicRoute>
+            </PublicLayout>
           }
         />
 
         <Route
-          path={"/campaignDetails/:id?"}
+          path={ROUTE}
           element={
-            <AppDashBoardLayout className="bg-[#D3D3D310] pt-16">
-              <CampaignDetailsPage />
+            <AppDashBoardLayout value="New Plan">
+              <CampaignTemplates />
             </AppDashBoardLayout>
           }
         />
+
         <Route
           path={MY_CAMPAIGNS_LIST}
           element={
-            <AppDashBoardLayout className="bg-[#D1D1D110] pt-16">
+            <AppDashBoardLayout value="Campaigns">
               <MyCampaignsListPage />
             </AppDashBoardLayout>
           }
         />
+
         <Route
           path={MY_PLANS_LIST}
           element={
-            <AppDashBoardLayout className="bg-[#D1D1D110] pt-16">
+            <AppDashBoardLayout value="Drafts">
               <MyPlansListPage />
-            </AppDashBoardLayout>
-          }
-        />
-        <Route
-          path={MY_CREATIVES}
-          element={
-            <AppDashBoardLayout className="bg-[#D1D1D110] pt-20">
-              <MyCreativesPage />
             </AppDashBoardLayout>
           }
         />
         <Route
           path={NEW_DASHBOARD}
           element={
-            <PublicRoute layout={HomePageLayout}>
+            <PublicLayout>
               <NewDashBoard />
-            </PublicRoute>
+            </PublicLayout>
           }
         />
         <Route
           path={"/editCampaign/:id?"}
           element={
-            <AppDashBoardLayout>
+            <PrivateLayout>
               <EditCampaignFlow />
-            </AppDashBoardLayout>
+            </PrivateLayout>
           }
         />
         <Route
           path={"/regularplan/:id?/:type?"}
           element={
-            <AppDashBoardLayout>
+            <PrivateLayout>
               <RegularPlanPage />
-            </AppDashBoardLayout>
+            </PrivateLayout>
           }
         />
         <Route
           path={"/specialdayplan/:id?/:type?"}
           element={
-            <AppDashBoardLayout>
+            <PrivateLayout>
               <SpecialDayPlanPage />
-            </AppDashBoardLayout>
+            </PrivateLayout>
           }
         />
         <Route
           path={"/triggerbasedplan/:id?/:type?"}
           element={
-            <AppDashBoardLayout>
+            <PrivateLayout>
               <TriggerBasedPlanPage />
-            </AppDashBoardLayout>
+            </PrivateLayout>
           }
         />
         <Route
           path={"/storebasedplan/:id?/:type?"}
           element={
-            <AppDashBoardLayout>
+            <PrivateLayout>
               <StoreBasedPlanPage />
-            </AppDashBoardLayout>
+            </PrivateLayout>
           }
         />
         <Route
           path={"/iknowitallplan/:id?/:type?"}
           element={
-            <AppDashBoardLayout>
+            <PrivateLayout>
               <IKnowItAllPlanPage />
-            </AppDashBoardLayout>
+            </PrivateLayout>
           }
         />
         <Route
           path={"/ppt"}
           element={
-            <PrivateRoute layout={HomePageLayout}>
+            <PublicLayout layout={HomePageLayout}>
               <PowerPointGenerator />
-            </PrivateRoute>
+            </PublicLayout>
           }
         />
         <Route
           path={"/engagement"}
           element={
-            <AppDashBoardLayout className="bg-[#D3D3D310] pt-16">
+            <PublicLayout>
               <Engagement />
-            </AppDashBoardLayout>
+            </PublicLayout>
           }
         />
-        <Route path={PLAY_LIVE_URL} element={<PlayLiveUrl />} />
-        <Route path={BRAND_AGENCY_PAGE} element={<BrandAgencyPage />} />
-
+        <Route
+          path={PLAY_LIVE_URL}
+          element={
+            <PublicLayout>
+              <PlayLiveUrl />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path={BRAND_AGENCY_PAGE}
+          element={
+            <PublicLayout>
+              <BrandAgencyPage />
+            </PublicLayout>
+          }
+        />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

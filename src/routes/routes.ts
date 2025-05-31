@@ -4,7 +4,9 @@ export const FORGET_PASSWORD = "/forget-password";
 export const UPDATE_PASSWORD = "/update-password";
 export const SIGN_UP = "/sign-up";
 
-export const HOME = "/";
+export const HOME = "/home";
+export const ROUTE = "/";
+
 export const PRODUCTS = "/products/:id";
 export const MY_CAMPAIGNS_LIST = "/myCampaignsList";
 export const CAMPAIGN_DETAILS = "/campaignDetails";
