@@ -55,10 +55,10 @@ export const BillingAndInvoice = (props: any) => {
   const [isConnected, setIsConnected] = useState(false);
   const [jobId, setJobId] = useState<any>(null);
   const [jobType, setJobType] = useState<any>(null);
-  const [socketUrl, setSocketUrl] = useState<any>("http://localhost:4444");
+  // const [socketUrl, setSocketUrl] = useState<any>("http://localhost:4444");
+  const [socketUrl, setSocketUrl] = useState<any>("wss://servermonad.vinciis.in");
 
   const todayDate = moment(new Date())?.format("YYYY-MM-DD hh:mm:ss");
-
 
   const {
     loading: loadingBillInvoiceCreation,
@@ -122,45 +122,6 @@ export const BillingAndInvoice = (props: any) => {
 
     dispatch(handleInvoicePdfGenerationAction({
       fileName: `INVOICE_${campaignDetails?.brandName}_${campaignDetails?.name}`,
-      // jsonData: {
-      //   planner: campaignDetails?.campaignPlannerName,
-      //   plannerEmail: campaignDetails?.campaignPlannerEmail,
-      //   clientAgencyName,
-      //   pan,
-      //   gst,
-      //   pocName,
-      //   pocEmail,
-      //   pocContact,
-      //   pocDesignation,
-      //   officeAddress: {
-      //     address,
-      //     city,
-      //     state: stateName,
-      //     country,
-      //     phone,
-      //     email,
-      //     website,
-      //     zipCode,
-      //     gst,
-      //     pan,
-      //   },
-      //   invoiceNumber: `PROOH/${String(new Date().getFullYear() - 1)}-${String(new Date().getFullYear())}/${clientAgencyDetailsData?.totalInvoiceNumber || 0}`,
-      //   invoiceDate: todayDate,
-      //   internalSoNumber: `PROOH/${String(new Date().getFullYear() - 1)}-${String(new Date().getFullYear())}/${clientAgencyDetailsData?.totalInvoiceNumber || 0}/SO`,
-      //   clientConfirmation: campaignDetails?.clientApprovalImgs?.length > 0 ? "Mail Confirmation" : "mail confirmation",
-      //   clientOrderDate: poDate,
-      //   poNumber,
-      //   invoiceDescription,
-      //   invoiceQuantity,
-      //   invoiceCurrency,
-      //   invoiceAmount: Number(invoiceAmount.toFixed(0)),
-      //   subTotalAmount: Number(invoiceAmount.toFixed(0)) * 1.18,
-      //   outPutGstPercent: 18,
-      //   outPutGstAmount: Number(invoiceAmount.toFixed(0)) * 0.18,
-      //   campaignName: `${campaignDetails?.name} (${campaignDetails?.brandName})`,
-      //   startDate: moment(campaignDetails?.startDate).format("YYYY-MM-DD"),
-      //   endDate: moment(campaignDetails?.endDate).format("YYYY-MM-DD"),
-      // },
       billInvoiceDetailsData,
       campaignDetails,
       clientAgencyDetailsData,
@@ -185,8 +146,8 @@ export const BillingAndInvoice = (props: any) => {
     setSSLoading(true);
     dispatch(takeDashboardScreenShotAction({
       campaignId: campaignDetails?._id,
-      url: `${window.location.origin}/campaignDashboard/${campaignDetails?._id}`,
-      // url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
+      // url: `${window.location.origin}/campaignDashboard/${campaignDetails?._id}`,
+      url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
       // url: `http://localhost:3000/campaignDashboard/${campaignDetails?._id}`,
       tabs: ["1", "2", "3", "4", "5"]
       // tabs: ["1"]
@@ -337,13 +298,20 @@ export const BillingAndInvoice = (props: any) => {
       console.log(jobId);
       // Establish connection
       const newSocket = io(socketUrl, {
-        transports: ['websocket']
+        transports: ['websocket'],
+        secure: true,
+        rejectUnauthorized: false, // Only for development with self-signed certs
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        timeout: 10000
       });
-    setSocket(newSocket);
+      console.log("newSocket", newSocket);
+    
     // Connection event handlers
     newSocket.on('connect', () => {
       setIsConnected(true);
-      console.log('Connected to WebSocket server');
+      console.log('Connected to WebSocket server', newSocket);
       
       // Subscribe to job status
       if (jobType === "screenshot") {
@@ -378,13 +346,29 @@ export const BillingAndInvoice = (props: any) => {
     });
 
     // Disconnect handler
-    newSocket.on('disconnect', () => {
+    newSocket.on('disconnect', (reason) => {
       setIsConnected(false);
-      console.log('Disconnected from WebSocket server');
+      console.log('Disconnected from WebSocket server: ', reason);
+      if (reason === 'io server disconnect') {
+        // The disconnection was initiated by the server, you need to reconnect manually
+        newSocket.connect();
+      }
     });
+
+    // Add error handlers
+    newSocket.on('connect_error', (error: any) => {
+      console.error('Connection Error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        description: error.description,
+        context: error.context
+      });
+    });
+    setSocket(newSocket);
 
     // Cleanup on unmount
     return () => {
+      console.log('Cleaning up WebSocket connection');
       newSocket.disconnect();
     };
   }
@@ -500,18 +484,13 @@ export const BillingAndInvoice = (props: any) => {
                     {billInvoiceDetailsData?.invoiceDocs.length === 0 && jobStatus && jobStatus.status && (
                       <div className="flex items-center gap-2 cursor-pointer">
                         {
-                          jobStatus?.status === "active" && (
+                          jobStatus?.status === "active" || ssLoading && (
                             <div className="border-b-2 border-[#22C55E] rounded-[2px]">
                               <i className="fi fi-sr-arrow-small-down text-[#22C55E] flex items-center justify-center animate-bounce"></i>
                             </div>
                           )
                         }
-                        {jobStatus.status === "active" && 
-                          <h1 className="text-[12px] text-[#22C55E] animate-pulse">
-                            success {jobStatus.progress}% completed, please wait for it to get downloaded...
-                          </h1>
-                        }
-                        {jobStatus.status === "completed" && (
+                        {jobStatus.status === "completed" && billInvoiceDetailsData?.invoiceDocs.length > 0 && (
                           <div className="flex items-center gap-2 cursor-pointer" onClick={() => (window.location as any).reload()}>
                               <h1 className="text-[12px] text-[#22C55E]">Invoice generated, please reload to donwload...</h1>
                               <div className="border-b-2 border-[#22C55E] rounded-[2px]">
