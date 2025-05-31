@@ -38,6 +38,9 @@ import * as dataHeroReducers from "../reducers/dataHeroReducers";
 // Landing Reducers
 import * as landingReducers from "../reducers/landingReducers";
 
+// monitoring Reducers
+import * as monitoringReducers from "../reducers/monitoringReducers"
+
 
 
 
@@ -166,4 +169,8 @@ export const rootReducer = {
     heroDataDetails: dataHeroReducers.getHeroDataDetailsReducer,
     audienceDataSave: dataHeroReducers.audienceDataSaveReducer,
     audienceDataGet: dataHeroReducers.audienceDataGetReducer,
+
+    // Monitoring
+    generateMonitoringPpt : monitoringReducers.generateMonitoringPptReducer,
+    getMonitoringPptJobStatus : monitoringReducers.getMonitoringPptJobStatusReducer,
 };
