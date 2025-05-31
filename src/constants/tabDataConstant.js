@@ -1,3 +1,5 @@
+import { MY_PLANS_LIST, USERS } from "../routes/routes";
+
 export const campaignMonitoringTab = [
   {
     id: "1",
@@ -77,4 +79,130 @@ export const siteLevelMonitoringTabData = [
   { id: "1", label: "Start Date", value: "startDate" },
   { id: "2", label: "End Date", value: "endDate" },
   { id: "3", label: "Mid Date", value: "midDate" },
+];
+
+export const campaignTypeTabs = [
+  {
+    id: "1",
+    label: "Active",
+    value: "Active",
+  },
+  {
+    id: "2",
+    label: "Live",
+    value: "Live",
+  },
+  {
+    id: "3",
+    label: "Upcoming",
+    value: "Pending",
+  },
+  {
+    id: "4",
+    label: "Hold",
+    value: "Hold",
+  },
+  {
+    id: "5",
+    label: "Paused",
+    value: "Pause",
+  },
+  {
+    id: "6",
+    label: "Completed",
+    value: "Completed",
+  },
+  {
+    id: "7",
+    label: "Deleted",
+    value: "Deleted",
+  },
+
+  {
+    id: "8",
+    label: "Default",
+    value: "Default",
+  },
+];
+export const queriesTypeTabs = [
+  {
+    id: "1",
+    label: "All",
+    value: "All",
+  },
+  {
+    id: "2",
+    label: "Unread",
+    value: "unread",
+  },
+  {
+    id: "3",
+    label: "Read",
+    value: "read",
+  },
+  {
+    id: "4",
+    label: "Resolved",
+    value: "resolved",
+  },
+];
+
+export const dmpQueriesTypeTabs = [
+  {
+    id: "1",
+    label: "All",
+    value: "All",
+  },
+  {
+    id: "2",
+    label: "Verified",
+    value: "verified",
+  },
+  {
+    id: "3",
+    label: "Unverified",
+    value: "unverified",
+  },
+];
+
+export const menuItemsCampaignManager = [
+  {
+    value: "New Plan",
+    path: "/",
+    icon: "fi-sr-add-document",
+    option: "Create Plan",
+  },
+  {
+    value: "Campaigns",
+    path: "/myCampaignsList",
+    icon: "fi-sr-megaphone ",
+    option: "Campaigns",
+  },
+  {
+    value: "Users",
+    path: USERS,
+    icon: "fi-sr-users-alt ",
+    option: "Users",
+  },
+];
+
+export const menuItemsCampaignPlanner = [
+  {
+    value: "New Plan",
+    path: "/",
+    icon: "fi-sr-add-document",
+    option: "New Plan",
+  },
+  {
+    value: "Campaigns",
+    path: "/myCampaignsList",
+    icon: "fi-sr-megaphone ",
+    option: "Campaigns",
+  },
+  {
+    value: "Drafts",
+    path: MY_PLANS_LIST,
+    icon: "fi-rs-blueprint",
+    option: "Drafts",
+  },
 ];

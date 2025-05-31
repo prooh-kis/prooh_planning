@@ -30,7 +30,7 @@ export const NewDashBoard: React.FC = () => {
   const [isAnalyzing, setIsAnalysing] = useState<boolean>(false);
 
   const [openInvoice, setOpenInvoice] = useState<any>(false);
-  
+
   // State for filters
   const [filters, setFilters] = useState<{
     cities: FilterState;
@@ -96,7 +96,6 @@ export const NewDashBoard: React.FC = () => {
   const { loading: loadingSitesDataMapView, data: sitesDataMapViewData } =
     useSelector((state: any) => state.sitesDataMapViewForPlannerDashboard);
 
-
   // Set up initial data fetch and refresh interval
   useEffect(() => {
     // fetchDashboardData();
@@ -133,12 +132,14 @@ export const NewDashBoard: React.FC = () => {
   if (hasError) {
     return (
       <div className="h-[20vh] w-full border rounded-[12px] mt-10">
-        <p>{errorCampaignDetails?.data?.message || errorDashboard?.data.message}</p>
+        <p>
+          {errorCampaignDetails?.data?.message || errorDashboard?.data.message}
+        </p>
       </div>
     );
   }
   return (
-    <div className="w-full h-full">
+    <div className="w-full">
       <BillingAndInvoice
         open={openInvoice}
         onClose={() => {
@@ -168,7 +169,6 @@ export const NewDashBoard: React.FC = () => {
       ) : (
         <LoadingScreen />
       )}
-      
     </div>
   );
 };

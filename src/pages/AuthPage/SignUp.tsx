@@ -16,7 +16,6 @@ import {
 import planner from "../../assets/icons/planner.svg";
 import manager from "../../assets/icons/manager.svg";
 
-
 export const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -84,27 +83,47 @@ export const SignUp: React.FC = () => {
       {userType === null ? (
         <div className="flex items-center justify-center h-screen">
           <div className="flex gap-12">
-            <div onClick={() => setUserType(CAMPAIGN_PLANNER)} className="cursor-pointer bg-white shadow-lg rounded-2xl p-6 w-100 flex flex-col items-center text-center 
-                      transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+            <div
+              onClick={() => setUserType(CAMPAIGN_PLANNER)}
+              className="cursor-pointer bg-white shadow-lg rounded-2xl p-6 w-100 flex flex-col items-center text-center 
+                      transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+            >
               {/* <i className="fi fi-br-plan-strategy text-[#50C878] text-[120px]" /> */}
               <img src={planner} alt={"PLANNER"} className="w-80 h-auto mb-4" />
-              <h2 className="font-custom text-[24px] text-[#3B82F6] font-semibold">{"CAMPAIGN PLANNER"}</h2>
-              <p className="font-custom text-gray-600 mt-2 text-[12px]">{"Click here if you are a campaign planner and you want to plan a campaign"}</p>
+              <h2 className="font-custom text-[24px] text-[#3B82F6] font-semibold">
+                {"CAMPAIGN PLANNER"}
+              </h2>
+              <p className="font-custom text-gray-600 mt-2 text-[12px]">
+                {
+                  "Click here if you are a campaign planner and you want to plan a campaign"
+                }
+              </p>
             </div>
-            <div onClick={() => setUserType(CAMPAIGN_MANAGER)}  className="cursor-pointer bg-white shadow-lg rounded-2xl p-6 w-100 flex flex-col items-center text-center 
-                      transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+            <div
+              onClick={() => setUserType(CAMPAIGN_MANAGER)}
+              className="cursor-pointer bg-white shadow-lg rounded-2xl p-6 w-100 flex flex-col items-center text-center 
+                      transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+            >
               {/* <i className="fi fi-br-lead-management text-[#8B5CF6] text-[120px]" /> */}
               <img src={manager} alt={"MANAGER"} className="w-80 h-auto mb-4" />
 
-              <h2 className="font-custom text-[24px] text-[#EF444490] font-semibold">{"CAMPAIGN MANAGER"}</h2>
-              <p className="font-custom text-gray-600 mt-2 text-[12px]">{"Click here if you are a campaign manager and you want to monitor your campaigns"}</p>
+              <h2 className="font-custom text-[24px] text-[#EF444490] font-semibold">
+                {"CAMPAIGN MANAGER"}
+              </h2>
+              <p className="font-custom text-gray-600 mt-2 text-[12px]">
+                {
+                  "Click here if you are a campaign manager and you want to monitor your campaigns"
+                }
+              </p>
             </div>
           </div>
-          </div>
+        </div>
       ) : (
         <div className="w-[90%] lg:w-[400px] rounded-[15px] bg-white px-5 lg:px-8 py-6 lg:py-10 shadow-lg">
           <div className="flex flex-col gap-4">
-            <h1 className="flex items-center text-xl font-bold">Welcome Planner</h1>
+            <h1 className="flex items-center text-xl font-bold">
+              Welcome Planner
+            </h1>
 
             <Form
               layout="vertical"
@@ -216,7 +235,6 @@ export const SignUp: React.FC = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };
