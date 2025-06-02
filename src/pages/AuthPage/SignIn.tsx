@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 
 import { signin } from "../../actions/userAction";
 import { useSelector } from "react-redux";
-import { FORGET_PASSWORD } from "../../routes/routes";
+import { FORGET_PASSWORD, SIGN_UP } from "../../routes/routes";
 
 export const SignIn: React.FC = () => {
   const navigate = useNavigate();
@@ -120,7 +120,7 @@ export const SignIn: React.FC = () => {
                   </h1>
                   <h1
                     className=" cursor-pointer items-center text-sm text-[#129BFF] underline underline-offset-2  font-bold"
-                    // onClick={() => navigate(SIGN_UP)} //add contact form todo
+                    onClick={() => navigate(SIGN_UP)} //add contact form todo
                   >
                     Register Now
                   </h1>
