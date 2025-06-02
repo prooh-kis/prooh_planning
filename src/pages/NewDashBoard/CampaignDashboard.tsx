@@ -274,20 +274,14 @@ export const CampaignDashboard = ({
     }
   }, [fetchDashboardData, campaignDetails?._id]);
   return (
-    <div
-      ref={parentComponentRef}
-      className="w-full bg-[#F2F4F7] flex flex-col gap-2 font-custom"
-    >
-      {/* Dashboard header Section */}
-      <div
-        ref={aComponentRef}
-        className="bg-[#FFFFFF] py-4 px-2  pr-14 mt-1 flex justify-between shadow-sm w-full"
-      >
+    <div className="w-full bg-[#F2F4F7] flex flex-col gap-2 font-custom relative">
+      <div className="bg-[#FFFFFF] py-4 px-2 pr-14 mt-1 flex justify-between shadow-sm w-full sticky top-0 z-10">
+        {/* Added sticky and z-10 */}
         <div className="px-2 flex justify-between items-center">
           <div className="flex gap-4">
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-4 items-center ">
               <i
-                className="fi fi-br-arrow-left text-[#6f7f8e]"
+                className="fi fi-br-arrow-left text-[#6f7f8e] cursor-pointer"
                 onClick={() => navigate(-1)}
               ></i>
               <FirstCharForBrandName brandName={campaignDetails?.brandName} />
@@ -307,11 +301,6 @@ export const CampaignDashboard = ({
               <p className="text-[14px] text-[#5B7180] leading-[100%]">
                 {campaignDetails?.brandName}
               </p>
-              <div className="relative w-full" ref={dropdownRef}>
-                {showMenu && (
-                  <DashBoardMenu campaignDetails={campaignDetails} />
-                )}
-              </div>
             </div>
           </div>
         </div>
@@ -331,7 +320,10 @@ export const CampaignDashboard = ({
           </div>
         </div>
       </div>
-      <div className="px-10 bg-[#F2F4F7] h-[78vh] overflow-y-auto  pr-2 ">
+      <div className="absolute top-20 left-2 z-50 w-[300px]">
+        {showMenu && <DashBoardMenu campaignDetails={campaignDetails} />}
+      </div>
+      <div className="px-10 bg-[#F2F4F7] h-[78vh] overflow-y-auto pr-4">
         {/* campaign dashboard grid view */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
           {gridItems.map((item) => (

@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Tooltip } from "antd";
 import { ShowMediaPopup } from "../../components/popup/ShowMediaPopup";
+import {
+  CAMPAIGN_MANAGER,
+  CAMPAIGN_PLANNER,
+} from "../../constants/userConstants";
 
 export const VendorConfirmationStatusTable = ({
   userInfo,
@@ -98,21 +102,28 @@ export const VendorConfirmationStatusTable = ({
           )}
         </thead>
         <tbody className="w-full">
-          {userInfo?.userRole === "campaignPlanner" &&
+          {(userInfo?.userRole === CAMPAIGN_PLANNER ||
+            userInfo?.userRole === CAMPAIGN_MANAGER) &&
             statusTableData?.map((status: any, i: any) => (
               <tr
                 key={i}
                 className={`border w-full grid grid-cols-12 rounded-b
               ${status.status === "PleaRequestBudgetSent" && "bg-[#F59E0B10]"}
-              ${status.status === "PleaRequestBudgetAccepted" && "bg-[#22C55E10]"}
-              ${status.status === "PleaRequestBudgetRejected" && "bg-[#EF444410]"}
+              ${
+                status.status === "PleaRequestBudgetAccepted" &&
+                "bg-[#22C55E10]"
+              }
+              ${
+                status.status === "PleaRequestBudgetRejected" &&
+                "bg-[#EF444410]"
+              }
               ${
                 status.status === "PleaRequestScreenApprovalSent" &&
                 "bg-[#F59E0B10]"
               }
               ${
                 status.status === "PleaRequestScreenApprovalAccepted" &&
-              "bg-[#22C55E10]"
+                "bg-[#22C55E10]"
               }
               ${
                 status.status === "PleaRequestScreenApprovalRejected" &&
@@ -140,7 +151,9 @@ export const VendorConfirmationStatusTable = ({
                 </td>
                 <td className="py-2 col-span-2 flex justify-around items-center truncate">
                   <Tooltip title={status.touchPoint}>
-                    <h1 className="text-[14px] truncate">{status.touchPoint}</h1>
+                    <h1 className="text-[14px] truncate">
+                      {status.touchPoint}
+                    </h1>
                   </Tooltip>
                 </td>
                 <td className="py-2 col-span-2 flex justify-around items-center">
@@ -172,7 +185,9 @@ export const VendorConfirmationStatusTable = ({
                   </div>
                 </td>
                 <td className="py-2 col-span-2 flex justify-around items-center truncate">
-                  <Tooltip title={status.status === "PleaRequestBudgetSent"
+                  <Tooltip
+                    title={
+                      status.status === "PleaRequestBudgetSent"
                         ? "Budget Approval Pending"
                         : status.status === "PleaRequestBudgetAccepted"
                         ? "Budget Approved"
@@ -192,7 +207,9 @@ export const VendorConfirmationStatusTable = ({
                         ? "Final Rejected"
                         : status.status === "Pending"
                         ? "Approved"
-                        : "Approved"}>
+                        : "Approved"
+                    }
+                  >
                     <h1
                       className={`text-[14px] truncate ${
                         status.status === "PleaRequestBudgetSent"
@@ -203,9 +220,11 @@ export const VendorConfirmationStatusTable = ({
                           ? "text-[#EF4444]"
                           : status.status === "PleaRequestScreenApprovalSent"
                           ? "text-[#F59E0B]"
-                          : status.status === "PleaRequestScreenApprovalAccepted"
+                          : status.status ===
+                            "PleaRequestScreenApprovalAccepted"
                           ? "text-[#22C55E]"
-                          : status.status === "PleaRequestScreenApprovalRejected"
+                          : status.status ===
+                            "PleaRequestScreenApprovalRejected"
                           ? "text-[#EF4444]"
                           : status.status === "PleaRequestFinalApprovalSent"
                           ? "text-[#F59E0B]"
@@ -241,7 +260,6 @@ export const VendorConfirmationStatusTable = ({
                         : "Approved"}
                     </h1>
                   </Tooltip>
-         
                 </td>
               </tr>
             ))}
