@@ -78,7 +78,11 @@ export const Header: React.FC = () => {
       {/* User Info or Auth Buttons */}
       {userInfo ? (
         <div className="flex items-center space-x-2 pr-4">
-          <img src={userImage} alt="User" className="w-10 h-10 rounded-full" />
+          <img
+            src={userInfo?.avatar || userImage}
+            alt="User"
+            className="w-10 h-10 rounded-full"
+          />
           <div className="truncate">
             <h3 className="font-custom text-lg font-semibold">
               {userInfo.name}

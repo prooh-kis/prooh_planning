@@ -179,10 +179,22 @@ export const menuItemsCampaignManager = [
     option: "Campaigns",
   },
   {
+    value: "Drafts",
+    path: MY_PLANS_LIST,
+    icon: "fi-rs-blueprint",
+    option: "Drafts",
+  },
+  {
     value: "Users",
     path: USERS,
     icon: "fi-sr-users-alt ",
     option: "Users",
+  },
+  {
+    value: "Setting",
+    path: "/setting",
+    icon: "fi-ss-settings",
+    option: "Setting",
   },
 ];
 
@@ -204,5 +216,11 @@ export const menuItemsCampaignPlanner = [
     path: MY_PLANS_LIST,
     icon: "fi-rs-blueprint",
     option: "Drafts",
+  },
+  {
+    value: "Setting",
+    path: "/setting",
+    icon: "fi-ss-settings",
+    option: "Setting",
   },
 ];

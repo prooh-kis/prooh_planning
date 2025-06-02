@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Loading } from "../../components/Loading";
 import {
   cloneCampaignAction,
   getAllCampaignsDetailsAction,
@@ -26,6 +25,7 @@ import { CampaignsListModel } from "../../components/molecules/CampaignsListMode
 import { GET_CAMPAIGN_DASHBOARD_DATA_RESET } from "../../constants/screenConstants";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 import { notification } from "antd";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 // import CampaignCreationModal from "../../components/popup/CampaignCreationModal";
 
 export const MyCampaignsListPage: React.FC = () => {
@@ -158,13 +158,14 @@ export const MyCampaignsListPage: React.FC = () => {
     }
   }, [currentTab, handleGetCampaignByStatus]);
 
+  const filteredCampaigns = allCampaigns?.filter(
+    (campaign: any) =>
+      campaign?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      campaign?.brandName?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="w-full">
-      {/* <CampaignCreationModal
-        visible={open}
-        onCancel={() => setOpen(false)}
-        onCreate={handleCreate}
-      /> */}
       <div className="bg-white w-auto rounded-[4px] mr-2">
         <div className="flex justify-between pr-8 border-b">
           <div className="flex gap-4 items-center p-4 ">
@@ -172,23 +173,7 @@ export const MyCampaignsListPage: React.FC = () => {
             <h1 className="text-[16px] font-semibold">
               My Campaigns{" "}
               <span className="text-[14px] text-[#68879C] ">
-                (
-                {
-                  allCampaigns?.filter(
-                    (campaign: any) =>
-                      campaign?.campaignName
-                        ?.toLowerCase()
-                        .includes(searchQuery) ||
-                      campaign?.brandName
-                        ?.toLowerCase()
-                        .includes(searchQuery) ||
-                      campaign?.campaignName
-                        ?.toUpperCase()
-                        .includes(searchQuery) ||
-                      campaign?.brandName?.toUpperCase().includes(searchQuery)
-                  )?.length
-                }
-                )
+                ({filteredCampaigns?.length})
               </span>
             </h1>
             <ReloadButton onClick={reset} />
@@ -210,46 +195,33 @@ export const MyCampaignsListPage: React.FC = () => {
           />
         </div>
       </div>
-      {loading ? (
-        <div className="w-full">
-          <Loading />
-        </div>
-      ) : (
-        <div className="mt-1">
-          {allCampaigns?.length === 0 && (
-            <div className="pt-4">
-              <NoDataView />
-            </div>
-          )}
+      <div className="mt-2">
+        {loading ? (
+          <LoadingScreen />
+        ) : filteredCampaigns?.length === 0 ? (
+          <NoDataView />
+        ) : (
           <div
-            className="h-[80vh] overflow-y-auto scrollbar-minimal mt-1 mr-2 rounded-lg flex flex-col gap-4"
+            className="h-[76vh] overflow-y-auto scrollbar-minimal  pr-2 rounded-lg flex flex-col gap-2"
             ref={targetDivRef}
           >
-            {allCampaigns
-              ?.filter(
-                (campaign: any) =>
-                  campaign?.campaignName?.toLowerCase().includes(searchQuery) ||
-                  campaign?.brandName?.toLowerCase().includes(searchQuery) ||
-                  campaign?.campaignName?.toUpperCase().includes(searchQuery) ||
-                  campaign?.brandName?.toUpperCase().includes(searchQuery)
-              )
-              ?.map((data: any, index: any) => (
-                <div key={index} className="pointer-cursor">
-                  <CampaignsListModel
-                    data={data}
-                    handleClone={handleClone}
-                    handleGoToDashBoard={(id: string) =>
-                      navigate(`/campaignDashboard/${id}`)
-                    }
-                    handleEditCampaign={(id: string, type: string) =>
-                      navigate(`/editCampaign/${id}`)
-                    }
-                  />
-                </div>
-              ))}
+            {filteredCampaigns?.map((data: any, index: any) => (
+              <div key={index} className="pointer-cursor">
+                <CampaignsListModel
+                  data={data}
+                  handleClone={handleClone}
+                  handleGoToDashBoard={(id: string) =>
+                    navigate(`/campaignDashboard/${id}`)
+                  }
+                  handleEditCampaign={(id: string, type: string) =>
+                    navigate(`/editCampaign/${id}`)
+                  }
+                />
+              </div>
+            ))}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
