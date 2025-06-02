@@ -39,7 +39,53 @@ import {
   USER_ADD_NEW_USER_SUCCESS,
   USER_ADD_NEW_USER_FAIL,
   USER_ADD_NEW_USER_RESET,
+  UPDATE_USER_PROFILE_REQUEST,
+  UPDATE_USER_PROFILE_SUCCESS,
+  UPDATE_USER_PROFILE_ERROR,
+  UPDATE_USER_PROFILE_RESET,
+  CHANGE_PASSWORD_REQUEST,
+  CHANGE_PASSWORD_SUCCESS,
+  CHANGE_PASSWORD_ERROR,
+  CHANGE_PASSWORD_RESET,
 } from "../constants/userConstants";
+
+export function updateUserProfileReducer(state = {}, action) {
+  switch (action.type) {
+    case UPDATE_USER_PROFILE_REQUEST:
+      return { loading: true };
+    case UPDATE_USER_PROFILE_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        data: action.payload,
+      };
+    case UPDATE_USER_PROFILE_ERROR:
+      return { loading: false, error: action.payload };
+    case UPDATE_USER_PROFILE_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function changeUserPasswordReducer(state = {}, action) {
+  switch (action.type) {
+    case CHANGE_PASSWORD_REQUEST:
+      return { loading: true };
+    case CHANGE_PASSWORD_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        data: action.payload,
+      };
+    case CHANGE_PASSWORD_ERROR:
+      return { loading: false, error: action.payload };
+    case CHANGE_PASSWORD_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
 
 export function userSignupReducer(state = {}, action) {
   switch (action.type) {

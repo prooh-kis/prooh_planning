@@ -6,7 +6,6 @@ import { Loading } from "../../components/Loading";
 import {
   convertIntoDateAndTime,
   getCampaignEndingStatus,
-  getNumberOfDaysBetweenTwoDates,
 } from "../../utils/dateAndTimeUtils";
 import {
   campaignLogsByCampaignIdAction,
@@ -31,12 +30,10 @@ import {
   EditCreativeEndDatePopup,
   SearchInputField,
   NoDataView,
-  PrimaryButton,
 } from "../../components";
 import { ShowMediaFile } from "../../components/molecules/ShowMediaFIle";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import { creativeTypeTab } from "../../constants/tabDataConstant";
-import { MY_CREATIVES } from "../../routes/routes";
 import {
   CAMPAIGN_CREATION_EDIT_END_DATE_PLANNING_PAGE,
   CAMPAIGN_CREATION_GET_CAMPAIGN_DETAILS_PLANNING_PAGE,
@@ -49,7 +46,10 @@ import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
 import { GET_CAMPAIGN_DASHBOARD_DATA_RESET } from "../../constants/screenConstants";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 import { formatNumber } from "../../utils/formatValue";
-import { getRegularVsCohortPriceData, getScreenSummaryPlanTableData } from "../../actions/screenAction";
+import {
+  getRegularVsCohortPriceData,
+  getScreenSummaryPlanTableData,
+} from "../../actions/screenAction";
 import { generateCampaignSummaryPdfFromJSON } from "../../utils/generatePdf";
 import { generatePPT } from "../../utils/generatePPT";
 
@@ -192,13 +192,15 @@ export const CampaignDetailsPage: React.FC = () => {
         })
       );
 
-      dispatch(getRegularVsCohortPriceData({
-        id: campaignCreated?._id,
-        screenIds: campaignCreated?.screenIds,
-        cohorts: campaignCreated?.cohorts,
-        gender: campaignCreated?.gender,
-        duration: campaignCreated?.duration,
-      }));
+      dispatch(
+        getRegularVsCohortPriceData({
+          id: campaignCreated?._id,
+          screenIds: campaignCreated?.screenIds,
+          cohorts: campaignCreated?.cohorts,
+          gender: campaignCreated?.gender,
+          duration: campaignCreated?.duration,
+        })
+      );
       dispatch(
         getCampaignCreatedScreensDetailsAction({
           screenIds: campaignCreated.screenIds,
@@ -341,28 +343,27 @@ export const CampaignDetailsPage: React.FC = () => {
   };
 
   const downloadSummary = () => {
-
     let pdfDownload: any = {
-      "summary" : {
+      summary: {
         heading: "CAMPAIGN SUMMARY",
         pdfData: {
           approach: [campaignCreated],
           costSummary: [screenSummaryPlanTableData],
-          creativeRatio: countScreensByResolutionAndCity(campaignCreated?.screenWiseSlotDetails),
+          creativeRatio: countScreensByResolutionAndCity(
+            campaignCreated?.screenWiseSlotDetails
+          ),
         },
         fileName: `${campaignCreated?.brandName} Campaign Summary`,
       },
       "screen-pictures": {
         heading: "SCREEN PICTURES",
-        pdfData: campaignCreated?.screenWiseSlotDetails?.filter(
-            (s: any) =>
-              campaignCreated?.screenIds.includes(s.screenId)
-          )
+        pdfData: campaignCreated?.screenWiseSlotDetails
+          ?.filter((s: any) => campaignCreated?.screenIds.includes(s.screenId))
           ?.map((screen: any) => {
             return screen;
           }),
         fileName: `${campaignCreated?.brandName} Campaign Screen Pictures`,
-      }
+      },
     };
 
     generateCampaignSummaryPdfFromJSON({
@@ -372,13 +373,12 @@ export const CampaignDetailsPage: React.FC = () => {
       fileName: pdfDownload["summary"].fileName,
       heading: pdfDownload["summary"].heading,
     });
-    message.success("Downloading Summary...")
+    message.success("Downloading Summary...");
     generatePPT({
       download: true,
       data: pdfDownload["screen-pictures"].pdfData,
       fileName: pdfDownload["screen-pictures"].fileName,
     });
- 
   };
 
   const getBgColors = (index: any) => {
@@ -420,7 +420,6 @@ export const CampaignDetailsPage: React.FC = () => {
             {right}
           </h1>
         )}
-        
       </div>
     );
   }
@@ -430,14 +429,22 @@ export const CampaignDetailsPage: React.FC = () => {
     { label: "Client Name", value: campaignCreated?.clientName },
     { label: "Brand Name", value: campaignCreated?.brandName },
     { label: "Campaign Type", value: campaignCreated?.campaignType },
-    { label: "Trigger", value: campaignCreated?.triggers?.weatherTriggers?.length > 0
-      ? "Weather Trigger"
-      : campaignCreated?.triggers?.sportsTriggers?.length > 0
-      ? "Sports Trigger"
-      : campaignCreated?.triggers?.vacantSlots?.length > 0 ? 
-      "Fill Vacancy Trigger" : "None" },
+    {
+      label: "Trigger",
+      value:
+        campaignCreated?.triggers?.weatherTriggers?.length > 0
+          ? "Weather Trigger"
+          : campaignCreated?.triggers?.sportsTriggers?.length > 0
+          ? "Sports Trigger"
+          : campaignCreated?.triggers?.vacantSlots?.length > 0
+          ? "Fill Vacancy Trigger"
+          : "None",
+    },
     { label: "Plan Created by", value: campaignCreated?.campaignPlannerName },
-    { label: "Plan Approved by", value: campaignCreated?.campaignManagerEmail?.split("@")[0] },
+    {
+      label: "Plan Approved by",
+      value: campaignCreated?.campaignManagerEmail?.split("@")[0],
+    },
   ];
 
   const durationDetails = [
@@ -465,7 +472,7 @@ export const CampaignDetailsPage: React.FC = () => {
       label: "Total TouchPoints",
       value: campaignCreated?.touchPoints?.length,
     },
-    { label: "Total Screens", value: campaignCreated?.screenIds?.length},
+    { label: "Total Screens", value: campaignCreated?.screenIds?.length },
     {
       label: "Audience Impression",
       value: formatNumber(campaignCreated?.totalImpression),
@@ -476,7 +483,9 @@ export const CampaignDetailsPage: React.FC = () => {
     },
     {
       label: "Tg%",
-      value: `${Number((campaignCreated?.totalImpression / campaignCreated?.totalReach)).toFixed(2)}  %`,
+      value: `${Number(
+        campaignCreated?.totalImpression / campaignCreated?.totalReach
+      ).toFixed(2)}  %`,
     },
     {
       label: "CPM",
@@ -493,12 +502,14 @@ export const CampaignDetailsPage: React.FC = () => {
     },
     {
       label: "Trigger Cost",
-      value: campaignCreated?.triggers?.weatherTriggers?.length > 0
-      ? campaignCreated?.triggers?.weatherTriggers?.[0]?.budget.toFixed(2)
-      : campaignCreated?.triggers?.sportsTriggers?.length > 0
-      ? campaignCreated?.triggers?.sportsTriggers?.[0]?.budget.toFixed(2)
-      : campaignCreated?.triggers?.vacantSlots?.length > 0 ? 
-      campaignCreated?.triggers?.vacantSlots?.[0]?.budget.toFixed(2) : "None" ,
+      value:
+        campaignCreated?.triggers?.weatherTriggers?.length > 0
+          ? campaignCreated?.triggers?.weatherTriggers?.[0]?.budget.toFixed(2)
+          : campaignCreated?.triggers?.sportsTriggers?.length > 0
+          ? campaignCreated?.triggers?.sportsTriggers?.[0]?.budget.toFixed(2)
+          : campaignCreated?.triggers?.vacantSlots?.length > 0
+          ? campaignCreated?.triggers?.vacantSlots?.[0]?.budget.toFixed(2)
+          : "None",
       paisa: true,
     },
     {
@@ -508,8 +519,12 @@ export const CampaignDetailsPage: React.FC = () => {
     },
     {
       label: "Total Cost",
-      value: formatNumber(campaignCreated?.finalCampaignBudget !== 0 ? campaignCreated?.finalCampaignBudget.toFixed(2) : campaignCreated?.totalCampaignBudget.toFixed(2)),
-      paisa: true
+      value: formatNumber(
+        campaignCreated?.finalCampaignBudget !== 0
+          ? campaignCreated?.finalCampaignBudget.toFixed(2)
+          : campaignCreated?.totalCampaignBudget.toFixed(2)
+      ),
+      paisa: true,
     },
   ];
 
@@ -564,8 +579,7 @@ export const CampaignDetailsPage: React.FC = () => {
                 </div>
                 <div className="flex flex-col gap-1">
                   <h1 className="text-[18px] font-semibold p-0 m-0">
-                    {campaignCreated?.name?.toUpperCase() ||
-                      "Campaign Name"}
+                    {campaignCreated?.name?.toUpperCase() || "Campaign Name"}
                   </h1>
                   <h1 className="text-[12px]">
                     {campaignCreated?.brandName}, {campaignCreated?.duration}{" "}
@@ -579,15 +593,14 @@ export const CampaignDetailsPage: React.FC = () => {
                 <div className="flex h-auto gap-1">
                   <div
                     onClick={() => {
-                      const pageName = getCampaignPageNameFromCampaignType(campaignCreated?.campaignType);
-                      navigate(
-                        `/${pageName}/${campaignCreated._id}/edit`,
-                        {
-                          state: {
-                            from: EDIT_CAMPAIGN,
-                          },
-                        }
+                      const pageName = getCampaignPageNameFromCampaignType(
+                        campaignCreated?.campaignType
                       );
+                      navigate(`/${pageName}/${campaignCreated._id}/edit`, {
+                        state: {
+                          from: EDIT_CAMPAIGN,
+                        },
+                      });
                     }}
                     className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
                   >
@@ -714,20 +727,6 @@ export const CampaignDetailsPage: React.FC = () => {
             </div>
           ) : (
             <div className="w-full border border-[#D3D3D350] rounded-[18px] p-4 bg-white mt-2">
-              <div className="flex justify-between">
-                <h1 className="text-[#092A41] text-[16px] font-semibold mt-2 px-1">
-                  Campaign Creatives
-                </h1>
-                <PrimaryButton
-                  action={() => navigate(MY_CREATIVES)}
-                  title="+ Creatives"
-                  rounded="rounded-full"
-                  height="h-10"
-                  width="w-28"
-                  textSize="text-[12px] font-semibold"
-                  reverse={true}
-                />
-              </div>
               <div className="border-b mb-1">
                 <TabWithoutIcon
                   currentTab={currentTab}

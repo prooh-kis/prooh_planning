@@ -1,15 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { getMyCreateCampaignsListForPlan } from "../../actions/campaignAction";
 import { NoDataView } from "../../components/molecules/NoDataView";
-import { SearchInputField } from "../../components";
+import { ReloadButton, SearchInputField } from "../../components";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-import { CAMPAIGN_PLANNER, SCREEN_OWNER } from "../../constants/userConstants";
+import {
+  CAMPAIGN_MANAGER,
+  CAMPAIGN_PLANNER,
+} from "../../constants/userConstants";
 import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
 import { CampaignCardForPlan } from "../../components/molecules/CampaignCardForPlan";
-import { EDIT_CAMPAIGN, VIEW_CAMPAIGN } from "../../constants/campaignConstants";
+import {
+  EDIT_CAMPAIGN,
+  VIEW_CAMPAIGN,
+} from "../../constants/campaignConstants";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 
 export const MyPlansListPage: React.FC = () => {
@@ -17,7 +23,7 @@ export const MyPlansListPage: React.FC = () => {
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
-
+  const targetDivRef = useRef(null);
   const { userInfo } = useSelector((state: any) => state.auth);
   const {
     loading,
@@ -32,14 +38,15 @@ export const MyPlansListPage: React.FC = () => {
   useEffect(() => {
     if (!userInfo) return navigate("/auth");
 
-    if (![CAMPAIGN_PLANNER, SCREEN_OWNER].includes(userInfo?.userRole)) {
-      message.error("You have no access to this page");
-      return navigate("/auth");
-    }
-
-    if (userInfo?.userRole === CAMPAIGN_PLANNER) {
+    if (
+      userInfo?.userRole === CAMPAIGN_PLANNER ||
+      userInfo?.userRole === CAMPAIGN_MANAGER
+    ) {
       removeAllKeyFromLocalStorage();
       dispatch(getMyCreateCampaignsListForPlan({ id: userInfo._id }));
+    } else {
+      message.error("You have no access to this page");
+      return navigate("/auth");
     }
   }, [dispatch, navigate, userInfo, campaignDetails]);
 
@@ -63,41 +70,53 @@ export const MyPlansListPage: React.FC = () => {
     });
   };
 
+  const reset = () => {
+    dispatch(getMyCreateCampaignsListForPlan({ id: userInfo._id }));
+  };
+
   return (
-    <div className="w-full h-full p-4">
-      {/* Header */}
-      <div className="flex items-center gap-2 border-b pb-2">
-        <i className="fi fi-sr-megaphone text-[#3F3CBB80] text-[14px] flex items-center justify-center"></i>
-        <h1 className="text-lg font-semibold text-primaryText">
-          My Plans List
-        </h1>
+    <div className="w-full">
+      <div className="bg-white w-auto rounded-[4px] mr-2">
+        <div className="flex justify-between pr-8 border-b">
+          <div className="flex gap-4 items-center p-4 ">
+            <i className="fi fi-sr-megaphone flex items-center justify-center text-[#8B5CF680]"></i>
+            <h1 className="text-[16px] font-semibold">
+              My Plans List{" "}
+              <span className="text-[14px] text-[#68879C] ">
+                ({filteredCampaigns?.length})
+              </span>
+            </h1>
+            <ReloadButton onClick={reset} />
+          </div>
+          <div className="flex items-center mt-1 w-96">
+            <SearchInputField
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search Campaign by campaign name or brand"
+            />
+          </div>
+        </div>
       </div>
-
-      {/* Search Input */}
-      <div className="mt-4 w-full">
-        <SearchInputField
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Search by campaign name or brand"
-        />
-      </div>
-
-      {/* Campaign List */}
-      <div className="mt-2 h-[80vh] overflow-y-auto no-scrollbar rounded-lg flex flex-col gap-4">
+      <div className="mt-2">
         {loading ? (
           <LoadingScreen />
         ) : filteredCampaigns?.length === 0 ? (
           <NoDataView />
         ) : (
-          filteredCampaigns?.map((data: any) => (
-            <div
-              key={data._id}
-              className="cursor-pointer"
-              onDoubleClick={() => handleCampaignClick(data)}
-            >
-              <CampaignCardForPlan data={data} handleEdit={handleEdit} />
-            </div>
-          ))
+          <div
+            className="h-[80vh] overflow-y-auto scrollbar-minimal  pr-2 rounded-lg flex flex-col gap-2"
+            ref={targetDivRef}
+          >
+            {filteredCampaigns?.map((data: any, index: any) => (
+              <div
+                key={data._id}
+                className="cursor-pointer"
+                onDoubleClick={() => handleCampaignClick(data)}
+              >
+                <CampaignCardForPlan data={data} handleEdit={handleEdit} />
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>

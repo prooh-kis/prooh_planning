@@ -20,3 +20,4 @@ export { IKnowItAllPlanPage } from "./IKnowItAllPlanPage";
 export { LandingPage } from "./LandingPage";
 
 export { MyUsers } from "./MyUsers";
+export { Setting } from "./Setting";

@@ -25,7 +25,7 @@ export const USER_EMAIL_VERIFICATION_REQUEST =
 export const USER_EMAIL_VERIFICATION_SUCCESS =
   "USER_EMAIL_VERIFICATION_SUCCESS";
 export const USER_EMAIL_VERIFICATION_ERROR = "USER_EMAIL_VERIFICATION_ERROR";
-export const USER_EMAIL_VERIFICATION_RESET = "USER_UPDATE_PROFILE_RESET";
+export const USER_EMAIL_VERIFICATION_RESET = "USER_EMAIL_VERIFICATION_RESET";
 
 export const SEND_EMAIL_TO_RESET_PASSWORD_REQUEST =
   "SEND_EMAIL_TO_RESET_PASSWORD_REQUEST";
@@ -69,28 +69,47 @@ export const SEND_EMAIL_FOR_VENDOR_CONFIRMATION_ERROR =
 export const SEND_EMAIL_FOR_VENDOR_CONFIRMATION_RESET =
   "SEND_EMAIL_FOR_VENDOR_CONFIRMATION_RESET";
 
+export const UPDATE_USER_PROFILE_REQUEST = "UPDATE_USER_PROFILE_REQUEST";
+export const UPDATE_USER_PROFILE_ERROR = "UPDATE_USER_PROFILE_ERROR";
+export const UPDATE_USER_PROFILE_SUCCESS = "UPDATE_USER_PROFILE_SUCCESS";
+export const UPDATE_USER_PROFILE_RESET = "UPDATE_USER_PROFILE_RESET";
 
-export const CAMPAIGN_PLANNER = "campaignPlanner"
-export const CAMPAIGN_MANAGER = "campaignManager"
-export const SCREEN_ADMIN = "screenAdmin"
-export const SCREEN_OWNER = "screenOwner"
-export const SCREEN_MANAGER = "screenManager"
 
-export const CAMPAIGN_STATUS_CHANGED_TO_ACTIVE_PLANNING_PAGE = "campaignStatusChangedToActivePLanningPage"
-export const CAMPAIGN_STATUS_CHANGED_TO_PAUSED_PLANNING_PAGE = "campaignStatusChangedToPausedPlanningPage"
-export const CAMPAIGN_STATUS_CHANGED_TO_DELETED_PLANNING_PAGE = "campaignStatusChangedToDeletedPlanningPage"
-export const CAMPAIGN_CHANGE_DATE_AND_CREATIVE_PLANNING_PAGE = "campaignChangeDateAndCreativePlanningPage"
+export const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
+export const CHANGE_PASSWORD_ERROR = "CHANGE_PASSWORD_ERROR";
+export const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
+export const CHANGE_PASSWORD_RESET = "CHANGE_PASSWORD_RESET";
+
+export const CAMPAIGN_PLANNER = "campaignPlanner";
+export const CAMPAIGN_MANAGER = "campaignManager";
+export const SCREEN_ADMIN = "screenAdmin";
+export const SCREEN_OWNER = "screenOwner";
+export const SCREEN_MANAGER = "screenManager";
+
+export const CAMPAIGN_STATUS_CHANGED_TO_ACTIVE_PLANNING_PAGE =
+  "campaignStatusChangedToActivePLanningPage";
+export const CAMPAIGN_STATUS_CHANGED_TO_PAUSED_PLANNING_PAGE =
+  "campaignStatusChangedToPausedPlanningPage";
+export const CAMPAIGN_STATUS_CHANGED_TO_DELETED_PLANNING_PAGE =
+  "campaignStatusChangedToDeletedPlanningPage";
+export const CAMPAIGN_CHANGE_DATE_AND_CREATIVE_PLANNING_PAGE =
+  "campaignChangeDateAndCreativePlanningPage";
 
 export const USERS_GET_PLANNING_PAGE = "usersGetPlanningPage";
 export const USERS_DELETE_PLANNING_PAGE = "usersDeletePlanningPage";
 export const USERS_ADD_PLANNING_PAGE = "usersAddPlanningPage";
 
-export const CREATIVE_GET_PLANNING_PAGE = "creativeGetPlanningPage"
-export const CREATIVE_ADD_PLANNING_PAGE = "creativeAddPlanningPage"
+export const CREATIVE_GET_PLANNING_PAGE = "creativeGetPlanningPage";
+export const CREATIVE_ADD_PLANNING_PAGE = "creativeAddPlanningPage";
 
-export const CAMPAIGN_CREATION_EDIT_END_DATE_PLANNING_PAGE = "campaignCreationEditEndDatePlanningPage"
-export const CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE = "campaignCreationGetAllCampaignDataPlanningPage"
-export const CAMPAIGN_CREATION_GET_CAMPAIGN_DETAILS_PLANNING_PAGE = "campaignCreationGetCampaignDetailsPlanningPage"
-export const CAMPAIGN_CREATION_CREATE_CLONE_PLANNING_PAGE = "campaignCreationCreateClonePlanningPage"
+export const CAMPAIGN_CREATION_EDIT_END_DATE_PLANNING_PAGE =
+  "campaignCreationEditEndDatePlanningPage";
+export const CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE =
+  "campaignCreationGetAllCampaignDataPlanningPage";
+export const CAMPAIGN_CREATION_GET_CAMPAIGN_DETAILS_PLANNING_PAGE =
+  "campaignCreationGetCampaignDetailsPlanningPage";
+export const CAMPAIGN_CREATION_CREATE_CLONE_PLANNING_PAGE =
+  "campaignCreationCreateClonePlanningPage";
 
-export const CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE = "campaignCreationAddDetailsToCreateCampaignPlanningPage"
+export const CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE =
+  "campaignCreationAddDetailsToCreateCampaignPlanningPage";

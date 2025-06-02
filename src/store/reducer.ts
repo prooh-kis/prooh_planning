@@ -39,7 +39,7 @@ import * as dataHeroReducers from "../reducers/dataHeroReducers";
 import * as landingReducers from "../reducers/landingReducers";
 
 // monitoring Reducers
-import * as monitoringReducers from "../reducers/monitoringReducers"
+import * as monitoringReducers from "../reducers/monitoringReducers";
 
 
 
@@ -105,6 +105,8 @@ export const rootReducer = {
     userSignin: userReducers.userSigninReducer,
     userSignup: userReducers.userSignupReducer,
     userAddNewUser: userReducers.userAddNewUserReducer,
+    profileUpdate: userReducers.updateUserProfileReducer,
+    changePassword: userReducers.changeUserPasswordReducer,
     userUpdatePassword: userReducers.userUpdatePasswordReducer,
     emailVerify: userReducers.userEmailVerificationReducer,
     userSendEmailToResetPassword: userReducers.userSendEmailToResetPasswordReducer,
@@ -171,6 +173,6 @@ export const rootReducer = {
     audienceDataGet: dataHeroReducers.audienceDataGetReducer,
 
     // Monitoring
-    generateMonitoringPpt : monitoringReducers.generateMonitoringPptReducer,
-    getMonitoringPptJobStatus : monitoringReducers.getMonitoringPptJobStatusReducer,
+    generateMonitoringPpt: monitoringReducers.generateMonitoringPptReducer,
+    getMonitoringPptJobStatus: monitoringReducers.getMonitoringPptJobStatusReducer,
 };

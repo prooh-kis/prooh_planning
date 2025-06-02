@@ -18,6 +18,7 @@ import {
   MyUsers,
   LandingPage,
   MyPlansListPage,
+  Setting,
 } from "../pages";
 
 import {
@@ -35,6 +36,7 @@ import {
   ROUTE,
   MY_PLANS_LIST,
   CAMPAIGN_DETAILS_PAGE,
+  SETTING,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 
@@ -127,6 +129,15 @@ const Routers: React.FC = () => {
           element={
             <AppDashBoardLayout value="Campaigns">
               <MyCampaignsListPage />
+            </AppDashBoardLayout>
+          }
+        />
+
+        <Route
+          path={SETTING}
+          element={
+            <AppDashBoardLayout value="Setting">
+              <Setting />
             </AppDashBoardLayout>
           }
         />

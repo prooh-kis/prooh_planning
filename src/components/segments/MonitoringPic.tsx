@@ -120,7 +120,7 @@ export const MonitoringPic = ({
       </div>
 
       {currentTabData.length === 0 ? (
-        <NoDataView />
+        <NoDataView bg="bg-gray-100" title="Monitoring pic not uploaded yet" />
       ) : (
         <div className={`grid ${className} gap-4 py-4`}>
           {currentTabData.map((data, index) => (
