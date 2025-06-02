@@ -10,6 +10,7 @@ import {
   CAMPAIGN_PLANNER,
 } from "../../constants/userConstants";
 import ButtonInput from "../../components/atoms/ButtonInput";
+import { Planner } from "../../assets";
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -28,11 +29,14 @@ export const Header: React.FC = () => {
   return (
     <header className="sticky top-0 w-full h-16 flex items-center border-b border-gray-50 justify-between px-4 sm:px-10 bg-[#FFFFFF] z-50 font-custom">
       {/* Logo Section */}
-      <div className="flex items-center">
-        <div className="cursor-pointer p-2" onClick={handleClick}>
-          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
-            PROOH.AI
-          </h1>
+      <div className="flex items-center gap-2" onClick={handleClick}>
+        {/* <h1 className="text-xl font-black">PROOH.AI</h1> */}
+        <img src={Planner} className="h-8 w-8" alt="Planner" />
+        <div className="">
+          <h1 className="text-[16px] text-[#1E376E] font-black">Planner</h1>
+          <p className="text-[10px] text-[#6F7F8E]">
+            powered by <span className="italic">PROOH.AI</span>
+          </p>
         </div>
       </div>
 

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signout } from "../../../actions/userAction";
 import { Header } from "../../../components/header";
-import { Tooltip } from "antd";
+import { notification, Tooltip } from "antd";
 import {
   menuItemsCampaignPlanner,
   menuItemsCampaignManager,
@@ -46,6 +46,12 @@ export const AppDashBoardLayout: React.FC<AppDashBoardLayoutProps> = ({
       case CAMPAIGN_PLANNER:
         setMenuItems(menuItemsCampaignPlanner);
         break;
+      default:
+        notification.error({
+          message: "Error",
+          description: "You have no access for planner",
+        });
+        dispatch(signout());
     }
   }, [userInfo, navigate]);
 
