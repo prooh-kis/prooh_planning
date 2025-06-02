@@ -110,7 +110,7 @@ export const AppDashBoardLayout: React.FC<AppDashBoardLayoutProps> = ({
             <div className="py-12 flex justify-between truncate">
               <div
                 onClick={handleSignOut}
-                className={`flex truncate w-full rounded-md ${
+                className={`flex truncate w-full rounded-md hover:bg-[#ECF7FF] hover:text-[#129BFF80]   ${
                   !showFull ? "border border-red-200" : "border border-red-200"
                 } justify-start items-center gap-2 py-2 rounded cursor-pointer ${
                   current === "Log Out"

@@ -81,50 +81,48 @@ export const CampaignTemplates: React.FC = () => {
   };
 
   return (
-    <div className="p-2 flex  w-full h-full bg-[#FFFFFF]">
-      <div className="border border-transparent rounded-lg w-full h-full">
-        <div className="flex flex-col items-start p-2">
-          <h1 className="font-custom text-[24px] font-bold text-primaryText">
-            Select Your Campaign Type
-          </h1>
-          <p className="text-[12px] text-secondaryText py-2">
-            Choose any one of the following and start planning your campaign
-            instantly
-          </p>
+    <div className="border border-transparent rounded-lg w-full h-full">
+      <div className="flex flex-col items-start p-2 bg-[#FFFFFF]">
+        <h1 className="font-custom text-[24px] font-bold text-primaryText">
+          Select Your Campaign Type
+        </h1>
+        <p className="text-[12px] text-secondaryText py-2">
+          Choose any one of the following and start planning your campaign
+          instantly
+        </p>
+      </div>
+      <div className="grid grid-cols-12 gap-8 py-8 bg-[#FFFFFF] mt-2 h-[80vh]">
+        <div className="col-span-4 rounded-[16px] bg-white px-4 ">
+          {allPlansData.map((plan: any) => (
+            <Cart
+              key={plan.id}
+              plan={plan}
+              selectedCard={selectedCard}
+              handleCardClick={handleCardClick}
+            />
+          ))}
         </div>
-        <div className="grid grid-cols-12 gap-8 py-8">
-          <div className="col-span-4 rounded-[16px] bg-white px-4 py-4 grid grid-rows-5">
-            {allPlansData.map((plan: any) => (
-              <Cart
-                key={plan.id}
-                plan={plan}
-                selectedCard={selectedCard}
-                handleCardClick={handleCardClick}
-              />
-            ))}
-          </div>
-          <div className="col-span-8 rounded-[16px] bg-white px-8 pt-8 pb-4">
-            <div className="flex flex-col h-full justify-between">
-              <div>
-                <span
-                  className={`bg-[${allPlansData[selectedCard].color}] rounded-full h-16 w-16 flex items-center justify-center`}
-                >
-                  <i
-                    className={`${allPlansData[selectedCard].icon} text-[28px] text-white flex items-center justify-center`}
-                  />
-                </span>
-                <h1 className="font-custom text-[28px] font-semibold py-4 border-b">
-                  {allPlansData[selectedCard].label}
-                </h1>
-                <p className="font-custom text-[14px] text-gray-500 my-4">
-                  {allPlansData[selectedCard].description}
-                </p>
-              </div>
-              <div className="flex justify-start py-4">
-                <ButtonInput rounded="full" onClick={toggle}>
-                  Start Planning
-                </ButtonInput>
-              </div>
+        <div className="col-span-8 rounded-[16px] bg-white px-8">
+          <div className="flex flex-col justify-between">
+            <div>
+              <span
+                className={`bg-[${allPlansData[selectedCard].color}] rounded-full h-16 w-16 flex items-center justify-center`}
+              >
+                <i
+                  className={`${allPlansData[selectedCard].icon} text-[28px] text-white flex items-center justify-center`}
+                />
+              </span>
+              <h1 className="font-custom text-[28px] font-semibold py-4 border-b">
+                {allPlansData[selectedCard].label}
+              </h1>
+              <p className="font-custom text-[14px] text-gray-500 my-4">
+                {allPlansData[selectedCard].description}
+              </p>
+            </div>
+            <div className="flex justify-start py-4">
+              <ButtonInput rounded="full" onClick={toggle}>
+                Start Planning
+              </ButtonInput>
             </div>
           </div>
         </div>

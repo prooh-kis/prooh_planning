@@ -1,18 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useRef } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Menu } from "./Menu";
 import "react-toastify/dist/ReactToastify.css";
-import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 import userImage from "../../assets/userImage.png";
-import {
-  AUTH,
-  ADVERTISERS_PAGE,
-  MEDIA_OWNER_PAGE,
-  SIGN_UP,
-  PRODUCTS,
-  DATA_HERO,
-} from "../../routes/routes";
+import { AUTH } from "../../routes/routes";
 import {
   CAMPAIGN_MANAGER,
   CAMPAIGN_PLANNER,
@@ -21,40 +13,9 @@ import ButtonInput from "../../components/atoms/ButtonInput";
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const dispatch = useDispatch<any>();
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
-
-  const handleMenuToggle = () => setIsMenuOpen((prev) => !prev);
-
-  const BASE_URL = `${window.location.origin}`;
-
-  const navLink = [
-    { title: "Home", path: "/" },
-    { title: "Products", path: `/products/Fly` },
-    { title: "Advertisers", path: `${ADVERTISERS_PAGE}` },
-    { title: "Media Owner", path: `${MEDIA_OWNER_PAGE}` },
-    { title: "Data Hero", path: `${DATA_HERO}` },
-  ];
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const handleClick = () => {
     if (userInfo) {
@@ -65,7 +26,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="top-0 w-full h-16 flex items-center border-b border-gray-50 justify-between px-4 sm:px-10 bg-[#FFFFFF] z-50 font-custom">
+    <header className="sticky top-0 w-full h-16 flex items-center border-b border-gray-50 justify-between px-4 sm:px-10 bg-[#FFFFFF] z-50 font-custom">
       {/* Logo Section */}
       <div className="flex items-center">
         <div className="cursor-pointer p-2" onClick={handleClick}>
@@ -77,7 +38,7 @@ export const Header: React.FC = () => {
 
       {/* User Info or Auth Buttons */}
       {userInfo ? (
-        <div className="flex items-center space-x-2 pr-4">
+        <div className="flex items-center space-x-2 pr-4 relative">
           <img
             src={userInfo?.avatar || userImage}
             alt="User"
@@ -95,83 +56,15 @@ export const Header: React.FC = () => {
                 : userInfo?.userRole}
             </p>
           </div>
-          <Menu userInfo={userInfo} />
+          <div className="relative" ref={dropdownRef}>
+            <Menu userInfo={userInfo} />
+          </div>
         </div>
       ) : (
         <div className="flex items-center gap-2">
           <ButtonInput onClick={() => navigate(AUTH)} rounded="full">
-            Login
+            Sign In
           </ButtonInput>
-          <ButtonInput
-            onClick={() => navigate(SIGN_UP)}
-            variant="outline"
-            rounded="full"
-          >
-            SignUp
-          </ButtonInput>
-
-          {/* Mobile Menu Icon */}
-          <div className="md:hidden">
-            <button
-              title="toggl"
-              type="submit"
-              onClick={handleMenuToggle}
-              className="focus:outline-none"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="w-8 h-8 text-gray-700"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
-          </div>
-          {/* Mobile Dropdown Menu */}
-          {isMenuOpen && (
-            <div
-              ref={dropdownRef}
-              className="absolute top-16 right-4 bg-white shadow-md rounded-lg w-48 z-50"
-            >
-              <ul className="flex flex-col p-2">
-                {navLink.map((item) => (
-                  <li key={item.title} className="border-b">
-                    <button
-                      onClick={() => {
-                        if (item.title === "Research") {
-                          window.open(`${item.path}`);
-                        } else {
-                          navigate(`${item.path}`);
-                        }
-                        setIsMenuOpen(false);
-                      }}
-                      className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100"
-                    >
-                      {item.title}
-                    </button>
-                  </li>
-                ))}
-                <li>
-                  <button
-                    onClick={() => {
-                      navigate(AUTH);
-                      setIsMenuOpen(false);
-                    }}
-                    className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100"
-                  >
-                    Get In
-                  </button>
-                </li>
-              </ul>
-            </div>
-          )}
         </div>
       )}
     </header>
