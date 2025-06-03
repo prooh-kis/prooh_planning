@@ -8,6 +8,7 @@ import { List, ListItem } from "../../components/molecules/List";
 import { GetCampaignLogsAction } from "../../actions/campaignAction";
 import { formatDateForLogs, getTimeFromDate } from "../../utils/dateAndTimeUtils";
 import { TIME_ZONES } from "../../constants/helperConstants";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 interface HeaderProps {
   icon: string;
@@ -61,6 +62,7 @@ export const ViewAllLogsPopup = ({
   const [selectedCities, setSelectedCities] = useState<any>([]);
   const [selectedTouchPoints, setSelectedTouchPoints] = useState<any>([]);
   const [selectedScreenTypes, setSelectedScreenTypes] = useState<any>([]);
+  const [zipGeneration, setZipGeneration] = useState(false);
 
   const [currentScreenName, setCurrentScreenName] = useState<string>("");
   const [currentScreenCampaignId, setCurrentScreenCampaignId] = useState<any>(null);
@@ -70,7 +72,7 @@ export const ViewAllLogsPopup = ({
     error: errorLogs,
     data: logs,
   } = useSelector((state: any) => state.campaignLogsGet);
-  
+
   const {
     loading: loadingAllLogs,
     error: errorAllLogs,
@@ -94,7 +96,7 @@ export const ViewAllLogsPopup = ({
     } else {
       return [];
     }
-    
+
   }, [logs]);
 
   const newCombinedData = useMemo(() => {
@@ -151,8 +153,8 @@ export const ViewAllLogsPopup = ({
   };
 
 
-   // Toggle all cities
-   const toggleAllCities = (checked: boolean) => {
+  // Toggle all cities
+  const toggleAllCities = (checked: boolean) => {
     const allCities = Object.keys(allLogsData?.cityWiseData || {}).filter(
       (c) => c !== "all"
     );
@@ -195,6 +197,30 @@ export const ViewAllLogsPopup = ({
     }
   };
 
+  const handleDownloadZip = async () => {
+    setZipGeneration(true);
+    try {
+      const res = await fetch(`https://api.justmonad.com/api/v2/monitoring/downlaodMonitoringLogsZip?id=${campaignId}`);
+      if (!res.ok) throw new Error('Failed to download');
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'monitoring_logs.zip'; // optional: dynamic name
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Download failed:', err);
+      alert("Download failed. Please try again.");
+      setZipGeneration(false)
+    } finally {
+      setZipGeneration(false);
+    }
+  };
+
   // Handle screen type selection
   const handleScreenTypeChange = (screenType: string, checked: boolean) => {
     if (checked) {
@@ -207,8 +233,8 @@ export const ViewAllLogsPopup = ({
   };
 
   useEffect(() => {
-    
-  },[]);
+
+  }, []);
 
   useEffect(() => {
     dispatch(getFiltersAndDataForAllLogsPopupAction({
@@ -252,25 +278,30 @@ export const ViewAllLogsPopup = ({
 
   }, [errorLogs, errorAllLogs]);
 
- 
-   useEffect(() => {
-     if (open) {
-       document.body.classList.add("overflow-hidden");
-     } else {
-       document.body.classList.remove("overflow-hidden");
-     }
-     // Clean up the effect when the component unmounts
-     return () => {
-       document.body.classList.remove("overflow-hidden");
-     };
-   }, [open]);
- 
-   if (!open) {
-     return null;
-   }
+
+  useEffect(() => {
+    if (open) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    // Clean up the effect when the component unmounts
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [open]);
+
+  if (!open) {
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 mt-16">
+      {(zipGeneration) && (
+        <div className="absolute inset-0 bg-white bg-opacity-70 z-20 flex items-center justify-center rounded-[10px]">
+          <LoadingScreen title={"Generating Zip , Please Wait..."} />
+        </div>
+      )}
       <div
         className="bg-[#FFFFFF] p-4 rounded-lg shadow-lg w-full max-w-full relative overflow-auto max-h-auto "
         style={{ height: "90vh", width: "95vw" }}
@@ -284,13 +315,21 @@ export const ViewAllLogsPopup = ({
               </span>
             </h1>
           </div>
-          <i
-            className="fi fi-br-cross text-[14px] cursor-pointer"
-            onClick={handleCancel}
-          />
+          <div className="flex items-center gap-3">
+            <i
+              className="fi fi-rr-folder-download text-[16px] text-[#0E212E] cursor-pointer"
+              title="Download ZIP"
+              onClick={handleDownloadZip}
+            />
+            <i
+              className="fi fi-br-cross text-[14px] cursor-pointer"
+              onClick={handleCancel}
+            />
+          </div>
+
         </div>
         <div className="">
-          
+
           <CalenderScaleStepper
             setCurrentDay={setCurrentDay}
             setCurrentWeek={setCurrentWeek}
@@ -324,7 +363,7 @@ export const ViewAllLogsPopup = ({
                           indeterminate={
                             selectedCities.length > 0 &&
                             selectedCities.length <
-                              Object.keys(allLogsData?.cityWiseData || {}).length
+                            Object.keys(allLogsData?.cityWiseData || {}).length
                           }
                           onChange={(e) => toggleAllCities(e.target.checked)}
                           checked={
@@ -336,10 +375,10 @@ export const ViewAllLogsPopup = ({
                           All
                         </Checkbox>
                         <div className="col-span-1">
-                          
+
                         </div>
                       </div>
-        
+
                       {Object.keys(allLogsData?.cityWiseData || {})
                         .filter((city) => city !== "all")
                         .map((city: string) => (
@@ -352,7 +391,7 @@ export const ViewAllLogsPopup = ({
                               {city}
                             </Checkbox>
                             <div className="col-span-1">
-                              
+
                             </div>
                           </div>
                         ))}
@@ -370,7 +409,7 @@ export const ViewAllLogsPopup = ({
                           indeterminate={
                             selectedTouchPoints.length > 0 &&
                             selectedTouchPoints.length <
-                              Object.keys(allLogsData?.touchPointWiseData || {}).length
+                            Object.keys(allLogsData?.touchPointWiseData || {}).length
                           }
                           onChange={(e) => toggleAllTouchPoints(e.target.checked)}
                           defaultChecked={
@@ -382,10 +421,10 @@ export const ViewAllLogsPopup = ({
                           All
                         </Checkbox>
                         <div className="col-span-1">
-                          
+
                         </div>
                       </div>
-        
+
                       {Object.keys(allLogsData?.touchPointWiseData || {})
                         .filter((tp) => tp !== "all")
                         .map((tp: string) => (
@@ -400,14 +439,14 @@ export const ViewAllLogsPopup = ({
                               {tp}
                             </Checkbox>
                             <div className="col-span-1">
-                
+
                             </div>
                           </div>
                         ))}
                     </div>
                   </div>
                 </div>
-      
+
                 {/* Screen List */}
                 <div className="border border-gray-100 rounded-[12px] col-span-3">
                   <Header title={"Screens"} icon="fi-sr-screen" />
@@ -420,7 +459,7 @@ export const ViewAllLogsPopup = ({
                           <div className="grid grid-cols-4 items-center py-1" key={screenName}>
                             <Checkbox
                               checked={currentScreenName === screenName}
-                              onChange={(e) =>  {
+                              onChange={(e) => {
                                 setCurrentScreenName(screenName);
                                 setCurrentScreenCampaignId(allLogsData?.screenWiseData[screenName].campaignId)
                               }}
@@ -429,7 +468,7 @@ export const ViewAllLogsPopup = ({
                               {screenName}
                             </Checkbox>
                             <div className="col-span-1">
-                
+
                             </div>
                           </div>
                         ))}
@@ -493,15 +532,15 @@ export const ViewAllLogsPopup = ({
                       {formatDateForLogs(`${date} 00:00:00 GMT`).apiDate !==
                         formatDateForLogs(`${currentDate} 00:00:00 GMT`)
                           .apiDate && (
-                        <div className="flex items-center gap-2 p-2">
-                          <h1 className="font-custom text-[16px]">
-                            Logs from previous day being saved on this day
-                          </h1>
-                          <Tooltip title="If the screen is switched of without saving the last logs on the server, the date is saved next day when the device is online after being started again...">
-                            <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
-                          </Tooltip>
-                        </div>
-                      )}
+                          <div className="flex items-center gap-2 p-2">
+                            <h1 className="font-custom text-[16px]">
+                              Logs from previous day being saved on this day
+                            </h1>
+                            <Tooltip title="If the screen is switched of without saving the last logs on the server, the date is saved next day when the device is online after being started again...">
+                              <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
+                            </Tooltip>
+                          </div>
+                        )}
                       <div className="overflow-scroll no-scrollbar h-[60vh] border-r border-gray-100 rounded-br-[12px]">
                         {Object.keys(hours)
                           .sort((a, b) => Number(a) - Number(b))
@@ -522,16 +561,16 @@ export const ViewAllLogsPopup = ({
                                         key={index}
                                         className={`
                                           grid grid-cols-12 border-b border-gray-100 hover:bg-gray-50 text-gray-700 p-1
-                                          ${TIME_ZONES?.["t1"].includes(Number(hour)) ? "bg-[#F9E39650]" : 
+                                          ${TIME_ZONES?.["t1"].includes(Number(hour)) ? "bg-[#F9E39650]" :
                                             TIME_ZONES?.["t2"].includes(Number(hour)) ? "bg-[#BCFFA650]" :
-                                            TIME_ZONES?.["t3"].includes(Number(hour)) ? "bg-[#D2CAFF50]" :
-                                            TIME_ZONES?.["t4"].includes(Number(hour)) ? "bg-[#EBFAFF50]" :
-                                            "bg-[#00A0FA10]"}
+                                              TIME_ZONES?.["t3"].includes(Number(hour)) ? "bg-[#D2CAFF50]" :
+                                                TIME_ZONES?.["t4"].includes(Number(hour)) ? "bg-[#EBFAFF50]" :
+                                                  "bg-[#00A0FA10]"}
                                         `}
                                       >
                                         <td className="col-span-1 py-2 flex items-center justify-center">
                                           <h1 className="text-[12px]">
-                                            {index+1}
+                                            {index + 1}
                                           </h1>
                                         </td>
                                         <td className="col-span-2 py-2 flex items-center justify-center">
@@ -550,11 +589,10 @@ export const ViewAllLogsPopup = ({
                                           </h1>
                                         </td>
                                         <td
-                                          className={`col-span-2 py-2 flex items-center justify-center ${
-                                            entry.screenStatus === "online"
-                                              ? "text-[#59A237]"
-                                              : "text-gray-500"
-                                          }`}
+                                          className={`col-span-2 py-2 flex items-center justify-center ${entry.screenStatus === "online"
+                                            ? "text-[#59A237]"
+                                            : "text-gray-500"
+                                            }`}
                                         >
                                           <h1 className="text-[12px]">
                                             {entry.screenStatus.toUpperCase()}
@@ -573,7 +611,7 @@ export const ViewAllLogsPopup = ({
                                     className={
                                       entries.length /
                                         (17 * campaignDetails?.sov) >=
-                                      1
+                                        1
                                         ? "text-[#2A892D] text-[12px]"
                                         : "text-[#CC0000] text-[12px]"
                                     }
@@ -584,29 +622,29 @@ export const ViewAllLogsPopup = ({
                                     className={
                                       entries.length /
                                         (17 * campaignDetails?.sov) >=
-                                      1
+                                        1
                                         ? "text-[#2A892D] text-[12px]"
                                         : "text-[#CC0000] text-[12px]"
                                     }
                                   >
                                     {entries.length /
                                       (17 * campaignDetails?.sov) >
-                                    1
+                                      1
                                       ? `(+${Number(
+                                        (entries.length /
+                                          (17 * campaignDetails?.sov)) *
+                                        100
+                                      ).toFixed(0)}%)`
+                                      : entries.length /
+                                        (17 * campaignDetails?.sov) <
+                                        1
+                                        ? `(-${Number(
+                                          100 -
                                           (entries.length /
                                             (17 * campaignDetails?.sov)) *
-                                            100
+                                          100
                                         ).toFixed(0)}%)`
-                                      : entries.length /
-                                          (17 * campaignDetails?.sov) <
-                                        1
-                                      ? `(-${Number(
-                                          100 -
-                                            (entries.length /
-                                              (17 * campaignDetails?.sov)) *
-                                              100
-                                        ).toFixed(0)}%)`
-                                      : `✔`}
+                                        : `✔`}
                                   </p>
                                 </div>
                                 <div className="col-span-1 border-x border-gray-100 flex justify-center items-center p-2">
