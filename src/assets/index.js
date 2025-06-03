@@ -25,15 +25,16 @@ export { default as dataHeroImg } from "./images/dataheroimg.png";
 export { default as Reward } from "./icons/Reward.svg";
 export { default as icon33 } from "./icons/Icon33.png";
 
-export {default as Fly } from "./icons/Asset.svg";
-export {default as Planner } from "./icons/campaign.svg";
-export {default as Layer } from "./icons/layers.svg";
+export { default as Fly } from "./icons/Asset.svg";
+export { default as Planner } from "./icons/campaign.svg";
+export { default as Layer } from "./icons/layers.svg";
+export { default as PPT } from "./icons/ppt.svg";
+export { default as ZIP } from "./icons/zip.svg";
 
-
-export {default as Carousel1} from "./images/carousel1.png";
-export {default as Carousel2} from "./images/carousel2.png";
-export {default as Carousel3} from "./images/carousel3.png";
-export {default as Carousel4} from "./images/carousel4.png";
-export {default as Carousel5} from "./images/carousel5.png";
-export {default as Carousel6} from "./images/carousel6.png";
-export {default as Carousel7} from "./images/carousel7.png";
+export { default as Carousel1 } from "./images/carousel1.png";
+export { default as Carousel2 } from "./images/carousel2.png";
+export { default as Carousel3 } from "./images/carousel3.png";
+export { default as Carousel4 } from "./images/carousel4.png";
+export { default as Carousel5 } from "./images/carousel5.png";
+export { default as Carousel6 } from "./images/carousel6.png";
+export { default as Carousel7 } from "./images/carousel7.png";

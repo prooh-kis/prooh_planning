@@ -10,8 +10,8 @@ export const SearchableSelect: React.FC<{
   const [searchTerm, setSearchTerm] = useState<string>(value);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(value);
-
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+
   const filteredOptions =
     searchTerm.length === 0
       ? []
@@ -62,28 +62,33 @@ export const SearchableSelect: React.FC<{
 
   return (
     <div className="relative w-full" ref={dropdownRef}>
-      <input
-        type="text"
-        value={
-          selectedOption
-            ? options.find((o) => o.value === selectedOption)?.label || ""
-            : searchTerm
-        }
-        onChange={(e) => {
-          setSearchTerm(e.target.value.toUpperCase());
-          setSelectedOption(null);
-          if (!isOpen) setIsOpen(true);
-          setFocusedIndex(-1);
-        }}
-        onFocus={() => setIsOpen(true)}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        className="border rounded-[8px] h-[48px] w-full pl-5 py-2 pr-4 focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-gray-100 active:bg-blue-100 transition-colors"
-      />
+      <div className="relative">
+        <input
+          type="text"
+          value={
+            selectedOption
+              ? options.find((o) => o.value === selectedOption)?.label || ""
+              : searchTerm
+          }
+          onChange={(e) => {
+            setSearchTerm(e.target.value.toUpperCase());
+            setSelectedOption(null);
+            if (!isOpen) setIsOpen(true);
+            setFocusedIndex(-1);
+          }}
+          onFocus={() => setIsOpen(true)}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder}
+          className="border rounded-[8px] h-[48px] w-full pl-9 py-2 pr-12 focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-gray-100 active:bg-blue-100 transition-colors"
+        />
+        <div className="absolute inset-y-0 left-0 flex items-center ml-3 pointer-events-none">
+          <i className="fi fi-bs-search text-gray-400 text-lg flex items-center"></i>
+        </div>
+      </div>
 
       {isOpen && (
         <div
-          className="absolute z-10 w-full bg-white border shadow-md max-h-60 overflow-y-auto"
+          className="absolute z-10 w-full bg-white  shadow-md max-h-60 overflow-y-auto mt-1 rounded-[8px]"
           role="listbox"
         >
           {filteredOptions.length > 0 ? (
@@ -96,7 +101,6 @@ export const SearchableSelect: React.FC<{
                   focusedIndex === index ? "bg-[#D7D7D7]" : "hover:bg-[#D7D7D7]"
                 }`}
                 role="option"
-                // aria-selected={focusedIndex === index} // Ensuring a valid boolean value
               >
                 {option.label}
               </div>

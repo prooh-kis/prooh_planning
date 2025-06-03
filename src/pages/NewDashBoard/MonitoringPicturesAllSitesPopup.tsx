@@ -6,10 +6,16 @@ import { Checkbox, notification } from "antd";
 import { List, ListItem } from "../../components/molecules/List";
 import { MonitoringPic } from "../../components/segments/MonitoringPic";
 import { LinearBar } from "../../components/molecules/linearbar";
-import { generateMonitoringPpt, getMonitoringPptJobStatus } from "../../actions/monitoringAction";
+import {
+  generateMonitoringPpt,
+  getMonitoringPptJobStatus,
+} from "../../actions/monitoringAction";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-import { GENERATE_MONITORING_PPT_RESET, GET_MONITORING_PPT_JOB_STATUS_RESET } from "../../constants/monitoringConstant";
-
+import {
+  GENERATE_MONITORING_PPT_RESET,
+  GET_MONITORING_PPT_JOB_STATUS_RESET,
+} from "../../constants/monitoringConstant";
+import { PPT, ZIP } from "../../assets";
 interface HeaderProps {
   icon: string;
   title: string;
@@ -42,16 +48,20 @@ export const MonitoringPicturesAllSitesPopup = ({
     (state: any) => state.allSitesMonitoringData
   );
 
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
   const [currentScreen, setCurrentScreen] = useState<string>("");
   const [selectedCities, setSelectedCities] = useState<string[]>([]);
   const [selectedTouchPoints, setSelectedTouchPoints] = useState<string[]>([]);
   const [selectedScreenTypes, setSelectedScreenTypes] = useState<string[]>([]);
   const [dataInitialized, setDataInitialized] = useState(false);
   const [pptGeneration, setPptGeneration] = useState(false);
-  const [zipGeneration , setZipGeneration] = useState(false);
+  const [zipGeneration, setZipGeneration] = useState(false);
   const [pptJobId, setPptJobId] = useState(1);
 
-  const generateMonitoringPPT = useSelector((state: any) => state.generateMonitoringPpt);
+  const generateMonitoringPPT = useSelector(
+    (state: any) => state.generateMonitoringPpt
+  );
   const {
     loading: generateMonitoringPptLoading,
     error: generateMonitoringPptError,
@@ -59,8 +69,9 @@ export const MonitoringPicturesAllSitesPopup = ({
     data: generateMonitoringPptData,
   } = generateMonitoringPPT;
 
-
-  const getMonitoringPptJobStatusData = useSelector((state: any) => state.getMonitoringPptJobStatus);
+  const getMonitoringPptJobStatusData = useSelector(
+    (state: any) => state.getMonitoringPptJobStatus
+  );
   const {
     loading: pptJobStatusLoading,
     error: pptJobStatusError,
@@ -69,44 +80,48 @@ export const MonitoringPicturesAllSitesPopup = ({
   } = getMonitoringPptJobStatusData;
 
   const downloadPPT = (url: any) => {
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = 'monitoring_ppt.pptx';
+    link.download = "monitoring_ppt.pptx";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
-  const getJobStatusInfo = async (id : any) => {
+  const getJobStatusInfo = async (id: any) => {
     setTimeout(async () => {
       try {
-        dispatch(getMonitoringPptJobStatus({ id: id }))
+        dispatch(getMonitoringPptJobStatus({ id: id }));
       } catch (error) {
-        console.error('API call failed:', error);
+        console.error("API call failed:", error);
       }
     }, 10000);
-  }
+  };
 
   useEffect(() => {
     if (generateMonitoringPptSuccess) {
-      console.log(generateMonitoringPptData)
-      setPptJobId(Number(generateMonitoringPptData.jobId))
-      setPptGeneration(true)
-      getJobStatusInfo(Number(generateMonitoringPptData.jobId))
-      dispatch({ type: GENERATE_MONITORING_PPT_RESET })
+      console.log(generateMonitoringPptData);
+      setPptJobId(Number(generateMonitoringPptData.jobId));
+      setPptGeneration(true);
+      getJobStatusInfo(Number(generateMonitoringPptData.jobId));
+      dispatch({ type: GENERATE_MONITORING_PPT_RESET });
     }
 
     if (pptJobStatusSuccess) {
       if (pptJobStatusData.state === "completed") {
-        setPptGeneration(false)
-        downloadPPT(pptJobStatusData.result.url)
-        dispatch({ type: GET_MONITORING_PPT_JOB_STATUS_RESET })
-      }
-      else {
-        getJobStatusInfo(pptJobId)
+        setPptGeneration(false);
+        downloadPPT(pptJobStatusData.result.url);
+        dispatch({ type: GET_MONITORING_PPT_JOB_STATUS_RESET });
+      } else {
+        getJobStatusInfo(pptJobId);
       }
     }
-  }, [generateMonitoringPptError, generateMonitoringPptSuccess, pptJobStatusSuccess, pptJobStatusError])
+  }, [
+    generateMonitoringPptError,
+    generateMonitoringPptSuccess,
+    pptJobStatusSuccess,
+    pptJobStatusError,
+  ]);
 
   useEffect(() => {
     if (data && !dataInitialized) {
@@ -194,28 +209,36 @@ export const MonitoringPicturesAllSitesPopup = ({
   };
 
   const handleDownloadPPT = () => {
-    dispatch(generateMonitoringPpt({ campaignId: campaignId }))
-  }
+    setIsMenuOpen(false);
+    dispatch(generateMonitoringPpt({ campaignId: campaignId }));
+  };
+
+  const handleOpenButtonMenu = () => {
+    setIsMenuOpen((pre: boolean) => !pre);
+  };
 
   const handleDownloadZip = async () => {
+    setIsMenuOpen(false);
     setZipGeneration(true);
     try {
-      const res = await fetch(`https://api.justmonad.com/api/v2/monitoring/downloadMonitoringPicsZip?id=${campaignId}`);
-      if (!res.ok) throw new Error('Failed to download');
+      const res = await fetch(
+        `https://api.justmonad.com/api/v2/monitoring/downloadMonitoringPicsZip?id=${campaignId}`
+      );
+      if (!res.ok) throw new Error("Failed to download");
 
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = 'monitoring_pics.zip'; // optional: dynamic name
+      a.download = "monitoring_pics.zip"; // optional: dynamic name
       document.body.appendChild(a);
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('Download failed:', err);
+      console.error("Download failed:", err);
       alert("Download failed. Please try again.");
-      setZipGeneration(false)
+      setZipGeneration(false);
     } finally {
       setZipGeneration(false);
     }
@@ -249,7 +272,13 @@ export const MonitoringPicturesAllSitesPopup = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 font-inter">
       {(pptGeneration || zipGeneration) && (
         <div className="absolute inset-0 bg-white bg-opacity-70 z-20 flex items-center justify-center rounded-[10px]">
-          <LoadingScreen title={ pptGeneration === true ? "Generating PPT, Please Wait..." : "Generating Zip , Please Wait..."} />
+          <LoadingScreen
+            title={
+              pptGeneration === true
+                ? "Generating PPT, Please Wait..."
+                : "Generating Zip , Please Wait..."
+            }
+          />
         </div>
       )}
       <div className="bg-[#FFFFFF] rounded-[10px] h-[80vh] w-[99%] p-4 flex flex-col">
@@ -263,30 +292,59 @@ export const MonitoringPicturesAllSitesPopup = ({
             </h1>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Download PDF Button */}
-            <i
-              className="fi fi-br-ppt-file text-[16px] text-[#0E212E] cursor-pointer"
-              title="Download PPT"
-              onClick={handleDownloadPPT}
-            />
-
-            {/* Download ZIP Button as anchor tag */}
+          <div className="relative flex items-center gap-3">
+            {/* Main Download Button */}
+            <button
+              onClick={handleOpenButtonMenu}
+              className="flex gap-2 items-center border border-gray-300 rounded-md px-4 py-2 transition-colors bg-[#129BFF] text-[#FFFFFF]"
+            >
+              <i className="fi fi-sr-folder-download text-[16px] flex items-center" />
+              <span>Download All Pics</span>
               <i
-              className="fi fi-rr-folder-download text-[16px] text-[#0E212E] cursor-pointer"
-              title="Download ZIP"
-              onClick={handleDownloadZip}
-            />
+                className={`fi ${
+                  isMenuOpen ? "fi-rr-angle-small-up" : "fi-rr-angle-small-down"
+                } text-[16px] flex items-center`}
+              />
+            </button>
 
-            {/* Close Button */}
-            <i
-              className="fi fi-br-cross text-[14px] cursor-pointer"
-              title="Close"
+            {/* Dropdown Menu - conditionally rendered */}
+            {isMenuOpen && (
+              <div className="absolute left-0 top-12 z-10 w-[80%] bg-white shadow-lg rounded-md border border-gray-200 overflow-hidden p-2">
+                {/* Menu Items */}
+                <div
+                  onClick={handleDownloadZip}
+                  className="flex items-center justify-between p-3 hover:bg-gray-100 cursor-pointer transition-colors rounded-md"
+                >
+                  <div className="flex items-center gap-2">
+                    <img src={ZIP} alt="ZIp" className="" />
+                    <span>Zip</span>
+                  </div>
+                  <i className="fi fi-br-download text-[14px] text-gray-500 flex items-center" />
+                </div>
+
+                <div
+                  onClick={handleDownloadPPT}
+                  className="flex items-center justify-between p-3 hover:bg-gray-100 cursor-pointer transition-colors rounded-md"
+                >
+                  <div className="flex items-center gap-2">
+                    <img src={PPT} alt="PPT" className="" />
+                    {/* <i className="fi fi-sr-ppt-file text-[16px] text-[#129BFF] flex items-center" /> */}
+                    <span>PPT</span>
+                  </div>
+                  <i className="fi fi-br-download text-[14px] text-gray-500 flex items-center" />
+                </div>
+
+                {/* Close Button */}
+              </div>
+            )}
+            <div
               onClick={handleCancel}
-            />
+              className="flex items-center justify-center p-2 border-t border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors"
+            >
+              <i className="fi fi-br-cross text-[14px] text-gray-500" />
+            </div>
           </div>
         </div>
-
 
         <div className="my-4 grid grid-cols-6 max-h-[65vh] gap-1">
           {/* Cities Filter */}
@@ -298,7 +356,7 @@ export const MonitoringPicturesAllSitesPopup = ({
                   indeterminate={
                     selectedCities.length > 0 &&
                     selectedCities.length <
-                    Object.keys(data?.cityWiseData || {}).length - 1
+                      Object.keys(data?.cityWiseData || {}).length - 1
                   }
                   onChange={(e) => toggleAllCities(e.target.checked)}
                   checked={
@@ -360,7 +418,7 @@ export const MonitoringPicturesAllSitesPopup = ({
                   indeterminate={
                     selectedTouchPoints.length > 0 &&
                     selectedTouchPoints.length <
-                    Object.keys(data?.touchPointWiseData || {}).length - 1
+                      Object.keys(data?.touchPointWiseData || {}).length - 1
                   }
                   onChange={(e) => toggleAllTouchPoints(e.target.checked)}
                   checked={
@@ -424,7 +482,7 @@ export const MonitoringPicturesAllSitesPopup = ({
                   indeterminate={
                     selectedScreenTypes.length > 0 &&
                     selectedScreenTypes.length <
-                    Object.keys(data?.screenTypeWiseData || {}).length - 1
+                      Object.keys(data?.screenTypeWiseData || {}).length - 1
                   }
                   onChange={(e) => toggleAllScreenTypes(e.target.checked)}
                   checked={

@@ -3,6 +3,9 @@ import {
   GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_ERROR,
   GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_REQUEST,
   GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_SUCCESS,
+  GET_ALL_PLANNER_IDS_AND_EMAIL_ERROR,
+  GET_ALL_PLANNER_IDS_AND_EMAIL_REQUEST,
+  GET_ALL_PLANNER_IDS_AND_EMAIL_SUCCESS,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_ERROR,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_REQUEST,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS,
@@ -659,35 +662,64 @@ export const getScreenDataForUploadCreativePageV3 =
     }
   };
 
+export const getCreativesFromCreativeBucketForUploadPage =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
 
-  export const getCreativesFromCreativeBucketForUploadPage =
-    (input) => async (dispatch, getState) => {
+      const { data } = await axios.post(
+        `${url}/getCreativesFromCreativeBucketForUploadPage`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
       dispatch({
-        type: GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_REQUEST,
-        payload: input,
+        type: GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_SUCCESS,
+        payload: data,
       });
-      try {
-        const {
-          auth: { userInfo },
-        } = getState();
+    } catch (error) {
+      dispatch({
+        type: GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_ERROR,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
-        const { data } = await axios.post(
-          `${url}/getCreativesFromCreativeBucketForUploadPage`,
-          input,
-          { headers: { authorization: `Bearer ${userInfo.token}` } }
-        );
-        dispatch({
-          type: GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_SUCCESS,
-          payload: data,
-        });
-      } catch (error) {
-        dispatch({
-          type: GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_ERROR,
-          payload:
-            error.response && error.response.data.message
-              ? error.response.data.message
-              : error.message,
-        });
-      }
-    };
+export const getAllPlannerIdsAndEmail =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_ALL_PLANNER_IDS_AND_EMAIL_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
 
+      const { data } = await axios.post(
+        `${url}/getAllPlannerIdsAndEmail`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({
+        type: GET_ALL_PLANNER_IDS_AND_EMAIL_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_ALL_PLANNER_IDS_AND_EMAIL_ERROR,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };

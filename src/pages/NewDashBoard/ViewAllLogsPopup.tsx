@@ -6,9 +6,13 @@ import { NoDataView } from "../../components";
 import { getFiltersAndDataForAllLogsPopupAction } from "../../actions/dashboardAction";
 import { List, ListItem } from "../../components/molecules/List";
 import { GetCampaignLogsAction } from "../../actions/campaignAction";
-import { formatDateForLogs, getTimeFromDate } from "../../utils/dateAndTimeUtils";
+import {
+  formatDateForLogs,
+  getTimeFromDate,
+} from "../../utils/dateAndTimeUtils";
 import { TIME_ZONES } from "../../constants/helperConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import ButtonInput from "../../components/atoms/ButtonInput";
 
 interface HeaderProps {
   icon: string;
@@ -54,7 +58,7 @@ export const ViewAllLogsPopup = ({
   setCurrentDate,
   currentDate,
   calendarData,
-  campaignDetails
+  campaignDetails,
 }: Props) => {
   const dispatch = useDispatch<any>();
   const scrollRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -65,7 +69,8 @@ export const ViewAllLogsPopup = ({
   const [zipGeneration, setZipGeneration] = useState(false);
 
   const [currentScreenName, setCurrentScreenName] = useState<string>("");
-  const [currentScreenCampaignId, setCurrentScreenCampaignId] = useState<any>(null);
+  const [currentScreenCampaignId, setCurrentScreenCampaignId] =
+    useState<any>(null);
 
   const {
     loading: loadingLogs,
@@ -76,7 +81,7 @@ export const ViewAllLogsPopup = ({
   const {
     loading: loadingAllLogs,
     error: errorAllLogs,
-    data: allLogsData
+    data: allLogsData,
   } = useSelector((state: any) => state.getFiltersAndDataForAllLogsPopup);
 
   const newData = useMemo(() => {
@@ -96,7 +101,6 @@ export const ViewAllLogsPopup = ({
     } else {
       return [];
     }
-
   }, [logs]);
 
   const newCombinedData = useMemo(() => {
@@ -152,7 +156,6 @@ export const ViewAllLogsPopup = ({
     return minutes > 0 ? `${minutes} m ${seconds} sec` : `${seconds} sec`;
   };
 
-
   // Toggle all cities
   const toggleAllCities = (checked: boolean) => {
     const allCities = Object.keys(allLogsData?.cityWiseData || {}).filter(
@@ -163,17 +166,17 @@ export const ViewAllLogsPopup = ({
 
   // Toggle all touch points
   const toggleAllTouchPoints = (checked: boolean) => {
-    const allTouchPoints = Object.keys(allLogsData?.touchPointWiseData || {}).filter(
-      (t) => t !== "all"
-    );
+    const allTouchPoints = Object.keys(
+      allLogsData?.touchPointWiseData || {}
+    ).filter((t) => t !== "all");
     setSelectedTouchPoints(checked ? allTouchPoints : []);
   };
 
   // Toggle all screen types
   const toggleAllScreenTypes = (checked: boolean) => {
-    const allScreenTypes = Object.keys(allLogsData?.screenTypeWiseData || {}).filter(
-      (s) => s !== "all"
-    );
+    const allScreenTypes = Object.keys(
+      allLogsData?.screenTypeWiseData || {}
+    ).filter((s) => s !== "all");
     setSelectedScreenTypes(checked ? allScreenTypes : []);
   };
 
@@ -200,22 +203,24 @@ export const ViewAllLogsPopup = ({
   const handleDownloadZip = async () => {
     setZipGeneration(true);
     try {
-      const res = await fetch(`https://api.justmonad.com/api/v2/monitoring/downlaodMonitoringLogsZip?id=${campaignId}`);
-      if (!res.ok) throw new Error('Failed to download');
+      const res = await fetch(
+        `https://api.justmonad.com/api/v2/monitoring/downlaodMonitoringLogsZip?id=${campaignId}`
+      );
+      if (!res.ok) throw new Error("Failed to download");
 
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = 'monitoring_logs.zip'; // optional: dynamic name
+      a.download = "monitoring_logs.zip"; // optional: dynamic name
       document.body.appendChild(a);
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('Download failed:', err);
+      console.error("Download failed:", err);
       alert("Download failed. Please try again.");
-      setZipGeneration(false)
+      setZipGeneration(false);
     } finally {
       setZipGeneration(false);
     }
@@ -232,17 +237,17 @@ export const ViewAllLogsPopup = ({
     }
   };
 
-  useEffect(() => {
-
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    dispatch(getFiltersAndDataForAllLogsPopupAction({
-      cities: selectedCities,
-      touchPoints: selectedTouchPoints,
-      screenTypes: selectedScreenTypes,
-      id: campaignId
-    }))
+    dispatch(
+      getFiltersAndDataForAllLogsPopupAction({
+        cities: selectedCities,
+        touchPoints: selectedTouchPoints,
+        screenTypes: selectedScreenTypes,
+        id: campaignId,
+      })
+    );
 
     if (currentScreenCampaignId !== null) {
       dispatch(
@@ -253,31 +258,43 @@ export const ViewAllLogsPopup = ({
         })
       );
     }
-
-
-  }, [dispatch, campaignId, selectedCities, selectedTouchPoints, selectedScreenTypes, currentDate, currentScreenCampaignId]);
+  }, [
+    dispatch,
+    campaignId,
+    selectedCities,
+    selectedTouchPoints,
+    selectedScreenTypes,
+    currentDate,
+    currentScreenCampaignId,
+  ]);
 
   // Dispatch action with updated filters
   useEffect(() => {
     if (allLogsData && !logs && currentScreenCampaignId === null) {
       setCurrentScreenName(() => {
-        return Object.keys(allLogsData?.screenWiseData || {})?.filter((l: any) => l !== "all")[0]
+        return Object.keys(allLogsData?.screenWiseData || {})?.filter(
+          (l: any) => l !== "all"
+        )[0];
       });
       setCurrentScreenCampaignId(() => {
-        return allLogsData?.screenWiseData[Object.keys(allLogsData?.screenWiseData || {})?.filter((l: any) => l !== "all")[0]]?.campaignId
-      })
+        return allLogsData?.screenWiseData[
+          Object.keys(allLogsData?.screenWiseData || {})?.filter(
+            (l: any) => l !== "all"
+          )[0]
+        ]?.campaignId;
+      });
 
       setSelectedCities(Object.keys(allLogsData?.cityWiseData || {}));
-      setSelectedTouchPoints(Object.keys(allLogsData?.touchPointWiseData || {}));
+      setSelectedTouchPoints(
+        Object.keys(allLogsData?.touchPointWiseData || {})
+      );
     }
   }, [allLogsData, logs, currentScreenCampaignId]);
 
   useEffect(() => {
     if (errorLogs) notification.error(errorLogs);
     if (errorAllLogs) notification.error(errorAllLogs);
-
   }, [errorLogs, errorAllLogs]);
-
 
   useEffect(() => {
     if (open) {
@@ -297,7 +314,7 @@ export const ViewAllLogsPopup = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 mt-16">
-      {(zipGeneration) && (
+      {zipGeneration && (
         <div className="absolute inset-0 bg-white bg-opacity-70 z-20 flex items-center justify-center rounded-[10px]">
           <LoadingScreen title={"Generating Zip , Please Wait..."} />
         </div>
@@ -316,20 +333,22 @@ export const ViewAllLogsPopup = ({
             </h1>
           </div>
           <div className="flex items-center gap-3">
-            <i
-              className="fi fi-rr-folder-download text-[16px] text-[#0E212E] cursor-pointer"
-              title="Download ZIP"
+            <ButtonInput
               onClick={handleDownloadZip}
-            />
+              icon={
+                <i className="fi fi-sr-folder-download text-[16px] flex items-center" />
+              }
+            >
+              Download All Logs
+            </ButtonInput>
+
             <i
               className="fi fi-br-cross text-[14px] cursor-pointer"
               onClick={handleCancel}
             />
           </div>
-
         </div>
         <div className="">
-
           <CalenderScaleStepper
             setCurrentDay={setCurrentDay}
             setCurrentWeek={setCurrentWeek}
@@ -363,7 +382,8 @@ export const ViewAllLogsPopup = ({
                           indeterminate={
                             selectedCities.length > 0 &&
                             selectedCities.length <
-                            Object.keys(allLogsData?.cityWiseData || {}).length
+                              Object.keys(allLogsData?.cityWiseData || {})
+                                .length
                           }
                           onChange={(e) => toggleAllCities(e.target.checked)}
                           checked={
@@ -374,25 +394,26 @@ export const ViewAllLogsPopup = ({
                         >
                           All
                         </Checkbox>
-                        <div className="col-span-1">
-
-                        </div>
+                        <div className="col-span-1"></div>
                       </div>
 
                       {Object.keys(allLogsData?.cityWiseData || {})
                         .filter((city) => city !== "all")
                         .map((city: string) => (
-                          <div className="grid grid-cols-4 items-center py-1" key={city}>
+                          <div
+                            className="grid grid-cols-4 items-center py-1"
+                            key={city}
+                          >
                             <Checkbox
                               checked={selectedCities.includes(city)}
-                              onChange={(e) => handleCityChange(city, e.target.checked)}
+                              onChange={(e) =>
+                                handleCityChange(city, e.target.checked)
+                              }
                               className="col-span-3 truncate"
                             >
                               {city}
                             </Checkbox>
-                            <div className="col-span-1">
-
-                            </div>
+                            <div className="col-span-1"></div>
                           </div>
                         ))}
                     </div>
@@ -409,26 +430,31 @@ export const ViewAllLogsPopup = ({
                           indeterminate={
                             selectedTouchPoints.length > 0 &&
                             selectedTouchPoints.length <
-                            Object.keys(allLogsData?.touchPointWiseData || {}).length
+                              Object.keys(allLogsData?.touchPointWiseData || {})
+                                .length
                           }
-                          onChange={(e) => toggleAllTouchPoints(e.target.checked)}
+                          onChange={(e) =>
+                            toggleAllTouchPoints(e.target.checked)
+                          }
                           defaultChecked={
                             selectedTouchPoints.length ===
-                            Object.keys(allLogsData?.touchPointWiseData || {}).length
+                            Object.keys(allLogsData?.touchPointWiseData || {})
+                              .length
                           }
                           className="col-span-3 truncate"
                         >
                           All
                         </Checkbox>
-                        <div className="col-span-1">
-
-                        </div>
+                        <div className="col-span-1"></div>
                       </div>
 
                       {Object.keys(allLogsData?.touchPointWiseData || {})
                         .filter((tp) => tp !== "all")
                         .map((tp: string) => (
-                          <div className="grid grid-cols-4 items-center py-1" key={tp}>
+                          <div
+                            className="grid grid-cols-4 items-center py-1"
+                            key={tp}
+                          >
                             <Checkbox
                               checked={selectedTouchPoints.includes(tp)}
                               onChange={(e) =>
@@ -438,9 +464,7 @@ export const ViewAllLogsPopup = ({
                             >
                               {tp}
                             </Checkbox>
-                            <div className="col-span-1">
-
-                            </div>
+                            <div className="col-span-1"></div>
                           </div>
                         ))}
                     </div>
@@ -452,24 +476,27 @@ export const ViewAllLogsPopup = ({
                   <Header title={"Screens"} icon="fi-sr-screen" />
                   <div className="max-h-[65vh] overflow-auto">
                     <div className="px-2 py-2 flex flex-col">
-
                       {Object.keys(allLogsData?.screenWiseData || {})
                         .filter((screen) => screen !== "all")
                         .map((screenName: string) => (
-                          <div className="grid grid-cols-4 items-center py-1" key={screenName}>
+                          <div
+                            className="grid grid-cols-4 items-center py-1"
+                            key={screenName}
+                          >
                             <Checkbox
                               checked={currentScreenName === screenName}
                               onChange={(e) => {
                                 setCurrentScreenName(screenName);
-                                setCurrentScreenCampaignId(allLogsData?.screenWiseData[screenName].campaignId)
+                                setCurrentScreenCampaignId(
+                                  allLogsData?.screenWiseData[screenName]
+                                    .campaignId
+                                );
                               }}
                               className="col-span-3 truncate"
                             >
                               {screenName}
                             </Checkbox>
-                            <div className="col-span-1">
-
-                            </div>
+                            <div className="col-span-1"></div>
                           </div>
                         ))}
                     </div>
@@ -526,12 +553,13 @@ export const ViewAllLogsPopup = ({
                     <Skeleton active paragraph={{ rows: 12 }} />
                   </div>
                 )}
-                {logs && Object.entries(newCombinedData?.hrWiseLogs).map(
-                  ([date, hours]: any) => (
-                    <div key={date}>
-                      {formatDateForLogs(`${date} 00:00:00 GMT`).apiDate !==
-                        formatDateForLogs(`${currentDate} 00:00:00 GMT`)
-                          .apiDate && (
+                {logs &&
+                  Object.entries(newCombinedData?.hrWiseLogs).map(
+                    ([date, hours]: any) => (
+                      <div key={date}>
+                        {formatDateForLogs(`${date} 00:00:00 GMT`).apiDate !==
+                          formatDateForLogs(`${currentDate} 00:00:00 GMT`)
+                            .apiDate && (
                           <div className="flex items-center gap-2 p-2">
                             <h1 className="font-custom text-[16px]">
                               Logs from previous day being saved on this day
@@ -541,131 +569,147 @@ export const ViewAllLogsPopup = ({
                             </Tooltip>
                           </div>
                         )}
-                      <div className="overflow-scroll no-scrollbar h-[60vh] border-r border-gray-100 rounded-br-[12px]">
-                        {Object.keys(hours)
-                          .sort((a, b) => Number(a) - Number(b))
-                          .map((key) => [key, hours[key]])
-                          .map(([hour, entries]: any, i: any) => (
-                            <div
-                              key={hour}
-                              className="grid grid-cols-9 "
-                            >
-                              <div
-                                className="col-span-6 overflow-scroll no-scrollbar h-[75vh] border-b"
-                                ref={(el) => (scrollRefs.current[hour] = el)}
-                              >
-                                <table className="min-w-full bg-white">
-                                  <tbody>
-                                    {entries.map((entry: any, index: any) => (
-                                      <tr
-                                        key={index}
-                                        className={`
+                        <div className="overflow-scroll no-scrollbar h-[60vh] border-r border-gray-100 rounded-br-[12px]">
+                          {Object.keys(hours)
+                            .sort((a, b) => Number(a) - Number(b))
+                            .map((key) => [key, hours[key]])
+                            .map(([hour, entries]: any, i: any) => (
+                              <div key={hour} className="grid grid-cols-9 ">
+                                <div
+                                  className="col-span-6 overflow-scroll no-scrollbar h-[75vh] border-b"
+                                  ref={(el) => (scrollRefs.current[hour] = el)}
+                                >
+                                  <table className="min-w-full bg-white">
+                                    <tbody>
+                                      {entries.map((entry: any, index: any) => (
+                                        <tr
+                                          key={index}
+                                          className={`
                                           grid grid-cols-12 border-b border-gray-100 hover:bg-gray-50 text-gray-700 p-1
-                                          ${TIME_ZONES?.["t1"].includes(Number(hour)) ? "bg-[#F9E39650]" :
-                                            TIME_ZONES?.["t2"].includes(Number(hour)) ? "bg-[#BCFFA650]" :
-                                              TIME_ZONES?.["t3"].includes(Number(hour)) ? "bg-[#D2CAFF50]" :
-                                                TIME_ZONES?.["t4"].includes(Number(hour)) ? "bg-[#EBFAFF50]" :
-                                                  "bg-[#00A0FA10]"}
+                                          ${
+                                            TIME_ZONES?.["t1"].includes(
+                                              Number(hour)
+                                            )
+                                              ? "bg-[#F9E39650]"
+                                              : TIME_ZONES?.["t2"].includes(
+                                                  Number(hour)
+                                                )
+                                              ? "bg-[#BCFFA650]"
+                                              : TIME_ZONES?.["t3"].includes(
+                                                  Number(hour)
+                                                )
+                                              ? "bg-[#D2CAFF50]"
+                                              : TIME_ZONES?.["t4"].includes(
+                                                  Number(hour)
+                                                )
+                                              ? "bg-[#EBFAFF50]"
+                                              : "bg-[#00A0FA10]"
+                                          }
                                         `}
-                                      >
-                                        <td className="col-span-1 py-2 flex items-center justify-center">
-                                          <h1 className="text-[12px]">
-                                            {index + 1}
-                                          </h1>
-                                        </td>
-                                        <td className="col-span-2 py-2 flex items-center justify-center">
-                                          <h1 className="text-[12px]">
-                                            {new Date(entry.logTime).toLocaleTimeString()}
-                                          </h1>
-                                        </td>
-                                        <td className="col-span-4 py-2 flex items-center justify-center">
-                                          <h1 className="text-[12px]">
-                                            {entry.mediaId.split("_")[1]}
-                                          </h1>
-                                        </td>
-                                        <td className="col-span-3 py-2 flex items-center justify-center">
-                                          <h1 className="text-[12px]">
-                                            {entry.brandName}
-                                          </h1>
-                                        </td>
-                                        <td
-                                          className={`col-span-2 py-2 flex items-center justify-center ${entry.screenStatus === "online"
-                                            ? "text-[#59A237]"
-                                            : "text-gray-500"
-                                            }`}
                                         >
-                                          <h1 className="text-[12px]">
-                                            {entry.screenStatus.toUpperCase()}
-                                          </h1>
-                                        </td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                              <div className={`
+                                          <td className="col-span-1 py-2 flex items-center justify-center">
+                                            <h1 className="text-[12px]">
+                                              {index + 1}
+                                            </h1>
+                                          </td>
+                                          <td className="col-span-2 py-2 flex items-center justify-center">
+                                            <h1 className="text-[12px]">
+                                              {new Date(
+                                                entry.logTime
+                                              ).toLocaleTimeString()}
+                                            </h1>
+                                          </td>
+                                          <td className="col-span-4 py-2 flex items-center justify-center">
+                                            <h1 className="text-[12px]">
+                                              {entry.mediaId.split("_")[1]}
+                                            </h1>
+                                          </td>
+                                          <td className="col-span-3 py-2 flex items-center justify-center">
+                                            <h1 className="text-[12px]">
+                                              {entry.brandName}
+                                            </h1>
+                                          </td>
+                                          <td
+                                            className={`col-span-2 py-2 flex items-center justify-center ${
+                                              entry.screenStatus === "online"
+                                                ? "text-[#59A237]"
+                                                : "text-gray-500"
+                                            }`}
+                                          >
+                                            <h1 className="text-[12px]">
+                                              {entry.screenStatus.toUpperCase()}
+                                            </h1>
+                                          </td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <div
+                                  className={`
                                 col-span-3 h-auto border-b border-l border-gray-100 grid grid-cols-3 bg-[#FFFFFF]
-                              `}>
-                                <div className="col-span-1 flex justify-center items-center gap-2 p-2">
-                                  <h1
-                                    className={
-                                      entries.length /
-                                        (17 * campaignDetails?.sov) >=
+                              `}
+                                >
+                                  <div className="col-span-1 flex justify-center items-center gap-2 p-2">
+                                    <h1
+                                      className={
+                                        entries.length /
+                                          (17 * campaignDetails?.sov) >=
                                         1
-                                        ? "text-[#2A892D] text-[12px]"
-                                        : "text-[#CC0000] text-[12px]"
-                                    }
-                                  >
-                                    {entries.length}
-                                  </h1>
-                                  <p
-                                    className={
-                                      entries.length /
-                                        (17 * campaignDetails?.sov) >=
+                                          ? "text-[#2A892D] text-[12px]"
+                                          : "text-[#CC0000] text-[12px]"
+                                      }
+                                    >
+                                      {entries.length}
+                                    </h1>
+                                    <p
+                                      className={
+                                        entries.length /
+                                          (17 * campaignDetails?.sov) >=
                                         1
-                                        ? "text-[#2A892D] text-[12px]"
-                                        : "text-[#CC0000] text-[12px]"
-                                    }
-                                  >
-                                    {entries.length /
-                                      (17 * campaignDetails?.sov) >
+                                          ? "text-[#2A892D] text-[12px]"
+                                          : "text-[#CC0000] text-[12px]"
+                                      }
+                                    >
+                                      {entries.length /
+                                        (17 * campaignDetails?.sov) >
                                       1
-                                      ? `(+${Number(
-                                        (entries.length /
-                                          (17 * campaignDetails?.sov)) *
-                                        100
-                                      ).toFixed(0)}%)`
-                                      : entries.length /
-                                        (17 * campaignDetails?.sov) <
-                                        1
+                                        ? `(+${Number(
+                                            (entries.length /
+                                              (17 * campaignDetails?.sov)) *
+                                              100
+                                          ).toFixed(0)}%)`
+                                        : entries.length /
+                                            (17 * campaignDetails?.sov) <
+                                          1
                                         ? `(-${Number(
-                                          100 -
-                                          (entries.length /
-                                            (17 * campaignDetails?.sov)) *
-                                          100
-                                        ).toFixed(0)}%)`
+                                            100 -
+                                              (entries.length /
+                                                (17 * campaignDetails?.sov)) *
+                                                100
+                                          ).toFixed(0)}%)`
                                         : `✔`}
-                                  </p>
-                                </div>
-                                <div className="col-span-1 border-x border-gray-100 flex justify-center items-center p-2">
-                                  <h1 className="text-[12px]">
-                                    {17 * campaignDetails?.sov}
-                                  </h1>
-                                </div>
-                                <div className="col-span-1 flex justify-center items-center p-2">
-                                  <h1 className="text-[12px]">
-                                    {calculateAvgTimeGap(entries) === "N/A"
-                                      ? "--"
-                                      : calculateAvgTimeGap(entries)}
-                                  </h1>
+                                    </p>
+                                  </div>
+                                  <div className="col-span-1 border-x border-gray-100 flex justify-center items-center p-2">
+                                    <h1 className="text-[12px]">
+                                      {17 * campaignDetails?.sov}
+                                    </h1>
+                                  </div>
+                                  <div className="col-span-1 flex justify-center items-center p-2">
+                                    <h1 className="text-[12px]">
+                                      {calculateAvgTimeGap(entries) === "N/A"
+                                        ? "--"
+                                        : calculateAvgTimeGap(entries)}
+                                    </h1>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          ))}
+                            ))}
+                        </div>
                       </div>
-                    </div>
-                  )
-                )}
+                    )
+                  )}
               </div>
             </div>
             <div className="grid grid-cols-12">

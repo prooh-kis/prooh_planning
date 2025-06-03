@@ -39,17 +39,18 @@ interface BarChartProps {
   color2?: string;
   bgColor2?: string;
   percent?: boolean;
-  allData?: any
+  allData?: any;
 }
 
 export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
   currentData,
   labels,
   percent = true,
-  allData
+  allData,
 }) => {
-
-  const sortedDates = Object.keys(allData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+  const sortedDates = Object.keys(allData).sort(
+    (a, b) => new Date(a).getTime() - new Date(b).getTime()
+  );
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -66,8 +67,12 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
     }
   }
 
-  const formattedToday = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
-  const currentDateIndex = sortedDates.findIndex(date => date === formattedToday);
+  const formattedToday = `${
+    today.getMonth() + 1
+  }/${today.getDate()}/${today.getFullYear()}`;
+  const currentDateIndex = sortedDates.findIndex(
+    (date) => date === formattedToday
+  );
   const currentDayRemaining: number[] = currentData.map((item, index) => {
     if (index === currentDateIndex) {
       return Math.max(item.slotsPromised - item.slotsDelivered, 0);
@@ -79,7 +84,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
     const promised = item.slotsPromised;
     const consumed = item.slotsDelivered;
     const originalValue = Math.max(promised - consumed, 0);
-  
+
     if (zeroIndex !== -1) {
       if (index === zeroIndex - 1 || index >= zeroIndex) {
         return 0;
@@ -94,15 +99,12 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
     }
   });
 
-
   const extraSlots: number[] = currentData?.map(
-    (played: any) =>
-      played.extraSlotsDelivered
+    (played: any) => played.extraSlotsDelivered
   );
 
   const dailyPlayedSlots: number[] = currentData?.map(
-    (played: any) =>
-      played.slotsDelivered
+    (played: any) => played.slotsDelivered
   );
 
   const futurePerformanceData: number[] = currentData.map((item, index) => {
@@ -225,6 +227,19 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
             }
             return `${label}: ${value?.toFixed(0) || 0}`;
           },
+          afterBody: (context: any) => {
+            const datasets = context[0].chart.data.datasets;
+            const dataIndex = context[0].dataIndex;
+            let total = 0;
+
+            datasets.forEach((dataset: any) => {
+              if (dataset.data[dataIndex] > 0) {
+                total += dataset.data[dataIndex];
+              }
+            });
+
+            return [`Total Delivered: ${total.toFixed(0)}`];
+          },
         },
       },
     },
@@ -245,7 +260,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           autoSkipPadding: 0, // Padding between labels when auto-skipping
           maxRotation: 0, // Prevent rotation
           minRotation: 0, // Prevent rotation
-        }
+        },
       },
       y: {
         beginAtZero: true,
@@ -255,11 +270,11 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           // drawBorder: true,
           // borderDash: [12, 20], // Add dashed lines (5px dash, 5px gap)
           // drawTicks: false, // Hide tick marks on y-axis
-          color: function(context: any) {
+          color: function (context: any) {
             // Create dashed effect by returning transparent color for some pixels
-            return context.tick.value % 2 === 0 ? '#E5E7EB50' : 'transparent';
+            return context.tick.value % 2 === 0 ? "#E5E7EB50" : "transparent";
           },
-          lineWidth: function(context: any) {
+          lineWidth: function (context: any) {
             return context.tick.value % 2 === 0 ? 1 : 0;
           },
           drawBorder: false,
@@ -276,7 +291,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           maxRotation: 0, // Prevent rotation
           minRotation: 0, // Prevent rotation
           padding: 1,
-          callback: function(value: number | string) {
+          callback: function (value: number | string) {
             return formatNumber(value);
           },
         },
@@ -284,8 +299,8 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
     },
     animation: {
       duration: 1000,
-      easing: 'easeOutQuart',
-    }
+      easing: "easeOutQuart",
+    },
   };
 
   return (

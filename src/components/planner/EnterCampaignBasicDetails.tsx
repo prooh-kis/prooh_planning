@@ -21,6 +21,8 @@ import { ALL_BRAND_LIST } from "../../constants/localStorageConstants";
 import { getAllBrandAndNetworkAction } from "../../actions/creativeAction";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
+import { getAllPlannerIdsAndEmail } from "../../actions/screenAction";
+import { SearchableSelect } from "../../components/atoms/SearchableSelect";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -37,6 +39,21 @@ const allIndex = [1, 2, 3, 6].map((data: any) => {
     value: data,
   };
 });
+// ["Select SOV Type", "ordered", "continuous", "random"];
+const sovTypeOptions = [
+  {
+    label: "Ordered",
+    value: "ordered",
+  },
+  {
+    label: "Continuous",
+    value: "continuous",
+  },
+  {
+    label: "Random",
+    value: "random",
+  },
+];
 export const EnterCampaignBasicDetails = ({
   setCurrentStep,
   step,
@@ -82,6 +99,14 @@ export const EnterCampaignBasicDetails = ({
     campaignDetails?.duration || ""
   );
   const [sov, setSov] = useState<number>(campaignDetails?.sov || 1);
+  const [sovType, setSovType] = useState<string>(
+    campaignDetails?.sovType || ""
+  );
+  const [managerId, setManagerId] = useState<string>(
+    campaignDetails?.campaignManagerId || ""
+  );
+
+  const [error, setError] = useState<string>("");
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -92,6 +117,18 @@ export const EnterCampaignBasicDetails = ({
     success: successAddDetails,
     data: addDetails,
   } = detailsToCreateCampaignAdd;
+
+  const allPlannerIdsAndEmail = useSelector(
+    (state: any) => state.allPlannerIdsAndEmail
+  );
+  const {
+    loading: loadingAllPlanner,
+    error: errorAllPlanner,
+    success: successAllPlanner,
+    data: AllPlanner,
+  } = allPlannerIdsAndEmail;
+
+  console.log("AllPlanner : ", AllPlanner);
 
   const allClientAgencyNamesListGet = useSelector(
     (state: any) => state.allClientAgencyNamesListGet
@@ -125,6 +162,12 @@ export const EnterCampaignBasicDetails = ({
       return false;
     } else if (endDate === "") {
       message.error("Please enter endData ");
+      return false;
+    } else if (sovType === "") {
+      message.error("Please select sov type ");
+      return false;
+    } else if (managerId === "") {
+      message.error("Please select manager ");
       return false;
     } else {
       return true;
@@ -173,9 +216,12 @@ export const EnterCampaignBasicDetails = ({
           campaignPlannerId: userInfo?._id,
           campaignPlannerName: userInfo?.name,
           campaignPlannerEmail: userInfo?.email,
-          campaignManagerId: userInfo?.primaryUserId,
-          campaignManagerEmail: userInfo?.primaryUserEmail,
+          campaignManagerId: managerId,
+          campaignManagerEmail: AllPlanner.find(
+            (data: any) => data._id === managerId
+          )?.email,
           sov: sov,
+          sovType,
         })
       );
     } else {
@@ -232,6 +278,9 @@ export const EnterCampaignBasicDetails = ({
   useEffect(() => {
     dispatch(getAllClientAgencyNames());
     dispatch(getAllBrandAndNetworkAction());
+    if (!AllPlanner?.length) {
+      dispatch(getAllPlannerIdsAndEmail({ id: userInfo?._id }));
+    }
   }, [dispatch]);
 
   useEffect(() => {
@@ -300,6 +349,12 @@ export const EnterCampaignBasicDetails = ({
           Enter your basic details for the campaigns to proceed further
         </p>
       </div>
+      {/* {error && (
+        <div className="bg-[#FF3F33] text-[#FFFFFF]  text-[16px] font-semibold p-4 flex justify-between mt-2">
+          <h1>{error}</h1>
+          <i className="fi fi-br-circle-xmark flex items-center"></i>
+        </div>
+      )} */}
       <div className="grid grid-cols-3 gap-8 pt-2">
         <div className="col-span-1 py-1">
           <div className="block flex justify-between gap-2 items-center mb-2">
@@ -424,17 +479,23 @@ export const EnterCampaignBasicDetails = ({
       <div className="grid grid-cols-3 gap-8 pt-2">
         <div className="col-span-1 py-1">
           <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">SOV</label>
+            <label className="block text-secondaryText text-[14px]">
+              Select Manager
+            </label>
             <Tooltip title="How many times you want to play creatives in one loop">
               <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
-          <DropdownInput
-            options={allIndex}
-            selectedOption={sov}
-            placeHolder="Select SOV"
-            setSelectedOption={setSov}
-            height="h-[48px]"
+          <SearchableSelect
+            options={AllPlanner?.map((data: any) => {
+              return {
+                label: `${data.name}`,
+                value: data._id,
+              };
+            })}
+            onChange={(value: string) => setManagerId(value)}
+            placeholder="Search managerId by name"
+            value={managerId}
           />
         </div>
         <div className="col-span-1 py-1">
@@ -459,6 +520,41 @@ export const EnterCampaignBasicDetails = ({
               setDuration(value);
               updateEndDateBasedOnDuration(value);
             }}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-8 pt-2">
+        <div className="col-span-1 py-1">
+          <div className="block flex justify-between gap-2 items-center mb-2">
+            <label className="block text-secondaryText text-[14px]">SOV</label>
+            <Tooltip title="How many times you want to play creatives in one loop">
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+            </Tooltip>
+          </div>
+          <DropdownInput
+            options={allIndex}
+            selectedOption={sov}
+            placeHolder="Select SOV"
+            setSelectedOption={setSov}
+            height="h-[48px]"
+          />
+        </div>
+        <div className="col-span-1 py-1">
+          <div className="block flex justify-between gap-2 items-center mb-2">
+            <label className="block text-secondaryText text-[14px]">
+              SOV Type
+            </label>
+            <Tooltip title="How many times you want to play creatives in one loop">
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+            </Tooltip>
+          </div>
+          <DropdownInput
+            options={sovTypeOptions}
+            selectedOption={sovType}
+            placeHolder="Select SOV Type"
+            setSelectedOption={setSovType}
+            height="h-[48px]"
           />
         </div>
       </div>

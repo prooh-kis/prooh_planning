@@ -6,6 +6,9 @@ import {
   GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_ERROR,
   GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_REQUEST,
   GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_SUCCESS,
+  GET_ALL_PLANNER_IDS_AND_EMAIL_ERROR,
+  GET_ALL_PLANNER_IDS_AND_EMAIL_REQUEST,
+  GET_ALL_PLANNER_IDS_AND_EMAIL_SUCCESS,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_ERROR,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_REQUEST,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS,
@@ -542,6 +545,26 @@ export function getCreativesFromCreativeBucketForUploadPageReducer(
         success: true,
       };
     case GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_ERROR:
+      return {
+        loading: false,
+        success: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+export function getAllPlannerIdsAndEmailReducer(state = [], action) {
+  switch (action.type) {
+    case GET_ALL_PLANNER_IDS_AND_EMAIL_REQUEST:
+      return { loading: true };
+    case GET_ALL_PLANNER_IDS_AND_EMAIL_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case GET_ALL_PLANNER_IDS_AND_EMAIL_ERROR:
       return {
         loading: false,
         success: false,

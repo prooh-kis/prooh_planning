@@ -71,7 +71,7 @@ export const rootReducer = {
         screenReducers.getAllFiltersDetailsForUploadCreativePageReducer,
     creativesFromCreativeBucketForUploadPage:
         screenReducers.getCreativesFromCreativeBucketForUploadPageReducer,
-
+    allPlannerIdsAndEmail: screenReducers.getAllPlannerIdsAndEmailReducer,
     // Campaign related
     campaignCreationsDetailsGet: campaignReducers.campaignCreationsDetailsGetReducer,
     allCampaignsDataGet: campaignReducers.allCampaignsDataGetReducer,

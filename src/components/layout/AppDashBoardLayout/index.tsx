@@ -38,6 +38,7 @@ export const AppDashBoardLayout: React.FC<AppDashBoardLayoutProps> = ({
   useEffect(() => {
     if (!userInfo) {
       navigate(AUTH);
+      return;
     }
     switch (userInfo?.userRole) {
       case CAMPAIGN_MANAGER:
