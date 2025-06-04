@@ -23,6 +23,7 @@ import { getAWSUrl } from "../../utils/awsUtils";
 import { getVideoDurationFromVideoURL } from "../../utils/fileUtils";
 import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 import { UploadCreativesFromBucketPopupV2 } from "../popup/UploadCreativesFromBucketPopupV2";
+// import ButtonInput from "../../components/atoms/ButtonInput";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -535,6 +536,32 @@ export const CreativeUploadV4 = ({
     });
   };
 
+  const removeAllSavedCreative = () => {
+    setCreativeUploadData((prevData) => {
+      const newData = [...prevData];
+      const screenIndex = newData?.findIndex(
+        (screen) => screen.screenId === currentScreen?.screenId
+      );
+
+      if (screenIndex === -1) {
+        message.error("Screen not found!");
+        return prevData;
+      }
+
+      const screen = { ...newData[screenIndex] };
+
+      screen.standardDayTimeCreatives = [];
+
+      screen.standardNightTimeCreatives = [];
+
+      screen.triggerCreatives = [];
+
+      newData[screenIndex] = screen;
+      setCurrentScreen(screen);
+      return newData;
+    });
+  };
+
   const closePopup = () => {
     setIsBucketPopupOpen(false);
     setCurrentScreens([]);
@@ -662,6 +689,7 @@ export const CreativeUploadV4 = ({
         tabData={tabData}
         screenData={currentScreen}
         removeFile={removeFile}
+        removeAllSavedCreative={removeAllSavedCreative}
       />
       <ShowSelectedCreativePopup
         open={openSelected}
@@ -789,11 +817,6 @@ export const CreativeUploadV4 = ({
                       return (
                         <div
                           key={index}
-                          title={
-                            isUploaded
-                              ? "Click to select row"
-                              : "This row has no creative"
-                          }
                           className={`grid grid-cols-8 w-full items-center border-b hover:bg-blue-50 cursor-pointer ${
                             currentScreen === singleData.screenId
                               ? "bg-blue-100"
@@ -827,7 +850,7 @@ export const CreativeUploadV4 = ({
                                   className="mr-2"
                                 />
                               )}
-                              {i === 0 ? (
+                              {i === 0 || i === 2 || i === 4 ? (
                                 <Tooltip title={item}>
                                   <span
                                     className={`text-sm truncate  font-medium`}

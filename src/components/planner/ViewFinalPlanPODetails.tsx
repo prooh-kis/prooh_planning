@@ -280,7 +280,6 @@ export const ViewFinalPlanPODetails = ({
         console.error("No files were uploaded to S3.");
         return;
       }
-      console.log("uploadedFiles", uploadedFiles)
 
       // Step 4: Prepare email content with file URLs
       const fileLinks = uploadedFiles
@@ -292,7 +291,7 @@ export const ViewFinalPlanPODetails = ({
         )
         .join("\n");
 
-      console.log("fileLinks", fileLinks)
+      console.log("fileLinks", fileLinks);
       // Step 5: Send email with file links
       sendEmail(fileLinks);
     } catch (error) {
@@ -352,9 +351,12 @@ export const ViewFinalPlanPODetails = ({
 
   const handleSaveAndContinue = async () => {
     if (!pathname.split("/").includes("view")) {
-      if (!skipEmailConfirmation) {
+      if (confirmationImageFiles?.length == 0) {
+        // message.info(
+        //   "Please skip the email confirmation or upload an email confirmation screenshot to continue"
+        // );
         message.info(
-          "Please skip the email confirmation or upload an email confirmation screenshot to continue"
+          "Please share your plan with your manager and upload an email confirmation screenshot to continue"
         );
         return;
       }
@@ -600,15 +602,18 @@ export const ViewFinalPlanPODetails = ({
   ]);
 
   const skipFunction = () => {
-    dispatch(
-      addDetailsToCreateCampaign({
-        event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
-        pageName: "View Final Plan Page",
-        id: campaignId,
-        clientApprovalImgs: [],
-        monitoringSelection: initialData,
-      })
+    message.info(
+      "You can't skip this step, you must have to upload plan approval screenshots"
     );
+    // dispatch(
+    //   addDetailsToCreateCampaign({
+    //     event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
+    //     pageName: "View Final Plan Page",
+    //     id: campaignId,
+    //     clientApprovalImgs: [],
+    //     monitoringSelection: initialData,
+    //   })
+    // );
   };
 
   const handleDownload = () => {
@@ -779,8 +784,12 @@ export const ViewFinalPlanPODetails = ({
                           loadingText="Sending...."
                           // icon={<i className="fi fi-rs-paper-plane"></i>}
                           onClick={() => {
-                            if (isValidEmail(toEmail)) sendMultipleAttachments();
-                            else message.error("Please Enter valid email");
+                            if (isValidEmail(toEmail)) {
+                              sendMultipleAttachments();
+                              message.info(
+                                "Sending plan complete summary, please call your manager and take approval"
+                              );
+                            } else message.error("Please Enter valid email");
                           }}
                         >
                           Send

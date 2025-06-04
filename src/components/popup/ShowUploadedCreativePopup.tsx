@@ -13,6 +13,7 @@ export const ShowUploadedCreativePopup = ({
   screenData,
   tabData,
   removeFile,
+  removeAllSavedCreative,
 }: any) => {
   const [currentTab, setCurrentTab] = useState<string>(
     "standardDayTimeCreatives"
@@ -31,14 +32,29 @@ export const ShowUploadedCreativePopup = ({
       <h1 className="text-[14px] font-semibold">
         Screen: {screenData?.screenName}
       </h1>
+
       {tabData && (
-        <TabWithoutIcon
-          tabData={tabData}
-          currentTab={currentTab}
-          setCurrentTab={setCurrentTab}
-        />
+        <div className="flex justify-between items-center">
+          <TabWithoutIcon
+            tabData={tabData}
+            currentTab={currentTab}
+            setCurrentTab={setCurrentTab}
+          />
+          <button
+            className="text-[#000000] opacity-[80%] text-[14px] font-normal hover:text-[#129BFF] hover:font-semibold cursor-pointer w-[70px]"
+            onClick={() => {
+              if (window.confirm("Do you really want to delete all files")) {
+                removeAllSavedCreative();
+                message.info("Removed all Uploaded Files");
+                onClose();
+              }
+            }}
+          >
+            Delete All
+          </button>
+        </div>
       )}
-      <div className="h-[60vh] overflow-scroll scrollbar-minimal border-t">
+      <div className="h-[60vh] overflow-scroll scrollbar-minimal mt-2">
         {screenData?.[currentTab]?.length > 0 ? (
           <ViewMediaForUploadCreatives2
             files={screenData?.[currentTab]}

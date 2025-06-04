@@ -155,6 +155,13 @@ export const SiteMonitoringPicDashboardComponent = ({
     return key === "startDate" ? "Start" : key === "midDate" ? "Mid" : "End";
   };
 
+  const orderedLabel = ["startDate", "midDate", "endDate"];
+
+  // Function to sort the array according to orderedLabel
+  function sortDates(data: string[]) {
+    return orderedLabel.filter((label) => data.includes(label));
+  }
+
   const getColorScheme = (label: string) => {
     switch (label.toLowerCase()) {
       case "start":
@@ -209,7 +216,7 @@ export const SiteMonitoringPicDashboardComponent = ({
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <h1 className="text-[15px] sm:text-[16px] py-2 font-semibold leading-[19.36px] text-[#0E212E]">
           Site Monitoring Pics{" "}
-          <span className="text-[#D7D7D7]">
+          <span className="text-[14px] text-[#68879C]">
             (
             {siteMonitoringPicsPercentageData?.siteMonitoringPicsPercentage?.toFixed(
               0
@@ -236,20 +243,20 @@ export const SiteMonitoringPicDashboardComponent = ({
       </div>
       <div className={`mt-4 grid gap-4 ${getGridColsClass(rowCount)}`}>
         {siteMonitoringPicsPercentageData?.result &&
-          Object.keys(siteMonitoringPicsPercentageData.result).map(
-            (key: string) => {
-              const colorScheme = getColorScheme(getLabel(key));
-              return (
-                <Monitoring
-                  key={key}
-                  bg={colorScheme.bg}
-                  text={colorScheme.text}
-                  label={getLabel(key)}
-                  data={siteMonitoringPicsPercentageData.result[key]}
-                />
-              );
-            }
-          )}
+          sortDates(
+            Object.keys(siteMonitoringPicsPercentageData?.result || {})
+          ).map((key: string) => {
+            const colorScheme = getColorScheme(getLabel(key));
+            return (
+              <Monitoring
+                key={key}
+                bg={colorScheme.bg}
+                text={colorScheme.text}
+                label={getLabel(key)}
+                data={siteMonitoringPicsPercentageData.result[key]}
+              />
+            );
+          })}
       </div>
     </div>
   );

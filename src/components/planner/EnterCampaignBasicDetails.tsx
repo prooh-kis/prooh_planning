@@ -128,8 +128,6 @@ export const EnterCampaignBasicDetails = ({
     data: AllPlanner,
   } = allPlannerIdsAndEmail;
 
-  console.log("AllPlanner : ", AllPlanner);
-
   const allClientAgencyNamesListGet = useSelector(
     (state: any) => state.allClientAgencyNamesListGet
   );

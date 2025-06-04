@@ -84,6 +84,9 @@ export const SearchableSelect: React.FC<{
         <div className="absolute inset-y-0 left-0 flex items-center ml-3 pointer-events-none">
           <i className="fi fi-bs-search text-gray-400 text-lg flex items-center"></i>
         </div>
+        <div className="absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-none">
+          <i className="fi fi-br-angle-small-down text-gray-400 text-lg flex items-center"></i>
+        </div>
       </div>
 
       {isOpen && (
