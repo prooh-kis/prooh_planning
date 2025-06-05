@@ -108,7 +108,7 @@ export const EnterCampaignBasicDetails = ({
   const [managerEmail, setManagerEmail] = useState<string>(
     campaignDetails?.campaignManagerEmail || ""
   );
-  const [allPlannerData, setAllPlannerData] = useState([])
+  const [allPlannerData, setAllPlannerData] = useState<any>([])
 
   const [error, setError] = useState<string>("");
 
@@ -499,14 +499,14 @@ export const EnterCampaignBasicDetails = ({
             options={allPlannerData?.map((data: any) => {
               return {
                 label: `${data.name}`,
-                value: data._id,
+                value: data._id.toString(),
               };
             })}
             selectedOption={managerId}
-            placeHolder="Search managerId by name"
+            placeHolder="Select Manager"
             setSelectedOption={(value: any) => {
-              setManagerId(value._id.toString())
-              setManagerEmail(value.email)
+              setManagerId(value)
+              setManagerEmail(allPlannerData?.find((data: any) => data._id === value)?.email || "")
             }}
             height="h-[48px]"
           />
