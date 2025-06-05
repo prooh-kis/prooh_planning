@@ -100,11 +100,15 @@ export const EnterCampaignBasicDetails = ({
   );
   const [sov, setSov] = useState<number>(campaignDetails?.sov || 1);
   const [sovType, setSovType] = useState<string>(
-    campaignDetails?.sovType || ""
+    campaignDetails?.sovType || "continuous"
   );
   const [managerId, setManagerId] = useState<string>(
     campaignDetails?.campaignManagerId || ""
   );
+  const [managerEmail, setManagerEmail] = useState<string>(
+    campaignDetails?.campaignManagerEmail || ""
+  );
+  const [allPlannerData, setAllPlannerData] = useState([])
 
   const [error, setError] = useState<string>("");
 
@@ -215,9 +219,7 @@ export const EnterCampaignBasicDetails = ({
           campaignPlannerName: userInfo?.name,
           campaignPlannerEmail: userInfo?.email,
           campaignManagerId: managerId,
-          campaignManagerEmail: AllPlanner.find(
-            (data: any) => data._id === managerId
-          )?.email,
+          campaignManagerEmail: managerEmail,
           sov: sov,
           sovType,
         })
@@ -243,6 +245,8 @@ export const EnterCampaignBasicDetails = ({
     endDate,
     userInfo,
     sov,
+    managerId,
+    managerEmail
   ]);
 
   useEffect(() => {
@@ -274,12 +278,16 @@ export const EnterCampaignBasicDetails = ({
   ]);
 
   useEffect(() => {
+    if (successAllPlanner) {
+      setAllPlannerData(AllPlanner)
+    }
+  }, [successAllPlanner])
+
+  useEffect(() => {
     dispatch(getAllClientAgencyNames());
     dispatch(getAllBrandAndNetworkAction());
-    if (!AllPlanner?.length) {
-      dispatch(getAllPlannerIdsAndEmail({ id: userInfo?._id }));
-    }
-  }, [dispatch]);
+    dispatch(getAllPlannerIdsAndEmail({ id: userInfo?._id }));
+  }, []);
 
   useEffect(() => {
     if (campaignDetails) {
@@ -304,6 +312,9 @@ export const EnterCampaignBasicDetails = ({
         return campaignDetails ? utcDate.toISOString().slice(0, 16) : "";
       });
       setSov(campaignDetails?.sov);
+      setSovType(campaignDetails?.sovType);
+      setManagerId(campaignDetails?.campaignManagerId.toString());
+      setManagerEmail(campaignDetails?.campaignManagerEmail)
       setDuration(campaignDetails?.duration);
     }
   }, [campaignDetails]);
@@ -484,16 +495,20 @@ export const EnterCampaignBasicDetails = ({
               <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
-          <SearchableSelect
-            options={AllPlanner?.map((data: any) => {
+          <DropdownInput
+            options={allPlannerData?.map((data: any) => {
               return {
                 label: `${data.name}`,
                 value: data._id,
               };
             })}
-            onChange={(value: string) => setManagerId(value)}
-            placeholder="Search managerId by name"
-            value={managerId}
+            selectedOption={managerId}
+            placeHolder="Search managerId by name"
+            setSelectedOption={(value: any) => {
+              setManagerId(value._id.toString())
+              setManagerEmail(value.email)
+            }}
+            height="h-[48px]"
           />
         </div>
         <div className="col-span-1 py-1">
