@@ -123,16 +123,15 @@ export const addDetailsToCreateCampaign =
   };
 
 export const getMyCreateCampaignsList =
-  ({ id, type }) =>
+  (input) =>
     async (dispatch, getState) => {
       dispatch({
         type: GET_MY_CREATE_CAMPAIGNS_LIST_REQUEST,
-        payload: { id, type },
+        payload: input,
       });
       try {
         const { data } = await axios.post(
-          `${url}/campaignCreationsCampaignPlanner`,
-          { id, type }
+          `${url}/campaignCreationsCampaignPlanner`, input
         );
         dispatch({
           type: GET_MY_CREATE_CAMPAIGNS_LIST_SUCCESS,

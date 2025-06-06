@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
-import { getMyCreateCampaignsListForPlan } from "../../actions/campaignAction";
+import { getMyCreateCampaignsList } from "../../actions/campaignAction";
 import { NoDataView } from "../../components/molecules/NoDataView";
 import { ReloadButton, SearchInputField } from "../../components";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
@@ -29,7 +29,7 @@ export const MyPlansListPage: React.FC = () => {
     loading,
     error,
     data: campaignsList,
-  } = useSelector((state: any) => state.myCreateCampaignsListForPlanGet);
+  } = useSelector((state: any) => state.myCreateCampaignsListGet);
 
   const { success, data: campaignDetails } = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -43,7 +43,7 @@ export const MyPlansListPage: React.FC = () => {
       userInfo?.userRole === CAMPAIGN_MANAGER
     ) {
       removeAllKeyFromLocalStorage();
-      dispatch(getMyCreateCampaignsListForPlan({ id: userInfo._id }));
+      dispatch(getMyCreateCampaignsList({ id: userInfo._id }));
     } else {
       message.error("You have no access to this page");
       return navigate("/auth");
@@ -71,7 +71,7 @@ export const MyPlansListPage: React.FC = () => {
   };
 
   const reset = () => {
-    dispatch(getMyCreateCampaignsListForPlan({ id: userInfo._id }));
+    dispatch(getMyCreateCampaignsList({ id: userInfo._id }));
   };
 
   return (
