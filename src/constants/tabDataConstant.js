@@ -39,17 +39,17 @@ export const campaignCreationTypeTabs = [
 export const creativeTypeTab = [
   {
     id: "standardDayTimeCreatives",
-    label: "Standard Days Creative",
+    label: "Days",
     value: "standardDayTimeCreatives",
   },
   {
     id: "standardNightTimeCreatives",
-    label: "Standard Night Creative",
+    label: "Night",
     value: "standardNightTimeCreatives",
   },
   {
     id: "triggerCreatives",
-    label: "Trigger Creatives",
+    label: "Trigger",
     value: "triggerCreatives",
   },
 ];

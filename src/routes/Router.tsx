@@ -158,6 +158,16 @@ const Routers: React.FC = () => {
             </PublicLayout>
           }
         />
+
+        <Route
+          path={CAMPAIGN_DETAILS_PAGE}
+          element={
+            <AppDashBoardLayout value="Campaigns">
+              <CampaignDetailsPage />
+            </AppDashBoardLayout>
+          }
+        />
+
         <Route
           path={"/editCampaign/:id?"}
           element={
@@ -175,14 +185,14 @@ const Routers: React.FC = () => {
           }
         />
 
-        <Route
+        {/* <Route
           path={CAMPAIGN_DETAILS_PAGE}
           element={
             <PrivateLayout padding="pt-0">
               <CampaignDetailsPage />
             </PrivateLayout>
           }
-        />
+        /> */}
         <Route
           path={"/specialdayplan/:id?/:type?"}
           element={

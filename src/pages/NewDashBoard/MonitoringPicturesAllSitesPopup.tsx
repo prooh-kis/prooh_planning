@@ -14,7 +14,7 @@ import {
   DownloadMenu,
   PanelHeader,
   FilterSection,
-} from "../../components/molecules/ViewMonitoringPicMolecule";
+} from "../../components/molecules/ViewMonitoringPicMolicule";
 import {
   GENERATE_MONITORING_PPT_RESET,
   GET_MONITORING_PPT_JOB_STATUS_RESET,
