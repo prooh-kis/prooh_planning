@@ -152,7 +152,7 @@ export const CostSegment = ({
                 bgColor=" bg-[#6DBC48]"
                 dataValue={
                   <h1 className="text-[12px] font-semibold truncate">
-                    Total-&#8377;{formatNumber(dataToShow.costConsumed.toFixed(0))}
+                    Total: &#8377;{formatNumber(dataToShow.costConsumed.toFixed(0))}
                     <span className="text-[#0E212E]">
                       /&#8377;{formatNumber(dataToShow.costTakenTillDate.toFixed(0))}
                     </span>  

@@ -157,7 +157,7 @@ export const HardwarePerformanceSegment = ({
                 bgColor=" bg-[#6982FF]"
                 dataValue={
                   <h1 className="text-[12px] font-semibold truncate">
-                    Total-{dataToShow?.hardwarePerformanceDelivered?.toFixed(0)}%
+                    Total: {dataToShow?.hardwarePerformanceDelivered?.toFixed(0)}%
                     <span className="text-[#0E212E]">
                       /
                       {dataToShow?.hardwarePerformancePromisedTillDate?.toFixed(0)}%

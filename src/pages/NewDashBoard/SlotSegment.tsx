@@ -156,7 +156,7 @@ export const SlotSegment = ({
                 bgColor=" bg-[#77BFEF]"
                 dataValue={
                   <h1 className="text-[12px] font-semibold truncate">
-                    Total-{formatNumber(dataToShow.slotsDelivered.toFixed(0))}
+                    Total: {formatNumber(dataToShow.slotsDelivered.toFixed(0))}
                     <span className="text-[#0E212E]">
                       /{formatNumber(dataToShow.slotsPromisedTillDate.toFixed(0))}
                     </span>  
