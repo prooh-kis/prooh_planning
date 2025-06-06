@@ -2,36 +2,23 @@ import { useState, useEffect } from "react";
 import { getAllSitesMonitoringData } from "../../actions/dashboardAction";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { Checkbox, notification } from "antd";
-import { List, ListItem } from "../../components/molecules/List";
+import { notification } from "antd";
+import { List } from "../../components/molecules/List";
 import { MonitoringPic } from "../../components/segments/MonitoringPic";
-import { LinearBar } from "../../components/molecules/linearbar";
 import {
   generateMonitoringPpt,
   getMonitoringPptJobStatus,
 } from "../../actions/monitoringAction";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import {
+  DownloadMenu,
+  PanelHeader,
+  FilterSection,
+} from "../../components/molecules/ViewMonitoringPicMolecule";
+import {
   GENERATE_MONITORING_PPT_RESET,
   GET_MONITORING_PPT_JOB_STATUS_RESET,
 } from "../../constants/monitoringConstant";
-import { PPT, ZIP } from "../../assets";
-interface HeaderProps {
-  icon: string;
-  title: string;
-}
-
-const Header = ({ icon, title }: HeaderProps) => {
-  return (
-    <div className="bg-[#FAFAFA] text-gray-800 text-[16px] font-medium font-inter p-2 flex items-center gap-2 px-2">
-      <div className="h-[26px] w-[26px] rounded-full bg-[#129BFF] flex items-center justify-center">
-        <i className={`fi ${icon} text-white text-[16px] flex items-center`} />
-      </div>
-      <h1>{title}</h1>
-    </div>
-  );
-};
-
 interface Props {
   handleCancel: () => void;
   campaignId: string;
@@ -48,9 +35,8 @@ export const MonitoringPicturesAllSitesPopup = ({
     (state: any) => state.allSitesMonitoringData
   );
 
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-
-  const [currentScreen, setCurrentScreen] = useState<string>("");
+  // State management
+  const [currentScreen, setCurrentScreen] = useState("");
   const [selectedCities, setSelectedCities] = useState<string[]>([]);
   const [selectedTouchPoints, setSelectedTouchPoints] = useState<string[]>([]);
   const [selectedScreenTypes, setSelectedScreenTypes] = useState<string[]>([]);
@@ -123,8 +109,10 @@ export const MonitoringPicturesAllSitesPopup = ({
     pptJobStatusError,
   ]);
 
+  // Initialize data
   useEffect(() => {
     if (data && !dataInitialized) {
+      console.log("data : ", data);
       const cities = Object.keys(data.cityWiseData || {}).filter(
         (c) => c !== "all"
       );
@@ -139,86 +127,38 @@ export const MonitoringPicturesAllSitesPopup = ({
       setSelectedTouchPoints(touchPoints);
       setSelectedScreenTypes(screenTypes);
       setCurrentScreen(data?.screenList?.[0] || "");
-
-      setDataInitialized(true); // Mark that initial setup is done
+      setDataInitialized(true);
     }
   }, [data, dataInitialized]);
 
-  // Dispatch action with updated filters
+  // Fetch data when filters change
   useEffect(() => {
-    if (dataInitialized) {
-      // Only when initial setup done
-      dispatch(
-        getAllSitesMonitoringData({
-          id: campaignId,
-          cities: selectedCities,
-          touchPoints: selectedTouchPoints,
-          screenTypes: selectedScreenTypes,
-          screenName: currentScreen === "all" ? "" : currentScreen,
-        })
-      );
-    }
+    dispatch(
+      getAllSitesMonitoringData({
+        id: campaignId,
+        cities: selectedCities,
+        touchPoints: selectedTouchPoints,
+        screenTypes: selectedScreenTypes,
+        screenName: currentScreen === "all" ? "" : currentScreen,
+      })
+    );
   }, [
     campaignId,
     selectedCities,
     selectedTouchPoints,
     selectedScreenTypes,
     currentScreen,
-    dataInitialized,
+
     open,
     dispatch,
   ]);
 
-  useEffect(() => {
-    if (error) notification.error(error);
-  }, [error]);
-
-  useEffect(() => {
-    setDataInitialized(true);
-  }, []);
-
-  // Handle city selection
-  const handleCityChange = (city: string, checked: boolean) => {
-    if (checked) {
-      setSelectedCities([...selectedCities, city]);
-    } else {
-      setSelectedCities(selectedCities.filter((c) => c !== city));
-    }
-  };
-
-  // Handle touch point selection
-  const handleTouchPointChange = (touchPoint: string, checked: boolean) => {
-    if (checked) {
-      setSelectedTouchPoints([...selectedTouchPoints, touchPoint]);
-    } else {
-      setSelectedTouchPoints(
-        selectedTouchPoints.filter((t) => t !== touchPoint)
-      );
-    }
-  };
-
-  // Handle screen type selection
-  const handleScreenTypeChange = (screenType: string, checked: boolean) => {
-    if (checked) {
-      setSelectedScreenTypes([...selectedScreenTypes, screenType]);
-    } else {
-      setSelectedScreenTypes(
-        selectedScreenTypes.filter((s) => s !== screenType)
-      );
-    }
-  };
-
+  // Handle downloads
   const handleDownloadPPT = () => {
-    setIsMenuOpen(false);
-    dispatch(generateMonitoringPpt({ campaignId: campaignId }));
-  };
-
-  const handleOpenButtonMenu = () => {
-    setIsMenuOpen((pre: boolean) => !pre);
+    dispatch(generateMonitoringPpt({ campaignId }));
   };
 
   const handleDownloadZip = async () => {
-    setIsMenuOpen(false);
     setZipGeneration(true);
     try {
       const res = await fetch(
@@ -230,21 +170,20 @@ export const MonitoringPicturesAllSitesPopup = ({
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "monitoring_pics.zip"; // optional: dynamic name
+      a.download = "monitoring_pics.zip";
       document.body.appendChild(a);
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error("Download failed:", err);
-      alert("Download failed. Please try again.");
-      setZipGeneration(false);
+      notification.error({ message: "Download failed. Please try again." });
     } finally {
       setZipGeneration(false);
     }
   };
 
-  // Toggle all cities
+  // Filter toggle handlers
   const toggleAllCities = (checked: boolean) => {
     const allCities = Object.keys(data?.cityWiseData || {}).filter(
       (c) => c !== "all"
@@ -252,7 +191,6 @@ export const MonitoringPicturesAllSitesPopup = ({
     setSelectedCities(checked ? allCities : []);
   };
 
-  // Toggle all touch points
   const toggleAllTouchPoints = (checked: boolean) => {
     const allTouchPoints = Object.keys(data?.touchPointWiseData || {}).filter(
       (t) => t !== "all"
@@ -260,7 +198,6 @@ export const MonitoringPicturesAllSitesPopup = ({
     setSelectedTouchPoints(checked ? allTouchPoints : []);
   };
 
-  // Toggle all screen types
   const toggleAllScreenTypes = (checked: boolean) => {
     const allScreenTypes = Object.keys(data?.screenTypeWiseData || {}).filter(
       (s) => s !== "all"
@@ -270,18 +207,19 @@ export const MonitoringPicturesAllSitesPopup = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 font-inter">
-      {(pptGeneration || zipGeneration) && (
-        <div className="absolute inset-0 bg-white bg-opacity-70 z-20 flex items-center justify-center rounded-[10px]">
-          <LoadingScreen
-            title={
-              pptGeneration === true
-                ? "Generating PPT, Please Wait..."
-                : "Generating Zip , Please Wait..."
-            }
-          />
-        </div>
-      )}
-      <div className="bg-[#FFFFFF] rounded-[10px] h-[80vh] w-[99%] p-4 flex flex-col">
+      {/* Modal Content */}
+      <div className="bg-[#FFFFFF] rounded-[10px] h-[80vh] w-[90%] p-4 flex flex-col relative">
+        {(pptGeneration || zipGeneration) && (
+          <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-20 rounded-[10px]">
+            <LoadingScreen
+              title={
+                pptGeneration
+                  ? "Generating PPT, Please Wait..."
+                  : "Generating Zip, Please Wait..."
+              }
+            />
+          </div>
+        )}
         <div className="relative inset-0 flex items-center justify-between gap-4 py-2 pr-5">
           <div className="flex gap-2 items-center">
             <h1 className="text-[#0E212E] font-semibold text-[20px]">
@@ -292,275 +230,90 @@ export const MonitoringPicturesAllSitesPopup = ({
             </h1>
           </div>
 
-          <div className="relative flex items-center gap-3">
-            {/* Main Download Button */}
+          <div className="flex items-center gap-3">
+            <DownloadMenu
+              onDownloadPPT={handleDownloadPPT}
+              onDownloadZip={handleDownloadZip}
+            />
             <button
-              onClick={handleOpenButtonMenu}
-              className="flex gap-2 items-center border border-gray-300 rounded-md px-4 py-2 transition-colors bg-[#129BFF] text-[#FFFFFF]"
-            >
-              <i className="fi fi-sr-folder-download text-[16px] flex items-center" />
-              <span>Download All Pics</span>
-              <i
-                className={`fi ${
-                  isMenuOpen ? "fi-rr-angle-small-up" : "fi-rr-angle-small-down"
-                } text-[16px] flex items-center`}
-              />
-            </button>
-
-            {/* Dropdown Menu - conditionally rendered */}
-            {isMenuOpen && (
-              <div className="absolute left-0 top-12 z-10 w-[80%] bg-white shadow-lg rounded-md border border-gray-200 overflow-hidden p-2">
-                {/* Menu Items */}
-                <div
-                  onClick={handleDownloadZip}
-                  className="flex items-center justify-between p-3 hover:bg-gray-100 cursor-pointer transition-colors rounded-md"
-                >
-                  <div className="flex items-center gap-2">
-                    <img src={ZIP} alt="ZIp" className="" />
-                    <span>Zip</span>
-                  </div>
-                  <i className="fi fi-br-download text-[14px] text-gray-500 flex items-center" />
-                </div>
-
-                <div
-                  onClick={handleDownloadPPT}
-                  className="flex items-center justify-between p-3 hover:bg-gray-100 cursor-pointer transition-colors rounded-md"
-                >
-                  <div className="flex items-center gap-2">
-                    <img src={PPT} alt="PPT" className="" />
-                    {/* <i className="fi fi-sr-ppt-file text-[16px] text-[#129BFF] flex items-center" /> */}
-                    <span>PPT</span>
-                  </div>
-                  <i className="fi fi-br-download text-[14px] text-gray-500 flex items-center" />
-                </div>
-
-                {/* Close Button */}
-              </div>
-            )}
-            <div
               onClick={handleCancel}
-              className="flex items-center justify-center p-2 border-t border-gray-200 hover:bg-gray-100 cursor-pointer transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-full"
             >
               <i className="fi fi-br-cross text-[14px] text-gray-500" />
-            </div>
+            </button>
           </div>
         </div>
-
         <div className="my-4 grid grid-cols-6 max-h-[65vh] gap-1">
-          {/* Cities Filter */}
-          <div className="border border-gray-100 rounded-[12px] col-span-1 max-h-[65vh] overflow-auto">
-            <Header title={"City"} icon="fi-sr-marker" />
-            <div className="px-2 py-2 flex flex-col">
-              <div className="grid grid-cols-4 items-center">
-                <Checkbox
-                  indeterminate={
-                    selectedCities.length > 0 &&
-                    selectedCities.length <
-                      Object.keys(data?.cityWiseData || {}).length - 1
-                  }
-                  onChange={(e) => toggleAllCities(e.target.checked)}
-                  checked={
-                    selectedCities.length ===
-                    Object.keys(data?.cityWiseData || {}).length - 1
-                  }
-                  className="col-span-3 truncate"
-                >
-                  All
-                </Checkbox>
-                <div className="col-span-1">
-                  <LinearBar
-                    value={data?.cityWiseData?.all?.monitoringDelivered?.toFixed(
-                      2
-                    )}
-                    colors={["#E4E4E4", "#129bff"]}
-                    highest={data?.cityWiseData?.all?.monitoringPromised?.toFixed(
-                      2
-                    )}
-                    percent={false}
-                  />
-                </div>
-              </div>
+          <FilterSection
+            title="City"
+            icon="fi-sr-marker"
+            data={data}
+            selectedItems={selectedCities}
+            onItemChange={(city: string, checked: boolean) => {
+              setSelectedCities(
+                checked
+                  ? [...selectedCities, city]
+                  : selectedCities.filter((c) => c !== city)
+              );
+            }}
+            onToggleAll={toggleAllCities}
+            dataKey="cityWiseData"
+          />
 
-              {Object.keys(data?.cityWiseData || {})
-                .filter((city) => city !== "all")
-                .map((city: string) => (
-                  <div className="grid grid-cols-4 items-center" key={city}>
-                    <Checkbox
-                      checked={selectedCities.includes(city)}
-                      onChange={(e) => handleCityChange(city, e.target.checked)}
-                      className="col-span-3 truncate"
-                    >
-                      {city}
-                    </Checkbox>
-                    <div className="col-span-1">
-                      <LinearBar
-                        value={data?.cityWiseData?.[
-                          city
-                        ]?.monitoringDelivered?.toFixed(2)}
-                        colors={["#E4E4E4", "#129bff"]}
-                        highest={data?.cityWiseData?.[
-                          city
-                        ]?.monitoringPromised?.toFixed(2)}
-                        percent={false}
-                      />
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
+          <FilterSection
+            title="Touch points"
+            icon="fi-sr-land-location"
+            data={data}
+            selectedItems={selectedTouchPoints}
+            onItemChange={(tp, checked) =>
+              setSelectedTouchPoints(
+                checked
+                  ? [...selectedTouchPoints, tp]
+                  : selectedTouchPoints.filter((t) => t !== tp)
+              )
+            }
+            onToggleAll={toggleAllTouchPoints}
+            dataKey="touchPointWiseData"
+          />
 
-          {/* Touch Points Filter */}
-          <div className="border border-gray-100 rounded-[12px] col-span-1 max-h-[65vh] overflow-auto">
-            <Header title={"Touch points"} icon="fi-sr-land-location" />
-            <div className="px-2 py-2 flex flex-col">
-              <div className="grid grid-cols-4 items-center">
-                <Checkbox
-                  indeterminate={
-                    selectedTouchPoints.length > 0 &&
-                    selectedTouchPoints.length <
-                      Object.keys(data?.touchPointWiseData || {}).length - 1
-                  }
-                  onChange={(e) => toggleAllTouchPoints(e.target.checked)}
-                  checked={
-                    selectedTouchPoints.length ===
-                    Object.keys(data?.touchPointWiseData || {}).length - 1
-                  }
-                  className="col-span-3 truncate"
-                >
-                  All
-                </Checkbox>
-                <div className="col-span-1">
-                  <LinearBar
-                    value={data?.cityWiseData?.all?.monitoringDelivered?.toFixed(
-                      2
-                    )}
-                    colors={["#E4E4E4", "#129bff"]}
-                    highest={data?.cityWiseData?.all?.monitoringPromised?.toFixed(
-                      2
-                    )}
-                    percent={false}
-                  />
-                </div>
-              </div>
+          <FilterSection
+            title="Screen Types"
+            icon="fi-sr-screen"
+            data={data}
+            selectedItems={selectedScreenTypes}
+            onItemChange={(st, checked) =>
+              setSelectedScreenTypes(
+                checked
+                  ? [...selectedScreenTypes, st]
+                  : selectedScreenTypes.filter((s) => s !== st)
+              )
+            }
+            onToggleAll={toggleAllScreenTypes}
+            dataKey="screenTypeWiseData"
+          />
 
-              {Object.keys(data?.touchPointWiseData || {})
-                .filter((tp) => tp !== "all")
-                .map((tp: string) => (
-                  <div className="grid grid-cols-4 items-center" key={tp}>
-                    <Checkbox
-                      checked={selectedTouchPoints.includes(tp)}
-                      onChange={(e) =>
-                        handleTouchPointChange(tp, e.target.checked)
-                      }
-                      className="col-span-3 truncate"
-                    >
-                      {tp}
-                    </Checkbox>
-                    <div className="col-span-1">
-                      <LinearBar
-                        value={data?.touchPointWiseData?.[
-                          tp
-                        ]?.monitoringDelivered?.toFixed(2)}
-                        colors={["#E4E4E4", "#129bff"]}
-                        highest={data?.touchPointWiseData?.[
-                          tp
-                        ]?.monitoringPromised?.toFixed(2)}
-                        percent={false}
-                      />
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-
-          {/* Screen Types Filter */}
-          <div className="border border-gray-100 rounded-[12px] col-span-1 max-h-[65vh] overflow-auto">
-            <Header title={"Screen Types"} icon="fi-sr-screen" />
-            <div className="px-2 py-2 flex flex-col">
-              <div className="grid grid-cols-4 items-center">
-                <Checkbox
-                  indeterminate={
-                    selectedScreenTypes.length > 0 &&
-                    selectedScreenTypes.length <
-                      Object.keys(data?.screenTypeWiseData || {}).length - 1
-                  }
-                  onChange={(e) => toggleAllScreenTypes(e.target.checked)}
-                  checked={
-                    selectedScreenTypes.length ===
-                    Object.keys(data?.screenTypeWiseData || {}).length - 1
-                  }
-                  className="col-span-3 truncate"
-                >
-                  All
-                </Checkbox>
-                <div className="col-span-1">
-                  <LinearBar
-                    value={data?.cityWiseData?.all?.monitoringDelivered?.toFixed(
-                      2
-                    )}
-                    colors={["#E4E4E4", "#129bff"]}
-                    highest={data?.cityWiseData?.all?.monitoringPromised?.toFixed(
-                      2
-                    )}
-                    percent={false}
-                  />
-                </div>
-              </div>
-
-              {Object.keys(data?.screenTypeWiseData || {})
-                .filter((screenType) => screenType !== "all")
-                .map((screenType: string) => (
+          <div className="border border-gray-100 rounded-[12px] col-span-1">
+            <PanelHeader title={"Screens"} icon="fi-sr-screen" />
+            <div className="h-[60vh]">
+              <List
+                items={data?.screenList || []}
+                loading={loading}
+                renderItem={(screenName: string) => (
                   <div
-                    className="grid grid-cols-4 items-center"
-                    key={screenType}
+                    key={screenName}
+                    className={`p-2 cursor-pointer ${
+                      currentScreen === screenName ? "bg-blue-50" : ""
+                    }`}
+                    onClick={() => setCurrentScreen(screenName)}
                   >
-                    <Checkbox
-                      checked={selectedScreenTypes.includes(screenType)}
-                      onChange={(e) =>
-                        handleScreenTypeChange(screenType, e.target.checked)
-                      }
-                      className="col-span-3 truncate"
-                    >
-                      {screenType}
-                    </Checkbox>
-                    <div className="col-span-1">
-                      <LinearBar
-                        value={data?.screenTypeWiseData?.[
-                          screenType
-                        ]?.monitoringDelivered?.toFixed(2)}
-                        colors={["#E4E4E4", "#129bff"]}
-                        highest={data?.screenTypeWiseData?.[
-                          screenType
-                        ]?.monitoringPromised?.toFixed(2)}
-                        percent={false}
-                      />
-                    </div>
+                    {screenName === "all" ? "All Screens" : screenName}
                   </div>
-                ))}
+                )}
+              />
             </div>
           </div>
 
-          {/* Screen List */}
-          <div className="border border-gray-100 rounded-[12px] col-span-1 max-h-[65vh] overflow-auto">
-            <Header title={"Screens"} icon="fi-sr-screen" />
-            <List
-              items={data?.screenList || []}
-              loading={loading}
-              renderItem={(screenName: string, index: number) => (
-                <ListItem
-                  key={index}
-                  item={screenName}
-                  isActive={currentScreen === screenName}
-                  onClick={() => setCurrentScreen(screenName)}
-                  icon=""
-                  text={screenName === "all" ? "All Screens" : screenName}
-                />
-              )}
-            />
-          </div>
-
-          {/* Monitoring Pictures */}
-          <div className="border border-gray-100 rounded-[12px] max-h-[65vh] overflow-auto col-span-2 px-2 py-2">
+          <div className="border border-gray-100 rounded-[12px]  col-span-2 px-2 py-2 h-[65vh] overflow-y-auto">
             {loading ? (
               <div className="flex items-center justify-center h-full">
                 Loading...

@@ -1,8 +1,6 @@
 import { PrimaryInput } from "../atoms/PrimaryInput";
-import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { message, Modal, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
-import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
@@ -13,6 +11,7 @@ import { DropdownInput } from "../../components/atoms/DropdownInput";
 import { SuggestionInput } from "../../components/atoms/SuggestionInput";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
+import { getAllPlannerIdsAndEmail } from "../../actions/screenAction";
 
 const allIndex = [1, 2, 3, 6].map((data: any) => {
   return {
@@ -20,6 +19,21 @@ const allIndex = [1, 2, 3, 6].map((data: any) => {
     value: data,
   };
 });
+
+const sovTypeOptions = [
+  {
+    label: "Ordered",
+    value: "ordered",
+  },
+  {
+    label: "Continuous",
+    value: "continuous",
+  },
+  {
+    label: "Random",
+    value: "random",
+  },
+];
 
 export const AddCampaignDetails = ({
   handleCancel,
@@ -40,11 +54,28 @@ export const AddCampaignDetails = ({
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [campaignName, setCampaignName] = useState<any>(campaignDetails?.name || "");
-  const [brandName, setBrandName] = useState<any>(campaignDetails?.brandName || "");
-  const [clientName, setClientName] = useState<any>(campaignDetails?.clientName || "");
-  const [industry, setIndustry] = useState<any>(campaignDetails?.industry || "");
+  const [campaignName, setCampaignName] = useState<any>(
+    campaignDetails?.name || ""
+  );
+  const [brandName, setBrandName] = useState<any>(
+    campaignDetails?.brandName || ""
+  );
+  const [clientName, setClientName] = useState<any>(
+    campaignDetails?.clientName || ""
+  );
+  const [industry, setIndustry] = useState<any>(
+    campaignDetails?.industry || ""
+  );
   const [sov, setSov] = useState<any>(campaignDetails?.sov || 1);
+  const [sovType, setSovType] = useState<string>(
+    campaignDetails?.sovType || "continuous"
+  );
+  const [managerId, setManagerId] = useState<string>(
+    campaignDetails?.campaignManagerId || ""
+  );
+  const [managerEmail, setManagerEmail] = useState<string>(
+    campaignDetails?.campaignManagerEmail || ""
+  );
   const allClientAgencyNamesListGet = useSelector(
     (state: any) => state.allClientAgencyNamesListGet
   );
@@ -53,6 +84,16 @@ export const AddCampaignDetails = ({
     error: errorClientAgencyNames,
     data: clientAgencyNamesList,
   } = allClientAgencyNamesListGet;
+
+  const allPlannerIdsAndEmail = useSelector(
+    (state: any) => state.allPlannerIdsAndEmail
+  );
+  const {
+    loading: loadingAllPlanner,
+    error: errorAllPlanner,
+    success: successAllPlanner,
+    data: AllPlanner,
+  } = allPlannerIdsAndEmail;
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -110,15 +151,15 @@ export const AddCampaignDetails = ({
           campaignPlannerId: userInfo?._id,
           campaignPlannerName: userInfo?.name,
           campaignPlannerEmail: userInfo?.email,
-          campaignManagerId: userInfo?.primaryUserId,
-          campaignManagerEmail: userInfo?.primaryUserEmail,
+          campaignManagerId: managerId,
+          campaignManagerEmail: managerEmail,
           sov: sov,
+          sovType,
         });
       }
     } else {
-      setCurrentStep(2)
+      setCurrentStep(2);
     }
-    
   };
 
   useEffect(() => {
@@ -126,19 +167,32 @@ export const AddCampaignDetails = ({
       message.error(errorAddDetails);
     }
 
-    if (successAddDetails && !pathname.split("/").includes("view") && !pathname.split("/").includes("edit")) {
+    if (
+      successAddDetails &&
+      !pathname.split("/").includes("view") &&
+      !pathname.split("/").includes("edit")
+    ) {
       navigate(`/${path}/${addDetails?._id}`);
       setCurrentStep(step + 1);
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
-      });  
+      });
     }
-
-  }, [addDetails?._id, dispatch, errorAddDetails, navigate, path, pathname, setCurrentStep, step, successAddDetails]);
-
+  }, [
+    addDetails?._id,
+    dispatch,
+    errorAddDetails,
+    navigate,
+    path,
+    pathname,
+    setCurrentStep,
+    step,
+    successAddDetails,
+  ]);
 
   useEffect(() => {
     dispatch(getAllClientAgencyNames());
+    dispatch(getAllPlannerIdsAndEmail({ id: userInfo?._id }));
   }, [dispatch]);
 
   useEffect(() => {
@@ -149,7 +203,7 @@ export const AddCampaignDetails = ({
       setIndustry(campaignDetails?.industry);
       setSov(campaignDetails?.sov);
     }
-  },[campaignDetails]);
+  }, [campaignDetails]);
 
   return (
     <Modal
@@ -266,26 +320,72 @@ export const AddCampaignDetails = ({
             )}
           </div>
         </div>
-        {sov && (
-          <div className="grid grid-cols-2 gap-8 pt-2">
-            <div className="col-span-1 py-1">
-              <div className="block flex justify-between gap-2 items-center mb-2">
-                <label className="block text-secondaryText text-[14px]">
-                  SOV
-                </label>
-                <Tooltip title="How many times you want to play creatives in one loop">
-                  <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-                </Tooltip>
-              </div>
-              <DropdownInput
-                options={allIndex}
-                selectedOption={sov}
-                placeHolder="Select SOV"
-                setSelectedOption={setSov}
-              />
+
+        <div className="grid grid-cols-2 gap-8 pt-2">
+          <div className="col-span-1 py-1">
+            <div className="block flex justify-between gap-2 items-center mb-2">
+              <label className="block text-secondaryText text-[14px]">
+                SOV
+              </label>
+              <Tooltip title="How many times you want to play creatives in one loop">
+                <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+              </Tooltip>
             </div>
+            <DropdownInput
+              options={allIndex}
+              selectedOption={sov}
+              placeHolder="Select SOV"
+              setSelectedOption={setSov}
+            />
           </div>
-        )}
+          <div className="col-span-1 py-1">
+            <div className="block flex justify-between gap-2 items-center mb-2">
+              <label className="block text-secondaryText text-[14px]">
+                SOV Type
+              </label>
+              <Tooltip title="How many times you want to play creatives in one loop">
+                <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+              </Tooltip>
+            </div>
+            <DropdownInput
+              options={sovTypeOptions}
+              selectedOption={sovType}
+              placeHolder="Select SOV Type"
+              setSelectedOption={setSovType}
+              height="h-[48px]"
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-8 pt-2">
+          <div className="col-span-1 py-1">
+            <div className="block flex justify-between gap-2 items-center mb-2">
+              <label className="block text-secondaryText text-[14px]">
+                Select Manager
+              </label>
+              <Tooltip title="How many times you want to play creatives in one loop">
+                <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+              </Tooltip>
+            </div>
+            <DropdownInput
+              options={AllPlanner?.map((data: any) => {
+                return {
+                  label: `${data.name}`,
+                  value: data._id.toString(),
+                };
+              })}
+              selectedOption={managerId}
+              placeHolder="Select Manager"
+              setSelectedOption={(value: any) => {
+                setManagerId(value);
+                setManagerEmail(
+                  AllPlanner?.find((data: any) => data._id === value)?.email ||
+                    ""
+                );
+              }}
+              height="h-[48px]"
+            />
+          </div>
+        </div>
 
         <button
           className="px-8 py-2 mt-4 text-[16px] font-semibold bg-[#1297E2] text-[#FFFFFF] rounded-md w-full"
