@@ -9,6 +9,7 @@ import { createBillInvoice, getBillInvoiceDetails } from "../../actions/billInvo
 import { CalendarInput } from "../../components/atoms/CalendarInput";
 import moment from "moment";
 import { ADD_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyConstants";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 
 export const BillingAndInvoiceEnterDetails = (props: any) => {
@@ -193,6 +194,9 @@ export const BillingAndInvoiceEnterDetails = (props: any) => {
 
   return (
     <div className="py-4 px-1">
+      {loadingAddClientAgencyDetails || loadingClientAgencyNames && (
+        <LoadingScreen />
+      ) }
       {clientAgencyNamesList && (
         <div className="p-2">
           <div>

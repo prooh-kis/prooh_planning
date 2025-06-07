@@ -4,6 +4,7 @@ import { Skeleton, Tooltip } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { TIME_ZONES } from "../../constants/helperConstants";
 import { GetCampaignLogsAction } from "../../actions/campaignAction";
+import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 
 interface BillAndInvoiceMonitoringPicsSegmentProps {
  campaignDetails?: any;
@@ -298,7 +299,7 @@ export const BillAndInvoiceMonitoringPicsSegment = ({ siteLevelData, campaignDet
      </div>
      {loadingLogs ? (
       <div className="pt-12">
-       <Skeleton active paragraph={{ rows: 12 }} />
+       <LoadingScreen />
       </div>
      ) : logs?.length > 0 && Object.entries(newCombinedData?.hrWiseLogs).map(
       ([date, hours]: any) => (

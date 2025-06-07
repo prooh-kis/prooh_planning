@@ -237,10 +237,7 @@ export const BillingAndInvoice = (props: any) => {
   },[invoicePdf, dashboardSS]);
 
   useEffect(() => {
-    if (socketUpdateStatus) {
-      console.log(jobId);
-      console.log(socketUpdateStatus);
-    }
+
     // Prevent WebSocket connection in iframe/webview
     if (window.location.search.includes('screenshot=true')) {
       return;
@@ -293,17 +290,29 @@ export const BillingAndInvoice = (props: any) => {
           switch (socketStatus) {
             case "completed":
               console.log(`${jobType} Job completed successfully: ${update}`);
-              if (update.result) {
-                setDashboardScreenshots(
-                  update.result.billInvoice.dashboardScreenshots?.map((item: any) => item.url)
-                )
+              if (jobType === 'screenshot' && update.result?.billInvoice?.dashboardScreenshots) {
+                // Update the dashboard screenshots with the new ones from the result
+                const newScreenshots = update.result.billInvoice.dashboardScreenshots
+                  .filter((item: any) => item.status === 'active')
+                  .map((item: any) => item.url);
+                
+                if (newScreenshots.length > 0) {
+                  // Create a new array to ensure React detects the state change
+                  setDashboardScreenshots([...newScreenshots]);
+                  message.success('Dashboard screenshots updated successfully');
+                  
+                  // Force a re-render by updating a dummy state
+                  setSSLoading(prev => !prev);
+                }
               } else {
                 dispatch(getBillInvoiceDetails({
                   campaignCreationId: campaignDetails?._id,
                 }));
               }
+          
               setSSLoading(false);
               setJobId(null);
+              setSocketUpdateStatus(null);
               break;
               
             case "active":
@@ -321,12 +330,14 @@ export const BillingAndInvoice = (props: any) => {
               console.error(`${jobType} Screenshot capture failed:  ${update.error}`);
               setSSLoading(false);
               setJobId(null);
+              setSocketUpdateStatus(null);
               message.error(`${jobType} job failed. Please try again.`);
               break;
               
             case "not_found":
               setSSLoading(false);
               setJobId(null);
+              setSocketUpdateStatus(null);
               message.info(`${jobType} Screenshot capture failed. Please retry after reloading...`);
               break;
               
@@ -334,6 +345,7 @@ export const BillingAndInvoice = (props: any) => {
               console.log(`${jobType} Screenshot capture stuck... ${update}`);
               setSSLoading(false);
               setJobId(null);
+              setSocketUpdateStatus(null);
               break;
           }
 
@@ -491,40 +503,41 @@ export const BillingAndInvoice = (props: any) => {
               </div>
             ) : (
               <div>
-                {ssLoading ? (
-                  <div className="flex items-center justify-center">
-                    <i className="fi fi-br-spinner text-[#22C55E] flex items-center animate-spin"></i>
-                  </div>
-                ) : (
-                  <div>
-                    {billInvoiceDetailsData?.invoiceDocs.length === 0 && dashboardSS && dashboardSS.status && (
-                      <div className="flex items-center gap-2 cursor-pointer">
-                        {
-                          dashboardSS?.status === "active" || ssLoading && (
+                <div>
+                  {billInvoiceDetailsData?.invoiceDocs.length === 0 && dashboardSS && dashboardSS.status && (
+                    <div className="flex items-center gap-2 cursor-pointer">
+                      {
+                        dashboardSS?.status === "active" || ssLoading && (
+                          <div className="border-b-2 border-[#22C55E] rounded-[2px]">
+                            <i className="fi fi-sr-arrow-small-down text-[#22C55E] flex items-center justify-center animate-bounce"></i>
+                          </div>
+                        )
+                      }
+                      {dashboardSS.status === "completed" && billInvoiceDetailsData?.invoiceDocs.length > 0 && (
+                        <div className="flex items-center gap-2 cursor-pointer" onClick={() => (window.location as any).reload()}>
+                            <h1 className="text-[12px] text-[#22C55E]">Invoice generated, please reload to donwload...</h1>
                             <div className="border-b-2 border-[#22C55E] rounded-[2px]">
                               <i className="fi fi-sr-arrow-small-down text-[#22C55E] flex items-center justify-center animate-bounce"></i>
                             </div>
-                          )
-                        }
-                        {dashboardSS.status === "completed" && billInvoiceDetailsData?.invoiceDocs.length > 0 && (
-                          <div className="flex items-center gap-2 cursor-pointer" onClick={() => (window.location as any).reload()}>
-                              <h1 className="text-[12px] text-[#22C55E]">Invoice generated, please reload to donwload...</h1>
-                              <div className="border-b-2 border-[#22C55E] rounded-[2px]">
-                                <i className="fi fi-sr-arrow-small-down text-[#22C55E] flex items-center justify-center animate-bounce"></i>
-                              </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
 
                 {billInvoiceDetailsData?.invoiceDocs.length > 0 && (
-                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.open(billInvoiceDetailsData?.invoiceDocs[billInvoiceDetailsData?.invoiceDocs.length - 1].url, "_blank")}>
-                      <h1 className="text-[12px] text-[#22C55E]">Already generated, click to download...</h1>
-                      <div className="border-b-2 border-[#22C55E] rounded-[2px]">
-                        <i className="fi fi-sr-arrow-small-down text-[#22C55E] flex items-center justify-center animate-bounce"></i>
-                      </div>
+                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => !ssLoading && window.open(billInvoiceDetailsData?.invoiceDocs[billInvoiceDetailsData?.invoiceDocs.length - 1].url, "_blank")}>
+                      <h1 className="text-[12px] text-[#22C55E]">Click to download...</h1>
+                      {ssLoading ? (
+                        <div className="flex items-center justify-center gap-1">
+                          <h1 className="text-[12px] text-[#22C55E]">{socketUpdateStatus?.progress}%</h1>
+                          <i className="fi fi-br-spinner text-[#22C55E] flex items-center animate-spin"></i>
+                        </div>
+                      ) : (
+                        <div className="border-b-2 border-[#22C55E] rounded-[2px]">
+                          <i className="fi fi-sr-arrow-small-down text-[#22C55E] flex items-center justify-center animate-bounce"></i>
+                        </div>
+                      )}
                   </div>
                 )}
               </div>
@@ -644,7 +657,7 @@ export const BillingAndInvoice = (props: any) => {
               )}
               {dashboardScreenshots?.length > 0 && (
                 <div className="grid grid-cols-2 gap-4 rounded-[12px]">
-                  {dashboardScreenshots?.reverse()?.map((image: any, i: number) => (
+                  {[...dashboardScreenshots]?.reverse()?.map((image: any, i: number) => (
                     <div key={i} className="col-span-1 py-4 group relative">
                       <div className="relative overflow-hidden rounded-[12px]">
                         <img 
