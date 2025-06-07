@@ -12,6 +12,7 @@ import {
 import { BillingAndInvoice } from "./BillingAndInvoice";
 import { GET_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { getBillInvoiceDetails, takeDashboardScreenShotAction } from "../../actions/billInvoiceAction";
 
 interface FilterState {
   audience: string[];
@@ -96,19 +97,35 @@ export const NewDashBoard: React.FC = () => {
   const { loading: loadingSitesDataMapView, data: sitesDataMapViewData } =
     useSelector((state: any) => state.sitesDataMapViewForPlannerDashboard);
 
+    const {
+      loading: loadingBillInvoiceDetails,
+      error: errorBillInvoiceDetails,
+      data: billInvoiceDetailsData,
+    } = useSelector((state: any) => state.billInvoiceDetailsGet);;
+
+  const takeScreenShot = ({ tabs=["1", "2", "3", "4", "5"]}: {tabs?: string[]}) => {
+    dispatch(takeDashboardScreenShotAction({
+      campaignId: campaignDetails?._id,
+      // url: `${window.location.origin}/campaignDashboard/${campaignDetails?._id}`,
+      // url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
+      url: `http://localhost:3000/campaignDashboard/${campaignDetails?._id}`,
+      tabs: tabs
+      // tabs: ["1", "2"]
+    }))
+  }
+
   // Set up initial data fetch and refresh interval
   useEffect(() => {
-    // fetchDashboardData();
+
+    dispatch(getBillInvoiceDetails({ campaignCreationId: campaignId }));
 
     dispatch(getCampaignCreationsDetails({ id: campaignId }));
     dispatch(getBasicDataForPlannerDashboard({ id: campaignId }));
 
     dispatch(getSiteMonitoringPicsPercentage({ id: campaignId }));
     dispatch(getSitesDataMapViewForPlannerDashboard({ id: campaignId }));
-    // const interval = setInterval(fetchDashboardData, 300000); // 10 minutes
 
-    // return () => clearInterval(interval);
-  }, [dispatch, campaignId]);
+  }, [dispatch, campaignId,]);
 
   const isLoading = loadingCampaignDetails || loadingDashboard;
   const hasError = errorCampaignDetails || errorDashboard;
@@ -151,6 +168,9 @@ export const NewDashBoard: React.FC = () => {
         pathname={pathname}
         campaignDetails={campaignDetails}
         siteLevelData={siteLevelData}
+        takeScreenShot={takeScreenShot}
+        billInvoiceDetailsData={billInvoiceDetailsData}
+        loadingBillInvoiceDetails={loadingBillInvoiceDetails}
       />
       {!loadingCampaignDetails && campaignDetails ? (
         <CampaignDashboard
@@ -165,6 +185,8 @@ export const NewDashBoard: React.FC = () => {
           loadingSiteLevel={loadingSiteLevel}
           setOpenInvoice={setOpenInvoice}
           openInvoice={openInvoice}
+          takeScreenShot={takeScreenShot}
+          billInvoiceDetailsData={billInvoiceDetailsData}
         />
       ) : (
         <LoadingScreen />

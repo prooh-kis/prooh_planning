@@ -3,9 +3,9 @@ import {
   CREATE_BILL_INVOICE_FAIL,
   CREATE_BILL_INVOICE_REQUEST,
   CREATE_BILL_INVOICE_SUCCESS,
-  GENERATE_PDF_GENERATION_FAIL,
-  GENERATE_PDF_GENERATION_REQUEST,
-  GENERATE_PDF_GENERATION_SUCCESS,
+  GENERATE_BILL_INVOICE_PDF_GENERATION_FAIL,
+  GENERATE_BILL_INVOICE_PDF_GENERATION_REQUEST,
+  GENERATE_BILL_INVOICE_PDF_GENERATION_SUCCESS,
   GET_BILL_INVOICE_FAIL,
   GET_BILL_INVOICE_REQUEST,
   GET_BILL_INVOICE_SUCCESS,
@@ -31,6 +31,10 @@ export const createBillInvoice = (input) => async (dispatch, getState) => {
       type: CREATE_BILL_INVOICE_SUCCESS,
       payload: data,
     });
+    dispatch({
+      type: GET_BILL_INVOICE_SUCCESS,
+      payload: data,
+    });
   } catch (error) {
     dispatch({
       type: CREATE_BILL_INVOICE_FAIL,
@@ -45,13 +49,13 @@ export const createBillInvoice = (input) => async (dispatch, getState) => {
 
 
 
-export const getBillInvoiceDetails = ({ campaignCreationId, invoiceId }) => async (dispatch, getState) => {
+export const getBillInvoiceDetails = ({ campaignCreationId }) => async (dispatch, getState) => {
   dispatch({
     type: GET_BILL_INVOICE_REQUEST,
-    payload: { campaignCreationId, invoiceId },
+    payload: { campaignCreationId },
   });
   try {
-    const { data } = await axios.get(`${url}/details?campaignCreationId=${campaignCreationId}${invoiceId ?? `?invoiceId=${invoiceId}`}`);
+    const { data } = await axios.get(`${url}/details?campaignCreationId=${campaignCreationId}`);
     dispatch({
       type: GET_BILL_INVOICE_SUCCESS,
       payload: data,
@@ -70,19 +74,19 @@ export const getBillInvoiceDetails = ({ campaignCreationId, invoiceId }) => asyn
 
 export const handleInvoicePdfGenerationAction = (input) => async (dispatch, getState) => {
   dispatch({
-    type: GENERATE_PDF_GENERATION_REQUEST,
+    type: GENERATE_BILL_INVOICE_PDF_GENERATION_REQUEST,
     payload: input,
   });
   try {
-    const { data } = await axios.post(`${url}/generatePDF`, input);
+    const { data } = await axios.post(`${url}/generateInvoicePDF`, input);
     
     dispatch({
-      type: GENERATE_PDF_GENERATION_SUCCESS,
+      type: GENERATE_BILL_INVOICE_PDF_GENERATION_SUCCESS,
       payload: data,
     });
   } catch (error) {
     dispatch({
-      type: GENERATE_PDF_GENERATION_FAIL,
+      type: GENERATE_BILL_INVOICE_PDF_GENERATION_FAIL,
       payload: {
         message: error.message,
         status: error.response?.status,
@@ -102,9 +106,11 @@ export const takeDashboardScreenShotAction = (input) => async (dispatch, getStat
       `${url}/takeDashboardScreenshot`,
       input
     );
+    // Ensure we're dispatching a plain object, not a class instance
+    const responseData = JSON.parse(JSON.stringify(data));
     dispatch({
       type: TAKE_DASHBOARD_SCREENSHOT_SUCCESS,
-      payload: data
+      payload: responseData
     });
   } catch (error) {
     dispatch({

@@ -1,4 +1,4 @@
-import { CREATE_BILL_INVOICE_FAIL, CREATE_BILL_INVOICE_REQUEST, CREATE_BILL_INVOICE_RESET, CREATE_BILL_INVOICE_SUCCESS, GENERATE_PDF_GENERATION_FAIL, GENERATE_PDF_GENERATION_REQUEST, GENERATE_PDF_GENERATION_RESET, GENERATE_PDF_GENERATION_SUCCESS, GET_BILL_INVOICE_FAIL, GET_BILL_INVOICE_REQUEST, GET_BILL_INVOICE_RESET, GET_BILL_INVOICE_SUCCESS, PULL_JOB_STATUS_FAIL, PULL_JOB_STATUS_REQUEST, PULL_JOB_STATUS_RESET, PULL_JOB_STATUS_SUCCESS, TAKE_DASHBOARD_SCREENSHOT_FAIL, TAKE_DASHBOARD_SCREENSHOT_REQUEST, TAKE_DASHBOARD_SCREENSHOT_SUCCESS } from "../constants/billInvoiceConstant";
+import { CREATE_BILL_INVOICE_FAIL, CREATE_BILL_INVOICE_REQUEST, CREATE_BILL_INVOICE_RESET, CREATE_BILL_INVOICE_SUCCESS, GENERATE_BILL_INVOICE_PDF_GENERATION_FAIL, GENERATE_BILL_INVOICE_PDF_GENERATION_REQUEST, GENERATE_BILL_INVOICE_PDF_GENERATION_RESET, GENERATE_BILL_INVOICE_PDF_GENERATION_SUCCESS, GET_BILL_INVOICE_FAIL, GET_BILL_INVOICE_REQUEST, GET_BILL_INVOICE_RESET, GET_BILL_INVOICE_SUCCESS, PULL_JOB_STATUS_FAIL, PULL_JOB_STATUS_REQUEST, PULL_JOB_STATUS_RESET, PULL_JOB_STATUS_SUCCESS, TAKE_DASHBOARD_SCREENSHOT_FAIL, TAKE_DASHBOARD_SCREENSHOT_REQUEST, TAKE_DASHBOARD_SCREENSHOT_RESET, TAKE_DASHBOARD_SCREENSHOT_SUCCESS } from "../constants/billInvoiceConstant";
 
 
 export function billInvoiceCreationReducer(state = {}, action) {
@@ -55,7 +55,7 @@ export function billInvoiceDetailsGetReducer(state = [], action) {
       return {
         loading: false,
         success: false,
-        data: state,
+        data: [],
       };
     default:
       return state;
@@ -65,21 +65,21 @@ export function billInvoiceDetailsGetReducer(state = [], action) {
 
 export function handleInvoicePdfGenerationReducer(state = {}, action) {
   switch (action.type) {
-    case GENERATE_PDF_GENERATION_REQUEST:
+    case GENERATE_BILL_INVOICE_PDF_GENERATION_REQUEST:
       return { loading: true };
-    case GENERATE_PDF_GENERATION_SUCCESS:
+    case GENERATE_BILL_INVOICE_PDF_GENERATION_SUCCESS:
       return {
         loading: false,
         success: true,
         data: action.payload,
       };
-    case GENERATE_PDF_GENERATION_FAIL:
+    case GENERATE_BILL_INVOICE_PDF_GENERATION_FAIL:
       return {
         loading: false,
         success: false,
         error: action.payload,
       };
-    case GENERATE_PDF_GENERATION_RESET:
+    case GENERATE_BILL_INVOICE_PDF_GENERATION_RESET:
       return {
         loading: false,
         success: false,
@@ -90,30 +90,36 @@ export function handleInvoicePdfGenerationReducer(state = {}, action) {
   }
 }
 
-export function takeDashboardScreenShotReducer(state = {}, action) {
+export function takeDashboardScreenShotReducer(state = { data: null, loading: false, error: null }, action) {
   switch (action.type) {
     case TAKE_DASHBOARD_SCREENSHOT_REQUEST:
       return { 
-        ...state,  // Preserve existing state
-        loading: true 
+        ...state,
+        loading: true,
+        error: null
       };
       
     case TAKE_DASHBOARD_SCREENSHOT_SUCCESS:
       return {
-        ...state,  // Preserve existing state
+        ...state,
         loading: false,
-        data: action.payload,
+        data: action.payload,  // Make sure payload is a new object/array
+        error: null
       };
       
     case TAKE_DASHBOARD_SCREENSHOT_FAIL:
       return {
-        ...state,  // Preserve existing state
+        ...state,
         loading: false,
-        error: {
-          ...action.payload  // Create new error object
-        }
+        error: action.payload ? { ...action.payload } : { message: 'Unknown error' }
       };
-      
+    case TAKE_DASHBOARD_SCREENSHOT_RESET:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        data: null
+      };
     default:
       return state;
   }

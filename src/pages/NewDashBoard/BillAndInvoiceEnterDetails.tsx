@@ -14,50 +14,10 @@ import { ADD_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyCon
 export const BillingAndInvoiceEnterDetails = (props: any) => {
   const dispatch = useDispatch<any>();
   const { 
-    // clientAgencyName,
-    // setClientAgencyName,
-    // setAddress,
-    // address,
-    // city,
-    // setCity,
-    // setStateName,
-    // stateName,
-    // setCountry,
-    // country,
-    // phone,
-    // setPhone,
-    // email,
-    // setEmail,
-    // website,
-    // setWebsite,
-    // zipCode,
-    // setZipCode,
-    // gst,
-    // setGst,
-    // pan,
-    // setPan,
-    // pocName,
-    // setPocName,
-    // pocEmail,
-    // setPocEmail,
-    // pocContact,
-    // setPocContact,
-    // pocDesignation,
-    // setPocDesignation,
-    // poNumber,
-    // setPoNumber,
-    // poDate,
-    // setPoDate,
     campaignDetails,
     clientAgencyDetailsData,
     billInvoiceDetailsData,
     poFiles,
-    // invoiceDescription,
-    // setInvoiceDescription,
-    // invoiceQuantity,
-    // setInvoiceQuantity,
-    // invoiceCurrency,
-    // setInvoiceCurrency,
   } = props;
     const todayDate = moment(new Date())?.format("YYYY-MM-DD hh:mm:ss");
 
@@ -113,9 +73,9 @@ export const BillingAndInvoiceEnterDetails = (props: any) => {
     if (billInvoiceDetailsData) {
       setPoNumber(billInvoiceDetailsData?.poNumber);
       setPoDate(billInvoiceDetailsData?.poDate);
-      setInvoiceDescription(billInvoiceDetailsData.tableContent.description);
-      setInvoiceCurrency(billInvoiceDetailsData.currency);
-      setInvoiceQuantity(billInvoiceDetailsData.tableContent.quantity);
+      setInvoiceDescription(billInvoiceDetailsData?.tableContent?.[0]?.description);
+      setInvoiceCurrency(billInvoiceDetailsData?.currency);
+      setInvoiceQuantity(billInvoiceDetailsData?.tableContent?.[0]?.quantity);
     }
 
     if (clientAgencyDetailsData) {
@@ -216,13 +176,13 @@ export const BillingAndInvoiceEnterDetails = (props: any) => {
       clientOrderDate: poDate,
       poNumber: poNumber,
       poDate: poDate,
-      tableContent: {
+      tableContent: [{
         description: invoiceDescription,
         quantity: invoiceQuantity,
         amount: invoiceAmount,
         rate: invoiceAmount,
         hsnsac: ""
-      },
+      }],
       subTotalAmount: invoiceAmount,
       outPutGstPercent: 18,
       outPutGstAmount: invoiceAmount * 0.18,

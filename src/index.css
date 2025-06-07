@@ -199,3 +199,22 @@ section {
 .flip-card-back {
   transform: rotateY(180deg);
 }
+
+.iframe-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* padding-top: 75%; Aspect ratio (4:3 = 75%, 16:9 = 56.25%) */
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.iframe-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1280px;
+  height: 720px;
+  border: none;
+}

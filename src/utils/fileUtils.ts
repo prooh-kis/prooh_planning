@@ -1,5 +1,8 @@
 import { PDFDocument } from 'pdf-lib';
 
+(window as any).pdfjsLib.GlobalWorkerOptions.workerSrc = 
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
+
 
 // using promise
 export const getVideoDurationFromVideoURL = (url: string) => {
@@ -34,7 +37,6 @@ export const getImageResolution = (url: string) => {
 };
 
 
-
 export const handleBase64ImageUpload = async (base64Data: string) => {
   try {
     // Extract content type from base64 string if available (e.g., "data:image/png;base64,...")
@@ -65,8 +67,6 @@ export const handleBase64ImageUpload = async (base64Data: string) => {
     throw error;
   }
 };
-
-
 
 export async function mergePdfs(pdf1: any, pdf2: any) {
   const mergedPdf = await PDFDocument.create();
@@ -112,3 +112,56 @@ export const getCanvasBlob = (canvas: HTMLCanvasElement): Promise<Blob> => {
     }, 'image/png');
   });
 };
+
+export const generateImageFromPdf = async (uploadedPO: any) => {
+  try {
+      const loadingTask = (window as any).pdfjsLib.getDocument(uploadedPO);
+      let pdf;
+      try {
+        pdf = await loadingTask.promise;
+        if (!pdf) {
+          console.error("Failed to load PDF: No document returned");
+          return null;
+        }
+      } catch (error) {
+        console.error("PDF loading error:", error);
+        return null;
+      }
+  
+      // Get the first page with error handling
+      let page;
+      try {
+        page = await pdf.getPage(1);
+        if (!page) {
+          throw new Error("No pages in PDF");
+        }
+      } catch (error) {
+        console.error("Failed to get PDF page:", error);
+        return null;
+      }
+  
+      // Render PDF page to canvas
+      const scale = 1.5;
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+      try {
+        await page.render({
+          canvasContext: context,
+          viewport: viewport
+        }).promise;
+      } catch (error) {
+        console.error("PDF rendering error:", error);
+        return null;
+      }
+  
+    // Convert canvas to blob and add to PDF
+      const poBlob = await getCanvasBlob(canvas);
+      return blobToBase64(poBlob);
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}

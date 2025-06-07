@@ -3,20 +3,20 @@ import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { BillingAndInvoiceEnterDetails } from "./BillAndInvoiceEnterDetails";
 import { FileUploadButton, PrimaryButton } from "../../components";
-import { createBillInvoice, getBillInvoiceDetails, getQueueJobStatusAction, handleInvoicePdfGenerationAction, takeDashboardScreenShotAction } from "../../actions/billInvoiceAction";
+import { createBillInvoice, getBillInvoiceDetails, handleInvoicePdfGenerationAction, takeDashboardScreenShotAction } from "../../actions/billInvoiceAction";
 import { getClientAgencyDetails } from "../../actions/clientAgencyAction";
 import { BillAndInvoiceSteppers } from "./BillAndInvoiceSteppers";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { message, Tooltip } from "antd";
-import { CREATE_BILL_INVOICE_RESET } from "../../constants/billInvoiceConstant";
+import { CREATE_BILL_INVOICE_RESET, TAKE_DASHBOARD_SCREENSHOT_RESET } from "../../constants/billInvoiceConstant";
 import {
   getAWSUrlToUploadFile,
   saveFileOnAWS,
 } from "../../utils/awsUtils";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import { BillAndInvoiceMonitoringPicsSegment } from "./BillAndInvoiceMonitoringPicsSegment";
-import { generateImageFromPdf } from "../../utils/generatePdf";
 import { io, Socket } from 'socket.io-client';
+import { generateImageFromPdf } from "../../utils/fileUtils";
 
 // Define types for job status
 type JobStatus = 'stuck' | 'waiting' | 'active' | 'completed' | 'failed' | 'error' | 'not_found' | 'no_job' ;
@@ -27,6 +27,7 @@ interface StatusUpdate {
   progress: number;
   result?: string; // URL or base64 image when completed
   error?: string;
+  stack?: any;
 }
 
 const dashboardScreenshotName = [{id: 5, label: "Cost Consumption"}, {id: 4, label: "Daily Impression"}, {id: 3, label: "Hardware Performance"}, {id: 2, label: "Audience Impression"}, {id: 1, label: "Campaign Duration"}]
@@ -34,10 +35,7 @@ const dashboardScreenshotName = [{id: 5, label: "Cost Consumption"}, {id: 4, lab
 export const BillingAndInvoice = (props: any) => {
   const dispatch = useDispatch<any>();
 
-  const { loading, onClose, campaignDetails, siteLevelData, pathname } = props;
-
-
-
+  const { loading, takeScreenShot, billInvoiceDetailsData, loadingBillInvoiceDetails, onClose, campaignDetails, siteLevelData, pathname } = props;
 
   const [magnifiedImageView, setMagnifiedImageView] = useState<boolean>(false);
   const [magnifiedImage, setMagnifiedImage] = useState<any>(null);
@@ -50,13 +48,12 @@ export const BillingAndInvoice = (props: any) => {
 
   const [disabledGenerate, setDisabledGenerate] = useState<boolean>(true);
 
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [status, setStatus] = useState<StatusUpdate | null>(null);
+  const [socketUpdateStatus, setSocketUpdateStatus] = useState<StatusUpdate | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [jobId, setJobId] = useState<any>(null);
   const [jobType, setJobType] = useState<any>(null);
-  // const [socketUrl, setSocketUrl] = useState<any>("http://localhost:4444");
-  const [socketUrl, setSocketUrl] = useState<any>("wss://servermonad.vinciis.in");
+  const [socketUrl, setSocketUrl] = useState<any>("ws://localhost:4444");
+  // const [socketUrl, setSocketUrl] = useState<any>("wss://servermonad.vinciis.in");
 
   const todayDate = moment(new Date())?.format("YYYY-MM-DD hh:mm:ss");
 
@@ -74,17 +71,10 @@ export const BillingAndInvoice = (props: any) => {
     data: clientAgencyDetailsData,
   } = clientAgencyDetailsGet;
 
-  const billInvoiceDetailsGet = useSelector((state: any) => state.billInvoiceDetailsGet);
-  const {
-    loading: loadingBillInvoiceDetails,
-    error: errorBillInvoiceDetails,
-    data: billInvoiceDetailsData,
-  } = billInvoiceDetailsGet;
-
   const {
     loading: loadingScreenshot,
     error: errorScreenshot,
-    data: screenshots
+    data: dashboardSS
   } = useSelector((state: any) => state.takeDashboardScreenShot)
 
   const {
@@ -93,13 +83,6 @@ export const BillingAndInvoice = (props: any) => {
     data: invoicePdf
   } = useSelector((state: any) => state.handleInvoicePdfGeneration);
 
-  const {
-    loading: loadingJobStatus,
-    error: errorJobStatus,
-    data: jobStatus
-  } = useSelector((state: any) => state.getQueueJobStatus);
-  
-  
   const getAWSUrl = async (data: any) => {
     try {
       const aws = await getAWSUrlToUploadFile(
@@ -115,44 +98,35 @@ export const BillingAndInvoice = (props: any) => {
   };
 
   const generateBillInvoice = useCallback(async () => {
-    let poImage;
+    let poImageBase64: any = null;
+      
     if (billInvoiceDetailsData?.uploadedPO) {
-      poImage = await generateImageFromPdf(billInvoiceDetailsData?.uploadedPO);
+      poImageBase64 = await generateImageFromPdf(billInvoiceDetailsData.uploadedPO);
     }
-
     dispatch(handleInvoicePdfGenerationAction({
       fileName: `INVOICE_${campaignDetails?.brandName}_${campaignDetails?.name}`,
       billInvoiceDetailsData,
       campaignDetails,
       clientAgencyDetailsData,
       siteLevelData,
-      poImage,
+      poImage: poImageBase64,
       newInvoice: false,
     }));
   }, [billInvoiceDetailsData, dispatch, campaignDetails, clientAgencyDetailsData, siteLevelData]);
   
-  const saveClientAgencyDetails = () => {
-    setBillingStep(billingStep + 1);
+  const handleSaveClick = () => {
+    if (!billInvoiceDetailsData?.poNumber || !billInvoiceDetailsData?.poDate) {
+      message.info("You have not entered PO Number for this invoice, please take a look...");
+      return;
+    }
     if (billingStep === 1) {
       dispatch(createBillInvoice({
         campaignCreationId: campaignDetails?._id,
         uploadedPO: billingStep === 1 && poFiles.length > 0 ? poFiles[poFiles.length - 1].awsURL : undefined,
       }))
     }
+    setBillingStep(billingStep + 1);
   };
-  
-
-  const takeScreenShot = () => {
-    setSSLoading(true);
-    dispatch(takeDashboardScreenShotAction({
-      campaignId: campaignDetails?._id,
-      // url: `${window.location.origin}/campaignDashboard/${campaignDetails?._id}`,
-      url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
-      // url: `http://localhost:3000/campaignDashboard/${campaignDetails?._id}`,
-      tabs: ["1", "2", "3", "4", "5"]
-      // tabs: ["1"]
-    }))
-  }
 
   const handleAddNewFile = async (file: File) => {
     if (file) {
@@ -202,6 +176,12 @@ export const BillingAndInvoice = (props: any) => {
       });
     }
 
+    if (dashboardSS && jobId === null) {
+      dispatch({
+        type: TAKE_DASHBOARD_SCREENSHOT_RESET
+      });
+    }
+
     if (successBillInvoiceCreation) {
       if (billingStep == 2 && dashboardScreenshots?.length === 0) {
         message.info("Your dashboard screen is not captured, please capture it first...");
@@ -211,27 +191,14 @@ export const BillingAndInvoice = (props: any) => {
       }
     }
 
-  },[dispatch, successBillInvoiceCreation, billingStep, dashboardScreenshots]);
-
-  
-  //  useEffect(() => {
-
-   
-  // },[billInvoiceDetailsData, dashboardScreenshots]);
+  },[dispatch, successBillInvoiceCreation, billingStep, dashboardScreenshots, dashboardSS, jobId]);
     
   useEffect(() => {
   
-    if (campaignDetails) {
-      dispatch(getBillInvoiceDetails({
-        campaignCreationId: campaignDetails?._id,
-        invoiceId: campaignDetails?.invoiceId
+    if (campaignDetails && !clientAgencyDetailsData) {
+      dispatch(getClientAgencyDetails({
+        clientAgencyName: campaignDetails?.clientName?.toUpperCase()
       }));
-
-      if (!clientAgencyDetailsData) {
-        dispatch(getClientAgencyDetails({
-          clientAgencyName: campaignDetails?.clientName?.toUpperCase()
-        }));
-      }
     }
 
   },[campaignDetails, clientAgencyDetailsData, dispatch]);
@@ -246,134 +213,183 @@ export const BillingAndInvoice = (props: any) => {
       setDisabledGenerate(false);
     }
 
-    // if (screenshots?.length > 0) {
-    //   setDashboardScreenshots((prev: any) => 
-    //     JSON.stringify(prev) !== JSON.stringify(screenshots) 
-    //       ? [...screenshots] 
-    //       : prev
-    //   );
-    // }
-
     if (billInvoiceDetailsData) {
       setPOFiles([billInvoiceDetailsData.uploadedPO]);
-      if (dashboardScreenshots.length === 0 && billInvoiceDetailsData?.dashboardScreenshots?.length > 0) {
-        const screenshots: any = billInvoiceDetailsData.dashboardScreenshots[billInvoiceDetailsData.dashboardScreenshots?.length - 1]?.screenshots;
-        setDashboardScreenshots(screenshots);
+      if (dashboardScreenshots?.length === 0 && billInvoiceDetailsData?.dashboardScreenshots?.length > 0) {
+        const lastScreenshotSet = billInvoiceDetailsData.dashboardScreenshots?.map((ss: any) => ss.url);
+        // Create a new array with the screenshots
+        setDashboardScreenshots(lastScreenshotSet);
       }
     }
 
-    if (screenshots) {
-      setJobId(screenshots.jobId)
-    }
 
-  },[dispatch, billingStep, screenshots, billInvoiceDetailsData, dashboardScreenshots]);
+  },[billInvoiceDetailsData, billingStep, dashboardSS, dashboardScreenshots?.length]);
 
   useEffect(() => {
-    if (invoicePdf && invoicePdf?.jobId) {
+    if (invoicePdf && invoicePdf?.job) {
       message.info("Invoice in being generated, will be made available in a moment...");
-      dispatch(getQueueJobStatusAction({
-        type: "invoice",
-        campaignCreationId: campaignDetails?._id, 
-        apiUrl: invoicePdf?.statusUrl,
-        jobId: invoicePdf?.jobId,
-      }));
+      setJobId(invoicePdf?.job.id);
     }
-  },[campaignDetails?._id, dispatch, invoicePdf]);
+    if (dashboardSS) {
+      message.info("Dashboard screenshot in being generated, will be made available in a moment...");
+      setJobId(dashboardSS.job.id)
+    }
+  },[invoicePdf, dashboardSS]);
 
   useEffect(() => {
-   
-    // const interval = setTimeout(() => {
-        if (jobStatus && jobStatus.status === "completed") {
-          message.info("Invoice generation completed...")
-        }
-      // }, 10000);
-  
-      // return () => {
-      //   clearInterval(interval);
-      // }
-  },[invoicePdf, jobStatus]);
-
-  useEffect(() => {
-    if (jobId !== null || jobId !== undefined || jobId !== "") {
+    if (socketUpdateStatus) {
       console.log(jobId);
-      // Establish connection
-      const newSocket = io(socketUrl, {
-        transports: ['websocket'],
-        secure: true,
-        rejectUnauthorized: false, // Only for development with self-signed certs
-        reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 1000,
-        timeout: 10000
-      });
-      console.log("newSocket", newSocket);
-    
-    // Connection event handlers
-    newSocket.on('connect', () => {
-      setIsConnected(true);
-      console.log('Connected to WebSocket server', newSocket);
+      console.log(socketUpdateStatus);
+    }
+    // Prevent WebSocket connection in iframe/webview
+    if (window.location.search.includes('screenshot=true')) {
+      return;
+    } else {
+      console.log(socketUpdateStatus);
+      if (jobId && jobId !== "") {
+        // Establish connection
+        const newSocket = io(socketUrl, {
+          transports: ['websocket'],
+          secure: true,
+          rejectUnauthorized: false, // Only for development with self-signed certs
+          reconnection: true,
+          reconnectionAttempts: 5,
+          reconnectionDelay: 1000,
+          timeout: 10000
+        });
+
+        newSocket.onAny((event: any, ...args: any) => {
+          console.log(`[SOCKET EVENT] ${event}`, args);
+        });
+
+        const socketState: any = {
+          connecting: () => console.log("[Socket] connecting..."),
+          connet: () => console.log("[Socket] connected..."),
+          connect_error: () => console.log("[Socket] connection error..."),
+          disconnect: (reason: any) => console.log("[Socket] disconnected: ", reason),
+          reconnect_attempt: (attempt: any) => console.log("[Socket] reconnecting, attempt: ", attempt),
+          reconnect_failed: () => console.log("[Socket] reconnect failed..."),
+        };
+
+        Object.entries(socketState).forEach(([event, handler]: any) => {
+          newSocket.on(event, handler);
+        });
+
+
+        // Connection event handlers
+        newSocket.on('connect', () => {
+          setIsConnected(true);
+          // Subscribe to job status
+          newSocket.emit('subscribeToScreenshotInvoiceJob', jobId);
+        });
       
-      // Subscribe to job status
-      if (jobType === "screenshot") {
-        newSocket.emit('subscribeToScreenshotJob', jobId);
-      }
-      if (jobType === "invoice") {
-        newSocket.emit('subscribeToInvoiceJob', jobId);
-      }
-    });
+        // Inside the socket.on('screenshotJobStatus', ...) handler
+        newSocket.on('screenshotInvoiceJobStatus', (update: any) => {
+          const socketStatus = (update.status || "").toLowerCase();
 
-    // Status update handler
-    newSocket.on('screenshotJobStatus', (update: StatusUpdate) => {
-      console.log('Job status update:', update);
-      setStatus(update);
-      if (update.status === "completed" && update.result) {
-        const newScreenshots: any = update?.result;
-         setDashboardScreenshots(newScreenshots.screenshots)
-         setSSLoading(false);
+          setSocketUpdateStatus(update);
+          
+          // Handle different job statuses
+          switch (socketStatus) {
+            case "completed":
+              console.log(`${jobType} Job completed successfully: ${update}`);
+              if (update.result) {
+                setDashboardScreenshots(
+                  update.result.billInvoice.dashboardScreenshots?.map((item: any) => item.url)
+                )
+              } else {
+                dispatch(getBillInvoiceDetails({
+                  campaignCreationId: campaignDetails?._id,
+                }));
+              }
+              setSSLoading(false);
+              setJobId(null);
+              break;
+              
+            case "active":
+              setSSLoading(true);
+              console.log(`${jobType} Screenshot capture in progress... ${update.progress}`);
+              break;
+              
+            case "progress":
+              console.log(`${jobType} Screenshot capture progress: ${update}`);
+              setSSLoading(true);
+              break;
+              
+            case "failed":
+            case "error":
+              console.error(`${jobType} Screenshot capture failed:  ${update.error}`);
+              setSSLoading(false);
+              setJobId(null);
+              message.error(`${jobType} job failed. Please try again.`);
+              break;
+              
+            case "not_found":
+              setSSLoading(false);
+              setJobId(null);
+              message.info(`${jobType} Screenshot capture failed. Please retry after reloading...`);
+              break;
+              
+            case "stuck":
+              console.log(`${jobType} Screenshot capture stuck... ${update}`);
+              setSSLoading(false);
+              setJobId(null);
+              break;
+          }
+
+        });
+
+        // Disconnect handler
+        newSocket.on('disconnect', (reason) => {
+          setIsConnected(false);
+          console.log('Disconnected from WebSocket server: ', reason);
+          if (reason === 'io server disconnect') {
+            // The disconnection was initiated by the server, you need to reconnect manually
+            newSocket.connect();
+          }
+        });
+
+        // Add this near your other socket event handlers
+        newSocket.on('error', (error: any) => {
+          console.error('Socket error:', error);
+          setIsConnected(false);
+        });
+
+        newSocket.on('connect_error', (error: any) => {
+          console.error('Connection error:', {
+            message: error.message,
+            description: error.description,
+            context: error.context,
+            error: error
+          });
+          setIsConnected(false);
+        });
+
+        // Cleanup on unmount
+        return () => {
+          console.log('Cleaning up WebSocket connection');
+          if (newSocket) {
+            // Remove all listeners to prevent memory leaks
+            newSocket.off('screenshotInvoiceJobStatus');
+            newSocket.off('connect');
+            newSocket.off('disconnect');
+            newSocket.off('connect_error');
+            newSocket.offAny(); // Remove all .onAny() handlers
+            
+            // Remove our custom event listeners
+            Object.keys(socketState).forEach(event => {
+              newSocket.off(event, socketState[event]);
+            });
+            // Only disconnect if we're not already disconnected
+            if (newSocket.connected) {
+              newSocket.disconnect();
+            }
+          }
+        };
       }
+    }
 
-      if (update.status === "active") {
-        setSSLoading(true);
-      }
-
-      if (update.status === "stuck")  {
-        // dispatch(getScreen)
-      }
-      if (update.status === "not_found") {
-        setSSLoading(false);
-        message.info("Screenshot capture failed, please retry again after reloading...")
-      }
-    });
-
-    // Disconnect handler
-    newSocket.on('disconnect', (reason) => {
-      setIsConnected(false);
-      console.log('Disconnected from WebSocket server: ', reason);
-      if (reason === 'io server disconnect') {
-        // The disconnection was initiated by the server, you need to reconnect manually
-        newSocket.connect();
-      }
-    });
-
-    // Add error handlers
-    newSocket.on('connect_error', (error: any) => {
-      console.error('Connection Error:', error);
-      console.error('Error details:', {
-        message: error.message,
-        description: error.description,
-        context: error.context
-      });
-    });
-    setSocket(newSocket);
-
-    // Cleanup on unmount
-    return () => {
-      console.log('Cleaning up WebSocket connection');
-      newSocket.disconnect();
-    };
-  }
-  }, [jobId, socketUrl, jobType]);
-
+  }, [jobId, socketUrl, socketUpdateStatus, jobType, dispatch, campaignDetails]);
 
   useEffect(() => {
     if (props?.open) {
@@ -429,7 +445,7 @@ export const BillingAndInvoice = (props: any) => {
                 {billingStep !== 3 && (
                   <PrimaryButton
                     title="Save"
-                    action={saveClientAgencyDetails}
+                    action={handleSaveClick}
                     height="h-8"
                     width="w-20"
                     textSize="text-[12px]"
@@ -475,22 +491,22 @@ export const BillingAndInvoice = (props: any) => {
               </div>
             ) : (
               <div>
-                {loadingJobStatus ? (
+                {ssLoading ? (
                   <div className="flex items-center justify-center">
                     <i className="fi fi-br-spinner text-[#22C55E] flex items-center animate-spin"></i>
                   </div>
                 ) : (
                   <div>
-                    {billInvoiceDetailsData?.invoiceDocs.length === 0 && jobStatus && jobStatus.status && (
+                    {billInvoiceDetailsData?.invoiceDocs.length === 0 && dashboardSS && dashboardSS.status && (
                       <div className="flex items-center gap-2 cursor-pointer">
                         {
-                          jobStatus?.status === "active" || ssLoading && (
+                          dashboardSS?.status === "active" || ssLoading && (
                             <div className="border-b-2 border-[#22C55E] rounded-[2px]">
                               <i className="fi fi-sr-arrow-small-down text-[#22C55E] flex items-center justify-center animate-bounce"></i>
                             </div>
                           )
                         }
-                        {jobStatus.status === "completed" && billInvoiceDetailsData?.invoiceDocs.length > 0 && (
+                        {dashboardSS.status === "completed" && billInvoiceDetailsData?.invoiceDocs.length > 0 && (
                           <div className="flex items-center gap-2 cursor-pointer" onClick={() => (window.location as any).reload()}>
                               <h1 className="text-[12px] text-[#22C55E]">Invoice generated, please reload to donwload...</h1>
                               <div className="border-b-2 border-[#22C55E] rounded-[2px]">
@@ -605,21 +621,22 @@ export const BillingAndInvoice = (props: any) => {
                   <Tooltip title="Refresh Dashboard Screenshot Data">
                     <i 
                       className="fi fi-br-rotate-right flex items-center justify-center text-gray-500"
-                      onClick={() => {
-                        takeScreenShot();
-                      }}
+                      onClick={() => ssLoading ? {} : takeScreenShot({})}
                     ></i>
                   </Tooltip>
                 </div>
               </div>
               {loadingScreenshot || ssLoading && (
-                <LoadingScreen />
+                <div className="py-4">
+                  <LoadingScreen progress={socketUpdateStatus?.progress || ""} />
+                </div>
               )}
               {dashboardScreenshots?.length === 0 && (
                 <div className="flex flex-col gap-2 items-center justify-center h-[50vh]">
                   <p className="text-[12px]">Take snapshots of your campaign summary for future proof of references...</p>
                   <ButtonInput
-                    onClick={takeScreenShot}
+                    disabled={ssLoading}
+                    onClick={() => takeScreenShot({})}
                   >
                     Take Snapshots
                   </ButtonInput>
@@ -628,17 +645,43 @@ export const BillingAndInvoice = (props: any) => {
               {dashboardScreenshots?.length > 0 && (
                 <div className="grid grid-cols-2 gap-4 rounded-[12px]">
                   {dashboardScreenshots?.reverse()?.map((image: any, i: number) => (
-                    <div key={i} className="col-span-1 py-4">
-                      <img 
-                        onClick={() => {
-                          setMagnifiedImage(image);
-                          setMagnifiedImageView(!magnifiedImageView);
-                        }} 
-                        className="h-full border border-gray-100 rounded-[12px] shadow-md"
-                        src={image?.split("/").includes("https:") ? image : `data:image/png;base64,${image}`}
-                        alt="image"
-                      />
-                      <h1 className="p-1 text-[12px] truncate">{dashboardScreenshotName?.find((ds: any) => ds.id === Number(image?.match(/_([0-9]+)\.png$/)?.[1]))?.label}</h1>
+                    <div key={i} className="col-span-1 py-4 group relative">
+                      <div className="relative overflow-hidden rounded-[12px]">
+                        <img 
+                          className="w-full h-full border border-gray-100 rounded-[12px] shadow-md transition-transform duration-300 group-hover:scale-105"
+                          src={image?.split("/").includes("https:") ? image : `${image}`}
+                          alt="dashboard-screenshot"
+                        />
+                        {!ssLoading && (
+                          <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 rounded-[12px]">
+                            <button 
+                              type="button"
+                              onClick={() => {
+                                setMagnifiedImage(image);
+                                setMagnifiedImageView(!magnifiedImageView);
+                              }}
+                              className="p-2 w-12 h-12 bg-white bg-opacity-80 rounded-full hover:bg-opacity-100 transition-all duration-200 transform hover:scale-110"
+                              title="View Fullscreen"
+                            >
+                              <i className="fi fi-rr-search flex items-center justify-center text-gray-700"></i>
+                            </button>
+                            <button 
+                              type="button"
+                              onClick={() => {
+                                takeScreenShot({tabs: [`${i+1}`]})
+                              }}
+                              className="p-2 h-12 w-12 bg-white bg-opacity-80 rounded-full hover:bg-opacity-100 transition-all duration-200 transform hover:scale-110"
+                              title="View Fullscreen"
+                            >
+                              <i className="fi fi-br-rotate-right flex items-center justify-center text-gray-700"></i>
+                            </button>
+                          </div>
+                        )}
+
+                      </div>
+                      <h1 className="p-1 text-[12px] truncate text-center mt-2">
+                        {dashboardScreenshotName?.find((ds: any) => ds.id === Number(image?.match(/_([0-9]+)\.jpeg$/)?.[1]) || Number(image?.match(/_([0-9]+)\.png$/)?.[1]))?.label}
+                      </h1>
                     </div>
                   ))}
                 </div>
@@ -656,7 +699,6 @@ export const BillingAndInvoice = (props: any) => {
                     <i 
                       className="fi fi-br-rotate-right flex items-center justify-center text-gray-500"
                       onClick={() => {
-                        // takeScreenShot();
                       }}
                     ></i>
                   </Tooltip>
