@@ -107,8 +107,8 @@ export const NewDashBoard: React.FC = () => {
     dispatch(takeDashboardScreenShotAction({
       campaignId: campaignDetails?._id,
       // url: `${window.location.origin}/campaignDashboard/${campaignDetails?._id}`,
-      // url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
-      url: `http://localhost:3000/campaignDashboard/${campaignDetails?._id}`,
+      url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
+      // url: `http://localhost:3000/campaignDashboard/${campaignDetails?._id}`,
       tabs: tabs
       // tabs: ["1", "2"]
     }))
