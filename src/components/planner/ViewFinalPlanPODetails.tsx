@@ -10,7 +10,7 @@ import {
   getScreenSummaryPlanTableData,
 } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
-import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
+import { addDetailsToCreateCampaign, downloadCampaignSummaryPPTAction } from "../../actions/campaignAction";
 import {
   getAWSUrlToUploadFile,
   getDocUrlToSaveOnAWS,
@@ -42,6 +42,7 @@ import { PrimaryInput } from "../../components/atoms/PrimaryInput";
 import { isValidEmail } from "../../utils/valueValidate";
 import { ChoseMonitoringTypeFive } from "../../components/segments/ChoseMonitoringTypeFive";
 import { monitoringTypes } from "../../constants/helperConstants";
+import { calculateAspectRatio } from "../../utils/formatValue";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -164,6 +165,12 @@ export const ViewFinalPlanPODetails = ({
     data: screenSummaryPlanTableData,
   } = screenSummaryPlanTableDataGet;
 
+  const {
+    loading: loadingDownloadDocs,
+    error: errorDownloadDocs,
+    data: downloadDocsData,
+  } = useSelector((state: any) => state.downloadCampaignSummaryPPT);
+
   const [currentCoupon, setCurrentCoupon] = useState<string>(
     poTableData?.couponId || ""
   );
@@ -183,122 +190,122 @@ export const ViewFinalPlanPODetails = ({
     },
   });
 
-  const sendEmail = (fileLinks: string) => {
+  const sendEmail = () => {
     const formData = new FormData();
     formData.append("toEmail", toEmail);
     formData.append("cc", cc);
-    formData.append(
-      "message",
-      `Please find the files at the following links:\n${fileLinks}`
-    );
+    // formData.append(
+    //   "message",
+    //   `Please find the files at the following links:\n${fileLinks}`
+    // );
     formData.append("id", campaignId);
 
     dispatch(sendEmailForConfirmation(formData));
   };
 
-  const handleBlob = async (pdf: any) => {
-    let newBlob: any = null;
-    if (pdf === "summary") {
-      newBlob = generateCampaignSummaryPdfFromJSON({
-        download: false,
-        jsonData: pdfDownload[pdf].pdfData,
-        fileName: pdfDownload[pdf].fileName,
-        heading: pdfDownload[pdf].heading,
-      });
-    }
+  // const handleBlob = async (pdf: any) => {
+  //   let newBlob: any = null;
+  //   if (pdf === "summary") {
+  //     newBlob = generateCampaignSummaryPdfFromJSON({
+  //       download: false,
+  //       jsonData: pdfDownload[pdf].data,
+  //       fileName: pdfDownload[pdf].fileName,
+  //       heading: pdfDownload[pdf].heading,
+  //     });
+  //   }
 
-    if (pdf === "screen-pictures") {
-      newBlob = await generatePPT({
-        download: false,
-        data: pdfDownload[pdf].pdfData,
-        fileName: pdfDownload[pdf].fileName,
-      });
-    }
+  //   if (pdf === "screen-pictures") {
+  //     newBlob = await generatePPT({
+  //       download: false,
+  //       data: pdfDownload[pdf].data,
+  //       fileName: pdfDownload[pdf].fileName,
+  //     });
+  //   }
 
-    if (newBlob instanceof Blob) {
-      const uniqueFileName =
-        pdf === "screen-pictures"
-          ? pdfDownload[pdf].fileName + ".pptx"
-          : pdfDownload[pdf].fileName + ".pdf";
+  //   if (newBlob instanceof Blob) {
+  //     const uniqueFileName =
+  //       pdf === "screen-pictures"
+  //         ? pdfDownload[pdf].fileName + ".pptx"
+  //         : pdfDownload[pdf].fileName + ".pdf";
 
-      return { fileName: uniqueFileName, newBlob };
-    } else {
-      console.error("Generated value is not a Blob:", newBlob);
-      return null;
-    }
-  };
+  //     return { fileName: uniqueFileName, newBlob };
+  //   } else {
+  //     console.error("Generated value is not a Blob:", newBlob);
+  //     return null;
+  //   }
+  // };
 
-  const sendMultipleAttachments = async () => {
-    setLoadingEmailReady(true);
-    try {
-      // Step 1: Collect all Blobs
-      const blobPromises = Object.keys(pdfDownload).map((pdf) =>
-        handleBlob(pdf)
-      );
-      const attachments: any = (await Promise.all(blobPromises)).filter(
-        Boolean
-      ); // Wait for all blobs to resolve
-      // Step 2: Upload each file to S3
-      const uploadPromises = attachments.map(
-        async ({ fileName, newBlob }: any) => {
-          try {
-            if (!(newBlob instanceof Blob)) {
-              throw new Error(`Invalid blob for file: ${fileName}`);
-            }
+  // const sendMultipleAttachments = async () => {
+  //   setLoadingEmailReady(true);
+  //   try {
+  //     // Step 1: Collect all Blobs
+  //     const blobPromises = Object.keys(pdfDownload).map((pdf) =>
+  //       handleBlob(pdf)
+  //     );
+  //     const attachments: any = (await Promise.all(blobPromises)).filter(
+  //       Boolean
+  //     ); // Wait for all blobs to resolve
+  //     // Step 2: Upload each file to S3
+  //     const uploadPromises = attachments.map(
+  //       async ({ fileName, newBlob }: any) => {
+  //         try {
+  //           if (!(newBlob instanceof Blob)) {
+  //             throw new Error(`Invalid blob for file: ${fileName}`);
+  //           }
 
-            // Step 2.1: Get S3 pre-signed URL for upload
-            const aws = await getDocUrlToSaveOnAWS(fileName, newBlob.type); // Assume fileName is passed to include in S3 key
-            if (!aws?.url) {
-              throw new Error(
-                `Failed to retrieve pre-signed URL for: ${fileName}`
-              );
-            }
+  //           // Step 2.1: Get S3 pre-signed URL for upload
+  //           const aws = await getDocUrlToSaveOnAWS(fileName, newBlob.type); // Assume fileName is passed to include in S3 key
+  //           if (!aws?.url) {
+  //             throw new Error(
+  //               `Failed to retrieve pre-signed URL for: ${fileName}`
+  //             );
+  //           }
 
-            // Step 2.2: Upload file to S3 using pre-signed URL
-            const response = await fetch(aws.url, {
-              method: "PUT",
-              headers: {
-                "Content-Type": newBlob.type,
-              },
-              body: newBlob,
-            });
+  //           // Step 2.2: Upload file to S3 using pre-signed URL
+  //           const response = await fetch(aws.url, {
+  //             method: "PUT",
+  //             headers: {
+  //               "Content-Type": newBlob.type,
+  //             },
+  //             body: newBlob,
+  //           });
 
-            if (!response.ok) {
-              throw new Error(`Failed to upload file: ${fileName}`);
-            }
-            return { fileName, fileUrl: aws.awsURL };
-          } catch (err) {
-            console.error(`Error uploading file ${fileName}:`, err);
-            return null; // Skip invalid files
-          }
-        }
-      );
+  //           if (!response.ok) {
+  //             throw new Error(`Failed to upload file: ${fileName}`);
+  //           }
+  //           return { fileName, fileUrl: aws.awsURL };
+  //         } catch (err) {
+  //           console.error(`Error uploading file ${fileName}:`, err);
+  //           return null; // Skip invalid files
+  //         }
+  //       }
+  //     );
 
-      // Step 3: Wait for all uploads to complete
-      const uploadedFiles = (await Promise.all(uploadPromises)).filter(Boolean);
-      if (uploadedFiles.length === 0) {
-        console.error("No files were uploaded to S3.");
-        return;
-      }
+  //     // Step 3: Wait for all uploads to complete
+  //     const uploadedFiles = (await Promise.all(uploadPromises)).filter(Boolean);
+  //     if (uploadedFiles.length === 0) {
+  //       console.error("No files were uploaded to S3.");
+  //       return;
+  //     }
 
-      // Step 4: Prepare email content with file URLs
-      const fileLinks = uploadedFiles
-        .map(
-          ({ fileName, fileUrl }: any) =>
-            `Campaign Summary :<br><br/><a href="${sanitizeUrlForS3(
-              fileUrl
-            )}" target="_blank">${fileName?.replace(/_/g, " ")}</a><br></br>`
-        )
-        .join("\n");
+  //     // Step 4: Prepare email content with file URLs
+  //     const fileLinks = uploadedFiles
+  //       .map(
+  //         ({ fileName, fileUrl }: any) =>
+  //           `Campaign Summary :<br><br/><a href="${sanitizeUrlForS3(
+  //             fileUrl
+  //           )}" target="_blank">${fileName?.replace(/_/g, " ")}</a><br></br>`
+  //       )
+  //       .join("\n");
 
-      console.log("fileLinks", fileLinks);
-      // Step 5: Send email with file links
-      sendEmail(fileLinks);
-    } catch (error) {
-      console.error("Error while sending attachments:", error);
-    }
-    setLoadingEmailReady(true);
-  };
+  //     console.log("fileLinks", fileLinks);
+  //     // Step 5: Send email with file links
+  //     sendEmail(fileLinks);
+  //   } catch (error) {
+  //     console.error("Error while sending attachments:", error);
+  //   }
+  //   setLoadingEmailReady(true);
+  // };
 
   const handleAddNewFile = async (file: File) => {
     if (file) {
@@ -352,9 +359,6 @@ export const ViewFinalPlanPODetails = ({
   const handleSaveAndContinue = async () => {
     if (!pathname.split("/").includes("view")) {
       if (confirmationImageFiles?.length == 0) {
-        // message.info(
-        //   "Please skip the email confirmation or upload an email confirmation screenshot to continue"
-        // );
         message.info(
           "Please share your plan with your manager and upload an email confirmation screenshot to continue"
         );
@@ -388,7 +392,6 @@ export const ViewFinalPlanPODetails = ({
 
   const countScreensByResolutionAndCity = (data: any) => {
     const result: any = {};
-
     data.forEach((screen: any) => {
       const { city } = screen.location;
       const { screenResolution } = screen;
@@ -396,11 +399,13 @@ export const ViewFinalPlanPODetails = ({
         result[city] = {};
       }
       if (!result[city][screenResolution]) {
-        result[city][screenResolution] = 0;
+        result[city][screenResolution] = {};
+        result[city][screenResolution].count = 0;
       }
-      result[city][screenResolution]++;
+      result[city][screenResolution].ratio = calculateAspectRatio(screenResolution);
+      result[city][screenResolution].resolution = screenResolution;
+      result[city][screenResolution].count++;
     });
-
     return result;
   };
 
@@ -566,27 +571,25 @@ export const ViewFinalPlanPODetails = ({
       });
 
       setPdfDownload({
-        summary: {
-          heading: "CAMPAIGN SUMMARY",
-          pdfData: {
+        "summary": {
+          data: {
             approach: [campaignDetails],
             costSummary: [screenSummaryPlanTableData],
             creativeRatio: countScreensByResolutionAndCity(
               campaignDetails?.screenWiseSlotDetails
             ),
           },
-          fileName: `${campaignDetails?.brandName} Campaign Summary`,
+          fileName: `${campaignDetails?.name}_${campaignDetails?.brandName}_Campaign_Summary`,
         },
         "screen-pictures": {
-          heading: "SCREEN PICTURES",
-          pdfData: campaignDetails?.screenWiseSlotDetails
+          data: campaignDetails?.screenWiseSlotDetails
             ?.filter((s: any) =>
               campaignDetails?.screenIds.includes(s.screenId)
             )
             ?.map((screen: any) => {
               return screen;
             }),
-          fileName: `${campaignDetails?.brandName} Campaign Screen Pictures`,
+          fileName: `${campaignDetails?.name}_${campaignDetails?.brandName}_Campaign_Screen_Pictures`,
         },
       });
     }
@@ -617,29 +620,36 @@ export const ViewFinalPlanPODetails = ({
   };
 
   const handleDownload = () => {
-    Object.keys(pdfDownload)?.map(async (pdf: any) => {
-      if (pdf === "summary") {
-        generateCampaignSummaryPdfFromJSON({
-          preview: false,
-          download: true,
-          jsonData: pdfDownload[pdf].pdfData,
-          fileName: pdfDownload[pdf].fileName,
-          heading: pdfDownload[pdf].heading,
-        });
-      }
-      if (pdf === "screen-pictures") {
-        if (pdfDownload[pdf].pdfData?.length > 0) {
-          generatePPT({
-            download: true,
-            data: pdfDownload[pdf].pdfData,
-            fileName: pdfDownload[pdf].fileName,
-          });
-        } else {
-          message.error("No data found, to download!");
-        }
-      }
-    });
+    dispatch(downloadCampaignSummaryPPTAction({
+      id: campaignId,
+      pdf: summaryChecked,
+      ppt: picturesChecked,
+      jsonData: pdfDownload
+    }));
+    // Object.keys(pdfDownload)?.map(async (pdf: any) => {
+    //   if (pdf === "summary") {
+    //     generateCampaignSummaryPdfFromJSON({
+    //       preview: false,
+    //       download: true,
+    //       jsonData: pdfDownload[pdf].data,
+    //       fileName: pdfDownload[pdf].fileName,
+    //       heading: pdfDownload[pdf].heading,
+    //     });
+    //   }
+    //   if (pdf === "screen-pictures") {
+    //     if (pdfDownload[pdf].data?.length > 0) {
+    //       generatePPT({
+    //         download: true,
+    //         data: pdfDownload[pdf].data,
+    //         fileName: pdfDownload[pdf].fileName,
+    //       });
+    //     } else {
+    //       message.error("No data found, to download!");
+    //     }
+    //   }
+    // });
   };
+
 
   return (
     <div className="w-full font-custom">
@@ -697,7 +707,7 @@ export const ViewFinalPlanPODetails = ({
                             if (e.target.checked) {
                               pdfToDownload["summary"] = {
                                 heading: "CAMPAIGN SUMMARY",
-                                pdfData: {
+                                data: {
                                   approach: [campaignDetails],
                                   costSummary: [screenSummaryPlanTableData],
                                   creativeRatio:
@@ -730,7 +740,7 @@ export const ViewFinalPlanPODetails = ({
                             if (e.target.checked) {
                               pdfToDownload["screen-pictures"] = {
                                 heading: "SCREEN PICTURES",
-                                pdfData: campaignDetails?.screenWiseSlotDetails
+                                data: campaignDetails?.screenWiseSlotDetails
                                   ?.filter((s: any) =>
                                     campaignDetails?.screenIds.includes(
                                       s.screenId
@@ -785,7 +795,7 @@ export const ViewFinalPlanPODetails = ({
                           // icon={<i className="fi fi-rs-paper-plane"></i>}
                           onClick={() => {
                             if (isValidEmail(toEmail)) {
-                              sendMultipleAttachments();
+                              sendEmail();
                               message.info(
                                 "Sending plan complete summary, please call your manager and take approval"
                               );
@@ -797,7 +807,7 @@ export const ViewFinalPlanPODetails = ({
                       </div>
                       <div className="col-span-2 flex items-center">
                         <h1 className="text-[12px] text-[#6F7F8E]">
-                          Plan highlights will go as pdf
+                          Enter email and share your plan
                         </h1>
                       </div>
                     </div>

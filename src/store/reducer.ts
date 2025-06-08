@@ -95,6 +95,7 @@ export const rootReducer = {
     campaignLogsGet: campaignReducers.campaignLogsGetReducer,
     campaignMonitoringPicsGet: campaignReducers.campaignMonitoringPicsGetReducer,
     cloneCampaign: campaignReducers.cloneCampaignReducer,
+    downloadCampaignSummaryPPT: campaignReducers.downloadCampaignSummaryPPTReducer,
 
     // External APIs
     cricketMatchesListGet: externalApiReducers.cricketMatchesListGetReducer,

@@ -65,6 +65,10 @@ import {
   CLONE_CAMPAIGN_SUCCESS,
   CLONE_CAMPAIGN_FAIL,
   CLONE_CAMPAIGN_RESET,
+  DOWNLOAD_CAMPAIGN_SUMMARY_PPT_REQUEST,
+  DOWNLOAD_CAMPAIGN_SUMMARY_PPT_SUCCESS,
+  DOWNLOAD_CAMPAIGN_SUMMARY_PPT_FAIL,
+  DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET,
 } from "../constants/campaignConstants";
 import {
   ALL_CAMPAIGNS_LIST,
@@ -437,6 +441,26 @@ export function cloneCampaignReducer(state = {}, action) {
     case CLONE_CAMPAIGN_FAIL:
       return { loading: false, error: action.payload };
     case CLONE_CAMPAIGN_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+
+export function downloadCampaignSummaryPPTReducer(state = {}, action) {
+  switch (action.type) {
+    case DOWNLOAD_CAMPAIGN_SUMMARY_PPT_REQUEST:
+      return { loading: true };
+    case DOWNLOAD_CAMPAIGN_SUMMARY_PPT_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        data: action.payload,
+      };
+    case DOWNLOAD_CAMPAIGN_SUMMARY_PPT_FAIL:
+      return { loading: false, error: action.payload };
+    case DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET:
       return {};
     default:
       return state;

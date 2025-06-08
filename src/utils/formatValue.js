@@ -57,3 +57,29 @@ export function numberToWords(num) {
 
   return result.trim();
 }
+
+
+export function calculateAspectRatio(resolution) {
+  if (!resolution || typeof resolution !== 'string') {
+    throw new Error('Invalid resolution format. Expected format: "widthxheight"');
+  }
+
+  // Split resolution into width and height
+  const [widthStr, heightStr] = resolution.split('x');
+  const width = parseInt(widthStr, 10);
+  const height = parseInt(heightStr, 10);
+
+  if (isNaN(width) || isNaN(height)) {
+    throw new Error('Invalid resolution values. Both width and height must be numbers');
+  }
+
+  // Calculate greatest common divisor (GCD) using Euclidean algorithm
+  const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+  const divisor = gcd(width, height);
+
+  // Calculate simplified ratio
+  const ratioWidth = width / divisor;
+  const ratioHeight = height / divisor;
+
+  return `${ratioWidth}:${ratioHeight}`;
+}

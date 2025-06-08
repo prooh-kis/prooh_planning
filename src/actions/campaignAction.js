@@ -57,6 +57,9 @@ import {
   CLONE_CAMPAIGN_REQUEST,
   CLONE_CAMPAIGN_SUCCESS,
   CLONE_CAMPAIGN_FAIL,
+  DOWNLOAD_CAMPAIGN_SUMMARY_PPT_REQUEST,
+  DOWNLOAD_CAMPAIGN_SUMMARY_PPT_SUCCESS,
+  DOWNLOAD_CAMPAIGN_SUMMARY_PPT_FAIL,
 } from "../constants/campaignConstants";
 import { removeAllKeyFromLocalStorage } from "../utils/localStorageUtils";
 const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/campaigns`;
@@ -589,3 +592,26 @@ export const cloneCampaignAction =
       });
     }
   };  
+
+
+  export const downloadCampaignSummaryPPTAction = (input) => async (dispatch, getState) => {
+    dispatch({
+      type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_REQUEST,
+      payload: input,
+    });
+    try {
+      const { data } = await axios.post(`${url}/downloadCampaignSummaryPPT`, input);
+      dispatch({
+        type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
