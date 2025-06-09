@@ -24,36 +24,12 @@ export const CampaignsListModel = ({
             <h1 className="text-[16px] text-[#092A41]">
               {data?.name || data?.campaignName}
             </h1>
-            <Tooltip title="Go to dashboard">
-              <i
-                className="fi fi-rr-dashboard"
-                onClick={() => handleGoToDashBoard(data?._id)}
-              ></i>
-            </Tooltip>
-            <Tooltip title="Edit Creatives">
-              <i
-                className="fi fi-sr-file-edit"
-                onClick={() =>
-                  handleEditCampaign(data?._id, data?.campaignType)
-                }
-              ></i>
-            </Tooltip>
             <Tooltip title="Clone the campaign">
               <i
                 className="fi fi-br-clone text-gray-200"
                 onClick={() => {
                   message.info("Coming sone");
                 }}
-
-                // onClick={() => {
-                //   if (
-                //     confirm(
-                //       "Do you really want to use this campaign as a template for creating a new campaign?"
-                //     )
-                //   ) {
-                //     handleClone(data?._id);
-                //   }
-                // }}
               ></i>
             </Tooltip>
           </div>

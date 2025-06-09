@@ -86,7 +86,7 @@ export function ScreenListMonitoringView({
             </div>
           )}
           <div className="col-span-7 truncate flex flex-col gap-1">
-            <h1 className="text-[20px] text-[#294558] font-semibold truncate">
+            <h1 className="text-[18px] text-[#294558] font-semibold truncate">
               {screen?.screenName}
             </h1>
             <div className="flex gap-2 text-[14px] text-[#6B8494]">

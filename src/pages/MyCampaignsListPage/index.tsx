@@ -108,8 +108,8 @@ export const MyCampaignsListPage: React.FC = () => {
         targetDivRef.current.scrollTop.toString()
       );
     }
-    // navigate(`/campaignDetails/${id}`);
-    navigate(`/campaignDashboard/${id}`);
+    navigate(`/campaignDetails/${id}`);
+    // navigate(`/campaignDashboard/${id}`);
   };
 
   const handleClone = (id: string) => {
@@ -206,16 +206,20 @@ export const MyCampaignsListPage: React.FC = () => {
             ref={targetDivRef}
           >
             {filteredCampaigns?.map((data: any, index: any) => (
-              <div key={index} className="pointer-cursor">
+              <div
+                key={index}
+                className="pointer-cursor"
+                onDoubleClick={() => handleDoubleClick(data?._id)}
+              >
                 <CampaignsListModel
                   data={data}
                   handleClone={handleClone}
                   handleGoToDashBoard={(id: string) =>
                     navigate(`/campaignDashboard/${id}`)
                   }
-                  handleEditCampaign={(id: string, type: string) =>
-                    navigate(`/editCampaign/${id}`)
-                  }
+                  // handleEditCampaign={(id: string, type: string) =>
+                  //   navigate(`/editCampaign/${id}`)
+                  // }
                 />
               </div>
             ))}

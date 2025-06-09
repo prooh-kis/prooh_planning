@@ -115,7 +115,7 @@ const ScreenListForCampaignDetails = ({
             onChange={setSearchQuery}
           />
         </div>
-        <div className="h-[56vh] overflow-y-auto scrollbar-minimal mt-2 pr-2 flex flex-col gap-2">
+        <div className="h-[56vh] overflow-y-auto scrollbar-minimal mt-2 pr-2 flex flex-col gap-1">
           {campaigns?.length === 0 ? (
             <NoDataView />
           ) : (
@@ -154,10 +154,10 @@ const ScreenListForCampaignDetails = ({
       {currentScreen && (
         <div className="col-span-4 w-full h-auto border border-[#D3D3D350] rounded-md p-4 bg-white">
           <div className="col-span-7 truncate flex flex-col gap-1">
-            <h1 className="text-[16px] text-[#294558] font-semibold truncate">
+            <h1 className="text-[16px] text-[#294558] font-bold truncate">
               {currentScreen?.screenName}
             </h1>
-            <div className="flex gap-2 text-[12px] text-[#6B8494]">
+            <div className="flex gap-2 py-2 text-[12px] text-[#6B8494]">
               <i className="fi fi-sr-marker" />
               <h1 className="truncate">
                 {currentScreen?.location?.address || currentScreen?.location},{" "}
@@ -165,7 +165,10 @@ const ScreenListForCampaignDetails = ({
               </h1>
             </div>
           </div>
-          <div className="border-b mb-2">
+          <h1 className="text-[16px] text-[#294558] font-semibold truncate  border-t py-1">
+            Creatives List
+          </h1>
+          <div className="border-b mb-2 border-t mt-2">
             <TabWithoutIcon
               currentTab={currentTab}
               setCurrentTab={setCurrentTab}

@@ -49,6 +49,13 @@ export const CampaignDetailsHeader = ({
         ) : (
           <div className="flex h-auto gap-1">
             <div
+              onClick={() => navigate(`/editCampaign/${campaignCreated?._id}`)}
+              className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
+            >
+              <i className="fi fi-rs-dashboard" />
+              <h1 className="truncate">Change Creatives</h1>
+            </div>
+            <div
               onClick={() => {
                 const pageName = getCampaignPageNameFromCampaignType(
                   campaignCreated?.campaignType

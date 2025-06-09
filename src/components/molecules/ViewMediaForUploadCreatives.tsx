@@ -102,6 +102,7 @@ export const ViewMediaForUploadCreatives2 = ({
               &times;
             </button>
           )}
+          <h1 className="text-[14px]">{file?.awsURL?.split("_")[1]}</h1>
         </div>
       ))}
     </div>
@@ -117,6 +118,7 @@ export const ViewMediaForUploadCreatives3 = ({
   removeFile: (url: string) => void;
   viewCreativeType: string;
 }) => {
+  console.log("files  : ", files);
   const showIcon = viewCreativeType !== "0";
 
   return (
