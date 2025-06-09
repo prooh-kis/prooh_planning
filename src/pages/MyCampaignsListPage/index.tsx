@@ -46,6 +46,7 @@ export const MyCampaignsListPage: React.FC = () => {
   );
   const { loading, error, data: allCampaigns } = allCampaignsDataGet;
 
+  console.log("dd : ", allCampaigns);
   const cloneCampaign = useSelector((state: any) => state.cloneCampaign);
   const {
     loading: loadingClone,
@@ -60,6 +61,7 @@ export const MyCampaignsListPage: React.FC = () => {
     } else if (!allCampaigns) {
       dispatch(
         getAllCampaignsDetailsAction({
+          plannerId: [],
           userId: userInfo?._id,
           status: CAMPAIGN_STATUS_ACTIVE,
           event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
@@ -79,6 +81,7 @@ export const MyCampaignsListPage: React.FC = () => {
       setCurrentTab(status);
       dispatch(
         getAllCampaignsDetailsAction({
+          plannerId: [],
           userId: userInfo?._id,
           status: campaignCreationTypeTabs?.filter(
             (tab: any) => tab.id === status
@@ -93,6 +96,7 @@ export const MyCampaignsListPage: React.FC = () => {
   const reset = () => {
     dispatch(
       getAllCampaignsDetailsAction({
+        plannerId: [],
         userId: userInfo?._id,
         status: CAMPAIGN_STATUS_ACTIVE,
         event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
@@ -158,7 +162,7 @@ export const MyCampaignsListPage: React.FC = () => {
     }
   }, [currentTab, handleGetCampaignByStatus]);
 
-  const filteredCampaigns = allCampaigns?.filter(
+  const filteredCampaigns = allCampaigns?.result?.filter(
     (campaign: any) =>
       campaign?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       campaign?.brandName?.toLowerCase().includes(searchQuery.toLowerCase())
