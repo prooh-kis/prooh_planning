@@ -15,7 +15,7 @@ import {
 } from "../../utils/awsUtils";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import { BillAndInvoiceMonitoringPicsSegment } from "./BillAndInvoiceMonitoringPicsSegment";
-import { io, Socket } from 'socket.io-client';
+import { io } from 'socket.io-client';
 import { generateImageFromPdf } from "../../utils/fileUtils";
 
 // Define types for job status
