@@ -26,7 +26,10 @@ import { GET_CAMPAIGN_DASHBOARD_DATA_RESET } from "../../constants/screenConstan
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 import { notification } from "antd";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-// import CampaignCreationModal from "../../components/popup/CampaignCreationModal";
+import {
+  SearchableSelect,
+  SearchableSelectV2,
+} from "../../components/atoms/SearchableSelect";
 
 export const MyCampaignsListPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -37,6 +40,7 @@ export const MyCampaignsListPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<any>("");
   const [selectedCard, setSelectedCard] = useState<any>(null);
   const [open, setOpen] = useState<boolean>(false);
+  const [plannerId, setPlannerId] = useState<any>("");
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
@@ -46,7 +50,6 @@ export const MyCampaignsListPage: React.FC = () => {
   );
   const { loading, error, data: allCampaigns } = allCampaignsDataGet;
 
-  console.log("dd : ", allCampaigns);
   const cloneCampaign = useSelector((state: any) => state.cloneCampaign);
   const {
     loading: loadingClone,
@@ -55,22 +58,25 @@ export const MyCampaignsListPage: React.FC = () => {
     data: campaignData,
   } = cloneCampaign;
 
-  useEffect(() => {
+  const fetchCampaigns = useCallback(() => {
     if (userInfo && !userInfo?.isMaster) {
-      // message.error("Not a screen owner!!!");
-    } else if (!allCampaigns) {
-      dispatch(
-        getAllCampaignsDetailsAction({
-          plannerId: [],
-          userId: userInfo?._id,
-          status: CAMPAIGN_STATUS_ACTIVE,
-          event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
-        })
-      );
+      return;
     }
+    dispatch(
+      getAllCampaignsDetailsAction({
+        plannerId: plannerId ? [plannerId] : [],
+        userId: userInfo?._id,
+        status: CAMPAIGN_STATUS_ACTIVE,
+        event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
+      })
+    );
+  }, [dispatch, userInfo, plannerId]);
+
+  useEffect(() => {
+    fetchCampaigns();
     removeAllKeyFromLocalStorage();
     dispatch({ type: GET_CAMPAIGN_DASHBOARD_DATA_RESET });
-  }, [dispatch, userInfo]);
+  }, [dispatch, userInfo, fetchCampaigns]);
 
   const handleCardClick = (id: any) => {
     setSelectedCard(id);
@@ -81,7 +87,7 @@ export const MyCampaignsListPage: React.FC = () => {
       setCurrentTab(status);
       dispatch(
         getAllCampaignsDetailsAction({
-          plannerId: [],
+          plannerId: plannerId ? [plannerId] : [],
           userId: userInfo?._id,
           status: campaignCreationTypeTabs?.filter(
             (tab: any) => tab.id === status
@@ -90,10 +96,11 @@ export const MyCampaignsListPage: React.FC = () => {
         })
       );
     },
-    [dispatch, userInfo]
+    [dispatch, userInfo, plannerId]
   );
 
   const reset = () => {
+    setPlannerId(""); // Reset plannerId when reloading
     dispatch(
       getAllCampaignsDetailsAction({
         plannerId: [],
@@ -105,7 +112,6 @@ export const MyCampaignsListPage: React.FC = () => {
   };
 
   const handleDoubleClick = (id: string) => {
-    // Save the current scroll position
     if (targetDivRef.current) {
       sessionStorage.setItem(
         "campaignsScrollPosition",
@@ -113,11 +119,9 @@ export const MyCampaignsListPage: React.FC = () => {
       );
     }
     navigate(`/campaignDetails/${id}`);
-    // navigate(`/campaignDashboard/${id}`);
   };
 
   const handleClone = (id: string) => {
-    // setOpen(true);
     dispatch(
       cloneCampaignAction({
         id: id,
@@ -137,7 +141,6 @@ export const MyCampaignsListPage: React.FC = () => {
         description: "Clone create successfully",
       });
       const data = campaignData?.clonedCampaign;
-      console.log("data : ", data);
       navigate(`/${data?.campaignType?.toLowerCase()}plan/${data._id}`, {
         state: { from: EDIT_CAMPAIGN },
       });
@@ -154,7 +157,6 @@ export const MyCampaignsListPage: React.FC = () => {
 
   useEffect(() => {
     handleGetCampaignByStatus(currentTab);
-    // Restore scroll position when coming back to this page
     const savedScrollPosition =
       sessionStorage.getItem("campaignsScrollPosition") || "0";
     if (targetDivRef.current) {
@@ -191,12 +193,28 @@ export const MyCampaignsListPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-1 px-4">
+        <div className="mt-1 px-4 flex justify-between items-center pr-8">
           <TabWithoutIcon
             currentTab={currentTab}
             setCurrentTab={handleGetCampaignByStatus}
             tabData={campaignCreationTypeTabs}
           />
+          <div>
+            <SearchableSelectV2
+              options={allCampaigns?.plannerData?.map((data: any) => {
+                return {
+                  label: data.name,
+                  value: data._id,
+                };
+              })}
+              value={plannerId}
+              onChange={(value) => setPlannerId(value)}
+              placeholder="Filter by planner"
+              showSearch
+              allowClear
+              className="w-96 pb-1"
+            />
+          </div>
         </div>
       </div>
       <div className="mt-2">
@@ -221,9 +239,6 @@ export const MyCampaignsListPage: React.FC = () => {
                   handleGoToDashBoard={(id: string) =>
                     navigate(`/campaignDashboard/${id}`)
                   }
-                  // handleEditCampaign={(id: string, type: string) =>
-                  //   navigate(`/editCampaign/${id}`)
-                  // }
                 />
               </div>
             ))}
