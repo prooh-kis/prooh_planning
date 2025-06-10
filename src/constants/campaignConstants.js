@@ -126,3 +126,9 @@ export const EDIT_CAMPAIGN = "edit";
 export const VIEW_CAMPAIGN = "view";
 
 export const EXCEL_DATA_TARGET_STORES = "ExcelDataTargetStores"
+
+// sov constants
+export const CONTINUOUS_SOV = "continuous"
+export const ORDERED_SOV = "ordered"
+export const RANDOM_SOV = "random"
+export const SOV_TYPE_ARRAY = ["Select SOV Type" , "ordered", "continuous", "random"]

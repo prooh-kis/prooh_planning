@@ -15,14 +15,16 @@ import {
 } from "../../actions/clientAgencyAction";
 import { SuggestionInput } from "../../components/atoms/SuggestionInput";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
-import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
+import {
+  ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+  ORDERED_SOV,
+} from "../../constants/campaignConstants";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { ALL_BRAND_LIST } from "../../constants/localStorageConstants";
 import { getAllBrandAndNetworkAction } from "../../actions/creativeAction";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 import { getAllPlannerIdsAndEmail } from "../../actions/screenAction";
-import { SearchableSelect } from "../../components/atoms/SearchableSelect";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -33,10 +35,19 @@ interface EnterCampaignBasicDetailsProps {
   campaignDetails?: any;
   campaignType?: any;
 }
-const allIndex = [1, 2, 3, 6].map((data: any) => {
+const allIndex = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+].map((value) => {
   return {
-    label: data,
-    value: data,
+    label: value.toString(),
+    value: value,
+  };
+});
+
+const allIndexOrderedSov = [1, 2, 3, 6, 18].map((value) => {
+  return {
+    label: value.toString(),
+    value: value,
   };
 });
 // ["Select SOV Type", "ordered", "continuous", "random"];
@@ -108,7 +119,7 @@ export const EnterCampaignBasicDetails = ({
   const [managerEmail, setManagerEmail] = useState<string>(
     campaignDetails?.campaignManagerEmail || ""
   );
-  const [allPlannerData, setAllPlannerData] = useState<any>([])
+  const [allPlannerData, setAllPlannerData] = useState<any>([]);
 
   const [error, setError] = useState<string>("");
 
@@ -246,7 +257,7 @@ export const EnterCampaignBasicDetails = ({
     userInfo,
     sov,
     managerId,
-    managerEmail
+    managerEmail,
   ]);
 
   useEffect(() => {
@@ -279,9 +290,9 @@ export const EnterCampaignBasicDetails = ({
 
   useEffect(() => {
     if (successAllPlanner) {
-      setAllPlannerData(AllPlanner)
+      setAllPlannerData(AllPlanner);
     }
-  }, [successAllPlanner])
+  }, [successAllPlanner]);
 
   useEffect(() => {
     dispatch(getAllClientAgencyNames());
@@ -314,7 +325,7 @@ export const EnterCampaignBasicDetails = ({
       setSov(campaignDetails?.sov);
       setSovType(campaignDetails?.sovType);
       setManagerId(campaignDetails?.campaignManagerId.toString());
-      setManagerEmail(campaignDetails?.campaignManagerEmail)
+      setManagerEmail(campaignDetails?.campaignManagerEmail);
       setDuration(campaignDetails?.duration);
     }
   }, [campaignDetails]);
@@ -505,8 +516,11 @@ export const EnterCampaignBasicDetails = ({
             selectedOption={managerId}
             placeHolder="Select Manager"
             setSelectedOption={(value: any) => {
-              setManagerId(value)
-              setManagerEmail(allPlannerData?.find((data: any) => data._id === value)?.email || "")
+              setManagerId(value);
+              setManagerEmail(
+                allPlannerData?.find((data: any) => data._id === value)
+                  ?.email || ""
+              );
             }}
             height="h-[48px]"
           />
@@ -540,21 +554,6 @@ export const EnterCampaignBasicDetails = ({
       <div className="grid grid-cols-3 gap-8 pt-2">
         <div className="col-span-1 py-1">
           <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">SOV</label>
-            <Tooltip title="How many times you want to play creatives in one loop">
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
-          </div>
-          <DropdownInput
-            options={allIndex}
-            selectedOption={sov}
-            placeHolder="Select SOV"
-            setSelectedOption={setSov}
-            height="h-[48px]"
-          />
-        </div>
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
             <label className="block text-secondaryText text-[14px]">
               SOV Type
             </label>
@@ -567,6 +566,21 @@ export const EnterCampaignBasicDetails = ({
             selectedOption={sovType}
             placeHolder="Select SOV Type"
             setSelectedOption={setSovType}
+            height="h-[48px]"
+          />
+        </div>
+        <div className="col-span-1 py-1">
+          <div className="block flex justify-between gap-2 items-center mb-2">
+            <label className="block text-secondaryText text-[14px]">SOV</label>
+            <Tooltip title="How many times you want to play creatives in one loop">
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+            </Tooltip>
+          </div>
+          <DropdownInput
+            options={sovType == ORDERED_SOV ? allIndexOrderedSov : allIndex}
+            selectedOption={sov}
+            placeHolder="Select SOV"
+            setSelectedOption={setSov}
             height="h-[48px]"
           />
         </div>
