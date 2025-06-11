@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  EnterCampaignBasicDetails,
-  ViewFinalPlanPODetails,
   VendorConfirmationDetails,
   CreativeUploadV4,
 } from "../../components/planner";
@@ -17,8 +15,6 @@ export const EditCampaignFlow: React.FC = () => {
   const steps = 4;
   const { pathname, state } = useLocation();
   const navigate = useNavigate();
-
-  console.log("pathname : ", pathname);
 
   const [campaignDetails, setCampaignDetails] = useState<any>(null);
   const campaignId: any = pathname.split("/")[2] || null;

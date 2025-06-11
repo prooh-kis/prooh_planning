@@ -25,6 +25,8 @@ import { getAllBrandAndNetworkAction } from "../../actions/creativeAction";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 import { getAllPlannerIdsAndEmail } from "../../actions/screenAction";
+import { format } from "date-fns";
+import { monitoringTypes } from "../../constants/helperConstants";
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -35,6 +37,18 @@ interface EnterCampaignBasicDetailsProps {
   campaignDetails?: any;
   campaignType?: any;
 }
+
+interface MonitoringTypeData {
+  dates: string[];
+  monitoringType: any[];
+}
+
+interface InitialData {
+  startDate: MonitoringTypeData;
+  midDate: MonitoringTypeData;
+  endDate: MonitoringTypeData;
+}
+
 const allIndex = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
 ].map((value) => {
@@ -90,6 +104,24 @@ export const EnterCampaignBasicDetails = ({
   const [industry, setIndustry] = useState<any>(
     campaignDetails?.industry || ""
   );
+
+  const [initialData, setInitialData] = useState<InitialData>({
+    startDate: {
+      dates: [format(new Date(), "yyyy-MM-dd")],
+      monitoringType: monitoringTypes?.map((type: any) => type.value),
+    },
+    endDate: {
+      dates: [format(new Date(), "yyyy-MM-dd")],
+      monitoringType: monitoringTypes?.map((type: any) => type.value),
+    },
+    midDate: {
+      dates: [],
+      monitoringType: [],
+    },
+  });
+
+  console.log("initialData : ", initialData);
+
   const [startDate, setStartDate] = useState<any>(() => {
     const localDate = new Date(campaignDetails?.startDate);
     const utcDate = new Date(
@@ -182,6 +214,9 @@ export const EnterCampaignBasicDetails = ({
     } else if (managerId === "") {
       message.error("Please select manager ");
       return false;
+    } else if (!initialData["midDate"].dates[0]) {
+      message.error("Please select mid date monitoring ");
+      return false;
     } else {
       return true;
     }
@@ -202,6 +237,15 @@ export const EnterCampaignBasicDetails = ({
           .slice(0, 16); // Keep only "YYYY-MM-DDTHH:mm"
 
         setEndDate(formattedEndDate);
+        setInitialData((pre: InitialData) => {
+          return {
+            ...pre,
+            endDate: {
+              dates: [format(new Date(formattedEndDate), "yyyy-MM-dd")],
+              monitoringType: monitoringTypes.map((type: any) => type.value),
+            },
+          };
+        });
       } else {
         message.error("Please enter a start date first");
       }
@@ -233,6 +277,7 @@ export const EnterCampaignBasicDetails = ({
           campaignManagerEmail: managerEmail,
           sov: sov,
           sovType,
+          monitoringSelection: initialData,
         })
       );
     } else {
@@ -256,6 +301,7 @@ export const EnterCampaignBasicDetails = ({
     endDate,
     userInfo,
     sov,
+    initialData,
     managerId,
     managerEmail,
   ]);
@@ -327,6 +373,7 @@ export const EnterCampaignBasicDetails = ({
       setManagerId(campaignDetails?.campaignManagerId.toString());
       setManagerEmail(campaignDetails?.campaignManagerEmail);
       setDuration(campaignDetails?.duration);
+      setInitialData(campaignDetails?.monitoringSelection);
     }
   }, [campaignDetails]);
 
@@ -337,6 +384,15 @@ export const EnterCampaignBasicDetails = ({
         setStartDate("");
       } else {
         setStartDate(value);
+        setInitialData((pre: InitialData) => {
+          return {
+            ...pre,
+            startDate: {
+              dates: [format(new Date(value), "yyyy-MM-dd")],
+              monitoringType: monitoringTypes.map((type: any) => type.value),
+            },
+          };
+        });
         if (duration) {
           const endDate1 = getEndDateFromStartDateAndDuration(value, duration);
           setEndDate(new Date(endDate1).toISOString());
@@ -354,9 +410,30 @@ export const EnterCampaignBasicDetails = ({
           startDate,
           value
         );
+        setInitialData((pre: InitialData) => {
+          return {
+            ...pre,
+            endDate: {
+              dates: [format(new Date(value), "yyyy-MM-dd")],
+              monitoringType: monitoringTypes.map((type: any) => type.value),
+            },
+          };
+        });
         setDuration(calculatedDuration);
       }
     }
+  };
+
+  const handleDateInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInitialData((pre: InitialData) => {
+      return {
+        ...pre,
+        midDate: {
+          dates: [format(new Date(e.target.value), "yyyy-MM-dd")],
+          monitoringType: monitoringTypes.map((type: any) => type.value),
+        },
+      };
+    });
   };
 
   return (
@@ -582,6 +659,28 @@ export const EnterCampaignBasicDetails = ({
             placeHolder="Select SOV"
             setSelectedOption={setSov}
             height="h-[48px]"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-8 pt-2">
+        <div className="col-span-1 py-1">
+          <div className="block flex justify-between gap-2 items-center mb-2">
+            <label className="block text-secondaryText text-[14px]">
+              Select Mid Date Monitoring Date
+            </label>
+            <Tooltip title="Monitoring start and end data will always be your campaign start and end date ">
+              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+            </Tooltip>
+          </div>
+          <input
+            title="date"
+            type="date"
+            className="h-[48px] w-full border px-4 rounded-md"
+            value={initialData["midDate"].dates[0]}
+            onChange={handleDateInputChange}
+            min={initialData["startDate"].dates[0]}
+            max={initialData["endDate"].dates[0]}
           />
         </div>
       </div>
