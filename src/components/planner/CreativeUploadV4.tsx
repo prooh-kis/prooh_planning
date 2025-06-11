@@ -605,6 +605,7 @@ export const CreativeUploadV4 = ({
     setMediaFiles([]);
     // setIsBucketPopupOpen(false);
     message.success(`Add creative successfully for ${label}`);
+    closePopup();
   };
 
   const handleOpenBucketPopup = () => {
