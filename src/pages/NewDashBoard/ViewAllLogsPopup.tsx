@@ -104,7 +104,7 @@ export const ViewAllLogsPopup = ({
   }, [logs]);
 
   const newCombinedData = useMemo(() => {
-    let hrWiseLogs: any;
+    let hrWiseLogs: any = {};
 
     if (newData && logs && logs.length > 0) {
       hrWiseLogs = logs?.reduce((result: any, item: any) => {
