@@ -1,10 +1,10 @@
 import { MatchDetails } from "./MatchDetails";
-import { DropdownInput } from "../../components/atoms/DropdownInput";
 import { useEffect, useRef, useState } from "react";
-import { getCricketMatchesList, getPlayersList } from "../../actions/externaApiAction";
+import {
+  getCricketMatchesList,
+  getPlayersList,
+} from "../../actions/externaApiAction";
 import { useDispatch, useSelector } from "react-redux";
-import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
-import { FULL_CAMPAIGN_PLAN } from "../../constants/localStorageConstants";
 import { message } from "antd";
 
 interface SportsSegmentProps {
@@ -17,7 +17,7 @@ interface SportsSegmentProps {
   player?: any;
   setPlayer?: any;
   condition?: any;
-  setCondition?: any
+  setCondition?: any;
   campaignDetails?: any;
   setTriggerSelected?: any;
 }
@@ -50,17 +50,20 @@ const SportDropdown = ({ sports, sport, setSport }: any) => {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
+
   return (
     <div className="relative w-full h-full" ref={dropdownRef}>
       {/* Dropdown button */}
@@ -69,7 +72,9 @@ const SportDropdown = ({ sports, sport, setSport }: any) => {
         onClick={toggleDropdown}
         className={`w-full h-full truncate text-[14px] border border-gray-200 px-3 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-[#FFFFFF] active:bg-[#FFFFFF] transition-colors rounded-md appearance-none text-left`}
       >
-        {sport ? `${sports?.find((s: any) => s.value === sport).label}` : "Select Sport"}
+        {sport
+          ? `${sports?.find((s: any) => s.value === sport).label}`
+          : "Select Sport"}
       </button>
 
       {/* Dropdown icon */}
@@ -96,9 +101,7 @@ const SportDropdown = ({ sports, sport, setSport }: any) => {
           <div
             onClick={() => handleSportSelect("")}
             className={`px-3 py-2 text-[14px] cursor-pointer ${
-              sport === ""
-                ? 'bg-[#129BFF] text-white'
-                : 'hover:bg-gray-100'
+              sport === "" ? "bg-[#129BFF] text-white" : "hover:bg-gray-100"
             }`}
           >
             Select Sport
@@ -111,8 +114,8 @@ const SportDropdown = ({ sports, sport, setSport }: any) => {
               onClick={() => handleSportSelect(sp.value)}
               className={`px-3 py-2 text-[14px] cursor-pointer ${
                 sport === sp.value
-                  ? 'bg-[#129BFF] text-white'
-                  : 'hover:bg-gray-100'
+                  ? "bg-[#129BFF] text-white"
+                  : "hover:bg-gray-100"
               }`}
             >
               {`${sp.label}`}
@@ -124,8 +127,11 @@ const SportDropdown = ({ sports, sport, setSport }: any) => {
   );
 };
 
-
-const MatchDropdown = ({ matches, selectedMatchId, setSelectedMatchId }: MatchDropdownProps) => {
+const MatchDropdown = ({
+  matches,
+  selectedMatchId,
+  setSelectedMatchId,
+}: MatchDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -141,19 +147,22 @@ const MatchDropdown = ({ matches, selectedMatchId, setSelectedMatchId }: MatchDr
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
+
   // Find the selected match for display
-  const selectedMatch = matches?.find(m => m.matchId === selectedMatchId);
+  const selectedMatch = matches?.find((m) => m.matchId === selectedMatchId);
 
   return (
     <div className="relative w-full h-full" ref={dropdownRef}>
@@ -163,7 +172,9 @@ const MatchDropdown = ({ matches, selectedMatchId, setSelectedMatchId }: MatchDr
         onClick={toggleDropdown}
         className={`w-full h-full truncate text-[14px] border border-gray-200 px-3 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-[#FFFFFF] active:bg-[#FFFFFF] transition-colors rounded-md appearance-none text-left`}
       >
-        {selectedMatch ? `${selectedMatch.team1} vs ${selectedMatch.team2}` : "Select Match"}
+        {selectedMatch
+          ? `${selectedMatch.team1} vs ${selectedMatch.team2}`
+          : "Select Match"}
       </button>
 
       {/* Dropdown icon */}
@@ -191,8 +202,8 @@ const MatchDropdown = ({ matches, selectedMatchId, setSelectedMatchId }: MatchDr
             // onClick={() => handleMatchSelect("")}
             className={`px-3 py-2 text-[14px] cursor-pointer ${
               selectedMatchId === ""
-                ? 'bg-[#129BFF] text-white'
-                : 'hover:bg-gray-100'
+                ? "bg-[#129BFF] text-white"
+                : "hover:bg-gray-100"
             }`}
           >
             Select Match
@@ -205,8 +216,8 @@ const MatchDropdown = ({ matches, selectedMatchId, setSelectedMatchId }: MatchDr
               onClick={() => handleMatchSelect(match.matchId)}
               className={`px-3 py-2 text-[14px] cursor-pointer ${
                 selectedMatchId === match.matchId
-                  ? 'bg-[#129BFF] text-white'
-                  : 'hover:bg-gray-100'
+                  ? "bg-[#129BFF] text-white"
+                  : "hover:bg-gray-100"
               }`}
             >
               {`${match.team1} vs ${match.team2}`}
@@ -218,11 +229,13 @@ const MatchDropdown = ({ matches, selectedMatchId, setSelectedMatchId }: MatchDr
   );
 };
 
-const TeamDropdown = ({teamData}: any) => {
+const TeamDropdown = ({ teamData }: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [selectedTeam, setSelectedTeam] = useState<string>(Object.keys(teamData)[0]);
-  const [selectedPlayer, setSelectedPlayer] = useState<string>('');
+  const [selectedTeam, setSelectedTeam] = useState<string>(
+    Object.keys(teamData)[0]
+  );
+  const [selectedPlayer, setSelectedPlayer] = useState<string>("");
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -230,7 +243,7 @@ const TeamDropdown = ({teamData}: any) => {
 
   const handleTeamSelect = (team: string) => {
     setSelectedTeam(team);
-    setSelectedPlayer(''); // Reset player selection when team changes
+    setSelectedPlayer(""); // Reset player selection when team changes
   };
 
   const handlePlayerSelect = (player: string) => {
@@ -241,14 +254,17 @@ const TeamDropdown = ({teamData}: any) => {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -274,8 +290,8 @@ const TeamDropdown = ({teamData}: any) => {
                 onClick={() => handleTeamSelect(team)}
                 className={`flex-1 py-2 px-4 text-sm font-medium ${
                   selectedTeam === team
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-gray-500 hover:text-gray-700'
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
                 }`}
               >
                 {team}
@@ -291,8 +307,8 @@ const TeamDropdown = ({teamData}: any) => {
                 onClick={() => handlePlayerSelect(player)}
                 className={`px-4 py-2 text-sm cursor-pointer ${
                   selectedPlayer === player
-                    ? 'bg-blue-100 text-blue-800'
-                    : 'hover:bg-gray-100'
+                    ? "bg-blue-100 text-blue-800"
+                    : "hover:bg-gray-100"
                 }`}
               >
                 {player}
@@ -321,17 +337,20 @@ const ConditionsDropdown = ({ conditions, condition, setCondition }: any) => {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
+
   return (
     <div className="relative w-full h-full" ref={dropdownRef}>
       {/* Dropdown button */}
@@ -340,7 +359,9 @@ const ConditionsDropdown = ({ conditions, condition, setCondition }: any) => {
         onClick={toggleDropdown}
         className={`w-full h-full truncate text-[14px] border border-gray-200 px-3 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-[#FFFFFF] active:bg-[#FFFFFF] transition-colors rounded-md appearance-none text-left`}
       >
-        {condition ? `${conditions?.find((s: any) => s.value === condition).label}` : "Select Match Condition"}
+        {condition
+          ? `${conditions?.find((s: any) => s.value === condition).label}`
+          : "Select Match Condition"}
       </button>
 
       {/* Dropdown icon */}
@@ -367,9 +388,7 @@ const ConditionsDropdown = ({ conditions, condition, setCondition }: any) => {
           <div
             onClick={() => handleConditionSelect("")}
             className={`px-3 py-2 text-[14px] cursor-pointer ${
-              condition === ""
-                ? 'bg-[#129BFF] text-white'
-                : 'hover:bg-gray-100'
+              condition === "" ? "bg-[#129BFF] text-white" : "hover:bg-gray-100"
             }`}
           >
             Select Sport
@@ -382,8 +401,8 @@ const ConditionsDropdown = ({ conditions, condition, setCondition }: any) => {
               onClick={() => handleConditionSelect(sp.value)}
               className={`px-3 py-2 text-[14px] cursor-pointer ${
                 condition === sp.value
-                  ? 'bg-[#129BFF] text-white'
-                  : 'hover:bg-gray-100'
+                  ? "bg-[#129BFF] text-white"
+                  : "hover:bg-gray-100"
               }`}
             >
               {`${sp.label}`}
@@ -406,43 +425,54 @@ export const SportsSegment = ({
 }: SportsSegmentProps) => {
   const dispatch = useDispatch<any>();
 
-  const sportOptions = [{
-    label: "Cricket",
-    value: "cricket"
-  }];
+  const sportOptions = [
+    {
+      label: "Cricket",
+      value: "cricket",
+    },
+  ];
 
-  const options = [{
-    label: "Hits 6",
-    value: "six",
-  },{
-    label: "Hits 4",
-    value: "four"
-  },{
-    label: "Scores 100",
-    value: "century"
-  },{
-    label: "Scores 50",
-    value: "halfCentury"
-  },{
-    label: "Bowls Out",
-    value: "bowlsOut"
-  },{
-    label: "Takes Catch",
-    value: "catching"
-  },{
-    label: "During Batting",
-    value: "batting"
-  },{
-    label: "During Bowling",
-    value: "bowling"
-  }];
-
-
+  const options = [
+    {
+      label: "Hits 6",
+      value: "six",
+    },
+    {
+      label: "Hits 4",
+      value: "four",
+    },
+    {
+      label: "Scores 100",
+      value: "century",
+    },
+    {
+      label: "Scores 50",
+      value: "halfCentury",
+    },
+    {
+      label: "Bowls Out",
+      value: "bowlsOut",
+    },
+    {
+      label: "Takes Catch",
+      value: "catching",
+    },
+    {
+      label: "During Batting",
+      value: "batting",
+    },
+    {
+      label: "During Bowling",
+      value: "bowling",
+    },
+  ];
 
   const [myMatches, setMyMatches] = useState<any>(null);
   const [players, setPlayers] = useState<any>({});
 
-  const cricketMatchesListGet = useSelector((state: any) => state.cricketMatchesListGet);
+  const cricketMatchesListGet = useSelector(
+    (state: any) => state.cricketMatchesListGet
+  );
   const {
     loading: loadingMatches,
     error: errorMatches,
@@ -456,48 +486,59 @@ export const SportsSegment = ({
     data: matchPlayers,
   } = playersListGet;
 
-
   useEffect(() => {
     if (errorMatches) {
-      message.error("Error in getting matches list, please select a different sport...")
+      message.error(
+        "Error in getting matches list, please select a different sport..."
+      );
     }
     // if (errorPlayers) {
     //   message.error("Error in getting players list, please select a different match...")
     // }
     if (selectedMatchId) {
-      dispatch(getPlayersList({id: selectedMatchId}));
+      dispatch(getPlayersList({ id: selectedMatchId }));
     }
     dispatch(getCricketMatchesList());
-  },[dispatch, errorMatches, selectedMatchId]);
+  }, [dispatch, errorMatches, selectedMatchId]);
 
   useEffect(() => {
-    if (matches && !myMatches) {
+    if (matches && !myMatches && Array.isArray(matches)) {
       const filteredMatches = matches.filter((match: any) => {
-        const currentDate = new Date(match?.startDate);
-        return currentDate >= new Date(campaignDetails?.startDate) && currentDate <= new Date(campaignDetails?.endDate);
+        if (
+          !match?.startDate ||
+          !campaignDetails?.startDate ||
+          !campaignDetails?.endDate
+        ) {
+          return false;
+        }
+
+        const currentDate = new Date(match.startDate);
+        const startDate = new Date(campaignDetails.startDate);
+        const endDate = new Date(campaignDetails.endDate);
+
+        return currentDate >= startDate && currentDate <= endDate;
       });
-      setMyMatches(filteredMatches);
+      setMyMatches(filteredMatches || []);
     }
 
-    if(matchPlayers) {
+    if (matchPlayers) {
       setPlayers(matchPlayers);
     }
-
-  },[matches, matchPlayers, myMatches, campaignDetails]);
+  }, [matches, matchPlayers, myMatches, campaignDetails]);
 
   return (
     <div className="py-4 border-b">
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-4">
           <div className={`border rounded h-full w-full flex items-center`}>
-          <SportDropdown 
-            sports={sportOptions}
-            setSport={setSport}
-            sport={sport}
-          />
+            <SportDropdown
+              sports={sportOptions}
+              setSport={setSport}
+              sport={sport}
+            />
           </div>
         </div>
-        
+
         <div className="col-span-4">
           {loadingMatches ? (
             <div className="border rounded h-full flex items-center">
@@ -505,7 +546,11 @@ export const SportsSegment = ({
             </div>
           ) : (
             <div className="border rounded h-full flex items-center">
-              <MatchDropdown selectedMatchId={selectedMatchId} setSelectedMatchId={setSelectedMatchId} matches={myMatches} />
+              <MatchDropdown
+                selectedMatchId={selectedMatchId}
+                setSelectedMatchId={setSelectedMatchId}
+                matches={myMatches}
+              />
             </div>
           )}
         </div>
@@ -519,23 +564,35 @@ export const SportsSegment = ({
               {Object.keys(players)?.length > 0 ? (
                 <TeamDropdown teamData={players} />
               ) : (
-                <h1 className="text-[14px] px-2 truncate">Select Match first</h1>
+                <h1 className="text-[14px] px-2 truncate">
+                  Select Match first
+                </h1>
               )}
             </div>
           )}
         </div>
-        
       </div>
       {myMatches && (
         <div className="w-full">
           <div className="w-full">
             <h1 className="px-1 pt-4 text-[14px]">Match Details</h1>
-            <MatchDetails details={myMatches?.filter((m: any) => Number(m.matchId) === Number(selectedMatchId)) || myMatches[0]} />
+            <MatchDetails
+              details={
+                myMatches?.filter(
+                  (m: any) => Number(m.matchId) === Number(selectedMatchId)
+                ) || myMatches[0]
+              }
+            />
           </div>
           <div className="border rounded h-full flex items-center">
-            <ConditionsDropdown setCondition={setCondition} condition={condition} conditions={options} />
+            <ConditionsDropdown
+              setCondition={setCondition}
+              condition={condition}
+              conditions={options}
+            />
           </div>
         </div>
       )}
     </div>
-  )}
+  );
+};
