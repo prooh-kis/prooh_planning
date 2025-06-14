@@ -52,7 +52,11 @@ import { CampaignDetailsPage } from "../pages/CampaignDetailsPage";
 
 const Routers: React.FC = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter
+      future={{
+        v7_relativeSplatPath: true,
+      }}
+    >
       <Routes>
         <Route
           path={AUTH}

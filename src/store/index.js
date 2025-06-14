@@ -27,12 +27,34 @@ const store = configureStore({
   // Disable Redux DevTools in production
   devTools: process.env.NODE_ENV !== "production",
 
-  // Only enable middleware checks in development
+  // Configure middleware with optimized checks
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: process.env.NODE_ENV !== "production",
-      immutableCheck: process.env.NODE_ENV !== "production",
-    }),
+      // Disable immutable check in development if still too slow
+      immutableCheck: process.env.NODE_ENV === 'production' ? false : {
+        warnAfter: 150, // Further increased threshold
+        ignoredPaths: [
+          // Add known large state paths that don't need immutability checks
+          'some.large.state.path',
+          'another.large.state.path'
+        ]
+      },
+      // Configure serializable check with optimized settings
+      serializableCheck: {
+        warnAfter: 150, // Increased threshold for serializable checks
+        ignoredPaths: [
+          // Add known non-serializable paths (like Date objects, functions, etc.)
+          'payload.updatedAt',
+          'payload.callback',
+          'payload.meta.arg',
+          'meta.arg',
+          'meta.baseQueryMeta.request',
+          'meta.baseQueryMeta.response'
+        ]
+      },
+      // Disable thunk check if not using it
+      thunk: true
+    }).filter(Boolean), // Remove any falsey values (like disabled middleware)
 });
 
 // Subscribe to store changes for persisting auth state
