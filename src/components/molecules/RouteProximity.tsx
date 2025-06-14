@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MapSearchInput } from "../../components/atoms/MapSearchInput";
-import { Tooltip } from "antd";
+import { Slider, Tooltip } from "antd";
 import { MapBoxSearchInput } from "../../components/atoms/MapboxSearchInput";
 import ButtonInput from "../../components/atoms/ButtonInput";
 
@@ -68,23 +68,46 @@ export const RouteProximity = ({
     setRoutes([...routes]);
   };
 
+  // const handleRemoveRoute = (id: any) => {
+  //   let arr = routes;
+  //   for (let data of arr) {
+  //     if (data?.id === id) {
+  //       setRouteFilteredScreens(
+  //         routeFilteredScreens?.filter(
+  //           (rf: any) =>
+  //             !data.selectedScreens.map((s: any) => s._id).includes(rf._id)
+  //         )
+  //       );
+  //       handleFinalSelectedScreens({
+  //         type: "remove",
+  //         screens: data?.selectedScreens,
+  //       });
+  //     }
+  //   }
+  //   arr = arr.filter((data: any) => data?.id != id);
+  //   setRoutes(arr);
+  // };
+
   const handleRemoveRoute = (id: any) => {
     let arr = routes;
     for (let data of arr) {
       if (data?.id === id) {
-        setRouteFilteredScreens(
-          routeFilteredScreens?.filter(
-            (rf: any) =>
-              !data.selectedScreens.map((s: any) => s._id).includes(rf._id)
-          )
-        );
+        // First, update the final selected screens by removing this route's screens
         handleFinalSelectedScreens({
           type: "remove",
-          screens: data?.selectedScreens,
+          screens: data.selectedScreens || []
         });
+        
+        // Then update the routeFilteredScreens
+        setRouteFilteredScreens(
+          routeFilteredScreens?.filter(
+            (rf: any) => !data.selectedScreens?.map((s: any) => s._id).includes(rf._id)
+          )
+        );
       }
     }
-    arr = arr.filter((data: any) => data?.id != id);
+    // Remove the route from the routes array
+    arr = arr.filter((data: any) => data?.id !== id);
     setRoutes(arr);
   };
 
@@ -93,7 +116,7 @@ export const RouteProximity = ({
   }, [routeRadius]);
 
   return (
-    <div className="py-4 border-b border-gray-100">
+    <div className="py-2 border-b border-gray-100">
       <button
         type="button"
         className="flex w-full items-center justify-between"
@@ -107,7 +130,7 @@ export const RouteProximity = ({
         <div className="flex justify-between w-full">
           <div className="flex justify-start">
             <div className="flex justify-start gap-2 items-center py-2 truncate">
-              <h1 className="lg:text-[16px] text-[14px] text-gray-500 truncate">
+              <h1 className="lg:text-[16px] text-[14px] truncate">
                 2. Choose your desired routes{" "}
               </h1>
               <Tooltip title="Enter the origin and destination of your desired routes and select all the screens in proximity of your desired routes">
@@ -118,16 +141,15 @@ export const RouteProximity = ({
               </h1>
             </div>
             <div className="flex items-center justify-center">
-              {open["route"] ? (
+              {/* {open["route"] ? (
                 <i className="fi fi-sr-caret-up text-[#EF4444] flex items-center"></i>
               ) : (
                 <i className="fi fi-sr-caret-down text-[#22C55E] flex items-center"></i>
-              )}
+              )} */}
             </div>
           </div>
           <div className="flex justify-end items-center">
-            <i className="fi fi-bs-circle text-[10px] text-[#22C55E] pr-2 flex items-center justify-center"></i>
-            {/* <input
+          {/* <input
               className="w-[36px] h-6 text-center"
               type="number"
               placeholder={`${routeRadius / 1000}`}
@@ -137,9 +159,30 @@ export const RouteProximity = ({
                 setRouteRadius(() => (newValue === 0 ? 1000 : newValue * 1000));
               }}
             /> */}
-            <Tooltip title="Route Radius is fixed as 1 km">
-              <h1 className="lg:text-[14px] text-[12px] pl-1">1 km</h1>
-            </Tooltip>
+            <div className="w-24 px-1">
+              <Slider
+                min={0.1}
+                max={1}
+                step={0.1}
+                value={routeRadius ? routeRadius / 1000 : 1}
+                onChange={(value) => {
+                  setRouteRadius(value * 1000);
+                }}
+                tooltip={{ formatter: (value) => `${value} km` }}
+                styles={{
+                  track: {
+                    background: '#22C55E',
+                  },
+                  handle: {
+                    borderColor: '#22C55E',
+                    backgroundColor: '#22C55E',
+                  },
+                }}
+              />
+            </div>
+            <div className="w-12 text-[12px] text-center">
+              {routeRadius ? (routeRadius / 1000).toFixed(1) : '1.0'} km
+            </div>
           </div>
         </div>
       </button>
@@ -148,17 +191,6 @@ export const RouteProximity = ({
         <div className="w-full">
           <div className="grid grid-cols-5 gap-2 flex items-center pt-2">
             <div className="col-span-2">
-              {/* <MapBoxSearchInput
-                setUserLocation={setUserLocation}
-                userLocation={userLocation}
-                handleClick={(e: any) => setRouteOrigin(e)}
-                value={routeOrigin}
-                placeholder="Origin"
-                prefix={
-                  <i className="fi fi-sr-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 w-5 h-5"></i>
-                }
-                reset={routeOrigin.length === 0 ? true : false}
-              /> */}
               <MapSearchInput
                 setUserLocation={setUserLocation}
                 userLocation={userLocation}
@@ -172,17 +204,6 @@ export const RouteProximity = ({
               />
             </div>
             <div className="col-span-2">
-              {/* <MapBoxSearchInput
-                setUserLocation={setUserLocation}
-                userLocation={userLocation}
-                handleClick={(e: any) => setRouteDestination(e)}
-                value={routeDestination}
-                placeholder="Destination"
-                prefix={
-                  <i className="fi fi-sr-map-pin absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 w-5 h-5"></i>
-                }
-                reset={routeDestination.length === 0 ? true : false}
-              /> */}
               <MapSearchInput
                 setUserLocation={setUserLocation}
                 userLocation={userLocation}
@@ -221,80 +242,82 @@ export const RouteProximity = ({
               <p className="text-sm text-[#9f9f9f]">Added Route</p>
               <p className="text-sm text-[#9f9f9f]">{routes.length}</p>
             </div>
-            <div className="overflow-scroll h-40 mb-1 border rounded">
-              {routes?.map((route: any, index: any) => (
-                <div
-                  key={index}
-                  className={`
-                    ${
-                      index === 0
-                        ? "bg-[#540b0e20]"
-                        : index === 1
-                        ? "bg-[#e09f3e20]"
-                        : index === 2
-                        ? "bg-[#073b4c20]"
-                        : index === 3
-                        ? "bg-[#0f4c5c20]"
-                        : index === 4
-                        ? "bg-[#ef476f20]"
-                        : "bg-[#F6F6F6]"
-                    }
-                    p-2 my-1 rounded
-                  `}
-                  onClick={() => {
-                    // console.log(randomColor(index));
-                    // console.log(route)
-                  }}
-                >
-                  <div className="">
-                    <div
-                      className="flex justify-between items-center"
-                      onClick={() => {
-                        setShowDetails(index);
-                      }}
-                    >
-                      <p className="text-sm">
-                        {index + 1}.{" "}
-                        <span className="font-bold">
-                          {route?.origin?.place_name?.split(",")[0]}
-                        </span>{" "}
-                        to{" "}
-                        <span className="font-bold">
-                          {route?.destination?.place_name?.split(",")[0]}
-                        </span>
-                        <span className="px-2 text-blue">
-                          ({route?.selectedScreens?.length})
-                        </span>
-                      </p>
-                      <i
-                        className="fi fi-sr-cross-small text-gray-700 flex items-center"
-                        onClick={() => handleRemoveRoute(route?.id)}
-                      ></i>
+            {routes.length > 0 && (
+              <div className="overflow-scroll h-40 mb-1 border rounded">
+                {routes?.map((route: any, index: any) => (
+                  <div
+                    key={index}
+                    className={`
+                      ${
+                        index === 0
+                          ? "bg-[#540b0e20]"
+                          : index === 1
+                          ? "bg-[#e09f3e20]"
+                          : index === 2
+                          ? "bg-[#073b4c20]"
+                          : index === 3
+                          ? "bg-[#0f4c5c20]"
+                          : index === 4
+                          ? "bg-[#ef476f20]"
+                          : "bg-[#F6F6F6]"
+                      }
+                      p-2 mb-1 rounded
+                    `}
+                    onClick={() => {
+                      // console.log(randomColor(index));
+                      // console.log(route)
+                    }}
+                  >
+                    <div className="">
+                      <div
+                        className="flex justify-between items-center"
+                        onClick={() => {
+                          setShowDetails(index);
+                        }}
+                      >
+                        <p className="text-sm">
+                          {index + 1}.{" "}
+                          <span className="font-bold">
+                            {route?.origin?.place_name?.split(",")[0]}
+                          </span>{" "}
+                          to{" "}
+                          <span className="font-bold">
+                            {route?.destination?.place_name?.split(",")[0]}
+                          </span>
+                          <span className="px-2 text-blue">
+                            ({route?.selectedScreens?.length})
+                          </span>
+                        </p>
+                        <i
+                          className="fi fi-sr-cross-small text-gray-700 flex items-center"
+                          onClick={() => handleRemoveRoute(route?.id)}
+                        ></i>
+                      </div>
                     </div>
+
+                    {showDetails === index && (
+                      <div>
+                        <div className="flex gap-2 items-center">
+                          {/* <i className="fi fi-br-arrow-from-left text-[12px] text-green-600"></i> */}
+                          <i className="fi fi-sr-marker text-violet-500 text-[12px]"></i>
+
+                          <p className="text-[12px]">
+                            {route?.origin?.place_name}
+                          </p>
+                        </div>
+                        <div className="flex gap-2 items-center">
+                          {/* <i className="fi fi-br-arrow-alt-to-left text-[12px] text-red-600"></i> */}
+                          <i className="fi fi-sr-marker text-pink-500 text-[12px]"></i>
+                          <p className="text-[12px]">
+                            {route?.destination?.place_name}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
-
-                  {showDetails === index && (
-                    <div>
-                      <div className="flex gap-2 items-center">
-                        {/* <i className="fi fi-br-arrow-from-left text-[12px] text-green-600"></i> */}
-                        <i className="fi fi-sr-marker text-violet-500 text-[12px]"></i>
-
-                        <p className="text-[12px]">
-                          {route?.origin?.place_name}
-                        </p>
-                      </div>
-                      <div className="flex gap-2 items-center">
-                        {/* <i className="fi fi-br-arrow-alt-to-left text-[12px] text-red-600"></i> */}
-                        <i className="fi fi-sr-marker text-pink-500 text-[12px]"></i>
-                        <p className="text-[12px]">
-                          {route?.destination?.place_name}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -97,8 +97,8 @@ export const RegularPlanPage: React.FC = () => {
     stepComponents[currentStep] || (() => <div>Invalid step</div>);
 
   return (
-    <div className="w-full font-custom">
-      <div className="w-full h-auto">
+    <div className="w-full font-custom flex flex-col">
+      <div className="flex-none w-full  bg-white z-10">
         <StepperSlider
           campaignId={campaignId}
           step={currentStep}
@@ -106,10 +106,10 @@ export const RegularPlanPage: React.FC = () => {
           steps={steps}
         />
       </div>
-      {loadingCampaignDetails ? (
-        <LoadingScreen />
-      ) : (
-        <div className="w-full h-[75vh] p-4">
+      <div className="flex-1 w-full overflow-y-auto px-4 py-4">
+        {loadingCampaignDetails ? (
+          <LoadingScreen />
+        ) : (
           <StepComponent
             setCurrentStep={setCurrentStep}
             step={currentStep}
@@ -119,8 +119,8 @@ export const RegularPlanPage: React.FC = () => {
             path="regularplan"
             campaignDetails={campaignDetails}
           />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

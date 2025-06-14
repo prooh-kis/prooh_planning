@@ -103,6 +103,7 @@ export const BillingAndInvoice = (props: any) => {
     if (billInvoiceDetailsData?.uploadedPO) {
       poImageBase64 = await generateImageFromPdf(billInvoiceDetailsData.uploadedPO);
     }
+    console.log(clientAgencyDetailsData)
     dispatch(handleInvoicePdfGenerationAction({
       fileName: `INVOICE_${campaignDetails?.brandName}_${campaignDetails?.name}`,
       billInvoiceDetailsData,

@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 w-full h-16 flex items-center border-b border-gray-50 justify-between px-4 sm:px-10 bg-[#FFFFFF] z-50 font-custom">
+    <header className="sticky top-0 w-full h-16 flex items-center border-b border-[#D7D7D700] justify-between px-4 sm:px-10 bg-[#FFFFFF] z-50 font-custom">
       {/* Logo Section */}
       <div className="flex items-center gap-2" onClick={handleClick}>
         {/* <h1 className="text-xl font-black">PROOH.AI</h1> */}
@@ -42,7 +42,7 @@ export const Header: React.FC = () => {
 
       {/* User Info or Auth Buttons */}
       {userInfo ? (
-        <div className="flex items-center space-x-2 pr-4 relative">
+        <div className="flex items-center space-x-2 pr-0 relative">
           <img
             src={userInfo?.avatar || userImage}
             alt="User"

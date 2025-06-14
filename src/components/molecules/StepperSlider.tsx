@@ -165,64 +165,68 @@ export const StepperSlider = ({
   }, [dispatch, userInfo]);
 
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-between pt-0 mb-6">
-        <div className="flex-1 h-1 bg-gray-200 relative mx-4">
-          <div className="absolute inset-x-0 flex justify-between">
-            <div
-              className="absolute h-1 inset-x-0 bg-primaryButton transition-all duration-500"
-              style={{ width: `${(Number(step - 1) / (steps - 1)) * 100}%` }}
-            />
-            {[...Array(steps)].map((_, i) => (
-              icons[i] && stepLabels[i] ? (
+    <div className="w-full bg-white mt-6">
+      <div className="mx-auto">
+        <div className="w-full h-full flex items-center py-3">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex-1 h-1 bg-gray-200 relative mx-4">
+              <div className="absolute inset-x-0 flex justify-between">
                 <div
-                  key={i}
-                  onClick={() => handleStepClick(i)}
-                  className="relative flex flex-col items-center cursor-pointer"
-                >
-                  <div
-                    className={`relative w-4 h-4 rounded-full -mt-1.5 flex flex-col items-center
-                      ${
-                        i <= step - 1
-                          ? "bg-primaryButton"
-                          : "border bg-gray-200"
-                      }
-                    `}
-                  >
-                    <Tooltip title={stepLabels[i] ?? "Step " + (i + 1)}>
-                      <div className="relative mt-[-32px] w-full">
-                        <div
-                          className={`flex w-full gap-2 ${
-                            i + 1 <= step
-                              ? "text-primaryButton"
-                              : "text-[#D6D2D2]"
-                          }`}
-                        >
-                          {icons[i] ?? <i className="fi fi-sr-question text-[14px]"></i>}
-                        </div>
-                      </div>
-                    </Tooltip>
-                  </div>
-                  {/* Adjust label positioning: left-aligned for first step, centered otherwise, right-aligned for last step */}
-                  {i + 1 === step && (
+                  className="absolute h-1 inset-x-0 bg-primaryButton transition-all duration-500"
+                  style={{ width: `${(Number(step - 1) / (steps - 1)) * 100}%` }}
+                />
+                {[...Array(steps)].map((_, i) => (
+                  icons[i] && stepLabels[i] ? (
                     <div
-                      className={`absolute top-full mt-2 text-primaryButton text-[14px] font-medium whitespace-nowrap
-                        ${
-                          i === 0
-                            ? "left-0"
-                            : i + 1 === steps
-                            ? "right-0"
-                            : "left-1/2 transform -translate-x-1/2"
-                        }
-                      `}
+                      key={i}
+                      onClick={() => handleStepClick(i)}
+                      className="relative flex flex-col items-center cursor-pointer"
                     >
-                      {stepLabels[step - 1]}
+                      <div
+                        className={`relative w-4 h-4 rounded-full -mt-1.5 flex flex-col items-center
+                          ${
+                            i <= step - 1
+                              ? "bg-primaryButton"
+                              : "border bg-gray-200"
+                          }
+                        `}
+                      >
+                        <Tooltip title={stepLabels[i] ?? "Step " + (i + 1)}>
+                          <div className="relative mt-[-32px] w-full">
+                            <div
+                              className={`flex w-full gap-2 ${
+                                i + 1 <= step
+                                  ? "text-primaryButton"
+                                  : "text-[#D6D2D2]"
+                              }`}
+                            >
+                              {icons[i] ?? <i className="fi fi-sr-question text-[14px]"></i>}
+                            </div>
+                          </div>
+                        </Tooltip>
+                      </div>
+                      
+                      {/* Adjust label positioning: left-aligned for first step, centered otherwise, right-aligned for last step */}
+                      {i + 1 === step && (
+                        <div
+                          className={`absolute top-full mt-2 text-primaryButton text-[14px] font-medium whitespace-nowrap
+                            ${
+                              i === 0
+                                ? "left-0"
+                                : i + 1 === steps
+                                ? "right-0"
+                                : "left-1/2 transform -translate-x-1/2"
+                            }
+                          `}
+                        >
+                          {stepLabels[step - 1]}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              ) : null
-              
-            ))}
+                  ) : null
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

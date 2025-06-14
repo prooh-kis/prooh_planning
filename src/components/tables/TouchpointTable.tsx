@@ -56,14 +56,14 @@ export const TouchpointTable = ({
         <tr className="grid grid-cols-6 w-full px-2 gap-4">
           <th className="col-span-4 flex items-center w-full gap-2">
             <div className="flex items-center gap-1 px-1 w-auto">
-              <div className="h-2 w-2 bg-[#7AB3A2]"></div>
-              <p className="lg:text-[14px] text-[12px] font-normal">
+              <i className="fi fi-sr-square-small flex items-center justify-center text-[#7AB3A2]"></i>
+              <p className="text-[12px] font-normal">
                 audience %
               </p>
             </div>
             <div className="flex items-center gap-1 w-auto">
-              <div className="h-2 w-2 bg-[#00A0FA]"></div>
-              <p className="lg:text-[14px] text-[12px] font-normal">screen %</p>
+              <i className="fi fi-sr-square-small flex items-center justify-center text-[#00A0FA]"></i>
+              <p className="text-[12px] font-normal">screen %</p>
             </div>
           </th>
           <th className="col-span-2 flex justify-between pr-2 truncate">
@@ -87,7 +87,7 @@ export const TouchpointTable = ({
                 key={i}
                 className="grid grid-cols-6 gap-4 flex justify-between items-center w-full px-2 lg:py-2 py-1"
               >
-                <div className="col-span-4 flex justify-between w-auto truncate text font-normal">
+                <div className="col-span-4 flex justify-between items-center w-auto truncate text font-normal">
                   <CheckboxInput
                     disabled={loading}
                     label={tp}

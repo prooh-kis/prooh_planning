@@ -16,7 +16,7 @@ export const PrivateLayout = (props: any) => {
   const dispatch = useDispatch<any>();
   const { children } = props;
   const { userInfo } = useSelector((state: any) => state.auth);
-  const padding = props.padding || "pt-16";
+  const padding = props.padding || "py-2";
 
   useEffect(() => {
     if (!userInfo) {
@@ -38,11 +38,11 @@ export const PrivateLayout = (props: any) => {
   }, [userInfo, navigate]);
 
   return (
-    <div className="h-[100vh] w-full overflow-y-auto no-scrollbar">
-      <Header />
-      <div
-        className={`h-[92vh] overflow-y-auto no-scrollbar px-8 border-t ${padding}`}
-      >
+    <div className="flex flex-col h-screen max-h-screen overflow-hidden">
+      <div className="flex-none">
+        <Header />
+      </div>
+      <div className={`flex-1 overflow-y-auto px-6 ${padding}`}>
         {children}
       </div>
     </div>

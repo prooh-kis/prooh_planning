@@ -61,7 +61,7 @@ export const DrawnMapPolygon = ({
   };
 
   return (
-    <div className="py-4 border-b">
+    <div className="py-2">
       <button
         type="button"
         className="flex items-center justify-between"
@@ -73,19 +73,19 @@ export const DrawnMapPolygon = ({
         }}
       >
         <div className="flex justify-start gap-2 items-center py-2">
-          <h1 className="lg:text-[16px] text-[14px] text-gray-500">3. Selected Location Areas </h1>
+          <h1 className="lg:text-[16px] text-[14px]">3. Selected Location Areas </h1>
           <Tooltip title="Choose your screens by drawing an area that you want to target and get all the screens within that area">
             <i className="fi fi-rs-info pr-1 lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
           </Tooltip>
           <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({polygonFilteredScreens?.length} sites)</h1>
         </div>
-        <div className="flex items-center justify-center">
+        {/* <div className="flex items-center justify-center">
           {open?.["polygon"] ? (
             <i className="fi fi-sr-caret-up text-[#EF4444] flex items-center"></i>
           ) : (
             <i className="fi fi-sr-caret-down text-[#22C55E] flex items-center"></i>
           )}
-        </div>
+        </div> */}
       </button>
       {open["polygon"] && (
         <div className="h-full my-2 border rounded h-full grid grid-cols-3 gap-4">
