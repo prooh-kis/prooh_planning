@@ -12,10 +12,6 @@ export function getIndustryCategoryReducer(state = [], action) {
     case GET_ALL_CATEGORY_LIST_REQUEST:
       return { loading: true };
     case GET_ALL_CATEGORY_LIST_SUCCESS:
-      //   const campaign = action.payload;
-      //   const saveData = {};
-      //   saveData[campaign._id] = campaign;
-      //   saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, saveData);
       return {
         loading: false,
         success: true,
@@ -31,17 +27,11 @@ export function getIndustryCategoryReducer(state = [], action) {
   }
 }
 
-// getCalendarListData
-
 export function getCalendarListDataReducer(state = [], action) {
   switch (action.type) {
     case GET_CALENDER_LIST_DATA_REQUEST:
       return { loading: true };
     case GET_CALENDER_LIST_DATA_SUCCESS:
-      //   const campaign = action.payload;
-      //   const saveData = {};
-      //   saveData[campaign._id] = campaign;
-      //   saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, saveData);
       return {
         loading: false,
         success: true,
@@ -56,4 +46,3 @@ export function getCalendarListDataReducer(state = [], action) {
       return state;
   }
 }
-

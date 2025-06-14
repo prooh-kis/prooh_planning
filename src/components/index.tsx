@@ -13,7 +13,6 @@ export {
   AdvanceFiltersDetails,
   TriggerDetails,
   ViewFinalPlanPODetails,
-  CreativeUploadDetails,
 } from "./planner";
 
 export { ViewPlanPic } from "./segments/ViewPlanPic";

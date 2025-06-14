@@ -147,8 +147,6 @@ export function userUpdatePasswordReducer(state = {}, action) {
   }
 }
 
-// userEmailVerification
-
 export function userEmailVerificationReducer(state = {}, action) {
   switch (action.type) {
     case USER_EMAIL_VERIFICATION_REQUEST:

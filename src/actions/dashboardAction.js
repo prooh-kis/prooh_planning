@@ -40,8 +40,7 @@ import {
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_REQUEST,
   GET_SPOT_DELIVERY_DATA_FOR_PLANNER_DASHBOARD_SUCCESS,
 } from "../constants/dashboardConstant";
-
-const newDashboardURL = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/dashboard`;
+import { dashboardURL } from "../constants/urlConstant";
 
 export const getBasicDataForPlannerDashboard =
   (input) => async (dispatch, getState) => {
@@ -51,7 +50,7 @@ export const getBasicDataForPlannerDashboard =
     });
     try {
       const { data } = await axios.post(
-        `${newDashboardURL}/getBasicDataForPlannerDashboard`,
+        `${dashboardURL}/getBasicDataForPlannerDashboard`,
         input
       );
       dispatch({
@@ -78,7 +77,7 @@ export const getSlotDeliveryGraphDateWiseForPlannerDashboard =
     });
     try {
       const { data } = await axios.post(
-        `${newDashboardURL}/getSlotDeliveryGraphDateWiseForPlannerDashboard`,
+        `${dashboardURL}/getSlotDeliveryGraphDateWiseForPlannerDashboard`,
         input
       );
       dispatch({
@@ -105,7 +104,7 @@ export const getAudienceDataForPlannerDashboard =
     });
     try {
       const { data } = await axios.post(
-        `${newDashboardURL}/getAudienceDataForPlannerDashboard`,
+        `${dashboardURL}/getAudienceDataForPlannerDashboard`,
         input
       );
       dispatch({
@@ -132,7 +131,7 @@ export const getHardwarePerformanceDataForPlannerDashboard =
     });
     try {
       const { data } = await axios.post(
-        `${newDashboardURL}/getHardwarePerformanceDataForPlannerDashboard`,
+        `${dashboardURL}/getHardwarePerformanceDataForPlannerDashboard`,
         input
       );
       dispatch({
@@ -159,7 +158,7 @@ export const getSpotDeliveryDataForPlannerDashboard =
     });
     try {
       const { data } = await axios.post(
-        `${newDashboardURL}/getSpotDeliveryDataForPlannerDashboard`,
+        `${dashboardURL}/getSpotDeliveryDataForPlannerDashboard`,
         input
       );
       dispatch({
@@ -186,7 +185,7 @@ export const getCostDataForPlannerDashboard =
     });
     try {
       const { data } = await axios.post(
-        `${newDashboardURL}/getCostDataForPlannerDashboard`,
+        `${dashboardURL}/getCostDataForPlannerDashboard`,
         input
       );
       dispatch({
@@ -213,7 +212,7 @@ export const getSiteLevelPerformanceForPlannerDashboard =
     });
     try {
       const { data } = await axios.post(
-        `${newDashboardURL}/getSiteLevelPerformanceForPlannerDashboard`,
+        `${dashboardURL}/getSiteLevelPerformanceForPlannerDashboard`,
         input
       );
       dispatch({
@@ -240,7 +239,7 @@ export const getSiteLevelPerformanceTabWiseForPlannerDashboard =
     });
     try {
       const { data } = await axios.post(
-        `${newDashboardURL}/getSiteLevelPerformanceTabWiseForPlannerDashboard`,
+        `${dashboardURL}/getSiteLevelPerformanceTabWiseForPlannerDashboard`,
         input
       );
       dispatch({
@@ -267,7 +266,7 @@ export const getSitesDataMapViewForPlannerDashboard =
     });
     try {
       const { data } = await axios.post(
-        `${newDashboardURL}/getSitesDataMapViewForPlannerDashboard`,
+        `${dashboardURL}/getSitesDataMapViewForPlannerDashboard`,
         input
       );
       dispatch({
@@ -294,7 +293,7 @@ export const getSiteMonitoringPicsPercentage =
     });
     try {
       const { data } = await axios.post(
-        `${newDashboardURL}/getSiteMonitoringPicsPercentage`,
+        `${dashboardURL}/getSiteMonitoringPicsPercentage`,
         input
       );
       dispatch({
@@ -313,7 +312,6 @@ export const getSiteMonitoringPicsPercentage =
     }
   };
 
-
 export const getAllSitesMonitoringData =
   (input) => async (dispatch, getState) => {
     dispatch({
@@ -322,7 +320,7 @@ export const getAllSitesMonitoringData =
     });
     try {
       const { data } = await axios.post(
-        `${newDashboardURL}/getAllSitesMonitoringData`,
+        `${dashboardURL}/getAllSitesMonitoringData`,
         input
       );
       dispatch({
@@ -341,7 +339,6 @@ export const getAllSitesMonitoringData =
     }
   };
 
-
 export const getSiteBasedDataOnLogsPageAction =
   (input) => async (dispatch, getState) => {
     dispatch({
@@ -350,7 +347,7 @@ export const getSiteBasedDataOnLogsPageAction =
     });
     try {
       const { data } = await axios.post(
-        `${newDashboardURL}/getSiteBasedDataOnLogsPage`,
+        `${dashboardURL}/getSiteBasedDataOnLogsPage`,
         input
       );
       dispatch({
@@ -377,7 +374,7 @@ export const getFiltersAndDataForAllLogsPopupAction =
     });
     try {
       const { data } = await axios.post(
-        `${newDashboardURL}/getFiltersAndDataForAllLogsPopup`,
+        `${dashboardURL}/getFiltersAndDataForAllLogsPopup`,
         input
       );
       dispatch({
@@ -395,4 +392,3 @@ export const getFiltersAndDataForAllLogsPopupAction =
       });
     }
   };
-
