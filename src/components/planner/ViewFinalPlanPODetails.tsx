@@ -706,7 +706,7 @@ export const ViewFinalPlanPODetails = ({
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-6 pt-4">
-                      <div className="flex items-center gap-2" onClick={() => {
+                      <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
                         if (downloadUrls.length > 0 && downloadUrls[0].url) {
                           window.open(downloadUrls[0].url, "_blank");
                         }
@@ -748,7 +748,7 @@ export const ViewFinalPlanPODetails = ({
                           Campaign Summary
                         </h1>
                       </div>
-                      <div className="flex items-center gap-2" onClick={() => {
+                      <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
                         if (downloadUrls.length > 0 && downloadUrls[1].url) {
                           window.open(downloadUrls[1].url, "_blank");
                         }
