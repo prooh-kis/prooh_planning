@@ -29,7 +29,7 @@ import {
   APPLY_COUPON_RESET,
   REMOVE_COUPON_RESET,
 } from "../../constants/couponConstants";
-import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
+import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET, DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET } from "../../constants/campaignConstants";
 import { ViewFinalPlanTable } from "../../components/tables/ViewFinalPlanTable";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import ButtonInput from "../../components/atoms/ButtonInput";
@@ -337,6 +337,7 @@ export const ViewFinalPlanPODetails = ({
       setConfirmToProceed(false);
       dispatch({ type: APPLY_COUPON_RESET });
       dispatch({ type: REMOVE_COUPON_RESET });
+      dispatch({ type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET });
       dispatch(getFinalPlanPOTableData(poInput));
       dispatch(
         addDetailsToCreateCampaign({
@@ -344,12 +345,15 @@ export const ViewFinalPlanPODetails = ({
           id: campaignId,
         })
       );
+      setDownloadUrls([]);
+      setJobId(null);
     }
     if (couponRemoveSuccess) {
       setCurrentCoupon("");
       setConfirmToProceed(false);
       dispatch({ type: APPLY_COUPON_RESET });
       dispatch({ type: REMOVE_COUPON_RESET });
+      dispatch({ type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET });
       dispatch(getFinalPlanPOTableData(poInput));
       dispatch(
         addDetailsToCreateCampaign({
@@ -357,9 +361,11 @@ export const ViewFinalPlanPODetails = ({
           id: campaignId,
         })
       );
+      setDownloadUrls([]);
+      setJobId(null);
     }
   }, [couponRemoveSuccess, couponApplySuccess, dispatch, campaignId, poInput]);
-
+console.log(downloadUrls);
   useEffect(() => {
     if (userInfo) {
       setCC(userInfo?.email);
@@ -569,6 +575,7 @@ export const ViewFinalPlanPODetails = ({
               });
               setDownloadUrls(downloadableUrls);
             }
+            dispatch({ type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET });
             break;
             
           case "active":
@@ -580,6 +587,7 @@ export const ViewFinalPlanPODetails = ({
             console.error('Job error:', update.error || 'Unknown error');
             setWsLoading(false);
             setJobId(null);
+            dispatch({ type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET });
             message.error(update.error || "Error in document generation. Please try again.");
             break;
             
@@ -587,6 +595,7 @@ export const ViewFinalPlanPODetails = ({
             console.error('Job not found');
             setWsLoading(false);
             setJobId(null);
+            dispatch({ type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET });
             message.error("Job not found. Please try again.");
             break;
             
@@ -594,6 +603,7 @@ export const ViewFinalPlanPODetails = ({
             console.warn('Job is stuck:', update);
             setWsLoading(false);
             setJobId(null);
+            dispatch({ type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET });
             message.warning("Document generation is taking longer than expected. Please check back later.");
             break;
             
