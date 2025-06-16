@@ -36,6 +36,8 @@ import ButtonInput from "../../components/atoms/ButtonInput";
 import { PrimaryInput } from "../../components/atoms/PrimaryInput";
 import { isValidEmail } from "../../utils/valueValidate";
 import { calculateAspectRatio } from "../../utils/formatValue";
+import { io } from "socket.io-client";
+import { sensitiseUrlByEncoding } from "../../utils/fileUtils";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -55,6 +57,9 @@ interface InitialData {
   endDate: MonitoringTypeData;
 }
 
+const socketUrl = "ws://localhost:4444";
+// const socketUrl= "wss://servermonad.vinciis.in";
+
 export const ViewFinalPlanPODetails = ({
   setCurrentStep,
   step,
@@ -64,6 +69,7 @@ export const ViewFinalPlanPODetails = ({
   const pageRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
+
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 
@@ -101,6 +107,11 @@ export const ViewFinalPlanPODetails = ({
   });
   const [confirmToProceed, setConfirmToProceed] = useState<any>(false);
 
+  const [jobId, setJobId] = useState<any>(null);
+  const [wsLoading, setWsLoading] = useState<any>(false);
+  const [socketUpdateStatus, setSocketUpdateStatus] = useState<any>(null);
+  const [downloadUrls, setDownloadUrls] = useState<any>([]);
+
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
   );
@@ -109,6 +120,24 @@ export const ViewFinalPlanPODetails = ({
     error: errorAddDetails,
     success: successAddDetails,
   } = detailsToCreateCampaignAdd;
+
+  const screenSummaryPlanTableDataGet = useSelector(
+    (state: any) => state.screenSummaryPlanTableDataGet
+  );
+  const {
+    loading: loadingScreenSummaryPlanTable,
+    error: errorScreenSummaryPlanTable,
+    data: screenSummaryPlanTableData,
+  } = screenSummaryPlanTableDataGet;
+
+  const finalPlanPOTableDataGet = useSelector(
+    (state: any) => state.finalPlanPOTableDataGet
+  );
+  const {
+    loading: loadingPOData,
+    error: errorPOData,
+    data: poTableData,
+  } = finalPlanPOTableDataGet;
 
   const { data: coupons } = useSelector((state: any) => state.couponList);
 
@@ -130,15 +159,6 @@ export const ViewFinalPlanPODetails = ({
     error: errorRemove,
   } = couponRemoveForCampaign;
 
-  const finalPlanPOTableDataGet = useSelector(
-    (state: any) => state.finalPlanPOTableDataGet
-  );
-  const {
-    loading: loadingPOData,
-    error: errorPOData,
-    data: poTableData,
-  } = finalPlanPOTableDataGet;
-
   const emailSendForConfirmation = useSelector(
     (state: any) => state.emailSendForConfirmation
   );
@@ -149,14 +169,11 @@ export const ViewFinalPlanPODetails = ({
     data: sendEmailData,
   } = emailSendForConfirmation;
 
-  const screenSummaryPlanTableDataGet = useSelector(
-    (state: any) => state.screenSummaryPlanTableDataGet
-  );
   const {
-    loading: loadingScreenSummaryPlanTable,
-    error: errorScreenSummaryPlanTable,
-    data: screenSummaryPlanTableData,
-  } = screenSummaryPlanTableDataGet;
+    loading: loadingGeneration,
+    error: errorGeneration,
+    data: generationData,
+  } = useSelector((state: any) => state.downloadCampaignSummaryPPT);
 
   const [currentCoupon, setCurrentCoupon] = useState<string>(
     poTableData?.couponId || ""
@@ -174,110 +191,6 @@ export const ViewFinalPlanPODetails = ({
 
     dispatch(sendEmailForConfirmation(formData));
   };
-
-  // const handleBlob = async (pdf: any) => {
-  //   let newBlob: any = null;
-  //   if (pdf === "summary") {
-  //     newBlob = generateCampaignSummaryPdfFromJSON({
-  //       download: false,
-  //       jsonData: pdfDownload[pdf].data,
-  //       fileName: pdfDownload[pdf].fileName,
-  //       heading: pdfDownload[pdf].heading,
-  //     });
-  //   }
-
-  //   if (pdf === "screen-pictures") {
-  //     newBlob = await generatePPT({
-  //       download: false,
-  //       data: pdfDownload[pdf].data,
-  //       fileName: pdfDownload[pdf].fileName,
-  //     });
-  //   }
-
-  //   if (newBlob instanceof Blob) {
-  //     const uniqueFileName =
-  //       pdf === "screen-pictures"
-  //         ? pdfDownload[pdf].fileName + ".pptx"
-  //         : pdfDownload[pdf].fileName + ".pdf";
-
-  //     return { fileName: uniqueFileName, newBlob };
-  //   } else {
-  //     console.error("Generated value is not a Blob:", newBlob);
-  //     return null;
-  //   }
-  // };
-
-  // const sendMultipleAttachments = async () => {
-  //   setLoadingEmailReady(true);
-  //   try {
-  //     // Step 1: Collect all Blobs
-  //     const blobPromises = Object.keys(pdfDownload).map((pdf) =>
-  //       handleBlob(pdf)
-  //     );
-  //     const attachments: any = (await Promise.all(blobPromises)).filter(
-  //       Boolean
-  //     ); // Wait for all blobs to resolve
-  //     // Step 2: Upload each file to S3
-  //     const uploadPromises = attachments.map(
-  //       async ({ fileName, newBlob }: any) => {
-  //         try {
-  //           if (!(newBlob instanceof Blob)) {
-  //             throw new Error(`Invalid blob for file: ${fileName}`);
-  //           }
-
-  //           // Step 2.1: Get S3 pre-signed URL for upload
-  //           const aws = await getDocUrlToSaveOnAWS(fileName, newBlob.type); // Assume fileName is passed to include in S3 key
-  //           if (!aws?.url) {
-  //             throw new Error(
-  //               `Failed to retrieve pre-signed URL for: ${fileName}`
-  //             );
-  //           }
-
-  //           // Step 2.2: Upload file to S3 using pre-signed URL
-  //           const response = await fetch(aws.url, {
-  //             method: "PUT",
-  //             headers: {
-  //               "Content-Type": newBlob.type,
-  //             },
-  //             body: newBlob,
-  //           });
-
-  //           if (!response.ok) {
-  //             throw new Error(`Failed to upload file: ${fileName}`);
-  //           }
-  //           return { fileName, fileUrl: aws.awsURL };
-  //         } catch (err) {
-  //           console.error(`Error uploading file ${fileName}:`, err);
-  //           return null; // Skip invalid files
-  //         }
-  //       }
-  //     );
-
-  //     // Step 3: Wait for all uploads to complete
-  //     const uploadedFiles = (await Promise.all(uploadPromises)).filter(Boolean);
-  //     if (uploadedFiles.length === 0) {
-  //       console.error("No files were uploaded to S3.");
-  //       return;
-  //     }
-
-  //     // Step 4: Prepare email content with file URLs
-  //     const fileLinks = uploadedFiles
-  //       .map(
-  //         ({ fileName, fileUrl }: any) =>
-  //           `Campaign Summary :<br><br/><a href="${sanitizeUrlForS3(
-  //             fileUrl
-  //           )}" target="_blank">${fileName?.replace(/_/g, " ")}</a><br></br>`
-  //       )
-  //       .join("\n");
-
-  //     console.log("fileLinks", fileLinks);
-  //     // Step 5: Send email with file links
-  //     sendEmail(fileLinks);
-  //   } catch (error) {
-  //     console.error("Error while sending attachments:", error);
-  //   }
-  //   setLoadingEmailReady(true);
-  // };
 
   const handleAddNewFile = async (file: File) => {
     if (file) {
@@ -551,6 +464,10 @@ export const ViewFinalPlanPODetails = ({
         },
       });
     }
+
+    if (generationData && generationData.docJob) {
+      setJobId(generationData.docJob.jobId);
+    }
   }, [
     poTableData,
     screenSummaryPlanTableData,
@@ -560,6 +477,7 @@ export const ViewFinalPlanPODetails = ({
     setCurrentStep,
     confirmToProceed,
     dispatch,
+    generationData
   ]);
 
   const skipFunction = () => {
@@ -578,37 +496,144 @@ export const ViewFinalPlanPODetails = ({
   };
 
   const handleDownload = () => {
-    dispatch(
-      downloadCampaignSummaryPPTAction({
-        id: campaignId,
-        pdf: summaryChecked,
-        ppt: picturesChecked,
-        jsonData: pdfDownload,
-      })
-    );
-    // Object.keys(pdfDownload)?.map(async (pdf: any) => {
-    //   if (pdf === "summary") {
-    //     generateCampaignSummaryPdfFromJSON({
-    //       preview: false,
-    //       download: true,
-    //       jsonData: pdfDownload[pdf].data,
-    //       fileName: pdfDownload[pdf].fileName,
-    //       heading: pdfDownload[pdf].heading,
-    //     });
-    //   }
-    //   if (pdf === "screen-pictures") {
-    //     if (pdfDownload[pdf].data?.length > 0) {
-    //       generatePPT({
-    //         download: true,
-    //         data: pdfDownload[pdf].data,
-    //         fileName: pdfDownload[pdf].fileName,
-    //       });
-    //     } else {
-    //       message.error("No data found, to download!");
-    //     }
-    //   }
-    // });
+    if (downloadUrls.length > 0) {
+      message.info("Your download link is ready, please click on the document type below to download...")
+    } else {
+      setDownloadUrls([]);
+      setWsLoading(true);
+      dispatch(
+        downloadCampaignSummaryPPTAction({
+          id: campaignId,
+          pdf: summaryChecked,
+          ppt: picturesChecked,
+          jsonData: pdfDownload,
+        })
+      );
+    }
+    
   };
+
+  useEffect(() => {
+
+    if (generationData && jobId) {
+      const webSocket = io(socketUrl, {
+        transports: ['websocket'],
+        secure: true,
+        rejectUnauthorized: false,
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        timeout: 10000
+      });
+  
+      const socketState: any = {
+        connecting: () => console.log("[Socket] connecting..."),
+        connect: () => console.log("[Socket] connected..."),
+        connect_error: (error: any) => console.error("[Socket] connection error:", error),
+        disconnect: (reason: any) => console.log("[Socket] disconnected:", reason),
+        reconnect_attempt: (attempt: any) => console.log("[Socket] reconnecting, attempt:", attempt),
+        reconnect_failed: () => console.error("[Socket] reconnect failed..."),
+      };
+  
+      // Set up all socket state handlers
+      Object.entries(socketState).forEach(([event, handler]: [string, any]) => {
+        webSocket.on(event, handler);
+      });
+  
+      // Connection handler
+      webSocket.on('connect', () => {
+        webSocket.emit('subscribeToGenerateDocPptJob', generationData.docJob);
+      });
+  
+      // Job status handler
+      webSocket.on('generateDocPptJobStatus', (update: any) => {
+        const socketStatus = (update.state || "").toLowerCase();
+        // Always update the socket status
+        setSocketUpdateStatus(update);
+        
+        // Handle different job statuses
+        switch (socketStatus) {
+          case "completed":
+            message.success("Document generation completed successfully!");
+            setWsLoading(false);
+            setJobId(null);
+            
+            // Handle the result if available
+            if (update.result) {
+              // You can access the result data here
+              const downloadableUrls = Object.keys(update.result).map((key) => {
+                return {
+                  fileName: update.result[key].docType,
+                  url: update.result[key].url.split("/").includes("https:") ? sensitiseUrlByEncoding(update.result[key].url) : null
+                }
+              });
+              setDownloadUrls(downloadableUrls);
+            }
+            break;
+            
+          case "active":
+            setWsLoading(true);
+            break;
+
+          case "failed":
+          case "error":
+            console.error('Job error:', update.error || 'Unknown error');
+            setWsLoading(false);
+            setJobId(null);
+            message.error(update.error || "Error in document generation. Please try again.");
+            break;
+            
+          case "not_found":
+            console.error('Job not found');
+            setWsLoading(false);
+            setJobId(null);
+            message.error("Job not found. Please try again.");
+            break;
+            
+          case "stuck":
+            console.warn('Job is stuck:', update);
+            setWsLoading(false);
+            setJobId(null);
+            message.warning("Document generation is taking longer than expected. Please check back later.");
+            break;
+            
+          default:
+            console.log('Unknown job status:', socketStatus);
+        }
+      });
+  
+      // Error handling
+      webSocket.on('connect_error', (error: any) => {
+        console.error('Connection error:', error);
+        message.error("Connection error. Please check your network and try again.");
+      });
+  
+      // Cleanup on unmount
+      return () => {
+        if (webSocket) {
+          // Unsubscribe from job updates
+          webSocket.emit('unsubscribeFromGenerateDocPptJob');
+          
+          // Remove all listeners
+          webSocket.off('generateDocPptJobStatus');
+          webSocket.off('connect');
+          webSocket.off('disconnect');
+          webSocket.off('connect_error');
+          webSocket.offAny();
+          
+          // Remove state handlers
+          Object.entries(socketState).forEach((event: any) => {
+            webSocket.off(event, socketState[event]);
+          });
+          
+          // Disconnect if connected
+          if (webSocket.connected) {
+            webSocket.disconnect();
+          }
+        }
+      };
+    }
+  }, [generationData, jobId, socketUpdateStatus]); // Removed socketUpdateStatus from dependencies to prevent re-renders
 
   return (
     <div className="w-full font-custom">
@@ -648,13 +673,22 @@ export const ViewFinalPlanPODetails = ({
                         className="cursor-pointer flex items-center gap-2"
                         onClick={handleDownload}
                       >
-                        <i className="fi fi-sr-file-download text-[12px] text-[#129BFF] flex items-center"></i>
-                        <h1 className="text-[12px] text-[#129BFF]">Download</h1>
+                        <i className={`${wsLoading ? "fi fi-br-spinner animate-spin" : "fi fi-sr-file-download"} text-[12px] text-[#129BFF] flex items-center`}></i>
+                        <h1 className="text-[12px] text-[#129BFF]">{downloadUrls.length > 0 ? "Download" : wsLoading ? "Generating" : "Generate"} {socketUpdateStatus?.progress && socketUpdateStatus?.progress !== 100 && `${socketUpdateStatus?.progress}%`} </h1>
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-6 pt-4">
-                      <div className="flex items-center gap-2">
-                        <input
+                      <div className="flex items-center gap-2" onClick={() => {
+                        if (downloadUrls.length > 0 && downloadUrls[0].url) {
+                          window.open(downloadUrls[0].url, "_blank");
+                        }
+                      }}>
+                        <i className={`
+                          fi fi-sr-file-pdf flex items-center justify-center
+                          ${downloadUrls.length > 0 && downloadUrls[0].url ? "text-[#129BFF]" : "text-[#D7D7D7]" }
+                          ${wsLoading ? "animate-pulse" : ""}
+                        `}></i>
+                        {/* <input
                           title="summary"
                           type="checkbox"
                           checked={summaryChecked}
@@ -681,13 +715,22 @@ export const ViewFinalPlanPODetails = ({
                             }
                             setPdfDownload(pdfToDownload);
                           }}
-                        />
-                        <h1 className="text-[14px] truncate">
+                        /> */}
+                        <h1 className={`text-[14px] truncate ${downloadUrls.length > 0 ? "text-[#129BFF] underline underline-offset-4" : "" }`}>
                           Campaign Summary
                         </h1>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <input
+                      <div className="flex items-center gap-2" onClick={() => {
+                        if (downloadUrls.length > 0 && downloadUrls[1].url) {
+                          window.open(downloadUrls[1].url, "_blank");
+                        }
+                      }}>
+                        <i className={`
+                          fi fi-sr-ppt-file flex items-center justify-center 
+                          ${downloadUrls.length > 0 && downloadUrls[1].url ? "text-[#129BFF]" : "text-[#D7D7D7]"}
+                          ${wsLoading ? "animate-pulse" : ""}
+                        `}></i>
+                        {/* <input
                           title="screen-pictures"
                           type="checkbox"
                           checked={picturesChecked}
@@ -716,8 +759,8 @@ export const ViewFinalPlanPODetails = ({
 
                             setPdfDownload(pdfToDownload);
                           }}
-                        />
-                        <h1 className="text-[14px] truncate">Screen Picture</h1>
+                        /> */}
+                        <h1 className={`text-[14px] truncate ${downloadUrls.length > 0 ? "underline underline-offset-4 text-[#129BFF]" : "" }`}>Screen Picture</h1>
                       </div>
                     </div>
                   </div>

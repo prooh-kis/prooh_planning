@@ -1,5 +1,4 @@
 import Axios from "axios";
-import { Buffer } from 'buffer';
 
 export const getAWSUrlToUploadFile = async (contentType: String, fileName: string) => {
   try {
