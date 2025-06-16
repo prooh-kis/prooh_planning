@@ -38,6 +38,7 @@ import { isValidEmail } from "../../utils/valueValidate";
 import { calculateAspectRatio } from "../../utils/formatValue";
 import { io } from "socket.io-client";
 import { sensitiseUrlByEncoding } from "../../utils/fileUtils";
+import { SendEmailPopup } from "../../components/popup/SendEmailPopup";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -77,8 +78,8 @@ export const ViewFinalPlanPODetails = ({
     useState<any>(false);
 
   const [confirmationImageFiles, setConfirmationImageFiles] = useState<any>([]);
-  const [toEmail, setToEmail] = useState<any>("");
-  const [cc, setCC] = useState<any>(userInfo?.email);
+  const [toEmail, setToEmail] = useState<any>(campaignDetails?.campaignManagerEmail);
+  const [cc, setCC] = useState<any>([campaignDetails?.campaignPlannerEmail, "tech@prooh.ai"]);
   const [loadingEmailReady, setLoadingEmailReady] = useState<any>(false);
 
   const [pdfDownload, setPdfDownload] = useState<any>({});
@@ -111,6 +112,8 @@ export const ViewFinalPlanPODetails = ({
   const [wsLoading, setWsLoading] = useState<any>(false);
   const [socketUpdateStatus, setSocketUpdateStatus] = useState<any>(null);
   const [downloadUrls, setDownloadUrls] = useState<any>([]);
+  const [isShareModalOpen, setIsShareModalOpen] = useState<any>(false);
+
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -180,6 +183,8 @@ export const ViewFinalPlanPODetails = ({
   );
 
   const sendEmail = () => {
+    message.info("Make sure to send latest generated docs to your valued partner...");
+    setLoadingEmailReady(true);
     const formData = new FormData();
     formData.append("toEmail", toEmail);
     formData.append("cc", cc);
@@ -365,10 +370,9 @@ export const ViewFinalPlanPODetails = ({
       setJobId(null);
     }
   }, [couponRemoveSuccess, couponApplySuccess, dispatch, campaignId, poInput]);
-console.log(downloadUrls);
+
   useEffect(() => {
     if (userInfo) {
-      setCC(userInfo?.email);
       setLoadingEmailReady(loadingSendEmail);
       dispatch(getCouponList());
       const images = campaignDetails?.clientApprovalImgs;
@@ -405,8 +409,9 @@ console.log(downloadUrls);
     if (successSendEmail) {
       message.success("Email sent successfully!");
       setToEmail("");
-      setCC("");
+      setCC([]);
       setConfirmationImageFiles([]);
+      setLoadingEmailReady(false);
       dispatch({ type: SEND_EMAIL_FOR_CONFIRMATION_RESET });
     }
   }, [successSendEmail, dispatch]);
@@ -643,14 +648,25 @@ console.log(downloadUrls);
         }
       };
     }
-  }, [generationData, jobId, socketUpdateStatus]); // Removed socketUpdateStatus from dependencies to prevent re-renders
+  }, [dispatch, generationData, jobId, socketUpdateStatus]); // Removed socketUpdateStatus from dependencies to prevent re-renders
 
   return (
     <div className="w-full font-custom">
+      <SendEmailPopup
+        open={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        campaignDetails={campaignDetails}
+        setToEmail={setToEmail}
+        toEmail={toEmail}
+        setCC={setCC}
+        cc={cc}
+        sendEmail={sendEmail}
+        loadingEmailReady={loadingEmailReady}
+      />
       <div>
         <h1 className="text-2xl font-semibold">View Final Plan & Share</h1>
         <h1 className="text-sm text-gray-500">
-          Any specific route you want to cover in this campaign
+          View your final PO before creative upload and get budget approval
         </h1>
       </div>
       {loadingPOData ? (
@@ -677,7 +693,7 @@ console.log(downloadUrls);
                   <div className="p-4 border border-1 border-#C3C3C3 rounded-2xl">
                     <div className="flex justify-between items-center">
                       <h1 className="font-semibold text-lg">
-                        Download or share your campaign plan
+                        Download your campaign plan
                       </h1>
                       <div
                         className="cursor-pointer flex items-center gap-2"
@@ -779,9 +795,14 @@ console.log(downloadUrls);
               {!loadingScreenSummaryPlanTable &&
                 !errorScreenSummaryPlanTable && (
                   <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-2xl">
-                    <h1 className="font-semibold text-lg">Share this plan</h1>
+                    <div className="flex items-center gap-2" onClick={() => {
+                      setIsShareModalOpen(true);
+                    }}>
+                      <h1 className="font-semibold text-lg">Share this plan</h1>
+                      <i className="fi fi-ss-paper-plane flex items-center text-[#129BFF] text-[12px]"></i>
+                    </div>
                     <div className="grid grid-cols-6 gap-2 pt-4">
-                      <div className="col-span-3">
+                      <div className="col-span-4">
                         <PrimaryInput
                           placeholder="Enter Email"
                           value={toEmail}
@@ -790,17 +811,19 @@ console.log(downloadUrls);
                           rounded="rounded-[8px]"
                         />
                       </div>
-                      <div className="col-span-1">
+                      <div className="col-span-2">
                         <ButtonInput
                           variant="primary"
-                          size="large"
-                          loadingText="Sending...."
-                          // icon={<i className="fi fi-rs-paper-plane"></i>}
+                          className="h-[48px]"
+                          loadingText="Sending..."
+                          loading={loadingEmailReady}
+                          disabled={loadingEmailReady}
+                          icon={<i className="fi fi-sr-envelope flex items-center"></i>}
                           onClick={() => {
                             if (isValidEmail(toEmail)) {
                               sendEmail();
                               message.info(
-                                "Sending plan complete summary, please call your manager and take approval"
+                                "Sending complete plan summary, please call your manager and take approval"
                               );
                             } else message.error("Please Enter valid email");
                           }}
@@ -808,11 +831,12 @@ console.log(downloadUrls);
                           Send
                         </ButtonInput>
                       </div>
-                      <div className="col-span-2 flex items-center">
-                        <h1 className="text-[12px] text-[#6F7F8E]">
-                          Enter email and share your plan
-                        </h1>
-                      </div>
+                      
+                    </div>
+                    <div className="flex items-center p-1">
+                      <h1 className="text-[12px] text-[#6F7F8E]">
+                        Enter email and share your plan
+                      </h1>
                     </div>
                   </div>
                 )}

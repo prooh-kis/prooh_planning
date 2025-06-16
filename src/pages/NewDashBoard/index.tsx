@@ -148,9 +148,10 @@ export const NewDashBoard: React.FC = () => {
 
   if (hasError) {
     return (
-      <div className="h-[20vh] w-full border rounded-[12px] mt-10">
-        <p>
-          {errorCampaignDetails?.data?.message || errorDashboard?.data.message}
+      <div className="h-[20vh] w-full border rounded-[12px] p-4">
+        <p className="text-[14px]">
+          Stay tuned for the campaign dashboard...
+          {/* {errorCampaignDetails?.data?.message || errorDashboard?.data.message} */}
         </p>
       </div>
     );
