@@ -10,8 +10,7 @@ import {
   REMOVE_COUPON_REQUEST,
   REMOVE_COUPON_SUCCESS,
 } from "../constants/couponConstants";
-
-const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/coupon`;
+import { couponURL } from "../constants/urlConstant";
 
 export const getCouponList = () => async (dispatch, getState) => {
   dispatch({
@@ -19,7 +18,7 @@ export const getCouponList = () => async (dispatch, getState) => {
     payload: {},
   });
   try {
-    const { data } = await axios.post(`${url}/get`);
+    const { data } = await axios.post(`${couponURL}/get`);
     dispatch({
       type: GET_COUPON_LIST_SUCCESS,
       payload: data,
@@ -43,7 +42,7 @@ export const applyCouponForCampaign = (input) => async (dispatch, getState) => {
     payload: {},
   });
   try {
-    const { data } = await axios.post(`${url}/apply`, input);
+    const { data } = await axios.post(`${couponURL}/apply`, input);
     dispatch({
       type: APPLY_COUPON_SUCCESS,
       payload: data,
@@ -60,26 +59,29 @@ export const applyCouponForCampaign = (input) => async (dispatch, getState) => {
   }
 };
 
-
-export const removeCouponForCampaign = ({campaignCreationId}) => async (dispatch, getState) => {
-  dispatch({
-    type: REMOVE_COUPON_REQUEST,
-    payload: {campaignCreationId},
-  });
-  try {
-    const { data } = await axios.post(`${url}/remove`, {campaignCreationId});
+export const removeCouponForCampaign =
+  ({ campaignCreationId }) =>
+  async (dispatch, getState) => {
     dispatch({
-      type: REMOVE_COUPON_SUCCESS,
-      payload: data,
+      type: REMOVE_COUPON_REQUEST,
+      payload: { campaignCreationId },
     });
-  } catch (error) {
-    dispatch({
-      type: REMOVE_COUPON_FAIL,
-      payload: {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-      },
-    });
-  }
-};
+    try {
+      const { data } = await axios.post(`${couponURL}/remove`, {
+        campaignCreationId,
+      });
+      dispatch({
+        type: REMOVE_COUPON_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: REMOVE_COUPON_FAIL,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };

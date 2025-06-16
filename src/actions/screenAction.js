@@ -9,18 +9,12 @@ import {
   GET_AUDIENCES_DATA_ADVANCE_FILTER_ERROR,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_REQUEST,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS,
-  GET_CAMPAIGN_DASHBOARD_DATA_ERROR,
-  GET_CAMPAIGN_DASHBOARD_DATA_REQUEST,
-  GET_CAMPAIGN_DASHBOARD_DATA_SUCCESS,
   GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_ERROR,
   GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_REQUEST,
   GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_SUCCESS,
   GET_FINAL_PLAN_PO_DATA_ERROR,
   GET_FINAL_PLAN_PO_DATA_REQUEST,
   GET_FINAL_PLAN_PO_DATA_SUCCESS,
-  GET_LANDING_PAGE_DATA_ERROR,
-  GET_LANDING_PAGE_DATA_REQUEST,
-  GET_LANDING_PAGE_DATA_SUCCESS,
   GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
   GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
   GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
@@ -67,22 +61,60 @@ import {
   TABLE_DATA_SET_AD_PLAY_TIME_REQUEST,
   TABLE_DATA_SET_AD_PLAY_TIME_SUCCESS,
 } from "../constants/screenConstants";
+import {
+  GET_ALL_CATEGORY_LIST_ERROR,
+  GET_ALL_CATEGORY_LIST_REQUEST,
+  GET_ALL_CATEGORY_LIST_SUCCESS,
+  GET_CALENDER_LIST_DATA_ERROR,
+  GET_CALENDER_LIST_DATA_REQUEST,
+  GET_CALENDER_LIST_DATA_SUCCESS,
+} from "../constants/calenderConstant";
+import { planningRouterURL } from "../constants/urlConstant";
 
-const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/screens`;
-
-export const getLandingPageData = () => async (dispatch, getState) => {
+// tropical day planning
+export const getIndustryCategory = (input) => async (dispatch, getState) => {
   dispatch({
-    type: GET_LANDING_PAGE_DATA_REQUEST,
+    type: GET_ALL_CATEGORY_LIST_REQUEST,
+    payload: input,
   });
   try {
-    const { data } = await axios.get(`${url}/landingPageData`);
+    const { data } = await axios.post(
+      `${planningRouterURL}/getIndustryCategoryForSelectTopicalDayPage`,
+      input
+    );
     dispatch({
-      type: GET_LANDING_PAGE_DATA_SUCCESS,
+      type: GET_ALL_CATEGORY_LIST_SUCCESS,
       payload: data,
     });
   } catch (error) {
     dispatch({
-      type: GET_LANDING_PAGE_DATA_ERROR,
+      type: GET_ALL_CATEGORY_LIST_ERROR,
+      payload: {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    });
+  }
+};
+// tropical day planning
+export const getCalendarListData = (input) => async (dispatch, getState) => {
+  dispatch({
+    type: GET_CALENDER_LIST_DATA_REQUEST,
+    payload: input,
+  });
+  try {
+    const { data } = await axios.post(
+      `${planningRouterURL}/getCalendarDataForSelectTopicalDayPage`,
+      input
+    );
+    dispatch({
+      type: GET_CALENDER_LIST_DATA_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_CALENDER_LIST_DATA_ERROR,
       payload: {
         message: error.message,
         status: error.response?.status,
@@ -101,7 +133,7 @@ export const getScreensAudiencesData =
     });
 
     try {
-      const { data } = await axios.post(`${url}/audienceData`, {
+      const { data } = await axios.post(`${planningRouterURL}/audienceData`, {
         id,
         markets,
       });
@@ -130,13 +162,16 @@ export const getScreensCostData =
     });
 
     try {
-      const { data } = await axios.post(`${url}/tableAudienceTouchPointPage`, {
-        id,
-        cohorts,
-        gender,
-        touchPoints,
-        duration,
-      });
+      const { data } = await axios.post(
+        `${planningRouterURL}/tableAudienceTouchPointPage`,
+        {
+          id,
+          cohorts,
+          gender,
+          touchPoints,
+          duration,
+        }
+      );
       dispatch({
         type: GET_SCREENS_COST_DATA_SUCCESS,
         payload: data,
@@ -162,10 +197,13 @@ export const getScreenDataForAdvanceFilters =
     });
 
     try {
-      const { data } = await axios.post(`${url}/screenDataFilterPage`, {
-        id,
-        touchPoints,
-      });
+      const { data } = await axios.post(
+        `${planningRouterURL}/screenDataFilterPage`,
+        {
+          id,
+          touchPoints,
+        }
+      );
       dispatch({
         type: GET_SCREENS_DATA_ADVANCE_FILTER_SUCCESS,
         payload: data,
@@ -191,9 +229,12 @@ export const getPoiBasedAudienceDataForAdvanceFilters =
     });
 
     try {
-      const { data } = await axios.post(`${url}/poiBasedAudienceData`, {
-        id,
-      });
+      const { data } = await axios.post(
+        `${planningRouterURL}/poiBasedAudienceData`,
+        {
+          id,
+        }
+      );
       dispatch({
         type: GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS,
         payload: data,
@@ -219,13 +260,16 @@ export const getRegularVsCohortPriceData =
     });
 
     try {
-      const { data } = await axios.post(`${url}/tableDataComparePlanPage`, {
-        id,
-        screenIds,
-        cohorts,
-        gender,
-        duration,
-      });
+      const { data } = await axios.post(
+        `${planningRouterURL}/tableDataComparePlanPage`,
+        {
+          id,
+          screenIds,
+          cohorts,
+          gender,
+          duration,
+        }
+      );
       dispatch({
         type: GET_SCREENS_PRICE_FOR_REGULAR_COHORT_SUCCESS,
         payload: data,
@@ -250,10 +294,13 @@ export const getScreenSummaryData =
       payload: { id, type },
     });
     try {
-      const { data } = await axios.post(`${url}/screenDataScreenSummaryPage`, {
-        id,
-        type,
-      });
+      const { data } = await axios.post(
+        `${planningRouterURL}/screenDataScreenSummaryPage`,
+        {
+          id,
+          type,
+        }
+      );
       dispatch({
         type: GET_SCREEN_SUMMARY_DATA_SUCCESS,
         payload: data,
@@ -279,7 +326,7 @@ export const getScreenSummaryDataIKnowItAll =
     });
     try {
       const { data } = await axios.post(
-        `${url}/screenDataScreenSummaryPageIKnowItAll`,
+        `${planningRouterURL}/screenDataScreenSummaryPageIKnowItAll`,
         {
           id,
         }
@@ -308,10 +355,13 @@ export const getScreenSummaryPlanTableData =
       payload: { id, screenIds },
     });
     try {
-      const { data } = await axios.post(`${url}/tableDataScreenSummaryPage`, {
-        id,
-        screenIds,
-      });
+      const { data } = await axios.post(
+        `${planningRouterURL}/tableDataScreenSummaryPage`,
+        {
+          id,
+          screenIds,
+        }
+      );
       dispatch({
         type: GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_SUCCESS,
         payload: data,
@@ -336,7 +386,7 @@ export const getFinalPlanPOTableData =
     });
     try {
       const { data } = await axios.post(
-        `${url}/tableDataViewFinalPlanPage`,
+        `${planningRouterURL}/tableDataViewFinalPlanPage`,
         poInput
       );
       dispatch({
@@ -355,39 +405,6 @@ export const getFinalPlanPOTableData =
     }
   };
 
-export const getScreenDataUploadCreativeData =
-  ({ id }) =>
-  async (dispatch, getState) => {
-    dispatch({
-      type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_REQUEST,
-      payload: { id },
-    });
-    try {
-      // const { data } = await axios.post(`${url}/screenDataUploadCreativePage`, {
-      //   id,
-      // });
-      const { data } = await axios.post(
-        `${url}/screenDataUploadCreativePageNew`,
-        {
-          id,
-        }
-      );
-      dispatch({
-        type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_SUCCESS,
-        payload: data,
-      });
-    } catch (error) {
-      dispatch({
-        type: GET_SCREEN_DATA_CITY_WISE_FOR_UPLOAD_CREATIVES_ERROR,
-        payload: {
-          message: error.message,
-          status: error.response?.status,
-          data: error.response?.data,
-        },
-      });
-    }
-  };
-
 export const getVendorConfirmationDetails =
   (vendorInput) => async (dispatch, getState) => {
     dispatch({
@@ -396,7 +413,7 @@ export const getVendorConfirmationDetails =
     });
     try {
       const { data } = await axios.post(
-        `${url}/tableDataVendorCnfPage`,
+        `${planningRouterURL}/tableDataVendorCnfPage`,
         vendorInput
       );
       dispatch({
@@ -423,9 +440,12 @@ export const getVendorConfirmationStatusTableDetails =
       payload: { id },
     });
     try {
-      const { data } = await axios.post(`${url}/statusTableVendorCnfPage`, {
-        id,
-      });
+      const { data } = await axios.post(
+        `${planningRouterURL}/statusTableVendorCnfPage`,
+        {
+          id,
+        }
+      );
       dispatch({
         type: GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_SUCCESS,
         payload: data,
@@ -433,31 +453,6 @@ export const getVendorConfirmationStatusTableDetails =
     } catch (error) {
       dispatch({
         type: GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_ERROR,
-        payload: {
-          message: error.message,
-          status: error.response?.status,
-          data: error.response?.data,
-        },
-      });
-    }
-  };
-
-export const getCampaignDashboardData =
-  ({ id }) =>
-  async (dispatch, getState) => {
-    dispatch({
-      type: GET_CAMPAIGN_DASHBOARD_DATA_REQUEST,
-      payload: { id },
-    });
-    try {
-      const { data } = await axios.post(`${url}/campaignDashboard`, { id });
-      dispatch({
-        type: GET_CAMPAIGN_DASHBOARD_DATA_SUCCESS,
-        payload: data,
-      });
-    } catch (error) {
-      dispatch({
-        type: GET_CAMPAIGN_DASHBOARD_DATA_ERROR,
         payload: {
           message: error.message,
           status: error.response?.status,
@@ -475,7 +470,7 @@ export const getTableDataForSelectTopicalDayPage =
     });
     try {
       const { data } = await axios.post(
-        `${url}/tableDataForSelectTopicalDayPage`,
+        `${planningRouterURL}/tableDataForSelectTopicalDayPage`,
         input
       );
       dispatch({
@@ -502,10 +497,13 @@ export const getPlanningPageFooterData =
       payload: { id, pageName },
     });
     try {
-      const { data } = await axios.post(`${url}/planningPageFooter`, {
-        id,
-        pageName,
-      });
+      const { data } = await axios.post(
+        `${planningRouterURL}/planningPageFooter`,
+        {
+          id,
+          pageName,
+        }
+      );
       dispatch({
         type: PLANNING_PAGE_FOOTER_DATA_SUCCESS,
         payload: data,
@@ -531,7 +529,7 @@ export const getTableDataScreenWiseAdPlayTime =
     });
     try {
       const { data } = await axios.post(
-        `${url}/tableDataScreenWiseAdPLayTime`,
+        `${planningRouterURL}/tableDataScreenWiseAdPLayTime`,
         { id }
       );
       dispatch({
@@ -558,7 +556,7 @@ export const getTableDataForSelectTriggerPage =
     });
     try {
       const { data } = await axios.post(
-        `${url}/tableDataForSelectTriggerPage`,
+        `${planningRouterURL}/tableDataForSelectTriggerPage`,
         input
       );
       dispatch({
@@ -583,7 +581,10 @@ export const tableDataSetAdPlayTime = (input) => async (dispatch, getState) => {
     payload: input,
   });
   try {
-    const { data } = await axios.post(`${url}/tableDataSetAdPlayTime`, input);
+    const { data } = await axios.post(
+      `${planningRouterURL}/tableDataSetAdPlayTime`,
+      input
+    );
     dispatch({
       type: TABLE_DATA_SET_AD_PLAY_TIME_SUCCESS,
       payload: data,
@@ -612,7 +613,7 @@ export const getAllFiltersDetailsForUploadCreativePage =
       } = getState();
 
       const { data } = await axios.post(
-        `${url}/filterDataUploadCreativePage`,
+        `${planningRouterURL}/filterDataUploadCreativePage`,
         input,
         { headers: { authorization: `Bearer ${userInfo.token}` } }
       );
@@ -643,7 +644,7 @@ export const getScreenDataForUploadCreativePageV3 =
       } = getState();
 
       const { data } = await axios.post(
-        `${url}/screenDataUploadCreativePageV3`,
+        `${planningRouterURL}/screenDataUploadCreativePageV3`,
         input,
         { headers: { authorization: `Bearer ${userInfo.token}` } }
       );
@@ -674,7 +675,7 @@ export const getCreativesFromCreativeBucketForUploadPage =
       } = getState();
 
       const { data } = await axios.post(
-        `${url}/getCreativesFromCreativeBucketForUploadPage`,
+        `${planningRouterURL}/getCreativesFromCreativeBucketForUploadPage`,
         input,
         { headers: { authorization: `Bearer ${userInfo.token}` } }
       );
@@ -705,7 +706,7 @@ export const getAllPlannerIdsAndEmail =
       } = getState();
 
       const { data } = await axios.post(
-        `${url}/getAllPlannerIdsAndEmail`,
+        `${planningRouterURL}/getAllPlannerIdsAndEmail`,
         input,
         { headers: { authorization: `Bearer ${userInfo.token}` } }
       );
