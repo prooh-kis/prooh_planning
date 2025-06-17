@@ -29,7 +29,10 @@ import {
   APPLY_COUPON_RESET,
   REMOVE_COUPON_RESET,
 } from "../../constants/couponConstants";
-import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET, DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET } from "../../constants/campaignConstants";
+import {
+  ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
+  DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET,
+} from "../../constants/campaignConstants";
 import { ViewFinalPlanTable } from "../../components/tables/ViewFinalPlanTable";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import ButtonInput from "../../components/atoms/ButtonInput";
@@ -39,6 +42,9 @@ import { calculateAspectRatio } from "../../utils/formatValue";
 import { io } from "socket.io-client";
 import { sensitiseUrlByEncoding } from "../../utils/fileUtils";
 import { SendEmailPopup } from "../../components/popup/SendEmailPopup";
+import { format } from "date-fns";
+import { monitoringTypes } from "../../constants/helperConstants";
+import { ChoseMonitoringTypeFive } from "../../components/segments/ChoseMonitoringTypeFive";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -62,7 +68,6 @@ const socketUrl = "ws://localhost:4444";
 // const socketUrl= "wss://servermonad.vinciis.in";
 // const socketUrl= "wss://beta.vinciis.in";
 
-
 export const ViewFinalPlanPODetails = ({
   setCurrentStep,
   step,
@@ -80,13 +85,32 @@ export const ViewFinalPlanPODetails = ({
     useState<any>(false);
 
   const [confirmationImageFiles, setConfirmationImageFiles] = useState<any>([]);
-  const [toEmail, setToEmail] = useState<any>(campaignDetails?.campaignManagerEmail);
-  const [cc, setCC] = useState<any>([campaignDetails?.campaignPlannerEmail, "tech@prooh.ai"]);
+  const [toEmail, setToEmail] = useState<any>(
+    campaignDetails?.campaignManagerEmail
+  );
+  const [cc, setCC] = useState<any>([
+    campaignDetails?.campaignPlannerEmail,
+    "tech@prooh.ai",
+  ]);
   const [loadingEmailReady, setLoadingEmailReady] = useState<any>(false);
 
   const [pdfDownload, setPdfDownload] = useState<any>({});
   const [summaryChecked, setSummaryChecked] = useState<any>(true);
   const [picturesChecked, setPicturesChecked] = useState<any>(true);
+  const [initialData, setInitialData] = useState<InitialData>({
+    startDate: {
+      dates: [format(new Date(), "yyyy-MM-dd")],
+      monitoringType: monitoringTypes?.map((type: any) => type.value),
+    },
+    endDate: {
+      dates: [format(new Date(), "yyyy-MM-dd")],
+      monitoringType: monitoringTypes?.map((type: any) => type.value),
+    },
+    midDate: {
+      dates: [],
+      monitoringType: [],
+    },
+  });
 
   const [poInput, setPoInput] = useState<any>({
     pageName: "View Final Plan Page",
@@ -115,7 +139,6 @@ export const ViewFinalPlanPODetails = ({
   const [socketUpdateStatus, setSocketUpdateStatus] = useState<any>(null);
   const [downloadUrls, setDownloadUrls] = useState<any>([]);
   const [isShareModalOpen, setIsShareModalOpen] = useState<any>(false);
-
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -185,7 +208,9 @@ export const ViewFinalPlanPODetails = ({
   );
 
   const sendEmail = () => {
-    message.info("Make sure to send latest generated docs to your valued partner...");
+    message.info(
+      "Make sure to send latest generated docs to your valued partner..."
+    );
     setLoadingEmailReady(true);
     const formData = new FormData();
     formData.append("toEmail", toEmail);
@@ -274,7 +299,7 @@ export const ViewFinalPlanPODetails = ({
           pageName: "View Final Plan Page",
           id: campaignId,
           clientApprovalImgs: imageArr,
-          // monitoringSelection: initialData,
+          monitoringSelection: initialData,
         })
       );
     } else {
@@ -374,10 +399,26 @@ export const ViewFinalPlanPODetails = ({
   }, [couponRemoveSuccess, couponApplySuccess, dispatch, campaignId, poInput]);
 
   useEffect(() => {
-    if (userInfo) {
+    if (userInfo && campaignDetails) {
       setLoadingEmailReady(loadingSendEmail);
       dispatch(getCouponList());
       const images = campaignDetails?.clientApprovalImgs;
+      setInitialData(
+        campaignDetails?.monitoringSelection || {
+          startDate: {
+            dates: [format(new Date(campaignDetails?.startDate), "yyyy-MM-dd")],
+            monitoringType: monitoringTypes.map((type: any) => type.value),
+          },
+          endDate: {
+            dates: [format(new Date(campaignDetails?.endDate), "yyyy-MM-dd")],
+            monitoringType: monitoringTypes.map((type: any) => type.value),
+          },
+          midDate: {
+            dates: [],
+            monitoringType: [],
+          },
+        }
+      );
 
       setConfirmationImageFiles(
         images?.map((image: string) => {
@@ -490,7 +531,7 @@ export const ViewFinalPlanPODetails = ({
     setCurrentStep,
     confirmToProceed,
     dispatch,
-    generationData
+    generationData,
   ]);
 
   const skipFunction = () => {
@@ -510,7 +551,9 @@ export const ViewFinalPlanPODetails = ({
 
   const handleDownload = () => {
     if (downloadUrls.length > 0) {
-      message.info("Your download link is ready, please click on the document type below to download...")
+      message.info(
+        "Your download link is ready, please click on the document type below to download..."
+      );
     } else {
       setDownloadUrls([]);
       setWsLoading(true);
@@ -523,129 +566,138 @@ export const ViewFinalPlanPODetails = ({
         })
       );
     }
-    
   };
 
   useEffect(() => {
-
     if (generationData && jobId) {
       const webSocket = io(socketUrl, {
-        transports: ['websocket'],
+        transports: ["websocket"],
         secure: true,
         rejectUnauthorized: false,
         reconnection: true,
         reconnectionAttempts: 5,
         reconnectionDelay: 1000,
-        timeout: 10000
+        timeout: 10000,
       });
-  
+
       const socketState: any = {
         connecting: () => console.log("[Socket] connecting..."),
         connect: () => console.log("[Socket] connected..."),
-        connect_error: (error: any) => console.error("[Socket] connection error:", error),
-        disconnect: (reason: any) => console.log("[Socket] disconnected:", reason),
-        reconnect_attempt: (attempt: any) => console.log("[Socket] reconnecting, attempt:", attempt),
+        connect_error: (error: any) =>
+          console.error("[Socket] connection error:", error),
+        disconnect: (reason: any) =>
+          console.log("[Socket] disconnected:", reason),
+        reconnect_attempt: (attempt: any) =>
+          console.log("[Socket] reconnecting, attempt:", attempt),
         reconnect_failed: () => console.error("[Socket] reconnect failed..."),
       };
-  
+
       // Set up all socket state handlers
       Object.entries(socketState).forEach(([event, handler]: [string, any]) => {
         webSocket.on(event, handler);
       });
-  
+
       // Connection handler
-      webSocket.on('connect', () => {
-        webSocket.emit('subscribeToGenerateDocPptJob', generationData.docJob);
+      webSocket.on("connect", () => {
+        webSocket.emit("subscribeToGenerateDocPptJob", generationData.docJob);
       });
-  
+
       // Job status handler
-      webSocket.on('generateDocPptJobStatus', (update: any) => {
+      webSocket.on("generateDocPptJobStatus", (update: any) => {
         const socketStatus = (update.state || "").toLowerCase();
         // Always update the socket status
         setSocketUpdateStatus(update);
-        
+
         // Handle different job statuses
         switch (socketStatus) {
           case "completed":
             message.success("Document generation completed successfully!");
             setWsLoading(false);
             setJobId(null);
-            
+
             // Handle the result if available
             if (update.result) {
               // You can access the result data here
               const downloadableUrls = Object.keys(update.result).map((key) => {
                 return {
                   fileName: update.result[key].docType,
-                  url: update.result[key].url.split("/").includes("https:") ? sensitiseUrlByEncoding(update.result[key].url) : null
-                }
+                  url: update.result[key].url.split("/").includes("https:")
+                    ? sensitiseUrlByEncoding(update.result[key].url)
+                    : null,
+                };
               });
               setDownloadUrls(downloadableUrls);
             }
             dispatch({ type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET });
             break;
-            
+
           case "active":
             setWsLoading(true);
             break;
 
           case "failed":
           case "error":
-            console.error('Job error:', update.error || 'Unknown error');
+            console.error("Job error:", update.error || "Unknown error");
             setWsLoading(false);
             setJobId(null);
             setSocketUpdateStatus(null);
             dispatch({ type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET });
-            message.error(update.error || "Error in document generation. Please try again.");
+            message.error(
+              update.error || "Error in document generation. Please try again."
+            );
             break;
-            
+
           case "not_found":
-            console.error('Job not found');
+            console.error("Job not found");
             setWsLoading(false);
             setJobId(null);
             setSocketUpdateStatus(null);
             dispatch({ type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET });
             message.error("Job not found. Please try again.");
             break;
-            
+
           case "stuck":
-            console.warn('Job is stuck:', update);
+            console.warn("Job is stuck:", update);
             setWsLoading(false);
             setJobId(null);
             setSocketUpdateStatus(null);
             dispatch({ type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET });
-            message.warning("Document generation is taking longer than expected. Please check back later.");
+            message.warning(
+              "Document generation is taking longer than expected. Please check back later."
+            );
             break;
-            
+
           default:
-            console.log('Unknown job status:', socketStatus);
+            console.log("Unknown job status:", socketStatus);
         }
       });
-  
+
       // Error handling
-      webSocket.on('connect_error', (error: any) => {
-        console.error('Connection error:', error);
-        message.error("Connection error. Please check your network and try again.");
+      webSocket.on("connect_error", (error: any) => {
+        console.error("Connection error:", error);
+        message.error(
+          "Connection error. Please check your network and try again."
+        );
       });
-  
+
       // Cleanup on unmount
       return () => {
         if (webSocket) {
           // Unsubscribe from job updates
-          webSocket.emit('unsubscribeFromGenerateDocPptJob');
-          
+          webSocket.emit("unsubscribeFromGenerateDocPptJob");
+
           // Remove all listeners
-          webSocket.off('generateDocPptJobStatus');
-          webSocket.off('connect');
-          webSocket.off('disconnect');
-          webSocket.off('connect_error');
+          webSocket.off("generateDocPptJobStatus");
+          webSocket.off("connect");
+          webSocket.off("disconnect");
+          webSocket.off("connect_error");
           webSocket.offAny();
-          
+
           // Remove state handlers
           Object.entries(socketState).forEach((event: any) => {
             webSocket.off(event, socketState[event]);
           });
-          
+
           // Disconnect if connected
           if (webSocket.connected) {
             webSocket.disconnect();
@@ -654,7 +706,6 @@ export const ViewFinalPlanPODetails = ({
       };
     }
   }, [dispatch, generationData, jobId, socketUpdateStatus]); // Removed socketUpdateStatus from dependencies to prevent re-renders
-
 
   return (
     <div className="w-full font-custom">
@@ -705,21 +756,45 @@ export const ViewFinalPlanPODetails = ({
                         className="cursor-pointer flex items-center gap-2"
                         onClick={handleDownload}
                       >
-                        <i className={`${wsLoading ? "fi fi-br-spinner animate-spin" : "fi fi-sr-file-download"} text-[12px] text-[#129BFF] flex items-center`}></i>
-                        <h1 className="text-[12px] text-[#129BFF]">{socketUpdateStatus?.progress && socketUpdateStatus?.progress !== 100 && `${socketUpdateStatus?.progress}%`} {downloadUrls.length > 0 ? "Download" : wsLoading ? "Generating" : "Generate"}</h1>
+                        <i
+                          className={`${
+                            wsLoading
+                              ? "fi fi-br-spinner animate-spin"
+                              : "fi fi-sr-file-download"
+                          } text-[12px] text-[#129BFF] flex items-center`}
+                        ></i>
+                        <h1 className="text-[12px] text-[#129BFF]">
+                          {socketUpdateStatus?.progress &&
+                            socketUpdateStatus?.progress !== 100 &&
+                            `${socketUpdateStatus?.progress}%`}{" "}
+                          {downloadUrls.length > 0
+                            ? "Download"
+                            : wsLoading
+                            ? "Generating"
+                            : "Generate"}
+                        </h1>
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-6 pt-4">
-                      <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
-                        if (downloadUrls.length > 0 && downloadUrls[0].url) {
-                          window.open(downloadUrls[0].url, "_blank");
-                        }
-                      }}>
-                        <i className={`
+                      <div
+                        className="flex items-center gap-2 cursor-pointer"
+                        onClick={() => {
+                          if (downloadUrls.length > 0 && downloadUrls[0].url) {
+                            window.open(downloadUrls[0].url, "_blank");
+                          }
+                        }}
+                      >
+                        <i
+                          className={`
                           fi fi-sr-file-pdf flex items-center justify-center
-                          ${downloadUrls.length > 0 && downloadUrls[0].url ? "text-[#129BFF]" : "text-[#D7D7D7]" }
+                          ${
+                            downloadUrls.length > 0 && downloadUrls[0].url
+                              ? "text-[#129BFF]"
+                              : "text-[#D7D7D7]"
+                          }
                           ${wsLoading ? "animate-pulse" : ""}
-                        `}></i>
+                        `}
+                        ></i>
                         {/* <input
                           title="summary"
                           type="checkbox"
@@ -748,20 +823,35 @@ export const ViewFinalPlanPODetails = ({
                             setPdfDownload(pdfToDownload);
                           }}
                         /> */}
-                        <h1 className={`text-[14px] truncate ${downloadUrls.length > 0 ? "text-[#129BFF] underline underline-offset-4" : "" }`}>
+                        <h1
+                          className={`text-[14px] truncate ${
+                            downloadUrls.length > 0
+                              ? "text-[#129BFF] underline underline-offset-4"
+                              : ""
+                          }`}
+                        >
                           Campaign Summary
                         </h1>
                       </div>
-                      <div className="flex items-center gap-2 cursor-pointer" onClick={() => {
-                        if (downloadUrls.length > 0 && downloadUrls[1].url) {
-                          window.open(downloadUrls[1].url, "_blank");
-                        }
-                      }}>
-                        <i className={`
+                      <div
+                        className="flex items-center gap-2 cursor-pointer"
+                        onClick={() => {
+                          if (downloadUrls.length > 0 && downloadUrls[1].url) {
+                            window.open(downloadUrls[1].url, "_blank");
+                          }
+                        }}
+                      >
+                        <i
+                          className={`
                           fi fi-sr-ppt-file flex items-center justify-center 
-                          ${downloadUrls.length > 0 && downloadUrls[1].url ? "text-[#129BFF]" : "text-[#D7D7D7]"}
+                          ${
+                            downloadUrls.length > 0 && downloadUrls[1].url
+                              ? "text-[#129BFF]"
+                              : "text-[#D7D7D7]"
+                          }
                           ${wsLoading ? "animate-pulse" : ""}
-                        `}></i>
+                        `}
+                        ></i>
                         {/* <input
                           title="screen-pictures"
                           type="checkbox"
@@ -792,18 +882,39 @@ export const ViewFinalPlanPODetails = ({
                             setPdfDownload(pdfToDownload);
                           }}
                         /> */}
-                        <h1 className={`text-[14px] truncate ${downloadUrls.length > 0 ? "underline underline-offset-4 text-[#129BFF]" : "" }`}>Screen Picture</h1>
+                        <h1
+                          className={`text-[14px] truncate ${
+                            downloadUrls.length > 0
+                              ? "underline underline-offset-4 text-[#129BFF]"
+                              : ""
+                          }`}
+                        >
+                          Screen Picture
+                        </h1>
                       </div>
                     </div>
                   </div>
                 )}
 
+              <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-2xl">
+                <h1 className="font-semibold text-lg pb-4">
+                  Choose Monitoring Pics Type
+                </h1>
+                <ChoseMonitoringTypeFive
+                  initialData={initialData}
+                  setInitialData={setInitialData}
+                />
+              </div>
+
               {!loadingScreenSummaryPlanTable &&
                 !errorScreenSummaryPlanTable && (
                   <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-2xl">
-                    <div className="flex items-center gap-2" onClick={() => {
-                      setIsShareModalOpen(true);
-                    }}>
+                    <div
+                      className="flex items-center gap-2"
+                      onClick={() => {
+                        setIsShareModalOpen(true);
+                      }}
+                    >
                       <h1 className="font-semibold text-lg">Share this plan</h1>
                       <i className="fi fi-ss-paper-plane flex items-center text-[#129BFF] text-[12px]"></i>
                     </div>
@@ -824,7 +935,9 @@ export const ViewFinalPlanPODetails = ({
                           loadingText="Sending..."
                           loading={loadingEmailReady}
                           disabled={loadingEmailReady}
-                          icon={<i className="fi fi-sr-envelope flex items-center"></i>}
+                          icon={
+                            <i className="fi fi-sr-envelope flex items-center"></i>
+                          }
                           onClick={() => {
                             if (isValidEmail(toEmail)) {
                               sendEmail();
@@ -837,7 +950,6 @@ export const ViewFinalPlanPODetails = ({
                           Send
                         </ButtonInput>
                       </div>
-                      
                     </div>
                     <div className="flex items-center p-1">
                       <h1 className="text-[12px] text-[#6F7F8E]">
