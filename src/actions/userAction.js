@@ -136,6 +136,8 @@ export const signin = (email, password) => async (dispatch) => {
     type: USER_SIGNIN_REQUEST,
     payload: { email, password },
   });
+console.log(userV1);
+
   try {
     const { data } = await Axios.post(`${userV1}/signin`, {
       email,
