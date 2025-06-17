@@ -165,3 +165,23 @@ export const generateImageFromPdf = async (uploadedPO: any) => {
     return null;
   }
 }
+
+export const sensitiseUrlByEncoding = (url: string): string => {
+  try {
+    // Split the URL into parts before and after the first '/'
+    const [protocol, ...rest] = url.split('://');
+    if (!rest.length) return url; // Return original if no protocol found
+    
+    // Encode the path part of the URL
+    const [domain, ...pathParts] = rest.join('://').split('/');
+    const encodedPath = pathParts
+      .map(part => part.split('/').map(encodeURIComponent).join('/'))
+      .join('/');
+    
+    // Reconstruct the URL with encoded path
+    return `${protocol}://${domain}/${encodedPath}`.replace(/([^:]\/)\/+/g, '$1');
+  } catch (error) {
+    console.error('Error encoding URL:', error);
+    return url; // Return original if there's an error
+  }
+};
