@@ -58,9 +58,9 @@ interface InitialData {
   endDate: MonitoringTypeData;
 }
 
-// const socketUrl = "ws://localhost:4444";
+const socketUrl = "ws://localhost:4444";
 // const socketUrl= "wss://servermonad.vinciis.in";
-const socketUrl= "wss://beta.vinciis.in";
+// const socketUrl= "wss://beta.vinciis.in";
 
 
 export const ViewFinalPlanPODetails = ({
@@ -594,6 +594,7 @@ export const ViewFinalPlanPODetails = ({
             console.error('Job error:', update.error || 'Unknown error');
             setWsLoading(false);
             setJobId(null);
+            setSocketUpdateStatus(null);
             dispatch({ type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET });
             message.error(update.error || "Error in document generation. Please try again.");
             break;
@@ -602,6 +603,7 @@ export const ViewFinalPlanPODetails = ({
             console.error('Job not found');
             setWsLoading(false);
             setJobId(null);
+            setSocketUpdateStatus(null);
             dispatch({ type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET });
             message.error("Job not found. Please try again.");
             break;
@@ -610,6 +612,7 @@ export const ViewFinalPlanPODetails = ({
             console.warn('Job is stuck:', update);
             setWsLoading(false);
             setJobId(null);
+            setSocketUpdateStatus(null);
             dispatch({ type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET });
             message.warning("Document generation is taking longer than expected. Please check back later.");
             break;
@@ -651,6 +654,7 @@ export const ViewFinalPlanPODetails = ({
       };
     }
   }, [dispatch, generationData, jobId, socketUpdateStatus]); // Removed socketUpdateStatus from dependencies to prevent re-renders
+
 
   return (
     <div className="w-full font-custom">
@@ -702,7 +706,7 @@ export const ViewFinalPlanPODetails = ({
                         onClick={handleDownload}
                       >
                         <i className={`${wsLoading ? "fi fi-br-spinner animate-spin" : "fi fi-sr-file-download"} text-[12px] text-[#129BFF] flex items-center`}></i>
-                        <h1 className="text-[12px] text-[#129BFF]">{downloadUrls.length > 0 ? "Download" : wsLoading ? "Generating" : "Generate"} {socketUpdateStatus?.progress && socketUpdateStatus?.progress !== 100 && `${socketUpdateStatus?.progress}%`} </h1>
+                        <h1 className="text-[12px] text-[#129BFF]">{socketUpdateStatus?.progress && socketUpdateStatus?.progress !== 100 && `${socketUpdateStatus?.progress}%`} {downloadUrls.length > 0 ? "Download" : wsLoading ? "Generating" : "Generate"}</h1>
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-6 pt-4">
