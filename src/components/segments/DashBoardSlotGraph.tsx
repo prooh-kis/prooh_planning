@@ -228,7 +228,10 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
             return `${label}: ${value?.toFixed(0) || 0}`;
           },
           afterBody: (context: any) => {
-            const datasets = context[0].chart.data.datasets;
+            const datasets = context[0].chart.data.datasets?.filter(
+              (data: any) =>
+                ["Daily Delivery", "Adjustment Delivery"].includes(data.label)
+            );
             const dataIndex = context[0].dataIndex;
             let total = 0;
 

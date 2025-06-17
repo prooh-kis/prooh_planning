@@ -22,8 +22,6 @@ export const EditStepperSlider = ({
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
 
-  console.log("StepperSlider : ", pathname);
-
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
 

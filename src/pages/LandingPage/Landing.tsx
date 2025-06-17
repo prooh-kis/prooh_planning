@@ -1,4 +1,4 @@
-import { cmsURL, dmpURL, planningURL } from "../../constants/urlConstant";
+import { cmsURL, dmpURL, planningRouterURL } from "../../constants/urlConstant";
 import { Fly, Layer, Planner } from "../../assets";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import React from "react";
@@ -136,7 +136,7 @@ export const Landing: React.FC<any> = ({}) => {
               // icon={<i className="fi fi-sr-megaphone flex items-center" />}
               rounded="small"
               fullWidth={true}
-              onClick={() => window.open(planningURL)}
+              onClick={() => window.open(planningRouterURL)}
             >
               Request Demo
             </ButtonInput>

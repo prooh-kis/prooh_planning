@@ -33,7 +33,6 @@ const ScreenListForCampaignDetails = ({
   currentTab,
   setCurrentTab,
 }: any) => {
-  console.log("currentTab : ", currentTab);
   const renderCreatives = () => {
     return (
       <div className="grid grid-cols-2 gap-4">
@@ -58,7 +57,7 @@ const ScreenListForCampaignDetails = ({
 
   return (
     <div className="grid grid-cols-12 gap-1 mt-1">
-      <div className="col-span-8 w-full h-auto border border-[#D3D3D350] rounded-md p-4 bg-white">
+      <div className="col-span-7 w-full h-auto border border-[#D3D3D350] rounded-md p-4 bg-white">
         <div className="flex justify-between">
           <h1 className="text-[16px] font-semibold">
             Screens Play{" "}
@@ -152,7 +151,7 @@ const ScreenListForCampaignDetails = ({
 
       {/* Creative Display */}
       {currentScreen && (
-        <div className="col-span-4 w-full h-auto border border-[#D3D3D350] rounded-md p-4 bg-white">
+        <div className="col-span-5 w-full h-auto border border-[#D3D3D350] rounded-md p-4 bg-white">
           <div className="col-span-7 truncate flex flex-col gap-1">
             <h1 className="text-[16px] text-[#294558] font-bold truncate">
               {currentScreen?.screenName}

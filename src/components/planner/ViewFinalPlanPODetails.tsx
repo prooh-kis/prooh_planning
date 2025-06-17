@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Divider, message } from "antd";
+import { message } from "antd";
 import { Footer } from "../../components/footer";
 import { EmailConfirmationImage } from "../../components/segments/EmailConfirmationImage";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,20 +10,16 @@ import {
   getScreenSummaryPlanTableData,
 } from "../../actions/screenAction";
 import { useLocation } from "react-router-dom";
-import { addDetailsToCreateCampaign, downloadCampaignSummaryPPTAction } from "../../actions/campaignAction";
 import {
-  getAWSUrlToUploadFile,
-  getDocUrlToSaveOnAWS,
-  sanitizeUrlForS3,
-  saveFileOnAWS,
-} from "../../utils/awsUtils";
-import { generateCampaignSummaryPdfFromJSON } from "../../utils/generatePdf";
+  addDetailsToCreateCampaign,
+  downloadCampaignSummaryPPTAction,
+} from "../../actions/campaignAction";
+import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { sendEmailForConfirmation } from "../../actions/userAction";
 import {
   CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
   SEND_EMAIL_FOR_CONFIRMATION_RESET,
 } from "../../constants/userConstants";
-import { generatePPT } from "../../utils/generatePPT";
 import {
   applyCouponForCampaign,
   getCouponList,
@@ -37,11 +33,8 @@ import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignCo
 import { ViewFinalPlanTable } from "../../components/tables/ViewFinalPlanTable";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import ButtonInput from "../../components/atoms/ButtonInput";
-import { format } from "date-fns";
 import { PrimaryInput } from "../../components/atoms/PrimaryInput";
 import { isValidEmail } from "../../utils/valueValidate";
-import { ChoseMonitoringTypeFive } from "../../components/segments/ChoseMonitoringTypeFive";
-import { monitoringTypes } from "../../constants/helperConstants";
 import { calculateAspectRatio } from "../../utils/formatValue";
 
 interface ViewFinalPlanPODetailsProps {
@@ -165,30 +158,9 @@ export const ViewFinalPlanPODetails = ({
     data: screenSummaryPlanTableData,
   } = screenSummaryPlanTableDataGet;
 
-  const {
-    loading: loadingDownloadDocs,
-    error: errorDownloadDocs,
-    data: downloadDocsData,
-  } = useSelector((state: any) => state.downloadCampaignSummaryPPT);
-
   const [currentCoupon, setCurrentCoupon] = useState<string>(
     poTableData?.couponId || ""
   );
-
-  const [initialData, setInitialData] = useState<InitialData>({
-    startDate: {
-      dates: [format(new Date(), "yyyy-MM-dd")],
-      monitoringType: monitoringTypes?.map((type: any) => type.value),
-    },
-    endDate: {
-      dates: [format(new Date(), "yyyy-MM-dd")],
-      monitoringType: monitoringTypes?.map((type: any) => type.value),
-    },
-    midDate: {
-      dates: [],
-      monitoringType: [],
-    },
-  });
 
   const sendEmail = () => {
     const formData = new FormData();
@@ -382,7 +354,7 @@ export const ViewFinalPlanPODetails = ({
           pageName: "View Final Plan Page",
           id: campaignId,
           clientApprovalImgs: imageArr,
-          monitoringSelection: initialData,
+          // monitoringSelection: initialData,
         })
       );
     } else {
@@ -402,7 +374,8 @@ export const ViewFinalPlanPODetails = ({
         result[city][screenResolution] = {};
         result[city][screenResolution].count = 0;
       }
-      result[city][screenResolution].ratio = calculateAspectRatio(screenResolution);
+      result[city][screenResolution].ratio =
+        calculateAspectRatio(screenResolution);
       result[city][screenResolution].resolution = screenResolution;
       result[city][screenResolution].count++;
     });
@@ -555,23 +528,8 @@ export const ViewFinalPlanPODetails = ({
       }
     }
     if (poTableData) {
-      setInitialData({
-        startDate: {
-          dates: [format(new Date(poTableData?.startDate), "yyyy-MM-dd")],
-          monitoringType: monitoringTypes.map((type: any) => type.value),
-        },
-        endDate: {
-          dates: [format(new Date(poTableData?.endDate), "yyyy-MM-dd")],
-          monitoringType: monitoringTypes.map((type: any) => type.value),
-        },
-        midDate: {
-          dates: [],
-          monitoringType: [],
-        },
-      });
-
       setPdfDownload({
-        "summary": {
+        summary: {
           data: {
             approach: [campaignDetails],
             costSummary: [screenSummaryPlanTableData],
@@ -620,12 +578,14 @@ export const ViewFinalPlanPODetails = ({
   };
 
   const handleDownload = () => {
-    dispatch(downloadCampaignSummaryPPTAction({
-      id: campaignId,
-      pdf: summaryChecked,
-      ppt: picturesChecked,
-      jsonData: pdfDownload
-    }));
+    dispatch(
+      downloadCampaignSummaryPPTAction({
+        id: campaignId,
+        pdf: summaryChecked,
+        ppt: picturesChecked,
+        jsonData: pdfDownload,
+      })
+    );
     // Object.keys(pdfDownload)?.map(async (pdf: any) => {
     //   if (pdf === "summary") {
     //     generateCampaignSummaryPdfFromJSON({
@@ -649,7 +609,6 @@ export const ViewFinalPlanPODetails = ({
     //   }
     // });
   };
-
 
   return (
     <div className="w-full font-custom">
@@ -764,15 +723,6 @@ export const ViewFinalPlanPODetails = ({
                   </div>
                 )}
 
-              <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-2xl">
-                <h1 className="font-semibold text-lg pb-4">
-                  Choose Monitoring Pics Type
-                </h1>
-                <ChoseMonitoringTypeFive
-                  initialData={initialData}
-                  setInitialData={setInitialData}
-                />
-              </div>
               {!loadingScreenSummaryPlanTable &&
                 !errorScreenSummaryPlanTable && (
                   <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-2xl">

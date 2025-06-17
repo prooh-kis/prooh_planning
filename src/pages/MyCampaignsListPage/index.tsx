@@ -24,23 +24,23 @@ import {
 import { CampaignsListModel } from "../../components/molecules/CampaignsListModel";
 import { GET_CAMPAIGN_DASHBOARD_DATA_RESET } from "../../constants/screenConstants";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
-import { notification } from "antd";
+import { notification, Tooltip } from "antd";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-import {
-  SearchableSelect,
-  SearchableSelectV2,
-} from "../../components/atoms/SearchableSelect";
+import { Input } from "../../components/atoms/Input";
 
 export const MyCampaignsListPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const targetDivRef = useRef<HTMLDivElement>(null);
 
+  const wrapperRef = useRef<any>(null);
   const [currentTab, setCurrentTab] = useState<any>("1");
   const [searchQuery, setSearchQuery] = useState<any>("");
   const [selectedCard, setSelectedCard] = useState<any>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [plannerId, setPlannerId] = useState<any>("");
+  const [showPlannerList, setShowPlannerList] = useState<boolean>(false);
+  const [plannerSearch, setPlannerSearch] = useState<string>("");
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
@@ -100,7 +100,8 @@ export const MyCampaignsListPage: React.FC = () => {
   );
 
   const reset = () => {
-    setPlannerId(""); // Reset plannerId when reloading
+    setPlannerId("");
+    setShowPlannerList(false);
     dispatch(
       getAllCampaignsDetailsAction({
         plannerId: [],
@@ -130,8 +131,16 @@ export const MyCampaignsListPage: React.FC = () => {
     );
   };
 
-  const handleCreate = (value: any) => {
-    console.log("value :", value);
+  const handlePlannerSelect = (id: string) => {
+    setPlannerId(id);
+    setShowPlannerList(false);
+    setPlannerSearch("");
+  };
+
+  const clearPlannerFilter = () => {
+    setPlannerId("");
+    setShowPlannerList(false);
+    setPlannerSearch("");
   };
 
   useEffect(() => {
@@ -164,10 +173,28 @@ export const MyCampaignsListPage: React.FC = () => {
     }
   }, [currentTab, handleGetCampaignByStatus]);
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        clearPlannerFilter();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const filteredCampaigns = allCampaigns?.result?.filter(
     (campaign: any) =>
       campaign?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       campaign?.brandName?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredPlanners = allCampaigns?.plannerData?.filter((planner: any) =>
+    planner.name.toLowerCase().includes(plannerSearch.toLowerCase())
   );
 
   return (
@@ -184,12 +211,52 @@ export const MyCampaignsListPage: React.FC = () => {
             </h1>
             <ReloadButton onClick={reset} />
           </div>
-          <div className="flex items-center mt-1 w-96">
+          <div className="flex items-center gap-4 mt-1 w-96">
             <SearchInputField
               value={searchQuery}
               onChange={setSearchQuery}
               placeholder="Search Campaign by campaign name or brand"
             />
+            <div className="relative">
+              <Tooltip title="Filer Campaign By Planner Name">
+                <i
+                  className={`flex items-center  text-gray-700 fi ${
+                    plannerId ? "fi-sr-filter " : "fi-tr-filter "
+                  }`}
+                  onClick={() => setShowPlannerList(!showPlannerList)}
+                ></i>
+              </Tooltip>
+              {showPlannerList && (
+                <div
+                  ref={wrapperRef}
+                  className="absolute top-10 right-0 z-10 bg-white shadow-lg rounded-md p-2 w-64"
+                >
+                  <Input
+                    value={plannerSearch}
+                    onChange={(e) => setPlannerSearch(e.target.value)}
+                    placeholder="Search planners..."
+                    className="mb-2"
+                  />
+                  <div className="max-h-60 overflow-y-auto">
+                    {filteredPlanners?.length > 0 ? (
+                      filteredPlanners.map((planner: any) => (
+                        <div
+                          key={planner._id}
+                          className={`p-2 hover:bg-gray-100 cursor-pointer ${
+                            plannerId === planner._id ? "bg-blue-50" : ""
+                          }`}
+                          onClick={() => handlePlannerSelect(planner._id)}
+                        >
+                          <span className="truncate block">{planner.name}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-2 text-gray-500">No planners found</div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -199,22 +266,6 @@ export const MyCampaignsListPage: React.FC = () => {
             setCurrentTab={handleGetCampaignByStatus}
             tabData={campaignCreationTypeTabs}
           />
-          <div>
-            <SearchableSelectV2
-              options={allCampaigns?.plannerData?.map((data: any) => {
-                return {
-                  label: data.name,
-                  value: data._id,
-                };
-              })}
-              value={plannerId}
-              onChange={(value) => setPlannerId(value)}
-              placeholder="Filter by planner"
-              showSearch
-              allowClear
-              className="w-96 pb-1"
-            />
-          </div>
         </div>
       </div>
       <div className="mt-2">
