@@ -38,13 +38,12 @@ interface Props {
   campaignDetails?: any;
 }
 
-
 export const AdsPlayTimeTable = ({
   currentTab,
   data,
   setData,
   totals,
-  campaignDetails
+  campaignDetails,
 }: Props) => {
   const getUpto2Decimal = (value: any) => {
     return `${Number(value)?.toFixed(2)}%`;
@@ -134,22 +133,26 @@ export const AdsPlayTimeTable = ({
           <div
             className="cursor-pointer"
             onClick={() => {
-              const allMorningIncluded = data?.flatMap((d) => 
-                d.screenData?.flatMap((d1) => 
-                  d1.dayWiseData[currentTab]?.morning?.included
+              const allMorningIncluded = data
+                ?.flatMap((d) =>
+                  d.screenData?.flatMap(
+                    (d1) => d1.dayWiseData[currentTab]?.morning?.included
+                  )
                 )
-              ).every((da) => da === true);
-              
+                .every((da) => da === true);
+
               handleSelectTimeZone("morning", allMorningIncluded);
             }}
           >
             <i
               className={`fi ${
-                data?.flatMap(d => 
-                  d.screenData?.flatMap(d1 => 
-                    d1.dayWiseData[currentTab]?.morning?.included
+                data
+                  ?.flatMap((d) =>
+                    d.screenData?.flatMap(
+                      (d1) => d1.dayWiseData[currentTab]?.morning?.included
+                    )
                   )
-                ).every(included => included === true)
+                  .every((included) => included === true)
                   ? "fi-br-check text-[#358E0B]"
                   : "fi-br-cross text-[#FF0808]"
               } flex items-center text-[12px]`}
@@ -163,22 +166,26 @@ export const AdsPlayTimeTable = ({
           <div
             className="cursor-pointer"
             onClick={() => {
-              const allAfternoonIncluded = data?.flatMap((d) => 
-                d.screenData?.flatMap((d1) => 
-                  d1.dayWiseData[currentTab]?.afternoon?.included
+              const allAfternoonIncluded = data
+                ?.flatMap((d) =>
+                  d.screenData?.flatMap(
+                    (d1) => d1.dayWiseData[currentTab]?.afternoon?.included
+                  )
                 )
-              ).every((da) => da === true);
-              
+                .every((da) => da === true);
+
               handleSelectTimeZone("afternoon", allAfternoonIncluded);
-            }}            
+            }}
           >
             <i
               className={`fi ${
-                data?.flatMap(d => 
-                  d.screenData?.flatMap(d1 => 
-                    d1.dayWiseData[currentTab]?.afternoon?.included
+                data
+                  ?.flatMap((d) =>
+                    d.screenData?.flatMap(
+                      (d1) => d1.dayWiseData[currentTab]?.afternoon?.included
+                    )
                   )
-                ).every(included => included === true)
+                  .every((included) => included === true)
                   ? "fi-br-check text-[#358E0B]"
                   : "fi-br-cross text-[#FF0808]"
               } flex items-center text-[12px]`}
@@ -192,27 +199,30 @@ export const AdsPlayTimeTable = ({
           <div
             className="cursor-pointer"
             onClick={() => {
-              const allEveningIncluded = data?.flatMap((d) => 
-                d.screenData?.flatMap((d1) => 
-                  d1.dayWiseData[currentTab]?.evening?.included
+              const allEveningIncluded = data
+                ?.flatMap((d) =>
+                  d.screenData?.flatMap(
+                    (d1) => d1.dayWiseData[currentTab]?.evening?.included
+                  )
                 )
-              ).every((da) => da === true);
-              
+                .every((da) => da === true);
+
               handleSelectTimeZone("evening", allEveningIncluded);
             }}
           >
             <i
               className={`fi ${
-                data?.flatMap(d => 
-                  d.screenData?.flatMap(d1 => 
-                    d1.dayWiseData[currentTab]?.evening?.included
+                data
+                  ?.flatMap((d) =>
+                    d.screenData?.flatMap(
+                      (d1) => d1.dayWiseData[currentTab]?.evening?.included
+                    )
                   )
-                ).every(included => included === true)
+                  .every((included) => included === true)
                   ? "fi-br-check text-[#358E0B]"
                   : "fi-br-cross text-[#FF0808]"
               } flex items-center text-[12px]`}
             ></i>
-
           </div>
         </div>
         <div className="w-full flex items-center justify-center gap-4 col-span-2">
@@ -222,23 +232,26 @@ export const AdsPlayTimeTable = ({
           <div
             className="cursor-pointer"
             onClick={() => {
-              const allNightIncluded = data?.flatMap((d) => 
-                d.screenData?.flatMap((d1) => 
-                  d1.dayWiseData[currentTab]?.night?.included
+              const allNightIncluded = data
+                ?.flatMap((d) =>
+                  d.screenData?.flatMap(
+                    (d1) => d1.dayWiseData[currentTab]?.night?.included
+                  )
                 )
-              ).every((da) => da === true);
-              
+                .every((da) => da === true);
+
               handleSelectTimeZone("night", allNightIncluded);
             }}
-            
           >
             <i
               className={`fi ${
-                data?.flatMap(d => 
-                  d.screenData?.flatMap(d1 => 
-                    d1.dayWiseData[currentTab]?.night?.included
+                data
+                  ?.flatMap((d) =>
+                    d.screenData?.flatMap(
+                      (d1) => d1.dayWiseData[currentTab]?.night?.included
+                    )
                   )
-                ).every(included => included === true)
+                  .every((included) => included === true)
                   ? "fi-br-check text-[#358E0B]"
                   : "fi-br-cross text-[#FF0808]"
               } flex items-center text-[12px]`}
@@ -247,7 +260,9 @@ export const AdsPlayTimeTable = ({
         </div>
       </div>
       <div
-        className={`overflow-y-auto h-[${countKeys(data) > 10 ? "35vh" : ""}]`}
+        className={`overflow-y-auto scrollbar-minimal h-[${
+          countKeys(data) > 10 ? "35vh" : ""
+        }]`}
       >
         {/* d= {screenData : [], touchPoint }*/}
         {data?.map((d: ResultData, i: number) => (
@@ -301,7 +316,12 @@ export const AdsPlayTimeTable = ({
                       <div
                         className="cursor-pointer"
                         onClick={() => {
-                          handleSelectTime(i,"afternoon",d1?.dayWiseData[currentTab]?.afternoon?.included,j);
+                          handleSelectTime(
+                            i,
+                            "afternoon",
+                            d1?.dayWiseData[currentTab]?.afternoon?.included,
+                            j
+                          );
                         }}
                       >
                         <i

@@ -437,7 +437,7 @@ export const EnterCampaignBasicDetails = ({
   };
 
   return (
-    <div className="w-full h-[76vh] overflow-y-auto px-1">
+    <div className="w-full h-[76vh] overflow-y-auto  scrollbar-minimal px-1">
       <div className="pt-8">
         <h1 className="text-[24px] text-primaryText font-semibold">
           Add Basic Details

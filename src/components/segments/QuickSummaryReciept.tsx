@@ -16,7 +16,7 @@ export const QuickSummaryReciept = ({
           Your final bill will include the cost of all the additional slots
         </p>
       </div>
-      <div className="px-4 flex flex-col gap-4 mt-4 h-[38vh] overflow-y-auto">
+      <div className="px-4 flex flex-col gap-4 mt-4 h-[38vh] overflow-y-auto scrollbar-minimal">
         {Object.keys(tableDataForSelectTrigger || {})?.map(
           (key: string, index: any) => (
             <div key={index} className="pr-4">

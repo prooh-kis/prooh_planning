@@ -361,11 +361,10 @@ export const TriggerDetails = ({
             pathname?.split("/")?.includes("triggerbasedplan")
               ? "col-span-6"
               : "col-span-8"
-          } border rounded p-4 h-[60vh] overflow-y-auto`}
+          } border rounded p-4 h-[60vh] overflow-y-auto scrollbar-minimal `}
         >
           {currentStep1 === 1 ? (
             <div className="">
-              {currentStep1}
               <div className="flex gap-2 justify-between">
                 <div className="flex items-center gap-4">
                   <div className="rounded-full bg-[#F5F9FF] p-3 w-16 h-16 flex items-center justify-center">

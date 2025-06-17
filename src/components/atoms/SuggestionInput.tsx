@@ -76,18 +76,17 @@ export const SuggestionInput: React.FC<SuggestionInputProps> = ({
         className="w-full h-12 px-4 py-2 border rounded-[8px] focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-gray-100 active:bg-[#F4F9FF]"
       />
       {showSuggestions && filteredSuggestions?.length > 0 && (
-        <ul className="absolute top-full left-0 right-0 bg-white border border-gray-300  shadow-md mt-1 max-h-36 overflow-y-auto z-50">
+        <ul className="absolute top-full left-0 right-0 bg-white border border-gray-300  shadow-md mt-1 max-h-36 overflow-y-auto scrollbar-minimal  z-50">
           {filteredSuggestions?.map((suggestion, index) => (
             <li
               key={index}
               onMouseDown={(e) => e.preventDefault()} // Prevent blur when clicking
               onClick={() => handleSuggestionClick(suggestion)}
-              className={
-                  `px-4 py-2 cursor-pointer border-b last:border-b-0 ${
-                  index === highlightedIndex ? "bg-[#129BFF10]" : "hover:bg-[#129BFF10]"
-                }`
-              }
-              
+              className={`px-4 py-2 cursor-pointer border-b last:border-b-0 ${
+                index === highlightedIndex
+                  ? "bg-[#129BFF10]"
+                  : "hover:bg-[#129BFF10]"
+              }`}
             >
               {suggestion}
             </li>

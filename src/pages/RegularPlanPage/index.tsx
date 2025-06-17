@@ -106,7 +106,7 @@ export const RegularPlanPage: React.FC = () => {
           steps={steps}
         />
       </div>
-      <div className="flex-1 w-full overflow-y-auto px-4 py-4">
+      <div className="flex-1 w-full overflow-y-auto  scrollbar-minimal px-4 py-4">
         {loadingCampaignDetails ? (
           <LoadingScreen />
         ) : (

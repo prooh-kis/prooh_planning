@@ -316,7 +316,14 @@ export const CampaignDashboard = ({
           <div
             className="px-4 border border-gray-300 rounded-lg flex justify-center gap-2 items-center h-[38px] cursor-pointer"
             onClick={() => {
-              if (!billInvoiceDetailsData?.dashboardScreenshots || billInvoiceDetailsData?.dashboardScreenshots && billInvoiceDetailsData?.dashboardScreenshots?.length < 5 && !billInvoiceDetailsData?.dashboardScreenshots?.find((s: any) => !s.url.includes("https:"))) {
+              if (
+                !billInvoiceDetailsData?.dashboardScreenshots ||
+                (billInvoiceDetailsData?.dashboardScreenshots &&
+                  billInvoiceDetailsData?.dashboardScreenshots?.length < 5 &&
+                  !billInvoiceDetailsData?.dashboardScreenshots?.find(
+                    (s: any) => !s.url.includes("https:")
+                  ))
+              ) {
                 takeScreenShot({});
               }
               setOpenInvoice(true);
@@ -330,7 +337,7 @@ export const CampaignDashboard = ({
       <div className="absolute top-20 left-2 z-50 w-[300px]">
         {showMenu && <DashBoardMenu campaignDetails={campaignDetails} />}
       </div>
-      <div className="px-10 bg-[#F2F4F7] h-[78vh] overflow-y-auto pr-4">
+      <div className="px-10 bg-[#F2F4F7] h-[78vh] overflow-y-auto scrollbar-minimal pr-4">
         {/* campaign dashboard grid view */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
           {gridItems.map((item) => (
