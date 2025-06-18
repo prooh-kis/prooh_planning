@@ -34,7 +34,12 @@ const calculateDuration = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
 };
 
 const calculateEndDate = (start: dayjs.Dayjs, duration: number) => {
-  return start.add(duration - 1, "day"); // -1 because duration includes start date
+  return start
+    .add(duration - 1, "day") // -1 because duration includes start date
+    .hour(23)
+    .minute(59)
+    .second(0)
+    .millisecond(0);
 };
 
 const { Option } = Select;
@@ -278,6 +283,19 @@ export const EnterCampaignBasicDetails = ({
     }
   }, [campaignDetails, form]);
 
+  const formItemStyles = `
+  .compact-form .ant-form-item-label {
+    padding-bottom: 2px;
+    line-height: 1.2;
+  }
+  .compact-form .ant-form-item {
+    margin-bottom: 12px;
+  }
+  .compact-form .ant-form-item-label > label {
+    font-size: 13px;
+  }
+`;
+
   return (
     <div className="w-full">
       <div className="pt-8 px-1">
@@ -288,6 +306,7 @@ export const EnterCampaignBasicDetails = ({
           Enter your basic details for the campaigns to proceed further
         </p>
       </div>
+      <style>{formItemStyles}</style>
 
       <Form
         form={form}
@@ -299,393 +318,352 @@ export const EnterCampaignBasicDetails = ({
           sov: 1,
         }}
       >
-        <div className="h-[60vh] overflow-y-auto scrollbar-minimal px-1">
-          <div className="grid grid-cols-3 gap-8 mt-4">
-            <div className="col-span-1 ">
-              {/* Campaign Name */}
-              <Form.Item
-                name="campaignName"
-                label={
-                  <div className="flex items-center gap-2">
-                    <span>Campaign Name</span>
-                    <Tooltip title="Enter a unique name for your campaign">
-                      <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                    </Tooltip>
-                  </div>
-                }
-                rules={[
-                  { required: true, message: "Please enter campaign name" },
-                ]}
-              >
-                <Input placeholder="Campaign Name" size="large" />
-              </Form.Item>
-            </div>
-            <div className="col-span-1 ">
-              {/* Brand Name */}
-              <Form.Item
-                name="brandName"
-                label={
-                  <div className="flex items-center gap-2">
-                    <span>Brand Name</span>
-                    <Tooltip title="Enter campaign's brand name">
-                      <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                    </Tooltip>
-                  </div>
-                }
-                rules={[{ required: true, message: "Please enter brand name" }]}
-              >
-                <SuggestionInput
-                  suggestions={getDataFromLocalStorage(ALL_BRAND_LIST)}
-                  placeholder="Brand Name"
-                  onChange={(value) =>
-                    form.setFieldsValue({ brandName: value })
-                  }
-                  value={form.getFieldValue("brandName") || ""}
-                />
-              </Form.Item>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-8">
-            <div className="col-span-1 ">
-              {/* Client/Agency Name */}
-              <Form.Item
-                name="clientName"
-                label={
-                  <div className="flex items-center gap-2">
-                    <span>Agency / Client</span>
-                    <Tooltip title="Enter Agency's name or client's name who is managing the campaign">
-                      <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                    </Tooltip>
-                  </div>
-                }
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter client/agency name",
-                  },
-                ]}
-              >
-                <SuggestionInput
-                  suggestions={clientAgencyNamesList?.map(
-                    (value: any) => value.clientAgencyName
-                  )}
-                  placeholder="Client/Agency Name"
-                  onChange={(value: any) =>
-                    form.setFieldsValue({ clientName: value.toUpperCase() })
-                  }
-                  value={form.getFieldValue("clientName") || ""}
-                />
-              </Form.Item>
-            </div>
-            <div className="col-span-1 ">
-              {/* Industry Type */}
-              <Form.Item
-                name="industry"
-                label={
-                  <div className="flex items-center gap-2">
-                    <span>Industry Type</span>
-                    <Tooltip title="Enter industry name your brand belongs to">
-                      <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                    </Tooltip>
-                  </div>
-                }
-                rules={[
-                  { required: true, message: "Please enter industry type" },
-                ]}
-              >
-                <Input placeholder="Industry Type" size="large" />
-              </Form.Item>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-8">
-            <div className="col-span-1 ">
-              {/* Start Date */}
-              <Form.Item
-                name="startDate"
-                label={
-                  <div className="flex items-center gap-2">
-                    <span>Start Date & Time</span>
-                    <Tooltip title="Select date and time when the campaign should start">
-                      <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                    </Tooltip>
-                  </div>
-                }
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select start date and time",
-                  },
-                  // ({ getFieldValue }) => ({
-                  //   validator(_, value) {
-                  //     if (value && value.isBefore(dayjs())) {
-                  //       return Promise.reject(
-                  //         "Start date/time must be in the future"
-                  //       );
-                  //     }
-                  //     return Promise.resolve();
-                  //   },
-                  // }),
-                ]}
-              >
-                <DatePicker
-                  showTime
-                  format="YYYY-MM-DD HH:mm"
-                  className="w-full"
-                  size="large"
-                  disabledDate={(current) =>
-                    current && current < dayjs().startOf("day")
-                  }
-                  disabledTime={(current) => {
-                    if (current && current.isSame(dayjs(), "day")) {
-                      return {
-                        disabledHours: () => range(0, dayjs().hour()),
-                        disabledMinutes: (selectedHour) => {
-                          if (selectedHour === dayjs().hour()) {
-                            return range(0, dayjs().minute());
-                          }
-                          return [];
-                        },
-                      };
-                    }
-                    return {};
-                  }}
-                />
-              </Form.Item>
-            </div>
-            <div className="col-span-1 ">
-              {/* End Date */}
-              <Form.Item
-                name="endDate"
-                label={
-                  <div className="flex items-center gap-2">
-                    <span>End Date & Time</span>
-                    <Tooltip title="Select date and time when the campaign should end">
-                      <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                    </Tooltip>
-                  </div>
-                }
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select end date and time",
-                  },
-                  ({ getFieldValue }) => ({
-                    validator(_, value) {
-                      const startDate = getFieldValue("startDate");
-                      if (!value) {
-                        return Promise.reject("Please select end date/time");
+        <div className="max-h-[65vh] overflow-y-auto scrollbar-minimal px-1 grid grid-cols-3  mt-4">
+          {" "}
+          {/* Campaign Name */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="campaignName"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Campaign Name</span>
+                <Tooltip title="Enter a unique name for your campaign">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[{ required: true, message: "Please enter campaign name" }]}
+          >
+            <Input placeholder="Campaign Name" size="large" />
+          </Form.Item>
+          {/* Brand Name */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="brandName"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Brand Name</span>
+                <Tooltip title="Enter campaign's brand name">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[{ required: true, message: "Please enter brand name" }]}
+          >
+            <SuggestionInput
+              suggestions={getDataFromLocalStorage(ALL_BRAND_LIST)}
+              placeholder="Brand Name"
+              onChange={(value) => form.setFieldsValue({ brandName: value })}
+              value={form.getFieldValue("brandName") || ""}
+            />
+          </Form.Item>
+          {/* Client/Agency Name */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="clientName"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Agency / Client</span>
+                <Tooltip title="Enter Agency's name or client's name who is managing the campaign">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[
+              {
+                required: true,
+                message: "Please enter client/agency name",
+              },
+            ]}
+          >
+            <SuggestionInput
+              suggestions={clientAgencyNamesList?.map(
+                (value: any) => value.clientAgencyName
+              )}
+              placeholder="Client/Agency Name"
+              onChange={(value: any) =>
+                form.setFieldsValue({ clientName: value.toUpperCase() })
+              }
+              value={form.getFieldValue("clientName") || ""}
+            />
+          </Form.Item>
+          {/* Industry Type */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="industry"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Industry Type</span>
+                <Tooltip title="Enter industry name your brand belongs to">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[{ required: true, message: "Please enter industry type" }]}
+          >
+            <Input placeholder="Industry Type" size="large" />
+          </Form.Item>
+          {/* Start Date */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="startDate"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Start Date & Time</span>
+                <Tooltip title="Select date and time when the campaign should start">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[
+              {
+                required: true,
+                message: "Please select start date and time",
+              },
+            ]}
+          >
+            <DatePicker
+              showTime
+              format="YYYY-MM-DD HH:mm"
+              className="w-full"
+              size="large"
+              disabledDate={(current) =>
+                current && current < dayjs().startOf("day")
+              }
+              disabledTime={(current) => {
+                if (current && current.isSame(dayjs(), "day")) {
+                  return {
+                    disabledHours: () => range(0, dayjs().hour()),
+                    disabledMinutes: (selectedHour) => {
+                      if (selectedHour === dayjs().hour()) {
+                        return range(0, dayjs().minute());
                       }
-                      if (startDate && value.isBefore(startDate)) {
-                        return Promise.reject(
-                          "End date/time must be after start date/time"
-                        );
-                      }
-                      return Promise.resolve();
+                      return [];
                     },
-                  }),
-                ]}
-              >
-                <DatePicker
-                  showTime
-                  format="YYYY-MM-DD HH:mm"
-                  className="w-full"
-                  size="large"
-                  disabledDate={(current) => {
-                    const startDate = form.getFieldValue("startDate");
-                    return (
-                      current &&
-                      (current < dayjs().startOf("day") ||
-                        (startDate && current < startDate.startOf("day")))
+                  };
+                }
+                return {};
+              }}
+            />
+          </Form.Item>
+          {/* End Date */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="endDate"
+            label={
+              <div className="flex items-center gap-2">
+                <span>End Date & Time</span>
+                <Tooltip title="Select date and time when the campaign should end">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[
+              {
+                required: true,
+                message: "Please select end date and time",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  const startDate = getFieldValue("startDate");
+                  if (!value) {
+                    return Promise.reject("Please select end date/time");
+                  }
+                  if (startDate && value.isBefore(startDate)) {
+                    return Promise.reject(
+                      "End date/time must be after start date/time"
                     );
-                  }}
-                  disabledTime={(current) => {
-                    const startDate = form.getFieldValue("startDate");
-                    if (
-                      current &&
-                      startDate &&
-                      current.isSame(startDate, "day")
-                    ) {
-                      return {
-                        disabledHours: () => range(0, startDate.hour()),
-                        disabledMinutes: (selectedHour) => {
-                          if (selectedHour === startDate.hour()) {
-                            return range(0, startDate.minute());
-                          }
-                          return [];
-                        },
-                      };
-                    }
-                    return {};
-                  }}
-                  onChange={(date) => {
-                    if (date) {
-                      const startDate = form.getFieldValue("startDate");
-                      if (startDate) {
-                        form.setFieldsValue({
-                          duration: calculateDuration(startDate, date),
-                        });
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+          >
+            <DatePicker
+              showTime
+              format="YYYY-MM-DD HH:mm"
+              className="w-full"
+              size="large"
+              disabledDate={(current) => {
+                const startDate = form.getFieldValue("startDate");
+                return (
+                  current &&
+                  (current < dayjs().startOf("day") ||
+                    (startDate && current < startDate.startOf("day")))
+                );
+              }}
+              disabledTime={(current) => {
+                const startDate = form.getFieldValue("startDate");
+                if (current && startDate && current.isSame(startDate, "day")) {
+                  return {
+                    disabledHours: () => range(0, startDate.hour()),
+                    disabledMinutes: (selectedHour) => {
+                      if (selectedHour === startDate.hour()) {
+                        return range(0, startDate.minute());
                       }
-                    }
-                  }}
-                />
-              </Form.Item>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-8">
-            <div className="col-span-1 ">
-              {/* Duration */}
-              <Form.Item
-                name="duration"
-                label={
-                  <div className="flex items-center gap-2">
-                    <span>Duration (Days)</span>
-                    <Tooltip title="Enter total duration of campaigns in days">
-                      <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                    </Tooltip>
-                  </div>
+                      return [];
+                    },
+                  };
                 }
-                rules={[{ required: true, message: "Please enter duration" }]}
-              >
-                <Input
-                  type="number"
-                  placeholder="30"
-                  min={1}
-                  size="large"
-                  onChange={(e) => {
-                    const duration = parseInt(e.target.value);
-                    if (!isNaN(duration) && duration > 0) {
-                      const startDate = form.getFieldValue("startDate");
-                      if (startDate) {
-                        form.setFieldsValue({
-                          endDate: calculateEndDate(startDate, duration),
-                        });
-                      }
-                    }
-                  }}
-                />
-              </Form.Item>
-            </div>
-            <div className="col-span-1 ">
-              {/* Manager */}
-              <Form.Item
-                name="managerId"
-                label={
-                  <div className="flex items-center gap-2">
-                    <span>Select Manager</span>
-                    <Tooltip title="Select the manager for this campaign">
-                      <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                    </Tooltip>
-                  </div>
+                return {};
+              }}
+              onChange={(date) => {
+                if (date) {
+                  const startDate = form.getFieldValue("startDate");
+                  if (startDate) {
+                    form.setFieldsValue({
+                      duration: calculateDuration(startDate, date),
+                    });
+                  }
                 }
-                rules={[{ required: true, message: "Please select manager" }]}
-              >
-                <Select
-                  placeholder="Select Manager"
-                  size="large"
-                  loading={!allPlannerData.length}
-                  showSearch
-                  optionFilterProp="label"
-                  options={allPlannerData?.map((data: any) => {
-                    return {
-                      label: data?.name,
-                      value: data?._id,
-                    };
-                  })}
-                ></Select>
-              </Form.Item>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-8">
-            <div className="col-span-1 ">
-              {/* SOV Type */}
-              <Form.Item
-                name="sovType"
-                label={
-                  <div className="flex items-center gap-2">
-                    <span>SOV Type</span>
-                    <Tooltip title="Continuous -> One After another , Ordered-> Ordered , Random -> At any place ">
-                      <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                    </Tooltip>
-                  </div>
+              }}
+            />
+          </Form.Item>
+          {/* Duration */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="duration"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Duration (Days)</span>
+                <Tooltip title="Enter total duration of campaigns in days">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[{ required: true, message: "Please enter duration" }]}
+          >
+            <Input
+              type="number"
+              placeholder="30"
+              min={1}
+              size="large"
+              onChange={(e) => {
+                const duration = parseInt(e.target.value);
+                if (!isNaN(duration) && duration > 0) {
+                  const startDate = form.getFieldValue("startDate");
+                  if (startDate) {
+                    form.setFieldsValue({
+                      endDate: calculateEndDate(startDate, duration),
+                    });
+                  }
                 }
-                rules={[{ required: true, message: "Please select SOV type" }]}
-              >
-                <Select placeholder="Select SOV Type" size="large">
-                  {sovTypeOptions.map((option) => (
-                    <Option key={option.value} value={option.value}>
-                      {option.label}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </div>
-            <div className="col-span-1 ">
-              {/* SOV */}
-              <Form.Item
-                name="sov"
-                label={
-                  <div className="flex items-center gap-2">
-                    <span>SOV</span>
-                    <Tooltip title="SOV: How many times you want to play your creatives in 3 minutes (one loop)">
-                      <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                    </Tooltip>
-                  </div>
-                }
-                rules={[{ required: true, message: "Please select SOV" }]}
-              >
-                <Select placeholder="Select SOV" size="large">
-                  {(form.getFieldValue("sovType") === ORDERED_SOV
-                    ? allIndexOrderedSov
-                    : allIndex
-                  ).map((option) => (
-                    <Option key={option.value} value={option.value}>
-                      {option.label}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-8">
-            <div className="col-span-1 ">
-              {/* Mid Date */}
-              <Form.Item
-                name="midDate"
-                label={
-                  <div className="flex items-center gap-2">
-                    <span>Select Mid Monitoring Date</span>
-                    <Tooltip title="Monitoring start and end data will always be your campaign start and end date">
-                      <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                    </Tooltip>
-                  </div>
-                }
-                rules={[
-                  {
-                    required: false,
-                    message: "Please select mid monitoring date",
-                  },
-                  { validator: validateMidDate },
-                ]}
-                dependencies={["startDate", "endDate"]}
-              >
-                <DatePicker
-                  className="w-full"
-                  size="large"
-                  disabledDate={(current) => {
-                    const startDate = form.getFieldValue("startDate");
-                    const endDate = form.getFieldValue("endDate");
-                    return (
-                      current &&
-                      ((startDate && current < startDate.startOf("day")) ||
-                        (endDate && current > endDate.endOf("day")))
-                    );
-                  }}
-                />
-              </Form.Item>
-            </div>
-          </div>
+              }}
+            />
+          </Form.Item>
+          {/* Manager */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="managerId"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Select Manager</span>
+                <Tooltip title="Select the manager for this campaign">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[{ required: true, message: "Please select manager" }]}
+          >
+            <Select
+              placeholder="Select Manager"
+              size="large"
+              loading={!allPlannerData.length}
+              showSearch
+              optionFilterProp="label"
+              options={allPlannerData?.map((data: any) => {
+                return {
+                  label: data?.name,
+                  value: data?._id,
+                };
+              })}
+            ></Select>
+          </Form.Item>
+          {/* SOV Type */}
+          <Form.Item
+            name="sovType"
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            label={
+              <div className="flex items-center gap-2">
+                <span>SOV Type</span>
+                <Tooltip title="Continuous -> One After another , Ordered-> Ordered , Random -> At any place ">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[{ required: true, message: "Please select SOV type" }]}
+          >
+            <Select placeholder="Select SOV Type" size="large">
+              {sovTypeOptions.map((option) => (
+                <Option key={option.value} value={option.value}>
+                  {option.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          {/* SOV */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="sov"
+            label={
+              <div className="flex items-center gap-2">
+                <span>SOV</span>
+                <Tooltip title="SOV: How many times you want to play your creatives in 3 minutes (one loop)">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[{ required: true, message: "Please select SOV" }]}
+          >
+            <Select placeholder="Select SOV" size="large">
+              {(form.getFieldValue("sovType") === ORDERED_SOV
+                ? allIndexOrderedSov
+                : allIndex
+              ).map((option) => (
+                <Option key={option.value} value={option.value}>
+                  {option.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          {/* Mid Date */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="midDate"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Select Mid Monitoring Date</span>
+                <Tooltip title="Monitoring start and end data will always be your campaign start and end date">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[
+              {
+                required: false,
+                message: "Please select mid monitoring date",
+              },
+              { validator: validateMidDate },
+            ]}
+            dependencies={["startDate", "endDate"]}
+          >
+            <DatePicker
+              className="w-full"
+              size="large"
+              disabledDate={(current) => {
+                const startDate = form.getFieldValue("startDate");
+                const endDate = form.getFieldValue("endDate");
+                return (
+                  current &&
+                  ((startDate && current < startDate.startOf("day")) ||
+                    (endDate && current > endDate.endOf("day")))
+                );
+              }}
+            />
+          </Form.Item>
         </div>
-        <div className="flex justify-end">
+
+        <div className="flex justify-start">
           {/* Submit Button */}
           <Form.Item className="col-span-3">
             <Button
