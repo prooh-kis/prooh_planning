@@ -227,13 +227,13 @@ export const BillingAndInvoice = (props: any) => {
   },[billInvoiceDetailsData, billingStep, dashboardSS, dashboardScreenshots?.length]);
 
   useEffect(() => {
-    if (invoicePdf && invoicePdf?.job) {
+    if (invoicePdf && invoicePdf?.invoiceJob) {
       message.info("Invoice in being generated, will be made available in a moment...");
-      setJobId(invoicePdf?.job.id);
+      setJobId(invoicePdf?.invoiceJob.id);
     }
     if (dashboardSS) {
       message.info("Dashboard screenshot in being generated, will be made available in a moment...");
-      setJobId(dashboardSS.job.id)
+      setJobId(dashboardSS.invoiceJob.id)
     }
   },[invoicePdf, dashboardSS]);
 

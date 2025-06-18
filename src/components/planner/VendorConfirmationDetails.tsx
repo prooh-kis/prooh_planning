@@ -252,8 +252,6 @@ export const VendorConfirmationDetails = ({
   };
 
   useEffect(() => {
-    if (!campaignDetails) return;
-    // Fetch data even if pageSuccess is false initially
     if (
       errorVendorConfirmationData ||
       errorStatusTableData ||
@@ -261,6 +259,12 @@ export const VendorConfirmationDetails = ({
     ) {
       message.error("Something went wrong, please contact tech support...");
     }
+  },[errorAddDetails, errorStatusTableData, errorVendorConfirmationData]);
+
+  useEffect(() => {
+    if (!campaignDetails) return;
+    // Fetch data even if pageSuccess is false initially
+
     dispatch(
       getVendorConfirmationStatusTableDetails({
         id: campaignDetails?._id,
@@ -288,7 +292,7 @@ export const VendorConfirmationDetails = ({
         pageName: "Vendor Confirmation Page",
       })
     );
-  }, [campaignDetails, campaignId, dispatch, errorAddDetails, errorStatusTableData, errorVendorConfirmationData]);
+  }, [campaignDetails, campaignId, dispatch]);
 
   useEffect(() => {
     if (successAddDetails) {
