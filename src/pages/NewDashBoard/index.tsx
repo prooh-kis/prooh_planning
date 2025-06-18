@@ -158,7 +158,7 @@ export const NewDashBoard: React.FC = () => {
   }
   return (
     <div className="w-full">
-      {/* <BillingAndInvoice
+      <BillingAndInvoice
         open={openInvoice}
         onClose={() => {
           setOpenInvoice(false);
@@ -172,7 +172,7 @@ export const NewDashBoard: React.FC = () => {
         takeScreenShot={takeScreenShot}
         billInvoiceDetailsData={billInvoiceDetailsData}
         loadingBillInvoiceDetails={loadingBillInvoiceDetails}
-      /> */}
+      />
       {!loadingCampaignDetails && campaignDetails ? (
         <CampaignDashboard
           pathname={pathname}

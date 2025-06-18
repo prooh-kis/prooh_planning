@@ -16,6 +16,7 @@ export const clientAgencyURL = cleanUrl('/api/v2/clientAgency');
 export const analyticsURL = cleanUrl('/api/v1/analytics');
 export const billInvoiceURL = cleanUrl('/api/v2/billInvoice');
 export const analyticsV1 = cleanUrl('/api/v1/analytics');
+export const awsV1 = cleanUrl('/api/v1/aws');
 
 export const cmsURL = "https://prooh-cms.vercel.app/sign-in";
 export const planningURL = "https://plan.prooh.ai/sign-up";

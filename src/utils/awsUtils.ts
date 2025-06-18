@@ -1,10 +1,11 @@
 import Axios from "axios";
+import { awsV1 } from "../constants/urlConstant";
 
 export const getAWSUrlToUploadFile = async (contentType: String, fileName: string) => {
   try {
     // console.log("getAWSUrlToUploadFile", { contentType, name: fileName });
     const { data } = await Axios.post(
-      `${process.env.REACT_APP_PROOH_SERVER}/api/v1/aws/getURLForFileUplaod`,
+      `${awsV1}/getURLForFileUplaod`,
       { contentType, name: fileName }
 
     );
@@ -51,7 +52,7 @@ export const getAWSUrl = async (file: any) => {
 export const getDocUrlToSaveOnAWS = async (fileName: any, fileType: any) => {
   try {
     const { data } = await Axios.post(
-      `${process.env.REACT_APP_PROOH_SERVER}/api/v1/aws/saveDocsOnAWS`,
+      `${awsV1}/saveDocsOnAWS`,
       { fileName, fileType }
       // {
       //   headers: {
