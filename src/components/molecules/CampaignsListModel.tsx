@@ -28,7 +28,7 @@ export const CampaignsListModel = ({
               <i
                 className="fi fi-br-clone text-gray-200"
                 onClick={() => {
-                  message.info("Coming sone");
+                  message.info("Coming soon");
                 }}
               ></i>
             </Tooltip>
