@@ -64,9 +64,9 @@ interface InitialData {
   endDate: MonitoringTypeData;
 }
 
-const socketUrl = "ws://localhost:4444";
+// const socketUrl = "ws://localhost:4444";
 // const socketUrl= "wss://servermonad.vinciis.in";
-// const socketUrl= "wss://beta.vinciis.in";
+const socketUrl= "wss://beta.vinciis.in";
 
 export const ViewFinalPlanPODetails = ({
   setCurrentStep,

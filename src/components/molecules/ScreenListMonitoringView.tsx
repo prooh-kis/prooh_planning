@@ -73,7 +73,7 @@ export function ScreenListMonitoringView({
             />
             <div className="-mt-2">
               <Tooltip
-                title={`${
+                title={`Last seen online ${
                   convertIntoDateAndTime(screen?.lastActive) || "Not Available"
                 }`}
               >
@@ -100,6 +100,9 @@ export function ScreenListMonitoringView({
               {campaign?.status ?? "No Creatives"}
             </h1>
           </Tooltip>
+          <h1 className="text-[10px]">
+            {convertIntoDateAndTime(screen?.lastActive)}
+          </h1>
         </div>
         <div className="col-span-1 relative inline-block ml-auto">
           {showOption && (
