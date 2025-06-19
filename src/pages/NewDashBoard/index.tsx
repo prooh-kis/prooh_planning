@@ -186,7 +186,6 @@ export const NewDashBoard: React.FC = () => {
           loadingSiteLevel={loadingSiteLevel}
           setOpenInvoice={setOpenInvoice}
           openInvoice={openInvoice}
-          takeScreenShot={takeScreenShot}
           billInvoiceDetailsData={billInvoiceDetailsData}
         />
       ) : (

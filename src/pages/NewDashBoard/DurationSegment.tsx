@@ -37,7 +37,7 @@ export const DurationSegment = ({
     dispatch(getSlotDeliveryGraphDateWiseForPlannerDashboard({
       id: campaignId,
       // date: "2025-04-16T06:29:00.000+00:00",
-      date: date.toISOString().replace('Z', '+00:00'),
+      date: date?.toISOString().replace('Z', '+00:00'),
     }))
   },[campaignId, currentDate, dispatch]);
   return (

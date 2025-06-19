@@ -13,6 +13,7 @@ import {
 import { TIME_ZONES } from "../../constants/helperConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import ButtonInput from "../../components/atoms/ButtonInput";
+import moment from "moment";
 
 interface HeaderProps {
   icon: string;
@@ -249,11 +250,14 @@ export const ViewAllLogsPopup = ({
       })
     );
 
-    if (currentScreenCampaignId !== null) {
+    if (campaignDetails && currentScreenCampaignId !== null) {
       dispatch(
         GetCampaignLogsAction({
           campaignId: currentScreenCampaignId,
-          date: formatDateForLogs(currentDate)?.apiDate,
+          // date: formatDateForLogs(currentDate)?.apiDate,
+          date: campaignDetails?.endDate 
+              ? formatDateForLogs(moment(Math.min(moment(new Date()).valueOf(), moment(campaignDetails.endDate).valueOf())).format("YYYY-MM-DD hh:mm:ss")).apiDate
+              : formatDateForLogs(moment(new Date()).format("YYYY-MM-DD hh:mm:ss")).apiDate,
           // date: "13/03/2025"
         })
       );
@@ -266,6 +270,7 @@ export const ViewAllLogsPopup = ({
     selectedScreenTypes,
     currentDate,
     currentScreenCampaignId,
+    campaignDetails,
   ]);
 
   // Dispatch action with updated filters

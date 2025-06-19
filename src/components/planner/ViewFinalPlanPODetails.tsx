@@ -64,9 +64,6 @@ interface InitialData {
   endDate: MonitoringTypeData;
 }
 
-// const socketUrl = "ws://localhost:4444";
-// const socketUrl= "wss://servermonad.vinciis.in";
-const socketUrl = "wss://beta.vinciis.in";
 
 export const ViewFinalPlanPODetails = ({
   setCurrentStep,
@@ -570,6 +567,8 @@ export const ViewFinalPlanPODetails = ({
 
   useEffect(() => {
     if (generationData && jobId) {
+      // const socketUrl = "ws://localhost:4444";
+      const socketUrl = "wss://beta.vinciis.in";
       const webSocket = io(socketUrl, {
         transports: ["websocket"],
         secure: true,

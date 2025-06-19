@@ -12,6 +12,7 @@ import { GetCampaignLogsAction } from "../../actions/campaignAction";
 import { downloadExcel2 } from "../../utils/excelUtils";
 import { MetricCard, SiteInfoHeader } from "./SiteMapViewDetailsPopup";
 import { TIME_ZONES } from "../../constants/helperConstants";
+import moment from "moment";
 
 export const ShowCampaignLogsPopup = ({
   open,
@@ -111,7 +112,9 @@ export const ShowCampaignLogsPopup = ({
       dispatch(
         GetCampaignLogsAction({
           campaignId: screenCampaignData?.campaignId,
-          date: formatDateForLogs(currentDate)?.apiDate,
+          date: campaignDetails?.endDate 
+                  ? formatDateForLogs(moment(Math.min(moment(new Date()).valueOf(), moment(campaignDetails.endDate).valueOf())).format("YYYY-MM-DD hh:mm:ss")).apiDate
+                  : formatDateForLogs(moment(new Date()).format("YYYY-MM-DD hh:mm:ss")).apiDate,
           // date: "13/03/2025"
         })
       );

@@ -43,8 +43,6 @@ export const CampaignDashboard = ({
   loadingSiteLevel,
   setOpenInvoice,
   openInvoice,
-  takeScreenShot,
-  billInvoiceDetailsData,
 }: any) => {
   const dropdownRef = useRef<any>(null);
   const navigate = useNavigate();
@@ -316,16 +314,6 @@ export const CampaignDashboard = ({
           <div
             className="px-4 border border-gray-300 rounded-lg flex justify-center gap-2 items-center h-[38px] cursor-pointer"
             onClick={() => {
-              if (
-                !billInvoiceDetailsData?.dashboardScreenshots ||
-                (billInvoiceDetailsData?.dashboardScreenshots &&
-                  billInvoiceDetailsData?.dashboardScreenshots?.length < 5 &&
-                  !billInvoiceDetailsData?.dashboardScreenshots?.find(
-                    (s: any) => !s.url.includes("https:")
-                  ))
-              ) {
-                takeScreenShot({});
-              }
               setOpenInvoice(true);
             }}
           >

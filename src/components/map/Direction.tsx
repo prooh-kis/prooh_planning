@@ -1,6 +1,7 @@
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as turf from "@turf/turf";
+import { message } from "antd";
 
 
 export function Directions({ allRoutes, setAllRoutes, allScreens, routeRadius, routeFilteredScreens, setRouteFilteredScreens, handleFinalSelectedScreens, finalSelectedScreens }: any) {
@@ -47,6 +48,15 @@ export function Directions({ allRoutes, setAllRoutes, allScreens, routeRadius, r
       ]);
       return turf.booleanPointInPolygon(screenPoint, buffered);
     });
+
+    if (filteredScreenRecords.length === 0) {
+      message.error("No screens found in the route selection, please select a different route");
+      setAllRoutes((prev: any) => {
+        return prev.filter((route: any) => route.id !== id);
+      })
+      return;
+    };
+
     filteredScreenRecords.forEach((record: any) => {
       if (!existingScreens.some((existing: any) => existing._id === record._id)) {
         existingScreens.push(record);

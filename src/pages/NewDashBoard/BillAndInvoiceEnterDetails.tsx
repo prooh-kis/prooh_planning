@@ -119,8 +119,11 @@ export const BillingAndInvoiceEnterDetails = (props: any) => {
       dispatch({
         type: ADD_CLIENT_AGENCY_DETAILS_RESET
       });
+      dispatch(getClientAgencyDetails({
+        clientAgencyName: campaignDetails?.clientName?.toUpperCase()
+      }));
     }
-  },[dispatch, errorAddClientAgencyDetails, successAddClientAgencyDetails]);
+  },[dispatch, errorAddClientAgencyDetails, campaignDetails, successAddClientAgencyDetails]);
 
   useEffect(() => {
     dispatch(getAllClientAgencyNames());
