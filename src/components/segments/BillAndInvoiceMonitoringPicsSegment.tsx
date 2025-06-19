@@ -128,7 +128,7 @@ export const BillAndInvoiceMonitoringPicsSegment = ({
 
   useEffect(() => {
   
-    if (campaignDetails && siteLevelData?.[seq].campaignId && currentDate) {
+    if (campaignDetails && siteLevelData?.[seq]?.campaignId && currentDate) {
       dispatch(
         GetCampaignLogsAction({
           campaignId: siteLevelData?.[seq].campaignId,
