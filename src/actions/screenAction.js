@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+  EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_ERROR,
+  EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_REQUEST,
+  EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_SUCCESS,
   GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_ERROR,
   GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_REQUEST,
   GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_SUCCESS,
@@ -9,12 +12,24 @@ import {
   GET_AUDIENCES_DATA_ADVANCE_FILTER_ERROR,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_REQUEST,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS,
+  GET_BASIC_DETAILS_COST_SUMMARY_ERROR,
+  GET_BASIC_DETAILS_COST_SUMMARY_REQUEST,
+  GET_BASIC_DETAILS_COST_SUMMARY_SUCCESS,
+  GET_CLIENT_COST_FOR_COST_SUMMARY_ERROR,
+  GET_CLIENT_COST_FOR_COST_SUMMARY_REQUEST,
+  GET_CLIENT_COST_FOR_COST_SUMMARY_SUCCESS,
   GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_ERROR,
   GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_REQUEST,
   GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_SUCCESS,
   GET_FINAL_PLAN_PO_DATA_ERROR,
   GET_FINAL_PLAN_PO_DATA_REQUEST,
   GET_FINAL_PLAN_PO_DATA_SUCCESS,
+  GET_GROSS_MARGIN_FOR_COST_SUMMARY_ERROR,
+  GET_GROSS_MARGIN_FOR_COST_SUMMARY_REQUEST,
+  GET_GROSS_MARGIN_FOR_COST_SUMMARY_SUCCESS,
+  GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_ERROR,
+  GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_REQUEST,
+  GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_SUCCESS,
   GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
   GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
   GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
@@ -54,6 +69,9 @@ import {
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_ERROR,
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_REQUEST,
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_SUCCESS,
+  GET_VENDOR_PAYOUT_FOR_COST_SUMMARY_ERROR,
+  GET_VENDOR_PAYOUT_FOR_COST_SUMMARY_REQUEST,
+  GET_VENDOR_PAYOUT_FOR_COST_SUMMARY_SUCCESS,
   PLANNING_PAGE_FOOTER_DATA_ERROR,
   PLANNING_PAGE_FOOTER_DATA_REQUEST,
   PLANNING_PAGE_FOOTER_DATA_SUCCESS,
@@ -717,6 +735,192 @@ export const getAllPlannerIdsAndEmail =
     } catch (error) {
       dispatch({
         type: GET_ALL_PLANNER_IDS_AND_EMAIL_ERROR,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const getBasicDetailsCostSummaryPopupPage =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_BASIC_DETAILS_COST_SUMMARY_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
+
+      const { data } = await axios.post(
+        `${planningRouterURL}/getBasicDetailsCostSummaryPopupPage`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({
+        type: GET_BASIC_DETAILS_COST_SUMMARY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_BASIC_DETAILS_COST_SUMMARY_ERROR,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const getClientCostForCostSummaryPopupPage =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_CLIENT_COST_FOR_COST_SUMMARY_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
+
+      const { data } = await axios.post(
+        `${planningRouterURL}/getClientCostForCostSummaryPopupPage`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({
+        type: GET_CLIENT_COST_FOR_COST_SUMMARY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_CLIENT_COST_FOR_COST_SUMMARY_ERROR,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const getVendorPayoutForCostSummaryPopupPage =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_VENDOR_PAYOUT_FOR_COST_SUMMARY_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
+
+      const { data } = await axios.post(
+        `${planningRouterURL}/getVendorPayoutForCostSummaryPopupPage`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({
+        type: GET_VENDOR_PAYOUT_FOR_COST_SUMMARY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_VENDOR_PAYOUT_FOR_COST_SUMMARY_ERROR,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const getGrossMarginForCostSummaryPopupPage =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_GROSS_MARGIN_FOR_COST_SUMMARY_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
+
+      const { data } = await axios.post(
+        `${planningRouterURL}/getGrossMarginForCostSummaryPopupPage`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({
+        type: GET_GROSS_MARGIN_FOR_COST_SUMMARY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_GROSS_MARGIN_FOR_COST_SUMMARY_ERROR,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const getInventoryDetailsForCostSummaryPopupPage =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
+
+      const { data } = await axios.post(
+        `${planningRouterURL}/getInventoryDetailsForCostSummaryPopupPage`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({
+        type: GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_ERROR,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const editCostDetailsScreenWiseForCostSummaryPopupPage =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
+
+      const { data } = await axios.post(
+        `${planningRouterURL}/editCostDetailsScreenWiseForCostSummaryPopupPage`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({
+        type: EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_ERROR,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message

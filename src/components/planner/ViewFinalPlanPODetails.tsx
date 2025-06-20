@@ -45,6 +45,7 @@ import { SendEmailPopup } from "../../components/popup/SendEmailPopup";
 import { format } from "date-fns";
 import { monitoringTypes } from "../../constants/helperConstants";
 import { ChoseMonitoringTypeFive } from "../../components/segments/ChoseMonitoringTypeFive";
+import { CostSummaryPopup } from "./CostSummaryPopup";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -136,6 +137,7 @@ export const ViewFinalPlanPODetails = ({
   const [socketUpdateStatus, setSocketUpdateStatus] = useState<any>(null);
   const [downloadUrls, setDownloadUrls] = useState<any>([]);
   const [isShareModalOpen, setIsShareModalOpen] = useState<any>(false);
+  const [isOpenCostSummary, setIsOpenCostSummary] = useState<any>(false);
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -306,7 +308,7 @@ export const ViewFinalPlanPODetails = ({
 
   const countScreensByResolutionAndCity = (data: any) => {
     const result: any = {};
-    data.forEach((screen: any) => {
+    data?.forEach((screen: any) => {
       const { city } = screen.location;
       const { screenResolution } = screen;
       if (!result[city]) {
@@ -708,6 +710,12 @@ export const ViewFinalPlanPODetails = ({
 
   return (
     <div className="w-full font-custom">
+      {isOpenCostSummary && (
+        <CostSummaryPopup
+          onClose={() => setIsOpenCostSummary(false)}
+          campaignId={campaignId}
+        />
+      )}
       <SendEmailPopup
         open={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
@@ -728,7 +736,7 @@ export const ViewFinalPlanPODetails = ({
       {loadingPOData ? (
         <LoadingScreen />
       ) : (
-        <div className="">
+        <div className="h-[66vh] overflow-y-auto scrollbar-minimal pr-2">
           <div className="grid grid-cols-2 gap-2 pb-20 mt-4">
             <div
               ref={pageRef}
@@ -740,6 +748,7 @@ export const ViewFinalPlanPODetails = ({
                 setCurrentCoupon={setCurrentCoupon}
                 handleApplyCoupon={handleApplyCoupon}
                 handleRemoveCoupon={handleRemoveCoupon}
+                setIsOpenCostSummary={setIsOpenCostSummary}
                 coupons={coupons}
               />
             </div>
@@ -897,7 +906,7 @@ export const ViewFinalPlanPODetails = ({
 
               <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-2xl">
                 <h1 className="font-semibold text-lg pb-4">
-                  Choose Monitoring Pics Type
+                  Add Mid Date Monitoring
                 </h1>
                 <ChoseMonitoringTypeFive
                   initialData={initialData}
