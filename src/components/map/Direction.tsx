@@ -50,7 +50,7 @@ export function Directions({ allRoutes, setAllRoutes, allScreens, routeRadius, r
     });
 
     if (filteredScreenRecords.length === 0) {
-      message.error("No screens found in the route selection, please select a different route");
+      message.info("No screens found in the route selection, please select a different route");
       setAllRoutes((prev: any) => {
         return prev.filter((route: any) => route.id !== id);
       })

@@ -13,3 +13,6 @@ export { MyRequestsListTable } from "./MyRequestsListTable";
 
 export { AdsPlayTimeTable } from "./AdsPlayTimeTable";
 export { AdsPlaySelectedSummaryTable } from "./AdsPlaySelectedSummaryTable";
+
+export { CostSheetTable } from "./CostSheetTable";
+

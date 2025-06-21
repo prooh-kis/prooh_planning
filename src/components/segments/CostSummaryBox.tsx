@@ -25,7 +25,7 @@ export const CostSummaryBox = ({
 }: BoxProps) => {
   return (
     <div
-      className={`rounded-lg border bg-white p-4 flex gap-4 ${
+      className={`cursor-pointer rounded-lg border bg-white p-4 flex gap-4 ${
         isSelected ? "ring-2 ring-blue-500" : ""
       }`}
       onClick={onClick}
@@ -50,7 +50,7 @@ export const CostSummaryBox = ({
             className="text-[18px] font-extrabold"
             style={{ color: valueColor }}
           >
-            ₹ {value.toLocaleString("en-IN")}
+            ₹ {(Number(value).toFixed(0))}
           </h1>
         )}
       </div>

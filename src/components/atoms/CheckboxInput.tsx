@@ -47,9 +47,11 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({
           <span
             className={`pl-2 col-span-11 flex justify-start text-[${
               color ? color : "#21394F"
-            }] text-[${textSize ? textSize : "12px"}] truncate whitespace-pre`}
+            }] text-[${textSize ? textSize : "12px"}] truncate whitespace-pre capitalize
+            ${checked ? "text-[#21394F]" : "text-[#9CA3AF]"}
+            `}
           >
-            {label}
+            {typeof label === "string" ? label?.toLowerCase() : label}
           </span>
         )}
         </Tooltip>

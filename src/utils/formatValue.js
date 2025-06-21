@@ -21,7 +21,6 @@ export function formatNumber(num) {
       return "0";
     }
   }
-  console.log(num);
   return Number(num).toFixed(0);
 }
 
