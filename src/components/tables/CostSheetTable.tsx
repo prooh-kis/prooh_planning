@@ -2,72 +2,83 @@ import clsx from "clsx";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { EditIcon } from "../../assets";
 import { Loading } from "../../components/Loading";
-import { useDispatch } from "react-redux";
-import { editCostDetailsScreenWiseForCostSummaryPopupPage } from "../../actions/screenAction";
+import { useDispatch, useSelector } from "react-redux";
+import { editCostDetailsScreenWiseForCostSummaryPopupPage, getInventoryDetailsForCostSummaryPopupPage } from "../../actions/screenAction";
 import { useEffect, useState } from "react";
 import { FileUploadButton } from "../../components/FileUploadButton";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { message } from "antd";
+import { PrimaryInput } from "../../components/atoms/PrimaryInput";
+import { EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET } from "../../constants/screenConstants";
 
 interface CostSheetTableProps {
   campaignId?: any;
-  result?: any;
   setIsEdit?: any;
   isEdit?: any;
   setCurrentRow?: any;
   currentRow?: number;
-  loadingInventoryDetails?: any;
   screenData?: any;
   setScreenData?: any;
+  loading?: any;
 }
 
 export const CostSheetTable = ({
   campaignId,
-  result,
   setIsEdit,
   isEdit,
   setCurrentRow,
   currentRow,
-  loadingInventoryDetails,
+  screenData,
+  setScreenData,
+  loading,
 }: CostSheetTableProps) => {
   const dispatch = useDispatch<any>();
 
-  const [screenData, setScreenData] = useState<any>(result);
   
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
   const [showDocumentModal, setShowDocumentModal] = useState<boolean>(false);
 
-
-  useEffect(() => {
-    setScreenData(result);
-  }, [result]);
-
   const handleEdit = (e: any) => {
     setScreenData((prevData: any[]) => {
+      if (!prevData || !prevData[e.index]) return prevData;
+      
       const newData = [...prevData];
+      const numericValue = e.value === '' ? 0 : Number(e.value);
+      
       if (e.type === "clientCost") {
         newData[e.index] = {
           ...newData[e.index],
-          clientCost: e.value
+          clientCost: isNaN(numericValue) ? 0 : Math.max(0, numericValue) // Ensure non-negative
         };
       }
 
       if (e.type === "vendorCost") {
         newData[e.index] = {
           ...newData[e.index],
-          vendorCost: e.value
+          vendorCost: isNaN(numericValue) ? 0 : Math.max(0, numericValue) // Ensure non-negative
         };
       }
+      
       return newData;
     });
   }
 
   const handleSave = () => {
+    // Create a new array with updated data to ensure immutability
+    const updatedData = screenData.map((item: any) => ({
+      ...item,
+      // Ensure clientCost and vendorCost are numbers
+      clientCost: Number(item.clientCost) || 0,
+      vendorCost: Number(item.vendorCost) || 0,
+      // Recalculate commission if needed or let the server handle it
+      // commission: item.commission // This will be recalculated by the server
+    }));
+
     dispatch(editCostDetailsScreenWiseForCostSummaryPopupPage({
       id: campaignId,
-      screenData: screenData
-    }))
+      screenData: updatedData
+    }));
   }
 
 
@@ -83,7 +94,7 @@ export const CostSheetTable = ({
 
   const handleSelectAllRow = (value: boolean) => {
     if (value) {
-      setSelectedRows(result.map((_: any, index: number) => index));
+      setSelectedRows(screenData.map((_: any, index: number) => index));
     } else {
       setSelectedRows([]);
     }
@@ -162,7 +173,7 @@ export const CostSheetTable = ({
       <div className="flex justify-between items-center">
         <h1 className="text-[14px] font-semibold p-2">
           Inventory Details{" "}
-          <span className="text-[#6F7F8E] text-[12px]">({result?.length || 0})</span>
+          <span className="text-[#6F7F8E] text-[12px]">({screenData?.length || 0})</span>
         </h1>
         {selectedRows?.length > 0 && (
           <div className="flex items-center gap-2">
@@ -185,7 +196,7 @@ export const CostSheetTable = ({
                   title="checkbox"
                   type="checkbox"
                   onChange={(e: any) => handleSelectAllRow(e.target.checked)}
-                  checked={selectedRows?.length === result?.length}
+                  checked={selectedRows?.length === screenData?.length}
                 />
                 <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">Sl</h1>
               </div>
@@ -251,14 +262,14 @@ export const CostSheetTable = ({
         <div className="overflow-y-auto flex-1">
           <table className="w-full">
             <tbody>
-              {loadingInventoryDetails && (
+              {loading && (
                 <tr>
                   <td>
                     <Loading />
                   </td>
                 </tr>
               )}
-              {screenData?.map((inventory: any, i: number) => (
+              {!loading && screenData && screenData?.map((inventory: any, i: number) => (
                 <tr
                   key={i}
                   className={clsx(
@@ -304,38 +315,38 @@ export const CostSheetTable = ({
                   </td>
                   <td className="flex col-span-1 w-full items-center justify-center gap-2">
                     {isEdit && currentRow === i ? (
-                      <input
-                        placeholder="₹"
-                        type="number"
-                        className="border rounded-md py-2 px-2 w-full"
+                      <PrimaryInput 
+                        placeholder={`₹ ${inventory?.clientCost}`}
                         value={inventory?.clientCost}
-                        onChange={(e: any) => handleEdit({value: e.target.value, type: "clientCost", index: i})}
+                        action={(value: any) => handleEdit({value: value, type: "clientCost", index: i})}
+                        inputType="number"
+                        height="h-[32px]"
                       />
                     ) : (
-                      <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal truncate">₹ {inventory?.clientCost?.toFixed(0)}</h1>
+                      <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal truncate">₹ {inventory?.clientCost?.toFixed(0) || 0}</h1>
                     )}
                   </td>
                   <td className="flex col-span-1 w-full items-center justify-center gap-2">
-                    <h1 className="lg:text-[12px] md:text-[12px] text-[#FF0808] font-normal truncate">{inventory?.commission?.toFixed(0)}%</h1>
+                    <h1 className="lg:text-[12px] md:text-[12px] text-[#FF0808] font-normal truncate">{inventory?.commission?.toFixed(0) || 0}%</h1>
                   </td>
                   <td className="flex col-span-1 w-full items-center justify-center gap-2">
                     {isEdit && currentRow === i ? (
-                      <input
-                        placeholder="₹"
-                        className="border rounded-md py-2 px-2 w-full"
-                        type="number"
+                      <PrimaryInput 
+                        placeholder={`₹ ${inventory?.vendorCost}`}
                         value={inventory?.vendorCost}
-                        onChange={(e: any) => handleEdit({value: e.target.value, type: "vendorCost", index: i})}
+                        action={(value: any) => handleEdit({value: value, type: "vendorCost", index: i})}
+                        inputType="number"
+                        height="h-[32px]"
                       />
                     ) : (
                       <span className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal">
-                        ₹ {inventory?.vendorCost?.toFixed(0)}
+                        ₹ {inventory?.vendorCost?.toFixed(0) || 0}
                       </span>
                     )}
                   </td>
                   <td className="flex col-span-1 w-full items-center justify-center gap-2">
                     <span className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal">
-                      ₹ {inventory?.margin?.toFixed(0)}
+                      ₹ {inventory?.margin?.toFixed(0) || 0}
                     </span>
                   </td>
                   <td className="flex col-span-1 w-full items-center justify-center gap-2">
@@ -347,7 +358,6 @@ export const CostSheetTable = ({
                       }`}
 
                       onClick={() => {
-                        console.log(inventory);
                         if (inventory?.documents?.length > 0) {
                           setShowDocumentModal(true);
                         } else {
@@ -359,33 +369,39 @@ export const CostSheetTable = ({
                       <h1 >{inventory?.documents?.length}</h1>
                     </div>
                   </td>
-                  <td className="cursor-pointer flex col-span-1 w-full items-center justify-center gap-2">
-                    
-                    {isEdit && currentRow === i ? (
-                      <button
-                        title="Save"
-                        type="button"
-                        className="h-8 w-8 border border-[#4DB37E] rounded-lg flex items-center justify-center hover:bg-[#4DB37E50] hover:border-[#4DB37E10]"
-                        onClick={() => {
-                          handleSave();
-                        }}
-                      >
-                        <i className="fi fi-sr-disk text-[16px] text-[#4DB37E]" />
-                      </button>
-                    ) : (
-                      <button
-                        title="Edit"
-                        type="button"
-                        className="h-8 w-8 border rounded-lg flex items-center justify-center hover:bg-[#D7D7D750]"
-                        onClick={() => {
-                          setCurrentRow(i);
-                          setIsEdit(true);
-                        }}
-                      >
-                        <img alt="edit icon" src={EditIcon} />
-                      </button>
-                    )}
-                  </td>
+                  {loading ? (
+                    <td className="cursor-pointer flex col-span-1 w-full items-center justify-center gap-2">
+                      <Loading />
+                    </td>
+                  ) : (
+                    <td className="cursor-pointer flex col-span-1 w-full items-center justify-center gap-2">
+                      {isEdit && currentRow === i ? (
+                        <button
+                          title="Save"
+                          type="button"
+                          className="h-8 w-8 border border-[#4DB37E] rounded-lg flex items-center justify-center hover:bg-[#4DB37E50] hover:border-[#4DB37E10]"
+                          onClick={() => {
+                            handleSave();
+                          }}
+                        >
+                          <i className="fi fi-sr-disk text-[16px] text-[#4DB37E]" />
+                        </button>
+                      ) : (
+                        <button
+                          title="Edit"
+                          type="button"
+                          className="h-8 w-8 border rounded-lg flex items-center justify-center hover:bg-[#D7D7D750]"
+                          onClick={() => {
+                            setCurrentRow(i);
+                            setIsEdit(true);
+                          }}
+                        >
+                          <img alt="edit icon" src={EditIcon} />
+                        </button>
+                      )}
+                    </td>
+                  )}
+
                 </tr>
               ))}
             </tbody>

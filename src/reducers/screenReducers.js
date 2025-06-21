@@ -5,6 +5,7 @@ import {
 import {
   EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_ERROR,
   EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_REQUEST,
+  EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET,
   EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_SUCCESS,
   GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_ERROR,
   GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_REQUEST,
@@ -701,6 +702,12 @@ export function editCostDetailsScreenWiseForCostSummaryPopupPageReducer(
         loading: false,
         success: false,
         error: action.payload,
+      };
+    case EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET:
+      return {
+        loading: false,
+        success: false,
+        error: [],
       };
     default:
       return state;

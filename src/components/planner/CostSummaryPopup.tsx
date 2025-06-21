@@ -1,22 +1,19 @@
 import { useSelector } from "react-redux";
-import React, { useEffect, useState } from "react";
-import { CheckboxInput } from "../../components/atoms/CheckboxInput";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
-  editCostDetailsScreenWiseForCostSummaryPopupPage,
   getBasicDetailsCostSummaryPopupPage,
   getClientCostForCostSummaryPopupPage,
   getGrossMarginForCostSummaryPopupPage,
   getInventoryDetailsForCostSummaryPopupPage,
   getVendorPayoutForCostSummaryPopupPage,
 } from "../../actions/screenAction";
-import { EditIcon } from "../../assets";
 import { CostSummaryBox } from "../../components/segments/CostSummaryBox";
-import ButtonInput from "../../components/atoms/ButtonInput";
 import { CostSheetTable } from "../../components/tables";
 import { CostSheetClientSegment } from "../../components/segments/CostSheetClientSegment";
 import { CostSheetVendorSegment } from "../../components/segments/CostSheetVendorSegment";
 import { CostSheetGrossMarginSegment } from "../../components/segments/CostSheetGrossMarginSegment";
+import { EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET } from "../../constants/screenConstants";
 import { message } from "antd";
 
 type CostMetric = "clientCost" | "vendorCost" | "grossMargin";
@@ -37,9 +34,9 @@ export const CostSummaryPopup = ({ onClose, campaignId }: any) => {
   const dispatch = useDispatch<any>();
   const [currentTab, setCurrentTab] = useState<number>(0);
 
-  const [result, setResult] = useState<any>(null);
   const [currentRow, setCurrentRow] = useState<number>();
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [screenData, setScreenData] = useState<any>(null);
 
 // State for filters
   const [filters, setFilters] = useState<{
@@ -70,27 +67,18 @@ export const CostSummaryPopup = ({ onClose, campaignId }: any) => {
     }
   });
 
-  const basicDetailsForCostSummary = useSelector(
-    (state: any) => state.basicDetailsForCostSummary
-  );
-
   const {
     loading: loadingBasicDetails,
     error: errorBasicDetails,
     data: basicDetails,
-  } = basicDetailsForCostSummary;
-
-  const inventoryDetailsForCostSummary = useSelector(
-    (state: any) => state.inventoryDetailsForCostSummary
-  );
+  } = useSelector((state: any) => state.basicDetailsForCostSummary);
 
   const {
     loading: loadingInventoryDetails,
     error: errorInventoryDetails,
     success: successInventoryDetails,
     data: inventoryDetails,
-  } = inventoryDetailsForCostSummary;
-
+  } = useSelector((state: any) => state.inventoryDetailsForCostSummary);
 
   const {
     loading: loadingEdit,
@@ -98,26 +86,7 @@ export const CostSummaryPopup = ({ onClose, campaignId }: any) => {
     success: successEdit
   } = useSelector((state: any) => state.editCostDetailsScreenWise);
 
-  useEffect(() => {
-    if (successInventoryDetails && result === null) {
-      setResult(
-        inventoryDetails?.map((data: any) => {
-          return {
-            ...data,
-            documents: data?.documents ? data?.documents : [],
-          };
-        })
-      );
-    }
-
-    if (successEdit) {
-      message.success("Cost details updated successfully")
-    }
-
-  }, [successInventoryDetails, result, inventoryDetails, successEdit]);
-
-
-  useEffect(() => {
+  const updateInitialData = useCallback(() => {
     dispatch(getInventoryDetailsForCostSummaryPopupPage({ id: campaignId }));
     dispatch(getBasicDetailsCostSummaryPopupPage({ id: campaignId }));
     dispatch(getClientCostForCostSummaryPopupPage({
@@ -141,8 +110,40 @@ export const CostSummaryPopup = ({ onClose, campaignId }: any) => {
       screenTypes: [],
       vendorTypes: []
     }));
-    
   }, [dispatch, campaignId]);
+  
+  useEffect(() => {
+    if (successInventoryDetails) {
+      setScreenData(
+        inventoryDetails?.map((data: any) => {
+          return {
+            ...data,
+            documents: data?.documents ? data?.documents : [],
+          };
+        })
+      );
+    }
+
+
+  }, [successInventoryDetails, inventoryDetails]);
+
+  useEffect(() => {
+    if (successEdit) {
+      message.success("Cost details updated successfully");
+      dispatch({
+        type: EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET
+      });
+      setIsEdit(false);
+      
+      // Refresh all the data
+      updateInitialData()
+    }
+  }, [dispatch, setIsEdit, successEdit, updateInitialData]);
+
+  useEffect(() => {
+    updateInitialData()
+    
+  }, [updateInitialData]);
 
   const titles: Record<CostMetric, TitleConfig> = {
     clientCost: {
@@ -161,7 +162,6 @@ export const CostSummaryPopup = ({ onClose, campaignId }: any) => {
       icon: "fi fi-sr-wallet",
     },
   } as const;
-
 
   return (
     <div className="font-custom fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
@@ -217,14 +217,14 @@ export const CostSummaryPopup = ({ onClose, campaignId }: any) => {
           <div className="px-4">
             <CostSheetTable
               campaignId={campaignId}
-              loadingInventoryDetails={loadingInventoryDetails}
-              result={result}
               setIsEdit={setIsEdit}
               isEdit={isEdit}
               setCurrentRow={setCurrentRow}
               currentRow={currentRow}
+              loading={loadingInventoryDetails || loadingEdit}
+              screenData={screenData}
+              setScreenData={setScreenData}
             />
-            
           </div>
         </div>
       </div>
