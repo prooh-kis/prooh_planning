@@ -185,7 +185,7 @@ export const CostSheetTable = ({
           </div>
         )}
       </div>
-      <div className="w-full flex flex-col h-[400px] border rounded-md">
+      <div className="w-full flex flex-col h-[400px] border border-gray-100 shadow-sm rounded-md">
         <div className="w-full">
           <table className="w-full">
             <thead className="bg-[#F7F7F7] w-full">

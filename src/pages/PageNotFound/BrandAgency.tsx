@@ -17,6 +17,7 @@ export const BrandAgencyPage = () => {
   const [brandToEdit, setBrandToEdit] = useState<Brand | null>(null);
   const [files, setFiles] = useState<FileData[]>([]);
 
+  const [primaryPoc, setPrimaryPoc] = useState<any>(null);
   const {
     loading: loadingAdd,
     error: errorAdd,
@@ -199,6 +200,7 @@ export const BrandAgencyPage = () => {
       })
     );
   }, [brandToEdit, dispatch]);
+
 
   if (loading) {
     return (

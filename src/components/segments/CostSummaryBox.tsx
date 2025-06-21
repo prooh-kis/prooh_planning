@@ -25,7 +25,7 @@ export const CostSummaryBox = ({
 }: BoxProps) => {
   return (
     <div
-      className={`cursor-pointer rounded-lg border bg-white p-4 flex gap-4 ${
+      className={`cursor-pointer rounded-lg border border-gray-100 shadow-sm bg-white p-4 flex gap-4 ${
         isSelected ? "ring-2 ring-blue-500" : ""
       }`}
       onClick={onClick}

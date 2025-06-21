@@ -27,8 +27,6 @@ export const NewDashBoard: React.FC = () => {
   const { pathname } = useLocation();
   const campaignId = pathname.split("/")[2] || "";
 
-  const [aiInsight, setAiInsight] = useState<string>("");
-  const [isAnalyzing, setIsAnalysing] = useState<boolean>(false);
 
   const [openInvoice, setOpenInvoice] = useState<any>(false);
 

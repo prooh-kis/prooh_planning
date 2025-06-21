@@ -146,11 +146,11 @@ export const CostSheetHorizontalBarChartSegment: React.FC<BarChartProps> = ({
             // @ts-ignore - value is a string from the label
             const percentage = parseFloat(this.getLabelForValue(value).replace('%', ''));
             if (percentage > 0) {
-              return `${percentage}%`;
+              return `${percentage.toFixed(0)}%`;
             } else if (percentage < 0) {
-              return `${percentage}%`;
+              return `${percentage.toFixed(0)}%`;
             }
-            return `${percentage}%`;
+            return `${percentage.toFixed(0)}%`;
           },
           color: (context: any) => {
             const label = context.tick.label;
