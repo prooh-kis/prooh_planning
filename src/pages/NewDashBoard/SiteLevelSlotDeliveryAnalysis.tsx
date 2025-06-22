@@ -148,15 +148,17 @@ export const SiteLevelSlotDeliveryAnalysis = ({
                   >
                     <h1 className="text-[12px] font-semibold truncate">
                       Total:{" "}
-                      {formatNumber(
-                        tabWiseSiteData?.dayWiseData.all?.totalSlotsDelivered?.toFixed(
-                          0
-                        )
-                      )}
+                      <span className={`${tabWiseSiteData?.dayWiseData.all?.totalSlotsDelivered > tabWiseSiteData?.dayWiseData.all?.slotsPromisedTillDate ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
+                        {formatNumber(
+                          tabWiseSiteData?.dayWiseData.all?.totalSlotsDelivered?.toFixed(
+                            0
+                          )
+                        )}
+                      </span>
                       <span className="text-[#0E212E]">
                         /
                         {formatNumber(
-                          tabWiseSiteData?.dayWiseData.all?.slotsPromised?.toFixed(
+                          tabWiseSiteData?.dayWiseData.all?.slotsPromisedTillDate?.toFixed(
                             0
                           )
                         )}

@@ -171,9 +171,11 @@ export const SlotSegment = ({
                   <Tooltip
                     title={`Slot delivered till now / slot promised till today`}
                   >
-                    <h1 className="text-[12px] font-semibold truncate">
+                    <h1 className={`text-[12px] font-semibold truncate`}>
                       Total:{" "}
-                      {formatNumber(dataToShow.slotsDelivered.toFixed(0))}
+                      <span className={`${dataToShow.slotsDelivered > dataToShow.slotsPromisedTillDate ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
+                        {formatNumber(dataToShow.slotsDelivered.toFixed(0))}
+                      </span>
                       <span className="text-[#0E212E]">
                         /
                         {formatNumber(

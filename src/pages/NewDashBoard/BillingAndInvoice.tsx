@@ -38,6 +38,16 @@ export const BillingAndInvoice = (props: any) => {
 
   const { takeScreenShot, billInvoiceDetailsData, loadingBillInvoiceDetails, onClose, campaignDetails, siteLevelData, pathname } = props;
 
+  // po data
+  const [poNumber, setPoNumber] = useState<string>("");
+  const [poDate, setPoDate] = useState<string>("");
+
+  // invoice data
+  const [invoiceDescription, setInvoiceDescription] = useState<string>("");
+  const [invoiceQuantity, setInvoiceQuantity] = useState<string>("");
+  const [invoiceCurrency, setInvoiceCurrency] = useState<string>("INR");
+  const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
+  
   const [magnifiedImageView, setMagnifiedImageView] = useState<boolean>(false);
   const [magnifiedImage, setMagnifiedImage] = useState<any>(null);
 
@@ -126,6 +136,27 @@ export const BillingAndInvoice = (props: any) => {
     if (billingStep === 1) {
       dispatch(createBillInvoice({
         campaignCreationId: campaignDetails?._id,
+        campaignName: campaignDetails?.name,
+        clientAgencyName: campaignDetails?.clientName,
+        invoiceNumber: `PROOH/${campaignDetails?._id}`,
+        invoiceDate: todayDate,
+        invoiceCurrency: invoiceCurrency,
+        clientConfirmation: campaignDetails?.clientApprovalImgs?.length > 0 ? "Mail Confirmation" : "mail confirmation",
+        clientOrderDate: poDate,
+        poNumber: poNumber,
+        poDate: poDate,
+        tableContent: [{
+          description: invoiceDescription,
+          quantity: invoiceQuantity,
+          amount: invoiceAmount,
+          rate: invoiceAmount,
+          hsnsac: ""
+        }],
+        subTotalAmount: invoiceAmount,
+        outPutGstPercent: 18,
+        outPutGstAmount: invoiceAmount * 0.18,
+        totalAmount: invoiceAmount * 1.18,
+        currency: "INR",
         uploadedPO: billingStep === 1 && poFiles.length > 0 ? poFiles[poFiles.length - 1].awsURL : undefined,
       }))
     }
@@ -387,6 +418,18 @@ export const BillingAndInvoice = (props: any) => {
                   campaignDetails={campaignDetails}
                   clientAgencyDetailsData={clientAgencyDetailsData}
                   billInvoiceDetailsData={billInvoiceDetailsData}
+                  setInvoiceAmount={setInvoiceAmount}
+                  invoiceAmount={invoiceAmount}
+                  setInvoiceDescription={setInvoiceDescription}
+                  invoiceDescription={invoiceDescription}
+                  setInvoiceQuantity={setInvoiceQuantity}
+                  invoiceQuantity={invoiceQuantity}
+                  setInvoiceCurrency={setInvoiceCurrency}
+                  invoiceCurrency={invoiceCurrency}
+                  setPoDate={setPoDate}
+                  poDate={poDate}
+                  setPoNumber={setPoNumber}
+                  poNumber={poNumber}
                 />
               )}
             </div>
