@@ -19,6 +19,8 @@ import {
   GENERATE_MONITORING_PPT_RESET,
   GET_MONITORING_PPT_JOB_STATUS_RESET,
 } from "../../constants/monitoringConstant";
+import { getUserRole } from "../../utils/campaignUtils";
+
 interface Props {
   handleCancel: () => void;
   campaignId: string;
@@ -34,6 +36,9 @@ export const MonitoringPicturesAllSitesPopup = ({
   const { loading, error, data } = useSelector(
     (state: any) => state.allSitesMonitoringData
   );
+
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
 
   // State management
   const [currentScreen, setCurrentScreen] = useState("");
@@ -136,6 +141,7 @@ export const MonitoringPicturesAllSitesPopup = ({
     dispatch(
       getAllSitesMonitoringData({
         id: campaignId,
+        userRole: getUserRole(userInfo?.userRole),
         cities: selectedCities,
         touchPoints: selectedTouchPoints,
         screenTypes: selectedScreenTypes,
@@ -301,8 +307,8 @@ export const MonitoringPicturesAllSitesPopup = ({
                 renderItem={(screenName: string) => (
                   <div
                     key={screenName}
-                    className={`p-2 cursor-pointer ${
-                      currentScreen === screenName ? "bg-blue-50" : ""
+                    className={`p-2 cursor-pointer truncate ${
+                      currentScreen === screenName ? "bg-[#129BFF50]" : ""
                     }`}
                     onClick={() => setCurrentScreen(screenName)}
                   >

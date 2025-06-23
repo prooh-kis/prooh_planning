@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getSpotDeliveryDataForPlannerDashboard } from "../../actions/dashboardAction";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { Tooltip } from "antd";
+import { getUserRole } from "../../utils/campaignUtils";
 
 export const SlotSegment = ({
   campaignId,
@@ -25,6 +26,9 @@ export const SlotSegment = ({
   const { loading: loadingSpotData, data: spotData } = useSelector(
     (state: any) => state.spotDeliveryDataForPlannerDashboard
   );
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
+
   const getSpotDeliveryData = () => {
     const datesArray = Object.keys(spotData?.spotDeliveryData)?.map(
       (date: any) => date
@@ -135,6 +139,7 @@ export const SlotSegment = ({
       dispatch(
         getSpotDeliveryDataForPlannerDashboard({
           id: campaignId,
+          userRole: getUserRole(userInfo?.userRole),          
           cities: filters.cities.spotDelivery?.filter((f: any) => f !== "all"),
           touchPoints: filters.touchPoints.spotDelivery?.filter(
             (f: any) => f !== "all"

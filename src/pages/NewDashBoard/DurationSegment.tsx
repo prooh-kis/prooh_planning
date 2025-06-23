@@ -1,4 +1,3 @@
-
 import { SectionHeader } from "../../components/molecules/DashboardGrid";
 import { CalenderScaleStepper } from "../../components/molecules/CalenderScale2";
 import { DurationGraphPerDay } from "../../components/segments/DurationGraphPerDay";
@@ -7,6 +6,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSlotDeliveryGraphDateWiseForPlannerDashboard } from "../../actions/dashboardAction";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { getUserRole } from "../../utils/campaignUtils";
 
 export const DurationSegment = ({
   calendarData = [],
@@ -27,19 +27,25 @@ export const DurationSegment = ({
   viewAllLogsOpen,
 }: any) => {
   const dispatch = useDispatch<any>();
-  const { loading: loadingHourlySpotDelivery, data: hourlySpotDelivery } = useSelector(
-    (state: any) => state.slotDeliveryGraphDateWiseForPlannerDashboard
-  );
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
+  const { loading: loadingHourlySpotDelivery, data: hourlySpotDelivery } =
+    useSelector(
+      (state: any) => state.slotDeliveryGraphDateWiseForPlannerDashboard
+    );
 
   useEffect(() => {
     const date = new Date(currentDate);
     date.setMinutes(date.getMinutes() + 29);
-    dispatch(getSlotDeliveryGraphDateWiseForPlannerDashboard({
-      id: campaignId,
-      // date: "2025-04-16T06:29:00.000+00:00",
-      date: date?.toISOString().replace('Z', '+00:00'),
-    }))
-  },[campaignId, currentDate, dispatch]);
+    dispatch(
+      getSlotDeliveryGraphDateWiseForPlannerDashboard({
+        id: campaignId,
+        // date: "2025-04-16T06:29:00.000+00:00",
+        date: date?.toISOString().replace("Z", "+00:00"),
+        userRole: getUserRole(userInfo?.userRole),
+      })
+    );
+  }, [campaignId, currentDate, dispatch]);
   return (
     <div className="relative grid grid-cols-12 gap-2">
       {calendarData && Object.keys(calendarData).length > 0 && (
@@ -70,7 +76,7 @@ export const DurationSegment = ({
           />
         </div>
       )}
-      
+
       <div className="col-span-4 bg-[#FFFFFF] rounded-[12px] border border-gray-100 h-full shadow-sm p-1">
         <div className="flex items-center justify-between border-b mx-4">
           <div className="flex items-center gap-2 pt-4 pb-2 truncate">
@@ -89,20 +95,34 @@ export const DurationSegment = ({
           <div className="flex items-center gap-4 pt-4 pb-2 truncate">
             <div className="flex items-center gap-2 truncate">
               <i className="fi fi-rr-calendar-lines text-[#DC6700] text-[12px] flex items-center" />
-              <h1 className="text-[12px] truncate">{new Date(currentDate)?.toLocaleDateString()}</h1>
+              <h1 className="text-[12px] truncate">
+                {new Date(currentDate)?.toLocaleDateString()}
+              </h1>
             </div>
             <div className="flex items-center gap-2 truncate">
               <i className="fi fi-br-clock text-[#DC6700] text-[12px] flex items-center" />
-              <h1 className="text-[12px] truncate">{new Date().toLocaleTimeString()}</h1>
+              <h1 className="text-[12px] truncate">
+                {new Date().toLocaleTimeString()}
+              </h1>
             </div>
           </div>
         </div>
-        {!loadingHourlySpotDelivery && hourlySpotDelivery && Object.keys(hourlySpotDelivery).length > 0 ? (
+        {!loadingHourlySpotDelivery &&
+        hourlySpotDelivery &&
+        Object.keys(hourlySpotDelivery).length > 0 ? (
           <DurationGraphPerDay
             currentData={hourlySpotDelivery}
             additionalLegends={[
-              { label: "Hourly Delivery", values: [1500], color: "rgba(16, 185, 129, 1)" },
-              { label: "Extra Delivery", values: [1200], color: "rgba(245, 158, 11, 1)" },
+              {
+                label: "Hourly Delivery",
+                values: [1500],
+                color: "rgba(16, 185, 129, 1)",
+              },
+              {
+                label: "Extra Delivery",
+                values: [1200],
+                color: "rgba(245, 158, 11, 1)",
+              },
             ]}
           />
         ) : (
@@ -112,5 +132,5 @@ export const DurationSegment = ({
         )}
       </div>
     </div>
-  )
-}
+  );
+};

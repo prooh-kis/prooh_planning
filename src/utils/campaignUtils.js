@@ -1,3 +1,4 @@
+import { CAMPAIGN_MANAGER, CAMPAIGN_PLANNER } from "../constants/userConstants";
 import {
   CAMPAIGN_PLAN_TYPE_KNOW,
   CAMPAIGN_PLAN_TYPE_REGULAR,
@@ -17,4 +18,17 @@ export const getCampaignPageNameFromCampaignType = (value) => {
   };
 
   return campaignTypeMap[value] || "";
+};
+
+export const getUserRole = (value) => {
+  if (!value) return "";
+
+  const userRole = {
+    [CAMPAIGN_PLANNER]: "planner",
+    [CAMPAIGN_MANAGER]: "planner",
+  };
+
+  console.log("getUserRole : ", value, userRole[value]);
+
+  return userRole[value] || "client";
 };

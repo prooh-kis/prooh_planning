@@ -20,6 +20,8 @@ import {
   getSiteLevelPerformanceForPlannerDashboard,
   getSpotDeliveryDataForPlannerDashboard,
 } from "../../actions/dashboardAction";
+import { getUserRole } from "../../utils/campaignUtils";
+import { useSelector } from "react-redux";
 
 interface GridItem {
   id: string;
@@ -115,6 +117,9 @@ export const CampaignDashboard = ({
     },
   ];
 
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
+
   const commonClasses =
     "cursor-pointer rounded-[12px] shadow-sm col-span-1 bg-white p-4 h-auto ";
 
@@ -188,10 +193,13 @@ export const CampaignDashboard = ({
         ),
         dayTypes: filters.dayTypes.audience?.filter((f: any) => f !== "all"),
         timezones: filters.timezones.audience?.filter((f: any) => f !== "all"),
+        userRole: getUserRole(userInfo?.userRole),
       })
     );
     dispatch(
       getHardwarePerformanceDataForPlannerDashboard({
+        userRole: getUserRole(userInfo?.userRole),
+
         ...commonParams,
         cities: filters.cities.screenPerformance?.filter(
           (f: any) => f !== "all"
@@ -213,6 +221,7 @@ export const CampaignDashboard = ({
     dispatch(
       getSpotDeliveryDataForPlannerDashboard({
         ...commonParams,
+        userRole: getUserRole(userInfo?.userRole),
         cities: filters.cities.spotDelivery?.filter((f: any) => f !== "all"),
         touchPoints: filters.touchPoints.spotDelivery?.filter(
           (f: any) => f !== "all"
@@ -231,6 +240,7 @@ export const CampaignDashboard = ({
     dispatch(
       getCostDataForPlannerDashboard({
         ...commonParams,
+        userRole: getUserRole(userInfo?.userRole),
         cities: filters.cities.costConsumption?.filter((f: any) => f !== "all"),
         touchPoints: filters.touchPoints.costConsumption?.filter(
           (f: any) => f !== "all"
@@ -249,6 +259,8 @@ export const CampaignDashboard = ({
     dispatch(
       getSiteLevelPerformanceForPlannerDashboard({
         ...commonParams,
+        userRole: getUserRole(userInfo?.userRole),
+
         cities: filters.cities.siteLevel,
         touchPoints: filters.touchPoints.siteLevel,
         screenTypes: filters.screenTypes.siteLevel,

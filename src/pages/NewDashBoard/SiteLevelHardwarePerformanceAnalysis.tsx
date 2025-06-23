@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { getSiteLevelPerformanceTabWiseForPlannerDashboard } from "../../actions/dashboardAction";
 import { HARDWARE_PERFORMANCE } from "../../constants/tabDataConstant";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { getUserRole } from "../../utils/campaignUtils";
 
 export const SiteLevelHardwarePerformanceAnalysis = ({
   campaignId,
@@ -20,6 +21,8 @@ export const SiteLevelHardwarePerformanceAnalysis = ({
   currentDate,
 }: any) => {
   const dispatch = useDispatch<any>();
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
 
   const {
     loading: loadingTabWiseSiteData,
@@ -107,6 +110,7 @@ export const SiteLevelHardwarePerformanceAnalysis = ({
     dispatch(
       getSiteLevelPerformanceTabWiseForPlannerDashboard({
         campaignId: campaignId,
+        userRole: getUserRole(userInfo?.userRole),        
         tab: HARDWARE_PERFORMANCE,
         date: new Date(currentDate).toISOString().replace("Z", "+00:00"),
         dayTypes: dayTimeFilters.dayTypes.screenPerformance?.filter(

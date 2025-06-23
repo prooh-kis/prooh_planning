@@ -7,6 +7,7 @@ import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { AUDIENCE_IMPRESSION } from "../../constants/tabDataConstant";
 import { SectionHeaderWithSwitch } from "../../components/segments/SectionHeaderWithSwitch";
 import { CheckboxInput } from "../../components/atoms/CheckboxInput";
+import { getUserRole } from "../../utils/campaignUtils";
 
 export const SiteLevelAudienceAnalysis = ({
   campaignId,
@@ -25,6 +26,9 @@ export const SiteLevelAudienceAnalysis = ({
   } = useSelector(
     (state: any) => state.siteLevelPerformanceTabWiseForPlannerDashboard
   );
+
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
 
 
   const handleClick = ({type, value, checked}: any) => {
@@ -77,14 +81,20 @@ export const SiteLevelAudienceAnalysis = ({
 
 
   useEffect(() => {
-    dispatch(getSiteLevelPerformanceTabWiseForPlannerDashboard({
-      campaignId: campaignId,
-      tab: AUDIENCE_IMPRESSION,
-      date: new Date(currentDate).toISOString().replace('Z', '+00:00'),
-      dayTypes: dayTimeFilters.dayTypes.audience?.filter((f: any) => f !== "all"),
-      timezones: dayTimeFilters.timezones.audience?.filter((f: any) => f !== "all"),
-     
-    }));
+    dispatch(
+      getSiteLevelPerformanceTabWiseForPlannerDashboard({
+        campaignId: campaignId,
+        userRole: getUserRole(userInfo?.userRole),
+        tab: AUDIENCE_IMPRESSION,
+        date: new Date(currentDate).toISOString().replace("Z", "+00:00"),
+        dayTypes: dayTimeFilters.dayTypes.audience?.filter(
+          (f: any) => f !== "all"
+        ),
+        timezones: dayTimeFilters.timezones.audience?.filter(
+          (f: any) => f !== "all"
+        ),
+      })
+    );
   }, [dispatch, campaignId, currentDate, dayTimeFilters]);
 
   return (

@@ -10,6 +10,7 @@ import { SPOT_DELIVERY } from "../../constants/tabDataConstant";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { DashBoardSlotGraph } from "../../components/segments/DashBoardSlotGraph";
 import { Tooltip } from "antd";
+import { getUserRole } from "../../utils/campaignUtils";
 
 export const SiteLevelSlotDeliveryAnalysis = ({
   campaignId,
@@ -22,6 +23,9 @@ export const SiteLevelSlotDeliveryAnalysis = ({
   campaignDetails,
 }: any) => {
   const dispatch = useDispatch<any>();
+  
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
 
   const {
     loading: loadingTabWiseSiteData,
@@ -108,6 +112,7 @@ export const SiteLevelSlotDeliveryAnalysis = ({
 
     dispatch(
       getSiteLevelPerformanceTabWiseForPlannerDashboard({
+        userRole: getUserRole(userInfo?.userRole),
         campaignId: campaignId,
         tab: SPOT_DELIVERY,
         date: new Date(currentDate).toISOString().replace("Z", "+00:00"),
@@ -147,7 +152,16 @@ export const SiteLevelSlotDeliveryAnalysis = ({
                   >
                     <h1 className="text-[12px] font-semibold truncate">
                       Total:{" "}
-                      <span className={`${tabWiseSiteData?.dayWiseData.all?.totalSlotsDelivered > tabWiseSiteData?.dayWiseData.all?.slotsPromisedTillDate ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
+                      <span
+                        className={`${
+                          tabWiseSiteData?.dayWiseData.all
+                            ?.totalSlotsDelivered >
+                          tabWiseSiteData?.dayWiseData.all
+                            ?.slotsPromisedTillDate
+                            ? "text-[#4DB37E]"
+                            : "text-[#EF4444]"
+                        }`}
+                      >
                         {formatNumber(
                           tabWiseSiteData?.dayWiseData.all?.totalSlotsDelivered?.toFixed(
                             0

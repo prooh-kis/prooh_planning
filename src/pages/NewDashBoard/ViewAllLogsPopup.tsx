@@ -15,6 +15,7 @@ import { TIME_ZONES } from "../../constants/helperConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import moment from "moment";
+import { getUserRole } from "../../utils/campaignUtils";
 
 interface HeaderProps {
   icon: string;
@@ -85,6 +86,9 @@ export const ViewAllLogsPopup = ({
     error: errorAllLogs,
     data: allLogsData,
   } = useSelector((state: any) => state.getFiltersAndDataForAllLogsPopup);
+
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
 
   const newData = useMemo(() => {
     if (logs && logs.length > 0) {
@@ -244,6 +248,7 @@ export const ViewAllLogsPopup = ({
   useEffect(() => {
     dispatch(
       getFiltersAndDataForAllLogsPopupAction({
+        userRole: getUserRole(userInfo?.userRole),        
         cities: selectedCities,
         touchPoints: selectedTouchPoints,
         screenTypes: selectedScreenTypes,

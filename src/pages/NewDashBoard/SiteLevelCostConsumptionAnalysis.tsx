@@ -9,6 +9,7 @@ import { getSiteLevelPerformanceTabWiseForPlannerDashboard } from "../../actions
 import { COST_CONSUMED } from "../../constants/tabDataConstant";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { DashBoardCostGraph } from "../../components/segments/DashBoardCostGraph";
+import { getUserRole } from "../../utils/campaignUtils";
 
 export const SiteLevelCostConsumptionAnalysis = ({
   campaignId,
@@ -28,6 +29,9 @@ export const SiteLevelCostConsumptionAnalysis = ({
   } = useSelector(
     (state: any) => state.siteLevelPerformanceTabWiseForPlannerDashboard
   );
+
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
 
   const getCostConsumptionData = () => {
     const datesArray =
@@ -103,6 +107,7 @@ export const SiteLevelCostConsumptionAnalysis = ({
     dispatch(
       getSiteLevelPerformanceTabWiseForPlannerDashboard({
         campaignId: campaignId,
+        userRole: getUserRole(userInfo?.userRole),        
         tab: COST_CONSUMED,
         date: new Date(currentDate).toISOString().replace("Z", "+00:00"),
         dayTypes: dayTimeFilters.dayTypes.costConsumption?.filter(

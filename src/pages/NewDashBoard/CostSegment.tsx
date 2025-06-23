@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getCostDataForPlannerDashboard } from "../../actions/dashboardAction";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { getUserRole } from "../../utils/campaignUtils";
 
 export const CostSegment = ({
   campaignId,
@@ -23,6 +24,9 @@ export const CostSegment = ({
   const { loading: loadingCostData, data: costData } = useSelector(
     (state: any) => state.costDataForPlannerDashboard
   );
+  const auth = useSelector((state: any) => state.auth);
+    const { userInfo } = auth;
+  
 
   const getCostData = () => {
     const datesArray = Object.keys(costData?.costData)?.map((date: any) => date);
@@ -124,6 +128,7 @@ export const CostSegment = ({
       dispatch(
         getCostDataForPlannerDashboard({
           id: campaignId,
+          userRole: getUserRole(userInfo?.userRole),          
           cities: filters.cities.costConsumption?.filter((f: any) => f !== "all"),
           touchPoints: filters.touchPoints.costConsumption?.filter((f: any) => f !== "all"),
           screenTypes: filters.screenTypes.costConsumption?.filter((f: any) => f !== "all"),

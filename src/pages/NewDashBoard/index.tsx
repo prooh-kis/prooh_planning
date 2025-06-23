@@ -12,7 +12,11 @@ import {
 import { BillingAndInvoice } from "./BillingAndInvoice";
 import { GET_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-import { getBillInvoiceDetails, takeDashboardScreenShotAction } from "../../actions/billInvoiceAction";
+import {
+  getBillInvoiceDetails,
+  takeDashboardScreenShotAction,
+} from "../../actions/billInvoiceAction";
+import { getUserRole } from "../../utils/campaignUtils";
 
 interface FilterState {
   audience: string[];
@@ -27,9 +31,9 @@ export const NewDashBoard: React.FC = () => {
   const { pathname } = useLocation();
   const campaignId = pathname.split("/")[2] || "";
 
-
   const [openInvoice, setOpenInvoice] = useState<any>(false);
-
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
   // State for filters
   const [filters, setFilters] = useState<{
     cities: FilterState;
@@ -95,35 +99,58 @@ export const NewDashBoard: React.FC = () => {
   const { loading: loadingSitesDataMapView, data: sitesDataMapViewData } =
     useSelector((state: any) => state.sitesDataMapViewForPlannerDashboard);
 
-    const {
-      loading: loadingBillInvoiceDetails,
-      error: errorBillInvoiceDetails,
-      data: billInvoiceDetailsData,
-    } = useSelector((state: any) => state.billInvoiceDetailsGet);;
+  const {
+    loading: loadingBillInvoiceDetails,
+    error: errorBillInvoiceDetails,
+    data: billInvoiceDetailsData,
+  } = useSelector((state: any) => state.billInvoiceDetailsGet);
 
-  const takeScreenShot = ({ tabs=["1", "2", "3", "4", "5"]}: {tabs?: string[]}) => {
-    dispatch(takeDashboardScreenShotAction({
-      campaignId: campaignDetails?._id,
-      // url: `${window.location.origin}/campaignDashboard/${campaignDetails?._id}`,
-      url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
-      // url: `http://localhost:3000/campaignDashboard/${campaignDetails?._id}`,
-      tabs: tabs
-      // tabs: ["1", "2"]
-    }))
-  }
+  const takeScreenShot = ({
+    tabs = ["1", "2", "3", "4", "5"],
+  }: {
+    tabs?: string[];
+  }) => {
+    dispatch(
+      takeDashboardScreenShotAction({
+        campaignId: campaignDetails?._id,
+        // url: `${window.location.origin}/campaignDashboard/${campaignDetails?._id}`,
+        url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
+        // url: `http://localhost:3000/campaignDashboard/${campaignDetails?._id}`,
+        tabs: tabs,
+        // tabs: ["1", "2"]
+      })
+    );
+  };
 
   // Set up initial data fetch and refresh interval
   useEffect(() => {
-
     dispatch(getBillInvoiceDetails({ campaignCreationId: campaignId }));
 
-    dispatch(getCampaignCreationsDetails({ id: campaignId }));
-    dispatch(getBasicDataForPlannerDashboard({ id: campaignId }));
+    dispatch(
+      getCampaignCreationsDetails({
+        id: campaignId,
+      })
+    );
+    dispatch(
+      getBasicDataForPlannerDashboard({
+        id: campaignId,
+        userRole: getUserRole(userInfo?.userRole),
+      })
+    );
 
-    dispatch(getSiteMonitoringPicsPercentage({ id: campaignId }));
-    dispatch(getSitesDataMapViewForPlannerDashboard({ id: campaignId }));
-
-  }, [dispatch, campaignId,]);
+    dispatch(
+      getSiteMonitoringPicsPercentage({
+        id: campaignId,
+        userRole: getUserRole(userInfo?.userRole),
+      })
+    );
+    dispatch(
+      getSitesDataMapViewForPlannerDashboard({
+        id: campaignId,
+        userRole: getUserRole(userInfo?.userRole),
+      })
+    );
+  }, [dispatch, campaignId]);
 
   const isLoading = loadingCampaignDetails || loadingDashboard;
   const hasError = errorCampaignDetails || errorDashboard;
