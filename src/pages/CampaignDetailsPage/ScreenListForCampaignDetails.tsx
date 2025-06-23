@@ -14,6 +14,7 @@ import {
 } from "../../constants/userConstants";
 import { ScreenListMonitoringView } from "../../components/molecules/ScreenListMonitoringView";
 import { ShowMediaFile } from "../../components/molecules/ShowMediaFIle";
+import { useEffect, useState } from "react";
 
 const ScreenListForCampaignDetails = ({
   campaignCreated,
@@ -33,6 +34,8 @@ const ScreenListForCampaignDetails = ({
   currentTab,
   setCurrentTab,
 }: any) => {
+  const [initialized, setInitialized] = useState(false);
+
   const renderCreatives = () => {
     return (
       <div className="grid grid-cols-2 gap-4">
@@ -42,6 +45,8 @@ const ScreenListForCampaignDetails = ({
               <ShowMediaFile
                 url={creativeGroup.url}
                 mediaType={creativeGroup.type?.split("/")[0]}
+                height="h-auto"
+                width="w-full"
               />
               <Tooltip title={creativeGroup.url?.split("_").pop()}>
                 <h1 className="text-[12px] text-gray-500 truncate">
@@ -54,6 +59,13 @@ const ScreenListForCampaignDetails = ({
       </div>
     );
   };
+  useEffect(() => {
+    if (!initialized && campaigns?.length > 0) {
+      handelSelectScreen(campaigns[0]?._id);
+      handleSetCurrentScreen(campaigns[0]?.screenId);
+      setInitialized(true); // Mark as initialized to prevent re-running
+    }
+  }, [campaigns, initialized]); // Only runs once when campaigns first loads
 
   return (
     <div className="grid grid-cols-12 gap-1 mt-1">

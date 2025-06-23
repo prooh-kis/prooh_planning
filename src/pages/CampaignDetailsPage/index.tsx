@@ -366,7 +366,7 @@ export const CampaignDetailsPage: React.FC = () => {
       {currentTab1 === "1" ? (
         <ScreenListForCampaignDetails
           campaignCreated={campaignCreated}
-          loadingStatusChange={loadingStatusChange}
+          loadingStatusChange={loadingStatusChange || loadingScreens}
           handleChangeStatusAll={handleChangeStatusAll}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}

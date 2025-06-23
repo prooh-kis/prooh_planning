@@ -88,12 +88,7 @@ export const CampaignDashboard = ({
       campaignDetails: screenLevelData?.campaignCreation,
       screenLevelData: screenLevelData?.data,
     },
-    {
-      id: "2",
-      type: "audience",
-      campaignDetails: screenLevelData?.campaignCreation,
-      screenLevelData: screenLevelData?.data,
-    },
+
     {
       id: "3",
       type: "screen",
@@ -109,6 +104,12 @@ export const CampaignDashboard = ({
     {
       id: "5",
       type: "cost",
+      campaignDetails: screenLevelData?.campaignCreation,
+      screenLevelData: screenLevelData?.data,
+    },
+    {
+      id: "2",
+      type: "audience",
       campaignDetails: screenLevelData?.campaignCreation,
       screenLevelData: screenLevelData?.data,
     },
