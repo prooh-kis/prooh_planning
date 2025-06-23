@@ -9,7 +9,6 @@ import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { ADD_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyConstants";
 import { Brand, FileData } from "../../types/brandAgencyTypes";
 import { BrandDetails, EditBrandForm } from "./SubComponents";
-import { getUserList } from "../../actions/userAction";
 
 export const BrandAgencyPage = () => {
   const dispatch = useDispatch<any>();
@@ -34,7 +33,6 @@ export const BrandAgencyPage = () => {
   // Load brands data
   useEffect(() => {
     dispatch(getAllClientAgencyNames());
-    dispatch(getUserList());
   }, [dispatch]);
 
   // Update local brands state when data loads
