@@ -8,6 +8,7 @@ import { AUTH } from "../../routes/routes";
 import {
   CAMPAIGN_MANAGER,
   CAMPAIGN_PLANNER,
+  CLIENT_POC_USER,
 } from "../../constants/userConstants";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import { Planner } from "../../assets";
@@ -57,6 +58,8 @@ export const Header: React.FC = () => {
                 ? "PLANNER"
                 : userInfo.userRole === CAMPAIGN_MANAGER
                 ? "MANAGER"
+                : userInfo.userRole === CLIENT_POC_USER
+                ? "Client POC"
                 : userInfo?.userRole}
             </p>
           </div>

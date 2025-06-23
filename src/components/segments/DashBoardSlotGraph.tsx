@@ -40,6 +40,7 @@ interface BarChartProps {
   bgColor2?: string;
   percent?: boolean;
   allData?: any;
+  campaignDetails?: any;
 }
 
 export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
@@ -47,11 +48,11 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
   labels,
   percent = true,
   allData,
+  campaignDetails,
 }) => {
   const sortedDates = Object.keys(allData).sort(
     (a, b) => new Date(a).getTime() - new Date(b).getTime()
   );
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -289,8 +290,9 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
             });
 
             return [
-              `Overall Delivered: ${total.toFixed(0)}`,
-              `Overall Promised: ${requiredToPlayedValue?.toFixed(0) || 0}`,
+              `Overall Delivery`,
+              `Delivered (${total.toFixed(0)}) / Promised (${requiredToPlayedValue?.toFixed(0) || 0})`,
+              context[0].dataset.label === "Partial Delivery" ? `Campaign started at ${new Date(campaignDetails.startDate).toLocaleTimeString()}` : "* inc. remaining previous day deliveries",
             ];
           },
         },

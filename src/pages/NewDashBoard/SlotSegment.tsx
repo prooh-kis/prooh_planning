@@ -18,6 +18,7 @@ export const SlotSegment = ({
   filters,
   setFilters,
   dataToShow,
+  campaignDetails,
 }: any) => {
   const dispatch = useDispatch<any>();
 
@@ -195,6 +196,7 @@ export const SlotSegment = ({
                 allData={spotData?.spotDeliveryData}
                 currentData={getSpotDeliveryData().countsArray}
                 labels={getSpotDeliveryData().datesArray}
+                campaignDetails={campaignDetails}
               />
             </div>
           </div>

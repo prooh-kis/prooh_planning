@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 
 import { Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { signin } from "../../actions/userAction";
-import { useSelector } from "react-redux";
 import { FORGET_PASSWORD, SIGN_UP } from "../../routes/routes";
 
 export const SignIn: React.FC = () => {

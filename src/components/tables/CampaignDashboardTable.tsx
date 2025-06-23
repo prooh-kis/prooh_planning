@@ -469,6 +469,7 @@ export const CampaignDashboardTable = ({
                             : screenData?.campaignId
                         );
                       }}
+                      campaignDetails={campaignDetails}
                     />
                   </td>
                 </tr>

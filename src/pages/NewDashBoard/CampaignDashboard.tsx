@@ -404,6 +404,7 @@ export const CampaignDashboard = ({
               dataToShow={
                 gridItems?.find((item: any) => item.id === "4")?.screenLevelData
               }
+              campaignDetails={campaignDetails}
             />
           ) : clicked === "5" ? (
             <CostSegment

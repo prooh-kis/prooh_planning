@@ -19,6 +19,7 @@ export const SiteLevelSlotDeliveryAnalysis = ({
   dayTimeFilters,
   setDayTimeFilters,
   currentDate,
+  campaignDetails,
 }: any) => {
   const dispatch = useDispatch<any>();
 
@@ -120,8 +121,6 @@ export const SiteLevelSlotDeliveryAnalysis = ({
     );
   }, [dispatch, campaignId, currentDate, dayTimeFilters]);
 
-  console.log("ddddddddddddd : getSlotDeliveryData()", getSlotDeliveryData());
-
   return (
     <div className="">
       {!loadingTabWiseSiteData &&
@@ -176,6 +175,7 @@ export const SiteLevelSlotDeliveryAnalysis = ({
                 currentData={getSlotDeliveryData()?.countsArray}
                 labels={getSlotDeliveryData()?.datesArray}
                 allData={tabWiseSiteData?.spotDeliveryData}
+                campaignDetails={campaignDetails}
               />
             </div>
           </div>

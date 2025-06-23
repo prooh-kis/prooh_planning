@@ -13,7 +13,7 @@ export const MiddleArea: React.FC = () => {
     if (userInfo) {
       navigate("/");
     }
-  }, [userInfo]);
+  }, [navigate, userInfo]);
 
   return (
     <div className="w-full h-full flex justify-center items-center">
