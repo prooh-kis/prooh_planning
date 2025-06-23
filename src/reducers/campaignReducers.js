@@ -287,7 +287,7 @@ export function campaignDurationChangeReducer(state = [], action) {
 export function campaignLogsGetReducer(state = [], action) {
   switch (action.type) {
     case CAMPAIGN_LOGS_REQUEST:
-      return { loading: true };
+      return { loading: true, data: [] };
     case CAMPAIGN_LOGS_SUCCESS:
       return {
         loading: false,

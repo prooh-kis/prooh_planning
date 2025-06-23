@@ -8,6 +8,7 @@ import { List, ListItem } from "../../components/molecules/List";
 import { GetCampaignLogsAction } from "../../actions/campaignAction";
 import {
   formatDateForLogs,
+  getCampaignDurationFromStartAndEndDate,
   getTimeFromDate,
 } from "../../utils/dateAndTimeUtils";
 import { TIME_ZONES } from "../../constants/helperConstants";
@@ -254,10 +255,9 @@ export const ViewAllLogsPopup = ({
       dispatch(
         GetCampaignLogsAction({
           campaignId: currentScreenCampaignId,
-          // date: formatDateForLogs(currentDate)?.apiDate,
-          date: campaignDetails?.endDate 
-              ? formatDateForLogs(moment(Math.min(moment(new Date()).valueOf(), moment(campaignDetails.endDate).valueOf())).format("YYYY-MM-DD hh:mm:ss")).apiDate
-              : formatDateForLogs(moment(new Date()).format("YYYY-MM-DD hh:mm:ss")).apiDate,
+          date: getCampaignDurationFromStartAndEndDate(currentDate, campaignDetails?.endDate) < 0 
+                  ? formatDateForLogs(moment(Math.min(moment(currentDate).valueOf(), moment(campaignDetails.endDate).valueOf())).format("YYYY-MM-DD hh:mm:ss")).apiDate
+                  : formatDateForLogs(moment(currentDate).format("YYYY-MM-DD hh:mm:ss")).apiDate,
           // date: "13/03/2025"
         })
       );

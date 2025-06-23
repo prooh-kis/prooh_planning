@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { convertDateIntoDateMonthYear, formatDateForLogs, getTimeFromDate } from "../../utils/dateAndTimeUtils";
+import { convertDateIntoDateMonthYear, formatDateForLogs, getCampaignDurationFromStartAndEndDate, getTimeFromDate } from "../../utils/dateAndTimeUtils";
 import { message, Skeleton, Tooltip } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { TIME_ZONES } from "../../constants/helperConstants";
@@ -132,10 +132,12 @@ export const BillAndInvoiceMonitoringPicsSegment = ({
       dispatch(
         GetCampaignLogsAction({
           campaignId: siteLevelData?.[seq].campaignId,
-          date: campaignDetails?.endDate 
-                  ? formatDateForLogs(moment(Math.min(moment(new Date()).valueOf(), moment(campaignDetails.endDate).valueOf())).format("YYYY-MM-DD hh:mm:ss")).apiDate
-                  : formatDateForLogs(moment(new Date()).format("YYYY-MM-DD hh:mm:ss")).apiDate,
-        }));
+          date: getCampaignDurationFromStartAndEndDate(currentDate, campaignDetails?.endDate) < 0 
+                  ? formatDateForLogs(moment(Math.min(moment(currentDate).valueOf(), moment(campaignDetails.endDate).valueOf())).format("YYYY-MM-DD hh:mm:ss")).apiDate
+                  : formatDateForLogs(moment(currentDate).format("YYYY-MM-DD hh:mm:ss")).apiDate,
+          // date: "13/03/2025"
+        })
+      );
     }
     
   }, [dispatch, siteLevelData, currentDate, seq, campaignDetails]);
