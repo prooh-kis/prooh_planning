@@ -99,6 +99,7 @@ export const SiteMonitoringPicDashboardComponent = ({
   siteLevelData,
   loadingSiteLevel,
   campaignId,
+  userInfo,
 }: any) => {
   const handleCancel = () => {
     setOpenSiteMapView(false);
@@ -117,9 +118,9 @@ export const SiteMonitoringPicDashboardComponent = ({
   const updatedData = sitesDataMapViewData?.map((data: any) => {
     return {
       ...data,
-      lat: data.location.latitude,
-      lng: data.location.longitude,
-      id: data.location._id,
+      lat: data?.location?.latitude,
+      lng: data?.location?.longitude,
+      id: data?.location?._id,
       screenType: "Spectacular",
     };
   });
@@ -211,6 +212,7 @@ export const SiteMonitoringPicDashboardComponent = ({
           open={openMonitoringView}
           handleCancel={handleCancelMonitoringPopup}
           campaignId={campaignId}
+          userInfo={userInfo}
         />
       )}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">

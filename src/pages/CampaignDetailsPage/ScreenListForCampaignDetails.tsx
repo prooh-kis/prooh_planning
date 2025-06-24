@@ -15,6 +15,7 @@ import {
 import { ScreenListMonitoringView } from "../../components/molecules/ScreenListMonitoringView";
 import { ShowMediaFile } from "../../components/molecules/ShowMediaFIle";
 import { useEffect, useState } from "react";
+import { getUserRole } from "../../utils/campaignUtils";
 
 const ScreenListForCampaignDetails = ({
   campaignCreated,
@@ -33,6 +34,7 @@ const ScreenListForCampaignDetails = ({
   currentScreen,
   currentTab,
   setCurrentTab,
+  userInfo,
 }: any) => {
   const [initialized, setInitialized] = useState(false);
 
@@ -79,40 +81,44 @@ const ScreenListForCampaignDetails = ({
           {loadingStatusChange ? (
             <Skeleton active paragraph={{ rows: 1 }} />
           ) : (
-            <div className="py-2 flex items-center justify-center h-auto gap-4">
-              <Tooltip title="Pause for all screens">
-                <i
-                  className="fi fi-br-pause-circle text-[#000000] cursor-pointer"
-                  onClick={() =>
-                    handleChangeStatusAll(
-                      CAMPAIGN_STATUS_PAUSE,
-                      CAMPAIGN_STATUS_CHANGED_TO_PAUSED_PLANNING_PAGE
-                    )
-                  }
-                />
-              </Tooltip>
-              <Tooltip title="Activate for all screens">
-                <i
-                  className="fi fi-br-play-circle text-[#000000] cursor-pointer"
-                  onClick={() =>
-                    handleChangeStatusAll(
-                      CAMPAIGN_STATUS_ACTIVE,
-                      CAMPAIGN_STATUS_CHANGED_TO_ACTIVE_PLANNING_PAGE
-                    )
-                  }
-                />
-              </Tooltip>
-              <Tooltip title="Delete for all screens">
-                <i
-                  className="fi fi-br-trash text-[#D44949] cursor-pointer"
-                  onClick={() =>
-                    handleChangeStatusAll(
-                      CAMPAIGN_STATUS_DELETED,
-                      CAMPAIGN_STATUS_CHANGED_TO_DELETED_PLANNING_PAGE
-                    )
-                  }
-                />
-              </Tooltip>
+            <div>
+              {getUserRole(userInfo?.role) === "planner" && (
+                <div className="py-2 flex items-center justify-center h-auto gap-4">
+                  <Tooltip title="Pause for all screens">
+                    <i
+                      className="fi fi-br-pause-circle text-[#000000] cursor-pointer"
+                      onClick={() =>
+                      handleChangeStatusAll(
+                        CAMPAIGN_STATUS_PAUSE,
+                        CAMPAIGN_STATUS_CHANGED_TO_PAUSED_PLANNING_PAGE
+                      )
+                    }
+                  />
+                </Tooltip>
+                <Tooltip title="Activate for all screens">
+                  <i
+                    className="fi fi-br-play-circle text-[#000000] cursor-pointer"
+                    onClick={() =>
+                      handleChangeStatusAll(
+                        CAMPAIGN_STATUS_ACTIVE,
+                        CAMPAIGN_STATUS_CHANGED_TO_ACTIVE_PLANNING_PAGE
+                      )
+                    }
+                  />
+                </Tooltip>
+                <Tooltip title="Delete for all screens">
+                  <i
+                    className="fi fi-br-trash text-[#D44949] cursor-pointer"
+                    onClick={() =>
+                      handleChangeStatusAll(
+                        CAMPAIGN_STATUS_DELETED,
+                        CAMPAIGN_STATUS_CHANGED_TO_DELETED_PLANNING_PAGE
+                      )
+                    }
+                  />
+                </Tooltip>
+                </div>
+              )}
             </div>
           )}
         </div>

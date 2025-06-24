@@ -373,10 +373,12 @@ export const CampaignDetailsPage: React.FC = () => {
         openCampaignDashboard={openCampaignDashboard}
         currentTab1={currentTab1}
         setCurrentTab1={setCurrentTab1}
+        userInfo={userInfo}
       />
       {/* Main Content */}
       {currentTab1 === "1" ? (
         <ScreenListForCampaignDetails
+          userInfo={userInfo}
           campaignCreated={campaignCreated}
           loadingStatusChange={loadingStatusChange || loadingScreens || loadingCampaignDetails}
           handleChangeStatusAll={handleChangeStatusAll}
@@ -396,6 +398,7 @@ export const CampaignDetailsPage: React.FC = () => {
         />
       ) : (
         <PlanDetails
+          userInfo={userInfo}
           downloadSummary={downloadSummary}
           basicDetails={getCampaignBasicDetails(campaignCreated)?.basicDetails}
           durationDetails={

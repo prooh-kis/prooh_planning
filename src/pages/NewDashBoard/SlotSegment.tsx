@@ -20,14 +20,13 @@ export const SlotSegment = ({
   setFilters,
   dataToShow,
   campaignDetails,
+  userInfo,
 }: any) => {
   const dispatch = useDispatch<any>();
 
   const { loading: loadingSpotData, data: spotData } = useSelector(
     (state: any) => state.spotDeliveryDataForPlannerDashboard
   );
-  const auth = useSelector((state: any) => state.auth);
-  const { userInfo } = auth;
 
   const getSpotDeliveryData = () => {
     const datesArray = Object.keys(spotData?.spotDeliveryData)?.map(
@@ -139,7 +138,8 @@ export const SlotSegment = ({
       dispatch(
         getSpotDeliveryDataForPlannerDashboard({
           id: campaignId,
-          userRole: getUserRole(userInfo?.userRole),          
+          userRole: getUserRole(userInfo?.userRole),
+          userId: userInfo?._id,
           cities: filters.cities.spotDelivery?.filter((f: any) => f !== "all"),
           touchPoints: filters.touchPoints.spotDelivery?.filter(
             (f: any) => f !== "all"
@@ -156,7 +156,7 @@ export const SlotSegment = ({
         })
       );
     }
-  }, [dispatch, campaignId, filters, spotData]);
+  }, [dispatch, campaignId, filters, spotData, userInfo]);
 
   return (
     <div className="h-full w-full">

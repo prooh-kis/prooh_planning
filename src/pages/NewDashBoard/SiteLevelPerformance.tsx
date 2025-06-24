@@ -36,6 +36,7 @@ interface SiteLevelPerformanceProps {
   setViewAllLogsOpen?: any;
   setCurrentScreen?: any;
   currentScreen?: any;
+  userInfo?: any;
 }
 
 export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
@@ -59,6 +60,7 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
   setOpenSiteLevelMonitoringPicsPopup,
   viewAllLogsOpen,
   setViewAllLogsOpen,
+  userInfo,
   currentScreen,
   setCurrentScreen
 }) => {
@@ -138,6 +140,7 @@ export const SiteLevelPerformance: React.FC<SiteLevelPerformanceProps> = ({
         currentDate={currentDate}
         calendarData={calendarData}
         campaignDetails={campaignDetails}
+        userInfo={userInfo}
       //  loading=
       />
       <div className="w-full pb-4">

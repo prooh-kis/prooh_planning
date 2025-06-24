@@ -16,14 +16,13 @@ export const AudienceSegment = ({
   screenLevelData,
   filters,
   setFilters,
+  userInfo
 }: any) => {
   const dispatch = useDispatch<any>();
 
   const { loading: loadingAudienceData, data: audienceData } = useSelector(
     (state: any) => state.audienceDataForPlannerDashboard
   );
-  const auth = useSelector((state: any) => state.auth);
-  const { userInfo } = auth;
 
   const handleClick = ({ type, value, checked }: any) => {
     setFilters((prev: any) => ({
@@ -95,6 +94,7 @@ export const AudienceSegment = ({
       dispatch(
         getAudienceDataForPlannerDashboard({
           userRole: getUserRole(userInfo?.userRole),
+          userId: userInfo?._id,
           id: campaignId,
           cities: filters.cities.audience?.filter((f: any) => f !== "all"),
           touchPoints: filters.touchPoints.audience?.filter(
@@ -110,7 +110,7 @@ export const AudienceSegment = ({
         })
       );
     }
-  }, [dispatch, campaignId, filters]);
+  }, [dispatch, campaignId, filters, userInfo]);
   return (
     <div className="w-full h-full">
       {loadingAudienceData && (

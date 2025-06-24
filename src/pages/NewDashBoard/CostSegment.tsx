@@ -17,16 +17,14 @@ export const CostSegment = ({
   screenLevelData,
   filters,
   setFilters,
-  dataToShow
+  dataToShow,
+  userInfo,
 }: any) => {
   const dispatch = useDispatch<any>();
 
   const { loading: loadingCostData, data: costData } = useSelector(
     (state: any) => state.costDataForPlannerDashboard
   );
-  const auth = useSelector((state: any) => state.auth);
-    const { userInfo } = auth;
-  
 
   const getCostData = () => {
     const datesArray = Object.keys(costData?.costData)?.map((date: any) => date);
@@ -128,7 +126,8 @@ export const CostSegment = ({
       dispatch(
         getCostDataForPlannerDashboard({
           id: campaignId,
-          userRole: getUserRole(userInfo?.userRole),          
+          userRole: getUserRole(userInfo?.userRole),   
+          userId: userInfo?._id,
           cities: filters.cities.costConsumption?.filter((f: any) => f !== "all"),
           touchPoints: filters.touchPoints.costConsumption?.filter((f: any) => f !== "all"),
           screenTypes: filters.screenTypes.costConsumption?.filter((f: any) => f !== "all"),
@@ -137,7 +136,7 @@ export const CostSegment = ({
         })
       );
     }
-  },[dispatch, campaignId, filters, costData])
+  },[dispatch, campaignId, filters, costData, userInfo])
 
 
   return (
