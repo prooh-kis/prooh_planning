@@ -62,12 +62,11 @@ const ScreenListForCampaignDetails = ({
     );
   };
   useEffect(() => {
-    if (!initialized && campaigns?.length > 0) {
+    if (campaigns?.length > 0) {
       handelSelectScreen(campaigns[0]?._id);
-      handleSetCurrentScreen(campaigns[0]?.screenId);
-      setInitialized(true); // Mark as initialized to prevent re-running
+      handleSetCurrentScreen(campaigns[0]?.screenId)
     }
-  }, [campaigns, initialized]); // Only runs once when campaigns first loads
+  }, [campaigns]); // Only runs once when campaigns first loads
 
   return (
     <div className="grid grid-cols-12 gap-1 mt-1">
@@ -139,9 +138,8 @@ const ScreenListForCampaignDetails = ({
             campaigns?.map((camp: any, k: number) => (
               <div
                 key={k}
-                className={`p-0 m-0 rounded-md ${
-                  campaign?._id === camp?._id ? "bg-[#129BFF30]" : ""
-                } cursor-pointer`}
+                className={`p-0 m-0 rounded-md ${campaign?._id === camp?._id ? "bg-[#129BFF30]" : ""
+                  } cursor-pointer`}
                 onClick={() => {
                   handelSelectScreen(camp?._id);
                   handleSetCurrentScreen(camp?.screenId);
@@ -193,7 +191,25 @@ const ScreenListForCampaignDetails = ({
             />
           </div>
           <div className="h-[50vh] rounded overflow-y-auto no-scrollbar py-2">
-            {renderCreatives()}
+            <div className="grid grid-cols-2 gap-4">
+              {campaign?.creatives?.[currentTab].map(
+                (creativeGroup: any, i: number) => (
+                  <div className="truncate" key={i}>
+                    <ShowMediaFile
+                      url={creativeGroup.url}
+                      mediaType={creativeGroup.type?.split("/")[0]}
+                      height="h-auto"
+                      width="w-full"
+                    />
+                    <Tooltip title={creativeGroup.url?.split("_").pop()}>
+                      <h1 className="text-[12px] text-gray-500 truncate">
+                        {creativeGroup.url?.split("_").pop()}
+                      </h1>
+                    </Tooltip>
+                  </div>
+                )
+              )}
+            </div>
           </div>
         </div>
       )}
