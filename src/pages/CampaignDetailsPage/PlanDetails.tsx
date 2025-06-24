@@ -1,3 +1,4 @@
+import { getUserRole } from "../../utils/campaignUtils";
 import React from "react";
 
 function MyDiv({ left, right, paisa = false }: any) {
@@ -25,6 +26,7 @@ export const PlanDetails = ({
   performanceMatrix,
   campaignCost,
   downloadSummary,
+  userInfo,
 }: any) => {
   return (
     <div className="w-full border border-[#D3D3D350] rounded-[18px] p-4 bg-white mt-2">
@@ -76,19 +78,23 @@ export const PlanDetails = ({
                 />
               ))}
             </div>
-            <h1 className="text-[#0E212E] font-semibold text-[14px] mt-4">
-              Campaign Cost
-            </h1>
-            <div className="mt-2 flex flex-col gap-1">
-              {campaignCost?.map((data: any, index: number) => (
-                <MyDiv
-                  paisa={data.paisa}
-                  key={index}
-                  left={data.label}
-                  right={data.value}
-                />
-              ))}
-            </div>
+            {getUserRole(userInfo?.userRole) === "planner" && (
+              <div>
+                <h1 className="text-[#0E212E] font-semibold text-[14px] mt-4">
+                  Campaign Cost
+                </h1>
+                <div className="mt-2 flex flex-col gap-1">
+                  {campaignCost?.map((data: any, index: number) => (
+                    <MyDiv
+                      paisa={data.paisa}
+                      key={index}
+                      left={data.label}
+                      right={data.value}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

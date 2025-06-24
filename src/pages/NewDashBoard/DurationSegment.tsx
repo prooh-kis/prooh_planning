@@ -25,10 +25,10 @@ export const DurationSegment = ({
   logsPopup,
   monitoringPopup,
   viewAllLogsOpen,
+  userInfo,
 }: any) => {
   const dispatch = useDispatch<any>();
-  const auth = useSelector((state: any) => state.auth);
-  const { userInfo } = auth;
+
   const { loading: loadingHourlySpotDelivery, data: hourlySpotDelivery } =
     useSelector(
       (state: any) => state.slotDeliveryGraphDateWiseForPlannerDashboard
@@ -43,9 +43,10 @@ export const DurationSegment = ({
         // date: "2025-04-16T06:29:00.000+00:00",
         date: date?.toISOString().replace("Z", "+00:00"),
         userRole: getUserRole(userInfo?.userRole),
+        userId: userInfo?._id,
       })
     );
-  }, [campaignId, currentDate, dispatch]);
+  }, [campaignId, currentDate, dispatch, userInfo]);
   return (
     <div className="relative grid grid-cols-12 gap-2">
       {calendarData && Object.keys(calendarData).length > 0 && (

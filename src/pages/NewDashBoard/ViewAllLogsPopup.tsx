@@ -47,6 +47,7 @@ interface Props {
   calendarData?: any;
   loading?: any;
   campaignDetails?: any;
+  userInfo?: any;
 }
 
 export const ViewAllLogsPopup = ({
@@ -62,6 +63,7 @@ export const ViewAllLogsPopup = ({
   currentDate,
   calendarData,
   campaignDetails,
+  userInfo,
 }: Props) => {
   const dispatch = useDispatch<any>();
   const scrollRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -86,9 +88,6 @@ export const ViewAllLogsPopup = ({
     error: errorAllLogs,
     data: allLogsData,
   } = useSelector((state: any) => state.getFiltersAndDataForAllLogsPopup);
-
-  const auth = useSelector((state: any) => state.auth);
-  const { userInfo } = auth;
 
   const newData = useMemo(() => {
     if (logs && logs.length > 0) {
@@ -248,7 +247,8 @@ export const ViewAllLogsPopup = ({
   useEffect(() => {
     dispatch(
       getFiltersAndDataForAllLogsPopupAction({
-        userRole: getUserRole(userInfo?.userRole),        
+        userRole: getUserRole(userInfo?.userRole), 
+        userId: userInfo?._id,      
         cities: selectedCities,
         touchPoints: selectedTouchPoints,
         screenTypes: selectedScreenTypes,
@@ -276,6 +276,7 @@ export const ViewAllLogsPopup = ({
     currentDate,
     currentScreenCampaignId,
     campaignDetails,
+    userInfo
   ]);
 
   // Dispatch action with updated filters
