@@ -13,6 +13,7 @@ import { confirmData } from "../../utils/champaignStatusUtils";
 import {
   CAMPAIGN_STATUS_CHANGE_RESET,
   EDIT_ALL_SUB_CAMPAIGNS_RESET,
+  GET_CAMPAIGN_CREATIONS_DETAILS_RESET,
 } from "../../constants/campaignConstants";
 import { getCreativesMediaAction } from "../../actions/creativeAction";
 import {
@@ -48,6 +49,7 @@ export const CampaignDetailsPage: React.FC = () => {
   const [currentTab1, setCurrentTab1] = useState<string>("1");
 
   const [campaign, setCampaign] = useState<any>(null);
+  const [campaignList, setCampaignList] = useState<any[]>([]);
   const [currentScreen, setCurrentScreen] = useState<any>(null);
 
   const [searchQuery, setSearchQuery] = useState<any>("");
@@ -70,9 +72,10 @@ export const CampaignDetailsPage: React.FC = () => {
 
   // Redux selectors
   const {
-    loading,
+    loading: loadingCampaignDetails,
     error,
     data: campaignCreated,
+    success: successCampaignDetails,
   } = useSelector((state: any) => state.campaignDetailsGet);
 
   const {
@@ -104,20 +107,6 @@ export const CampaignDetailsPage: React.FC = () => {
     error: errorScreenSummaryPlanTable,
     data: screenSummaryPlanTableData,
   } = useSelector((state: any) => state.screenSummaryPlanTableDataGet);
-
-  // Filtered campaigns
-  const campaigns =
-    screens?.length > 0
-      ? campaignCreated?.campaigns
-          ?.filter((camp: any) =>
-            campaignCreated?.screenIds?.includes(camp.screenId.toString())
-          )
-          ?.filter((camp: any) =>
-            camp?.screenName
-              ?.toLowerCase()
-              ?.includes(searchQuery?.toLowerCase())
-          )
-      : [];
 
   // Data fetching and initialization
   useEffect(() => {
@@ -175,8 +164,31 @@ export const CampaignDetailsPage: React.FC = () => {
     successEditAllSubCampaigns,
     errorEditAllSubCampaigns,
     dispatch,
-    campaignId,
+    campaignId
   ]);
+
+  useEffect(() => {
+    const filteredCampaigns =
+      screens?.length > 0 && campaignCreated?.campaigns?.length > 0
+        ? campaignCreated?.campaigns
+          .filter((camp: any) =>
+            campaignCreated?.screenIds?.includes(camp.screenId?.toString())
+          )
+          .filter((camp: any) =>
+            camp?.screenName
+              ?.toLowerCase()
+              ?.includes(searchQuery?.toLowerCase() || "")
+          )
+        : [];
+
+    setCampaignList(filteredCampaigns);
+  }, [campaignCreated?.campaigns, screens, searchQuery]);
+
+  useEffect(() => {
+    if (successCampaignDetails) {
+      dispatch({ type: GET_CAMPAIGN_CREATIONS_DETAILS_RESET });
+    }
+  }, [successCampaignDetails, dispatch]);
 
   useEffect(() => {
     if (successStatusChange) {
@@ -366,11 +378,11 @@ export const CampaignDetailsPage: React.FC = () => {
       {currentTab1 === "1" ? (
         <ScreenListForCampaignDetails
           campaignCreated={campaignCreated}
-          loadingStatusChange={loadingStatusChange || loadingScreens}
+          loadingStatusChange={loadingStatusChange || loadingScreens || loadingCampaignDetails}
           handleChangeStatusAll={handleChangeStatusAll}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
-          campaigns={campaigns}
+          campaigns={campaignList}
           campaign={campaign}
           handelSelectScreen={handelSelectScreen}
           handleSetCurrentScreen={handleSetCurrentScreen}
