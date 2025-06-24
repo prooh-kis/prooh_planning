@@ -76,6 +76,27 @@ export function GoogleMapWithGeometry(props: any) {
     setScreenData(data);
   };
 
+  // Cleanup function to clear any existing routes and buffered regions
+  useEffect(() => {
+    // Store the current map reference to avoid closure issues
+    const currentMap = mapRef.current;
+    
+    return () => {
+      if (!currentMap) return;
+      
+      // Clear all overlays from the map
+      const overlays = currentMap.overlayMapTypes;
+      while (overlays.getLength() > 0) {
+        overlays.removeAt(0);
+      }
+      
+      // Clear any existing routes and polylines
+      currentMap.data.forEach((feature: google.maps.Data.Feature) => {
+        currentMap.data.remove(feature);
+      });
+    };
+  }, []);
+
   useEffect(() => {
     setSelectedMarkers(
       props?.filteredScreens?.map((m: any) => ({
@@ -102,13 +123,9 @@ export function GoogleMapWithGeometry(props: any) {
           details: m.location,
           screenType: m.screenType,
           name: m.screenName,
-
         }))
     );
   }, [props]);
-
-  // console.log("selected screens", selectedMarkers);
-  // console.log("screenData", screenData);
 
   return (
     <div className="relative h-full w-full items-top">
@@ -207,6 +224,7 @@ export function GoogleMapWithGeometry(props: any) {
           routeRadius={props?.routeRadius}
           setRouteFilteredScreens={props?.setRouteFilteredScreens}
           handleFinalSelectedScreens={props?.handleFinalSelectedScreens}
+          finalSelectedScreens={props?.finalSelectedScreens}
         />
 
         <DrawPolygon

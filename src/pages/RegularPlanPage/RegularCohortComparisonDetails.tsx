@@ -137,11 +137,11 @@ export const RegularCohortComparisonDetails = ({
                   <div
                     className={`w-full ${
                       selecting === type
-                        ? "border border-[#C9E9FF] rounded"
+                        ? "border-2 border-[#3B82F6] rounded"
                         : ""
                     }`}
                     onMouseEnter={() => !showSummary && setSelecting(type)}
-                    onMouseLeave={() => setSelecting(null)}
+                    // onMouseLeave={() => setSelecting(null)}
                   >
                     <RegularCohortSlotsCampaignTable
                       priceData={priceData?.[type]}

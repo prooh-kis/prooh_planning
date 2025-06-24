@@ -85,6 +85,8 @@ export const CAMPAIGN_MANAGER = "campaignManager";
 export const SCREEN_ADMIN = "screenAdmin";
 export const SCREEN_OWNER = "screenOwner";
 export const SCREEN_MANAGER = "screenManager";
+export const CLIENT_POC_USER = "clientPocUser"
+
 
 export const CAMPAIGN_STATUS_CHANGED_TO_ACTIVE_PLANNING_PAGE =
   "campaignStatusChangedToActivePLanningPage";

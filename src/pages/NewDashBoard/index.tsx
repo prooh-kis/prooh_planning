@@ -12,7 +12,12 @@ import {
 import { BillingAndInvoice } from "./BillingAndInvoice";
 import { GET_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
-import { getBillInvoiceDetails, takeDashboardScreenShotAction } from "../../actions/billInvoiceAction";
+import {
+  getBillInvoiceDetails,
+  takeDashboardScreenShotAction,
+} from "../../actions/billInvoiceAction";
+import { getUserRole } from "../../utils/campaignUtils";
+import { CAMPAIGN_PLANNER, CLIENT_POC_USER } from "../../constants/userConstants";
 
 interface FilterState {
   audience: string[];
@@ -27,10 +32,13 @@ export const NewDashBoard: React.FC = () => {
   const { pathname } = useLocation();
   const campaignId = pathname.split("/")[2] || "";
 
-  const [aiInsight, setAiInsight] = useState<string>("");
-  const [isAnalyzing, setIsAnalysing] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<any>({ userRole: CLIENT_POC_USER });
+  const [openView, setOpenView] = useState<any>(CLIENT_POC_USER);
 
   const [openInvoice, setOpenInvoice] = useState<any>(false);
+
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo: loggedInUser } = auth;
 
   // State for filters
   const [filters, setFilters] = useState<{
@@ -97,35 +105,70 @@ export const NewDashBoard: React.FC = () => {
   const { loading: loadingSitesDataMapView, data: sitesDataMapViewData } =
     useSelector((state: any) => state.sitesDataMapViewForPlannerDashboard);
 
-    const {
-      loading: loadingBillInvoiceDetails,
-      error: errorBillInvoiceDetails,
-      data: billInvoiceDetailsData,
-    } = useSelector((state: any) => state.billInvoiceDetailsGet);;
+  const {
+    loading: loadingBillInvoiceDetails,
+    error: errorBillInvoiceDetails,
+    data: billInvoiceDetailsData,
+  } = useSelector((state: any) => state.billInvoiceDetailsGet);
 
-  const takeScreenShot = ({ tabs=["1", "2", "3", "4", "5"]}: {tabs?: string[]}) => {
-    dispatch(takeDashboardScreenShotAction({
-      campaignId: campaignDetails?._id,
-      // url: `${window.location.origin}/campaignDashboard/${campaignDetails?._id}`,
-      url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
-      // url: `http://localhost:3000/campaignDashboard/${campaignDetails?._id}`,
-      tabs: tabs
-      // tabs: ["1", "2"]
-    }))
-  }
+  const takeScreenShot = ({
+    tabs = ["1", "2", "3", "4", "5"],
+  }: {
+    tabs?: string[];
+  }) => {
+    dispatch(
+      takeDashboardScreenShotAction({
+        campaignId: campaignDetails?._id,
+        // url: `${window.location.origin}/campaignDashboard/${campaignDetails?._id}`,
+        url: `https://developmentplanning.vercel.app/campaignDashboard/${campaignDetails?._id}`,
+        // url: `http://localhost:3000/campaignDashboard/${campaignDetails?._id}`,
+        tabs: tabs,
+        // tabs: ["1", "2"]
+      })
+    );
+  };
+
+  useEffect(() => {
+    if (loggedInUser) {
+      setUserInfo(loggedInUser)
+      setOpenView(loggedInUser.userRole);
+    }
+  },[loggedInUser]);
 
   // Set up initial data fetch and refresh interval
   useEffect(() => {
+    if (userInfo?.userRole === CAMPAIGN_PLANNER) {
+      dispatch(getBillInvoiceDetails({ campaignCreationId: campaignId }));
+    }
 
-    dispatch(getBillInvoiceDetails({ campaignCreationId: campaignId }));
+    dispatch(
+      getCampaignCreationsDetails({
+        id: campaignId,
+      })
+    );
+    dispatch(
+      getBasicDataForPlannerDashboard({
+        id: campaignId,
+        userRole: getUserRole(userInfo?.userRole),
+        userId: userInfo?._id,
+      })
+    );
 
-    dispatch(getCampaignCreationsDetails({ id: campaignId }));
-    dispatch(getBasicDataForPlannerDashboard({ id: campaignId }));
-
-    dispatch(getSiteMonitoringPicsPercentage({ id: campaignId }));
-    dispatch(getSitesDataMapViewForPlannerDashboard({ id: campaignId }));
-
-  }, [dispatch, campaignId,]);
+    dispatch(
+      getSiteMonitoringPicsPercentage({
+        id: campaignId,
+        userRole: getUserRole(userInfo?.userRole),
+        userId: userInfo?._id,
+      })
+    );
+    dispatch(
+      getSitesDataMapViewForPlannerDashboard({
+        id: campaignId,
+        userRole: getUserRole(userInfo?.userRole),
+        userId: userInfo?._id,
+      })
+    );
+  }, [dispatch, campaignId, userInfo]);
 
   const isLoading = loadingCampaignDetails || loadingDashboard;
   const hasError = errorCampaignDetails || errorDashboard;
@@ -148,32 +191,38 @@ export const NewDashBoard: React.FC = () => {
 
   if (hasError) {
     return (
-      <div className="h-[20vh] w-full border rounded-[12px] mt-10">
-        <p>
-          {errorCampaignDetails?.data?.message || errorDashboard?.data.message}
+      <div className="h-[20vh] w-full border rounded-[12px] p-4">
+        <p className="text-[14px]">
+          Stay tuned for the campaign dashboard...
+          {/* {errorCampaignDetails?.data?.message || errorDashboard?.data.message} */}
         </p>
       </div>
     );
   }
+
   return (
-    <div className="w-full">
-      {/* <BillingAndInvoice
-        open={openInvoice}
-        onClose={() => {
-          setOpenInvoice(false);
-          dispatch({
-            type: GET_CLIENT_AGENCY_DETAILS_RESET,
-          });
-        }}
-        pathname={pathname}
-        campaignDetails={campaignDetails}
-        siteLevelData={siteLevelData}
-        takeScreenShot={takeScreenShot}
-        billInvoiceDetailsData={billInvoiceDetailsData}
-        loadingBillInvoiceDetails={loadingBillInvoiceDetails}
-      /> */}
+    <div className="w-full font-custom">
+        <BillingAndInvoice
+          open={openInvoice}
+          onClose={() => {
+            setOpenInvoice(false);
+            dispatch({
+              type: GET_CLIENT_AGENCY_DETAILS_RESET,
+            });
+          }}
+          pathname={pathname}
+          campaignDetails={campaignDetails}
+          siteLevelData={siteLevelData}
+          takeScreenShot={takeScreenShot}
+          billInvoiceDetailsData={billInvoiceDetailsData}
+          loadingBillInvoiceDetails={loadingBillInvoiceDetails}
+        />
       {!loadingCampaignDetails && campaignDetails ? (
         <CampaignDashboard
+          userInfo={userInfo}
+          setUserInfo={setUserInfo}
+          openView={openView}
+          setOpenView={setOpenView}
           pathname={pathname}
           loading={isLoading}
           campaignDetails={campaignDetails}
@@ -185,7 +234,6 @@ export const NewDashBoard: React.FC = () => {
           loadingSiteLevel={loadingSiteLevel}
           setOpenInvoice={setOpenInvoice}
           openInvoice={openInvoice}
-          takeScreenShot={takeScreenShot}
           billInvoiceDetailsData={billInvoiceDetailsData}
         />
       ) : (

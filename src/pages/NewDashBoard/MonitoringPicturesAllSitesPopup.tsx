@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { getAllSitesMonitoringData } from "../../actions/dashboardAction";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { notification } from "antd";
 import { List } from "../../components/molecules/List";
 import { MonitoringPic } from "../../components/segments/MonitoringPic";
@@ -19,16 +18,20 @@ import {
   GENERATE_MONITORING_PPT_RESET,
   GET_MONITORING_PPT_JOB_STATUS_RESET,
 } from "../../constants/monitoringConstant";
+import { getUserRole } from "../../utils/campaignUtils";
+
 interface Props {
   handleCancel: () => void;
   campaignId: string;
   open: string;
+  userInfo: any;
 }
 
 export const MonitoringPicturesAllSitesPopup = ({
   open,
   handleCancel,
   campaignId,
+  userInfo,
 }: Props) => {
   const dispatch = useDispatch<any>();
   const { loading, error, data } = useSelector(
@@ -86,7 +89,6 @@ export const MonitoringPicturesAllSitesPopup = ({
 
   useEffect(() => {
     if (generateMonitoringPptSuccess) {
-      console.log(generateMonitoringPptData);
       setPptJobId(Number(generateMonitoringPptData.jobId));
       setPptGeneration(true);
       getJobStatusInfo(Number(generateMonitoringPptData.jobId));
@@ -103,6 +105,7 @@ export const MonitoringPicturesAllSitesPopup = ({
       }
     }
   }, [
+    dispatch,
     generateMonitoringPptError,
     generateMonitoringPptSuccess,
     pptJobStatusSuccess,
@@ -112,7 +115,6 @@ export const MonitoringPicturesAllSitesPopup = ({
   // Initialize data
   useEffect(() => {
     if (data && !dataInitialized) {
-      console.log("data : ", data);
       const cities = Object.keys(data.cityWiseData || {}).filter(
         (c) => c !== "all"
       );
@@ -136,6 +138,8 @@ export const MonitoringPicturesAllSitesPopup = ({
     dispatch(
       getAllSitesMonitoringData({
         id: campaignId,
+        userRole: getUserRole(userInfo?.userRole),
+        userId: userInfo?._id,
         cities: selectedCities,
         touchPoints: selectedTouchPoints,
         screenTypes: selectedScreenTypes,
@@ -148,7 +152,7 @@ export const MonitoringPicturesAllSitesPopup = ({
     selectedTouchPoints,
     selectedScreenTypes,
     currentScreen,
-
+    userInfo,
     open,
     dispatch,
   ]);
@@ -236,6 +240,8 @@ export const MonitoringPicturesAllSitesPopup = ({
               onDownloadZip={handleDownloadZip}
             />
             <button
+              title="Close"
+              type="button"
               onClick={handleCancel}
               className="p-2 hover:bg-gray-100 rounded-full"
             >
@@ -301,8 +307,8 @@ export const MonitoringPicturesAllSitesPopup = ({
                 renderItem={(screenName: string) => (
                   <div
                     key={screenName}
-                    className={`p-2 cursor-pointer ${
-                      currentScreen === screenName ? "bg-blue-50" : ""
+                    className={`p-2 cursor-pointer truncate ${
+                      currentScreen === screenName ? "bg-[#129BFF50]" : ""
                     }`}
                     onClick={() => setCurrentScreen(screenName)}
                   >

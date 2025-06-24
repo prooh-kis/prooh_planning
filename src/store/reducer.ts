@@ -67,9 +67,15 @@ export const rootReducer = {
     tableDataSetAdPlayTimeStore: screenReducers.tableDataSetAdPlayTimeReducer,
     allFiltersDetailsForUploadCreativePage:
         screenReducers.getAllFiltersDetailsForUploadCreativePageReducer,
-    creativesFromCreativeBucketForUploadPage:
-        screenReducers.getCreativesFromCreativeBucketForUploadPageReducer,
     allPlannerIdsAndEmail: screenReducers.getAllPlannerIdsAndEmailReducer,
+
+    creativesFromCreativeBucketForUploadPage: screenReducers.getCreativesFromCreativeBucketForUploadPageReducer,
+    basicDetailsForCostSummary: screenReducers.getBasicDetailsCostSummaryPopupPagerReducer,
+    clientCostForCostSummary: screenReducers.getClientCostForCostSummaryPopupPageReducer,
+    vendorPayoutForCostSummary: screenReducers.getVendorPayoutForCostSummaryPopupPageReducer,
+    grossMarginForCostSummary: screenReducers.getGrossMarginForCostSummaryPopupPageReducer,
+    inventoryDetailsForCostSummary: screenReducers.getInventoryDetailsForCostSummaryPopupPageReducer,
+    editCostDetailsScreenWise: screenReducers.editCostDetailsScreenWiseForCostSummaryPopupPageReducer,
     // Campaign related
     campaignCreationsDetailsGet: campaignReducers.campaignCreationsDetailsGetReducer,
     allCampaignsDataGet: campaignReducers.allCampaignsDataGetReducer,

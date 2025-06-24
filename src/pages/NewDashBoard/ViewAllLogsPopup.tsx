@@ -8,11 +8,14 @@ import { List, ListItem } from "../../components/molecules/List";
 import { GetCampaignLogsAction } from "../../actions/campaignAction";
 import {
   formatDateForLogs,
+  getCampaignDurationFromStartAndEndDate,
   getTimeFromDate,
 } from "../../utils/dateAndTimeUtils";
 import { TIME_ZONES } from "../../constants/helperConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import ButtonInput from "../../components/atoms/ButtonInput";
+import moment from "moment";
+import { getUserRole } from "../../utils/campaignUtils";
 
 interface HeaderProps {
   icon: string;
@@ -44,6 +47,7 @@ interface Props {
   calendarData?: any;
   loading?: any;
   campaignDetails?: any;
+  userInfo?: any;
 }
 
 export const ViewAllLogsPopup = ({
@@ -59,6 +63,7 @@ export const ViewAllLogsPopup = ({
   currentDate,
   calendarData,
   campaignDetails,
+  userInfo,
 }: Props) => {
   const dispatch = useDispatch<any>();
   const scrollRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -242,6 +247,8 @@ export const ViewAllLogsPopup = ({
   useEffect(() => {
     dispatch(
       getFiltersAndDataForAllLogsPopupAction({
+        userRole: getUserRole(userInfo?.userRole), 
+        userId: userInfo?._id,      
         cities: selectedCities,
         touchPoints: selectedTouchPoints,
         screenTypes: selectedScreenTypes,
@@ -249,11 +256,13 @@ export const ViewAllLogsPopup = ({
       })
     );
 
-    if (currentScreenCampaignId !== null) {
+    if (campaignDetails && currentScreenCampaignId !== null) {
       dispatch(
         GetCampaignLogsAction({
           campaignId: currentScreenCampaignId,
-          date: formatDateForLogs(currentDate)?.apiDate,
+          date: getCampaignDurationFromStartAndEndDate(currentDate, campaignDetails?.endDate) < 0 
+                  ? formatDateForLogs(moment(Math.min(moment(currentDate).valueOf(), moment(campaignDetails.endDate).valueOf())).format("YYYY-MM-DD hh:mm:ss")).apiDate
+                  : formatDateForLogs(moment(currentDate).format("YYYY-MM-DD hh:mm:ss")).apiDate,
           // date: "13/03/2025"
         })
       );
@@ -266,6 +275,8 @@ export const ViewAllLogsPopup = ({
     selectedScreenTypes,
     currentDate,
     currentScreenCampaignId,
+    campaignDetails,
+    userInfo
   ]);
 
   // Dispatch action with updated filters

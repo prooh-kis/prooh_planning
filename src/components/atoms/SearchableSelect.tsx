@@ -93,7 +93,7 @@ export const SearchableSelect: React.FC<{
 
       {isOpen && (
         <div
-          className="absolute z-10 w-full bg-white  shadow-md max-h-60 overflow-y-auto mt-1 rounded-[8px]"
+          className="absolute z-10 w-full bg-white  shadow-md max-h-60 overflow-y-auto scrollbar-minimal mt-1 rounded-[8px]"
           role="listbox"
         >
           {filteredOptions?.length > 0 ? (
@@ -252,7 +252,7 @@ export const SearchableSelectV2: React.FC<SearchableSelectProps> = ({
             </div>
           )}
 
-          <div className="max-h-60 overflow-y-auto">
+          <div className="max-h-60 overflow-y-auto scrollbar-minimal">
             {loading ? (
               <div className="p-2 text-center text-gray-500">Loading...</div>
             ) : filteredOptions?.length === 0 ? (

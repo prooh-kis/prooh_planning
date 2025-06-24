@@ -5,7 +5,10 @@ export function MapSearchInput(props: any) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
   const placesLib = useMapsLibrary("places");
 
   // Get user's location using Geolocation API
@@ -30,7 +33,9 @@ export function MapSearchInput(props: any) {
     setSuggestions([]);
 
     if (!placesLib) return;
-    const placesService = new placesLib.PlacesService(document.createElement("div"));
+    const placesService = new placesLib.PlacesService(
+      document.createElement("div")
+    );
 
     placesService.getDetails(
       { placeId: suggestion.place_id },
@@ -39,7 +44,10 @@ export function MapSearchInput(props: any) {
           props?.handleClick([
             {
               place_name: place.formatted_address,
-              center: [place.geometry.location.lng(), place.geometry.location.lat()],
+              center: [
+                place.geometry.location.lng(),
+                place.geometry.location.lat(),
+              ],
             },
           ]);
         }
@@ -51,7 +59,9 @@ export function MapSearchInput(props: any) {
     if (e.key === "Enter" && suggestions[highlightedIndex]) {
       await handleSuggestionClick(suggestions[highlightedIndex]);
     } else if (e.key === "ArrowDown") {
-      setHighlightedIndex((prevIndex) => Math.min(prevIndex + 1, suggestions.length - 1));
+      setHighlightedIndex((prevIndex) =>
+        Math.min(prevIndex + 1, suggestions.length - 1)
+      );
     } else if (e.key === "ArrowUp") {
       setHighlightedIndex((prevIndex) => Math.max(prevIndex - 1, 0));
     }
@@ -96,7 +106,7 @@ export function MapSearchInput(props: any) {
   };
 
   const renderSuggestions = () => (
-    <ul className="absolute z-10 w-full max-h-40 overflow-y-auto bg-[#FFFFFF] rounded-lg shadow-lg">
+    <ul className="absolute z-10 w-full max-h-40 overflow-y-auto scrollbar-minimal bg-[#FFFFFF] rounded-lg shadow-lg">
       {suggestions.map((suggestion: any, index: number) => (
         <li
           key={suggestion.place_id}

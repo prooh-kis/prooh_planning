@@ -136,6 +136,7 @@ export const signin = (email, password) => async (dispatch) => {
     type: USER_SIGNIN_REQUEST,
     payload: { email, password },
   });
+
   try {
     const { data } = await Axios.post(`${userV1}/signin`, {
       email,
@@ -470,3 +471,4 @@ export const deleteUser = (input) => async (dispatch, getState) => {
     });
   }
 };
+

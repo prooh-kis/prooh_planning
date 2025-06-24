@@ -2,7 +2,7 @@ import { useRef, ChangeEvent, useState, useEffect, useCallback } from "react";
 import { readExcelFile, validateGioData } from "../../utils/excelUtils";
 import { getDistance } from "geolib";
 import { ExcelExport } from "./ExcelExport";
-import { Tooltip } from "antd";
+import { Tooltip, Slider } from "antd";
 import { PrimaryInput } from "../../components/atoms/PrimaryInput";
 import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
 import { EXCEL_DATA_TARGET_STORES } from "../../constants/campaignConstants";
@@ -231,7 +231,7 @@ export function ExcelImport({
   };
 
   return (
-    <div className="py-4 w-full border-b border-gray-100">
+    <div className="py-2 w-full border-b border-gray-100">
       <button title="" type="button" className="flex items-center justify-between w-full"
         onClick={() => {
           // setOpen((prev: any) => ({
@@ -243,7 +243,7 @@ export function ExcelImport({
         <div className="flex justify-between w-full">
           <div className="flex justify-start">
             <div className="flex justify-start gap-2 items-center py-2">
-              <h1 className="lg:text-[16px] text-[14px] text-gray-500">
+              <h1 className="lg:text-[16px] text-[14px]">
                 1. Choose your target stores
               </h1>
               <Tooltip
@@ -254,16 +254,15 @@ export function ExcelImport({
               <h1 className="lg:text-[14px] text-[12px] text-[#3B82F6]">({excelFilteredScreens.length} sites)</h1>
             </div>
             <div className="flex items-center justify-center">
-              {open["excel"] ? (
+              {/* {open["excel"] ? (
                 <i className="fi fi-sr-caret-up text-[#EF4444] flex items-center"></i>
               ) : (
                 <i className="fi fi-sr-caret-down text-[#22C55E] flex items-center"></i>
-              )}
+              )} */}
             </div>
           </div>
 
           <div className="flex justify-end items-center">
-            <i className="fi fi-bs-circle text-[10px] text-[#22C55E] pr-2"></i>
             {/* <PrimaryInput
               width="w-20"
               height="h-6"
@@ -272,21 +271,30 @@ export function ExcelImport({
               value={circleRadius}
               action={setCircleRadius}
             /> */}
-            <input
-              className="w-[36px] h-6 text-center"
-              type="number"
-              placeholder={circleRadius ? (circleRadius / 1000).toString() : "1"}
-              value={circleRadius ? circleRadius / 1000 : ""}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                const newValue = parseFloat(e.target.value) || 0; // Convert to number
-                if (newValue === 0) {
-                  setCircleRadius(1000);
-                } else {
-                  setCircleRadius(newValue * 1000);
-                }
-              }}
-            />
-            <h1 className="lg:text-[14px] text-[12px] pl-1">km</h1>
+            <div className="w-24 px-1">
+              <Slider
+                min={0.1}
+                max={1}
+                step={0.1}
+                value={circleRadius ? circleRadius / 1000 : 1}
+                onChange={(value) => {
+                  setCircleRadius(value * 1000);
+                }}
+                tooltip={{ formatter: (value) => `${value} km` }}
+                styles={{
+                  track: {
+                    background: '#22C55E',
+                  },
+                  handle: {
+                    borderColor: '#22C55E',
+                    backgroundColor: '#22C55E',
+                  },
+                }}
+              />
+            </div>
+            <div className="w-12 text-[12px] text-center">
+              {circleRadius ? (circleRadius / 1000).toFixed(1) : '1.0'} km
+            </div>
           </div>
         </div>
 

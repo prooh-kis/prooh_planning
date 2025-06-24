@@ -121,7 +121,7 @@ export function MapBoxSearchInput(props: any) {
   };
 
   const renderSuggestions = () => (
-    <ul className="absolute z-10 w-full max-h-40 overflow-y-auto bg-[#FFFFFF] rounded-lg shadow-lg">
+    <ul className="absolute z-10 w-full max-h-40 overflow-y-auto scrollbar-minimal bg-[#FFFFFF] rounded-lg shadow-lg">
       {suggestions.map((suggestion: any, index: number) => (
         <li
           key={suggestion.id}

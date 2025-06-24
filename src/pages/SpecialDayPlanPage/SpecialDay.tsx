@@ -204,7 +204,7 @@ export const SpecialDay = ({
             </span>
             events according to your category{" "}
           </h1>
-          <div className="flex flex-col gap-4 mt-4 overflow-y-auto pr-4 h-[50vh]">
+          <div className="flex flex-col gap-4 mt-4 overflow-y-auto scrollbar-minimal pr-4 h-[50vh]">
             {loadingCalendarListDat && (
               <div className="flex flex-col gap-4">
                 <div
@@ -246,7 +246,7 @@ export const SpecialDay = ({
           <h1 className="text-[14px] font-normal text-[#737373]  leading-[19.07px]">
             Your final bill will include the cost of all the additional slots,{" "}
           </h1>
-          <div className="flex flex-col gap-2 mt-4 overflow-y-auto max-h-[40vh]">
+          <div className="flex flex-col gap-2 mt-4 overflow-y-auto scrollbar-minimal max-h-[40vh]">
             {Object.keys(tableDataForSelectTopicalDay1 || {})?.map(
               (key: string, index: any) => (
                 <div key={index} className="pr-4">

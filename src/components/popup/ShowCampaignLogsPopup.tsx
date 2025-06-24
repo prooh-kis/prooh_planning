@@ -2,6 +2,7 @@ import { message, Skeleton, Tooltip } from "antd";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   formatDateForLogs,
+  getCampaignDurationFromStartAndEndDate,
   getTimeFromDate,
   transformToAmPm,
 } from "../../utils/dateAndTimeUtils";
@@ -12,6 +13,7 @@ import { GetCampaignLogsAction } from "../../actions/campaignAction";
 import { downloadExcel2 } from "../../utils/excelUtils";
 import { MetricCard, SiteInfoHeader } from "./SiteMapViewDetailsPopup";
 import { TIME_ZONES } from "../../constants/helperConstants";
+import moment from "moment";
 
 export const ShowCampaignLogsPopup = ({
   open,
@@ -111,14 +113,16 @@ export const ShowCampaignLogsPopup = ({
       dispatch(
         GetCampaignLogsAction({
           campaignId: screenCampaignData?.campaignId,
-          date: formatDateForLogs(currentDate)?.apiDate,
+          date: getCampaignDurationFromStartAndEndDate(currentDate, campaignDetails?.endDate) < 0 
+                  ? formatDateForLogs(moment(Math.min(moment(currentDate).valueOf(), moment(campaignDetails.endDate).valueOf())).format("YYYY-MM-DD hh:mm:ss")).apiDate
+                  : formatDateForLogs(moment(currentDate).format("YYYY-MM-DD hh:mm:ss")).apiDate,
           // date: "13/03/2025"
         })
       );
 
     }
-  }, [dispatch, screenCampaignData, currentDate]);
-
+  }, [dispatch, currentDate, screenCampaignData?.campaignId, campaignDetails.endDate]);
+  
   useEffect(() => {
     if (open) {
       document.body.classList.add("overflow-hidden");
@@ -314,8 +318,8 @@ export const ShowCampaignLogsPopup = ({
                         formatDateForLogs(`${currentDate} 00:00:00 GMT`)
                           .apiDate && (
                         <div className="flex items-center gap-2 py-2">
-                          <h1 className="font-custom text-[16px]">
-                            Logs from previous day being saved on this day
+                          <h1 className="font-custom text-[12px] px-2">
+                            Logs from previous day being saved on this day {moment(date).format("DD/MM/YYYY")}
                           </h1>
                           <Tooltip title="If the screen is switched of without saving the last logs on the server, the date is saved next day when the device is online after being started again...">
                             <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>

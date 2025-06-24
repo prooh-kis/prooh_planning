@@ -1,7 +1,7 @@
 import { WeatherSegment } from "../../components/segments/WeatherSegment";
 import { TabWithIcon } from "../../components/molecules/TabWithIcon";
 import { VerticalStepperSlider } from "../../components/molecules/VerticalStepperSlide";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SportsSegment } from "../../components/segments/SportsSegment";
 import { BuyVacantSlots } from "../../components/segments/BuyVacantSlots";
 import { OpenBudgetSegment } from "../../components/segments/OpenBudgetSegment";
@@ -9,11 +9,10 @@ import { PrimaryButton } from "../../components/atoms/PrimaryButton";
 import { formatNumber } from "../../utils/formatValue";
 import { Footer } from "../../components/footer";
 import { DropdownInput } from "../../components/atoms/DropdownInput";
-import { message } from "antd";
+import { message, Radio } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { useLocation } from "react-router-dom";
-import { RadioInput } from "../../components/atoms/RadioInput";
 import { QuickSummaryReciept } from "../../components/segments/QuickSummaryReciept";
 import {
   getPlanningPageFooterData,
@@ -21,7 +20,10 @@ import {
 } from "../../actions/screenAction";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
-
+import {
+  timeOptionSportsTrigger,
+  weatherTabData,
+} from "../../data/triggerData";
 
 interface TriggerProps {
   setCurrentStep: (step: number) => void;
@@ -46,15 +48,17 @@ export const TriggerDetails = ({
   const [disableApply, setDisableApply] = useState<any>(true);
   const [triggerSelected, setTriggerSelected] = useState<any>(false);
 
-  const [selectedTrigger, setSelectedTrigger] = useState<any>({
-    triggerType: "weather",
-  });
+  const [selectedTrigger, setSelectedTrigger] = useState<any>(null);
   const [selectedTriggerData, setSelectedTriggerData] = useState<any>({
     weatherTriggers: [],
     sportsTriggers: [],
     vacantSlots: [],
   });
 
+  // console.log("selectedTrigger : ", selectedTrigger);
+  // console.log("triggerSelected : ", triggerSelected);
+  // console.log("selectedTriggerData : ", selectedTriggerData);
+  // console.log("currentStep1  : ", currentStep1);
   const [minVal, setMinVal] = useState<any>(0);
   const [maxVal, setMaxVal] = useState<any>(0);
   const [rainType, setRainType] = useState<any>("0");
@@ -70,64 +74,12 @@ export const TriggerDetails = ({
   const [selectedSOV, setSelectedSOV] = useState<any>(null);
   const [selectedTimeOptions, setSelectedTimeOptions] = useState<any>(300);
 
-  const timeOptionSportsTrigger = [
-    {
-      label: "5 Mins",
-      value: "300",
-    },
-    {
-      label: "15 Mins",
-      value: "900",
-    },
-    {
-      label: "30 Mins",
-      value: "1800",
-    },
-    {
-      label: "1 Hrs",
-      value: "3600",
-    },
-    {
-      label: "2 Hrs",
-      value: "7200",
-    },
-    {
-      label: "3 Hrs",
-      value: "10800",
-    },
-    {
-      label: "4 Hrs",
-      value: "14400",
-    },
-  ];
-
   const timeOptionsWeatherTrigger = [
     {
       label: "Forever",
       value: "0",
     },
   ];
-
-  const weatherTabData = useMemo(() => [
-    {
-      icon: <i className="fi fi-tr-summer flex items-center"></i>,
-      label: "Temperature",
-      value: "temperature",
-      id: 1,
-    },
-    {
-      icon: <i className="fi fi-ts-cloud-sun-rain flex items-center"></i>,
-      label: "Rain",
-      value: "rain",
-      id: 2,
-    },
-    {
-      icon: <i className="fi fi-ts-pollution flex items-center"></i>,
-      label: "AQI",
-      value: "aqi",
-      id: 3,
-    },
-  ],[]);
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -148,73 +100,101 @@ export const TriggerDetails = ({
   } = tableDataForSelectTriggerPageGet;
 
   const handleSelectTrigger = useCallback(() => {
-
     setSelectedTriggerData(() => {
       return {
-      weatherTriggers: selectedTrigger?.triggerType === "weather"
-        ? [
-            {
-              type: weatherTabData?.filter(
-                (w: any) => w.id === currentTab
-              )[0]?.value,
-              minVal: minVal,
-              maxVal: maxVal,
-              rainType: rainType,
-              aqi: aqi,
-              openBudgetSovPercent: selectedSOV,
-              budget: Number(selectedBudget),
-              period: Number(selectedTimeOptions),
-            },
-          ]
-        : [],
-        sportsTriggers: selectedTrigger?.triggerType === "sport"
-        ? [
-            {
-              sport: sport,
-              player: player,
-              matchId: selectedMatchId,
-              condition: condition,
-              openBudgetSovPercent: selectedSOV,
-              budget: Number(selectedBudget),
-              period: Number(selectedTimeOptions),
-            },
-          ]
-        : [],
-        vacantSlots: selectedTrigger?.triggerType === "empty"
-        ? [
-            {
-              type: "vacantSlots",
-              slotType: condition,
-              openBudgetSovPercent: selectedSOV,
-              budget: Number(selectedBudget),
-              period: Number(selectedTimeOptions),
-            },
-          ]
-        : [],
-      }
+        weatherTriggers:
+          selectedTrigger?.triggerType === "weather"
+            ? [
+                {
+                  type: weatherTabData?.filter(
+                    (w: any) => w.id === currentTab
+                  )[0]?.value,
+                  minVal: minVal,
+                  maxVal: maxVal,
+                  rainType: rainType,
+                  aqi: aqi,
+                  openBudgetSovPercent: selectedSOV,
+                  budget: Number(selectedBudget),
+                  period: Number(selectedTimeOptions),
+                },
+              ]
+            : [],
+        sportsTriggers:
+          selectedTrigger?.triggerType === "sport"
+            ? [
+                {
+                  sport: sport,
+                  player: player,
+                  matchId: selectedMatchId,
+                  condition: condition,
+                  openBudgetSovPercent: selectedSOV,
+                  budget: Number(selectedBudget),
+                  period: Number(selectedTimeOptions),
+                },
+              ]
+            : [],
+        vacantSlots:
+          selectedTrigger?.triggerType === "empty"
+            ? [
+                {
+                  type: "vacantSlots",
+                  slotType: condition,
+                  openBudgetSovPercent: selectedSOV,
+                  budget: Number(selectedBudget),
+                  period: Number(selectedTimeOptions),
+                },
+              ]
+            : [],
+      };
     });
-
-  }, [selectedTrigger, weatherTabData, minVal, maxVal, rainType, aqi, selectedSOV, selectedBudget, selectedTimeOptions, sport, player, selectedMatchId, condition, currentTab]);
+  }, [
+    selectedTrigger,
+    minVal,
+    maxVal,
+    rainType,
+    aqi,
+    selectedSOV,
+    selectedBudget,
+    selectedTimeOptions,
+    sport,
+    player,
+    selectedMatchId,
+    condition,
+    currentTab,
+  ]);
 
   const handleSaveAndContinue = () => {
     if (pathname?.split("/").includes("view")) {
       setCurrentStep(step + 1);
-    } else {
-      if (isDisabled) {
-        message.error(
-          "Please confirm budget for your selected trigger or skip this step"
-        );
-      } else {
-        dispatch(
-          addDetailsToCreateCampaign({
-            event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
-            pageName: "Add Triggers Page",
-            id: campaignId,
-            triggers: selectedTriggerData,
-          })
-        );
-      }
+      return;
     }
+
+    // Check if any trigger is selected
+    const hasTriggers =
+      selectedTriggerData.weatherTriggers.length > 0 ||
+      selectedTriggerData.sportsTriggers.length > 0 ||
+      selectedTriggerData.vacantSlots.length > 0;
+
+    if (!hasTriggers) {
+      message.error("Please select at least one trigger before saving");
+      return;
+    }
+
+    if (isDisabled) {
+      message.error(
+        "Please confirm budget for your selected trigger or skip this step"
+      );
+      return;
+    }
+
+    dispatch(
+      addDetailsToCreateCampaign({
+        event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
+        pageName: "Add Triggers Page",
+        id: campaignId,
+        triggers: selectedTriggerData,
+      })
+    );
   };
 
   const handleSkipTriggerSelection = () => {
@@ -282,11 +262,11 @@ export const TriggerDetails = ({
     }
   }, [campaignDetails, campaignId]);
 
-  useEffect(() => {
-    if (selectedTrigger) {
-      handleSelectTrigger();
-    }
-  }, [handleSelectTrigger, selectedTrigger]);
+  // useEffect(() => {
+  //   if (selectedTrigger) {
+  //     handleSelectTrigger();
+  //   }
+  // }, [handleSelectTrigger, selectedTrigger]);
 
   useEffect(() => {
     if (!campaignDetails) return;
@@ -324,28 +304,21 @@ export const TriggerDetails = ({
         </h1>
         {pathname?.split("/")?.includes("triggerbasedplan") ? (
           <div className="flex items-center justify-start gap-4">
-            <div className="flex justify-between py-1">
-              <RadioInput
-                title="Weather Conditions"
-                value="1"
-                isChecked={currentStep1 === Number("1") ? true : false}
-                onChange={() => {
-                  setCurrentStep1(Number("1"));
-                  setSelectedTrigger({ triggerType: "weather" });
-                }}
-              />
-            </div>
-            <div className="flex justify-between py-1">
-              <RadioInput
-                title="Sports Event"
-                value="2"
-                isChecked={currentStep1 === Number("2") ? true : false}
-                onChange={() => {
-                  setCurrentStep1(Number("3"));
-                  setSelectedTrigger({ triggerType: "sport" });
-                }}
-              />
-            </div>
+            <Radio.Group
+              value={currentStep1}
+              onChange={(e) => {
+                const value = e.target.value;
+                setCurrentStep1(value);
+                setSelectedTrigger({
+                  triggerType: value === 1 ? "weather" : "sport",
+                });
+              }}
+              options={[
+                { label: "Weather Conditions", value: 1 },
+                { label: "Sports Event", value: 3 },
+              ]}
+              className="text-[16px]"
+            ></Radio.Group>
           </div>
         ) : (
           <div className="flex items-center justify-between">
@@ -388,10 +361,10 @@ export const TriggerDetails = ({
             pathname?.split("/")?.includes("triggerbasedplan")
               ? "col-span-6"
               : "col-span-8"
-          } border rounded p-5`}
+          } border rounded p-4 h-[60vh] overflow-y-auto scrollbar-minimal `}
         >
           {currentStep1 === 1 ? (
-            <div>
+            <div className="">
               <div className="flex gap-2 justify-between">
                 <div className="flex items-center gap-4">
                   <div className="rounded-full bg-[#F5F9FF] p-3 w-16 h-16 flex items-center justify-center">
@@ -432,7 +405,7 @@ export const TriggerDetails = ({
                 setMaxVal={setMaxVal}
                 rainType={rainType}
                 setRainType={setRainType}
-                currentTab={currentTab}
+                currentTab={Number(currentTab)}
                 aqi={aqi}
                 setAqi={setAqi}
                 setTriggerSelected={setTriggerSelected}
@@ -504,7 +477,11 @@ export const TriggerDetails = ({
           )}
           <div className="">
             <OpenBudgetSegment
-              totalCost={pathname?.split("/")?.includes("triggerbasedplan") ? tableDataForSelectTrigger?.["Total Budget"] : campaignDetails?.totalCampaignBudget}
+              totalCost={
+                pathname?.split("/")?.includes("triggerbasedplan")
+                  ? tableDataForSelectTrigger?.["Total Budget"]
+                  : campaignDetails?.totalCampaignBudget
+              }
               selectedSOV={selectedSOV}
               selectedBudget={selectedBudget}
               setSelectedBudget={setSelectedBudget}
@@ -578,28 +555,6 @@ export const TriggerDetails = ({
           </div>
         )}
       </div>
-      {/* <div className="pb-16">
-        <div className="flex items-center pt-4">
-          <CheckboxInput
-            label={
-              <>
-                Kindly re-confirm the additional budget of
-                <span className="font-bold">
-                  {" "}
-                  &#8377;{formatNumber(Number(selectedBudget).toFixed(0))}{" "}
-                </span>
-                for your campaign triggers
-              </>
-            }
-            onChange={(e) => {
-              // handleConfirmScreensSelections({
-              //   checked: e,
-              //   screens: finalSelectedScreens,
-              // });
-            }}
-          />
-        </div>
-      </div> */}
 
       <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF] z-10">
         <Footer

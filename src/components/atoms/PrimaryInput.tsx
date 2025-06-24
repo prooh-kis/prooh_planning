@@ -11,6 +11,7 @@ interface PrimaryInputProps {
   height?: any;
   width?: any;
   disabled?: boolean;
+  text?: any;
 }
 
 export const PrimaryInput = ({
@@ -24,6 +25,7 @@ export const PrimaryInput = ({
   value,
   action,
   inputType,
+  text,
 }: PrimaryInputProps) => {
   const navigate = useNavigate();
   return (
@@ -38,7 +40,7 @@ export const PrimaryInput = ({
         onChange={(e) => action(e.target.value)}
         onWheel={(e) => inputType === "number" && e.currentTarget.blur()}
         min={inputType === "number" ? 1 : undefined}
-        className={`${height ? height : "h-[48px]"} ${
+        className={`${text ? text : "text-[12px]"} ${height ? height : "h-[48px]"} ${
           width ? width : "w-full"
         } border ${
           rounded ? rounded : "rounded-lg"

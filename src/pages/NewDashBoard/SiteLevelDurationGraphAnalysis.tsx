@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { getSiteLevelPerformanceTabWiseForPlannerDashboard } from "../../actions/dashboardAction";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { CAMPAIGN_DURATION } from "../../constants/tabDataConstant";
+import { getUserRole } from "../../utils/campaignUtils";
 
 export const SiteLevelDurationGraphAnalysis = ({
   campaignId,
@@ -18,9 +19,13 @@ export const SiteLevelDurationGraphAnalysis = ({
     (state: any) => state.siteLevelPerformanceTabWiseForPlannerDashboard
   );
 
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
+
   useEffect(() => {
     dispatch(getSiteLevelPerformanceTabWiseForPlannerDashboard({
       campaignId: campaignId,
+      userRole: getUserRole(userInfo?.userRole),      
       tab: CAMPAIGN_DURATION,
       date: new Date(currentDate).toISOString().replace('Z', '+00:00'),
       dayTypes: [],

@@ -190,11 +190,11 @@ export const ScreenSummaryTableIKnowItAll = ({
   return (
     <div className="h-full">
       <div className="w-full h-full border-b">
-        <div className="bg-[#f7f7f7] grid grid-cols-12 items-center rounded-t text-[#6f7f8e]">
-          <div className="py-2 col-span-2">
+        <div className="bg-[#f7f7f7] border grid grid-cols-12 items-center rounded-t text-[#6f7f8e]">
+          <div className="py-2 col-span-2 border-r">
             <h1 className="text-[16px] font-bold text-center">Touchpoints</h1>
           </div>
-          <div className="py-2 col-span-2 border-l">
+          <div className="py-2 col-span-2 border-r">
             <h1 className="text-[16px] font-bold text-center">Screen Type</h1>
           </div>
           <div className="col-span-8">
@@ -221,7 +221,7 @@ export const ScreenSummaryTableIKnowItAll = ({
                 }}
               >
                 {Object.keys(cityZones[currentCity]).map((zone, i) => (
-                  <div className="col-span-1 border-x min-w-[2rem]" key={i}>
+                  <div className="col-span-1 border-r min-w-[2rem]" key={i}>
                     <h1 className="md:text-[16px] sm:text-[14px] py-2 font-bold text-center truncate">
                       {zone.split(" ").slice(0, 3).join(" ")}
                     </h1>
@@ -245,9 +245,9 @@ export const ScreenSummaryTableIKnowItAll = ({
                 {Object.keys(cityTP?.[currentCity]?.[tp] || {}).map((st, j) => (
                   <div
                     key={j}
-                    className="rounded-br grid grid-cols-10 border-b border-r"
+                    className="grid grid-cols-10 border-b"
                   >
-                    <div className="cursor-pointer col-span-2 py-2 px-4 border-r">
+                    <div className={`cursor-pointer col-span-2 py-2 px-4 ${screenTypeToggle?.[currentCity]?.[tp]?.[st] ? "text-[#52A2FF]" : "text-[#6f7f8e] bg-[#F7F7F7]"}`}>
                       <div className="flex gap-2 items-center">
                         <Checkbox
                           onChange={(e) => handleScreenTypeClick(st, tp)}
@@ -286,7 +286,7 @@ export const ScreenSummaryTableIKnowItAll = ({
                         {Object.keys(cityZones[currentCity]).map((zone, k) => (
                           <div
                             key={k}
-                            className="cursor-pointer col-span-1 border-r min-w-[2rem] truncate"
+                            className="cursor-pointer col-span-1 min-w-[2rem] truncate border-l bg-[#F7F7F7]"
                           >
                             {data?.[currentCity]?.[tp]?.[st]?.[zone]?.map(
                               (screen: any, m: number) => (
@@ -294,7 +294,11 @@ export const ScreenSummaryTableIKnowItAll = ({
                                   key={m}
                                   className={`cursor-pointer flex gap-2 justify-between py-2 px-4 ${
                                     m === 0 ? "" : "border-t"
-                                  } truncate`}
+                                  } truncate
+                                  ${screensBuyingCount[currentCity]?.[
+                                    screen._id
+                                  ]?.status ? "text-[#4DB37E]" : "text-[#6f7f8e] bg-[#F7F7F7]" }
+                                  `}
                                 >
                                   <Checkbox
                                     onChange={(e) =>

@@ -18,7 +18,7 @@ export const Footer = ({
   const { loading, error, data: totalScreensData } = planningPageFooterDataGet;
 
   return (
-    <div className="py-2 z-10 flex justify-between px-4">
+    <div className="py-2 z-10 flex justify-between px-8">
       <div className="flex w-full justify-start items-center gap-4">
         {totalScreensData && (
           <div className="flex">

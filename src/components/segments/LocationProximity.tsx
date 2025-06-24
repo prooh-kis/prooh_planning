@@ -85,8 +85,8 @@ export const LocationProximity = ({
   });
 
   return (
-    <div className="h-auto">
-      <div className="h-[55vh] lg:h-[55vh] overflow-scroll scrollbar-minimal">
+    <div className="flex flex-col flex-1 h-full">
+      <div className={`overflow-y-auto pr-2 h-[calc(100%-150px)]`}>
         <ExcelImport
           open={open}
           setOpen={setOpen}
@@ -129,62 +129,61 @@ export const LocationProximity = ({
           allScreens={allScreens}
           handleFinalSelectedScreens={handleFinalSelectedScreens}
         />
-        {/* <POIProximity
-          open={open}
-          setOpen={setOpen}
-          pois={pois}
-          selectedPOIs={selectedPOIs}
-          setSelectedPOIs={setSelectedPOIs}
-          setPOIFilteredScreens={setPOIFilteredScreens}
-          allScreens={allScreens}
-          finalSelectedScreens={finalSelectedScreens}
-          selectedScreensFromMap={selectedScreensFromMap}
-          handleSelectFromMap={handleSelectFromMap}
-          handleConfirmScreensSelections={handleConfirmScreensSelections}
-        /> */}
       </div>
-      <div className="flex justify-start gap-2 pt-2">
-        <h1 className="lg:text-[16px] text-[14px] font-semibold">
-          Showing Results Below
-        </h1>
-        <Tooltip title="Only showing unique screens from all the above filters selected">
-          <i className="fi fi-rs-info pr-1 lg:text-[14px] text-[12px] text-gray-400 flex justify-center items-center"></i>
-        </Tooltip>
-      </div>
+      
+      <div className="border-b mr-2" />
 
-      <div className="grid grid-cols-12 gap-2 flex items-center pt-2">
-        <div className="col-span-2">
-          <CheckboxInput
-            color="#52A2FF"
-            label={finalSelectedScreens.length}
-            checked={true}
-            disabled
-            onChange={() => {}}
-          />
+      <div className="py-2 pr-4">
+        <div className="flex justify-between items-center mb-2">
+          <div className="flex items-center gap-2">
+            <h1 className="text-sm font-medium text-gray-700">
+              Showing Results
+            </h1>
+            <Tooltip title="Only showing unique screens from all the above filters selected">
+              <i className="fi fi-rs-info text-xs text-gray-400"></i>
+            </Tooltip>
+          </div>
+          
         </div>
-        <div className="col-span-8">
-          <LinearBar
-            value={(
-              (finalSelectedScreens.length * 100) /
-              allScreens.length
-            )?.toFixed(2)}
-            colors={["#F3F3F3", "#7AB3A2"]}
-          />
+        <div className="grid grid-cols-12 flex items-center gap-4">
+          <div className="col-span-2">
+            <CheckboxInput
+              color="#52A2FF"
+              label={finalSelectedScreens.length}
+              checked={true}
+              disabled
+              onChange={() => {}}
+            />
+          </div>
+          <div className="col-span-8">
+            <LinearBar
+              value={(
+                (finalSelectedScreens.length * 100) /
+                allScreens.length
+              )?.toFixed(2)}
+              colors={["#F3F3F3", "#7AB3A2"]}
+            />
+          </div>
+          <div className="col-span-2 flex justify-end">
+            <p className="text-xs font-medium text-gray-700">
+              {finalSelectedScreens.length} of {allScreens?.length} Sites
+            </p>
+          </div>
         </div>
-        <p className="col-span-2 text-[12px] text-semibold flex justify-end truncate">
-          {allScreens?.length} Sites
-        </p>
       </div>
-      <div className="flex items-center pt-4">
+      
+      <div className="border-b mr-2" />
+
+      <div className="flex items-center justify-start py-2">
         <CheckboxInput
           label={
-            <>
+            <p>
               Confirm and take{" "}
               <span className=" font-bold">
                 {`${finalSelectedScreens.length} Sites Out of ${allScreens.length} Sites `}
               </span>{" "}
               for my plan
-            </>
+            </p>
           }
           onChange={(e) => {
             handleConfirmScreensSelections({

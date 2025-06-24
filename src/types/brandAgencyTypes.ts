@@ -19,6 +19,8 @@ export interface Brand {
     officeAddress: OfficeAddress;
     isEditing?: boolean;
     industry?: string;
+    pocDetails?: any;
+    primaryPoc?: any;
 }
 
 export interface FileData {

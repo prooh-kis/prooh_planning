@@ -187,7 +187,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
   }
 
   return (
-    <div className="w-full px-4 py-2">
+    <div className="w-full px-4">
       <ul>
         {Object.keys(processedData || {}).map((state) => (
           <li key={state} className="mb-2 text-[#303030]">

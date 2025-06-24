@@ -1,12 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
-import { PrimaryInput } from "../../components/atoms/PrimaryInput";
-import { useLocation, useNavigate } from "react-router-dom";
-import { CalendarInput } from "../../components/atoms/CalendarInput";
 import {
-  getCampaignDurationFromStartAndEndDate,
-  getEndDateFromStartDateAndDuration,
-} from "../../utils/dateAndTimeUtils";
-import { message, Tooltip } from "antd";
+  Form,
+  Input,
+  DatePicker,
+  Select,
+  Button,
+  Tooltip,
+  message,
+} from "antd";
+import { useCallback, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import {
@@ -14,7 +16,6 @@ import {
   getAllClientAgencyNames,
 } from "../../actions/clientAgencyAction";
 import { SuggestionInput } from "../../components/atoms/SuggestionInput";
-import { DropdownInput } from "../../components/atoms/DropdownInput";
 import {
   ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
   ORDERED_SOV,
@@ -22,11 +23,26 @@ import {
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { ALL_BRAND_LIST } from "../../constants/localStorageConstants";
 import { getAllBrandAndNetworkAction } from "../../actions/creativeAction";
-import ButtonInput from "../../components/atoms/ButtonInput";
 import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 import { getAllPlannerIdsAndEmail } from "../../actions/screenAction";
 import { format } from "date-fns";
 import { monitoringTypes } from "../../constants/helperConstants";
+import dayjs from "dayjs";
+
+const calculateDuration = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
+  return end.diff(start, "day") + 1; // +1 to include both start and end dates
+};
+
+const calculateEndDate = (start: dayjs.Dayjs, duration: number) => {
+  return start
+    .add(duration - 1, "day") // -1 because duration includes start date
+    .hour(23)
+    .minute(59)
+    .second(0)
+    .millisecond(0);
+};
+
+const { Option } = Select;
 
 interface EnterCampaignBasicDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -38,47 +54,24 @@ interface EnterCampaignBasicDetailsProps {
   campaignType?: any;
 }
 
-interface MonitoringTypeData {
-  dates: string[];
-  monitoringType: any[];
-}
-
-interface InitialData {
-  startDate: MonitoringTypeData;
-  midDate: MonitoringTypeData;
-  endDate: MonitoringTypeData;
-}
-
 const allIndex = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-].map((value) => {
-  return {
-    label: value.toString(),
-    value: value,
-  };
-});
+].map((value) => ({
+  label: value.toString(),
+  value: value,
+}));
 
-const allIndexOrderedSov = [1, 2, 3, 6, 18].map((value) => {
-  return {
-    label: value.toString(),
-    value: value,
-  };
-});
-// ["Select SOV Type", "ordered", "continuous", "random"];
+const allIndexOrderedSov = [1, 2, 3, 6, 18].map((value) => ({
+  label: value.toString(),
+  value: value,
+}));
+
 const sovTypeOptions = [
-  {
-    label: "Ordered",
-    value: "ordered",
-  },
-  {
-    label: "Continuous",
-    value: "continuous",
-  },
-  {
-    label: "Random",
-    value: "random",
-  },
+  { label: "Ordered", value: "ordered" },
+  { label: "Continuous", value: "continuous" },
+  { label: "Random", value: "random" },
 ];
+
 export const EnterCampaignBasicDetails = ({
   setCurrentStep,
   step,
@@ -88,76 +81,25 @@ export const EnterCampaignBasicDetails = ({
   campaignType,
   path,
 }: EnterCampaignBasicDetailsProps) => {
+  const [form] = Form.useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
 
-  const [campaignName, setCampaignName] = useState<any>(
-    campaignDetails?.name || ""
-  );
-  const [brandName, setBrandName] = useState<any>(
-    campaignDetails?.brandName || ""
-  );
-  const [clientName, setClientName] = useState<any>(
-    campaignDetails?.clientName || ""
-  );
-  const [industry, setIndustry] = useState<any>(
-    campaignDetails?.industry || ""
-  );
-
-  const [initialData, setInitialData] = useState<InitialData>({
-    startDate: {
-      dates: [format(new Date(), "yyyy-MM-dd")],
-      monitoringType: monitoringTypes?.map((type: any) => type.value),
-    },
-    endDate: {
-      dates: [format(new Date(), "yyyy-MM-dd")],
-      monitoringType: monitoringTypes?.map((type: any) => type.value),
-    },
-    midDate: {
-      dates: [],
-      monitoringType: [],
-    },
-  });
-
-  console.log("initialData : ", initialData);
-
-  const [startDate, setStartDate] = useState<any>(() => {
-    const localDate = new Date(campaignDetails?.startDate);
-    const utcDate = new Date(
-      localDate.getTime() - localDate.getTimezoneOffset() * 60000
-    );
-
-    return campaignDetails ? utcDate.toISOString().slice(0, 16) : "";
-  });
-  const [endDate, setEndDate] = useState<any>(() => {
-    const localDate = new Date(campaignDetails?.endDate);
-    const utcDate = new Date(
-      localDate.getTime() - localDate.getTimezoneOffset() * 60000
-    );
-
-    return campaignDetails ? utcDate.toISOString().slice(0, 16) : "";
-  });
-  const [duration, setDuration] = useState<any>(
-    campaignDetails?.duration || ""
-  );
-  const [sov, setSov] = useState<number>(campaignDetails?.sov || 1);
-  const [sovType, setSovType] = useState<string>(
-    campaignDetails?.sovType || "continuous"
-  );
-  const [managerId, setManagerId] = useState<string>(
-    campaignDetails?.campaignManagerId || ""
-  );
-  const [managerEmail, setManagerEmail] = useState<string>(
-    campaignDetails?.campaignManagerEmail || ""
-  );
   const [allPlannerData, setAllPlannerData] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
 
-  const [error, setError] = useState<string>("");
-
+  // Redux selectors
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
   );
+  const allPlannerIdsAndEmail = useSelector(
+    (state: any) => state.allPlannerIdsAndEmail
+  );
+  const allClientAgencyNamesListGet = useSelector(
+    (state: any) => state.allClientAgencyNamesListGet
+  );
+
   const {
     loading: loadingAddDetails,
     error: errorAddDetails,
@@ -165,21 +107,10 @@ export const EnterCampaignBasicDetails = ({
     data: addDetails,
   } = detailsToCreateCampaignAdd;
 
-  const allPlannerIdsAndEmail = useSelector(
-    (state: any) => state.allPlannerIdsAndEmail
-  );
-  const {
-    loading: loadingAllPlanner,
-    error: errorAllPlanner,
-    success: successAllPlanner,
-    data: AllPlanner,
-  } = allPlannerIdsAndEmail;
-
-  const allClientAgencyNamesListGet = useSelector(
-    (state: any) => state.allClientAgencyNamesListGet
-  );
   const { data: clientAgencyNamesList } = allClientAgencyNamesListGet;
+  const { data: AllPlanner } = allPlannerIdsAndEmail;
 
+  // Handle adding new client/agency
   const handleAddNewClient = useCallback(
     (value: string) => {
       if (
@@ -195,116 +126,112 @@ export const EnterCampaignBasicDetails = ({
     [dispatch, clientAgencyNamesList]
   );
 
-  const validateForm = () => {
-    if (campaignName.length === 0) {
-      message.error("Please enter campaign name");
-      return false;
-    } else if (brandName.length === 0) {
-      message.error("Please enter brand name");
-      return false;
-    } else if (startDate === "") {
-      message.error("Please enter start data ");
-      return false;
-    } else if (endDate === "") {
-      message.error("Please enter endData ");
-      return false;
-    } else if (sovType === "") {
-      message.error("Please select sov type ");
-      return false;
-    } else if (managerId === "") {
-      message.error("Please select manager ");
-      return false;
-    } else if (!initialData["midDate"].dates[0]) {
-      message.error("Please select mid date monitoring ");
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  const updateEndDateBasedOnDuration = useCallback(
-    (newDuration: number) => {
-      if (startDate) {
-        const endDate1 = getEndDateFromStartDateAndDuration(
-          startDate,
-          newDuration
-        );
-
-        // Convert to YYYY-MM-DDTHH:mm format in local timezone
-        const formattedEndDate = new Date(endDate1)
-          .toLocaleString("en-CA", { timeZone: "Asia/Kolkata", hour12: false })
-          .replace(", ", "T")
-          .slice(0, 16); // Keep only "YYYY-MM-DDTHH:mm"
-
-        setEndDate(formattedEndDate);
-        setInitialData((pre: InitialData) => {
-          return {
-            ...pre,
-            endDate: {
-              dates: [format(new Date(formattedEndDate), "yyyy-MM-dd")],
-              monitoringType: monitoringTypes.map((type: any) => type.value),
-            },
-          };
-        });
-      } else {
-        message.error("Please enter a start date first");
-      }
-    },
-    [startDate]
-  );
-
-  const saveCampaignDetailsOnLocalStorage = useCallback(() => {
+  // Form submission handler
+  const onFinish = async (values: any) => {
+    setLoading(true);
     if (!pathname.split("/").includes("view")) {
-      updateEndDateBasedOnDuration(duration);
-      handleAddNewClient(clientName);
-      dispatch(
-        addDetailsToCreateCampaign({
+      try {
+        const payload = {
           event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
           id: campaignId,
           pageName: "Basic Details Page",
-          name: campaignName,
-          brandName: brandName,
+          name: values.campaignName,
+          brandName: values.brandName,
           campaignType: campaignType,
-          clientName: clientName,
-          industry: industry,
-          startDate: new Date(startDate).toISOString(),
-          endDate: new Date(endDate).toISOString(),
-          duration: duration,
+          clientName: values.clientName,
+          industry: values.industry,
+          startDate: values.startDate.toISOString(),
+          endDate: values.endDate.toISOString(),
+          duration: values.duration,
           campaignPlannerId: userInfo?._id,
           campaignPlannerName: userInfo?.name,
           campaignPlannerEmail: userInfo?.email,
-          campaignManagerId: managerId,
-          campaignManagerEmail: managerEmail,
-          sov: sov,
-          sovType,
-          monitoringSelection: initialData,
-        })
-      );
+          campaignManagerId: values.managerId,
+          campaignManagerEmail:
+            allPlannerData?.find((data: any) => data._id === values.managerId)
+              ?.email || "",
+          sov: values.sov,
+          sovType: values.sovType,
+          monitoringSelection: {
+            startDate: {
+              dates: [format(values.startDate.toDate(), "yyyy-MM-dd")],
+              monitoringType: monitoringTypes.map((type: any) => type.value),
+            },
+            endDate: {
+              dates: [format(values.endDate.toDate(), "yyyy-MM-dd")],
+              monitoringType: monitoringTypes.map((type: any) => type.value),
+            },
+            midDate: {
+              dates: [format(values.midDate.toDate(), "yyyy-MM-dd")],
+              monitoringType: monitoringTypes.map((type: any) => type.value),
+            },
+          },
+        };
+
+        handleAddNewClient(values.clientName);
+
+        await dispatch(addDetailsToCreateCampaign(payload));
+        console.log("ddddddddddddddd : ", {
+          startDate: {
+            dates: [format(values.startDate.toDate(), "yyyy-MM-dd")],
+            monitoringType: monitoringTypes.map((type: any) => type.value),
+          },
+          endDate: {
+            dates: [format(values.endDate.toDate(), "yyyy-MM-dd")],
+            monitoringType: monitoringTypes.map((type: any) => type.value),
+          },
+          midDate: {
+            dates: [format(values.midDate.toDate(), "yyyy-MM-dd")],
+            monitoringType: monitoringTypes.map((type: any) => type.value),
+          },
+        });
+      } catch (error) {
+        message.error("Failed to save campaign details");
+      } finally {
+        setLoading(false);
+      }
     } else {
       setCurrentStep(step + 1);
     }
-  }, [
-    step,
-    setCurrentStep,
-    pathname,
-    updateEndDateBasedOnDuration,
-    duration,
-    handleAddNewClient,
-    clientName,
-    dispatch,
-    campaignId,
-    campaignName,
-    brandName,
-    campaignType,
-    industry,
-    startDate,
-    endDate,
-    userInfo,
-    sov,
-    initialData,
-    managerId,
-    managerEmail,
-  ]);
+  };
+
+  // Date validation
+
+  const validateMidDate = (_: any, value: dayjs.Dayjs) => {
+    const startDate = form.getFieldValue("startDate");
+    const endDate = form.getFieldValue("endDate");
+
+    if (startDate && endDate && value) {
+      if (value.isBefore(startDate)) {
+        return Promise.reject("Mid date must be after start date");
+      }
+      if (value.isAfter(endDate)) {
+        return Promise.reject("Mid date must be before end date");
+      }
+    }
+    return Promise.resolve();
+  };
+
+  const range = (start: number, end: number) => {
+    const result = [];
+    for (let i = start; i < end; i++) {
+      result.push(i);
+    }
+    return result;
+  };
+
+  // Load initial data
+  useEffect(() => {
+    dispatch(getAllClientAgencyNames());
+    dispatch(getAllBrandAndNetworkAction());
+    dispatch(getAllPlannerIdsAndEmail({ id: userInfo?._id }));
+  }, [dispatch, userInfo]);
+
+  useEffect(() => {
+    if (AllPlanner) {
+      setAllPlannerData(AllPlanner);
+    }
+  }, [AllPlanner]);
 
   useEffect(() => {
     if (errorAddDetails) {
@@ -335,369 +262,421 @@ export const EnterCampaignBasicDetails = ({
   ]);
 
   useEffect(() => {
-    if (successAllPlanner) {
-      setAllPlannerData(AllPlanner);
-    }
-  }, [successAllPlanner]);
-
-  useEffect(() => {
-    dispatch(getAllClientAgencyNames());
-    dispatch(getAllBrandAndNetworkAction());
-    dispatch(getAllPlannerIdsAndEmail({ id: userInfo?._id }));
-  }, []);
-
-  useEffect(() => {
     if (campaignDetails) {
-      setCampaignName(campaignDetails?.name);
-      setBrandName(campaignDetails?.brandName);
-      setClientName(campaignDetails?.clientName);
-      setIndustry(campaignDetails?.industry);
-      setStartDate(() => {
-        const localDate = new Date(campaignDetails?.startDate);
-        const utcDate = new Date(
-          localDate.getTime() - localDate.getTimezoneOffset() * 60000
-        );
-
-        return campaignDetails ? utcDate.toISOString().slice(0, 16) : "";
+      console.log(
+        "campaignDetails?.monitoringSelectionerrewrewrw",
+        campaignDetails?.monitoringSelection
+      );
+      form.setFieldsValue({
+        campaignName: campaignDetails?.name,
+        brandName: campaignDetails?.brandName,
+        clientName: campaignDetails?.clientName,
+        industry: campaignDetails?.industry,
+        startDate: dayjs(campaignDetails?.startDate),
+        endDate: dayjs(campaignDetails?.endDate),
+        sov: campaignDetails?.sov,
+        sovType: campaignDetails?.sovType,
+        managerId: campaignDetails?.campaignManagerId.toString(),
+        duration: campaignDetails?.duration,
+        midDate: dayjs(campaignDetails?.monitoringSelection?.midDate?.dates[0]),
       });
-      setEndDate(() => {
-        const localDate = new Date(campaignDetails?.endDate);
-        const utcDate = new Date(
-          localDate.getTime() - localDate.getTimezoneOffset() * 60000
-        );
-
-        return campaignDetails ? utcDate.toISOString().slice(0, 16) : "";
-      });
-      setSov(campaignDetails?.sov);
-      setSovType(campaignDetails?.sovType);
-      setManagerId(campaignDetails?.campaignManagerId.toString());
-      setManagerEmail(campaignDetails?.campaignManagerEmail);
-      setDuration(campaignDetails?.duration);
-      setInitialData(campaignDetails?.monitoringSelection);
     }
-  }, [campaignDetails]);
+  }, [campaignDetails, form]);
 
-  const handleDateChange = (value: any, type: any) => {
-    if (type === "start") {
-      if (new Date() > new Date(value)) {
-        message.error("Start date must be greater than today!");
-        setStartDate("");
-      } else {
-        setStartDate(value);
-        setInitialData((pre: InitialData) => {
-          return {
-            ...pre,
-            startDate: {
-              dates: [format(new Date(value), "yyyy-MM-dd")],
-              monitoringType: monitoringTypes.map((type: any) => type.value),
-            },
-          };
-        });
-        if (duration) {
-          const endDate1 = getEndDateFromStartDateAndDuration(value, duration);
-          setEndDate(new Date(endDate1).toISOString());
-        }
-      }
-    }
-
-    if (type === "end") {
-      if (new Date(startDate) > new Date(value)) {
-        message.error("End date must be greater than start date!");
-        setEndDate("");
-      } else {
-        setEndDate(value);
-        const calculatedDuration = getCampaignDurationFromStartAndEndDate(
-          startDate,
-          value
-        );
-        setInitialData((pre: InitialData) => {
-          return {
-            ...pre,
-            endDate: {
-              dates: [format(new Date(value), "yyyy-MM-dd")],
-              monitoringType: monitoringTypes.map((type: any) => type.value),
-            },
-          };
-        });
-        setDuration(calculatedDuration);
-      }
-    }
-  };
-
-  const handleDateInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInitialData((pre: InitialData) => {
-      return {
-        ...pre,
-        midDate: {
-          dates: [format(new Date(e.target.value), "yyyy-MM-dd")],
-          monitoringType: monitoringTypes.map((type: any) => type.value),
-        },
-      };
-    });
-  };
+  const formItemStyles = `
+  .compact-form .ant-form-item-label {
+    padding-bottom: 2px;
+    line-height: 1.2;
+  }
+  .compact-form .ant-form-item {
+    margin-bottom: 12px;
+  }
+  .compact-form .ant-form-item-label > label {
+    font-size: 13px;
+  }
+`;
 
   return (
-    <div className="w-full h-[76vh] overflow-y-auto px-1">
-      <div className="pt-8">
+    <div className="w-full">
+      <div className="pt-8 px-1">
         <h1 className="text-[24px] text-primaryText font-semibold">
           Add Basic Details
         </h1>
-        <p className="text-[14px] text-secondaryText">
+        <p className="text-[14px] text-primaryText">
           Enter your basic details for the campaigns to proceed further
         </p>
       </div>
-      {/* {error && (
-        <div className="bg-[#FF3F33] text-[#FFFFFF]  text-[16px] font-semibold p-4 flex justify-between mt-2">
-          <h1>{error}</h1>
-          <i className="fi fi-br-circle-xmark flex items-center"></i>
-        </div>
-      )} */}
-      <div className="grid grid-cols-3 gap-8 pt-2">
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="text-secondaryText text-[14px] truncate">
-              Campaign Name
-            </label>
-            <Tooltip title="Enter a unique name for your campaign">
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
-          </div>
+      <style>{formItemStyles}</style>
 
-          <PrimaryInput
-            inputType="text"
-            placeholder="Campaign Name"
-            value={campaignName}
-            action={setCampaignName}
-          />
-        </div>
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px] truncate">
-              Brand Name
-            </label>
-            <Tooltip title="Enter campaign's brand name">
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
-          </div>
-
-          <SuggestionInput
-            suggestions={getDataFromLocalStorage(ALL_BRAND_LIST)}
-            onChange={(value: string) =>
-              setBrandName(
-                String(value ?? "")
-                  .toUpperCase()
-                  .trim()
-              )
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        className=""
+        initialValues={{
+          sovType: "continuous",
+          sov: 1,
+        }}
+      >
+        <div className="max-h-[65vh] overflow-y-auto scrollbar-minimal px-1 grid grid-cols-3  mt-4">
+          {" "}
+          {/* Campaign Name */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="campaignName"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Campaign Name</span>
+                <Tooltip title="Enter a unique name for your campaign">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
             }
-            value={brandName || ""}
-            placeholder="Brand Name"
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-3 gap-8 pt-2">
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px] truncate">
-              Agency / Client
-            </label>
-            <Tooltip title="Enter Agency's name or client's name who is managing the campaign">
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
-          </div>
-          <SuggestionInput
-            suggestions={clientAgencyNamesList?.map(
-              (value: any) => value.clientAgencyName
-            )}
-            placeholder="Client/Agency Name"
-            onChange={(value: string) => setClientName(value?.toUpperCase())}
-            value={clientName || ""}
-          />
-        </div>
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between justify-betweengap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px] truncate">
-              Industry Type
-            </label>
-            <Tooltip title="Enter industry name your brand belongs to">
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
-          </div>
-          <PrimaryInput
-            inputType="text"
-            placeholder="Industry Type"
-            value={industry}
-            action={setIndustry}
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-3 gap-8 pt-2">
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px] truncate">
-              Start Date
-            </label>
-            <Tooltip title="Select Date from when the campaign is to be started">
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
-          </div>
-          <CalendarInput
-            placeholder="Start Date"
-            value={startDate}
-            action={(e: any) => handleDateChange(e, "start")}
-            disabled={false}
-            minDate={new Date()}
-          />
-        </div>
-
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px] truncate">
-              End Date
-            </label>
-            <Tooltip title="Select Date from when the campaign is to be started">
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
-          </div>
-          <CalendarInput
-            placeholder="End Date"
-            value={endDate}
-            action={(e: any) => {
-              if (startDate === "") {
-                message.error("Please select start date first!");
-                return;
-              }
-              handleDateChange(e, "end");
-            }}
-            disabled={false}
-            minDate={new Date()}
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-3 gap-8 pt-2">
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">
-              Select Manager
-            </label>
-            <Tooltip title="How many times you want to play creatives in one loop">
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
-          </div>
-          <DropdownInput
-            options={allPlannerData?.map((data: any) => {
-              return {
-                label: `${data.name}`,
-                value: data._id.toString(),
-              };
-            })}
-            selectedOption={managerId}
-            placeHolder="Select Manager"
-            setSelectedOption={(value: any) => {
-              setManagerId(value);
-              setManagerEmail(
-                allPlannerData?.find((data: any) => data._id === value)
-                  ?.email || ""
-              );
-            }}
-            height="h-[48px]"
-          />
-        </div>
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px] truncate">
-              Duration (Days)
-            </label>
-            <Tooltip title="Enter total duration of campaigns in days">
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
-          </div>
-          <PrimaryInput
-            inputType="number"
-            placeholder="30"
-            value={duration}
-            // disabled={startDate === ""}
-            action={(value: any) => {
-              if (startDate === "") {
-                message.error("Please select start date first!");
-                return;
-              }
-              setDuration(value);
-              updateEndDateBasedOnDuration(value);
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-8 pt-2">
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">
-              SOV Type
-            </label>
-            <Tooltip title="How many times you want to play creatives in one loop">
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
-          </div>
-          <DropdownInput
-            options={sovTypeOptions}
-            selectedOption={sovType}
-            placeHolder="Select SOV Type"
-            setSelectedOption={setSovType}
-            height="h-[48px]"
-          />
-        </div>
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">SOV</label>
-            <Tooltip title="How many times you want to play creatives in one loop">
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
-          </div>
-          <DropdownInput
-            options={sovType == ORDERED_SOV ? allIndexOrderedSov : allIndex}
-            selectedOption={sov}
-            placeHolder="Select SOV"
-            setSelectedOption={setSov}
-            height="h-[48px]"
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-8 pt-2">
-        <div className="col-span-1 py-1">
-          <div className="block flex justify-between gap-2 items-center mb-2">
-            <label className="block text-secondaryText text-[14px]">
-              Select Mid Date Monitoring Date
-            </label>
-            <Tooltip title="Monitoring start and end data will always be your campaign start and end date ">
-              <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
-            </Tooltip>
-          </div>
-          <input
-            title="date"
-            type="date"
-            className="h-[48px] w-full border px-4 rounded-md"
-            value={initialData["midDate"].dates[0]}
-            onChange={handleDateInputChange}
-            min={initialData["startDate"].dates[0]}
-            max={initialData["endDate"].dates[0]}
-          />
-        </div>
-      </div>
-
-      <div className="flex py-8">
-        <ButtonInput
-          onClick={() => {
-            if (validateForm()) {
-              saveCampaignDetailsOnLocalStorage();
+            rules={[{ required: true, message: "Please enter campaign name" }]}
+          >
+            <Input placeholder="Campaign Name" size="large" />
+          </Form.Item>
+          {/* Brand Name */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="brandName"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Brand Name</span>
+                <Tooltip title="Enter campaign's brand name">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
             }
-          }}
-          variant="primary"
-          loading={loadingAddDetails}
-        >
-          {!campaignId ? "Create" : "Continue"}
-        </ButtonInput>
-      </div>
+            rules={[{ required: true, message: "Please enter brand name" }]}
+          >
+            <SuggestionInput
+              suggestions={getDataFromLocalStorage(ALL_BRAND_LIST)}
+              placeholder="Brand Name"
+              onChange={(value) => form.setFieldsValue({ brandName: value })}
+              value={form.getFieldValue("brandName") || ""}
+            />
+          </Form.Item>
+          {/* Client/Agency Name */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="clientName"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Agency / Client</span>
+                <Tooltip title="Enter Agency's name or client's name who is managing the campaign">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[
+              {
+                required: true,
+                message: "Please enter client/agency name",
+              },
+            ]}
+          >
+            <SuggestionInput
+              suggestions={clientAgencyNamesList?.map(
+                (value: any) => value.clientAgencyName
+              )}
+              placeholder="Client/Agency Name"
+              onChange={(value: any) =>
+                form.setFieldsValue({ clientName: value.toUpperCase() })
+              }
+              value={form.getFieldValue("clientName") || ""}
+            />
+          </Form.Item>
+          {/* Industry Type */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="industry"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Industry Type</span>
+                <Tooltip title="Enter industry name your brand belongs to">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[{ required: true, message: "Please enter industry type" }]}
+          >
+            <Input placeholder="Industry Type" size="large" />
+          </Form.Item>
+          {/* Start Date */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="startDate"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Start Date & Time</span>
+                <Tooltip title="Select date and time when the campaign should start">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[
+              {
+                required: true,
+                message: "Please select start date and time",
+              },
+            ]}
+          >
+            <DatePicker
+              showTime
+              format="YYYY-MM-DD HH:mm"
+              className="w-full"
+              size="large"
+              disabledDate={(current) =>
+                current && current < dayjs().startOf("day")
+              }
+              disabledTime={(current) => {
+                if (current && current.isSame(dayjs(), "day")) {
+                  return {
+                    disabledHours: () => range(0, dayjs().hour()),
+                    disabledMinutes: (selectedHour) => {
+                      if (selectedHour === dayjs().hour()) {
+                        return range(0, dayjs().minute());
+                      }
+                      return [];
+                    },
+                  };
+                }
+                return {};
+              }}
+            />
+          </Form.Item>
+          {/* End Date */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="endDate"
+            label={
+              <div className="flex items-center gap-2">
+                <span>End Date & Time</span>
+                <Tooltip title="Select date and time when the campaign should end">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[
+              {
+                required: true,
+                message: "Please select end date and time",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  const startDate = getFieldValue("startDate");
+                  if (!value) {
+                    return Promise.reject("Please select end date/time");
+                  }
+                  if (startDate && value.isBefore(startDate)) {
+                    return Promise.reject(
+                      "End date/time must be after start date/time"
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+          >
+            <DatePicker
+              showTime
+              format="YYYY-MM-DD HH:mm"
+              className="w-full"
+              size="large"
+              disabledDate={(current) => {
+                const startDate = form.getFieldValue("startDate");
+                return (
+                  current &&
+                  (current < dayjs().startOf("day") ||
+                    (startDate && current < startDate.startOf("day")))
+                );
+              }}
+              disabledTime={(current) => {
+                const startDate = form.getFieldValue("startDate");
+                if (current && startDate && current.isSame(startDate, "day")) {
+                  return {
+                    disabledHours: () => range(0, startDate.hour()),
+                    disabledMinutes: (selectedHour) => {
+                      if (selectedHour === startDate.hour()) {
+                        return range(0, startDate.minute());
+                      }
+                      return [];
+                    },
+                  };
+                }
+                return {};
+              }}
+              onChange={(date) => {
+                if (date) {
+                  const startDate = form.getFieldValue("startDate");
+                  if (startDate) {
+                    form.setFieldsValue({
+                      duration: calculateDuration(startDate, date),
+                    });
+                  }
+                }
+              }}
+            />
+          </Form.Item>
+          {/* Duration */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="duration"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Duration (Days)</span>
+                <Tooltip title="Enter total duration of campaigns in days">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[{ required: true, message: "Please enter duration" }]}
+          >
+            <Input
+              type="number"
+              placeholder="30"
+              min={1}
+              size="large"
+              onChange={(e) => {
+                const duration = parseInt(e.target.value);
+                if (!isNaN(duration) && duration > 0) {
+                  const startDate = form.getFieldValue("startDate");
+                  if (startDate) {
+                    form.setFieldsValue({
+                      endDate: calculateEndDate(startDate, duration),
+                    });
+                  }
+                }
+              }}
+            />
+          </Form.Item>
+          {/* Manager */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="managerId"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Select Manager</span>
+                <Tooltip title="Select the manager for this campaign">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[{ required: true, message: "Please select manager" }]}
+          >
+            <Select
+              placeholder="Select Manager"
+              size="large"
+              loading={!allPlannerData.length}
+              showSearch
+              optionFilterProp="label"
+              options={allPlannerData?.map((data: any) => {
+                return {
+                  label: data?.name,
+                  value: data?._id,
+                };
+              })}
+            ></Select>
+          </Form.Item>
+          {/* SOV Type */}
+          <Form.Item
+            name="sovType"
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            label={
+              <div className="flex items-center gap-2">
+                <span>SOV Type</span>
+                <Tooltip title="Continuous -> One After another , Ordered-> Ordered , Random -> At any place ">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[{ required: true, message: "Please select SOV type" }]}
+          >
+            <Select placeholder="Select SOV Type" size="large">
+              {sovTypeOptions.map((option) => (
+                <Option key={option.value} value={option.value}>
+                  {option.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          {/* SOV */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="sov"
+            label={
+              <div className="flex items-center gap-2">
+                <span>SOV</span>
+                <Tooltip title="SOV: How many times you want to play your creatives in 3 minutes (one loop)">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[{ required: true, message: "Please select SOV" }]}
+          >
+            <Select placeholder="Select SOV" size="large">
+              {(form.getFieldValue("sovType") === ORDERED_SOV
+                ? allIndexOrderedSov
+                : allIndex
+              ).map((option) => (
+                <Option key={option.value} value={option.value}>
+                  {option.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          {/* Mid Date */}
+          <Form.Item
+            style={{ marginRight: 16}} /* Reduced from default 24px */
+            name="midDate"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Select Mid Monitoring Date</span>
+                <Tooltip title="Monitoring start and end data will always be your campaign start and end date">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[
+              {
+                required: false,
+                message: "Please select mid monitoring date",
+              },
+              { validator: validateMidDate },
+            ]}
+            dependencies={["startDate", "endDate"]}
+          >
+            <DatePicker
+              className="w-full"
+              size="large"
+              disabledDate={(current) => {
+                const startDate = form.getFieldValue("startDate");
+                const endDate = form.getFieldValue("endDate");
+                return (
+                  current &&
+                  ((startDate && current < startDate.startOf("day")) ||
+                    (endDate && current > endDate.endOf("day")))
+                );
+              }}
+            />
+          </Form.Item>
+        </div>
+
+        <div className="flex justify-start">
+          {/* Submit Button */}
+          <Form.Item className="col-span-3">
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loading}
+              className="mt-8"
+            >
+              {!campaignId ? "Create" : "Continue"}
+            </Button>
+          </Form.Item>
+        </div>
+      </Form>
     </div>
   );
 };

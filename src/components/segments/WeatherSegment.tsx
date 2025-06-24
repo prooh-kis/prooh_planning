@@ -24,18 +24,17 @@ export const WeatherSegment = ({
   currentTab,
   aqi,
   setAqi,
-  setTriggerSelected
+  setTriggerSelected,
 }: WeatherSegmentProps) => {
   return (
     <div className="">
       {currentTab === 1 ? (
         <div className="border-b p-2">
           <div className="flex gap-2 items-center">
-            {/* <i className="fi fi-tr-summer flex items-center"></i> */}
-            <h1 className="md:text-[16px] sm:text-[14px]">Play my ad when temperature turns</h1>
-            <Tooltip
-              title="Choose temperature range for adding contextual ads in your campaign for targetting your audience in context of temperature related events"
-            >
+            <h1 className="md:text-[16px] sm:text-[14px]">
+              Play my ad when temperature turns
+            </h1>
+            <Tooltip title="Choose temperature range for adding contextual ads in your campaign for targetting your audience in context of temperature related events">
               <i className="fi fi-rs-info p-1 text-[12px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
@@ -51,7 +50,7 @@ export const WeatherSegment = ({
                   setTriggerSelected(true);
                 }}
               />
-              <p className="text-[14px] text-[#5BB8F7]">Freezing</p>  
+              <p className="text-[14px] text-[#5BB8F7]">Freezing</p>
             </div>
             <div className="flex justify-between py-1">
               <RadioInput
@@ -110,10 +109,10 @@ export const WeatherSegment = ({
       ) : currentTab === 2 ? (
         <div className="border-b p-2">
           <div className="flex gap-2 items-center">
-            <h1 className="md:text-[16px] sm:text-[14px]">Play my ad when rain forecast is</h1>
-            <Tooltip
-              title="Choose raining conditions for adding contextual ads in your campaign for targetting your audience in context of rain related events"
-            >
+            <h1 className="md:text-[16px] sm:text-[14px]">
+              Play my ad when rain forecast is
+            </h1>
+            <Tooltip title="Choose raining conditions for adding contextual ads in your campaign for targetting your audience in context of rain related events">
               <i className="fi fi-rs-info p-1 text-[12px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
@@ -183,10 +182,10 @@ export const WeatherSegment = ({
       ) : currentTab === 3 ? (
         <div className="border-b p-2">
           <div className="flex gap-2 items-center">
-            <h1 className="md:text-[16px] sm:text-[14px]">Play my ad when AQI is</h1>
-            <Tooltip
-              title="Choose AQI range for adding contextual ads in your campaign for targetting your audience in context of AQI related events"
-            >
+            <h1 className="md:text-[16px] sm:text-[14px]">
+              Play my ad when AQI is
+            </h1>
+            <Tooltip title="Choose AQI range for adding contextual ads in your campaign for targetting your audience in context of AQI related events">
               <i className="fi fi-rs-info p-1 text-[12px] text-gray-400 flex justify-center items-center"></i>
             </Tooltip>
           </div>
@@ -203,7 +202,7 @@ export const WeatherSegment = ({
                   setTriggerSelected(true);
                 }}
               />
-              <p className="text-[14px] text-[#348655]">0-50</p>  
+              <p className="text-[14px] text-[#348655]">0-50</p>
             </div>
             <div className="flex justify-between py-1">
               <RadioInput
@@ -265,5 +264,5 @@ export const WeatherSegment = ({
         </div>
       ) : null}
     </div>
-  )
-}
+  );
+};

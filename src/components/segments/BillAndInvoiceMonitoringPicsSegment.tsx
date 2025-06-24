@@ -1,18 +1,39 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { convertDateIntoDateMonthYear, formatDateForLogs, getTimeFromDate } from "../../utils/dateAndTimeUtils";
-import { Skeleton, Tooltip } from "antd";
+import { convertDateIntoDateMonthYear, formatDateForLogs, getCampaignDurationFromStartAndEndDate, getTimeFromDate } from "../../utils/dateAndTimeUtils";
+import { message, Skeleton, Tooltip } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { TIME_ZONES } from "../../constants/helperConstants";
 import { GetCampaignLogsAction } from "../../actions/campaignAction";
-import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { LoadingScreen } from "../molecules/LoadingScreen";
+import moment from "moment";
+import { io } from "socket.io-client";
+import { getBillInvoiceDetails } from "../../actions/billInvoiceAction";
 
 interface BillAndInvoiceMonitoringPicsSegmentProps {
  campaignDetails?: any;
  currentDate?: any;
  siteLevelData?: any;
+ jobId?: any;
+ invoicePdf?: any;
+ setSocketUpdateStatus?: any;
+ setJobId?: any;
+ setLoading?: any;
+ loading?: any;
+ socketUpdateStatus?: any;
 }
 
-export const BillAndInvoiceMonitoringPicsSegment = ({ siteLevelData, campaignDetails, currentDate }: BillAndInvoiceMonitoringPicsSegmentProps) => {
+export const BillAndInvoiceMonitoringPicsSegment = ({
+  siteLevelData,
+  campaignDetails,
+  currentDate,
+  jobId,
+  invoicePdf,
+  setJobId,
+  setSocketUpdateStatus,
+  setLoading,
+  loading,
+  socketUpdateStatus,
+}: BillAndInvoiceMonitoringPicsSegmentProps) => {
 
   const dispatch = useDispatch<any>();
 
@@ -106,18 +127,161 @@ export const BillAndInvoiceMonitoringPicsSegment = ({ siteLevelData, campaignDet
   },[logs, seq, dispatch]);
 
   useEffect(() => {
-    if (siteLevelData?.[seq].campaignId) {
+  
+    if (campaignDetails && siteLevelData?.[seq]?.campaignId && currentDate) {
       dispatch(
         GetCampaignLogsAction({
           campaignId: siteLevelData?.[seq].campaignId,
-          date: formatDateForLogs(currentDate)?.apiDate,
-        }));
+          date: getCampaignDurationFromStartAndEndDate(currentDate, campaignDetails?.endDate) < 0 
+                  ? formatDateForLogs(moment(Math.min(moment(currentDate).valueOf(), moment(campaignDetails.endDate).valueOf())).format("YYYY-MM-DD hh:mm:ss")).apiDate
+                  : formatDateForLogs(moment(currentDate).format("YYYY-MM-DD hh:mm:ss")).apiDate,
+          // date: "13/03/2025"
+        })
+      );
     }
     
-  }, [dispatch, siteLevelData, currentDate, seq]);
+  }, [dispatch, siteLevelData, currentDate, seq, campaignDetails]);
+
+  useEffect(() => {
+    if (invoicePdf && jobId) {
+      // const socketUrl = "ws://localhost:4444";
+      const socketUrl = "wss://beta.vinciis.in";
+
+      const webSocket = io(socketUrl, {
+        transports: ["websocket"],
+        secure: true,
+        rejectUnauthorized: false,
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        timeout: 10000,
+      });
+  
+      const socketState: any = {
+        connecting: () => console.log("[Socket] connecting..."),
+        connect: () => console.log("[Socket] connected..."),
+        connect_error: (error: any) =>
+          console.error("[Socket] connection error:", error),
+        disconnect: (reason: any) =>
+          console.log("[Socket] disconnected:", reason),
+        reconnect_attempt: (attempt: any) =>
+          console.log("[Socket] reconnecting, attempt:", attempt),
+        reconnect_failed: () => console.error("[Socket] reconnect failed..."),
+      };
+  
+      // Set up all socket state handlers
+      Object.entries(socketState).forEach(([event, handler]: [string, any]) => {
+        webSocket.on(event, handler);
+      });
+  
+      // Connection handler
+      webSocket.on("connect", () => {
+        webSocket.emit("subscribeToBillInvoiceGenerationJob", invoicePdf.invoiceJob);
+      });
+  
+      // Job status handler
+      webSocket.on("billInvoiceGenerationJobStatus", (update: any) => {
+        const socketStatus = (update.state || "").toLowerCase();
+        // Always update the socket status
+        setSocketUpdateStatus(update);
+        
+        // Handle different job statuses
+        switch (socketStatus) {
+          case "completed":
+            message.success("Document generation completed successfully!");
+            setLoading(false);
+            setJobId(null);
+            dispatch(getBillInvoiceDetails({ campaignCreationId: campaignDetails._id }));
+            break;
+
+          case "active":
+            setLoading(true);
+            break;
+
+          case "failed":
+          case "error":
+            console.error("Job error:", update.error || "Unknown error");
+            setLoading(false);
+            setJobId(null);
+            setSocketUpdateStatus(null);
+            // dispatch({ type: TAKE_DASHBOARD_SCREENSHOT_RESET });
+            message.error(
+              update.error || "Error in document generation. Please try again."
+            );
+            break;
+
+          case "not_found":
+            console.error("Job not found");
+            setLoading(false);
+            setJobId(null);
+            setSocketUpdateStatus(null);
+            // dispatch({ type: TAKE_DASHBOARD_SCREENSHOT_RESET });
+            message.error("Job not found. Please try again.");
+            break;
+
+          case "stuck":
+            console.warn("Job is stuck:", update);
+            setLoading(false);
+            setJobId(null);
+            setSocketUpdateStatus(null);
+            // dispatch({ type: TAKE_DASHBOARD_SCREENSHOT_RESET });
+            message.warning(
+              "Document generation is taking longer than expected. Please check back later."
+            );
+            break;
+
+          default:
+            console.log("Unknown job status:", socketStatus);
+        }
+      });
+
+
+      // Error handling
+      webSocket.on("connect_error", (error: any) => {
+        console.error("Connection error:", error);
+        message.error(
+          "Connection error. Please check your network and try again."
+        );
+      });
+
+      // Cleanup on unmount
+      return () => {
+        if (webSocket) {
+          // Unsubscribe from job updates
+          webSocket.emit("unsubscribeFromBillInvoiceGenerationJob");
+  
+          // Remove all listeners
+          webSocket.off("billInvoiceGenerationJobStatus");
+          webSocket.off("connect");
+          webSocket.off("disconnect");
+          webSocket.off("connect_error");
+          webSocket.offAny();
+  
+          // Remove state handlers
+          Object.entries(socketState).forEach((event: any) => {
+            webSocket.off(event, socketState[event]);
+          });
+  
+          // Disconnect if connected
+          if (webSocket.connected) {
+            webSocket.disconnect();
+          }
+        }
+      };
+    }
+   
+  },[invoicePdf, jobId, setJobId, setLoading, setSocketUpdateStatus]);
+
+
+
 
  return (
   <div className="w-full border-t my-2 py-2">
+    {loading && (
+      <div className="py-4">
+        <LoadingScreen progress={socketUpdateStatus?.progress || ""} />
+      </div>
+    )}
    <div className="flex items-top gap-2 w-full">
     <div className="w-[15vw] rounded-[8px]">
      <img className="rounded-[8px]" src={siteLevelData?.[seq]?.images?.[0]} alt="screen"/>

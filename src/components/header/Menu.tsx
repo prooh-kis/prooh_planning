@@ -64,7 +64,7 @@ export const Menu = (props: any) => {
       path: MY_CAMPAIGNS_LIST,
     },
     {
-      label: "Plans",
+      label: "Drafts",
       path: MY_PLANS_LIST,
     },
     // {

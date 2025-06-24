@@ -6,8 +6,10 @@ import {
   ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
   GET_CAMPAIGN_CREATIONS_DETAILS_RESET,
 } from "../../constants/campaignConstants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ButtonInput from "../../components/atoms/ButtonInput";
+import { CLIENT_POC_USER } from "../../constants/userConstants";
+import { MY_CAMPAIGNS_LIST } from "../../routes/routes";
 
 interface Plan {
   id: number;
@@ -66,6 +68,7 @@ export const CampaignTemplates: React.FC = () => {
   const [selectedCard, setSelectedCard] = useState<number>(0);
   const dispatch = useDispatch<any>();
 
+  const { userInfo } = useSelector((state: any) => state.auth);
   useEffect(() => {
     removeAllKeyFromLocalStorage();
     dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
@@ -79,6 +82,12 @@ export const CampaignTemplates: React.FC = () => {
   const toggle = () => {
     navigate(allPlansData[selectedCard]?.link || "/");
   };
+
+  useEffect(() => {
+    if (userInfo?.userRole === CLIENT_POC_USER) {
+      navigate(MY_CAMPAIGNS_LIST);
+    }
+  }, [navigate, userInfo]);
 
   return (
     <div className="border border-transparent rounded-lg w-full h-full">

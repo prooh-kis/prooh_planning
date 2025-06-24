@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getHardwarePerformanceDataForPlannerDashboard } from "../../actions/dashboardAction";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { getUserRole } from "../../utils/campaignUtils";
 
 export const HardwarePerformanceSegment = ({
   campaignId,
@@ -17,6 +18,7 @@ export const HardwarePerformanceSegment = ({
   filters,
   setFilters,
   dataToShow,
+  userInfo,
 }: any) => {
   const dispatch = useDispatch<any>();
   const {
@@ -127,6 +129,8 @@ export const HardwarePerformanceSegment = ({
     if (filters && campaignId && !hardwarePerformanceData) {
       dispatch(
         getHardwarePerformanceDataForPlannerDashboard({
+          userRole: getUserRole(userInfo?.userRole), 
+          userId: userInfo?._id,
           id: campaignId,
           cities: filters.cities.screenPerformance?.filter((f: any) => f !== "all"),
           touchPoints: filters.touchPoints.screenPerformance?.filter((f: any) => f !== "all"),
@@ -137,7 +141,7 @@ export const HardwarePerformanceSegment = ({
         })
       );
     }
-  },[dispatch, campaignId, filters, hardwarePerformanceData])
+  },[dispatch, campaignId, filters, hardwarePerformanceData, userInfo])
 
 
   return (
