@@ -11,6 +11,7 @@ export function SiteLevelAnalysis({
   screenData,
   siteAnalysisTabData,
   currentDate,
+  campaignDetails,
 }: any) {
 
 
@@ -66,6 +67,7 @@ export function SiteLevelAnalysis({
             dayTimeFilters={dayTimeFilters}
             setDayTimeFilters={setDayTimeFilters}
             currentDate={currentDate}
+            campaignDetails={campaignDetails}
           />
       ) : currentAnalysisTab == "5" ? (
         <SiteLevelCostConsumptionAnalysis

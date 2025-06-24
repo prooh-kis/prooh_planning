@@ -1,6 +1,6 @@
 import { TabWithoutIcon } from "../../components/index";
 import { FirstCharForBrandName } from "../../components/molecules/FirstCharForBrandName";
-import { getCampaignPageNameFromCampaignType } from "../../utils/campaignUtils";
+import { getCampaignPageNameFromCampaignType, getUserRole } from "../../utils/campaignUtils";
 import { getCampaignEndingStatus } from "../../utils/dateAndTimeUtils";
 import { Skeleton } from "antd";
 import { EDIT_CAMPAIGN } from "../../constants/campaignConstants";
@@ -13,6 +13,7 @@ export const CampaignDetailsHeader = ({
   openCampaignDashboard,
   currentTab1,
   setCurrentTab1,
+  userInfo
 }: any) => {
   const navigate = useNavigate();
   return (
@@ -48,34 +49,39 @@ export const CampaignDetailsHeader = ({
           <Skeleton active paragraph={{ rows: 1 }} />
         ) : (
           <div className="flex h-auto gap-1">
-            <div
-              onClick={() => navigate(`/editCampaign/${campaignCreated?._id}`)}
-              className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
-            >
-              <i className="fi fi-rs-dashboard" />
-              <h1 className="truncate">Change Creatives</h1>
-            </div>
-            <div
-              onClick={() => {
-                const pageName = getCampaignPageNameFromCampaignType(
-                  campaignCreated?.campaignType
-                );
-                navigate(`/${pageName}/${campaignCreated?._id}/edit`, {
-                  state: { from: EDIT_CAMPAIGN },
-                });
-              }}
-              className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
-            >
-              <i className="fi fi-rr-file-edit" />
-              <h1 className="truncate">Edit Plan</h1>
-            </div>
-            <div
-              onClick={() => setOpenCreateCampaignEndDateChangePopup(true)}
-              className="truncate h-8 flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
-            >
-              <i className="fi fi-rs-calendar-lines-pen" />
-              <h1 className="truncate">Edit Duration</h1>
-            </div>
+            {getUserRole(userInfo?.userRole) === "planner" && (
+              <div className="flex gap-1">
+                <div
+                  onClick={() => navigate(`/editCampaign/${campaignCreated?._id}`)}
+                  className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
+                >
+                  <i className="fi fi-rs-dashboard" />
+                  <h1 className="truncate">Change Creatives</h1>
+                </div>
+                <div
+                  onClick={() => {
+                    const pageName = getCampaignPageNameFromCampaignType(
+                      campaignCreated?.campaignType
+                    );
+                    navigate(`/${pageName}/${campaignCreated?._id}/edit`, {
+                      state: { from: EDIT_CAMPAIGN },
+                    });
+                  }}
+                  className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
+                >
+                  <i className="fi fi-rr-file-edit" />
+                  <h1 className="truncate">Edit Plan</h1>
+                </div>
+                <div
+                  onClick={() => setOpenCreateCampaignEndDateChangePopup(true)}
+                  className="truncate h-8 flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
+                >
+                  <i className="fi fi-rs-calendar-lines-pen" />
+                  <h1 className="truncate">Edit Duration</h1>
+                </div>
+              </div>
+            )}
+     
             <div
               onClick={openCampaignDashboard}
               className="h-8 truncate flex gap-2 text-[14px] font-medium text-[#129BFF] cursor-pointer border border-[#129BFF] rounded-md py-1 px-4"

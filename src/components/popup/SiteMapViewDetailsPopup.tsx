@@ -257,7 +257,7 @@ export const SiteInfoHeader = ({
       <div>
         <div className="rounded-[7px] p-2">
           <img
-            src={images[0]}
+            src={images?.[0]}
             alt={screenName}
             className="w-full h-full object-cover rounded-[7px]"
             onError={(e) => {

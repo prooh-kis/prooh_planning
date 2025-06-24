@@ -14,11 +14,9 @@ import {
   PULL_JOB_STATUS_SUCCESS,
   TAKE_DASHBOARD_SCREENSHOT_FAIL,
   TAKE_DASHBOARD_SCREENSHOT_REQUEST,
-  TAKE_DASHBOARD_SCREENSHOT_SUCCESS
+  TAKE_DASHBOARD_SCREENSHOT_SUCCESS,
 } from "../constants/billInvoiceConstant";
-
-
-const url = `${process.env.REACT_APP_PROOH_SERVER}/api/v2/billInvoice`;
+import { billInvoiceURL } from "../constants/urlConstant";
 
 export const createBillInvoice = (input) => async (dispatch, getState) => {
   dispatch({
@@ -26,7 +24,7 @@ export const createBillInvoice = (input) => async (dispatch, getState) => {
     payload: input,
   });
   try {
-    const { data } = await axios.post(`${url}/add`, input);
+    const { data } = await axios.post(`${billInvoiceURL}/add`, input);
     dispatch({
       type: CREATE_BILL_INVOICE_SUCCESS,
       payload: data,
@@ -47,106 +45,114 @@ export const createBillInvoice = (input) => async (dispatch, getState) => {
   }
 };
 
-
-
-export const getBillInvoiceDetails = ({ campaignCreationId }) => async (dispatch, getState) => {
-  dispatch({
-    type: GET_BILL_INVOICE_REQUEST,
-    payload: { campaignCreationId },
-  });
-  try {
-    const { data } = await axios.get(`${url}/details?campaignCreationId=${campaignCreationId}`);
+export const getBillInvoiceDetails =
+  ({ campaignCreationId }) =>
+  async (dispatch, getState) => {
     dispatch({
-      type: GET_BILL_INVOICE_SUCCESS,
-      payload: data,
+      type: GET_BILL_INVOICE_REQUEST,
+      payload: { campaignCreationId },
     });
-  } catch (error) {
-    dispatch({
-      type: GET_BILL_INVOICE_FAIL,
-      payload: {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-      },
-    });
-  }
-};
+    try {
+      const { data } = await axios.get(
+        `${billInvoiceURL}/details?campaignCreationId=${campaignCreationId}`
+      );
+      dispatch({
+        type: GET_BILL_INVOICE_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_BILL_INVOICE_FAIL,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
-export const handleInvoicePdfGenerationAction = (input) => async (dispatch, getState) => {
-  dispatch({
-    type: GENERATE_BILL_INVOICE_PDF_GENERATION_REQUEST,
-    payload: input,
-  });
-  try {
-    const { data } = await axios.post(`${url}/generateInvoicePDF`, input);
-    
+export const handleInvoicePdfGenerationAction =
+  (input) => async (dispatch, getState) => {
     dispatch({
-      type: GENERATE_BILL_INVOICE_PDF_GENERATION_SUCCESS,
-      payload: data,
+      type: GENERATE_BILL_INVOICE_PDF_GENERATION_REQUEST,
+      payload: input,
     });
-  } catch (error) {
-    dispatch({
-      type: GENERATE_BILL_INVOICE_PDF_GENERATION_FAIL,
-      payload: {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-      },
-    });
-  }
-};
+    try {
+      const { data } = await axios.post(
+        `${billInvoiceURL}/generateInvoicePDF`,
+        input
+      );
 
-export const takeDashboardScreenShotAction = (input) => async (dispatch, getState) => {
-  dispatch({
-    type: TAKE_DASHBOARD_SCREENSHOT_REQUEST,
-    payload: input,
-  });
-  try {
-    const { data } = await axios.post(
-      `${url}/takeDashboardScreenshot`,
-      input
-    );
-    // Ensure we're dispatching a plain object, not a class instance
-    const responseData = JSON.parse(JSON.stringify(data));
-    dispatch({
-      type: TAKE_DASHBOARD_SCREENSHOT_SUCCESS,
-      payload: responseData
-    });
-  } catch (error) {
-    dispatch({
-      type: TAKE_DASHBOARD_SCREENSHOT_FAIL,
-      payload: {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-      },
-    });
-  }
-}
+      dispatch({
+        type: GENERATE_BILL_INVOICE_PDF_GENERATION_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GENERATE_BILL_INVOICE_PDF_GENERATION_FAIL,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
 
-
-export const getQueueJobStatusAction = (input) => async (dispatch, getState) => {
-  dispatch({
-    type: PULL_JOB_STATUS_REQUEST,
-    payload: input,
-  });
-  try {
-    const { data } = await axios.post(`${url}/getQueueJobStatus`, input);
- 
+export const takeDashboardScreenShotAction =
+  (input) => async (dispatch, getState) => {
     dispatch({
-      type: PULL_JOB_STATUS_SUCCESS,
-      payload: data,
+      type: TAKE_DASHBOARD_SCREENSHOT_REQUEST,
+      payload: input,
     });
-  } catch (error) {
+    try {
+      const { data } = await axios.post(
+        `${billInvoiceURL}/takeDashboardScreenshot`,
+        input
+      );
+      // Ensure we're dispatching a plain object, not a class instance
+      const responseData = JSON.parse(JSON.stringify(data));
+      dispatch({
+        type: TAKE_DASHBOARD_SCREENSHOT_SUCCESS,
+        payload: responseData,
+      });
+    } catch (error) {
+      dispatch({
+        type: TAKE_DASHBOARD_SCREENSHOT_FAIL,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
+
+export const getQueueJobStatusAction =
+  (input) => async (dispatch, getState) => {
     dispatch({
-      type: PULL_JOB_STATUS_FAIL,
-      payload: {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-      },
+      type: PULL_JOB_STATUS_REQUEST,
+      payload: input,
     });
-  }
+    try {
+      const { data } = await axios.post(
+        `${billInvoiceURL}/getQueueJobStatus`,
+        input
+      );
 
-}
-
+      dispatch({
+        type: PULL_JOB_STATUS_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: PULL_JOB_STATUS_FAIL,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };

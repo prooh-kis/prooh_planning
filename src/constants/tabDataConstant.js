@@ -198,6 +198,27 @@ export const menuItemsCampaignManager = [
   },
 ];
 
+export const menuItemsClientPOCUser = [
+  {
+    value: "Campaigns",
+    path: "/myCampaignsList",
+    icon: "fi-sr-megaphone ",
+    option: "Campaigns",
+  },
+  {
+    value: "Drafts",
+    path: MY_PLANS_LIST,
+    icon: "fi-rs-blueprint",
+    option: "Drafts",
+  },
+  {
+    value: "Setting",
+    path: "/setting",
+    icon: "fi-ss-settings",
+    option: "Setting",
+  },
+];
+
 export const menuItemsCampaignPlanner = [
   {
     value: "New Plan",

@@ -15,6 +15,7 @@ const loadUserFromLocalStorage = () => {
       localStorage.removeItem('userInfo');
       localStorage.clear();
       store.dispatch(logout());
+      window.location.reload();
     }
   }
 };

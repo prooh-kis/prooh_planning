@@ -113,14 +113,34 @@ export const CalenderScaleStepper = ({
     }
 
     if (input.type === "week") {
-      setCurrentWeek?.(input.step + 1);
-      if (currentDay > weeks[input.step][1]?.length) {
-        setCurrentDay?.(weeks[input.step][1]?.length);
+      const newWeek = input.step + 1;
+      const targetWeek = weeks[input.step];
+      
+      // Don't allow selection of "End" week
+      if (!targetWeek || targetWeek[0] === "End") return;
+      
+      setCurrentWeek?.(newWeek);
+      
+      // Ensure currentDay is within bounds of the new week
+      const daysInWeek = targetWeek[1]?.length || 0;
+      if (currentDay > daysInWeek) {
+        const safeDay = Math.max(1, Math.min(currentDay, daysInWeek));
+        setCurrentDay?.(safeDay);
+        setCurrentDate?.(targetWeek[1][safeDay - 1]?.value);
+      } else if (daysInWeek > 0) {
+        setCurrentDate?.(targetWeek[1][currentDay - 1]?.value);
       }
-      setCurrentDate?.(weeks[input.step][1][currentDay - 1]?.value);
     } else if (input.type === "day") {
+      const targetWeek = weeks[currentWeek - 1];
+      // Don't allow selection if week is invalid or "End" week
+      if (!targetWeek || targetWeek[0] === "End") return;
+      
+      const targetDay = targetWeek[1]?.[input.step];
+      // Don't allow selection of "End" day
+      if (!targetDay || targetDay.label === "End") return;
+      
       setCurrentDay?.(input.step + 1);
-      setCurrentDate?.(weeks[currentWeek - 1][1][input.step]?.value);
+      setCurrentDate?.(targetDay.value);
     }
   }, [loading, currentDay, currentWeek, weeks, setCurrentDay, setCurrentWeek, setCurrentDate]);
 
@@ -130,20 +150,32 @@ export const CalenderScaleStepper = ({
   }, []);
 
   const getCurrentTime = useCallback(() => {
-    let weekDates = weeks?.[currentWeek - 1]?.[1] || [];
+    if (!weeks?.length) return 0;
 
-    if (currentWeek == weeks?.length) {
-      // setCurrentWeekMinusValue(2)
-      weekDates = weeks?.[currentWeek-2]?.[1]
+    let weekDates;
+    if (currentWeek === weeks.length) {
+      // Handle "End" week case
+      if (weeks.length > 1) {
+        weekDates = weeks[currentWeek - 2]?.[1];
+      } else {
+        return 0;
+      }
+    } else {
+      weekDates = weeks[currentWeek - 1]?.[1];
     }
+
+    if (!weekDates?.length) return 0;
     
-    const numberOfGaps = weekDates?.length - 1;
+    const numberOfGaps = weekDates.length - 1;
     let timeMarkerPosition = 0;
 
     for (let i = 0; i < numberOfGaps; i++) {
-      const start = new Date(weekDates[i]?.value);
-      const end = new Date(weekDates[i + 1]?.value);
+      if (!weekDates[i]?.value || !weekDates[i + 1]?.value) continue;
+      
+      const start = new Date(weekDates[i].value);
+      const end = new Date(weekDates[i + 1].value);
       const now = new Date();
+      
       if (now >= start && now <= end) {
         const hoursSinceStart = (now.getTime() - start.getTime()) / (1000 * 60 * 60);
         const percentageOfGap = (hoursSinceStart / 24) * (100 / numberOfGaps);
@@ -152,6 +184,7 @@ export const CalenderScaleStepper = ({
       }
     }
     return timeMarkerPosition;
+
   }, [currentWeek, weeks]);
 
   const getCurrentDay = useCallback(() => {
@@ -257,13 +290,15 @@ export const CalenderScaleStepper = ({
   }, [logsPopup, openInvoice, viewAllLogsOpen, openSiteMapView, openMonitoringView, monitoringPopup]);
 
   useEffect(() => {
+
     if (currentDate && allDates?.length > 0) {
       // Find the index of the currentDate in allDates
       const dateIndex = allDates.findIndex(date => 
-        new Date(date?.value).toDateString() === new Date(currentDate).toDateString()
+        date?.value && new Date(date.value).toDateString() === new Date(currentDate).toDateString()
       );
+      
       if (dateIndex >= 0) {
-        setCurrentWeekMinusValue(1)
+        setCurrentWeekMinusValue(1);
         // Calculate the week number (1-based)
         const weekNumber = Math.floor(dateIndex / 7) + 1;
         // Calculate the day number within the week (1-based)
@@ -271,13 +306,30 @@ export const CalenderScaleStepper = ({
 
         setCurrentWeek?.(weekNumber);
         setCurrentDay?.(dayNumber);
-      }
-
-      if (dateIndex < 0) {
-        setCurrentWeekMinusValue(2)
-        setShowTooltip(false);
-        setCurrentWeek?.(weeks?.length)
-        setCurrentDay?.(weeks[weeks?.length-2][1]?.length)
+      } else if (weeks?.length > 0) {
+        // Handle case where date is in the "End" day
+        let found = false;
+        for (let i = 0; i < weeks.length; i++) {
+          const week = weeks[i];
+          if (week[0] === "End") continue;
+          
+          const endDay = week[1]?.find(d => d?.label === "End");
+          if (endDay && new Date(endDay.value).toDateString() === new Date(currentDate).toDateString()) {
+            setCurrentWeekMinusValue(1);
+            setShowTooltip(false);
+            setCurrentWeek?.(i + 1);
+            setCurrentDay?.(week[1]?.length || 1);
+            found = true;
+            break;
+          }
+        }
+        
+        if (!found) {
+          setCurrentWeekMinusValue(2);
+          setShowTooltip(false);
+          setCurrentWeek?.(weeks.length);
+          setCurrentDay?.(weeks[weeks.length - 2]?.[1]?.length || 1);
+        }
       }
     }
   }, [currentDate, allDates, setCurrentWeek, setCurrentDay, weeks]);

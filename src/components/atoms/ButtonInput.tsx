@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface ButtonProps {
   children: React.ReactNode;
@@ -91,6 +91,45 @@ const ButtonInput: React.FC<ButtonProps> = ({
     large: "h-6 w-6 p-1 flex items-center",
   };
 
+  const [showOnlyIcon, setShowOnlyIcon] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current || !contentRef.current || !icon) {
+      return;
+    }
+
+    const checkWidth = () => {
+      if (!containerRef.current || !contentRef.current) return;
+      
+      const containerWidth = containerRef.current.offsetWidth;
+      const contentWidth = contentRef.current.scrollWidth;
+      
+      // Add some padding to prevent text from being cut off too early
+      setShowOnlyIcon(containerWidth < contentWidth + 24);
+    };
+
+    // Initial check
+    checkWidth();
+
+    // Store the current ref in a variable to use in cleanup
+    const currentContainer = containerRef.current;
+    const resizeObserver = new ResizeObserver(checkWidth);
+    
+    if (currentContainer) {
+      resizeObserver.observe(currentContainer);
+    }
+
+    // Cleanup
+    return () => {
+      if (currentContainer) {
+        resizeObserver.unobserve(currentContainer);
+      }
+      resizeObserver.disconnect();
+    };
+  }, [children, icon]);
+
   const handleClick = (e: React.MouseEvent) => {
     if (!disabled && !loading && onClick) {
       onClick();
@@ -99,20 +138,22 @@ const ButtonInput: React.FC<ButtonProps> = ({
 
   return (
     <div
+      ref={containerRef}
       role="button"
       tabIndex={0}
       aria-disabled={disabled || loading}
+      aria-label={showOnlyIcon && typeof children === 'string' ? children : undefined}
       onClick={handleClick}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           handleClick(e as any);
         }
       }}
-      className={`${baseClasses} ${sizeClasses[size]} ${roundedClasses[rounded]} ${variantClasses[variant]} ${className}`}
+      className={`${baseClasses} ${sizeClasses[size]} ${roundedClasses[rounded]} ${variantClasses[variant]} ${className} overflow-hidden`}
     >
       {loading ? (
-        <>
-          <svg
+        <div className="flex items-center gap-2 px-1 truncate">
+          {/* <svg
             className={`animate-spin ${iconSizeClasses[size]} mr-2`}
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -131,16 +172,22 @@ const ButtonInput: React.FC<ButtonProps> = ({
               fill="currentColor"
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
-          </svg>
+          </svg> */}
+          <i className={`fi fi-br-spinner animate-spin ${iconSizeClasses[size]} flex items-center justify-center`}></i>
+
           {loadingText}
-        </>
+        </div>
       ) : (
         <div className={`flex items-center gap-2 ${textColor}`}>
-          {icon && iconPosition === "left" && (
+          {icon && (iconPosition === "left" || showOnlyIcon) && (
             <span className={iconSizeClasses[size]}>{icon}</span>
           )}
-          {children}
-          {icon && iconPosition === "right" && (
+          {!showOnlyIcon && (
+            <div ref={contentRef} className="whitespace-nowrap">
+              {children}
+            </div>
+          )}
+          {icon && iconPosition === "right" && !showOnlyIcon && (
             <span className={iconSizeClasses[size]}>{icon}</span>
           )}
         </div>

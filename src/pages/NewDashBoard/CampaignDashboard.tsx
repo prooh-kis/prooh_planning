@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { DashboardGrid } from "../../components/molecules/DashboardGrid";
 import { useNavigate } from "react-router-dom";
-import { BillingAndInvoice } from "./BillingAndInvoice";
-import { GET_CLIENT_AGENCY_DETAILS_RESET } from "../../constants/clientAgencyConstants";
 import { useDispatch } from "react-redux";
 import { DashBoardMenu } from "./DashBoardMenu";
 import { FirstCharForBrandName } from "../../components/molecules/FirstCharForBrandName";
@@ -20,6 +18,9 @@ import {
   getSiteLevelPerformanceForPlannerDashboard,
   getSpotDeliveryDataForPlannerDashboard,
 } from "../../actions/dashboardAction";
+import { getUserRole } from "../../utils/campaignUtils";
+import { CAMPAIGN_PLANNER } from "../../constants/userConstants";
+import { DashboardViewSelectionPopup } from "../../components/popup/DashboardViewSelectionPopup";
 
 interface GridItem {
   id: string;
@@ -43,8 +44,10 @@ export const CampaignDashboard = ({
   loadingSiteLevel,
   setOpenInvoice,
   openInvoice,
-  takeScreenShot,
-  billInvoiceDetailsData,
+  userInfo,
+  setOpenView,
+  openView,
+  setUserInfo
 }: any) => {
   const dropdownRef = useRef<any>(null);
   const navigate = useNavigate();
@@ -83,6 +86,8 @@ export const CampaignDashboard = ({
   const [openMonitoringView, setOpenMonitoringView] = useState<boolean>(false);
   const [viewAllLogsOpen, setViewAllLogsOpen] = useState<boolean>(false);
 
+  const [isViewSelectionOpen, setIsViewSelectionOpen] = useState<boolean>(false);
+
   const gridItems: GridItem[] = [
     {
       id: "1",
@@ -90,12 +95,7 @@ export const CampaignDashboard = ({
       campaignDetails: screenLevelData?.campaignCreation,
       screenLevelData: screenLevelData?.data,
     },
-    {
-      id: "2",
-      type: "audience",
-      campaignDetails: screenLevelData?.campaignCreation,
-      screenLevelData: screenLevelData?.data,
-    },
+
     {
       id: "3",
       type: "screen",
@@ -111,6 +111,12 @@ export const CampaignDashboard = ({
     {
       id: "5",
       type: "cost",
+      campaignDetails: screenLevelData?.campaignCreation,
+      screenLevelData: screenLevelData?.data,
+    },
+    {
+      id: "2",
+      type: "audience",
       campaignDetails: screenLevelData?.campaignCreation,
       screenLevelData: screenLevelData?.data,
     },
@@ -189,10 +195,14 @@ export const CampaignDashboard = ({
         ),
         dayTypes: filters.dayTypes.audience?.filter((f: any) => f !== "all"),
         timezones: filters.timezones.audience?.filter((f: any) => f !== "all"),
+        userRole: getUserRole(userInfo?.userRole),
+        userId: userInfo?._id,
       })
     );
     dispatch(
       getHardwarePerformanceDataForPlannerDashboard({
+        userRole: getUserRole(userInfo?.userRole),
+        userId: userInfo?._id,
         ...commonParams,
         cities: filters.cities.screenPerformance?.filter(
           (f: any) => f !== "all"
@@ -214,6 +224,8 @@ export const CampaignDashboard = ({
     dispatch(
       getSpotDeliveryDataForPlannerDashboard({
         ...commonParams,
+        userRole: getUserRole(userInfo?.userRole),
+        userId: userInfo?._id,
         cities: filters.cities.spotDelivery?.filter((f: any) => f !== "all"),
         touchPoints: filters.touchPoints.spotDelivery?.filter(
           (f: any) => f !== "all"
@@ -232,6 +244,8 @@ export const CampaignDashboard = ({
     dispatch(
       getCostDataForPlannerDashboard({
         ...commonParams,
+        userRole: getUserRole(userInfo?.userRole),
+        userId: userInfo?._id,
         cities: filters.cities.costConsumption?.filter((f: any) => f !== "all"),
         touchPoints: filters.touchPoints.costConsumption?.filter(
           (f: any) => f !== "all"
@@ -250,6 +264,8 @@ export const CampaignDashboard = ({
     dispatch(
       getSiteLevelPerformanceForPlannerDashboard({
         ...commonParams,
+        userRole: getUserRole(userInfo?.userRole),
+        userId: userInfo?._id,
         cities: filters.cities.siteLevel,
         touchPoints: filters.touchPoints.siteLevel,
         screenTypes: filters.screenTypes.siteLevel,
@@ -257,7 +273,7 @@ export const CampaignDashboard = ({
         // timezones: filters.timezones.audience?.filter((f: any) => f !== "all")
       })
     );
-  }, [campaignDetails, dispatch, filters]);
+  }, [campaignDetails, dispatch, filters, userInfo]);
 
   useEffect(() => {
     if (Number(clickedTab) !== 1) {
@@ -274,7 +290,7 @@ export const CampaignDashboard = ({
         block: "center",
       });
     }
-  }, [fetchDashboardData, campaignDetails?._id]);
+  }, [fetchDashboardData, campaignDetails?._id, clickedTab]);
   return (
     <div className="w-full bg-[#F2F4F7] flex flex-col gap-2 font-custom relative">
       <div className="bg-[#FFFFFF] py-4 px-2 pr-14 mt-1 flex justify-between shadow-sm w-full sticky top-0 z-10">
@@ -306,31 +322,55 @@ export const CampaignDashboard = ({
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-end gap-2 ">
-          <div
-            className="border border-gray-300 rounded-lg flex justify-center items-center h-[38px] w-[38px] cursor-pointer"
-            onClick={() => navigate(`/campaignDetails/${campaignDetails?._id}`)}
-          >
-            <i className="fi fi-sr-file-edit text-[14px] flex items-center justify-center text-[#129BFF]"></i>
+        {openView === CAMPAIGN_PLANNER ? (
+          <div className="flex items-center justify-end gap-2 ">
+            <DashboardViewSelectionPopup
+              open={isViewSelectionOpen}
+              onClose={() => setIsViewSelectionOpen(false)}
+              onSelectView={(view: any) => {
+                setUserInfo({userRole: view.value, _id: siteLevelData[0].master});
+              }}
+              type="viewer"
+              data={[]}
+            />
+            {getUserRole(userInfo?.userRole) === "vendor" ? (
+              <DashboardViewSelectionPopup
+                open={isViewSelectionOpen}
+                onClose={() => setIsViewSelectionOpen(false)}
+                onSelectView={(view: any) => {
+                  setUserInfo({ userRole: userInfo?.userRole, _id: view.id});
+                }}
+                type="vendor"
+                data={siteLevelData}
+              />
+            ) : (
+              <div
+                className="px-4 border border-gray-300 rounded-lg flex justify-center gap-2 items-center h-[38px] cursor-pointer"
+                onClick={() => {
+                  setOpenInvoice(true);
+                }}
+              >
+                <i className="fi fi-rs-calculator-bill text-[14px] flex items-center justify-center text-[#129BFF]"></i>
+                <p className="text-[16px] text-[#0E212E]">Generate Invoice</p>
+              </div>
+            )}
+
           </div>
-          <div
-            className="px-4 border border-gray-300 rounded-lg flex justify-center gap-2 items-center h-[38px] cursor-pointer"
-            onClick={() => {
-              if (!billInvoiceDetailsData?.dashboardScreenshots || billInvoiceDetailsData?.dashboardScreenshots && billInvoiceDetailsData?.dashboardScreenshots?.length < 5 && !billInvoiceDetailsData?.dashboardScreenshots?.find((s: any) => !s.url.includes("https:"))) {
-                takeScreenShot({});
-              }
-              setOpenInvoice(true);
-            }}
-          >
-            <i className="fi fi-rs-calculator-bill text-[14px] flex items-center justify-center text-[#129BFF]"></i>
-            <p className="text-[16px] text-[#0E212E]">Invoice</p>
+        ) : (
+          <div className="flex items-end">
+            <div className="flex items-center gap-2" onClick={() => {
+              // if (userInfo?)
+            }}>
+              <i className="fi fi-br-user text-[12px] flex items-center justify-center text-[#129BFF]"></i>
+              <h1 className="text-[12px] leading-[16.94px]">Planned by <span className="font-semibold text-[#129BFF]">{campaignDetails?.campaignPlannerName}</span></h1>
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <div className="absolute top-20 left-2 z-50 w-[300px]">
         {showMenu && <DashBoardMenu campaignDetails={campaignDetails} />}
       </div>
-      <div className="px-10 bg-[#F2F4F7] h-[78vh] overflow-y-auto pr-4">
+      <div className="px-10 bg-[#F2F4F7] h-[78vh] overflow-y-auto scrollbar-minimal pr-4">
         {/* campaign dashboard grid view */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
           {gridItems.map((item) => (
@@ -360,6 +400,7 @@ export const CampaignDashboard = ({
         <div className="mt-2">
           {clicked === "1" ? (
             <DurationSegment
+              userInfo={userInfo}
               campaignId={campaignDetails?._id}
               calendarData={calendarData}
               setCurrentWeek={setCurrentWeek}
@@ -379,6 +420,7 @@ export const CampaignDashboard = ({
             />
           ) : clicked === "2" ? (
             <AudienceSegment
+              userInfo={userInfo}
               campaignId={campaignDetails?._id}
               screenLevelData={screenLevelData}
               showPercent={showPercent}
@@ -388,6 +430,7 @@ export const CampaignDashboard = ({
             />
           ) : clicked === "3" ? (
             <HardwarePerformanceSegment
+              userInfo={userInfo}
               campaignId={campaignDetails?._id}
               screenLevelData={screenLevelData}
               showPercent={showPercent}
@@ -400,6 +443,7 @@ export const CampaignDashboard = ({
             />
           ) : clicked === "4" ? (
             <SlotSegment
+              userInfo={userInfo}
               campaignId={campaignDetails?._id}
               screenLevelData={screenLevelData}
               showPercent={showPercent}
@@ -409,9 +453,11 @@ export const CampaignDashboard = ({
               dataToShow={
                 gridItems?.find((item: any) => item.id === "4")?.screenLevelData
               }
+              campaignDetails={campaignDetails}
             />
           ) : clicked === "5" ? (
             <CostSegment
+              userInfo={userInfo}
               campaignId={campaignDetails?._id}
               screenLevelData={screenLevelData}
               showPercent={showPercent}
@@ -431,8 +477,10 @@ export const CampaignDashboard = ({
           openMonitoringView={openMonitoringView}
           setOpenMonitoringView={setOpenMonitoringView}
           campaignId={campaignDetails?._id}
+          userInfo={userInfo}
         />
         <SiteLevelPerformance
+          userInfo={userInfo}
           campaignId={campaignDetails?._id}
           loadingSiteLevel={loadingSiteLevel}
           siteLevelData={siteLevelData}

@@ -30,6 +30,8 @@ export { default as Planner } from "./icons/campaign.svg";
 export { default as Layer } from "./icons/layers.svg";
 export { default as PPT } from "./icons/ppt.svg";
 export { default as ZIP } from "./icons/zip.svg";
+export { default as EditIcon } from "./icons/pencil 1.svg";
+
 
 export { default as Carousel1 } from "./images/carousel1.png";
 export { default as Carousel2 } from "./images/carousel2.png";

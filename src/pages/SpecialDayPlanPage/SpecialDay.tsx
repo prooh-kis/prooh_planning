@@ -7,7 +7,7 @@ import moment from "moment";
 import {
   getCalendarListData,
   getIndustryCategory,
-} from "../../actions/calenderAction";
+} from "../../actions/screenAction";
 import { useSelector, useDispatch } from "react-redux";
 import { getTableDataForSelectTopicalDayPage } from "../../actions/screenAction";
 import { SingleCalenderData } from "../../components/molecules/SingleCalenderData";
@@ -94,8 +94,9 @@ export const SpecialDay = ({
 
     dispatch(
       getCalendarListData({
-        startDate: `${year}-${month + 1}-${month === new Date().getMonth() ? todayDate : "01"
-          }`,
+        startDate: `${year}-${month + 1}-${
+          month === new Date().getMonth() ? todayDate : "01"
+        }`,
         endDate: `${year}-${month + 1}-${lastDayOfCurrentMonth}`,
         category: [category],
       })
@@ -179,7 +180,9 @@ export const SpecialDay = ({
         {/* <EventCalender events={calendarListData1?.filteredCalendar || []} /> */}
       </div>
       <div className="">
-        <h1 className="pt-2 text-[14px] font-semibold">{new Date().getFullYear()}</h1>
+        <h1 className="pt-2 text-[14px] font-semibold">
+          {new Date().getFullYear()}
+        </h1>
         <div className="py-4 w-full">
           <MonthRangeSlider
             setMonth={setMonth}
@@ -201,7 +204,7 @@ export const SpecialDay = ({
             </span>
             events according to your category{" "}
           </h1>
-          <div className="flex flex-col gap-4 mt-4 overflow-y-auto pr-4 h-[50vh]">
+          <div className="flex flex-col gap-4 mt-4 overflow-y-auto scrollbar-minimal pr-4 h-[50vh]">
             {loadingCalendarListDat && (
               <div className="flex flex-col gap-4">
                 <div
@@ -243,7 +246,7 @@ export const SpecialDay = ({
           <h1 className="text-[14px] font-normal text-[#737373]  leading-[19.07px]">
             Your final bill will include the cost of all the additional slots,{" "}
           </h1>
-          <div className="flex flex-col gap-2 mt-4 overflow-y-auto max-h-[40vh]">
+          <div className="flex flex-col gap-2 mt-4 overflow-y-auto scrollbar-minimal max-h-[40vh]">
             {Object.keys(tableDataForSelectTopicalDay1 || {})?.map(
               (key: string, index: any) => (
                 <div key={index} className="pr-4">
@@ -252,22 +255,23 @@ export const SpecialDay = ({
                       {key}
                     </h1>
                     <h1
-                      className={`${key === "Total Budget"
-                        ? "text-[#1297E2]"
-                        : "text-[#CC1C1C]"
-                        } text-[14px] leading-[21.79px] tracking-[-0.02em]`}
+                      className={`${
+                        key === "Total Budget"
+                          ? "text-[#1297E2]"
+                          : "text-[#CC1C1C]"
+                      } text-[14px] leading-[21.79px] tracking-[-0.02em]`}
                     >
                       {key === "Price Per Slot" ||
-                        key === "Total Budget" ||
-                        key === "CPM"
+                      key === "Total Budget" ||
+                      key === "CPM"
                         ? "\u20B9 "
                         : ""}
                       {!isNaN(Number(tableDataForSelectTopicalDay1[key]))
                         ? formatNumber(
-                          Number(tableDataForSelectTopicalDay1[key]).toFixed(
-                            0
+                            Number(tableDataForSelectTopicalDay1[key]).toFixed(
+                              0
+                            )
                           )
-                        )
                         : tableDataForSelectTopicalDay1[key]}
                       {key === "Campaign Duration" ? " Days" : ""}
                     </h1>

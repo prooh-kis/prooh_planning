@@ -235,12 +235,12 @@ export const AudienceTouchPointsDetails = ({
   ]);
 
   return (
-    <>
+    <div className="">
       {loadingAudiences ? (
         <LoadingScreen />
       ) : (
         <div className="w-full">
-          <div>
+          <div className="">
             <h1 className="text-[24px] text-primaryText font-semibold">
               Select Target Audiences and TouchPoints
             </h1>
@@ -249,8 +249,8 @@ export const AudienceTouchPointsDetails = ({
               touchPoints
             </p>
           </div>
-          <div className="grid grid-cols-8 gap-1 pt-4">
-            <div className="col-span-2 flex justify-center">
+          <div className="grid grid-cols-9 gap-1 py-2">
+            <div className="col-span-3 flex justify-center">
               <LocationTable
                 loading={loadingAudiences}
                 handleSelection={handleSelection}
@@ -282,7 +282,7 @@ export const AudienceTouchPointsDetails = ({
               />
             </div>
           </div>
-          <div className="flex justify-start items-center gap-2 pt-2 pb-20">
+          <div className="flex justify-start items-center gap-2 pt-2">
             <i className="fi fi-sr-lightbulb-on text-[#FFB904]"></i>
             <h1 className="text-[14px] text-[#178967]">
               Prooh Tip:- select target audience and select select target
@@ -304,6 +304,6 @@ export const AudienceTouchPointsDetails = ({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };

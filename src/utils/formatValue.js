@@ -21,7 +21,7 @@ export function formatNumber(num) {
       return "0";
     }
   }
-  return num.toString();
+  return Number(num).toFixed(0);
 }
 
 export function numberToWords(num) {

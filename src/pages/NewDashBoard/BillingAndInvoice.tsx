@@ -14,9 +14,10 @@ import {
   saveFileOnAWS,
 } from "../../utils/awsUtils";
 import ButtonInput from "../../components/atoms/ButtonInput";
-import { BillAndInvoiceMonitoringPicsSegment } from "./BillAndInvoiceMonitoringPicsSegment";
-import { io, Socket } from 'socket.io-client';
-import { generateImageFromPdf } from "../../utils/fileUtils";
+import { BillAndInvoiceMonitoringPicsSegment } from "../../components/segments/BillAndInvoiceMonitoringPicsSegment";
+import { generateImageFromPdf, sensitiseUrlByEncoding } from "../../utils/fileUtils";
+import { CampaignDashboardScreenshots } from "../../components/segments/CampaignDashboardScreenshots";
+import { formatDateForLogs } from "../../utils/dateAndTimeUtils";
 
 // Define types for job status
 type JobStatus = 'stuck' | 'waiting' | 'active' | 'completed' | 'failed' | 'error' | 'not_found' | 'no_job' ;
@@ -35,8 +36,18 @@ const dashboardScreenshotName = [{id: 5, label: "Cost Consumption"}, {id: 4, lab
 export const BillingAndInvoice = (props: any) => {
   const dispatch = useDispatch<any>();
 
-  const { loading, takeScreenShot, billInvoiceDetailsData, loadingBillInvoiceDetails, onClose, campaignDetails, siteLevelData, pathname } = props;
+  const { takeScreenShot, billInvoiceDetailsData, loadingBillInvoiceDetails, onClose, campaignDetails, siteLevelData, pathname } = props;
 
+  // po data
+  const [poNumber, setPoNumber] = useState<string>("");
+  const [poDate, setPoDate] = useState<string>("");
+
+  // invoice data
+  const [invoiceDescription, setInvoiceDescription] = useState<string>("");
+  const [invoiceQuantity, setInvoiceQuantity] = useState<string>("");
+  const [invoiceCurrency, setInvoiceCurrency] = useState<string>("INR");
+  const [invoiceAmount, setInvoiceAmount] = useState<number>(0);
+  
   const [magnifiedImageView, setMagnifiedImageView] = useState<boolean>(false);
   const [magnifiedImage, setMagnifiedImage] = useState<any>(null);
 
@@ -44,7 +55,7 @@ export const BillingAndInvoice = (props: any) => {
 
   const [poFiles, setPOFiles] = useState<any[]>([]);
   const [dashboardScreenshots, setDashboardScreenshots] = useState<any>([]);
-  const [ssLoading, setSSLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [disabledGenerate, setDisabledGenerate] = useState<boolean>(true);
 
@@ -52,10 +63,11 @@ export const BillingAndInvoice = (props: any) => {
   const [isConnected, setIsConnected] = useState(false);
   const [jobId, setJobId] = useState<any>(null);
   const [jobType, setJobType] = useState<any>(null);
-  const [socketUrl, setSocketUrl] = useState<any>("ws://localhost:4444");
-  // const [socketUrl, setSocketUrl] = useState<any>("wss://servermonad.vinciis.in");
 
-  const todayDate = moment(new Date())?.format("YYYY-MM-DD hh:mm:ss");
+
+  const todayDate = campaignDetails?.endDate 
+    ? moment(Math.min(moment(new Date()).valueOf(), moment(campaignDetails.endDate).valueOf())).format("YYYY-MM-DD hh:mm:ss")
+    : moment(new Date())?.format("YYYY-MM-DD hh:mm:ss");
 
   const {
     loading: loadingBillInvoiceCreation,
@@ -103,6 +115,8 @@ export const BillingAndInvoice = (props: any) => {
     if (billInvoiceDetailsData?.uploadedPO) {
       poImageBase64 = await generateImageFromPdf(billInvoiceDetailsData.uploadedPO);
     }
+    setSocketUpdateStatus(null);
+    setLoading(true);
     dispatch(handleInvoicePdfGenerationAction({
       fileName: `INVOICE_${campaignDetails?.brandName}_${campaignDetails?.name}`,
       billInvoiceDetailsData,
@@ -122,6 +136,27 @@ export const BillingAndInvoice = (props: any) => {
     if (billingStep === 1) {
       dispatch(createBillInvoice({
         campaignCreationId: campaignDetails?._id,
+        campaignName: campaignDetails?.name,
+        clientAgencyName: campaignDetails?.clientName,
+        invoiceNumber: `PROOH/${campaignDetails?._id}`,
+        invoiceDate: todayDate,
+        invoiceCurrency: invoiceCurrency,
+        clientConfirmation: campaignDetails?.clientApprovalImgs?.length > 0 ? "Mail Confirmation" : "mail confirmation",
+        clientOrderDate: poDate,
+        poNumber: poNumber,
+        poDate: poDate,
+        tableContent: [{
+          description: invoiceDescription,
+          quantity: invoiceQuantity,
+          amount: invoiceAmount,
+          rate: invoiceAmount,
+          hsnsac: ""
+        }],
+        subTotalAmount: invoiceAmount,
+        outPutGstPercent: 18,
+        outPutGstAmount: invoiceAmount * 0.18,
+        totalAmount: invoiceAmount * 1.18,
+        currency: "INR",
         uploadedPO: billingStep === 1 && poFiles.length > 0 ? poFiles[poFiles.length - 1].awsURL : undefined,
       }))
     }
@@ -174,12 +209,7 @@ export const BillingAndInvoice = (props: any) => {
       dispatch({
         type: CREATE_BILL_INVOICE_RESET
       });
-    }
-
-    if (dashboardSS && jobId === null) {
-      dispatch({
-        type: TAKE_DASHBOARD_SCREENSHOT_RESET
-      });
+      dispatch(getBillInvoiceDetails({ campaignCreationId: campaignDetails._id }));
     }
 
     if (successBillInvoiceCreation) {
@@ -191,17 +221,15 @@ export const BillingAndInvoice = (props: any) => {
       }
     }
 
-  },[dispatch, successBillInvoiceCreation, billingStep, dashboardScreenshots, dashboardSS, jobId]);
+  },[dispatch, successBillInvoiceCreation, billingStep, campaignDetails, dashboardScreenshots]);
     
   useEffect(() => {
-  
-    if (campaignDetails && !clientAgencyDetailsData) {
+    if (campaignDetails) {
       dispatch(getClientAgencyDetails({
         clientAgencyName: campaignDetails?.clientName?.toUpperCase()
       }));
     }
-
-  },[campaignDetails, clientAgencyDetailsData, dispatch]);
+  },[campaignDetails, dispatch]);
 
 
   useEffect(() => {
@@ -212,7 +240,6 @@ export const BillingAndInvoice = (props: any) => {
       setJobType("invoice");
       setDisabledGenerate(false);
     }
-
     if (billInvoiceDetailsData) {
       setPOFiles([billInvoiceDetailsData.uploadedPO]);
       if (dashboardScreenshots?.length === 0 && billInvoiceDetailsData?.dashboardScreenshots?.length > 0) {
@@ -221,187 +248,19 @@ export const BillingAndInvoice = (props: any) => {
         setDashboardScreenshots(lastScreenshotSet);
       }
     }
-
-
   },[billInvoiceDetailsData, billingStep, dashboardSS, dashboardScreenshots?.length]);
 
   useEffect(() => {
-    if (invoicePdf && invoicePdf?.job) {
+    if (invoicePdf && invoicePdf?.invoiceJob) {
       message.info("Invoice in being generated, will be made available in a moment...");
-      setJobId(invoicePdf?.job.id);
+      setJobId(invoicePdf?.invoiceJob.jobId);
     }
-    if (dashboardSS) {
+    if (dashboardSS && dashboardSS?.screenshotjob) {
       message.info("Dashboard screenshot in being generated, will be made available in a moment...");
-      setJobId(dashboardSS.job.id)
+      setJobId(dashboardSS.screenshotjob.jobId)
     }
-  },[invoicePdf, dashboardSS]);
+  },[dashboardSS, invoicePdf]);
 
-  useEffect(() => {
-
-    // Prevent WebSocket connection in iframe/webview
-    if (window.location.search.includes('screenshot=true')) {
-      return;
-    } else {
-      console.log(socketUpdateStatus);
-      if (jobId && jobId !== "") {
-        // Establish connection
-        const newSocket = io(socketUrl, {
-          transports: ['websocket'],
-          secure: true,
-          rejectUnauthorized: false, // Only for development with self-signed certs
-          reconnection: true,
-          reconnectionAttempts: 5,
-          reconnectionDelay: 1000,
-          timeout: 10000
-        });
-
-        newSocket.onAny((event: any, ...args: any) => {
-          console.log(`[SOCKET EVENT] ${event}`, args);
-        });
-
-        const socketState: any = {
-          connecting: () => console.log("[Socket] connecting..."),
-          connet: () => console.log("[Socket] connected..."),
-          connect_error: () => console.log("[Socket] connection error..."),
-          disconnect: (reason: any) => console.log("[Socket] disconnected: ", reason),
-          reconnect_attempt: (attempt: any) => console.log("[Socket] reconnecting, attempt: ", attempt),
-          reconnect_failed: () => console.log("[Socket] reconnect failed..."),
-        };
-
-        Object.entries(socketState).forEach(([event, handler]: any) => {
-          newSocket.on(event, handler);
-        });
-
-
-        // Connection event handlers
-        newSocket.on('connect', () => {
-          setIsConnected(true);
-          // Subscribe to job status
-          newSocket.emit('subscribeToScreenshotInvoiceJob', jobId);
-        });
-      
-        // Inside the socket.on('screenshotJobStatus', ...) handler
-        newSocket.on('screenshotInvoiceJobStatus', (update: any) => {
-          const socketStatus = (update.status || "").toLowerCase();
-
-          setSocketUpdateStatus(update);
-          
-          // Handle different job statuses
-          switch (socketStatus) {
-            case "completed":
-              console.log(`${jobType} Job completed successfully: ${update}`);
-              if (jobType === 'screenshot' && update.result?.billInvoice?.dashboardScreenshots) {
-                // Update the dashboard screenshots with the new ones from the result
-                const newScreenshots = update.result.billInvoice.dashboardScreenshots
-                  .filter((item: any) => item.status === 'active')
-                  .map((item: any) => item.url);
-                
-                if (newScreenshots.length > 0) {
-                  // Create a new array to ensure React detects the state change
-                  setDashboardScreenshots([...newScreenshots]);
-                  message.success('Dashboard screenshots updated successfully');
-                  
-                  // Force a re-render by updating a dummy state
-                  setSSLoading(prev => !prev);
-                }
-              } else {
-                dispatch(getBillInvoiceDetails({
-                  campaignCreationId: campaignDetails?._id,
-                }));
-              }
-          
-              setSSLoading(false);
-              setJobId(null);
-              setSocketUpdateStatus(null);
-              break;
-              
-            case "active":
-              setSSLoading(true);
-              console.log(`${jobType} Screenshot capture in progress... ${update.progress}`);
-              break;
-              
-            case "progress":
-              console.log(`${jobType} Screenshot capture progress: ${update}`);
-              setSSLoading(true);
-              break;
-              
-            case "failed":
-            case "error":
-              console.error(`${jobType} Screenshot capture failed:  ${update.error}`);
-              setSSLoading(false);
-              setJobId(null);
-              setSocketUpdateStatus(null);
-              message.error(`${jobType} job failed. Please try again.`);
-              break;
-              
-            case "not_found":
-              setSSLoading(false);
-              setJobId(null);
-              setSocketUpdateStatus(null);
-              message.info(`${jobType} Screenshot capture failed. Please retry after reloading...`);
-              break;
-              
-            case "stuck":
-              console.log(`${jobType} Screenshot capture stuck... ${update}`);
-              setSSLoading(false);
-              setJobId(null);
-              setSocketUpdateStatus(null);
-              break;
-          }
-
-        });
-
-        // Disconnect handler
-        newSocket.on('disconnect', (reason) => {
-          setIsConnected(false);
-          console.log('Disconnected from WebSocket server: ', reason);
-          if (reason === 'io server disconnect') {
-            // The disconnection was initiated by the server, you need to reconnect manually
-            newSocket.connect();
-          }
-        });
-
-        // Add this near your other socket event handlers
-        newSocket.on('error', (error: any) => {
-          console.error('Socket error:', error);
-          setIsConnected(false);
-        });
-
-        newSocket.on('connect_error', (error: any) => {
-          console.error('Connection error:', {
-            message: error.message,
-            description: error.description,
-            context: error.context,
-            error: error
-          });
-          setIsConnected(false);
-        });
-
-        // Cleanup on unmount
-        return () => {
-          console.log('Cleaning up WebSocket connection');
-          if (newSocket) {
-            // Remove all listeners to prevent memory leaks
-            newSocket.off('screenshotInvoiceJobStatus');
-            newSocket.off('connect');
-            newSocket.off('disconnect');
-            newSocket.off('connect_error');
-            newSocket.offAny(); // Remove all .onAny() handlers
-            
-            // Remove our custom event listeners
-            Object.keys(socketState).forEach(event => {
-              newSocket.off(event, socketState[event]);
-            });
-            // Only disconnect if we're not already disconnected
-            if (newSocket.connected) {
-              newSocket.disconnect();
-            }
-          }
-        };
-      }
-    }
-
-  }, [jobId, socketUrl, socketUpdateStatus, jobType, dispatch, campaignDetails]);
 
   useEffect(() => {
     if (props?.open) {
@@ -409,6 +268,7 @@ export const BillingAndInvoice = (props: any) => {
     } else {
       document.body.classList.remove("overflow-hidden");
     }
+
     // Clean up the effect when the component unmounts
     return () => {
       document.body.classList.remove("overflow-hidden");
@@ -507,7 +367,7 @@ export const BillingAndInvoice = (props: any) => {
                   {billInvoiceDetailsData?.invoiceDocs.length === 0 && dashboardSS && dashboardSS.status && (
                     <div className="flex items-center gap-2 cursor-pointer">
                       {
-                        dashboardSS?.status === "active" || ssLoading && (
+                        dashboardSS?.status === "active" || loading && (
                           <div className="border-b-2 border-[#22C55E] rounded-[2px]">
                             <i className="fi fi-sr-arrow-small-down text-[#22C55E] flex items-center justify-center animate-bounce"></i>
                           </div>
@@ -526,9 +386,11 @@ export const BillingAndInvoice = (props: any) => {
                 </div>
 
                 {billInvoiceDetailsData?.invoiceDocs.length > 0 && (
-                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => !ssLoading && window.open(billInvoiceDetailsData?.invoiceDocs[billInvoiceDetailsData?.invoiceDocs.length - 1].url, "_blank")}>
+                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => !loading && window.open(billInvoiceDetailsData?.invoiceDocs[billInvoiceDetailsData?.invoiceDocs.length - 1].url, "_blank")}>
+                    <Tooltip title={`Generated on ${billInvoiceDetailsData?.invoiceDocs[billInvoiceDetailsData?.invoiceDocs.length - 1].date}`}>
                       <h1 className="text-[12px] text-[#22C55E]">Click to download...</h1>
-                      {ssLoading ? (
+                    </Tooltip>
+                      {loading ? (
                         <div className="flex items-center justify-center gap-1">
                           <h1 className="text-[12px] text-[#22C55E]">{socketUpdateStatus?.progress}%</h1>
                           <i className="fi fi-br-spinner text-[#22C55E] flex items-center animate-spin"></i>
@@ -556,6 +418,18 @@ export const BillingAndInvoice = (props: any) => {
                   campaignDetails={campaignDetails}
                   clientAgencyDetailsData={clientAgencyDetailsData}
                   billInvoiceDetailsData={billInvoiceDetailsData}
+                  setInvoiceAmount={setInvoiceAmount}
+                  invoiceAmount={invoiceAmount}
+                  setInvoiceDescription={setInvoiceDescription}
+                  invoiceDescription={invoiceDescription}
+                  setInvoiceQuantity={setInvoiceQuantity}
+                  invoiceQuantity={invoiceQuantity}
+                  setInvoiceCurrency={setInvoiceCurrency}
+                  invoiceCurrency={invoiceCurrency}
+                  setPoDate={setPoDate}
+                  poDate={poDate}
+                  setPoNumber={setPoNumber}
+                  poNumber={poNumber}
                 />
               )}
             </div>
@@ -624,82 +498,23 @@ export const BillingAndInvoice = (props: any) => {
               </div>
             </div>
           ) : billingStep === 2 ? (
-            <div className="py-4 px-1">
-              <div className="flex justify-between">
-                <div>
-                  <h1 className="text-[14px] font-semibold pt-2">Screenshot Of Campaign Dashboard Summary</h1>
-                  <p className="text-[12px] text-[#6F7F8E]">A verified proof of client approval showcasing our commitment to transparency</p>
-                </div>
-                <div className="px-4">
-                  <Tooltip title="Refresh Dashboard Screenshot Data">
-                    <i 
-                      className="fi fi-br-rotate-right flex items-center justify-center text-gray-500"
-                      onClick={() => ssLoading ? {} : takeScreenShot({})}
-                    ></i>
-                  </Tooltip>
-                </div>
-              </div>
-              {loadingScreenshot || ssLoading && (
-                <div className="py-4">
-                  <LoadingScreen progress={socketUpdateStatus?.progress || ""} />
-                </div>
-              )}
-              {dashboardScreenshots?.length === 0 && (
-                <div className="flex flex-col gap-2 items-center justify-center h-[50vh]">
-                  <p className="text-[12px]">Take snapshots of your campaign summary for future proof of references...</p>
-                  <ButtonInput
-                    disabled={ssLoading}
-                    onClick={() => takeScreenShot({})}
-                  >
-                    Take Snapshots
-                  </ButtonInput>
-                </div>
-              )}
-              {dashboardScreenshots?.length > 0 && (
-                <div className="grid grid-cols-2 gap-4 rounded-[12px]">
-                  {[...dashboardScreenshots]?.reverse()?.map((image: any, i: number) => (
-                    <div key={i} className="col-span-1 py-4 group relative">
-                      <div className="relative overflow-hidden rounded-[12px]">
-                        <img 
-                          className="w-full h-full border border-gray-100 rounded-[12px] shadow-md transition-transform duration-300 group-hover:scale-105"
-                          src={image?.split("/").includes("https:") ? image : `${image}`}
-                          alt="dashboard-screenshot"
-                        />
-                        {!ssLoading && (
-                          <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 rounded-[12px]">
-                            <button 
-                              type="button"
-                              onClick={() => {
-                                setMagnifiedImage(image);
-                                setMagnifiedImageView(!magnifiedImageView);
-                              }}
-                              className="p-2 w-12 h-12 bg-white bg-opacity-80 rounded-full hover:bg-opacity-100 transition-all duration-200 transform hover:scale-110"
-                              title="View Fullscreen"
-                            >
-                              <i className="fi fi-rr-search flex items-center justify-center text-gray-700"></i>
-                            </button>
-                            <button 
-                              type="button"
-                              onClick={() => {
-                                takeScreenShot({tabs: [`${i+1}`]})
-                              }}
-                              className="p-2 h-12 w-12 bg-white bg-opacity-80 rounded-full hover:bg-opacity-100 transition-all duration-200 transform hover:scale-110"
-                              title="View Fullscreen"
-                            >
-                              <i className="fi fi-br-rotate-right flex items-center justify-center text-gray-700"></i>
-                            </button>
-                          </div>
-                        )}
-
-                      </div>
-                      <h1 className="p-1 text-[12px] truncate text-center mt-2">
-                        {dashboardScreenshotName?.find((ds: any) => ds.id === Number(image?.match(/_([0-9]+)\.jpeg$/)?.[1]) || Number(image?.match(/_([0-9]+)\.png$/)?.[1]))?.label}
-                      </h1>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <CampaignDashboardScreenshots
+              loading={loadingScreenshot || loading}
+              takeScreenShot={takeScreenShot}
+              setSocketUpdateStatus={setSocketUpdateStatus}
+              socketUpdateStatus={socketUpdateStatus}
+              setDashboardScreenshots={setDashboardScreenshots}
+              dashboardScreenshots={dashboardScreenshots}
+              setMagnifiedImageView={setMagnifiedImageView}
+              setMagnifiedImage={setMagnifiedImage}
+              magnifiedImageView={magnifiedImageView}
+              dashboardScreenshotName={dashboardScreenshotName}
+              dashboardSS={dashboardSS}
+              jobId={jobId}
+              setJobId={setJobId}
+              setLoading={setLoading}
+              
+            />
           ) : billingStep === 3 ? (
             <div className="py-4 px-1">
               <div className="flex justify-between">
@@ -707,22 +522,19 @@ export const BillingAndInvoice = (props: any) => {
                   <h1 className="text-[14px] font-semibold pt-2">Monitoring Pics & Logs</h1>
                   <p className="text-[12px] text-[#6F7F8E]">A verified proof of monitoring pictures and logs, showcasing our commitment to transparency</p>
                 </div>
-                <div className="px-4">
-                  <Tooltip title="Refresh Dashboard Screenshot Data">
-                    <i 
-                      className="fi fi-br-rotate-right flex items-center justify-center text-gray-500"
-                      onClick={() => {
-                      }}
-                    ></i>
-                  </Tooltip>
-                </div>
               </div>
               <BillAndInvoiceMonitoringPicsSegment
                 campaignDetails={campaignDetails}
                 currentDate={todayDate}
                 siteLevelData={siteLevelData}
+                jobId={jobId}
+                invoicePdf={invoicePdf}
+                setSocketUpdateStatus={setSocketUpdateStatus}
+                setLoading={setLoading}
+                setJobId={setJobId}
+                socketUpdateStatus={socketUpdateStatus}
+                loading={loading}
               />
-
             </div>
           ) : null}
         </div>

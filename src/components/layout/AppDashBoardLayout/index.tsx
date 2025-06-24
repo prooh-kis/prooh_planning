@@ -7,12 +7,14 @@ import { notification, Tooltip } from "antd";
 import {
   menuItemsCampaignPlanner,
   menuItemsCampaignManager,
+  menuItemsClientPOCUser,
 } from "../../../constants/tabDataConstant";
 import {
   CAMPAIGN_MANAGER,
   CAMPAIGN_PLANNER,
+  CLIENT_POC_USER,
 } from "../../../constants/userConstants";
-import { AUTH } from "../../../routes/routes";
+import { AUTH, MY_CAMPAIGNS_LIST } from "../../../routes/routes";
 
 interface AppDashBoardLayoutProps {
   children: React.ReactNode;
@@ -47,6 +49,9 @@ export const AppDashBoardLayout: React.FC<AppDashBoardLayoutProps> = ({
       case CAMPAIGN_PLANNER:
         setMenuItems(menuItemsCampaignPlanner);
         break;
+      case CLIENT_POC_USER:
+        setMenuItems(menuItemsClientPOCUser);
+        break;
       default:
         notification.error({
           message: "Error",
@@ -54,7 +59,7 @@ export const AppDashBoardLayout: React.FC<AppDashBoardLayoutProps> = ({
         });
         dispatch(signout());
     }
-  }, [userInfo, navigate]);
+  }, [dispatch, userInfo, navigate]);
 
   const handleMenuClick = (index: number) => {
     setCurrent(menuItems[index].option);

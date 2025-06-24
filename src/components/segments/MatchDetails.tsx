@@ -4,7 +4,7 @@ interface MatchDetailsProps {
 
 export const MatchDetails = ({ details }: MatchDetailsProps) => {
   return (
-    <div className="overflow-y-auto h-28 no-scrollbar">
+    <div className="overflow-y-auto  scrollbar-minimal h-28 no-scrollbar">
       {details.length < 1 && (
         <p className="px-1 text-[12px] text-[#FF0808]">
           Please select a match first

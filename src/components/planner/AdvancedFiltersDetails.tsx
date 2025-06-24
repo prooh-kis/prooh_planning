@@ -55,7 +55,7 @@ export const AdvanceFiltersDetails = ({
     campaignDetails?.advanceFilterData?.stores?.[0]?.comp || []
   );
   const [circleRadius, setCircleRadius] = useState<any>(
-    campaignDetails?.advanceFilterData?.stores?.[0]?.radius || 1000 // in meters
+    campaignDetails?.advanceFilterData?.stores?.[0]?.radius || 100 // in meters
   );
   const [circleData, setCircleData] = useState<any>({});
   const [routes, setRoutes] = useState<any[]>(
@@ -63,7 +63,7 @@ export const AdvanceFiltersDetails = ({
   );
   const [routeOrigin, setRouteOrigin] = useState<any>([]);
   const [routeDestination, setRouteDestination] = useState<any>([]);
-  const [routeRadius, setRouteRadius] = useState<any>(1000); // in meteres
+  const [routeRadius, setRouteRadius] = useState<any>(300); // in meteres
 
   const [polygons, setPolygons] = useState<google.maps.Polygon[]>([]);
 
@@ -105,6 +105,7 @@ export const AdvanceFiltersDetails = ({
       );
     }
   };
+
 
   const handleConfirmScreensSelections = ({ checked, screens }: any) => {
     setIsDisabled(!checked);
@@ -229,13 +230,13 @@ export const AdvanceFiltersDetails = ({
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-[calc(100vh-200px)] flex flex-col">
       {loadingAdvanceFilterData ? (
         <LoadingScreen />
       ) : (
-        <div className="w-full">
-          <div className="w-full h-full grid grid-cols-2 gap-4 pb-16">
-            <div className="col-span-1 h-full pr-4">
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 flex overflow-hidden">
+            <div className="w-1/2 p-4">
               <div className="flex justify-between items-center">
                 <div>
                   <h1 className="lg:text-[24px] md:text-[18px] text-primaryText font-semibold truncate">
@@ -290,7 +291,7 @@ export const AdvanceFiltersDetails = ({
               )}
             </div>
 
-            <div className="col-span-1 w-full py-2">
+            <div className="w-1/2 h-full overflow-hidden">
               {!loadingAdvanceFilterData && allScreens?.length > 0 && (
                 <GoogleMapWithGeometry
                   userLocation={userLocation}

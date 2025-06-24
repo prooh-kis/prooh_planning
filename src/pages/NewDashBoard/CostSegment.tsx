@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getCostDataForPlannerDashboard } from "../../actions/dashboardAction";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
+import { getUserRole } from "../../utils/campaignUtils";
 
 export const CostSegment = ({
   campaignId,
@@ -16,7 +17,8 @@ export const CostSegment = ({
   screenLevelData,
   filters,
   setFilters,
-  dataToShow
+  dataToShow,
+  userInfo,
 }: any) => {
   const dispatch = useDispatch<any>();
 
@@ -124,6 +126,8 @@ export const CostSegment = ({
       dispatch(
         getCostDataForPlannerDashboard({
           id: campaignId,
+          userRole: getUserRole(userInfo?.userRole),   
+          userId: userInfo?._id,
           cities: filters.cities.costConsumption?.filter((f: any) => f !== "all"),
           touchPoints: filters.touchPoints.costConsumption?.filter((f: any) => f !== "all"),
           screenTypes: filters.screenTypes.costConsumption?.filter((f: any) => f !== "all"),
@@ -132,7 +136,7 @@ export const CostSegment = ({
         })
       );
     }
-  },[dispatch, campaignId, filters, costData])
+  },[dispatch, campaignId, filters, costData, userInfo])
 
 
   return (

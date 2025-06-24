@@ -28,7 +28,7 @@ export const CampaignsListModel = ({
               <i
                 className="fi fi-br-clone text-gray-200"
                 onClick={() => {
-                  message.info("Coming sone");
+                  message.info("Coming soon");
                 }}
               ></i>
             </Tooltip>
@@ -77,6 +77,10 @@ export const CampaignsListModel = ({
           <h1 className="text-[12px] text-[#06B6D4]">
             : {getCampaignEndingStatus(data?.endDate)}
           </h1>
+        </div>
+        <div className="flex gap-1 items-center justify-start">
+          <i className="fi fi-br-user text-[#22C55E] text-[12px] flex items-center"></i>
+          <h1 className="text-[12px] text-[#06B6D4]">: {data.plannerName}</h1>
         </div>
       </div>
     </div>

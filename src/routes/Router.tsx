@@ -52,7 +52,11 @@ import { CampaignDetailsPage } from "../pages/CampaignDetailsPage";
 
 const Routers: React.FC = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter
+      future={{
+        v7_relativeSplatPath: true,
+      }}
+    >
       <Routes>
         <Route
           path={AUTH}
@@ -185,14 +189,6 @@ const Routers: React.FC = () => {
           }
         />
 
-        {/* <Route
-          path={CAMPAIGN_DETAILS_PAGE}
-          element={
-            <PrivateLayout padding="pt-0">
-              <CampaignDetailsPage />
-            </PrivateLayout>
-          }
-        /> */}
         <Route
           path={"/specialdayplan/:id?/:type?"}
           element={

@@ -35,8 +35,7 @@ import * as dashboardReducers from "../reducers/dashboardReducers";
 // Data Hero Reducers
 import * as dataHeroReducers from "../reducers/dataHeroReducers";
 
-// Landing Reducers
-import * as landingReducers from "../reducers/landingReducers";
+
 
 // monitoring Reducers
 import * as monitoringReducers from "../reducers/monitoringReducers";
@@ -46,7 +45,6 @@ import * as monitoringReducers from "../reducers/monitoringReducers";
 
 export const rootReducer = {
     // Screen related
-    landingPageDataGet: screenReducers.landingPageDataGetReducer,
     screensAudiencesDataGet: screenReducers.screensAudiencesDataGetReducer,
     screensCostDataGet: screenReducers.screensCostDataGetReducer,
     screensDataAdvanceFilterGet: screenReducers.screensDataAdvanceFilterGetReducer,
@@ -69,9 +67,15 @@ export const rootReducer = {
     tableDataSetAdPlayTimeStore: screenReducers.tableDataSetAdPlayTimeReducer,
     allFiltersDetailsForUploadCreativePage:
         screenReducers.getAllFiltersDetailsForUploadCreativePageReducer,
-    creativesFromCreativeBucketForUploadPage:
-        screenReducers.getCreativesFromCreativeBucketForUploadPageReducer,
     allPlannerIdsAndEmail: screenReducers.getAllPlannerIdsAndEmailReducer,
+
+    creativesFromCreativeBucketForUploadPage: screenReducers.getCreativesFromCreativeBucketForUploadPageReducer,
+    basicDetailsForCostSummary: screenReducers.getBasicDetailsCostSummaryPopupPagerReducer,
+    clientCostForCostSummary: screenReducers.getClientCostForCostSummaryPopupPageReducer,
+    vendorPayoutForCostSummary: screenReducers.getVendorPayoutForCostSummaryPopupPageReducer,
+    grossMarginForCostSummary: screenReducers.getGrossMarginForCostSummaryPopupPageReducer,
+    inventoryDetailsForCostSummary: screenReducers.getInventoryDetailsForCostSummaryPopupPageReducer,
+    editCostDetailsScreenWise: screenReducers.editCostDetailsScreenWiseForCostSummaryPopupPageReducer,
     // Campaign related
     campaignCreationsDetailsGet: campaignReducers.campaignCreationsDetailsGetReducer,
     allCampaignsDataGet: campaignReducers.allCampaignsDataGetReducer,
@@ -93,7 +97,6 @@ export const rootReducer = {
         campaignReducers.campaignStatusChangeAfterVendorApprovalReducer,
     updateCampaignDuration: campaignReducers.campaignDurationChangeReducer,
     campaignLogsGet: campaignReducers.campaignLogsGetReducer,
-    campaignMonitoringPicsGet: campaignReducers.campaignMonitoringPicsGetReducer,
     cloneCampaign: campaignReducers.cloneCampaignReducer,
     downloadCampaignSummaryPPT: campaignReducers.downloadCampaignSummaryPPTReducer,
 
@@ -138,9 +141,6 @@ export const rootReducer = {
 
     getQueueJobStatus: billInvoiceReducers.getQueueJobStatusReducer,
 
-    // Landing
-    saveContactDetails: landingReducers.saveContactDetailsForQueryReducer,
-
     // Creative
     creativesMediaUpload: creativeReducers.creativesMediaUploadReducer,
     creativesMediaGet: creativeReducers.creativesMediaGetReducer,
@@ -174,6 +174,7 @@ export const rootReducer = {
     audienceDataGet: dataHeroReducers.audienceDataGetReducer,
 
     // Monitoring
+    campaignMonitoringPicsGet: monitoringReducers.campaignMonitoringPicsGetReducer,
     generateMonitoringPpt: monitoringReducers.generateMonitoringPptReducer,
     getMonitoringPptJobStatus: monitoringReducers.getMonitoringPptJobStatusReducer,
 };

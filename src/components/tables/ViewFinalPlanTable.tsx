@@ -13,7 +13,7 @@ function MyDiv({ left, right }: any) {
 }
 
 const MyDivider = () => (
-  <div className="h-[1px] border-1 w-fill bg-[#D9D9D9] my-4 "></div>
+  <div className="h-[1px] border-1 w-fill bg-[#D9D9D9] my-2 "></div>
 );
 
 export const ViewFinalPlanTable = ({
@@ -23,6 +23,7 @@ export const ViewFinalPlanTable = ({
   handleApplyCoupon,
   handleRemoveCoupon,
   coupons,
+  setIsOpenCostSummary,
 }: any) => {
   return (
     <div>
@@ -76,7 +77,9 @@ export const ViewFinalPlanTable = ({
             : "None"
         }
       />
-      <div className="flex items-center text-[#2B2B2B] mt-4">
+
+      <MyDivider />
+      <div className="flex items-center text-[#2B2B2B]">
         <h1 className="text-left text-[14px] basis-1/2">Apply Discount%</h1>
         <div className="flex items-center gap-4">
           <DropdownInput
@@ -84,7 +87,9 @@ export const ViewFinalPlanTable = ({
             height="h-8"
             width="w-full"
             placeHolder="---Select coupon---"
-            selectedOption={coupons?.find((coupon: any) => coupon._id === currentCoupon) || ""}
+            selectedOption={
+              coupons?.find((coupon: any) => coupon._id === currentCoupon) || ""
+            }
             setSelectedOption={(e: any) => {
               setCurrentCoupon(e);
               handleApplyCoupon(e);
@@ -98,9 +103,8 @@ export const ViewFinalPlanTable = ({
           />
         </div>
       </div>
-      <MyDivider />
-      <div className="flex font-semibold ">
-        <div className="basis-1/2 flex items-center justify-start gap-2">
+      <div className="flex font-semibold mt-2 ">
+        <div className="basis-1/2 flex items-center justify-start gap-2 ">
           <h1 className="text-left">Total Cost</h1>
           <Tooltip
             title={`${
@@ -115,11 +119,7 @@ export const ViewFinalPlanTable = ({
         <div className="flex  basis-1/2 gap-4 truncate">
           {poTableData?.couponId && poTableData?.couponId !== "NA" && (
             <h1 className="text-left ">
-              &#8377;{" "}
-              {
-                Number(poTableData?.finalCampaignBudget)?.toFixed(2)
-              }
-              *
+              &#8377; {Number(poTableData?.finalCampaignBudget)?.toFixed(2)}*
             </h1>
           )}
           <h1
@@ -129,9 +129,7 @@ export const ViewFinalPlanTable = ({
                 : ""
             }`}
           >
-            &#8377;{" "}
-            {Number(poTableData?.totalCampaignBudget)?.toFixed(2)}
-            *
+            &#8377; {Number(poTableData?.totalCampaignBudget)?.toFixed(2)}*
           </h1>
         </div>
       </div>
@@ -164,18 +162,24 @@ export const ViewFinalPlanTable = ({
             </div>
           </div>
           <div className="basis-1/2">
-              {poTableData?.couponId && poTableData?.couponId !== "NA" && (
-                <h1 className="text-left text-[#388e3c]">
-                  {
-                    coupons?.find((c: any) => c._id == poTableData?.couponId)
-                      ?.discountPercent
-                  }
-                  % off
-                </h1>
-              )}
-            </div>
+            {poTableData?.couponId && poTableData?.couponId !== "NA" && (
+              <h1 className="text-left text-[#388e3c]">
+                {
+                  coupons?.find((c: any) => c._id == poTableData?.couponId)
+                    ?.discountPercent
+                }
+                % off
+              </h1>
+            )}
+          </div>
         </div>
       )}
+      <button
+        className="py-2 px-4 border-2 rounded-lg mt-4"
+        onClick={() => setIsOpenCostSummary(true)}
+      >
+        View Cost Summary
+      </button>
     </div>
   );
 };

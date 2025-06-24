@@ -3,6 +3,10 @@ import {
   saveDataOnLocalStorage,
 } from "../utils/localStorageUtils";
 import {
+  EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_ERROR,
+  EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_REQUEST,
+  EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET,
+  EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_SUCCESS,
   GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_ERROR,
   GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_REQUEST,
   GET_ALL_FILTERS_DETAILS_FOR_UPLOAD_CREATIVE_PAGE_SUCCESS,
@@ -12,19 +16,28 @@ import {
   GET_AUDIENCES_DATA_ADVANCE_FILTER_ERROR,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_REQUEST,
   GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS,
+  GET_BASIC_DETAILS_COST_SUMMARY_ERROR,
+  GET_BASIC_DETAILS_COST_SUMMARY_REQUEST,
+  GET_BASIC_DETAILS_COST_SUMMARY_SUCCESS,
   GET_CAMPAIGN_DASHBOARD_DATA_ERROR,
   GET_CAMPAIGN_DASHBOARD_DATA_REQUEST,
   GET_CAMPAIGN_DASHBOARD_DATA_RESET,
   GET_CAMPAIGN_DASHBOARD_DATA_SUCCESS,
+  GET_CLIENT_COST_FOR_COST_SUMMARY_ERROR,
+  GET_CLIENT_COST_FOR_COST_SUMMARY_REQUEST,
+  GET_CLIENT_COST_FOR_COST_SUMMARY_SUCCESS,
   GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_ERROR,
   GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_REQUEST,
   GET_CREATIVES_FROM_CREATIVE_BUCKET_FOR_UPLOAD_SUCCESS,
   GET_FINAL_PLAN_PO_DATA_ERROR,
   GET_FINAL_PLAN_PO_DATA_REQUEST,
   GET_FINAL_PLAN_PO_DATA_SUCCESS,
-  GET_LANDING_PAGE_DATA_ERROR,
-  GET_LANDING_PAGE_DATA_REQUEST,
-  GET_LANDING_PAGE_DATA_SUCCESS,
+  GET_GROSS_MARGIN_FOR_COST_SUMMARY_ERROR,
+  GET_GROSS_MARGIN_FOR_COST_SUMMARY_REQUEST,
+  GET_GROSS_MARGIN_FOR_COST_SUMMARY_SUCCESS,
+  GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_ERROR,
+  GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_REQUEST,
+  GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_SUCCESS,
   GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
   GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
   GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
@@ -66,6 +79,9 @@ import {
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_ERROR,
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_REQUEST,
   GET_VENDOR_CONFIRMATION_STATUS_TABLE_DETAILS_SUCCESS,
+  GET_VENDOR_PAYOUT_FOR_COST_SUMMARY_ERROR,
+  GET_VENDOR_PAYOUT_FOR_COST_SUMMARY_REQUEST,
+  GET_VENDOR_PAYOUT_FOR_COST_SUMMARY_SUCCESS,
   PLANNING_PAGE_FOOTER_DATA_ERROR,
   PLANNING_PAGE_FOOTER_DATA_REQUEST,
   PLANNING_PAGE_FOOTER_DATA_SUCCESS,
@@ -78,32 +94,11 @@ import {
   AUDIENCE_DATA,
   COST_SUMMARY,
   FOOTER_DATA,
-  LANDING_PAGE_DATA,
   REGULAR_VS_COHORT_PRICE_DATA,
   SCREEN_SUMMARY_DATA,
   SCREEN_SUMMARY_TABLE_DATA,
   TOTAL_SCREEN_COST_DATA,
 } from "../constants/localStorageConstants";
-
-export function landingPageDataGetReducer(state = {}, action) {
-  switch (action.type) {
-    case GET_LANDING_PAGE_DATA_REQUEST:
-      return { loading: true };
-    case GET_LANDING_PAGE_DATA_SUCCESS:
-      saveDataOnLocalStorage(LANDING_PAGE_DATA, action.payload);
-      return {
-        loading: false,
-        data: action.payload,
-      };
-    case GET_LANDING_PAGE_DATA_ERROR:
-      return {
-        loading: false,
-        error: action.payload,
-      };
-    default:
-      return state;
-  }
-}
 
 export function screensAudiencesDataGetReducer(state = [], action) {
   switch (action.type) {
@@ -188,10 +183,6 @@ export function poiBasedAudienceDataAdvanceFilterGetReducer(
       return { loading: true };
     case GET_AUDIENCES_DATA_ADVANCE_FILTER_SUCCESS:
       const { id, ...data } = action.payload;
-      // const saveData = {};
-      // saveData[campaign.id] = campaign;
-      // saveDataOnLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA, saveData);
-
       return {
         loading: false,
         data: data,
@@ -309,8 +300,6 @@ export function finalPlanPOTableDataGetReducer(state = [], action) {
     case GET_FINAL_PLAN_PO_DATA_REQUEST:
       return { loading: true };
     case GET_FINAL_PLAN_PO_DATA_SUCCESS:
-      // saveDataOnLocalStorage(AUDIENCE_DATA, action.payload);
-
       return {
         loading: false,
         data: action.payload,
@@ -569,6 +558,156 @@ export function getAllPlannerIdsAndEmailReducer(state = [], action) {
         loading: false,
         success: false,
         error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function getBasicDetailsCostSummaryPopupPagerReducer(
+  state = [],
+  action
+) {
+  switch (action.type) {
+    case GET_BASIC_DETAILS_COST_SUMMARY_REQUEST:
+      return { loading: true };
+    case GET_BASIC_DETAILS_COST_SUMMARY_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case GET_BASIC_DETAILS_COST_SUMMARY_ERROR:
+      return {
+        loading: false,
+        success: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function getClientCostForCostSummaryPopupPageReducer(
+  state = [],
+  action
+) {
+  switch (action.type) {
+    case GET_CLIENT_COST_FOR_COST_SUMMARY_REQUEST:
+      return { loading: true };
+    case GET_CLIENT_COST_FOR_COST_SUMMARY_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case GET_CLIENT_COST_FOR_COST_SUMMARY_ERROR:
+      return {
+        loading: false,
+        success: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function getVendorPayoutForCostSummaryPopupPageReducer(
+  state = [],
+  action
+) {
+  switch (action.type) {
+    case GET_VENDOR_PAYOUT_FOR_COST_SUMMARY_REQUEST:
+      return { loading: true };
+    case GET_VENDOR_PAYOUT_FOR_COST_SUMMARY_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case GET_VENDOR_PAYOUT_FOR_COST_SUMMARY_ERROR:
+      return {
+        loading: false,
+        success: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function getGrossMarginForCostSummaryPopupPageReducer(
+  state = [],
+  action
+) {
+  switch (action.type) {
+    case GET_GROSS_MARGIN_FOR_COST_SUMMARY_REQUEST:
+      return { loading: true };
+    case GET_GROSS_MARGIN_FOR_COST_SUMMARY_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case GET_GROSS_MARGIN_FOR_COST_SUMMARY_ERROR:
+      return {
+        loading: false,
+        success: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function getInventoryDetailsForCostSummaryPopupPageReducer(
+  state = [],
+  action
+) {
+  switch (action.type) {
+    case GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_REQUEST:
+      return { loading: true };
+    case GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_ERROR:
+      return {
+        loading: false,
+        success: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
+export function editCostDetailsScreenWiseForCostSummaryPopupPageReducer(
+  state = [],
+  action
+) {
+  switch (action.type) {
+    case EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_REQUEST:
+      return { loading: true };
+    case EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_ERROR:
+      return {
+        loading: false,
+        success: false,
+        error: action.payload,
+      };
+    case EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET:
+      return {
+        loading: false,
+        success: false,
+        error: [],
       };
     default:
       return state;

@@ -28,9 +28,6 @@ import {
   CAMPAIGN_LOGS_REQUEST,
   CAMPAIGN_LOGS_SUCCESS,
   CAMPAIGN_LOGS_FAIL,
-  CAMPAIGN_MONITORING_PICS_REQUEST,
-  CAMPAIGN_MONITORING_PICS_SUCCESS,
-  CAMPAIGN_MONITORING_PICS_FAIL,
   GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_REQUEST,
   GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_SUCCESS,
   GET_MY_CREATE_CAMPAIGNS_LIST_FOR_PLAN_ERROR,
@@ -102,11 +99,6 @@ export function detailsToCreateCampaignAddReducer(state = {}, action) {
     case ADD_DETAILS_TO_CREATE_CAMPAIGN_REQUEST:
       return { loading: true };
     case ADD_DETAILS_TO_CREATE_CAMPAIGN_SUCCESS:
-      // const campaign = action.payload;
-      // const saveData = {};
-      // saveData[campaign._id] = campaign;
-      // console.log(saveData);
-      // saveDataOnLocalStorage(FULL_CAMPAIGN_PLAN, saveData);
       return {
         loading: false,
         success: true,
@@ -295,7 +287,7 @@ export function campaignDurationChangeReducer(state = [], action) {
 export function campaignLogsGetReducer(state = [], action) {
   switch (action.type) {
     case CAMPAIGN_LOGS_REQUEST:
-      return { loading: true };
+      return { loading: true, data: [] };
     case CAMPAIGN_LOGS_SUCCESS:
       return {
         loading: false,
@@ -303,27 +295,6 @@ export function campaignLogsGetReducer(state = [], action) {
         success: true,
       };
     case CAMPAIGN_LOGS_FAIL:
-      return {
-        loading: false,
-        error: action.payload,
-        success: false,
-      };
-    default:
-      return state;
-  }
-}
-
-export function campaignMonitoringPicsGetReducer(state = [], action) {
-  switch (action.type) {
-    case CAMPAIGN_MONITORING_PICS_REQUEST:
-      return { loading: true };
-    case CAMPAIGN_MONITORING_PICS_SUCCESS:
-      return {
-        loading: false,
-        data: action.payload,
-        success: true,
-      };
-    case CAMPAIGN_MONITORING_PICS_FAIL:
       return {
         loading: false,
         error: action.payload,
@@ -446,7 +417,6 @@ export function cloneCampaignReducer(state = {}, action) {
       return state;
   }
 }
-
 
 export function downloadCampaignSummaryPPTReducer(state = {}, action) {
   switch (action.type) {

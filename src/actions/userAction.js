@@ -42,8 +42,7 @@ import store from "../store";
 import { login, logout } from "../store/authSlice";
 import { removeDispatchData } from "../utils/dispatchUtils";
 import { removeAllKeyFromLocalStorage } from "../utils/localStorageUtils";
-
-const USER_URL = `${process.env.REACT_APP_PROOH_SERVER}/api/v1/users`;
+import { userV1 } from "../constants/urlConstant";
 
 export const signup = (reqBody) => async (dispatch) => {
   dispatch({
@@ -51,7 +50,7 @@ export const signup = (reqBody) => async (dispatch) => {
     payload: reqBody,
   });
   try {
-    const { data } = await Axios.post(`${USER_URL}/signup`, reqBody);
+    const { data } = await Axios.post(`${userV1}/signup`, reqBody);
     dispatch({
       type: USER_SIGNUP_SUCCESS,
       payload: data,
@@ -86,7 +85,7 @@ export const createUser = (reqBody) => async (dispatch, getState) => {
       auth: { userInfo },
     } = getState();
 
-    const { data } = await Axios.post(`${USER_URL}/create`, reqBody, {
+    const { data } = await Axios.post(`${userV1}/create`, reqBody, {
       headers: { Authorization: `Bearer ${userInfo.token}` },
     });
     dispatch({
@@ -114,7 +113,7 @@ export const addNewUser = (input) => async (dispatch, getState) => {
       auth: { userInfo },
     } = getState();
 
-    const { data } = await Axios.post(`${USER_URL}/create`, input, {
+    const { data } = await Axios.post(`${userV1}/create`, input, {
       headers: { authorization: `Bearer ${userInfo.token}` },
     });
     dispatch({
@@ -137,8 +136,9 @@ export const signin = (email, password) => async (dispatch) => {
     type: USER_SIGNIN_REQUEST,
     payload: { email, password },
   });
+
   try {
-    const { data } = await Axios.post(`${USER_URL}/signin`, {
+    const { data } = await Axios.post(`${userV1}/signin`, {
       email,
       password,
     });
@@ -185,7 +185,7 @@ export const userEmailVerification = (token) => async (dispatch) => {
     payload: { token },
   });
   try {
-    const { data } = await Axios.get(`${USER_URL}/verify/email?token=${token}`);
+    const { data } = await Axios.get(`${userV1}/verify/email?token=${token}`);
     dispatch({
       type: USER_EMAIL_VERIFICATION_SUCCESS,
       payload: data,
@@ -220,7 +220,7 @@ export const sendEmailToResetPassword = (email) => async (dispatch) => {
     payload: { email },
   });
   try {
-    const { data } = await Axios.get(`${USER_URL}/sendEmail?email=${email}`);
+    const { data } = await Axios.get(`${userV1}/sendEmail?email=${email}`);
     dispatch({
       type: SEND_EMAIL_TO_RESET_PASSWORD_SUCCESS,
       payload: data,
@@ -242,7 +242,7 @@ export const updateUserProfile = (input) => async (dispatch, getState) => {
     payload: input,
   });
   try {
-    const { data } = await Axios.put(`${USER_URL}/profile`, input);
+    const { data } = await Axios.put(`${userV1}/profile`, input);
     dispatch({
       type: UPDATE_USER_PROFILE_SUCCESS,
       payload: data,
@@ -265,7 +265,7 @@ export const changeUserPassword = (input) => async (dispatch, getState) => {
     payload: input,
   });
   try {
-    const { data } = await Axios.put(`${USER_URL}/changePassword`, input);
+    const { data } = await Axios.put(`${userV1}/changePassword`, input);
     dispatch({
       type: CHANGE_PASSWORD_SUCCESS,
       payload: data,
@@ -289,7 +289,7 @@ export const updateUserPassword =
       payload: { email, password },
     });
     try {
-      const { data } = await Axios.put(`${USER_URL}/updatePassword`, {
+      const { data } = await Axios.put(`${userV1}/updatePassword`, {
         email,
         password,
       });
@@ -317,7 +317,7 @@ export const googleSignupSignin =
       payload: { name, email, avatar },
     });
     try {
-      const { data } = await Axios.post(`${USER_URL}/googleSignupSignin`, {
+      const { data } = await Axios.post(`${userV1}/googleSignupSignin`, {
         name,
         email,
         avatar,
@@ -358,7 +358,7 @@ export const sendEmailForConfirmation =
       } = getState();
 
       const { data } = await Axios.post(
-        `${USER_URL}/sendEmailForConfirmation`,
+        `${userV1}/sendEmailForConfirmation`,
         formData,
         {
           params: userInfo,
@@ -391,7 +391,7 @@ export const sendEmailForVendorConfirmation =
     });
     try {
       const { data } = await Axios.post(
-        `${USER_URL}/sendEmailForVendorConfirmation`,
+        `${userV1}/sendEmailForVendorConfirmation`,
         emailData,
         {
           headers: {
@@ -423,7 +423,7 @@ export const getUserList = (input) => async (dispatch, getState) => {
     const {
       auth: { userInfo },
     } = getState();
-    const { data } = await Axios.get(`${USER_URL}/users`, {
+    const { data } = await Axios.get(`${userV1}/users`, {
       headers: { authorization: `Bearer ${userInfo.token}` },
       params: input,
     });
@@ -452,7 +452,7 @@ export const deleteUser = (input) => async (dispatch, getState) => {
     const {
       auth: { userInfo },
     } = getState();
-    const { data } = await Axios.delete(`${USER_URL}/deleteUser`, {
+    const { data } = await Axios.delete(`${userV1}/deleteUser`, {
       params: input,
       headers: { authorization: `Bearer ${userInfo.token}` },
     });
@@ -471,3 +471,4 @@ export const deleteUser = (input) => async (dispatch, getState) => {
     });
   }
 };
+

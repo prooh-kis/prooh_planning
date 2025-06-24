@@ -14,6 +14,7 @@ import { LinearBar } from "../../components/molecules/linearbar";
 import SiteLevelComponent from "../../pages/NewDashBoard/SiteLevelComponent";
 import { ShowMonitoringPicPopup } from "../../components/popup/ShowMonitoringPicPopup";
 import { getSiteBasedDataOnLogsPageAction } from "../../actions/dashboardAction";
+import { getUserRole } from "../../utils/campaignUtils";
 
 const analyticsV1 = `${process.env.REACT_APP_PROOH_SERVER}/api/v1/analytics`;
 
@@ -118,7 +119,6 @@ const getScreenStatus = (lastActive: any) => {
   } else return "Close";
 };
 
-
 export const CampaignDashboardTable = ({
   filteredScreenLevelData,
   campaignDetails,
@@ -155,6 +155,9 @@ export const CampaignDashboardTable = ({
     error: errorSiteBasedDataOnLogs,
     data: siteBasedData,
   } = useSelector((state: any) => state.siteBasedDataOnLogsPage);
+
+  const auth = useSelector((state: any) => state.auth);
+  const { userInfo } = auth;
 
   useEffect(() => {
     if (campaignDetails?.startDate && campaignDetails?.endDate) {
@@ -294,11 +297,15 @@ export const CampaignDashboardTable = ({
             <React.Fragment key={index}>
               <tr
                 key={screenData}
-                className={
-                  `grid grid-cols-12 bg-[#FFFFFF] flex w-full h-[40px] hover:bg-gray-50 hover:rounded-[12px] border-b border-x border-gray-100 shadow-sm text-[#0E212E] truncate cursor-pointer
-                  ${index == filteredScreenLevelData.length - 1 || index === key ? "rounded-b-[12px]" : currentIndex !== null && index === key + 1 ? "rounded-t-[12px]" : ""}
-                  `
-                }
+                className={`grid grid-cols-12 bg-[#FFFFFF] flex w-full h-[40px] hover:bg-gray-50 hover:rounded-[12px] border-b border-x border-gray-100 shadow-sm text-[#0E212E] truncate cursor-pointer
+                  ${
+                    index == filteredScreenLevelData.length - 1 || index === key
+                      ? "rounded-b-[12px]"
+                      : currentIndex !== null && index === key + 1
+                      ? "rounded-t-[12px]"
+                      : ""
+                  }
+                  `}
               >
                 <td className="w-full flex items-center justify-start gap-4 col-span-3 grid grid-cols-8 pl-4 truncate">
                   <p className="text-[12px] col-span-1">
@@ -430,9 +437,12 @@ export const CampaignDashboardTable = ({
                         onClick={() => {
                           setCurrentScreen(screenData);
                           setCalendarData(screenData.slotDataDateWise);
-                          dispatch(getSiteBasedDataOnLogsPageAction({
-                            campaignId: screenData?.campaignId
-                          }));
+                          dispatch(
+                            getSiteBasedDataOnLogsPageAction({
+                              campaignId: screenData?.campaignId,
+                              userRole: getUserRole(userInfo?.userRole),
+                            })
+                          );
                           setOpenSiteLevelLogsPopup(true);
                         }}
                       ></i>
@@ -469,6 +479,7 @@ export const CampaignDashboardTable = ({
                             : screenData?.campaignId
                         );
                       }}
+                      campaignDetails={campaignDetails}
                     />
                   </td>
                 </tr>

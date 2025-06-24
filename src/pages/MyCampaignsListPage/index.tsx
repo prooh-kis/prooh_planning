@@ -99,6 +99,7 @@ export const MyCampaignsListPage: React.FC = () => {
     [dispatch, userInfo, plannerId]
   );
 
+  console.log(userInfo.email)
   const reset = () => {
     setPlannerId("");
     setShowPlannerList(false);
@@ -190,7 +191,8 @@ export const MyCampaignsListPage: React.FC = () => {
   const filteredCampaigns = allCampaigns?.result?.filter(
     (campaign: any) =>
       campaign?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      campaign?.brandName?.toLowerCase().includes(searchQuery.toLowerCase())
+      campaign?.brandName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      campaign?.clientName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const filteredPlanners = allCampaigns?.plannerData?.filter((planner: any) =>
@@ -215,7 +217,7 @@ export const MyCampaignsListPage: React.FC = () => {
             <SearchInputField
               value={searchQuery}
               onChange={setSearchQuery}
-              placeholder="Search Campaign by campaign name or brand"
+              placeholder="Search by name, brand, client"
             />
             <div className="relative">
               <Tooltip title="Filer Campaign By Planner Name">

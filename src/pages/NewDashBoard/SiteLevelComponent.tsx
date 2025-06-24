@@ -10,6 +10,7 @@ const SiteLevelComponent = ({
   screenLevelData,
   currentDate,
   handleCancel,
+  campaignDetails,
 }: any) => {
   const dispatch = useDispatch<any>();
 
@@ -59,6 +60,7 @@ const SiteLevelComponent = ({
             screenData={screenData}
             currentDate={currentDate}
             siteAnalysisTabData={siteLevelPerformanceTabData}
+            campaignDetails={campaignDetails}
           />
         </div>
       </div>

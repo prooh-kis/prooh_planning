@@ -5,6 +5,7 @@ interface SuggestionInputProps {
   onChange: (value: string) => void;
   placeholder: string;
   value: string;
+  size?: "small" | "medium" | "large";
 }
 
 export const SuggestionInput: React.FC<SuggestionInputProps> = ({
@@ -12,10 +13,27 @@ export const SuggestionInput: React.FC<SuggestionInputProps> = ({
   onChange,
   placeholder,
   value,
+  size = "medium",
 }) => {
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+
+  // Size configuration
+  const sizeClasses = {
+    small: {
+      input: "h-8 text-sm",
+      suggestion: "text-sm py-1",
+    },
+    medium: {
+      input: "h-10 text-base",
+      suggestion: "text-base py-2",
+    },
+    large: {
+      input: "h-12 text-lg",
+      suggestion: "text-lg py-3",
+    },
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
@@ -35,12 +53,11 @@ export const SuggestionInput: React.FC<SuggestionInputProps> = ({
   };
 
   const handleSuggestionClick = (suggestion: string) => {
-    onChange(suggestion); // Update the parent state with the clicked suggestion
-    setShowSuggestions(false); // Close the suggestions dropdown
+    onChange(suggestion);
+    setShowSuggestions(false);
   };
 
   const handleBlur = (e: React.FocusEvent) => {
-    // Allow time for suggestion clicks to register before hiding the list
     setTimeout(() => setShowSuggestions(false), 100);
   };
 
@@ -73,21 +90,22 @@ export const SuggestionInput: React.FC<SuggestionInputProps> = ({
         onBlur={handleBlur}
         onFocus={() => value && setShowSuggestions(true)}
         placeholder={placeholder}
-        className="w-full h-12 px-4 py-2 border rounded-[8px] focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-gray-100 active:bg-[#F4F9FF]"
+        className={`w-full px-4 border rounded-[8px] focus:outline-none focus:ring-2 focus:ring-[#129BFF] hover:bg-gray-100 active:bg-[#F4F9FF] ${sizeClasses[size].input}`}
       />
       {showSuggestions && filteredSuggestions?.length > 0 && (
-        <ul className="absolute top-full left-0 right-0 bg-white border border-gray-300  shadow-md mt-1 max-h-36 overflow-y-auto z-50">
+        <ul
+          className={`absolute top-full left-0 right-0 bg-white border border-gray-300 shadow-md mt-1 max-h-36 overflow-y-auto scrollbar-minimal z-50 ${sizeClasses[size].suggestion}`}
+        >
           {filteredSuggestions?.map((suggestion, index) => (
             <li
               key={index}
-              onMouseDown={(e) => e.preventDefault()} // Prevent blur when clicking
+              onMouseDown={(e) => e.preventDefault()}
               onClick={() => handleSuggestionClick(suggestion)}
-              className={
-                  `px-4 py-2 cursor-pointer border-b last:border-b-0 ${
-                  index === highlightedIndex ? "bg-[#129BFF10]" : "hover:bg-[#129BFF10]"
-                }`
-              }
-              
+              className={`px-4 cursor-pointer border-b last:border-b-0 ${
+                index === highlightedIndex
+                  ? "bg-[#129BFF10]"
+                  : "hover:bg-[#129BFF10]"
+              }`}
             >
               {suggestion}
             </li>
