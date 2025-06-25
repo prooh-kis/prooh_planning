@@ -201,3 +201,51 @@ export function isDateAfter(dateStr1, dateStr2) {
     const date2 = new Date(dateStr2);
     return date1 > date2;
   }
+
+
+export function calculateDayTypes(startDate, endDate) {
+  // Convert input to Date objects if they aren't already
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  // Validate the dates
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      throw new Error("Invalid date input");
+  }
+
+  // Swap dates if start is after end
+  if (start > end) {
+      [start, end] = [end, start];
+  }
+
+  // Initialize counters
+  let weekdays = 0;
+  let saturdays = 0;
+  let sundays = 0;
+
+  // Create a copy of the start date to iterate through
+  const current = new Date(start);
+
+  // Loop through each day
+  while (current <= end) {
+      const day = current.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+      
+      if (day === 0) {
+          sundays++;
+      } else if (day === 6) {
+          saturdays++;
+      } else {
+          weekdays++;
+      }
+      
+      // Move to the next day
+      current.setDate(current.getDate() + 1);
+  }
+ 
+  return {
+      weekdays,
+      saturdays,
+      sundays,
+      all: weekdays + saturdays + sundays
+  }
+}
