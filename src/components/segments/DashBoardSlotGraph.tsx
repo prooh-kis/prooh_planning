@@ -136,7 +136,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
     datasets: [
       
       {
-        label: "Daily Delivery",
+        label: "Daily",
         data: dailyPlayedSlots,
         backgroundColor: "#77BFEF",
         // borderColor: "#77BFEF50",
@@ -152,7 +152,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
         },
       },
       {
-        label: "Remaining Delivery",
+        label: "Remaining",
         data: requiredToPlayed,
         backgroundColor: "#E5F4FF",
         // borderColor: "#E5F4FF50",
@@ -168,7 +168,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
         },
       },
       {
-        label: "Current Day",
+        label: "Current",
         data: currentDayRemaining,
         backgroundColor: "#FFE896",
         // borderColor: "#FFE89650",
@@ -184,7 +184,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
         },
       },
       {
-        label: "Partial Delivery",
+        label: "Partial",
         data: partialDaySlots,
         backgroundColor: "#00000070",
         // borderColor: "#77BFEF50",
@@ -196,11 +196,11 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           align: "center" as const,
           rotation: -90,
           font: { size: 8 },
-          formatter: (value: number) => value > 0 ? "Partial" : ""
+          formatter: (value: number) => value > 0 ? "" : ""
         },
       },
       {
-        label: "Adjustment Delivery",
+        label: "Adjustment",
         data: extraSlots,
         backgroundColor: "#CDC5FF",
         // borderColor: "#CDC5FF50",
@@ -216,7 +216,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
         },
       },
       {
-        label: "Still To Come",
+        label: "Upcoming",
         data: futurePerformanceData,
         backgroundColor: "#D7D7D750",
         // borderColor: "#CDC5FF50",
@@ -252,50 +252,77 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
         },
       },
       tooltip: {
+        enabled: true,
+        mode: 'index',
+        intersect: false,
+        titleFont: {
+          size: 12,
+          weight: '600',
+        },
+        bodyFont: {
+          size: 12,
+          weight: 'normal',
+        },
+        borderColor: '#E5E7EB',
+        borderWidth: 1,
+        padding: 12,
+        usePointStyle: true,
+        boxWidth: 8,
+        boxHeight: 8,
         callbacks: {
-          label: (context: any) => {
-            let label = context.dataset.label || "";
-            let value = context.raw;
-            if (label == "Current Day" && value == 0) {
+          label: function(context: any) {
+            const label = context.dataset.label || '';
+            if (label === 'Current Day' && context.raw === 0) {
               return null;
             }
-            return [
-              `${label}: ${value?.toFixed(0) || 0}`, 
-            ];
+            return `${label}: ${context.raw?.toFixed(0) || 0}`;
           },
-          // afterLabel: (context: any) => {
-          //   const dataIndex = context.dataIndex;
-          //   const slotsPromised = currentData[dataIndex]?.slotsPromised;
-          //   return `Total Promised: ${slotsPromised?.toFixed(0) || 0}`;
-          // },
-          afterBody: (context: any) => {
+          afterBody: function(context: any) {
             const dataIndex = context[0].dataIndex;
-            const lastDayRemaining = 
-              dataIndex === 0 ? 0 : 
-              Math.max(0, currentData[dataIndex-1].slotsPromised - (currentData[dataIndex-1].delayedSlots || 0) - currentData[dataIndex-1].slotsDelivered);
-            const requiredToPlayedValue = 
-              currentData[dataIndex].delayedSlots ? 
-                currentData[dataIndex]?.slotsPromised - currentData[dataIndex].delayedSlots : 
-                currentData[dataIndex]?.slotsPromised + lastDayRemaining;
+            const currentItem = currentData[dataIndex];
             
-            const datasets = context[0]?.chart?.data?.datasets?.filter(
-              (data: any) =>
-                ["Daily Delivery", "Adjustment Delivery"].includes(data.label)
-            );
-            let total = 0;
-            datasets?.forEach((dataset: any) => {
-              if (dataset.data[dataIndex] > 0) {
-                total += dataset.data[dataIndex];
-              }
-            });
+            // Calculate required values
+            const lastDayRemaining = dataIndex === 0 ? 0 : 
+              Math.max(0, currentData[dataIndex-1].slotsPromised - 
+                (currentData[dataIndex-1].delayedSlots || 0) - 
+                currentData[dataIndex-1].slotsDelivered);
+                
+            const requiredToPlayedValue = currentItem.delayedSlots ? 
+              currentItem.slotsPromised - currentItem.delayedSlots : 
+              currentItem.slotsPromised + lastDayRemaining;
 
+            // Get all datasets
+            const allDatasets = context[0]?.chart?.data?.datasets?.filter(
+              (data: any) => ["Daily", "Adjustment", "Remaining", "Partial", "Upcoming"].includes(data.label)
+            ) || [];
+
+            // Extract values
+            const getValue = (label: string) => {
+              const dataset = allDatasets.find((d: any) => d.label === label);
+              return dataset?.data[dataIndex] ?? 0;
+            };
+
+            const dailyDelivery = getValue("Daily");
+            const adjustmentDelivery = getValue("Adjustment");
+            const remainingDelivery = getValue("Remaining");
+            const currentDay = getValue("Upcoming");
+            const partialDelivery = getValue("Partial");
+
+            // Calculate total delivered
+            const total = [dailyDelivery, adjustmentDelivery]
+              .reduce((sum, val) => sum + (val || 0), 0);
+
+            // Return formatted lines with colors
             return [
-              `Overall Delivery`,
-              `Delivered (${total.toFixed(0)}) / Promised (${requiredToPlayedValue?.toFixed(0) || 0})`,
-              context[0].dataset.label === "Partial Delivery" ? `Campaign started at ${new Date(campaignDetails.startDate).toLocaleTimeString()}` : "* inc. remaining previous day deliveries",
+              // `Daily Delivery: ${dailyDelivery !== 0 ? dailyDelivery : 'Still To Come'}`,
+              // `Adjustment Delivery: ${adjustmentDelivery !== 0 ? adjustmentDelivery : 'None'}`,
+              // `Remaining Delivery: ${remainingDelivery !== 0 ? remainingDelivery : currentDay !== 0 ? currentDay : 'None'}`,
+              // `Partial Delivery: ${partialDelivery !== 0 ? partialDelivery : 'None'}`,
+              `Total Delivered: ${total.toFixed(0)}`,
+              `Total Promised: ${requiredToPlayedValue?.toFixed(0) || 0}`
             ];
           },
-        },
+        }
       },
     },
     scales: {

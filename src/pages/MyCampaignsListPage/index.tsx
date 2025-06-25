@@ -99,7 +99,6 @@ export const MyCampaignsListPage: React.FC = () => {
     [dispatch, userInfo, plannerId]
   );
 
-  console.log(userInfo.email)
   const reset = () => {
     setPlannerId("");
     setShowPlannerList(false);

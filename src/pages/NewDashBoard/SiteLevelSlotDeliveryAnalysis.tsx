@@ -148,10 +148,9 @@ export const SiteLevelSlotDeliveryAnalysis = ({
                 bgColor=" bg-[#77BFEF]"
                 dataValue={
                   <Tooltip
-                    title={`Slot delivered till now / slot promised till today`}
+                    title={`Av. slots delivered per day / Av. slots promised per day`}
                   >
                     <h1 className="text-[12px] font-semibold truncate">
-                      Total:{" "}
                       <span
                         className={`${
                           tabWiseSiteData?.dayWiseData.all
@@ -162,19 +161,15 @@ export const SiteLevelSlotDeliveryAnalysis = ({
                             : "text-[#EF4444]"
                         }`}
                       >
-                        {formatNumber(
-                          tabWiseSiteData?.dayWiseData.all?.totalSlotsDelivered?.toFixed(
-                            0
-                          )
-                        )}
+                        Actual ({formatNumber(
+                          tabWiseSiteData?.dayWiseData.all?.totalSlotsDelivered?.toFixed(0)/screenLevelData?.data?.durationDelivered
+                        )})
                       </span>
                       <span className="text-[#0E212E]">
                         /
-                        {formatNumber(
-                          tabWiseSiteData?.dayWiseData.all?.slotsPromisedTillDate?.toFixed(
-                            0
-                          )
-                        )}
+                        Promised ({formatNumber(
+                          tabWiseSiteData?.dayWiseData.all?.slotsPromisedTillDate?.toFixed(0)/screenLevelData?.data?.durationDelivered
+                        )})
                       </span>
                     </h1>
                   </Tooltip>
