@@ -275,7 +275,8 @@ export const ScreenSummaryDetails = ({
       } else {
         dispatch(
           addDetailsToCreateCampaign({
-            event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
+            event:
+              CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
             pageName: "Screen Summary Page",
             id: campaignId,
             totalScreens: getSelectedScreenIdsFromAllCities(screensBuyingCount),
@@ -314,11 +315,16 @@ export const ScreenSummaryDetails = ({
   }, [handleClickOutside]);
 
   useEffect(() => {
-    if (!campaignDetails) return;
-
-    if (errorAddDetails) message.error("Error in add campaign details...");
-    if (errorScreenSummary)
+    if (errorScreenSummary) {
       message.error("Error in fetching screen summary data...");
+    }
+    if (errorAddDetails) {
+      message.error("Error in fetching Add Details...");
+    }
+  }, [errorScreenSummary, errorAddDetails]);
+
+  useEffect(() => {
+    if (!campaignDetails) return;
 
     dispatch(
       getScreenSummaryData({
@@ -326,20 +332,13 @@ export const ScreenSummaryDetails = ({
         type: campaignDetails?.selectedType,
       })
     );
-
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
         pageName: "Screen Summary Page",
       })
     );
-  }, [
-    campaignId,
-    campaignDetails,
-    errorAddDetails,
-    errorScreenSummary,
-    dispatch,
-  ]);
+  }, [campaignId, campaignDetails, dispatch]);
 
   useEffect(() => {
     if (errorScreenSummaryPlanTable) {

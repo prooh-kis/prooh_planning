@@ -48,7 +48,9 @@ export const TriggerDetails = ({
   const [disableApply, setDisableApply] = useState<any>(true);
   const [triggerSelected, setTriggerSelected] = useState<any>(false);
 
-  const [selectedTrigger, setSelectedTrigger] = useState<any>(null);
+  const [selectedTrigger, setSelectedTrigger] = useState<any>({
+    triggerType: "weather",
+  });
   const [selectedTriggerData, setSelectedTriggerData] = useState<any>({
     weatherTriggers: [],
     sportsTriggers: [],
@@ -223,59 +225,103 @@ export const TriggerDetails = ({
       setIsDisabled(false);
     }
     if (trigger?.weatherTriggers?.length > 0) {
+      const weatherTrigger = trigger.weatherTriggers[0];
       setSelectedTrigger({
         triggerType: "weather",
       });
-      setMinVal(trigger?.weatherTriggers[0]?.minVal || 0);
-      setMaxVal(trigger?.weatherTriggers[0]?.maxVal || 0);
-      setRainType(trigger?.weatherTriggers[0]?.rainType || "0");
-      setAqi(trigger?.weatherTriggers[0]?.aqi || "");
-      setSelectedSOV(trigger?.weatherTriggers[0]?.openBudgetSovPercent || null);
-      setSelectedBudget(
-        Number(trigger?.weatherTriggers[0]?.budget).toFixed(0) || null
-      );
-      setMaxVal(trigger?.weatherTriggers[0]?.maxVal || 0);
-      setSelectedTimeOptions(trigger?.weatherTriggers[0]?.period || 300);
+      setMinVal(weatherTrigger?.minVal || 0);
+      setMaxVal(weatherTrigger?.maxVal || 0);
+      setRainType(weatherTrigger?.rainType || "0");
+      setAqi(weatherTrigger?.aqi || "");
+      setSelectedSOV(weatherTrigger?.openBudgetSovPercent || null);
+      setSelectedBudget(Number(weatherTrigger?.budget).toFixed(0) || null);
+      setSelectedTimeOptions(weatherTrigger?.period || 300);
+
+      // Set selectedTriggerData directly with the values we just set
+      setSelectedTriggerData({
+        weatherTriggers: [
+          {
+            type: weatherTabData?.find((w: any) => w.id === currentTab)?.value,
+            minVal: weatherTrigger?.minVal || 0,
+            maxVal: weatherTrigger?.maxVal || 0,
+            rainType: weatherTrigger?.rainType || "0",
+            aqi: weatherTrigger?.aqi || "",
+            openBudgetSovPercent: weatherTrigger?.openBudgetSovPercent || null,
+            budget: Number(weatherTrigger?.budget) || 0,
+            period: Number(weatherTrigger?.period) || 300,
+          },
+        ],
+        sportsTriggers: [],
+        vacantSlots: [],
+      });
     } else if (trigger?.sportsTriggers?.length > 0) {
+      const sportsTrigger = trigger.sportsTriggers[0];
       setSelectedTrigger({
         triggerType: "sport",
       });
-      setSport(trigger?.sportsTriggers[0]?.sport || "");
-      setPlayer(trigger?.sportsTriggers[0]?.player || "");
-      setSelectedMatchId(trigger?.sportsTriggers[0]?.matchId || "");
-      setCondition(trigger?.sportsTriggers[0]?.condition || "");
-      setSelectedSOV(trigger?.sportsTriggers[0]?.openBudgetSovPercent || null);
-      setSelectedBudget(
-        Number(trigger?.sportsTriggers[0]?.budget).toFixed(0) || null
-      );
-      setSelectedTimeOptions(trigger?.sportsTriggers[0]?.period || 300);
+      setSport(sportsTrigger?.sport || "");
+      setPlayer(sportsTrigger?.player || "");
+      setSelectedMatchId(sportsTrigger?.matchId || "");
+      setCondition(sportsTrigger?.condition || "");
+      setSelectedSOV(sportsTrigger?.openBudgetSovPercent || null);
+      setSelectedBudget(Number(sportsTrigger?.budget).toFixed(0) || null);
+      setSelectedTimeOptions(sportsTrigger?.period || 300);
+
+      // Set selectedTriggerData directly with the values we just set
+      setSelectedTriggerData({
+        weatherTriggers: [],
+        sportsTriggers: [
+          {
+            sport: sportsTrigger?.sport || "",
+            player: sportsTrigger?.player || "",
+            matchId: sportsTrigger?.matchId || "",
+            condition: sportsTrigger?.condition || "",
+            openBudgetSovPercent: sportsTrigger?.openBudgetSovPercent || null,
+            budget: Number(sportsTrigger?.budget) || 0,
+            period: Number(sportsTrigger?.period) || 300,
+          },
+        ],
+        vacantSlots: [],
+      });
     } else if (trigger?.vacantSlots?.length > 0) {
+      const vacantSlot = trigger.vacantSlots[0];
       setSelectedTrigger({
         triggerType: "empty",
       });
-      setCondition(trigger?.sportsTriggers[0]?.condition || "");
-      setSelectedSOV(trigger?.sportsTriggers[0]?.openBudgetSovPercent || null);
-      setSelectedBudget(
-        Number(trigger?.sportsTriggers[0]?.budget).toFixed(0) || null
-      );
-      setSelectedTimeOptions(trigger?.sportsTriggers[0]?.period || 300);
-    }
-  }, [campaignDetails, campaignId]);
+      setCondition(vacantSlot?.condition || "");
+      setSelectedSOV(vacantSlot?.openBudgetSovPercent || null);
+      setSelectedBudget(Number(vacantSlot?.budget).toFixed(0) || null);
+      setSelectedTimeOptions(vacantSlot?.period || 300);
 
-  // useEffect(() => {
-  //   if (selectedTrigger) {
-  //     handleSelectTrigger();
-  //   }
-  // }, [handleSelectTrigger, selectedTrigger]);
+      // Set selectedTriggerData directly with the values we just set
+      setSelectedTriggerData({
+        weatherTriggers: [],
+        sportsTriggers: [],
+        vacantSlots: [
+          {
+            type: "vacantSlots",
+            slotType: vacantSlot?.condition || "",
+            openBudgetSovPercent: vacantSlot?.openBudgetSovPercent || null,
+            budget: Number(vacantSlot?.budget) || 0,
+            period: Number(vacantSlot?.period) || 300,
+          },
+        ],
+      });
+    }
+  }, [campaignDetails, campaignId, currentTab]);
 
   useEffect(() => {
-    if (!campaignDetails) return;
     if (errorAddDetails) {
       message.error("Error in add campaign details...");
     }
     if (errorTriggerDetails) {
       message.error("Error in getting impression wise data...");
     }
+  }, [errorAddDetails, errorTriggerDetails]);
+
+  useEffect(() => {
+    if (!campaignDetails) return;
+
     dispatch(
       getTableDataForSelectTriggerPage({ duration: 30, impactFactor: 0.1 })
     );
@@ -285,7 +331,7 @@ export const TriggerDetails = ({
         pageName: "Add Triggers Page",
       })
     );
-  }, [dispatch, campaignDetails, errorAddDetails, errorTriggerDetails]);
+  }, [dispatch, campaignDetails]);
 
   useEffect(() => {
     if (successAddDetails) {

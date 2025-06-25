@@ -492,14 +492,14 @@ export const SportsSegment = ({
         "Error in getting matches list, please select a different sport..."
       );
     }
-    // if (errorPlayers) {
-    //   message.error("Error in getting players list, please select a different match...")
-    // }
+  }, [errorMatches]);
+
+  useEffect(() => {
     if (selectedMatchId) {
       dispatch(getPlayersList({ id: selectedMatchId }));
     }
     dispatch(getCricketMatchesList());
-  }, [dispatch, errorMatches, selectedMatchId]);
+  }, [dispatch, selectedMatchId]);
 
   useEffect(() => {
     if (matches && !myMatches && Array.isArray(matches)) {

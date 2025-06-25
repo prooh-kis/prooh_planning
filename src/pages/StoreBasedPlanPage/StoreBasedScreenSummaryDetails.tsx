@@ -274,31 +274,29 @@ export const StoreBasedScreenSummaryDetails = ({
   }, [handleClickOutside]);
 
   useEffect(() => {
-    if (!campaignDetails) return;
-
-    if (errorAddDetails) message.error("Error in add campaign details...");
-    if (errorScreenSummary)
+    if (errorScreenSummary) {
       message.error("Error in fetching screen summary data...");
+    }
+    if (errorAddDetails) {
+      message.error("Error in fetching Add Details...");
+    }
+  }, [errorScreenSummary, errorAddDetails]);
+
+  useEffect(() => {
+    if (!campaignDetails) return;
 
     dispatch(
       getScreenSummaryDataIKnowItAll({
         id: campaignId,
       })
     );
-
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
         pageName: "Select Screens Page",
       })
     );
-  }, [
-    campaignId,
-    campaignDetails,
-    errorAddDetails,
-    errorScreenSummary,
-    dispatch,
-  ]);
+  }, [campaignId, campaignDetails, dispatch]);
 
   useEffect(() => {
     if (successAddDetails) {
