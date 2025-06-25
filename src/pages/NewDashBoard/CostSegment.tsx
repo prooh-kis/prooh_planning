@@ -33,6 +33,7 @@ export const CostSegment = ({
   };
 
   const handleClick = ({type, value, checked}: any) => {
+    console.log('sadadad', filters )
     setFilters((prev: any) => ({
       ...prev,
       cities: {
@@ -83,18 +84,18 @@ export const CostSegment = ({
         ...prev.timezones,
         costConsumption:
           type == "timezone" && checked ?
-            [...prev.timezones.costConsumption, value] :
+            [...prev?.timezones?.costConsumption, value] :
           type == "timezone" && checked && value == "all" ? 
             [] :
           type == "timezone" && !checked ?
-            filters.timezones.costConsumption.filter((f: any) => f !== value) :
-          filters.timezone.costConsumption,
+            filters?.timezones?.costConsumption?.filter((f: any) => f !== value) :
+          filters?.timezones?.costConsumption,
       },
     }));
   }
     // Initialize filters based on spot data
     useEffect(() => {
-    if (costData && (filters.cities.costConsumption.length == 0 || filters.touchPoints.costConsumption.length == 0 || filters.screenTypes.costConsumption.length == 0)) {
+    if (costData && (filters?.cities?.costConsumption?.length == 0 || filters?.touchPoints?.costConsumption?.length == 0 || filters?.screenTypes?.costConsumption?.length == 0)) {
       setFilters((prev: any) => ({
         ...prev,
         cities: {
@@ -123,6 +124,7 @@ export const CostSegment = ({
 
   useEffect(() => {
     if (filters && campaignId && !costData) {
+      console.log("gilte", filters.timezones.costConsumption)
       dispatch(
         getCostDataForPlannerDashboard({
           id: campaignId,
@@ -282,7 +284,7 @@ export const CostSegment = ({
               <div className="border-b">
                 <SectionHeaderWithSwitch
                   iconClass="fi-sr-land-location"
-                  title="Touchpoints"
+                  title="Screen Types"
                   bgColor=" bg-[#6DBC48]"
                   showPercent={showPercent?.[3]}
                   setShowPercent={() => {

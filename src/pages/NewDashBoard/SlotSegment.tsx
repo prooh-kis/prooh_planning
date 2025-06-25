@@ -10,6 +10,7 @@ import { getSpotDeliveryDataForPlannerDashboard } from "../../actions/dashboardA
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { Tooltip } from "antd";
 import { getUserRole } from "../../utils/campaignUtils";
+import { calculateDayTypes, getNumberOfDaysBetweenTwoDates } from "../../utils/dateAndTimeUtils";
 
 export const SlotSegment = ({
   campaignId,
@@ -175,18 +176,17 @@ export const SlotSegment = ({
                 bgColor=" bg-[#77BFEF]"
                 dataValue={
                   <Tooltip
-                    title={`Slot delivered till now / slot promised till today`}
+                    title={`Av. slots delivered per day / Av. slots promised per day`}
                   >
                     <h1 className={`text-[12px] font-semibold truncate`}>
-                      Total:{" "}
                       <span className={`${dataToShow.slotsDelivered > dataToShow.slotsPromisedTillDate ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
-                        {formatNumber(dataToShow.slotsDelivered.toFixed(0))}
+                        Actual ({formatNumber(dataToShow.slotsDelivered.toFixed(0)/ screenLevelData?.data?.durationDelivered)}) 
                       </span>
                       <span className="text-[#0E212E]">
-                        /
-                        {formatNumber(
-                          dataToShow.slotsPromisedTillDate.toFixed(0)
-                        )}
+                        / 
+                        Promised ({formatNumber(
+                          dataToShow.slotsPromisedTillDate.toFixed(0)/screenLevelData?.data?.durationDelivered
+                        )})
                       </span>
                     </h1>
                   </Tooltip>
@@ -489,17 +489,28 @@ export const SlotSegment = ({
                           }
                         />
                       </div>
-                      <div className="grid grid-cols-4 flex items-center w-full gap-2">
+                      <div className="grid grid-cols-4 flex items-center w-full gap-2"
+                      onClick={() => {
+                        console.log(spotData.dayWiseData?.[dayKey]);
+                        console.log(spotData.dayWiseData?.[dayKey].slotsPromised);
+                        console.log(screenLevelData?.data);
+                        console.log("days remaining", getNumberOfDaysBetweenTwoDates(new Date(), campaignDetails.endDate))
+                        console.log("total day types", calculateDayTypes(campaignDetails?.startDate, new Date()))
+                        console.log("day types till now", calculateDayTypes(campaignDetails?.startDate, new Date())?.[dayKey as keyof typeof calculateDayTypes])
+                      }}
+                      >
                         <div className="col-span-3">
                           <MultiColorLinearBar2
                             delivered={
                               spotData.dayWiseData[dayKey]?.totalSlotsDelivered
                             }
                             expected={
-                              (spotData.dayWiseData[dayKey]?.slotsPromised *
-                                (screenLevelData?.data?.durationDelivered ||
-                                  1)) /
-                              screenLevelData?.data?.durationPromised
+                              ((spotData.dayWiseData[dayKey]?.slotsPromised * calculateDayTypes(campaignDetails?.startDate, new Date())?.[dayKey as keyof typeof calculateDayTypes])/
+                              calculateDayTypes(campaignDetails?.startDate, campaignDetails?.endDate)?.[dayKey as keyof typeof calculateDayTypes])
+                              // (spotData.dayWiseData[dayKey]?.slotsPromised/
+                              // (getNumberOfDaysBetweenTwoDates(new Date(), campaignDetails.endDate) < 0 ?
+                              // calculateDayTypes(campaignDetails?.startDate, campaignDetails?.endDate)?.[dayKey as keyof typeof calculateDayTypes] :
+                              // calculateDayTypes(campaignDetails?.startDate, new Date())?.[dayKey as keyof typeof calculateDayTypes]))
                             }
                             total={spotData.dayWiseData[dayKey]?.slotsPromised}
                             deliveredColor="bg-[#77BFEF]"
