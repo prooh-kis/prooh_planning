@@ -33,62 +33,65 @@ export const CostSegment = ({
   };
 
   const handleClick = ({type, value, checked}: any) => {
-    console.log('sadadad', filters )
     setFilters((prev: any) => ({
       ...prev,
       cities: {
         ...prev.cities,
         costConsumption: 
+          type == "city" && checked && value == "all" ? 
+            Object.keys(costData.cityWiseData) :
           type == "city" && checked ? 
             [...prev.cities.costConsumption, value] :
-          type == "city" && checked && value == "all" ? 
-            [] :
-          type == "city" && !checked ? 
-            filters.cities.costConsumption.filter((f: any) => f !== value) :
+          type == "city" && !checked && filters.cities.costConsumption.length !== 1 ? 
+            filters.cities.costConsumption.filter((f: any) => f !== value && f !== "all") :
           filters.cities.costConsumption,
       },
       touchPoints: {
         ...prev.touchPoints,
         costConsumption:
+          type == "touchpoint" && checked && value == "all" ? 
+            Object.keys(costData.touchPointWiseData) :
           type == "touchpoint" && checked ?
             [...prev.touchPoints.costConsumption, value] :
           type == "touchpoint" && checked && value == "all" ? 
             [] :
-          type == "touchpoint" && !checked ?
-            filters.touchPoints.costConsumption.filter((f: any) => f !== value) :
+          type == "touchpoint" && !checked && filters.touchPoints.costConsumption.length !== 1 ?
+            filters.touchPoints.costConsumption.filter((f: any) => f !== value && f !== "all") :
           filters.touchPoints.costConsumption,
       },
       screenTypes: {
         ...prev.screenTypes,
         costConsumption:
+          type == "screenType" && checked && value == "all" ? 
+            Object.keys(costData.screenTypeWiseData) :
           type == "screenType" && checked ?
             [...prev.screenTypes.costConsumption, value] :
           type == "screenType" && checked && value == "all" ? 
             [] :
-          type == "screenType" && !checked ?
-            filters.screenTypes.costConsumption.filter((f: any) => f !== value) :
+          type == "screenType" && !checked && filters.screenTypes.costConsumption.length !== 1 ?
+            filters.screenTypes.costConsumption.filter((f: any) => f !== value && f !== "all") :
           filters.screenTypes.costConsumption,
       },
       dayTypes: {
         ...prev.dayTypes,
         costConsumption:
+          type == "dayType" && checked && value == "all" ? 
+            Object.keys(costData.dayWiseData) :
           type == "dayType" && checked ?
             [...prev.dayTypes.costConsumption, value] :
-          type == "dayType" && checked && value == "all" ? 
-            [] :
-          type == "dayType" && !checked ?
-            filters.dayTypes.costConsumption.filter((f: any) => f !== value) :
+          type == "dayType" && !checked && filters.dayTypes.costConsumption.length !== 1 ?
+            filters.dayTypes.costConsumption.filter((f: any) => f !== value && f !== "all") :
           filters.dayTypes.costConsumption,
       },
       timezones: {
         ...prev.timezones,
         costConsumption:
+          type == "timezone" && checked && value == "all" ? 
+            Object.keys(costData.timeWiseData) :
           type == "timezone" && checked ?
             [...prev?.timezones?.costConsumption, value] :
-          type == "timezone" && checked && value == "all" ? 
-            [] :
-          type == "timezone" && !checked ?
-            filters?.timezones?.costConsumption?.filter((f: any) => f !== value) :
+          type == "timezone" && !checked && filters.timezones.costConsumption.length !== 1 ?
+            filters?.timezones?.costConsumption?.filter((f: any) => f !== value && f !== "all") :
           filters?.timezones?.costConsumption,
       },
     }));
@@ -198,7 +201,9 @@ export const CostSegment = ({
                   <div key={i} className="flex items-center gap-2 pt-1">
                     <div>
                       <CheckboxInput
-                        disabled={false}
+                        disabled={filters.cities["costConsumption"]?.includes(
+                          cityKey
+                        ) && filters.cities["costConsumption"]?.length === 1}
                         label={cityKey.toUpperCase()}
                         checked={filters.cities["costConsumption"]?.includes(cityKey)}
                         textSize={"10px"}
@@ -250,7 +255,9 @@ export const CostSegment = ({
                   <div key={i} className="flex items-center gap-2 pt-1">
                     <div>
                       <CheckboxInput
-                        disabled={false}
+                        disabled={filters.cities["costConsumption"]?.includes(
+                          tpKey
+                        ) && filters.cities["costConsumption"]?.length === 1}
                         label={tpKey.toUpperCase()}
                         checked={filters.touchPoints["costConsumption"]?.includes(tpKey)}
                         textSize={"10px"}
@@ -302,7 +309,9 @@ export const CostSegment = ({
                   <div key={i} className="flex items-center gap-2 pt-1">
                     <div>
                       <CheckboxInput
-                        disabled={false}
+                        disabled={filters.cities["costConsumption"]?.includes(
+                          stKey
+                        ) && filters.cities["costConsumption"]?.length === 1}
                         label={stKey.toUpperCase()}
                         checked={filters.screenTypes["costConsumption"]?.includes(stKey)}
                         textSize={"10px"}
@@ -354,7 +363,9 @@ export const CostSegment = ({
                   <div key={i} className="flex items-center gap-2 pt-1">
                     <div>
                       <CheckboxInput
-                        disabled={false}
+                        disabled={filters.cities["costConsumption"]?.includes(
+                          dayKey
+                        ) && filters.cities["costConsumption"]?.length === 1}
                         label={dayKey.toUpperCase()}
                         checked={filters.dayTypes["costConsumption"]?.includes(dayKey)}
                         textSize={"10px"}
@@ -406,7 +417,9 @@ export const CostSegment = ({
                   <div key={i} className="flex items-center gap-2 pt-1">
                     <div>
                       <CheckboxInput
-                        disabled={false}
+                        disabled={filters.cities["costConsumption"]?.includes(
+                          timeKey
+                        ) && filters.cities["costConsumption"]?.length === 1}
                         label={timeKey.toUpperCase()}
                         checked={filters.timezones["costConsumption"]?.includes(timeKey)}
                         textSize={"10px"}

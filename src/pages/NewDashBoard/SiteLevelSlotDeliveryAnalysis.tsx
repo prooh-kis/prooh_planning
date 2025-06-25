@@ -59,26 +59,26 @@ export const SiteLevelSlotDeliveryAnalysis = ({
       dayTypes: {
         ...prev?.dayTypes,
         spotDelivery:
-          type == "dayType" && checked
+            type == "dayType" && checked && value == "all"
+              ? Object.keys(tabWiseSiteData?.dayWiseData || {})
+            : type == "dayType" && checked
             ? [...prev?.dayTypes?.spotDelivery, value]
-            : type == "dayType" && checked && value == "all"
-            ? []
-            : type == "dayType" && !checked
+            :  type == "dayType" && !checked && dayTimeFilters?.dayTypes?.spotDelivery?.length !== 1
             ? dayTimeFilters?.dayTypes?.spotDelivery?.filter(
-                (f: any) => f !== value
+                (f: any) => f !== value && f !== "all"
               )
             : dayTimeFilters?.dayTypes?.spotDelivery,
       },
       timezones: {
         ...prev?.timezones,
         spotDelivery:
-          type == "timezone" && checked
+          type == "timezone" && checked && value == "all"
+            ? Object.keys(tabWiseSiteData?.timeWiseData || {})
+            : type == "timezone" && checked
             ? [...prev?.timezones?.spotDelivery, value]
-            : type == "timezone" && checked && value == "all"
-            ? []
-            : type == "timezone" && !checked
+            :  type == "timezone" && !checked && dayTimeFilters?.timezones?.spotDelivery?.length !== 1
             ? dayTimeFilters?.timezones?.spotDelivery?.filter(
-                (f: any) => f !== value
+                (f: any) => f !== value && f !== "all"
               )
             : dayTimeFilters?.timezones?.spotDelivery,
       },
@@ -124,7 +124,7 @@ export const SiteLevelSlotDeliveryAnalysis = ({
         ),
       })
     );
-  }, [dispatch, campaignId, currentDate, dayTimeFilters]);
+  }, [dispatch, campaignId, currentDate, dayTimeFilters, userInfo?.userRole]);
 
   return (
     <div className="">
@@ -167,8 +167,11 @@ export const SiteLevelSlotDeliveryAnalysis = ({
                       </span>
                       <span className="text-[#0E212E]">
                         /
-                        Promised ({formatNumber(
-                          tabWiseSiteData?.dayWiseData.all?.slotsPromisedTillDate?.toFixed(0)/screenLevelData?.data?.durationDelivered
+                        Promised ({
+                        // formatNumber
+                        (
+                          tabWiseSiteData?.dayWiseData.all?.slotsPromisedTillDate?.toFixed(0)
+                          // /screenLevelData?.data?.durationDelivered
                         )})
                       </span>
                     </h1>
@@ -214,7 +217,9 @@ export const SiteLevelSlotDeliveryAnalysis = ({
                       <div key={i} className="flex items-center gap-2 pt-1">
                         <div>
                           <CheckboxInput
-                            disabled={false}
+                            disabled={dayTimeFilters.timezones["spotDelivery"]?.includes(
+                              dayKey
+                            ) && dayTimeFilters.timezones["spotDelivery"]?.length === 1}
                             label={dayKey.toUpperCase()}
                             checked={dayTimeFilters.dayTypes[
                               "spotDelivery"
@@ -297,7 +302,9 @@ export const SiteLevelSlotDeliveryAnalysis = ({
                       <div key={i} className="flex items-center gap-2 pt-1">
                         <div>
                           <CheckboxInput
-                            disabled={false}
+                            disabled={dayTimeFilters.timezones["spotDelivery"]?.includes(
+                              timeKey
+                            ) && dayTimeFilters.timezones["spotDelivery"]?.length === 1}
                             label={timeKey.toUpperCase()}
                             checked={dayTimeFilters?.timezones[
                               "spotDelivery"

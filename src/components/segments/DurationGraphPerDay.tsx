@@ -133,7 +133,7 @@ export const DurationGraphPerDay: React.FC<LineChartProps> = ({
             const tooltipLines = [
               `${label}: ${formatNumber(value.toFixed(0))}`,
             ];
-            
+    
             // Assuming your additional data is stored in an array matching your main data
             additionalLegends.forEach((legend: any) => {
               tooltipLines.push(

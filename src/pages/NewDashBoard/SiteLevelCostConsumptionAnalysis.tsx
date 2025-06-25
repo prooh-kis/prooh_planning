@@ -53,26 +53,26 @@ export const SiteLevelCostConsumptionAnalysis = ({
       dayTypes: {
         ...prev?.dayTypes,
         costConsumption:
-          type == "dayType" && checked
+          type == "dayType" && checked && value == "all"
+            ? Object.keys(tabWiseSiteData?.dayWiseData || {})
+            : type == "dayType" && checked
             ? [...prev?.dayTypes?.costConsumption, value]
-            : type == "dayType" && checked && value == "all"
-            ? []
-            : type == "dayType" && !checked
+            : type == "dayType" && !checked && dayTimeFilters?.dayTypes?.costConsumption?.length !== 1
             ? dayTimeFilters?.dayTypes?.costConsumption?.filter(
-                (f: any) => f !== value
+                (f: any) => f !== value && f !== "all"
               )
             : dayTimeFilters?.dayTypes?.costConsumption,
       },
       timezones: {
         ...prev?.timezones,
         costConsumption:
-          type == "timezone" && checked
+        type == "timezone" && checked && value == "all"
+            ? Object.keys(tabWiseSiteData?.timeWiseData || {})
+            : type == "timezone" && checked
             ? [...prev?.timezones?.costConsumption, value]
-            : type == "timezone" && checked && value == "all"
-            ? []
-            : type == "timezone" && !checked
+            : type == "timezone" && !checked && dayTimeFilters?.timezones?.costConsumption?.length !== 1
             ? dayTimeFilters?.timezones?.costConsumption?.filter(
-                (f: any) => f !== value
+                (f: any) => f !== value && f !== "all"
               )
             : dayTimeFilters?.timezones?.costConsumption,
       },
@@ -118,7 +118,7 @@ export const SiteLevelCostConsumptionAnalysis = ({
         ),
       })
     );
-  }, [dispatch, campaignId, currentDate, dayTimeFilters]);
+  }, [dispatch, campaignId, currentDate, dayTimeFilters, userInfo?.userRole]);
 
   return (
     <div className="">
@@ -188,7 +188,9 @@ export const SiteLevelCostConsumptionAnalysis = ({
                       <div key={i} className="flex items-center gap-2 pt-1">
                         <div>
                           <CheckboxInput
-                            disabled={false}
+                            disabled={dayTimeFilters.timezones["costConsumption"]?.includes(
+                              dayKey
+                            ) && dayTimeFilters.timezones["costConsumption"]?.length === 1}
                             label={dayKey.toUpperCase()}
                             checked={dayTimeFilters.dayTypes[
                               "costConsumption"
@@ -271,7 +273,9 @@ export const SiteLevelCostConsumptionAnalysis = ({
                       <div key={i} className="flex items-center gap-2 pt-1">
                         <div>
                           <CheckboxInput
-                            disabled={false}
+                            disabled={dayTimeFilters.timezones["costConsumption"]?.includes(
+                              timeKey
+                            ) && dayTimeFilters.timezones["costConsumption"]?.length === 1}
                             label={timeKey.toUpperCase()}
                             checked={dayTimeFilters?.timezones[
                               "costConsumption"

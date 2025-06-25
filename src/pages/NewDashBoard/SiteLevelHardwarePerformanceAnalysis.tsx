@@ -56,26 +56,26 @@ export const SiteLevelHardwarePerformanceAnalysis = ({
       dayTypes: {
         ...prev?.dayTypes,
         screenPerformance:
-          type == "dayType" && checked
+          type == "dayType" && checked && value == "all"
+            ? Object.keys(tabWiseSiteData?.dayWiseData || {})
+            : type == "dayType" && checked
             ? [...prev?.dayTypes?.screenPerformance, value]
-            : type == "dayType" && checked && value == "all"
-            ? []
-            : type == "dayType" && !checked
+            : type == "dayType" && !checked && dayTimeFilters?.dayTypes?.screenPerformance?.length !== 1
             ? dayTimeFilters?.dayTypes?.screenPerformance?.filter(
-                (f: any) => f !== value
+                (f: any) => f !== value && f !== "all"
               )
             : dayTimeFilters?.dayTypes?.screenPerformance,
       },
       timezones: {
         ...prev?.timezones,
         screenPerformance:
-          type == "timezone" && checked
+          type == "timezone" && checked && value == "all"
+            ? Object.keys(tabWiseSiteData?.timeWiseData || {})
+            : type == "timezone" && checked
             ? [...prev?.timezones?.screenPerformance, value]
-            : type == "timezone" && checked && value == "all"
-            ? []
-            : type == "timezone" && !checked
+            : type == "timezone" && !checked && dayTimeFilters?.timezones?.screenPerformance?.length !== 1
             ? dayTimeFilters?.timezones?.screenPerformance?.filter(
-                (f: any) => f !== value
+                (f: any) => f !== value && f !== "all"
               )
             : dayTimeFilters?.timezones?.screenPerformance,
       },
@@ -121,7 +121,7 @@ export const SiteLevelHardwarePerformanceAnalysis = ({
         ),
       })
     );
-  }, [dispatch, campaignId, currentDate, dayTimeFilters]);
+  }, [dispatch, campaignId, currentDate, dayTimeFilters, userInfo?.userRole]);
 
   return (
     <div className="">
@@ -189,7 +189,9 @@ export const SiteLevelHardwarePerformanceAnalysis = ({
                       <div key={i} className="flex items-center gap-2 pt-1">
                         <div>
                           <CheckboxInput
-                            disabled={false}
+                            disabled={dayTimeFilters.timezones["screenPerformance"]?.includes(
+                              dayKey
+                            ) && dayTimeFilters.timezones["screenPerformance"]?.length === 1}
                             label={dayKey.toUpperCase()}
                             checked={dayTimeFilters.dayTypes[
                               "screenPerformance"
@@ -266,7 +268,9 @@ export const SiteLevelHardwarePerformanceAnalysis = ({
                       <div key={i} className="flex items-center gap-2 pt-1">
                         <div>
                           <CheckboxInput
-                            disabled={false}
+                            disabled={dayTimeFilters.timezones["screenPerformance"]?.includes(
+                              timeKey
+                            ) && dayTimeFilters.timezones["screenPerformance"]?.length === 1}
                             label={timeKey.toUpperCase()}
                             checked={dayTimeFilters?.timezones[
                               "screenPerformance"

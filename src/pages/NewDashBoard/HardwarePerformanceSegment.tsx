@@ -40,45 +40,45 @@ export const HardwarePerformanceSegment = ({
       cities: {
         ...prev.cities,
         screenPerformance: 
+          type == "city" && checked && value == "all" ? 
+            Object.keys(hardwarePerformanceData.cityWiseData) :
           type == "city" && checked ? 
             [...prev.cities.screenPerformance, value] :
-          type == "city" && checked && value == "all" ? 
-            [] :
-          type == "city" && !checked ? 
-            filters.cities.screenPerformance.filter((f: any) => f !== value) :
+          type == "city" && !checked && filters.cities.screenPerformance.length !== 1 ? 
+            filters.cities.screenPerformance.filter((f: any) => f !== value && f !== "all") :
           filters.cities.screenPerformance,
       },
       touchPoints: {
         ...prev.touchPoints,
         screenPerformance:
+          type == "touchpoint" && checked && value == "all" ? 
+            Object.keys(hardwarePerformanceData.touchPointWiseData) :
           type == "touchpoint" && checked ?
             [...prev.touchPoints.screenPerformance, value] :
-          type == "touchpoint" && checked && value == "all" ? 
-            [] :
-          type == "touchpoint" && !checked ?
-            filters.touchPoints.screenPerformance.filter((f: any) => f !== value) :
+          type == "touchpoint" && !checked && filters.touchPoints.screenPerformance.length !== 1 ?
+            filters.touchPoints.screenPerformance.filter((f: any) => f !== value && f !== "all") :
           filters.touchPoints.screenPerformance,
       },
       screenTypes: {
         ...prev.screenTypes,
         screenPerformance:
+          type == "screenType" && checked && value == "all" ? 
+            Object.keys(hardwarePerformanceData.screenTypeWiseData) :
           type == "screenType" && checked ?
             [...prev.screenTypes.screenPerformance, value] :
-          type == "screenType" && checked && value == "all" ? 
-            [] :
-          type == "screenType" && !checked ?
-            filters.screenTypes.screenPerformance.filter((f: any) => f !== value) :
+          type == "screenType" && !checked && filters.screenTypes.screenPerformance.length !== 1 ?
+            filters.screenTypes.screenPerformance.filter((f: any) => f !== value && f !== "all") :
           filters.screenTypes.screenPerformance,
       },
       dayTypes: {
         ...prev.dayTypes,
         screenPerformance:
+          type == "dayType" && checked && value == "all" ? 
+            Object.keys(hardwarePerformanceData.dayWiseData) :
           type == "dayType" && checked ?
             [...prev.dayTypes.screenPerformance, value] :
-          type == "dayType" && checked && value == "all" ? 
-            [] :
-          type == "dayType" && !checked ?
-            filters.dayTypes.screenPerformance.filter((f: any) => f !== value) :
+          type == "dayType" && !checked && filters.dayTypes.screenPerformance.length !== 1 ?
+            filters.dayTypes.screenPerformance.filter((f: any) => f !== value && f !== "all") :
           filters.dayTypes.screenPerformance,
       },
       timezones: {
@@ -87,9 +87,9 @@ export const HardwarePerformanceSegment = ({
           type == "timezone" && checked ?
             [...prev.timezones.screenPerformance, value] :
           type == "timezone" && checked && value == "all" ? 
-            [] :
-          type == "timezone" && !checked ?
-            filters.timezones.screenPerformance.filter((f: any) => f !== value) :
+            Object.keys(hardwarePerformanceData.timeWiseData) :
+          type == "timezone" && !checked && filters.timezones.screenPerformance.length !== 1 ?
+            filters.timezones.screenPerformance.filter((f: any) => f !== value && f !== "all") :
           filters.timezones.screenPerformance,
       },
     }));
@@ -204,7 +204,9 @@ export const HardwarePerformanceSegment = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div>
                         <CheckboxInput
-                          disabled={false}
+                          disabled={filters.cities["screenPerformance"]?.includes(
+                            cityKey
+                          ) && filters.cities["screenPerformance"]?.length === 1}
                           label={cityKey.toUpperCase()}
                           checked={filters.cities[
                             "screenPerformance"
@@ -279,7 +281,9 @@ export const HardwarePerformanceSegment = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div>
                         <CheckboxInput
-                          disabled={false}
+                          disabled={filters.touchPoints["screenPerformance"]?.includes(
+                            tpKey
+                          ) && filters.touchPoints["screenPerformance"]?.length === 1}
                           label={tpKey.toUpperCase()}
                           checked={filters.touchPoints[
                             "screenPerformance"
@@ -354,7 +358,9 @@ export const HardwarePerformanceSegment = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div>
                         <CheckboxInput
-                          disabled={false}
+                          disabled={filters.screenTypes["screenPerformance"]?.includes(
+                            stKey
+                          ) && filters.screenTypes["screenPerformance"]?.length === 1}
                           label={stKey.toUpperCase()}
                           checked={filters.screenTypes[
                             "screenPerformance"
@@ -429,7 +435,9 @@ export const HardwarePerformanceSegment = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div>
                         <CheckboxInput
-                          disabled={false}
+                          disabled={filters.dayTypes["screenPerformance"]?.includes(
+                            dayKey
+                          ) && filters.dayTypes["screenPerformance"]?.length === 1}
                           label={dayKey.toUpperCase()}
                           checked={filters.dayTypes[
                             "screenPerformance"
@@ -504,7 +512,9 @@ export const HardwarePerformanceSegment = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div>
                         <CheckboxInput
-                          disabled={false}
+                          disabled={filters.timezones["screenPerformance"]?.includes(
+                            timeKey
+                          ) && filters.timezones["screenPerformance"]?.length === 1}
                           label={timeKey.toUpperCase()}
                           checked={filters.timezones[
                             "screenPerformance"

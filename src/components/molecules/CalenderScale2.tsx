@@ -122,13 +122,19 @@ export const CalenderScaleStepper = ({
       setCurrentWeek?.(newWeek);
       
       // Ensure currentDay is within bounds of the new week
-      const daysInWeek = targetWeek[1]?.length || 0;
-      if (currentDay > daysInWeek) {
-        const safeDay = Math.max(1, Math.min(currentDay, daysInWeek));
-        setCurrentDay?.(safeDay);
-        setCurrentDate?.(targetWeek[1][safeDay - 1]?.value);
-      } else if (daysInWeek > 0) {
-        setCurrentDate?.(targetWeek[1][currentDay - 1]?.value);
+      // const daysInWeek = targetWeek[1]?.length || 0;
+      // if (currentDay > daysInWeek) {
+      //   const safeDay = Math.max(1, Math.min(currentDay, daysInWeek));
+      //   setCurrentDay?.(safeDay);
+      //   setCurrentDate?.(targetWeek[1][safeDay - 1]?.value);
+      // } else if (daysInWeek > 0) {
+      //   setCurrentDate?.(targetWeek[1][currentDay - 1]?.value);
+      // }
+
+      // Set to first day of the week when week changes
+      if (targetWeek[1]?.[0]?.value) {
+        setCurrentDay?.(1);
+        setCurrentDate?.(targetWeek[1][0]?.value);
       }
     } else if (input.type === "day") {
       const targetWeek = weeks[currentWeek - 1];
@@ -142,7 +148,7 @@ export const CalenderScaleStepper = ({
       setCurrentDay?.(input.step + 1);
       setCurrentDate?.(targetDay.value);
     }
-  }, [loading, currentDay, currentWeek, weeks, setCurrentDay, setCurrentWeek, setCurrentDate]);
+  }, [loading, currentWeek, weeks, setCurrentDay, setCurrentWeek, setCurrentDate]);
 
   const getPercentageValue = useCallback((delivered: number, promised: number) => {
     const percentage = (delivered / promised) * 100 || 0;
@@ -428,19 +434,19 @@ export const CalenderScaleStepper = ({
                 <div
                   key={i}
                   onClick={() => {
-                    if (week !== "End" && 
-                      !weeks[i][1][currentDay - 1] || 
-                      getNumberOfDaysBetweenTwoDates(
-                        new Date(),
-                        new Date(weeks[i][1][currentDay - 1]?.value)
-                      ) > 0
-                    ) {
-                      message.info("Still to come...");
-                    } else {
+                    // if (week !== "End" && 
+                    //   !weeks[i][1][currentDay - 1] || 
+                    //   getNumberOfDaysBetweenTwoDates(
+                    //     new Date(),
+                    //     new Date(weeks[i][1][currentDay - 1]?.value)
+                    //   ) > 0
+                    // ) {
+                    //   message.info("Still to come...");
+                    // } else {
                       if (week !== "End") {
                         handleStepClick({ type: "week", step: i });
                       }
-                    }
+                    // }
                   }}
                   className="relative flex flex-col items-center"
                 >

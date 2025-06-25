@@ -30,34 +30,34 @@ export const AudienceSegment = ({
       cities: {
         ...prev.cities,
         audience:
-          type == "city" && checked
+          type == "city" && checked && value == "all"
+            ? Object.keys(audienceData.cityWiseData)
+            : type == "city" && checked
             ? [...prev.cities.audience, value]
-            : type == "city" && checked && value == "all"
-            ? []
-            : type == "city" && !checked
-            ? filters.cities.audience.filter((f: any) => f !== value)
+            : type == "city" && !checked && filters.cities.audience.length !== 1
+            ? filters.cities.audience.filter((f: any) => f !== value && f !== "all")
             : filters.cities.audience,
       },
       touchPoints: {
         ...prev.touchPoints,
         audience:
-          type == "touchpoint" && checked
+          type == "touchpoint" && checked && value == "all"
+            ? Object.keys(audienceData.touchPointWiseData)
+            : type == "touchpoint" && checked
             ? [...prev.touchPoints.audience, value]
-            : type == "touchpoint" && checked && value == "all"
-            ? []
-            : type == "touchpoint" && !checked
-            ? filters.touchPoints.audience.filter((f: any) => f !== value)
+            : type == "touchpoint" && !checked && filters.cities.audience.length !== 1
+            ? filters.touchPoints.audience.filter((f: any) => f !== value && f !== "all")
             : filters.touchPoints.audience,
       },
       screenTypes: {
         ...prev.screenTypes,
         audience:
-          type == "screenType" && checked
+          type == "screenType" && checked && value == "all"
+            ? Object.keys(audienceData.screenTypeWiseData)
+            : type == "screenType" && checked
             ? [...prev.screenTypes.audience, value]
-            : type == "screenType" && checked && value == "all"
-            ? []
-            : type == "screenType" && !checked
-            ? filters.screenTypes.audience.filter((f: any) => f !== value)
+            : type == "screenType" && !checked && filters.cities.audience.length !== 1
+            ? filters.screenTypes.audience.filter((f: any) => f !== value && f !== "all")
             : filters.screenTypes.audience,
       },
     }));
@@ -145,7 +145,9 @@ export const AudienceSegment = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div>
                         <CheckboxInput
-                          disabled={false}
+                          disabled={filters.cities["audience"]?.includes(
+                            cityKey
+                          ) && filters.cities["audience"]?.length === 1}
                           label={cityKey.toUpperCase()}
                           checked={filters.cities["audience"]?.includes(
                             cityKey
@@ -227,7 +229,9 @@ export const AudienceSegment = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div>
                         <CheckboxInput
-                          disabled={false}
+                          disabled={filters.touchPoints["audience"]?.includes(
+                            tpKey
+                          ) && filters.touchPoints["audience"]?.length === 1}
                           label={tpKey.toUpperCase()}
                           checked={filters.touchPoints["audience"]?.includes(
                             tpKey
@@ -309,7 +313,9 @@ export const AudienceSegment = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div>
                         <CheckboxInput
-                          disabled={false}
+                          disabled={filters.screenTypes["audience"]?.includes(
+                            stKey
+                          ) && filters.screenTypes["audience"]?.length === 1}
                           label={stKey.toUpperCase()}
                           checked={filters.screenTypes["audience"]?.includes(
                             stKey

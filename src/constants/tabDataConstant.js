@@ -63,10 +63,10 @@ export const COST_CONSUMED = "costConsumed";
 
 export const siteLevelPerformanceTabData = [
   { id: "1", label: "Campaign Duration", value: CAMPAIGN_DURATION },
-  { id: "2", label: "Audience Impression", value: AUDIENCE_IMPRESSION },
   { id: "3", label: "Hardware Performance", value: HARDWARE_PERFORMANCE },
   { id: "4", label: "Slot delivery", value: SPOT_DELIVERY },
   { id: "5", label: "Cost consumption", value: COST_CONSUMED },
+  { id: "2", label: "Audience Impression", value: AUDIENCE_IMPRESSION },
 ];
 
 export const siteLevelAnalysisTabData = [

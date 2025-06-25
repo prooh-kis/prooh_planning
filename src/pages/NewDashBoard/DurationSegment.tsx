@@ -116,12 +116,10 @@ export const DurationSegment = ({
             additionalLegends={[
               {
                 label: "Hourly Delivery",
-                values: [1500],
                 color: "rgba(16, 185, 129, 1)",
               },
               {
                 label: "Extra Delivery",
-                values: [1200],
                 color: "rgba(245, 158, 11, 1)",
               },
             ]}

@@ -37,23 +37,23 @@ export const SiteLevelAudienceAnalysis = ({
       dayTypes: {
         ...prev?.dayTypes,
         audience:
+          type == "dayType" && checked && value == "all" ? 
+            Object.keys(tabWiseSiteData?.dayWiseData || {}) :
           type == "dayType" && checked ?
             [...prev?.dayTypes?.audience, value] :
-          type == "dayType" && checked && value == "all" ? 
-            [] :
-          type == "dayType" && !checked ?
-            dayTimeFilters?.dayTypes?.audience?.filter((f: any) => f !== value) :
+          type == "dayType" && !checked && dayTimeFilters?.dayTypes?.audience?.length !== 1 ?
+            dayTimeFilters?.dayTypes?.audience?.filter((f: any) => f !== value && f !== "all") :
           dayTimeFilters?.dayTypes?.audience,
       },
       timezones: {
         ...prev?.timezones,
         audience:
+          type == "timezone" && checked && value == "all" ? 
+            Object.keys(tabWiseSiteData?.timeWiseData || {}) :
           type == "timezone" && checked ?
             [...prev?.timezones?.audience, value] :
-          type == "timezone" && checked && value == "all" ? 
-            [] :
-          type == "timezone" && !checked ?
-            dayTimeFilters?.timezones?.audience?.filter((f: any) => f !== value) :
+          type == "timezone" && !checked && dayTimeFilters?.timezones?.audience?.length !== 1 ?
+            dayTimeFilters?.timezones?.audience?.filter((f: any) => f !== value && f !== "all") :
           dayTimeFilters?.timezones?.audience,
       },
     }));
@@ -95,7 +95,7 @@ export const SiteLevelAudienceAnalysis = ({
         ),
       })
     );
-  }, [dispatch, campaignId, currentDate, dayTimeFilters]);
+  }, [dispatch, campaignId, currentDate, dayTimeFilters, userInfo?.userRole]);
 
   return (
     <div className="">
@@ -248,7 +248,9 @@ export const SiteLevelAudienceAnalysis = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div>
                         <CheckboxInput
-                          disabled={false}
+                          disabled={dayTimeFilters.timezones["audience"]?.includes(
+                            dayKey
+                          ) && dayTimeFilters.timezones["audience"]?.length === 1}
                           label={dayKey.toUpperCase()}
                           checked={dayTimeFilters.dayTypes[
                             "audience"
@@ -322,7 +324,9 @@ export const SiteLevelAudienceAnalysis = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div>
                         <CheckboxInput
-                          disabled={false}
+                          disabled={dayTimeFilters.timezones["audience"]?.includes(
+                            timeKey
+                          ) && dayTimeFilters.timezones["audience"]?.length === 1}
                           label={timeKey.toUpperCase()}
                           checked={dayTimeFilters?.timezones[
                             "audience"

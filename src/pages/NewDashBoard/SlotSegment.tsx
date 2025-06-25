@@ -45,56 +45,57 @@ export const SlotSegment = ({
       cities: {
         ...prev.cities,
         spotDelivery:
-          type == "city" && checked
+          type == "city" && checked && value == "all"
+            ? Object.keys(spotData.cityWiseData)
+            : type == "city" && checked
             ? [...prev.cities.spotDelivery, value]
-            : type == "city" && checked && value == "all"
-            ? []
-            : type == "city" && !checked
-            ? filters.cities.spotDelivery.filter((f: any) => f !== value)
+            : type == "city" && !checked && filters.cities.spotDelivery.length !== 1
+            ? filters.cities.spotDelivery.filter((f: any) => f !== value && f !== "all")
             : filters.cities.spotDelivery,
       },
       touchPoints: {
         ...prev.touchPoints,
         spotDelivery:
-          type == "touchpoint" && checked
+          type == "touchpoint" && checked && value == "all"
+            ? Object.keys(spotData.touchPointWiseData)
+            : type == "touchpoint" && checked
             ? [...prev.touchPoints.spotDelivery, value]
-            : type == "touchpoint" && checked && value == "all"
-            ? []
-            : type == "touchpoint" && !checked
-            ? filters.touchPoints.spotDelivery.filter((f: any) => f !== value)
+            
+            : type == "touchpoint" && !checked && filters.touchPoints.spotDelivery.length !== 1
+            ? filters.touchPoints.spotDelivery.filter((f: any) => f !== value && f !== "all")
             : filters.touchPoints.spotDelivery,
       },
       screenTypes: {
         ...prev.screenTypes,
         spotDelivery:
-          type == "screenType" && checked
+          type == "screenType" && checked && value == "all"
+            ? Object.keys(spotData.screenTypeWiseData)
+            : type == "screenType" && checked
             ? [...prev.screenTypes.spotDelivery, value]
-            : type == "screenType" && checked && value == "all"
-            ? []
-            : type == "screenType" && !checked
-            ? filters.screenTypes.spotDelivery.filter((f: any) => f !== value)
+            : type == "screenType" && !checked && filters.screenTypes.spotDelivery.length !== 1
+            ? filters.screenTypes.spotDelivery.filter((f: any) => f !== value && f !== "all")
             : filters.screenTypes.spotDelivery,
       },
       dayTypes: {
         ...prev.dayTypes,
         spotDelivery:
-          type == "dayType" && checked
+          type == "dayType" && checked && value == "all"
+            ? Object.keys(spotData.dayWiseData)
+            : type == "dayType" && checked
             ? [...prev.dayTypes.spotDelivery, value]
-            : type == "dayType" && checked && value == "all"
-            ? []
-            : type == "dayType" && !checked
-            ? filters.dayTypes.spotDelivery.filter((f: any) => f !== value)
+            : type == "dayType" && !checked && filters.dayTypes.spotDelivery.length !== 1
+            ? filters.dayTypes.spotDelivery.filter((f: any) => f !== value && f !== "all")
             : filters.dayTypes.spotDelivery,
       },
       timezones: {
         ...prev.timezones,
         spotDelivery:
-          type == "timezone" && checked
+          type == "timezone" && checked && value == "all"
+            ? Object.keys(spotData.timeWiseData)
+            : type == "timezone" && checked
             ? [...prev.timezones.spotDelivery, value]
-            : type == "timezone" && checked && value == "all"
-            ? []
-            : type == "timezone" && !checked
-            ? filters.timezones.spotDelivery.filter((f: any) => f !== value)
+            : type == "timezone" && !checked && filters.timezones.spotDelivery.length !== 1
+            ? filters.timezones.spotDelivery.filter((f: any) => f !== value && f !== "all")
             : filters.timezones.spotDelivery,
       },
     }));
@@ -229,7 +230,9 @@ export const SlotSegment = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div>
                         <CheckboxInput
-                          disabled={false}
+                          disabled={filters.cities["spotDelivery"]?.includes(
+                            cityKey
+                          ) && filters.cities["spotDelivery"]?.length === 1}
                           label={cityKey.toUpperCase()}
                           checked={filters.cities["spotDelivery"]?.includes(
                             cityKey
@@ -309,7 +312,9 @@ export const SlotSegment = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div>
                         <CheckboxInput
-                          disabled={false}
+                          disabled={filters.touchPoints["spotDelivery"]?.includes(
+                            tpKey
+                          ) && filters.touchPoints["spotDelivery"]?.length === 1}
                           label={tpKey.toUpperCase()}
                           checked={filters.touchPoints["spotDelivery"].includes(
                             tpKey
@@ -391,7 +396,9 @@ export const SlotSegment = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div>
                         <CheckboxInput
-                          disabled={false}
+                          disabled={filters.screenTypes["spotDelivery"]?.includes(
+                            stKey
+                          ) && filters.screenTypes["spotDelivery"]?.length === 1}
                           label={stKey.toUpperCase()}
                           checked={filters.screenTypes["spotDelivery"].includes(
                             stKey
@@ -473,7 +480,9 @@ export const SlotSegment = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div className="">
                         <CheckboxInput
-                          disabled={false}
+                          disabled={filters.dayTypes["spotDelivery"]?.includes(
+                            dayKey
+                          ) && filters.dayTypes["spotDelivery"]?.length === 1}
                           label={dayKey.toUpperCase()}
                           checked={filters.dayTypes["spotDelivery"].includes(
                             dayKey
@@ -490,14 +499,14 @@ export const SlotSegment = ({
                         />
                       </div>
                       <div className="grid grid-cols-4 flex items-center w-full gap-2"
-                      onClick={() => {
-                        console.log(spotData.dayWiseData?.[dayKey]);
-                        console.log(spotData.dayWiseData?.[dayKey].slotsPromised);
-                        console.log(screenLevelData?.data);
-                        console.log("days remaining", getNumberOfDaysBetweenTwoDates(new Date(), campaignDetails.endDate))
-                        console.log("total day types", calculateDayTypes(campaignDetails?.startDate, new Date()))
-                        console.log("day types till now", calculateDayTypes(campaignDetails?.startDate, new Date())?.[dayKey as keyof typeof calculateDayTypes])
-                      }}
+                      // onClick={() => {
+                      //   console.log(spotData.dayWiseData?.[dayKey]);
+                      //   console.log(spotData.dayWiseData?.[dayKey].slotsPromised);
+                      //   console.log(screenLevelData?.data);
+                      //   console.log("days remaining", getNumberOfDaysBetweenTwoDates(new Date(), campaignDetails.endDate))
+                      //   console.log("total day types", calculateDayTypes(campaignDetails?.startDate, new Date()))
+                      //   console.log("day types till now", calculateDayTypes(campaignDetails?.startDate, new Date())?.[dayKey as keyof typeof calculateDayTypes])
+                      // }}
                       >
                         <div className="col-span-3">
                           <MultiColorLinearBar2
@@ -507,10 +516,6 @@ export const SlotSegment = ({
                             expected={
                               ((spotData.dayWiseData[dayKey]?.slotsPromised * calculateDayTypes(campaignDetails?.startDate, new Date())?.[dayKey as keyof typeof calculateDayTypes])/
                               calculateDayTypes(campaignDetails?.startDate, campaignDetails?.endDate)?.[dayKey as keyof typeof calculateDayTypes])
-                              // (spotData.dayWiseData[dayKey]?.slotsPromised/
-                              // (getNumberOfDaysBetweenTwoDates(new Date(), campaignDetails.endDate) < 0 ?
-                              // calculateDayTypes(campaignDetails?.startDate, campaignDetails?.endDate)?.[dayKey as keyof typeof calculateDayTypes] :
-                              // calculateDayTypes(campaignDetails?.startDate, new Date())?.[dayKey as keyof typeof calculateDayTypes]))
                             }
                             total={spotData.dayWiseData[dayKey]?.slotsPromised}
                             deliveredColor="bg-[#77BFEF]"
@@ -561,7 +566,9 @@ export const SlotSegment = ({
                     <div key={i} className="flex items-center gap-2 pt-1">
                       <div>
                         <CheckboxInput
-                          disabled={false}
+                          disabled={filters.timezones["spotDelivery"]?.includes(
+                            timeKey
+                          ) && filters.timezones["spotDelivery"]?.length === 1}
                           label={timeKey.toUpperCase()}
                           checked={filters.timezones["spotDelivery"].includes(
                             timeKey
