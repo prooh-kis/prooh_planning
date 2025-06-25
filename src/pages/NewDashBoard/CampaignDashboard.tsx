@@ -47,7 +47,7 @@ export const CampaignDashboard = ({
   userInfo,
   setOpenView,
   openView,
-  setUserInfo
+  setUserInfo,
 }: any) => {
   const dropdownRef = useRef<any>(null);
   const navigate = useNavigate();
@@ -86,7 +86,8 @@ export const CampaignDashboard = ({
   const [openMonitoringView, setOpenMonitoringView] = useState<boolean>(false);
   const [viewAllLogsOpen, setViewAllLogsOpen] = useState<boolean>(false);
 
-  const [isViewSelectionOpen, setIsViewSelectionOpen] = useState<boolean>(false);
+  const [isViewSelectionOpen, setIsViewSelectionOpen] =
+    useState<boolean>(false);
 
   const gridItems: GridItem[] = [
     {
@@ -293,7 +294,7 @@ export const CampaignDashboard = ({
   }, [fetchDashboardData, campaignDetails?._id, clickedTab]);
   return (
     <div className="w-full bg-[#F2F4F7] flex flex-col gap-2 font-custom relative">
-      <div className="bg-[#FFFFFF] py-4 px-2 pr-14 mt-1 flex justify-between shadow-sm w-full sticky top-0 z-10">
+      <div className="bg-[#FFFFFF] py-4 px-8 mt-1 flex justify-between shadow-sm w-full sticky top-0 z-10">
         {/* Added sticky and z-10 */}
         <div className="px-2 flex justify-between items-center">
           <div className="flex gap-4">
@@ -305,7 +306,7 @@ export const CampaignDashboard = ({
               <FirstCharForBrandName brandName={campaignDetails?.brandName} />
             </div>
             <div className="w-full relative flex flex-col justify-between">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 mt-1">
                 <h1 className="text-[20px] font-semibold leading-[19.36px] text-[#0E212E]">
                   {campaignDetails?.name?.toUpperCase()}
                 </h1>
@@ -316,7 +317,7 @@ export const CampaignDashboard = ({
                   onClick={handleToggleMenu}
                 ></i>
               </div>
-              <p className="text-[14px] text-[#5B7180] leading-[100%]">
+              <p className="text-[14px] text-[#5B7180] leading-[100%] mb-1">
                 {campaignDetails?.brandName}
               </p>
             </div>
@@ -328,7 +329,10 @@ export const CampaignDashboard = ({
               open={isViewSelectionOpen}
               onClose={() => setIsViewSelectionOpen(false)}
               onSelectView={(view: any) => {
-                setUserInfo({userRole: view.value, _id: siteLevelData[0].master});
+                setUserInfo({
+                  userRole: view.value,
+                  _id: siteLevelData[0].master,
+                });
               }}
               type="viewer"
               data={[]}
@@ -338,7 +342,7 @@ export const CampaignDashboard = ({
                 open={isViewSelectionOpen}
                 onClose={() => setIsViewSelectionOpen(false)}
                 onSelectView={(view: any) => {
-                  setUserInfo({ userRole: userInfo?.userRole, _id: view.id});
+                  setUserInfo({ userRole: userInfo?.userRole, _id: view.id });
                 }}
                 type="vendor"
                 data={siteLevelData}
@@ -354,15 +358,22 @@ export const CampaignDashboard = ({
                 <p className="text-[16px] text-[#0E212E]">Generate Invoice</p>
               </div>
             )}
-
           </div>
         ) : (
           <div className="flex items-end">
-            <div className="flex items-center gap-2" onClick={() => {
-              // if (userInfo?)
-            }}>
+            <div
+              className="flex items-center gap-2"
+              onClick={() => {
+                // if (userInfo?)
+              }}
+            >
               <i className="fi fi-br-user text-[12px] flex items-center justify-center text-[#129BFF]"></i>
-              <h1 className="text-[12px] leading-[16.94px]">Planned by <span className="font-semibold text-[#129BFF]">{campaignDetails?.campaignPlannerName}</span></h1>
+              <h1 className="text-[12px] leading-[16.94px]">
+                Planned by{" "}
+                <span className="font-semibold text-[#129BFF]">
+                  {campaignDetails?.campaignPlannerName}
+                </span>
+              </h1>
             </div>
           </div>
         )}
