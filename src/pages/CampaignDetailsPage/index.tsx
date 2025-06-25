@@ -374,6 +374,7 @@ export const CampaignDetailsPage: React.FC = () => {
         currentTab1={currentTab1}
         setCurrentTab1={setCurrentTab1}
         userInfo={userInfo}
+        campaignId={campaignId}
       />
       {/* Main Content */}
       {currentTab1 === "1" ? (
