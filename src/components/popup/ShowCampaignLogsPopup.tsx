@@ -21,6 +21,7 @@ export const ShowCampaignLogsPopup = ({
   logs,
   siteBasedDataOnLogs,
   loading,
+  error,
   calendarData,
   campaignDetails,
   setCurrentDay,
@@ -232,11 +233,7 @@ export const ShowCampaignLogsPopup = ({
             logsPopup={open}
           />
         </div>
-        {loading ? (
-          <div className="pt-12">
-            <Skeleton active paragraph={{ rows: 12 }} />
-          </div>
-        ) : logs?.length > 0 ? (
+        {logs?.length > 0 ? (
           <div className="p-1">
             <div className="bg-white rounded pt-2 pb-4">
               <h1 className="font-semibold text-[16px] text-[#0E212E] leading-[19.36px]">
@@ -499,8 +496,8 @@ export const ShowCampaignLogsPopup = ({
               </div>
             </div>
           </div>
-        ) : (
-          <div className="flex justify-center items-center pt-12" onClick={() => {
+        ) : !loading && (logs.length === 0 || error) ? (
+          <div className={`${error ? "border border-[#EFF000]" : ""} flex justify-center items-center pt-12`} onClick={() => {
             dispatch(
               GetCampaignLogsAction({
                 campaignId: screenCampaignData?.campaignId,
@@ -511,6 +508,10 @@ export const ShowCampaignLogsPopup = ({
             );
           }}>
             <NoDataView title="Please click to reload data again" reload={true} />
+          </div>
+        ) : (
+          <div className="pt-12">
+            <Skeleton active paragraph={{ rows: 12 }} />
           </div>
         )}
       </div>

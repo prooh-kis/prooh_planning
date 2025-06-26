@@ -49,6 +49,7 @@ export const CampaignDashboard = ({
   setOpenView,
   openView,
   setUserInfo,
+  loggedInUser,
 }: any) => {
   const dropdownRef = useRef<any>(null);
   const navigate = useNavigate();
@@ -326,7 +327,7 @@ export const CampaignDashboard = ({
             </div>
           </div>
         </div>
-        {openView === CAMPAIGN_PLANNER ? (
+        {openView === CAMPAIGN_PLANNER && campaignDetails?.campaignPlannerId === loggedInUser?._id ? (
           <div className="flex items-center justify-end gap-2 ">
             <DashboardViewSelectionPopup
               open={isViewSelectionOpen}

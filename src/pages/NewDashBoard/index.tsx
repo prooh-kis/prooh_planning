@@ -138,10 +138,6 @@ export const NewDashBoard: React.FC = () => {
   // Set up initial data fetch and refresh interval
   useEffect(() => {
     if (userInfo?.userRole === CAMPAIGN_PLANNER) {
-      if (campaignDetails && campaignDetails.campaignPlanner !== loggedInUser._id) {
-        setUserInfo({ ...userInfo, userRole: CLIENT_POC_USER });
-        setOpenView(CLIENT_POC_USER);
-      }
       dispatch(getBillInvoiceDetails({ campaignCreationId: campaignId }));
     }
 
@@ -223,6 +219,7 @@ export const NewDashBoard: React.FC = () => {
         />
       {!loadingCampaignDetails && campaignDetails ? (
         <CampaignDashboard
+          loggedInUser={loggedInUser}
           userInfo={userInfo}
           setUserInfo={setUserInfo}
           openView={openView}

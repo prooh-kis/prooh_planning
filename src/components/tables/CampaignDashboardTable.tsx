@@ -248,6 +248,7 @@ export const CampaignDashboardTable = ({
         logs={logs}
         siteBasedDataOnLogs={siteBasedData}
         loading={loadingLogs || loadingSiteBasedDataOnLogs}
+        error={errorLogs || errorSiteBasedDataOnLogs}
         open={openSiteLevelLogsPopup}
         onClose={onClose}
         calendarData={calendarData}
