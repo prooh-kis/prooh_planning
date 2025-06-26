@@ -65,7 +65,6 @@ interface InitialData {
   endDate: MonitoringTypeData;
 }
 
-
 export const ViewFinalPlanPODetails = ({
   setCurrentStep,
   step,
@@ -570,7 +569,7 @@ export const ViewFinalPlanPODetails = ({
   useEffect(() => {
     if (generationData && jobId) {
       // const socketUrl = "ws://localhost:4444";
-      const socketUrl = "wss://beta.vinciis.in";
+      const socketUrl = "wss://prooh.vinciis.in";
       const webSocket = io(socketUrl, {
         transports: ["websocket"],
         secure: true,
