@@ -96,7 +96,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
       if (index === currentData.length - 1 && currentDateIndex !== zeroIndex) {
         return 0;
       }
-      return originalValue;
+      return Math.max(0, originalValue);
     }
   });
 
@@ -105,16 +105,16 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
       if (played.delayedSlots && played.slotsDelivered > played.slotsPromised - played.delayedSlots) {
         return played.extraSlotsDelivered + played.slotsDelivered - (played.slotsPromised - played.delayedSlots);
       }
-      return played.extraSlotsDelivered;
+      return Math.max(0, played.extraSlotsDelivered);
     }
   );
 
   const dailyPlayedSlots: number[] = currentData?.map(
     (played: any) => {
       if (played.delayedSlots && played.slotsDelivered > played.slotsPromised - played.delayedSlots) {
-        return played.slotsPromised - played.delayedSlots;
+        return Math.max(0, played.slotsPromised - played.delayedSlots);
       }
-      return played.slotsDelivered;
+      return Math.max(0, played.slotsDelivered);
     }
   );
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Map } from "@vis.gl/react-google-maps";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import { NewCustomMarker } from "../../components/map/NewCustomMarker";
-import { getTimeDifferenceInMin } from "../../utils/dateAndTimeUtils";
+import { getTimeDifferenceInMin, transformToAmPm } from "../../utils/dateAndTimeUtils";
 import { formatNumber } from "../../utils/formatValue";
 import { LinearBar } from "../../components/molecules/linearbar";
 import { MonitoringPic } from "../../components/segments/MonitoringPic";
@@ -31,6 +31,7 @@ interface SiteInfoHeaderProps {
   onClose: () => void;
   images: string[];
   showCloseIcon?: any;
+  operationalDuration?: any;
 }
 
 interface StatusIndicatorProps {
@@ -216,6 +217,7 @@ export const SiteInfoHeader = ({
   onClose,
   images,
   showCloseIcon=true,
+  operationalDuration
 }: SiteInfoHeaderProps) => (
   <div>
     {showCloseIcon ? (
@@ -239,6 +241,7 @@ export const SiteInfoHeader = ({
               <h1 className="text-[#0E212E] text-[16px] font-semibold m-0 p-0">
                 {screenName}
               </h1>
+              
               {showCloseIcon && (
                 <StatusIndicator lastActive={lastActive} />
               )}
@@ -273,6 +276,9 @@ export const SiteInfoHeader = ({
             {screenName}
           </h1>
           <p className="text-[#667D8C] font-normal text-[12px]">{address}</p>
+          <p className="text-[#667D8C] font-normal text-[10px]">
+            {transformToAmPm(operationalDuration?.onTime)} to {transformToAmPm(operationalDuration?.offTime)}
+          </p>
         </div>
       </div>
     )}

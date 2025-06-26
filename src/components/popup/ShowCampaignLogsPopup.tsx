@@ -56,31 +56,39 @@ export const ShowCampaignLogsPopup = ({
   }, [logs]);
 
   const newCombinedData = useMemo(() => {
-    let hrWiseLogs: any;
-
+    let hrWiseLogs: any = {};
     if (newData && logs && logs.length > 0) {
-      hrWiseLogs = logs?.reduce((result: any, item: any) => {
-        const date: any = formatDateForLogs(item?.logTime)?.logDate; // Assuming today's date
-        const [time, period] = item?.logTime?.split(" ");
-        let [hour, minute, second] = time?.split("T")[1]?.split(":");
+      // // First, create a structure with all hours between onTime and offTime
+      // const onTime = screenCampaignData?.operationalDuration?.onTime;
+      // const offTime = screenCampaignData?.operationalDuration?.offTime;
 
-        if (period === "PM" && hour !== "12") {
-          hour = String(Number(hour) + 12);
-        } else if (period === "AM" && hour === "12") {
-          hour = "00";
+      
+      // Now populate with actual logs
+      logs?.forEach((item: any) => {
+        const date: any = formatDateForLogs(item?.logTime)?.logDate;
+        const timeStr = new Date(item?.logTime).toLocaleTimeString();
+        const [time, period] = timeStr.split(' ');
+        let [hour] = time.split(':');
+        
+        // Convert to 24-hour format
+        if (period === 'PM' && hour !== '12') {
+          hour = String(Number(hour) + 12).padStart(2, '0');
+        } else if (period === 'AM' && hour === '12') {
+          hour = '00';
+        } else {
+          hour = hour.padStart(2, '0');
         }
 
-        if (!result[date]) {
-          result[date] = {};
+        if (!hrWiseLogs[date]) {
+          hrWiseLogs[date] = {};
         }
 
-        if (!result[date][hour]) {
-          result[date][hour] = [];
+        if (!hrWiseLogs[date][hour]) {
+          hrWiseLogs[date][hour] = [];
         }
 
-        result[date][hour].push(item);
-        return result;
-      }, {});
+        hrWiseLogs[date][hour].unshift(item);
+      });
     }
 
     return { hrWiseLogs: hrWiseLogs };
@@ -209,7 +217,6 @@ export const ShowCampaignLogsPopup = ({
           </div>
         </div>
         <div className="">
-          
           <CalenderScaleStepper
             setCurrentDay={setCurrentDay}
             setCurrentWeek={setCurrentWeek}
@@ -231,7 +238,7 @@ export const ShowCampaignLogsPopup = ({
           </div>
         ) : logs?.length > 0 ? (
           <div className="p-1">
-            <div className="bg-white rounded py-4">
+            <div className="bg-white rounded pt-2 pb-4">
               <h1 className="font-semibold text-[16px] text-[#0E212E] leading-[19.36px]">
                 Hourly Based Logs{" "}
               </h1>
@@ -296,6 +303,7 @@ export const ShowCampaignLogsPopup = ({
                   onClose={() => {}}
                   images={siteBasedDataOnLogs?.images}
                   showCloseIcon={false}
+                  operationalDuration={siteBasedDataOnLogs?.operationalDuration}
                 />
                 <div className="flex flex-col mt-4 p-2">
                   {metrics.map((metric, i: any) => (
@@ -314,7 +322,7 @@ export const ShowCampaignLogsPopup = ({
                 {Object.entries(newCombinedData?.hrWiseLogs).map(
                   ([date, hours]: any) => (
                     <div key={date}>
-                      {formatDateForLogs(`${date} 00:00:00 GMT`).apiDate !==
+                      {/* {formatDateForLogs(`${date} 00:00:00 GMT`).apiDate !==
                         formatDateForLogs(`${currentDate} 00:00:00 GMT`)
                           .apiDate && (
                         <div className="flex items-center gap-2 py-2">
@@ -325,7 +333,7 @@ export const ShowCampaignLogsPopup = ({
                             <i className="fi fi-br-info text-gray-400 lg:text-[14px] text-[12px] flex items-center justify-center"></i>
                           </Tooltip>
                         </div>
-                      )}
+                      )} */}
                       <div className="overflow-scroll no-scrollbar h-[75vh] border-r border-gray-100 rounded-br-[12px]">
                         {Object.keys(hours)
                           .sort((a, b) => Number(a) - Number(b))
@@ -339,6 +347,12 @@ export const ShowCampaignLogsPopup = ({
                                 className="col-span-6 overflow-scroll no-scrollbar h-[75vh] border-b"
                                 ref={(el) => (scrollRefs.current[hour] = el)}
                               >
+                                {i== 0 && Number(hour) > Number(siteBasedDataOnLogs?.operationalDuration?.onTime?.split(":")[0]) && (
+                                  <div className="flex items-center justify-center h-[5vh] bg-[#D7D7D7]">
+                                    <h1 className="text-[12px]">No Logs from {`${siteBasedDataOnLogs?.operationalDuration?.onTime?.split(":")[0]} to ${hour} O'clock`}</h1>
+                                  </div>
+                                )}
+
                                 <table className="min-w-full bg-white">
                                   <tbody>
                                     {entries.map((entry: any, index: any) => (
@@ -486,8 +500,17 @@ export const ShowCampaignLogsPopup = ({
             </div>
           </div>
         ) : (
-          <div className="flex justify-center items-center pt-12">
-            <NoDataView />
+          <div className="flex justify-center items-center pt-12" onClick={() => {
+            dispatch(
+              GetCampaignLogsAction({
+                campaignId: screenCampaignData?.campaignId,
+                date: getCampaignDurationFromStartAndEndDate(currentDate, campaignDetails?.endDate) < 0 
+                  ? formatDateForLogs(moment(Math.min(moment(currentDate).valueOf(), moment(campaignDetails.endDate).valueOf())).format("YYYY-MM-DD hh:mm:ss")).apiDate
+                  : formatDateForLogs(moment(currentDate).format("YYYY-MM-DD hh:mm:ss")).apiDate,
+              })
+            );
+          }}>
+            <NoDataView title="Please click to reload data again" reload={true} />
           </div>
         )}
       </div>

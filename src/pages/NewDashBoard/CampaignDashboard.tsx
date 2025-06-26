@@ -21,6 +21,7 @@ import {
 import { getUserRole } from "../../utils/campaignUtils";
 import { CAMPAIGN_PLANNER } from "../../constants/userConstants";
 import { DashboardViewSelectionPopup } from "../../components/popup/DashboardViewSelectionPopup";
+import { Tooltip } from "antd";
 
 interface GridItem {
   id: string;
@@ -291,6 +292,7 @@ export const CampaignDashboard = ({
         block: "center",
       });
     }
+
   }, [fetchDashboardData, campaignDetails?._id, clickedTab]);
   return (
     <div className="w-full bg-[#F2F4F7] flex flex-col gap-2 font-custom relative">
@@ -305,20 +307,21 @@ export const CampaignDashboard = ({
               ></i>
               <FirstCharForBrandName brandName={campaignDetails?.brandName} />
             </div>
-            <div className="w-full relative flex flex-col justify-between">
-              <div className="flex items-center gap-4 mt-1">
-                <h1 className="text-[20px] font-semibold leading-[19.36px] text-[#0E212E]">
-                  {campaignDetails?.name?.toUpperCase()}
-                </h1>
-                <i
-                  className={`${
-                    !showMenu ? "fi fi-br-angle-down" : "fi fi-br-angle-up"
-                  } text-[#6f7f8e] cursor-pointer`}
-                  onClick={handleToggleMenu}
-                ></i>
-              </div>
+            <div className="w-full relative flex flex-col justify-center gap-2">
+              <Tooltip title="Click to see basic details">
+                <div className="flex items-center gap-2 cursor-pointer" onClick={handleToggleMenu}>
+                  <h1 className="text-[20px] font-semibold leading-[19.36px] text-[#0E212E]">
+                    {campaignDetails?.name?.toUpperCase()}
+                  </h1>
+                  <i
+                    className={`${
+                      !showMenu ? "fi fi-br-angle-down" : "fi fi-br-angle-up"
+                    } flex items-center text-[#6f7f8e] cursor-pointer`}
+                  ></i>
+                </div>
+              </Tooltip>
               <p className="text-[14px] text-[#5B7180] leading-[100%] mb-1">
-                {campaignDetails?.brandName}
+                {campaignDetails?.brandName} <span>({campaignDetails?.clientName})</span>
               </p>
             </div>
           </div>
