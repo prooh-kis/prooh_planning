@@ -23,7 +23,6 @@ import { getAWSUrl } from "../../utils/awsUtils";
 import { getVideoDurationFromVideoURL } from "../../utils/fileUtils";
 import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 import { UploadCreativesFromBucketPopupV2 } from "../popup/UploadCreativesFromBucketPopupV2";
-// import ButtonInput from "../../components/atoms/ButtonInput";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -902,38 +901,32 @@ export const CreativeUploadV4 = ({
               </div>
             </div>
 
-            {/* <TabWithoutIcon
-              tabData={[
-                { id: "1", label: "+ New Upload" },
-                {
-                  id: "2",
-                  label: `Uploaded Files (${creativeUploadData?.length})`,
-                },
-              ]}
-              currentTab={currentTab}
-              setCurrentTab={setCurrentTab}
-            /> */}
-
             {currentTab === "1" && (
               <div className="mt-4">
                 <div className="flex flex-col gap-4">
-                  <MultipleFileUpload
-                    title="Upload Day"
-                    handleFile={(files) =>
-                      handleSelectFiles("standardDayTimeCreatives", files)
-                    }
-                    width="w-full"
-                    fileType="*"
-                  />
-                  <p className="text-[14px] font-medium">Optional creative</p>
-                  <MultipleFileUpload
-                    title="Upload Night"
-                    handleFile={(files) =>
-                      handleSelectFiles("standardNightTimeCreatives", files)
-                    }
-                    width="w-full"
-                    fileType="*"
-                  />
+                  {!isTriggerBasedCampaign ? (
+                    <div className="flex flex-col gap-4">
+                      <MultipleFileUpload
+                        title="Upload Day"
+                        handleFile={(files) =>
+                          handleSelectFiles("standardDayTimeCreatives", files)
+                        }
+                        width="w-full"
+                        fileType="*"
+                      />
+                      <p className="text-[14px] font-medium">
+                        Optional creative
+                      </p>
+                      <MultipleFileUpload
+                        title="Upload Night"
+                        handleFile={(files) =>
+                          handleSelectFiles("standardNightTimeCreatives", files)
+                        }
+                        width="w-full"
+                        fileType="*"
+                      />
+                    </div>
+                  ) : null}
                   {isTriggerAvailable() && (
                     <MultipleFileUpload
                       title="Upload Trigger"

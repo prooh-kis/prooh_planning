@@ -1,9 +1,15 @@
 import { TabWithoutIcon } from "../../components/index";
 import { FirstCharForBrandName } from "../../components/molecules/FirstCharForBrandName";
-import { getCampaignPageNameFromCampaignType, getUserRole } from "../../utils/campaignUtils";
+import {
+  getCampaignPageNameFromCampaignType,
+  getUserRole,
+} from "../../utils/campaignUtils";
 import { getCampaignEndingStatus } from "../../utils/dateAndTimeUtils";
 import { notification, Skeleton } from "antd";
-import { CLONE_CAMPAIGN_RESET, EDIT_CAMPAIGN } from "../../constants/campaignConstants";
+import {
+  CLONE_CAMPAIGN_RESET,
+  EDIT_CAMPAIGN,
+} from "../../constants/campaignConstants";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { cloneCampaignAction } from "../../actions/campaignAction";
@@ -19,7 +25,7 @@ export const CampaignDetailsHeader = ({
   currentTab1,
   setCurrentTab1,
   userInfo,
-  campaignId
+  campaignId,
 }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -31,7 +37,6 @@ export const CampaignDetailsHeader = ({
     success: successClone,
     data: campaignData,
   } = cloneCampaign;
-
 
   useEffect(() => {
     if (successClone) {
@@ -71,12 +76,13 @@ export const CampaignDetailsHeader = ({
               {campaignCreated?.brandName}, {campaignCreated?.duration} days
             </h1>
             <h1
-              className={`text-[12px] ${getCampaignEndingStatus(campaignCreated?.endDate).includes(
-                "Already"
-              )
-                ? "text-[#EF4444]"
-                : "text-[#22C55E]"
-                }`}
+              className={`text-[12px] ${
+                getCampaignEndingStatus(campaignCreated?.endDate).includes(
+                  "Already"
+                )
+                  ? "text-[#EF4444]"
+                  : "text-[#22C55E]"
+              }`}
             >
               {getCampaignEndingStatus(campaignCreated?.endDate)}
             </h1>
@@ -99,15 +105,17 @@ export const CampaignDetailsHeader = ({
                   }}
                   className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
                 >
-                  <i className="fi fi-rs-dashboard" />
-                  <h1 className="truncate">Clone Campaign</h1>
+                  <i className="fi fi-sr-clone flex items-center" />
+                  <h1 className="truncate">Clone</h1>
                 </div>
 
                 <div
-                  onClick={() => navigate(`/editCampaign/${campaignCreated?._id}`)}
+                  onClick={() =>
+                    navigate(`/editCampaign/${campaignCreated?._id}`)
+                  }
                   className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
                 >
-                  <i className="fi fi-rs-dashboard" />
+                  <i className="fi fi-rr-edit-alt flex items-center" />
                   <h1 className="truncate">Change Creatives</h1>
                 </div>
                 <div
@@ -121,14 +129,14 @@ export const CampaignDetailsHeader = ({
                   }}
                   className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
                 >
-                  <i className="fi fi-rr-file-edit" />
+                  <i className="fi fi-rr-file-edit flex items-center" />
                   <h1 className="truncate">Edit Plan</h1>
                 </div>
                 <div
                   onClick={() => setOpenCreateCampaignEndDateChangePopup(true)}
                   className="truncate h-8 flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
                 >
-                  <i className="fi fi-rs-calendar-lines-pen" />
+                  <i className="fi fi-rs-calendar-lines-pen flex items-center" />
                   <h1 className="truncate">Edit Duration</h1>
                 </div>
               </div>
