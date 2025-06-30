@@ -148,15 +148,15 @@ export const NewDashBoard: React.FC = () => {
         "http://localhost:3000",
         "https://prooh-cms-beta.vercel.app",
         "https://prooh-cms.vercel.app",
-        "https://cms.prooh.in"
+        "https://cms.prooh.ai"
       ];
 
-      // Log all incoming messages for debugging
-      console.log('Message received in iframe:', {
-        origin: event.origin,
-        data: event.data,
-        isAllowedOrigin: allowedOrigins.includes(event.origin)
-      });
+      // // Log all incoming messages for debugging
+      // console.log('Message received in iframe:', {
+      //   origin: event.origin,
+      //   data: event.data,
+      //   isAllowedOrigin: allowedOrigins.includes(event.origin)
+      // });
 
       // Only process messages from allowed origins
       if (!allowedOrigins.includes(event.origin)) {
