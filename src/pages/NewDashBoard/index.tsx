@@ -18,6 +18,7 @@ import {
 } from "../../actions/billInvoiceAction";
 import { getUserRole } from "../../utils/campaignUtils";
 import { CAMPAIGN_PLANNER, CLIENT_POC_USER } from "../../constants/userConstants";
+import { createNoSubstitutionTemplateLiteral } from "typescript";
 
 interface FilterState {
   audience: string[];
@@ -128,47 +129,72 @@ export const NewDashBoard: React.FC = () => {
     );
   };
 
+  // // In your iframe's code
+  // useEffect(() => {
+    
+  // }, []); // Empty dependency array means this effect runs once on mount
+
+
   useEffect(() => {
     if (loggedInUser) {
-      console.log("calling here")
       setUserInfo(loggedInUser)
       setOpenView(loggedInUser.userRole);
-
-    } else {
-      console.log("no calling here")
-      const handleMessage = (event: MessageEvent) => {
-
-        const origin = [
-          "http://localhost:3000",
-          "https://prooh-cms-beta.vercel.app",
-          "https://prooh-cms.vercel.app",
-          "https://cms.prooh.in"
-        ].includes(event.origin);
-
-        // Only process messages from our expected origin and with our specific message format
-        if (origin && 
-            event.data && 
-            event.data.type === 'USERINFO_FOR_VENDOR_DASHBOARD') {
-              setUserInfo(event.data.userInfo);
-              setOpenView(event.data.userInfo.userRole);
-          console.log('Custom message received in iframe:', event.data);
-        }
-      };
-    
-      window.addEventListener('message', handleMessage);
-    
-      // Cleanup function to remove the event listener
-      return () => {
-        window.removeEventListener('message', handleMessage);
-      };
     }
-    
-  
+
+    // Function to handle incoming messages
+    const handleMessage = (event: MessageEvent) => {
+      const allowedOrigins = [
+        "http://localhost:3001",
+        "http://localhost:3000",
+        "https://prooh-cms-beta.vercel.app",
+        "https://prooh-cms.vercel.app",
+        "https://cms.prooh.in"
+      ];
+
+      // Log all incoming messages for debugging
+      console.log('Message received in iframe:', {
+        origin: event.origin,
+        data: event.data,
+        isAllowedOrigin: allowedOrigins.includes(event.origin)
+      });
+
+      // Only process messages from allowed origins
+      if (!allowedOrigins.includes(event.origin)) {
+        console.warn('Message from untrusted origin:', event.origin);
+        return;
+      }
+
+      // Handle the message based on its type
+      if (event.data && event.data.type === 'USERINFO_FOR_VENDOR_DASHBOARD') {
+        console.log('User info received:', event.data);
+        // Handle the user info
+        setUserInfo(event.data.data.userInfo);
+        setOpenView(event.data.data.userInfo.userRole);
+      }
+    };
+
+    // Add message listener
+    window.addEventListener('message', handleMessage);
+
+    // Notify parent that iframe is ready
+    const notifyParent = () => {
+      try {
+        window.parent.postMessage('IFRAME_READY', '*');
+        console.log('IFRAME_READY message sent to parent');
+      } catch (error) {
+        console.error('Failed to send IFRAME_READY message:', error);
+      }
+    };
+
+    // Send initial ready notification
+    notifyParent();
+
+    // Clean up
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
   },[loggedInUser]);
-
-  console.log(loggedInUser);
-
-
+  
   // Set up initial data fetch and refresh interval
   useEffect(() => {
     if (userInfo?.userRole === CAMPAIGN_PLANNER) {

@@ -17,7 +17,7 @@ export const PageNotFound: React.FC = () => {
       // Wait for the iframe to be fully loaded
       if (iframeRef.current && iframeRef.current.contentWindow) {
         // Send the message to the iframe
-        iframeRef.current.contentWindow.postMessage(message, 'https://cms.prooh.ai/');
+        iframeRef.current.contentWindow.postMessage(message, window.location.origin);
         // Also log it in the parent console for debugging
         console.log('Message sent to iframe:', message);
       }
