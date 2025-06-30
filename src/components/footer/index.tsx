@@ -118,9 +118,13 @@ export const Footer = ({
       </div>
       {!loading && !error && (
         <div className="flex w-full justify-end items-center gap-4">
-          <ButtonInput onClick={handleBack} variant="outline">
+         
+          <button
+            className="border-2 border-[#D7D7D7] py-2  px-6 rounded-lg text-[#808080]"
+            onClick={handleBack}
+          >
             Back
-          </ButtonInput>
+          </button>
 
           <ButtonInput
             onClick={handleSave}

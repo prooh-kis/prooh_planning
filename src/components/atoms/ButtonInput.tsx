@@ -77,7 +77,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
     ghost: `bg-transparent ${
       disabled || loading ? "text-gray-400" : "text-[#129BFF] hover:bg-blue-50"
     }`,
-    danger: `text-white bg-red-500 hover:bg-red-600 ${
+    danger: `text-white hover:bg-[#ef4444] bg-[#FFFFFF] hover:text-[#FFFFFF] text-[#ef4444] border-[#ef4444] border-2 ${
       disabled || loading ? "bg-red-300" : ""
     }`,
     knowMore: `bg-white hover:bg-gray-100`,
@@ -102,10 +102,10 @@ const ButtonInput: React.FC<ButtonProps> = ({
 
     const checkWidth = () => {
       if (!containerRef.current || !contentRef.current) return;
-      
+
       const containerWidth = containerRef.current.offsetWidth;
       const contentWidth = contentRef.current.scrollWidth;
-      
+
       // Add some padding to prevent text from being cut off too early
       setShowOnlyIcon(containerWidth < contentWidth + 24);
     };
@@ -116,7 +116,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
     // Store the current ref in a variable to use in cleanup
     const currentContainer = containerRef.current;
     const resizeObserver = new ResizeObserver(checkWidth);
-    
+
     if (currentContainer) {
       resizeObserver.observe(currentContainer);
     }
@@ -142,7 +142,9 @@ const ButtonInput: React.FC<ButtonProps> = ({
       role="button"
       tabIndex={0}
       aria-disabled={disabled || loading}
-      aria-label={showOnlyIcon && typeof children === 'string' ? children : undefined}
+      aria-label={
+        showOnlyIcon && typeof children === "string" ? children : undefined
+      }
       onClick={handleClick}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -173,7 +175,9 @@ const ButtonInput: React.FC<ButtonProps> = ({
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
           </svg> */}
-          <i className={`fi fi-br-spinner animate-spin ${iconSizeClasses[size]} flex items-center justify-center`}></i>
+          <i
+            className={`fi fi-br-spinner animate-spin ${iconSizeClasses[size]} flex items-center justify-center`}
+          ></i>
 
           {loadingText}
         </div>

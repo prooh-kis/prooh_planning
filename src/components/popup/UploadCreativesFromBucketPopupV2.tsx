@@ -57,7 +57,7 @@ UploadCreativesFromBucketPopupPropsV2) {
           </div>
           <div className="flex gap-4 items-center">
             <ButtonInput
-              variant="outline"
+              variant="danger"
               onClick={() => onClose()}
               className="w-[120px]"
             >

@@ -10,6 +10,7 @@ import {
 } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import durationPlugin from "dayjs/plugin/duration";
+import ButtonInput from "@components/atoms/ButtonInput";
 
 dayjs.extend(durationPlugin);
 
@@ -80,9 +81,9 @@ const CampaignCreationModal: React.FC<CampaignCreationModalProps> = ({
         onCancel();
       }}
       footer={[
-        <Button key="cancel" onClick={onCancel}>
+        <ButtonInput key="cancel" onClick={onCancel} variant="danger">
           Cancel
-        </Button>,
+        </ButtonInput>,
         <Button key="submit" type="primary" onClick={handleSubmit}>
           Create Campaign
         </Button>,

@@ -133,9 +133,9 @@ export const WeatherSegment = ({
               <RadioInput
                 title="Drizzle"
                 value="drizzle"
-                isChecked={rainType === "drizzel" ? true : false}
+                isChecked={rainType === "drizzle" ? true : false}
                 onChange={() => {
-                  setRainType("drizzel");
+                  setRainType("drizzle");
                   setTriggerSelected(true);
                 }}
               />

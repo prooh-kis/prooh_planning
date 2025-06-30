@@ -23,7 +23,7 @@ export const EmailConfirmationImage = ({page, skipEmailConfirmation, setSkipEmai
             <p className="text-[12px] text-[#6F7F8E]">Plan highlights to be sent on email</p>
           </div>
 
-          {files?.length === 0 && (
+          {/* {files?.length === 0 && (
             <div className="flex justify-end items-bottom px-2 cursor-pointer"
               onClick={() => {
                 setSkipEmailConfirmation(true);
@@ -40,7 +40,7 @@ export const EmailConfirmationImage = ({page, skipEmailConfirmation, setSkipEmai
                 {" "}this step
               </p>
             </div>
-          )}
+          )} */}
         </div>
 
         <div className="flex justify-between pt-2">

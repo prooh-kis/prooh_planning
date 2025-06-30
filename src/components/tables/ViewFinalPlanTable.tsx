@@ -79,7 +79,7 @@ export const ViewFinalPlanTable = ({
       />
 
       <MyDivider />
-      <div className="flex items-center text-[#2B2B2B]">
+      {/* <div className="flex items-center text-[#2B2B2B]">
         <h1 className="text-left text-[14px] basis-1/2">Apply Discount%</h1>
         <div className="flex items-center gap-4">
           <DropdownInput
@@ -102,7 +102,7 @@ export const ViewFinalPlanTable = ({
             })}
           />
         </div>
-      </div>
+      </div> */}
       <div className="flex font-semibold mt-2 ">
         <div className="basis-1/2 flex items-center justify-start gap-2 ">
           <h1 className="text-left">Total Cost</h1>

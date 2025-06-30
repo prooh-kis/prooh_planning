@@ -53,7 +53,7 @@ export const TriggerBasedIndication = ({ triggerData, triggerType }: any) => {
                 triggerData?.rainType === "cloudy"
               ? triggerText[5]
               : triggerData?.type === "rain" &&
-                triggerData?.rainType === "drizzel"
+                triggerData?.rainType === "drizzle"
               ? triggerText[6]
               : triggerData?.type === "rain" &&
                 triggerData?.rainType === "heavy"
