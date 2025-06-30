@@ -105,8 +105,6 @@ export const AdvanceFiltersDetails = ({
       );
     }
   };
-
-
   const handleConfirmScreensSelections = ({ checked, screens }: any) => {
     setIsDisabled(!checked);
     if (checked) {
@@ -236,7 +234,7 @@ export const AdvanceFiltersDetails = ({
       ) : (
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 flex overflow-hidden">
-            <div className="w-1/2 p-4">
+            <div className="w-1/2 p-2">
               <div className="flex justify-between items-center">
                 <div>
                   <h1 className="lg:text-[24px] md:text-[18px] text-primaryText font-semibold truncate">
@@ -297,7 +295,7 @@ export const AdvanceFiltersDetails = ({
                   userLocation={userLocation}
                   setUserLocation={setUserLocation}
                   allScreens={allScreens}
-                  filteredScreens={finalSelectedScreens}
+                  finalSelectedScreens={finalSelectedScreens}
                   heatmap={advanceFilterData?.heatmap}
                   data={circleData}
                   circleRadius={circleRadius}

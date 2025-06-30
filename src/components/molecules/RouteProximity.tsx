@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MapSearchInput } from "../../components/atoms/MapSearchInput";
 import { Slider, Tooltip } from "antd";
 import { MapBoxSearchInput } from "../../components/atoms/MapboxSearchInput";
@@ -41,52 +41,31 @@ export const RouteProximity = ({
 }: RouteProximityProps) => {
   const [showDetails, setShowDetails] = useState<any>(null);
 
-  const handleRouteSetup = async (originData: any, destinationData: any) => {
-    let newRoute: any = {};
-    newRoute["origin"] = originData[0];
-    newRoute["destination"] = destinationData[0];
-    newRoute["selectedScreens"] = [];
-    newRoute["id"] = routes?.length + 1;
+  const handleRouteSetup = useCallback(async (originData: any, destinationData: any) => {
+    if (!originData?.[0] || !destinationData?.[0]) return;
+    
+    const newRoute = {
+      origin: originData[0],
+      destination: destinationData[0],
+      selectedScreens: [],
+      id: routes.length + 1
+    };
+    console.log("new", JSON.parse(JSON.stringify(newRoute)));
 
-    var addRoute = 0;
-    for (const route of routes) {
-      if (
-        route.origin === newRoute.origin &&
+
+    // Check if this exact route already exists
+    const routeExists = routes.some(
+      (route: any) => 
+        route.origin === newRoute.origin && 
         route.destination === newRoute.destination
-      ) {
-        addRoute = 1;
-      }
+    );
+
+    if (!routeExists) {
+      setRoutes((prevRoutes: any[]) => [...prevRoutes, newRoute]);
     }
-
-    if (
-      addRoute === 0 &&
-      newRoute.origin != null &&
-      newRoute.destination != null
-    )
-      routes.push(newRoute);
-
-    setRoutes([...routes]);
-  };
-
-  // const handleRemoveRoute = (id: any) => {
-  //   let arr = routes;
-  //   for (let data of arr) {
-  //     if (data?.id === id) {
-  //       setRouteFilteredScreens(
-  //         routeFilteredScreens?.filter(
-  //           (rf: any) =>
-  //             !data.selectedScreens.map((s: any) => s._id).includes(rf._id)
-  //         )
-  //       );
-  //       handleFinalSelectedScreens({
-  //         type: "remove",
-  //         screens: data?.selectedScreens,
-  //       });
-  //     }
-  //   }
-  //   arr = arr.filter((data: any) => data?.id != id);
-  //   setRoutes(arr);
-  // };
+    
+  }, [routes, setRoutes]);
+  
 
   const handleRemoveRoute = (id: any) => {
     let arr = routes;
@@ -110,10 +89,14 @@ export const RouteProximity = ({
     arr = arr.filter((data: any) => data?.id !== id);
     setRoutes(arr);
   };
+  console.log(routeFilteredScreens);
 
-  useEffect(() => {
-    handleRouteSetup(routeOrigin, routeDestination);
-  }, [routeRadius]);
+  // useEffect(() => {
+  //   // Only run when both origin and destination are set and have values
+  //   if (routeOrigin?.length > 0 && routeDestination?.length > 0) {
+  //     handleRouteSetup(routeOrigin, routeDestination);
+  //   }
+  // }, [routeRadius, routeOrigin, routeDestination, handleRouteSetup]);
 
   return (
     <div className="py-2 border-b border-gray-100">
@@ -149,16 +132,6 @@ export const RouteProximity = ({
             </div>
           </div>
           <div className="flex justify-end items-center">
-          {/* <input
-              className="w-[36px] h-6 text-center"
-              type="number"
-              placeholder={`${routeRadius / 1000}`}
-              value={routeRadius / 1000}
-              onChange={(e) => {
-                const newValue = Number(e.target.value);
-                setRouteRadius(() => (newValue === 0 ? 1000 : newValue * 1000));
-              }}
-            /> */}
             <div className="w-24 px-1">
               <Slider
                 min={0.1}
@@ -180,7 +153,7 @@ export const RouteProximity = ({
                 }}
               />
             </div>
-            <div className="w-12 text-[12px] text-center">
+            <div className="w-12 pr-2 text-[12px] text-center">
               {routeRadius ? (routeRadius / 1000).toFixed(1) : '1.0'} km
             </div>
           </div>

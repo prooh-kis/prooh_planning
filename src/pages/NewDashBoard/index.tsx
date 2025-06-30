@@ -130,10 +130,44 @@ export const NewDashBoard: React.FC = () => {
 
   useEffect(() => {
     if (loggedInUser) {
+      console.log("calling here")
       setUserInfo(loggedInUser)
       setOpenView(loggedInUser.userRole);
+
+    } else {
+      console.log("no calling here")
+      const handleMessage = (event: MessageEvent) => {
+
+        const origin = [
+          "http://localhost:3000",
+          "https://prooh-cms-beta.vercel.app",
+          "https://prooh-cms.vercel.app",
+          "https://cms.prooh.in"
+        ].includes(event.origin);
+
+        // Only process messages from our expected origin and with our specific message format
+        if (origin && 
+            event.data && 
+            event.data.type === 'USERINFO_FOR_VENDOR_DASHBOARD') {
+              setUserInfo(event.data.userInfo);
+              setOpenView(event.data.userInfo.userRole);
+          console.log('Custom message received in iframe:', event.data);
+        }
+      };
+    
+      window.addEventListener('message', handleMessage);
+    
+      // Cleanup function to remove the event listener
+      return () => {
+        window.removeEventListener('message', handleMessage);
+      };
     }
+    
+  
   },[loggedInUser]);
+
+  console.log(loggedInUser);
+
 
   // Set up initial data fetch and refresh interval
   useEffect(() => {
@@ -202,21 +236,21 @@ export const NewDashBoard: React.FC = () => {
 
   return (
     <div className="w-full font-custom">
-        <BillingAndInvoice
-          open={openInvoice}
-          onClose={() => {
-            setOpenInvoice(false);
-            dispatch({
-              type: GET_CLIENT_AGENCY_DETAILS_RESET,
-            });
-          }}
-          pathname={pathname}
-          campaignDetails={campaignDetails}
-          siteLevelData={siteLevelData}
-          takeScreenShot={takeScreenShot}
-          billInvoiceDetailsData={billInvoiceDetailsData}
-          loadingBillInvoiceDetails={loadingBillInvoiceDetails}
-        />
+      <BillingAndInvoice
+        open={openInvoice}
+        onClose={() => {
+          setOpenInvoice(false);
+          dispatch({
+            type: GET_CLIENT_AGENCY_DETAILS_RESET,
+          });
+        }}
+        pathname={pathname}
+        campaignDetails={campaignDetails}
+        siteLevelData={siteLevelData}
+        takeScreenShot={takeScreenShot}
+        billInvoiceDetailsData={billInvoiceDetailsData}
+        loadingBillInvoiceDetails={loadingBillInvoiceDetails}
+      />
       {!loadingCampaignDetails && campaignDetails ? (
         <CampaignDashboard
           loggedInUser={loggedInUser}

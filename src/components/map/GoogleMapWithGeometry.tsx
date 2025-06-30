@@ -26,6 +26,8 @@ export function GoogleMapWithGeometry(props: any) {
   const [screenData, setScreenData] = useState<any>(null);
   const [heatmapOn, setHeatMapOn] = useState<any>(false);
   
+  const [routeDataCache, setRouteDataCache] = useState<{ [key: string]: any }>({});
+
   const brandCoor = props?.data?.["brand"]?.map((c: any) => {
     return {
       lat: c[1],
@@ -65,6 +67,49 @@ export function GoogleMapWithGeometry(props: any) {
     });
   }
 
+  const handleRouteData = useCallback(({cacheData}: any) => {
+    let routeSelectedScreens: any[] = [];
+    props.handleFinalSelectedScreens({
+      type: "remove",
+      screens: props.routeFilteredScreens,
+    });
+
+    let singleRouteScreens: any = {}
+
+    for (let singleRoute in cacheData) {
+      const routeId = Number(singleRoute.split("-")[0])
+      if (!singleRouteScreens[routeId]) {
+        singleRouteScreens[routeId] = [];
+      }
+      for (let selectedScreen of cacheData[singleRoute].screens) {
+
+        if (!singleRouteScreens[routeId].some((screen: any) => screen._id === selectedScreen._id)) {
+          singleRouteScreens[routeId].push(selectedScreen)
+        }
+        if (!routeSelectedScreens.some((screen: any) => screen._id === selectedScreen._id)) {
+          routeSelectedScreens.push(selectedScreen)
+        }
+      }
+      props.setRoutes((prev: any) => {
+        for (let route of prev) {
+          if (Number(route.id) === routeId) {
+            route.selectedScreens = singleRouteScreens[routeId];
+          }
+        }
+        return prev;
+      });
+    }
+    
+    props.setRouteFilteredScreens(routeSelectedScreens);
+
+    props.handleFinalSelectedScreens({
+      type: "add",
+      screens: routeSelectedScreens,
+    });
+  },[]);
+
+
+
   useEffect(() => {
     loadPoiGeojson(props?.heatmap).then(data => setPoiGeojson(data));
   }, [props?.heatmap]);
@@ -99,7 +144,7 @@ export function GoogleMapWithGeometry(props: any) {
 
   useEffect(() => {
     setSelectedMarkers(
-      props?.filteredScreens?.map((m: any) => ({
+      props?.finalSelectedScreens?.map((m: any) => ({
         images: m.images,
         lng: m?.location?.geographicalLocation?.longitude,
         lat: m?.location?.geographicalLocation?.latitude,
@@ -113,7 +158,7 @@ export function GoogleMapWithGeometry(props: any) {
     setUnselectedMarkers(
       props.allScreens
         ?.filter(
-          (s: any) => !props?.filteredScreens?.map((f: any) => f._id).includes(s._id)
+          (s: any) => !props?.finalSelectedScreens?.map((f: any) => f._id).includes(s._id)
         )
         ?.map((m: any) => ({
           images: m.images,
@@ -126,6 +171,16 @@ export function GoogleMapWithGeometry(props: any) {
         }))
     );
   }, [props]);
+
+  useEffect(() => {
+    handleRouteData({cacheData: routeDataCache});
+  }, [handleRouteData, routeDataCache]);
+
+  console.log("selected Markers: ", JSON.parse(JSON.stringify(selectedMarkers)).length);
+  console.log("routes: ", JSON.parse(JSON.stringify(props.routes)));
+  console.log("routeFilteredScreens: ", JSON.parse(JSON.stringify(props.routeFilteredScreens)));
+  console.log("routeDataCache: ", JSON.parse(JSON.stringify(routeDataCache)));
+
 
   return (
     <div className="relative h-full w-full items-top">
@@ -217,6 +272,8 @@ export function GoogleMapWithGeometry(props: any) {
 
         {/* <Directions allRoutes={mapRoutes} /> */}
         <Directions
+          setRouteDataCache={setRouteDataCache}
+          routeDataCache={routeDataCache}
           allRoutes={props?.routes}
           setAllRoutes={props?.setRoutes}
           allScreens={props?.allScreens}

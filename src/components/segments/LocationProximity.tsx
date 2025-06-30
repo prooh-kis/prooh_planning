@@ -86,7 +86,7 @@ export const LocationProximity = ({
 
   return (
     <div className="flex flex-col flex-1 h-full">
-      <div className={`overflow-y-auto pr-2 h-[calc(100%-150px)]`}>
+      <div className={`overflow-y-auto px-1 h-[calc(100%-150px)]`}>
         <ExcelImport
           open={open}
           setOpen={setOpen}
