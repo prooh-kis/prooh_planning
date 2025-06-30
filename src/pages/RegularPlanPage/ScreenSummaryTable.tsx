@@ -45,6 +45,7 @@ export const ScreenSummaryTable = ({
 }: ScreenSummaryTableProps) => {
   const handleData = useCallback(
     (myData: any) => {
+      if(!myData) return;
       const zones: any = {};
       const tps: any = {};
       const screens: any = {};

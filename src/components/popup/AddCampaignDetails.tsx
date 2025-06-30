@@ -12,6 +12,8 @@ import { SuggestionInput } from "../../components/atoms/SuggestionInput";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { getAllPlannerIdsAndEmail } from "../../actions/screenAction";
+import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
+import { ALL_BRAND_LIST } from "../../constants/localStorageConstants";
 
 const allIndex = [1, 2, 3, 6].map((data: any) => {
   return {
@@ -240,12 +242,11 @@ export const AddCampaignDetails = ({
                 <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
               </Tooltip>
             </div>
-
-            <PrimaryInput
-              inputType="text"
+            <SuggestionInput
+              suggestions={getDataFromLocalStorage(ALL_BRAND_LIST)}
               placeholder="Brand Name"
+              onChange={(value) => setBrandName(value?.toUpperCase())}
               value={brandName}
-              action={(value) => setBrandName(value?.toUpperCase())}
             />
           </div>
         </div>

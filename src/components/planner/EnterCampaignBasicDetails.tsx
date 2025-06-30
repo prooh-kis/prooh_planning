@@ -322,7 +322,7 @@ export const EnterCampaignBasicDetails = ({
           {" "}
           {/* Campaign Name */}
           <Form.Item
-            style={{ marginRight: 16}} /* Reduced from default 24px */
+            style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="campaignName"
             label={
               <div className="flex items-center gap-2">
@@ -338,7 +338,7 @@ export const EnterCampaignBasicDetails = ({
           </Form.Item>
           {/* Brand Name */}
           <Form.Item
-            style={{ marginRight: 16}} /* Reduced from default 24px */
+            style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="brandName"
             label={
               <div className="flex items-center gap-2">
@@ -359,7 +359,7 @@ export const EnterCampaignBasicDetails = ({
           </Form.Item>
           {/* Client/Agency Name */}
           <Form.Item
-            style={{ marginRight: 16}} /* Reduced from default 24px */
+            style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="clientName"
             label={
               <div className="flex items-center gap-2">
@@ -389,7 +389,7 @@ export const EnterCampaignBasicDetails = ({
           </Form.Item>
           {/* Industry Type */}
           <Form.Item
-            style={{ marginRight: 16}} /* Reduced from default 24px */
+            style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="industry"
             label={
               <div className="flex items-center gap-2">
@@ -405,7 +405,7 @@ export const EnterCampaignBasicDetails = ({
           </Form.Item>
           {/* Start Date */}
           <Form.Item
-            style={{ marginRight: 16}} /* Reduced from default 24px */
+            style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="startDate"
             label={
               <div className="flex items-center gap-2">
@@ -448,7 +448,7 @@ export const EnterCampaignBasicDetails = ({
           </Form.Item>
           {/* End Date */}
           <Form.Item
-            style={{ marginRight: 16}} /* Reduced from default 24px */
+            style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="endDate"
             label={
               <div className="flex items-center gap-2">
@@ -521,7 +521,7 @@ export const EnterCampaignBasicDetails = ({
           </Form.Item>
           {/* Duration */}
           <Form.Item
-            style={{ marginRight: 16}} /* Reduced from default 24px */
+            style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="duration"
             label={
               <div className="flex items-center gap-2">
@@ -553,7 +553,7 @@ export const EnterCampaignBasicDetails = ({
           </Form.Item>
           {/* Manager */}
           <Form.Item
-            style={{ marginRight: 16}} /* Reduced from default 24px */
+            style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="managerId"
             label={
               <div className="flex items-center gap-2">
@@ -582,7 +582,7 @@ export const EnterCampaignBasicDetails = ({
           {/* SOV Type */}
           <Form.Item
             name="sovType"
-            style={{ marginRight: 16}} /* Reduced from default 24px */
+            style={{ marginRight: 16 }} /* Reduced from default 24px */
             label={
               <div className="flex items-center gap-2">
                 <span>SOV Type</span>
@@ -603,7 +603,7 @@ export const EnterCampaignBasicDetails = ({
           </Form.Item>
           {/* SOV */}
           <Form.Item
-            style={{ marginRight: 16}} /* Reduced from default 24px */
+            style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="sov"
             label={
               <div className="flex items-center gap-2">
@@ -628,7 +628,7 @@ export const EnterCampaignBasicDetails = ({
           </Form.Item>
           {/* Mid Date */}
           <Form.Item
-            style={{ marginRight: 16}} /* Reduced from default 24px */
+            style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="midDate"
             label={
               <div className="flex items-center gap-2">
@@ -670,7 +670,7 @@ export const EnterCampaignBasicDetails = ({
               type="primary"
               htmlType="submit"
               loading={loading}
-              className="mt-8"
+              className="mt-8 h-11 w-44 text-[18px]"
             >
               {!campaignId ? "Create" : "Continue"}
             </Button>
