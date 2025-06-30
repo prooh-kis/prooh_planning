@@ -161,30 +161,23 @@ export const EnterCampaignBasicDetails = ({
               dates: [format(values.endDate.toDate(), "yyyy-MM-dd")],
               monitoringType: monitoringTypes.map((type: any) => type.value),
             },
-            midDate: {
-              dates: [format(values.midDate.toDate(), "yyyy-MM-dd")],
-              monitoringType: monitoringTypes.map((type: any) => type.value),
-            },
+            midDate: values.midDate
+              ? {
+                  dates: [format(values.midDate.toDate(), "yyyy-MM-dd")],
+                  monitoringType: monitoringTypes.map(
+                    (type: any) => type.value
+                  ),
+                }
+              : {
+                  dates: [],
+                  monitoringType: [],
+                },
           },
         };
 
         handleAddNewClient(values.clientName);
 
-        await dispatch(addDetailsToCreateCampaign(payload));
-        console.log("ddddddddddddddd : ", {
-          startDate: {
-            dates: [format(values.startDate.toDate(), "yyyy-MM-dd")],
-            monitoringType: monitoringTypes.map((type: any) => type.value),
-          },
-          endDate: {
-            dates: [format(values.endDate.toDate(), "yyyy-MM-dd")],
-            monitoringType: monitoringTypes.map((type: any) => type.value),
-          },
-          midDate: {
-            dates: [format(values.midDate.toDate(), "yyyy-MM-dd")],
-            monitoringType: monitoringTypes.map((type: any) => type.value),
-          },
-        });
+        dispatch(addDetailsToCreateCampaign(payload));
       } catch (error) {
         message.error("Failed to save campaign details");
       } finally {
@@ -628,7 +621,7 @@ export const EnterCampaignBasicDetails = ({
           </Form.Item>
           {/* Mid Date */}
           <Form.Item
-            style={{ marginRight: 16 }} /* Reduced from default 24px */
+            style={{ marginRight: 16 }}
             name="midDate"
             label={
               <div className="flex items-center gap-2">
@@ -640,10 +633,25 @@ export const EnterCampaignBasicDetails = ({
             }
             rules={[
               {
-                required: false,
-                message: "Please select mid monitoring date",
+                required: false, // This makes it optional
               },
-              { validator: validateMidDate },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  // Only validate if a value is provided
+                  if (!value) return Promise.resolve();
+
+                  const startDate = getFieldValue("startDate");
+                  const endDate = getFieldValue("endDate");
+
+                  if (startDate && value.isBefore(startDate)) {
+                    return Promise.reject("Mid date must be after start date");
+                  }
+                  if (endDate && value.isAfter(endDate)) {
+                    return Promise.reject("Mid date must be before end date");
+                  }
+                  return Promise.resolve();
+                },
+              }),
             ]}
             dependencies={["startDate", "endDate"]}
           >
