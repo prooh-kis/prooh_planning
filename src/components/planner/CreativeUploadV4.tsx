@@ -360,6 +360,13 @@ export const CreativeUploadV4 = ({
     );
   };
 
+  const handleSelectScreenByClick = (screenId: string) => {
+    const checked = currentScreens?.includes(screenId);
+    setCurrentScreens((prev) =>
+      !checked ? [...prev, screenId] : prev.filter((id) => id !== screenId)
+    );
+  };
+
   const handleViewCreative = (id: string) => {
     const screen = creativeUploadData.find(
       (screen: Screen) => screen.screenId === id
@@ -801,7 +808,7 @@ export const CreativeUploadV4 = ({
                   </div>
 
                   {/* Table Body */}
-                  <div className="h-[45vh] overflow-auto scrollbar-minimal">
+                  <div className="h-[50vh] overflow-auto scrollbar-minimal">
                     {filteredScreens?.map((singleData: any, index: number) => {
                       const isUploaded = isCreativeUploaded(
                         singleData.screenId
@@ -854,12 +861,22 @@ export const CreativeUploadV4 = ({
                                 <Tooltip title={item}>
                                   <span
                                     className={`text-sm truncate  font-medium`}
+                                    onClick={() =>
+                                      handleSelectScreenByClick(
+                                        singleData.screenId
+                                      )
+                                    }
                                   >
                                     {item}
                                   </span>
                                 </Tooltip>
                               ) : (
                                 <span
+                                  onClick={() =>
+                                    handleSelectScreenByClick(
+                                      singleData.screenId
+                                    )
+                                  }
                                   className={`text-sm truncate ${
                                     i === 5 ? `${statusColor} font-medium` : ""
                                   }`}

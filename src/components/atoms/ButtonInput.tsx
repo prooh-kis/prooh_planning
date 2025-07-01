@@ -77,7 +77,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
     ghost: `bg-transparent ${
       disabled || loading ? "text-gray-400" : "text-[#129BFF] hover:bg-blue-50"
     }`,
-    danger: `text-white hover:bg-[#ef4444] bg-[#FFFFFF] hover:text-[#FFFFFF] text-[#ef4444] border-[#ef4444] border-2 ${
+    danger: `hover:bg-[#ef4444] bg-[#FFFFFF] hover:text-[#FFFFFF] text-[#ef4444] border-[#ef4444] border-2 ${
       disabled || loading ? "bg-red-300" : ""
     }`,
     knowMore: `bg-white hover:bg-gray-100`,

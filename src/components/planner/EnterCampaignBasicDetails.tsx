@@ -177,8 +177,6 @@ export const EnterCampaignBasicDetails = ({
 
         handleAddNewClient(values.clientName);
 
-        console.log("ddddddddddd : ", JSON.stringify(payload));
-
         dispatch(addDetailsToCreateCampaign(payload));
       } catch (error) {
         message.error("Failed to save campaign details");

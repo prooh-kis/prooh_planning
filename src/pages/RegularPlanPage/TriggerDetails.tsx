@@ -22,7 +22,6 @@ import {
 import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignConstants";
 import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 
-
 interface TriggerProps {
   setCurrentStep: (step: number) => void;
   step: number;
@@ -108,26 +107,29 @@ export const TriggerDetails = ({
     },
   ];
 
-  const weatherTabData = useMemo(() => [
-    {
-      icon: <i className="fi fi-tr-summer flex items-center"></i>,
-      label: "Temperature",
-      value: "temperature",
-      id: 1,
-    },
-    {
-      icon: <i className="fi fi-ts-cloud-sun-rain flex items-center"></i>,
-      label: "Rain",
-      value: "rain",
-      id: 2,
-    },
-    {
-      icon: <i className="fi fi-ts-pollution flex items-center"></i>,
-      label: "AQI",
-      value: "aqi",
-      id: 3,
-    },
-  ],[]);
+  const weatherTabData = useMemo(
+    () => [
+      {
+        icon: <i className="fi fi-tr-summer flex items-center"></i>,
+        label: "Temperature",
+        value: "temperature",
+        id: 1,
+      },
+      {
+        icon: <i className="fi fi-ts-cloud-sun-rain flex items-center"></i>,
+        label: "Rain",
+        value: "rain",
+        id: 2,
+      },
+      {
+        icon: <i className="fi fi-ts-pollution flex items-center"></i>,
+        label: "AQI",
+        value: "aqi",
+        id: 3,
+      },
+    ],
+    []
+  );
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -148,53 +150,69 @@ export const TriggerDetails = ({
   } = tableDataForSelectTriggerPageGet;
 
   const handleSelectTrigger = useCallback(() => {
-
     setSelectedTriggerData(() => {
       return {
-      weatherTriggers: selectedTrigger?.triggerType === "weather"
-        ? [
-            {
-              type: weatherTabData?.filter(
-                (w: any) => w.id === currentTab
-              )[0]?.value,
-              minVal: minVal,
-              maxVal: maxVal,
-              rainType: rainType,
-              aqi: aqi,
-              openBudgetSovPercent: selectedSOV,
-              budget: Number(selectedBudget),
-              period: Number(selectedTimeOptions),
-            },
-          ]
-        : [],
-        sportsTriggers: selectedTrigger?.triggerType === "sport"
-        ? [
-            {
-              sport: sport,
-              player: player,
-              matchId: selectedMatchId,
-              condition: condition,
-              openBudgetSovPercent: selectedSOV,
-              budget: Number(selectedBudget),
-              period: Number(selectedTimeOptions),
-            },
-          ]
-        : [],
-        vacantSlots: selectedTrigger?.triggerType === "empty"
-        ? [
-            {
-              type: "vacantSlots",
-              slotType: condition,
-              openBudgetSovPercent: selectedSOV,
-              budget: Number(selectedBudget),
-              period: Number(selectedTimeOptions),
-            },
-          ]
-        : [],
-      }
+        weatherTriggers:
+          selectedTrigger?.triggerType === "weather"
+            ? [
+                {
+                  type: weatherTabData?.filter(
+                    (w: any) => w.id === currentTab
+                  )[0]?.value,
+                  minVal: minVal,
+                  maxVal: maxVal,
+                  rainType: rainType,
+                  aqi: aqi,
+                  openBudgetSovPercent: selectedSOV,
+                  budget: Number(selectedBudget),
+                  period: Number(selectedTimeOptions),
+                },
+              ]
+            : [],
+        sportsTriggers:
+          selectedTrigger?.triggerType === "sport"
+            ? [
+                {
+                  sport: sport,
+                  player: player,
+                  matchId: selectedMatchId,
+                  condition: condition,
+                  openBudgetSovPercent: selectedSOV,
+                  budget: Number(selectedBudget),
+                  period: Number(selectedTimeOptions),
+                },
+              ]
+            : [],
+        vacantSlots:
+          selectedTrigger?.triggerType === "empty"
+            ? [
+                {
+                  type: "vacantSlots",
+                  slotType: condition,
+                  openBudgetSovPercent: selectedSOV,
+                  budget: Number(selectedBudget),
+                  period: Number(selectedTimeOptions),
+                },
+              ]
+            : [],
+      };
     });
-
-  }, [selectedTrigger, weatherTabData, minVal, maxVal, rainType, aqi, selectedSOV, selectedBudget, selectedTimeOptions, sport, player, selectedMatchId, condition, currentTab]);
+  }, [
+    selectedTrigger,
+    weatherTabData,
+    minVal,
+    maxVal,
+    rainType,
+    aqi,
+    selectedSOV,
+    selectedBudget,
+    selectedTimeOptions,
+    sport,
+    player,
+    selectedMatchId,
+    condition,
+    currentTab,
+  ]);
 
   const handleSaveAndContinue = () => {
     if (pathname?.split("/").includes("view")) {
@@ -207,7 +225,8 @@ export const TriggerDetails = ({
       } else {
         dispatch(
           addDetailsToCreateCampaign({
-            event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
+            event:
+              CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
             pageName: "Add Triggers Page",
             id: campaignId,
             triggers: selectedTriggerData,
@@ -364,7 +383,7 @@ export const TriggerDetails = ({
           </div>
         )}
       </div>
-      <div className="grid grid-cols-12 gap-4 w-full pb-16">
+      <div className="grid grid-cols-12 gap-4 w-full max-h-[62vh] overflow-y-auto">
         {!pathname?.split("/").includes("triggerbasedplan") && (
           <div className="col-span-4 border rounded py-5 flex flex-col justify-between">
             <div className="">

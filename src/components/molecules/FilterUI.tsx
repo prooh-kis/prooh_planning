@@ -140,9 +140,9 @@ const FilterUI: React.FC<Props> = ({
     const allSelected = isAllSelected(category);
 
     return (
-      <div className="mb-6 pb-2">
+      <div className="mb-6">
         {expandedSections[category] && (
-          <div className="mt-2 space-y-2">
+          <div className="mt-1 space-y-2">
             {/* "All" option with count */}
             <div className="flex justify-between items-center border-b pb-2">
               <div className="flex items-center truncate">
@@ -231,7 +231,7 @@ const FilterUI: React.FC<Props> = ({
   };
   return (
     <div className="bg-white rounded-lg border">
-      <div className="flex justify-between mb-6 items-center border-b pb-4 p-4">
+      <div className="flex justify-between items-center border-b pb-4 p-4">
         <h2 className="text-[16px] font-bold text-gray-800">Filters</h2>
         <button
           onClick={() => {
@@ -248,7 +248,7 @@ const FilterUI: React.FC<Props> = ({
         </button>
       </div>
       {filterOptions && Object.keys(filterOptions || {}).length > 0 && (
-        <div className="h-[48vh] overflow-y-auto scrollbar-minimal pr-2 px-4">
+        <div className="h-[56vh] overflow-y-auto scrollbar-minimal pr-2 px-4">
           {renderFilterGroup(
             "cities",
             "Cities",
