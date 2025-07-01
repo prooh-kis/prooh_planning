@@ -25,9 +25,8 @@ import { ALL_BRAND_LIST } from "../../constants/localStorageConstants";
 import { getAllBrandAndNetworkAction } from "../../actions/creativeAction";
 import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 import { getAllPlannerIdsAndEmail } from "../../actions/screenAction";
-import { format } from "date-fns";
-import { monitoringTypes } from "../../constants/helperConstants";
 import dayjs from "dayjs";
+import { industryTypes } from "../../data/touchpointData";
 
 const calculateDuration = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
   return end.diff(start, "day") + 1; // +1 to include both start and end dates
@@ -126,22 +125,44 @@ export const EnterCampaignBasicDetails = ({
     [dispatch, clientAgencyNamesList]
   );
 
+  // Helper functions to handle dates
+  const getStartDateWithTime = (date: dayjs.Dayjs) => {
+    const now = dayjs();
+    if (date.isSame(now, "day")) {
+      // If today, use current time
+      return date
+        .hour(now.hour())
+        .minute(now.minute())
+        .second(0)
+        .millisecond(0);
+    }
+    // Future date, set to 8:00 AM
+    return date.hour(8).minute(0).second(0).millisecond(0);
+  };
+
+  const getEndDateWithTime = (date: dayjs.Dayjs) => {
+    // Always set to 23:59
+    return date.hour(23).minute(59).second(0).millisecond(0);
+  };
+
   // Form submission handler
   const onFinish = async (values: any) => {
     setLoading(true);
     if (!pathname.split("/").includes("view")) {
       try {
+        const startDate = getStartDateWithTime(values.startDate);
+        const endDate = getEndDateWithTime(values.endDate);
         const payload = {
           event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
           id: campaignId,
           pageName: "Basic Details Page",
           name: values.campaignName,
-          brandName: values.brandName,
+          brandName: values.brandName?.toUpperCase(),
           campaignType: campaignType,
-          clientName: values.clientName,
+          clientName: values.clientName?.toUpperCase(),
           industry: values.industry,
-          startDate: values.startDate.toISOString(),
-          endDate: values.endDate.toISOString(),
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
           duration: values.duration,
           campaignPlannerId: userInfo?._id,
           campaignPlannerName: userInfo?.name,
@@ -151,31 +172,12 @@ export const EnterCampaignBasicDetails = ({
             allPlannerData?.find((data: any) => data._id === values.managerId)
               ?.email || "",
           sov: values.sov,
-          sovType: values.sovType,
-          monitoringSelection: {
-            startDate: {
-              dates: [format(values.startDate.toDate(), "yyyy-MM-dd")],
-              monitoringType: monitoringTypes.map((type: any) => type.value),
-            },
-            endDate: {
-              dates: [format(values.endDate.toDate(), "yyyy-MM-dd")],
-              monitoringType: monitoringTypes.map((type: any) => type.value),
-            },
-            midDate: values.midDate
-              ? {
-                  dates: [format(values.midDate.toDate(), "yyyy-MM-dd")],
-                  monitoringType: monitoringTypes.map(
-                    (type: any) => type.value
-                  ),
-                }
-              : {
-                  dates: [],
-                  monitoringType: [],
-                },
-          },
+          sovType: "ordered",
         };
 
         handleAddNewClient(values.clientName);
+
+        console.log("ddddddddddd : ", JSON.stringify(payload));
 
         dispatch(addDetailsToCreateCampaign(payload));
       } catch (error) {
@@ -186,23 +188,6 @@ export const EnterCampaignBasicDetails = ({
     } else {
       setCurrentStep(step + 1);
     }
-  };
-
-  // Date validation
-
-  const validateMidDate = (_: any, value: dayjs.Dayjs) => {
-    const startDate = form.getFieldValue("startDate");
-    const endDate = form.getFieldValue("endDate");
-
-    if (startDate && endDate && value) {
-      if (value.isBefore(startDate)) {
-        return Promise.reject("Mid date must be after start date");
-      }
-      if (value.isAfter(endDate)) {
-        return Promise.reject("Mid date must be before end date");
-      }
-    }
-    return Promise.resolve();
   };
 
   const range = (start: number, end: number) => {
@@ -256,22 +241,16 @@ export const EnterCampaignBasicDetails = ({
 
   useEffect(() => {
     if (campaignDetails) {
-      console.log(
-        "campaignDetails?.monitoringSelectionerrewrewrw",
-        campaignDetails?.monitoringSelection
-      );
       form.setFieldsValue({
         campaignName: campaignDetails?.name,
-        brandName: campaignDetails?.brandName,
-        clientName: campaignDetails?.clientName,
+        brandName: campaignDetails?.brandName?.toUpperCase(),
+        clientName: campaignDetails?.clientName?.toUpperCase(),
         industry: campaignDetails?.industry,
         startDate: dayjs(campaignDetails?.startDate),
         endDate: dayjs(campaignDetails?.endDate),
         sov: campaignDetails?.sov,
-        sovType: campaignDetails?.sovType,
         managerId: campaignDetails?.campaignManagerId.toString(),
         duration: campaignDetails?.duration,
-        midDate: dayjs(campaignDetails?.monitoringSelection?.midDate?.dates[0]),
       });
     }
   }, [campaignDetails, form]);
@@ -346,7 +325,9 @@ export const EnterCampaignBasicDetails = ({
             <SuggestionInput
               suggestions={getDataFromLocalStorage(ALL_BRAND_LIST)}
               placeholder="Brand Name"
-              onChange={(value) => form.setFieldsValue({ brandName: value })}
+              onChange={(value) =>
+                form.setFieldsValue({ brandName: value?.toUpperCase() })
+              }
               value={form.getFieldValue("brandName") || ""}
             />
           </Form.Item>
@@ -394,48 +375,43 @@ export const EnterCampaignBasicDetails = ({
             }
             rules={[{ required: true, message: "Please enter industry type" }]}
           >
-            <Input placeholder="Industry Type" size="large" />
+            <Select
+              placeholder="Select Industry"
+              size="large"
+              showSearch
+              optionFilterProp="label"
+              options={industryTypes}
+            ></Select>
           </Form.Item>
           {/* Start Date */}
           <Form.Item
             style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="startDate"
-            label={
-              <div className="flex items-center gap-2">
-                <span>Start Date & Time</span>
-                <Tooltip title="Select date and time when the campaign should start">
-                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                </Tooltip>
-              </div>
-            }
-            rules={[
-              {
-                required: true,
-                message: "Please select start date and time",
-              },
-            ]}
+            label="Start Date & Time"
+            rules={[{ required: true, message: "Please select start date" }]}
           >
             <DatePicker
-              showTime
-              format="YYYY-MM-DD HH:mm"
+              showTime={false}
+              format="YYYY-MM-DD"
               className="w-full"
               size="large"
               disabledDate={(current) =>
                 current && current < dayjs().startOf("day")
               }
-              disabledTime={(current) => {
-                if (current && current.isSame(dayjs(), "day")) {
-                  return {
-                    disabledHours: () => range(0, dayjs().hour()),
-                    disabledMinutes: (selectedHour) => {
-                      if (selectedHour === dayjs().hour()) {
-                        return range(0, dayjs().minute());
-                      }
-                      return [];
-                    },
-                  };
+              onChange={(date) => {
+                if (date) {
+                  const startDate = getStartDateWithTime(date);
+                  form.setFieldsValue({ startDate });
+
+                  // Auto-update end date if duration exists
+                  const duration = form.getFieldValue("duration");
+                  if (duration) {
+                    const endDate = getEndDateWithTime(
+                      startDate.add(duration - 1, "day")
+                    );
+                    form.setFieldsValue({ endDate });
+                  }
                 }
-                return {};
               }}
             />
           </Form.Item>
@@ -443,29 +419,15 @@ export const EnterCampaignBasicDetails = ({
           <Form.Item
             style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="endDate"
-            label={
-              <div className="flex items-center gap-2">
-                <span>End Date & Time</span>
-                <Tooltip title="Select date and time when the campaign should end">
-                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                </Tooltip>
-              </div>
-            }
+            label="End Date & Time"
             rules={[
-              {
-                required: true,
-                message: "Please select end date and time",
-              },
+              { required: true, message: "Please select end date" },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   const startDate = getFieldValue("startDate");
-                  if (!value) {
-                    return Promise.reject("Please select end date/time");
-                  }
+                  if (!value) return Promise.reject("Please select end date");
                   if (startDate && value.isBefore(startDate)) {
-                    return Promise.reject(
-                      "End date/time must be after start date/time"
-                    );
+                    return Promise.reject("End date must be after start date");
                   }
                   return Promise.resolve();
                 },
@@ -473,8 +435,8 @@ export const EnterCampaignBasicDetails = ({
             ]}
           >
             <DatePicker
-              showTime
-              format="YYYY-MM-DD HH:mm"
+              showTime={false}
+              format="YYYY-MM-DD"
               className="w-full"
               size="large"
               disabledDate={(current) => {
@@ -485,29 +447,16 @@ export const EnterCampaignBasicDetails = ({
                     (startDate && current < startDate.startOf("day")))
                 );
               }}
-              disabledTime={(current) => {
-                const startDate = form.getFieldValue("startDate");
-                if (current && startDate && current.isSame(startDate, "day")) {
-                  return {
-                    disabledHours: () => range(0, startDate.hour()),
-                    disabledMinutes: (selectedHour) => {
-                      if (selectedHour === startDate.hour()) {
-                        return range(0, startDate.minute());
-                      }
-                      return [];
-                    },
-                  };
-                }
-                return {};
-              }}
               onChange={(date) => {
                 if (date) {
-                  const startDate = form.getFieldValue("startDate");
-                  if (startDate) {
-                    form.setFieldsValue({
-                      duration: calculateDuration(startDate, date),
-                    });
-                  }
+                  const endDate = getEndDateWithTime(date);
+                  form.setFieldsValue({
+                    endDate,
+                    duration: calculateDuration(
+                      form.getFieldValue("startDate"),
+                      endDate
+                    ),
+                  });
                 }
               }}
             />
@@ -538,6 +487,7 @@ export const EnterCampaignBasicDetails = ({
                   if (startDate) {
                     form.setFieldsValue({
                       endDate: calculateEndDate(startDate, duration),
+                      duration,
                     });
                   }
                 }
@@ -572,28 +522,6 @@ export const EnterCampaignBasicDetails = ({
               })}
             ></Select>
           </Form.Item>
-          {/* SOV Type */}
-          <Form.Item
-            name="sovType"
-            style={{ marginRight: 16 }} /* Reduced from default 24px */
-            label={
-              <div className="flex items-center gap-2">
-                <span>SOV Type</span>
-                <Tooltip title="Continuous -> One After another , Ordered-> Ordered , Random -> At any place ">
-                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                </Tooltip>
-              </div>
-            }
-            rules={[{ required: true, message: "Please select SOV type" }]}
-          >
-            <Select placeholder="Select SOV Type" size="large">
-              {sovTypeOptions.map((option) => (
-                <Option key={option.value} value={option.value}>
-                  {option.label}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
           {/* SOV */}
           <Form.Item
             style={{ marginRight: 16 }} /* Reduced from default 24px */
@@ -618,56 +546,6 @@ export const EnterCampaignBasicDetails = ({
                 </Option>
               ))}
             </Select>
-          </Form.Item>
-          {/* Mid Date */}
-          <Form.Item
-            style={{ marginRight: 16 }}
-            name="midDate"
-            label={
-              <div className="flex items-center gap-2">
-                <span>Select Mid Monitoring Date</span>
-                <Tooltip title="Monitoring start and end data will always be your campaign start and end date">
-                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
-                </Tooltip>
-              </div>
-            }
-            rules={[
-              {
-                required: false, // This makes it optional
-              },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  // Only validate if a value is provided
-                  if (!value) return Promise.resolve();
-
-                  const startDate = getFieldValue("startDate");
-                  const endDate = getFieldValue("endDate");
-
-                  if (startDate && value.isBefore(startDate)) {
-                    return Promise.reject("Mid date must be after start date");
-                  }
-                  if (endDate && value.isAfter(endDate)) {
-                    return Promise.reject("Mid date must be before end date");
-                  }
-                  return Promise.resolve();
-                },
-              }),
-            ]}
-            dependencies={["startDate", "endDate"]}
-          >
-            <DatePicker
-              className="w-full"
-              size="large"
-              disabledDate={(current) => {
-                const startDate = form.getFieldValue("startDate");
-                const endDate = form.getFieldValue("endDate");
-                return (
-                  current &&
-                  ((startDate && current < startDate.startOf("day")) ||
-                    (endDate && current > endDate.endOf("day")))
-                );
-              }}
-            />
           </Form.Item>
         </div>
 
