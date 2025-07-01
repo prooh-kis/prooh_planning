@@ -387,7 +387,7 @@ export const EnterCampaignBasicDetails = ({
           <Form.Item
             style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="startDate"
-            label="Start Date & Time"
+            label="Start Date"
             rules={[{ required: true, message: "Please select start date" }]}
           >
             <DatePicker
@@ -419,7 +419,7 @@ export const EnterCampaignBasicDetails = ({
           <Form.Item
             style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="endDate"
-            label="End Date & Time"
+            label="End Date"
             rules={[
               { required: true, message: "Please select end date" },
               ({ getFieldValue }) => ({
