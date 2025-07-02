@@ -184,11 +184,6 @@ export function ExcelImport({
         return updatedScreens;
       });
 
-      // handleFinalSelectedScreens({
-      //   type: "add",
-      //   screens: filtered,
-      // });
-
       setCircleData((prev: any) => ({
         ...prev,
         brand: brandCoordinates,

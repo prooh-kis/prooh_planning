@@ -101,6 +101,7 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
  
               if (renderedRouteIds.has(routeId)) return;
               renderedRouteIds.add(routeId);
+              currentRenderers.forEach((renderer) => renderer.setMap(null));
     
               const renderer = new routesLibrary!.DirectionsRenderer({
                 map,
@@ -141,6 +142,7 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
                   if (bufferPolygonCoords?.length > 0) {
                     const bufferColor = `#${getColorForRoute(route.id)?.split("#")?.join("30")}`;
     
+                    currentPolygons.forEach((polygon) => polygon.setMap(null));
                     const newPolygon = new google.maps.Polygon({
                       paths: bufferPolygonCoords,
                       strokeColor: getColorForRoute(route.id),
@@ -153,6 +155,7 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
                     newPolygon.setMap(map);
                     newPolygons.push(newPolygon);
                     mapElementsRef.current.polygons.push(newPolygon);
+
                     // get number of screens in current route buffer
                     filteredScreenRecords = allScreens?.filter((point: any) => {
                       const screenPoint = turf.point([
@@ -161,24 +164,34 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
                       ]);
                       return turf.booleanPointInPolygon(screenPoint, buffered);
                     });
-
-                    setRouteFilteredScreens((prev: any) => {
-                      
-                      const routeFilteredScreensIds = prev?.map((screen: any) => screen._id);
-                      const newScreens = filteredScreenRecords?.filter((screen: any) => !routeFilteredScreensIds?.includes(screen._id));
-                      return [...prev, ...newScreens];
-                    })
+                    const oldScreens = allRoutes?.find((route: any) => Number(route.id) === Number(route.id))?.selectedScreens;
+                    // const removedScreen
+                    console.log(route.id, "oldScreens", oldScreens)
+                    console.log(route.id, "filteredScreenRecords", filteredScreenRecords)
+                    const screensToRemove = oldScreens?.filter((screen: any) => !filteredScreenRecords?.map((s: any) => s._id).includes(screen._id));
+                    console.log(route.id, "screens To Remove", screensToRemove)
 
                     setAllRoutes((prev: any) => {
                       for (let oldRoute of prev) {
                         if (Number(oldRoute.id) === Number(route.id)){
-                          const oldRouteScreenIds = oldRoute?.selectedScreens?.map((screen: any) => screen._id);
+                          const updatedScreens = oldRoute.selectedScreens.filter((scr: any) => !screensToRemove?.map((s: any) => s._id).includes(scr._id));
+                          const oldRouteScreenIds = updatedScreens?.map((screen: any) => screen._id);
                           const newScreens = filteredScreenRecords?.filter((screen: any) => !oldRouteScreenIds?.includes(screen._id));
-                          oldRoute.selectedScreens = [...oldRoute.selectedScreens, ...newScreens];
+                          oldRoute.selectedScreens = [...updatedScreens, ...newScreens];
                         }
                       }
                       return prev;
                     });
+
+                    setRouteFilteredScreens((prev: any) => {
+                      const updatedScreens = prev.filter((scr: any) => !screensToRemove?.map((s: any) => s._id).includes(scr._id));
+                      
+                      const routeFilteredScreensIds = updatedScreens?.map((screen: any) => screen._id);
+                      const newScreens = filteredScreenRecords?.filter((screen: any) => !routeFilteredScreensIds?.includes(screen._id));
+                      return [...updatedScreens, ...newScreens];
+                    })
+
+                    
                   }
                 }
                 cachedRoute = {...cachedRoute, [routeId]: {route, screens: filteredScreenRecords}};
@@ -193,6 +206,8 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
               iconEnd.className = "fi fi-sr-marker"; // className of the custom icon
               iconEnd.style.fontSize = "40px"; // Set the size of the icon
               iconEnd.style.color = "#FF77E9"; // Set the color of the icon 8B5CF6
+
+              currentMarkers.forEach((marker) => marker.map = null );
 
               // **Only add markers for rendered routes**
               const startMarker = new google.maps.marker.AdvancedMarkerElement({
