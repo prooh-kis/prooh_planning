@@ -8,6 +8,7 @@ interface DrawnMapPolygonProps {
   polygons?: google.maps.Polygon[];
   setPolygons?: (polygons: google.maps.Polygon[]) => void;
   polygonFilteredScreens?: any;
+  // setPolygonFilteredScreens?: any;
   handleFinalSelectedScreens?: any;
   allScreens?: any;
 }
@@ -18,6 +19,7 @@ export const DrawnMapPolygon = ({
   polygons,
   setPolygons,
   polygonFilteredScreens,
+  // setPolygonFilteredScreens,
   handleFinalSelectedScreens,
   allScreens,
 }: DrawnMapPolygonProps) => {
@@ -45,17 +47,20 @@ export const DrawnMapPolygon = ({
   
   // Function to handle polygon deletion
   const handleDeleteSelected = (polygon: google.maps.Polygon) => {
-    if (!polygon) return;
+    if (!polygon || !polygons) return;
 
     // Remove the polygon from the map
     polygon.setMap(null);
 
     // Update the polygons state
-    const updatedPolygons = polygons?.filter((p) => p !== polygon) || [];
-    const polygonToRemove = polygons?.filter((p) => p === polygon) || [];
-    const screensToRemove = getScreensInsidePolygons(polygonToRemove)
+    const updatedPolygons = polygons.filter((p) => p !== polygon);
+    const polygonToRemove = polygons.filter((p) => p === polygon);
+    const screensToRemove = getScreensInsidePolygons(polygonToRemove);
     setPolygons?.(updatedPolygons);
-    handleFinalSelectedScreens({screens: screensToRemove, type: "remove"});
+    // setPolygonFilteredScreens((prev: any) => {
+    //   return prev.filter((screen: any) => !screensToRemove.map((sc: any) => sc._id).includes(screen._id));
+    // });
+    handleFinalSelectedScreens?.({ screens: screensToRemove, type: 'remove' });
     // Reset selected polygon
     setSelectedPolygon(null);
   };

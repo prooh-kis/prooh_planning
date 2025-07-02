@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { MapSearchInput } from "../../components/atoms/MapSearchInput";
 import { Slider, Tooltip } from "antd";
-import { MapBoxSearchInput } from "../../components/atoms/MapboxSearchInput";
 import ButtonInput from "../../components/atoms/ButtonInput";
 
 interface RouteProximityProps {
   open: any;
-  setOpen: any;
   userLocation?: any;
   setUserLocation?: any;
   routeRadius?: any;
@@ -17,14 +15,14 @@ interface RouteProximityProps {
   routeDestination?: any;
   setRouteDestination?: any;
   routeFilteredScreens?: any;
-  handleFinalSelectedScreens?: any;
-  setRouteFilteredScreens?: any;
   setRoutes?: any;
+  setRouteDataCache?: any;
+  props?: any;
+  setRouteFilteredScreens?: any;
 }
 
 export const RouteProximity = ({
   open,
-  setOpen,
   userLocation,
   setUserLocation,
   routeRadius,
@@ -35,9 +33,9 @@ export const RouteProximity = ({
   routeDestination,
   setRouteDestination,
   routeFilteredScreens,
-  setRouteFilteredScreens,
   setRoutes,
-  handleFinalSelectedScreens,
+  setRouteDataCache,
+  setRouteFilteredScreens,
 }: RouteProximityProps) => {
   const [showDetails, setShowDetails] = useState<any>(null);
 
@@ -48,9 +46,8 @@ export const RouteProximity = ({
       origin: originData[0],
       destination: destinationData[0],
       selectedScreens: [],
-      id: routes.length + 1
+      id: routes?.map((r: any) => r.id)?.includes(routes.length + 1) ? routes[routes.length - 1]?.id + 1 : routes.length + 1
     };
-    console.log("new", JSON.parse(JSON.stringify(newRoute)));
 
 
     // Check if this exact route already exists
@@ -65,39 +62,29 @@ export const RouteProximity = ({
     }
     
   }, [routes, setRoutes]);
-  
+
 
   const handleRemoveRoute = (id: any) => {
     let arr = routes;
-    for (let data of arr) {
-      if (data?.id === id) {
-        // First, update the final selected screens by removing this route's screens
-        handleFinalSelectedScreens({
-          type: "remove",
-          screens: data.selectedScreens || []
-        });
-        
-        // Then update the routeFilteredScreens
-        setRouteFilteredScreens(
-          routeFilteredScreens?.filter(
-            (rf: any) => !data.selectedScreens?.map((s: any) => s._id).includes(rf._id)
-          )
-        );
-      }
-    }
+    setRouteDataCache((prev: any) => {
+      const newCache = { ...prev };
+      // Only update if there are routes to filter by
+      Object.keys(newCache).forEach((key) => {
+        const routeId = Number(key.split("-")[0]);
+        if (routeId === Number(id)) {
+          delete newCache[key];
+        }
+      });
+      return newCache;
+    });
+    const screensToRemove = arr.find((data: any) => data?.id === id)?.selectedScreens;
+    setRouteFilteredScreens((prev: any) => {
+      return prev.filter((data: any) => !screensToRemove?.map((s: any) => s._id).includes(data._id));
+    });
     // Remove the route from the routes array
     arr = arr.filter((data: any) => data?.id !== id);
     setRoutes(arr);
   };
-  console.log(routeFilteredScreens);
-
-  // useEffect(() => {
-  //   // Only run when both origin and destination are set and have values
-  //   if (routeOrigin?.length > 0 && routeDestination?.length > 0) {
-  //     handleRouteSetup(routeOrigin, routeDestination);
-  //   }
-  // }, [routeRadius, routeOrigin, routeDestination, handleRouteSetup]);
-
   return (
     <div className="py-2 border-b border-gray-100">
       <button

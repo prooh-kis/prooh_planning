@@ -6,11 +6,11 @@ interface DrawPolygonProps {
   setPolygons: any;
   allScreens: Screen[];
   setPolygonFilteredScreens: any;
-  handleFinalSelectedScreens?: any;
+  // handleFinalSelectedScreens?: any;
   drawingMode?: any;
 }
 
-export function DrawPolygon({ handleFinalSelectedScreens, polygons, setPolygons, allScreens, setPolygonFilteredScreens }: DrawPolygonProps) {
+export function DrawPolygon({ polygons, setPolygons, allScreens, setPolygonFilteredScreens }: DrawPolygonProps) {
   const map = useMap(); // ✅ Get map instance
   const [selectedPolygon, setSelectedPolygon] = useState<google.maps.Polygon | null>(null);
   // Function to check if a screen is inside a polygon
@@ -22,7 +22,7 @@ export function DrawPolygon({ handleFinalSelectedScreens, polygons, setPolygons,
   // Function to get all screens inside all polygons
   const getScreensInsidePolygons = (polygons: google.maps.Polygon[]) => {
     const screensInsidePolygons = allScreens.filter((screen) =>
-      polygons.some((polygon) => isScreenInsidePolygon(screen, polygon))
+      polygons?.some((polygon) => isScreenInsidePolygon(screen, polygon))
     );
     return screensInsidePolygons;
   };
@@ -36,7 +36,7 @@ export function DrawPolygon({ handleFinalSelectedScreens, polygons, setPolygons,
         prevPolygons.map((p: any) => (p === polygon ? polygon : p))
       );
       const screensInsidePolygons = getScreensInsidePolygons(polygons);
-      handleFinalSelectedScreens({ screens: screensInsidePolygons, type: "add" });
+      // handleFinalSelectedScreens({ screens: screensInsidePolygons, type: "add" });
       setPolygonFilteredScreens(screensInsidePolygons);
     };
 
@@ -48,7 +48,6 @@ export function DrawPolygon({ handleFinalSelectedScreens, polygons, setPolygons,
   // Effect to handle drawing and updating polygons
   useEffect(() => {
     if (!map || !window.google) return;
-    console.log("ca")
 
     const drawingManager = new google.maps.drawing.DrawingManager({
       drawingMode: null,
@@ -77,7 +76,7 @@ export function DrawPolygon({ handleFinalSelectedScreens, polygons, setPolygons,
 
       // Click to select the polygon
       google.maps.event.addListener(polygon, "click", () => {
-        polygons.forEach((p: any) => p.setOptions({ strokeWeight: 2 })); // Reset all stroke weights
+        polygons?.forEach((p: any) => p.setOptions({ strokeWeight: 2 })); // Reset all stroke weights
         polygon.setOptions({ strokeWeight: 5, strokeColor: "#FF0000" }); // Highlight selection
         setSelectedPolygon(polygon);
       });
@@ -85,27 +84,24 @@ export function DrawPolygon({ handleFinalSelectedScreens, polygons, setPolygons,
 
 
     if (!map || !window.google) return;
-    polygons.forEach((polygon: any) => {
+    polygons?.forEach((polygon: any) => {
       polygon.setMap(map);
       attachPolygonListeners(polygon);
     });
-console.log("called now..")
     // Clear existing polygons from the map
-    polygons.forEach((polygon: any) => polygon.setMap(null));
+    polygons?.forEach((polygon: any) => polygon.setMap(null));
 
     // Re-render polygons
-    polygons.forEach((polygon: any) => {
+    polygons?.forEach((polygon: any) => {
       polygon.setMap(map);
 
       // Reattach click listeners for selection
       google.maps.event.addListener(polygon, "click", () => {
-        polygons.forEach((p: any) => p.setOptions({ strokeWeight: 2 })); // Reset all stroke weights
-        polygon.setOptions({ strokeWeight: 5, strokeColor: "#FF0000" }); // Highlight selection
+        polygons?.forEach((p: any) => p.setOptions({ strokeWeight: 2 })); // Reset all stroke weights
+        polygon?.setOptions({ strokeWeight: 5, strokeColor: "#FF0000" }); // Highlight selection
         setSelectedPolygon(polygon);
       });
     });
-    const screensInsidePolygons = getScreensInsidePolygons(polygons);
-    console.log("screens inside polygon", screensInsidePolygons);
 
     // Cleanup drawing manager
     return () => {
@@ -116,13 +112,12 @@ console.log("called now..")
   // Effect to update polygon screens when polygons change
   useEffect(() => {
     if (!window.google || !window.google.maps.geometry) return;
-console.log("called")
     const screensInsidePolygons = getScreensInsidePolygons(polygons);
     setPolygonFilteredScreens((prev: any) => {
       if (prev.map((screen: any) => screen.id) === screensInsidePolygons.map((sc: any) => sc._id)) {
         return prev;
       }
-      handleFinalSelectedScreens({ screens: screensInsidePolygons, type: "add" });
+      // handleFinalSelectedScreens({ screens: screensInsidePolygons, type: "add" });
       return screensInsidePolygons;
     });
   }, [polygons, allScreens, setPolygonFilteredScreens]);
@@ -142,10 +137,10 @@ console.log("called")
     setPolygonFilteredScreens((prev: any) => {
       return prev.filter((screen: any) => !screensToRemove.map((sc: any) => sc._id).includes(screen._id));
     });
-    handleFinalSelectedScreens({ 
-      screens: screensToRemove, 
-      type: "remove" 
-    });
+    // handleFinalSelectedScreens({ 
+    //   screens: screensToRemove, 
+    //   type: "remove" 
+    // });
   
     // Clear the selected polygon
     setSelectedPolygon(null);

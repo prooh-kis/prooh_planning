@@ -1,87 +1,54 @@
 import { Tooltip } from "antd";
-import { DrawnMapPolygon } from "../../components/molecules/DrawnMapPolygon";
-import { CheckboxInput } from "../atoms/CheckboxInput";
-// import { ExcelImport } from "../molecules/ExcelImport copy";
-import { ExcelImport } from "../molecules/ExcelImport";
-import { RouteProximity } from "../molecules/RouteProximity";
-import { LinearBar } from "../molecules/linearbar";
-import { POIProximity } from "./POIProximity";
+import { LinearBar } from "../../molecules/linearbar";
+import { CheckboxInput } from "../../atoms/CheckboxInput";
+import { DrawnMapPolygon } from "../../molecules/DrawnMapPolygon";
+import { ExcelImport } from "../../molecules/ExcelImport";
+import { RouteProximity } from "../../molecules/RouteProximity";
 import { useState } from "react";
 
 interface LocationProximityProps {
-  setCircleRadius?: any;
-  circleRadius?: any;
-  setRouteRadius?: any;
-  routeRadius?: any;
-  userLocation?: any;
-  setUserLocation?: any;
-  routes?: any;
-  routeOrigin?: any;
-  setRouteOrigin?: any;
-  routeDestination?: any;
-  setRouteDestination?: any;
-  setDataBrand?: any;
-  setDataComp?: any;
-  dataBrand?: any;
-  dataComp?: any;
-  setCircleData?: any;
   allScreens?: any;
   finalSelectedScreens?: any;
-  setExcelFilteredScreens?: any;
+  userLocation?: any;
   excelFilteredScreens?: any;
-  handleRouteSetup?: any;
-  handleRemoveRoute?: any;
-  handleFinalSelectedScreens?: any;
-  setDraw?: any;
+  setExcelFilteredScreens?: any;
+  setExcelData?: any;
+  setDataBrand?: any;
+  setDataComp?: any;
+  circleRadius?: any;
+  setCircleRadius?: any;
+  routeFilteredScreens?: any;
+  setRouteFilteredScreens?: any;
+  setRouteDataCache?: any;
+  routeRadius?: any;
+  setRouteRadius?: any;
+  routes?: any;
+  setRoutes?: any;
+  polygonFilteredScreens?: any;
   polygons?: any;
   setPolygons?: any;
-  polygonFilteredScreens?: any;
-  setPolygonFilteredScreens?: any;
-  setDrawingMode?: any;
-  routeFilteredScreens?: any;
-  pois?: any;
-  selectedPOIs?: any;
-  setSelectedPOIs?: any;
-  setPOIFilteredScreens?: any;
-  selectedScreensFromMap?: any;
-  handleSelectFromMap?: any;
-  handleConfirmScreensSelections?: any;
-  setRoutes?: any;
-  setRouteFilteredScreens?: any;
-  routeDataCache?: any;
-  setRouteDataCache?: any;
 }
 export const LocationProximity = ({
-  userLocation,
-  setUserLocation,
-  routes,
-  routeOrigin,
-  setRouteOrigin,
-  routeDestination,
-  setRouteDestination,
-  setDataBrand,
-  setDataComp,
-  setCircleData,
   allScreens,
   finalSelectedScreens,
-  setExcelFilteredScreens,
+  userLocation,
   excelFilteredScreens,
-  handleFinalSelectedScreens,
-  setDraw,
+  setExcelFilteredScreens,
+  setExcelData,
+  setDataBrand,
+  setDataComp,
+  circleRadius,
+  setCircleRadius,
+  routeFilteredScreens,
+  setRouteFilteredScreens,
+  setRouteDataCache,
+  routeRadius,
+  setRouteRadius,
+  routes,
+  setRoutes,
+  polygonFilteredScreens,
   polygons,
   setPolygons,
-  polygonFilteredScreens,
-  setPolygonFilteredScreens,
-  routeFilteredScreens,
-  setCircleRadius,
-  circleRadius,
-  setRouteRadius,
-  routeRadius,
-  handleConfirmScreensSelections,
-  setRouteFilteredScreens,
-  setRoutes,
-  routeDataCache,
-  setRouteDataCache,
 }: LocationProximityProps) => {
   const [open, setOpen] = useState<any>({
     excel: true,
@@ -89,6 +56,9 @@ export const LocationProximity = ({
     polygon: true,
     poi: true,
   });
+
+  const [routeOrigin, setRouteOrigin] = useState<any>([]);
+  const [routeDestination, setRouteDestination] = useState<any>([]);
 
   return (
     <div className="flex flex-col flex-1 h-full">
@@ -100,7 +70,7 @@ export const LocationProximity = ({
           text="Stores"
           setDataBrand={setDataBrand}
           setDataComp={setDataComp}
-          setCircleData={setCircleData}
+          setCircleData={setExcelData}
           allScreens={allScreens}
           setExcelFilteredScreens={setExcelFilteredScreens}
           excelFilteredScreens={excelFilteredScreens}
@@ -116,6 +86,7 @@ export const LocationProximity = ({
           userLocation={userLocation}
           setUserLocation={userLocation}
           routeFilteredScreens={routeFilteredScreens}
+          setRouteFilteredScreens={setRouteFilteredScreens}
           routes={routes}
           routeOrigin={routeOrigin}
           setRouteOrigin={setRouteOrigin}
@@ -123,7 +94,6 @@ export const LocationProximity = ({
           setRouteDestination={setRouteDestination}
           setRoutes={setRoutes}
           setRouteDataCache={setRouteDataCache}
-          props={polygonFilteredScreens}
         />
         <DrawnMapPolygon
           open={open}
@@ -131,9 +101,7 @@ export const LocationProximity = ({
           polygons={polygons}
           setPolygons={setPolygons}
           polygonFilteredScreens={polygonFilteredScreens}
-          // setPolygonFilteredScreens={setPolygonFilteredScreens}
           allScreens={allScreens}
-          handleFinalSelectedScreens={handleFinalSelectedScreens}
         />
       </div>
       
@@ -192,10 +160,10 @@ export const LocationProximity = ({
             </p>
           }
           onChange={(e) => {
-            handleConfirmScreensSelections({
-              checked: e,
-              screens: finalSelectedScreens,
-            });
+            // handleConfirmScreensSelections({
+            //   checked: e,
+            //   screens: finalSelectedScreens,
+            // });
           }}
         />
       </div>

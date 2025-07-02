@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Map, InfoWindow } from "@vis.gl/react-google-maps";
+import { Map } from "@vis.gl/react-google-maps";
 import { CustomAdvancedMarker } from "./CustomMarker";
 import { Circle } from "./MapCircle";
 import { Directions } from "./Direction";
 import { DrawPolygon } from "./DrawPolygon";
 import {FeatureCollection, Point, GeoJsonProperties} from 'geojson';
 import { Heatmap } from "./Heatmap";
-import { ToggleSwitch } from "../../components/atoms/ToggleSwitch";
+import { ToggleSwitch } from "../../../../components/atoms/ToggleSwitch";
 import clsx from "clsx";
 
 type POIProps = {
@@ -26,22 +26,9 @@ export function GoogleMapWithGeometry(props: any) {
   const [screenData, setScreenData] = useState<any>(null);
   const [heatmapOn, setHeatMapOn] = useState<any>(false);
 
-  const [finalSelectedScreens, setFinalSelectedScreens] = useState<any>(props?.finalSelectedScreens);
-  const [routeDataCache, setRouteDataCache] = useState<any>(props?.routeDataCache);
+  const brandCoor = props?.excelData?.["brand"]?.map((c: any) => {return { lat: c[1], lng: c[0] }});
 
-  const brandCoor = props?.data?.["brand"]?.map((c: any) => {
-    return {
-      lat: c[1],
-      lng: c[0],
-    }
-  });
-
-  const compCoor = props?.data?.["comp"]?.map((c: any) => {
-    return {
-      lat: c[1],
-      lng: c[0],
-    }
-  });
+  const compCoor = props?.excelData?.["comp"]?.map((c: any) => {return { lat: c[1], lng: c[0] }});
 
   const [viewState, setViewState] = useState({
     center: {
@@ -74,52 +61,50 @@ export function GoogleMapWithGeometry(props: any) {
     setScreenData(data);
   };
 
-  const handleRouteData = useCallback(({cacheData}: any) => {
-    let routeSelectedScreens: any[] = [];
-    props.handleFinalSelectedScreens({
-      type: "remove",
-      screens: props.routeFilteredScreens,
-    });
+  // const handleRouteData = useCallback(({cacheData}: any) => {
+  //   let routeSelectedScreens: any[] = [];
+  //   props.handleFinalSelectedScreens({
+  //     type: "remove",
+  //     screens: props.routeFilteredScreens,
+  //   });
 
-    let singleRouteScreens: any = {}
+  //   let singleRouteScreens: any = {}
 
-    for (let singleRoute in cacheData) {
-      const routeId = Number(singleRoute.split("-")[0])
-      if (!singleRouteScreens[routeId]) {
-        singleRouteScreens[routeId] = [];
-      }
-      for (let selectedScreen of cacheData[singleRoute].screens) {
+  //   for (let singleRoute in cacheData) {
+  //     const routeId = Number(singleRoute.split("-")[0])
+  //     if (!singleRouteScreens[routeId]) {
+  //       singleRouteScreens[routeId] = [];
+  //     }
+  //     for (let selectedScreen of cacheData[singleRoute].screens) {
 
-        if (!singleRouteScreens[routeId].some((screen: any) => screen._id === selectedScreen._id)) {
-          singleRouteScreens[routeId].push(selectedScreen)
-        }
-        if (!routeSelectedScreens.some((screen: any) => screen._id === selectedScreen._id)) {
-          routeSelectedScreens.push(selectedScreen)
-        }
-      }
-      props.setRoutes((prev: any) => {
-        for (let route of prev) {
-          if (Number(route.id) === routeId) {
-            route.selectedScreens = singleRouteScreens[routeId];
-          }
-        }
-        return prev;
-      });
-    }
+  //       if (!singleRouteScreens[routeId].some((screen: any) => screen._id === selectedScreen._id)) {
+  //         singleRouteScreens[routeId].push(selectedScreen)
+  //       }
+  //       if (!routeSelectedScreens.some((screen: any) => screen._id === selectedScreen._id)) {
+  //         routeSelectedScreens.push(selectedScreen)
+  //       }
+  //     }
+  //     props.setRoutes((prev: any) => {
+  //       for (let route of prev) {
+  //         if (Number(route.id) === routeId) {
+  //           route.selectedScreens = singleRouteScreens[routeId];
+  //         }
+  //       }
+  //       return prev;
+  //     });
+  //   }
     
-    props.setRouteFilteredScreens(routeSelectedScreens);
+  //   props.setRouteFilteredScreens(routeSelectedScreens);
 
-    props.handleFinalSelectedScreens({
-      type: "add",
-      screens: routeSelectedScreens,
-    });
-  },[]);
+  //   props.handleFinalSelectedScreens({
+  //     type: "add",
+  //     screens: routeSelectedScreens,
+  //   });
+  // },[]);
 
   useEffect(() => {
     loadPoiGeojson(props?.heatmap).then(data => setPoiGeojson(data));
-    setFinalSelectedScreens(props?.finalSelectedScreens);
-    setRouteDataCache(props?.routeDataCache);
-  }, [props?.heatmap, props?.finalSelectedScreens, props?.routeDataCache]);
+  }, [props?.heatmap]);
 
   // Cleanup function to clear any existing routes and buffered regions
   useEffect(() => {
@@ -136,15 +121,15 @@ export function GoogleMapWithGeometry(props: any) {
       }
       
       // Clear any existing routes and polylines
-      currentMap.data.forEach((feature: google.maps.Data.Feature) => {
-        currentMap.data.remove(feature);
+      currentMap?.data?.forEach((feature: google.maps.Data.Feature) => {
+        currentMap?.data?.remove(feature);
       });
     };
   }, []);
 
   useEffect(() => {
     setSelectedMarkers(
-      finalSelectedScreens.map((m: any) => ({
+      props?.finalSelectedScreens.map((m: any) => ({
         images: m.images,
         lng: m?.location?.geographicalLocation?.longitude,
         lat: m?.location?.geographicalLocation?.latitude,
@@ -158,7 +143,7 @@ export function GoogleMapWithGeometry(props: any) {
     setUnselectedMarkers(
       props.allScreens
         ?.filter(
-          (s: any) => !finalSelectedScreens.map((f: any) => f._id).includes(s._id)
+          (s: any) => !props?.finalSelectedScreens.map((f: any) => f._id).includes(s._id)
         )
         ?.map((m: any) => ({
           images: m.images,
@@ -171,14 +156,12 @@ export function GoogleMapWithGeometry(props: any) {
         }))
     );
 
-  }, [props.allScreens, finalSelectedScreens]);
+  }, [props?.finalSelectedScreens, props?.allScreens]);
 
-  useEffect(() => {
-    handleRouteData({cacheData: routeDataCache});
-  }, [handleRouteData, routeDataCache]);
+  // useEffect(() => {
+  //   handleRouteData({cacheData: routeDataCache});
+  // }, [handleRouteData, routeDataCache]);
 
-  console.log(selectedMarkers.length);
-  console.log(unSelectedMarkers.length);
 
   return (
     <div className="relative h-full w-full items-top">
@@ -228,13 +211,12 @@ export function GoogleMapWithGeometry(props: any) {
         />
       </div>
       <Map
-        // mapContainerStyle={containerStyle}
         defaultCenter={viewState.center}
         defaultZoom={viewState.zoom}
-        // onLoad={(map: any) => (mapRef.current = map)}
         mapId="96194b21d9fc00de"
         gestureHandling={"greedy"}
         disableDefaultUI={true}
+        onClick={() => setScreenData(null)}
       >
         {/* circle */}
         {brandCoor?.map((coor: any, i: any) => (
@@ -268,18 +250,14 @@ export function GoogleMapWithGeometry(props: any) {
           />
         ))}
 
-        {/* <Directions allRoutes={mapRoutes} /> */}
         <Directions
           setRouteDataCache={props?.setRouteDataCache}
           routeDataCache={props?.routeDataCache}
           allRoutes={props?.routes}
           setAllRoutes={props?.setRoutes}
           allScreens={props?.allScreens}
-          routeFilteredScreens={props?.routeFilteredScreens}
           routeRadius={props?.routeRadius}
           setRouteFilteredScreens={props?.setRouteFilteredScreens}
-          handleFinalSelectedScreens={props?.handleFinalSelectedScreens}
-          finalSelectedScreens={props?.finalSelectedScreens}
         />
 
         <DrawPolygon
@@ -287,7 +265,7 @@ export function GoogleMapWithGeometry(props: any) {
           setPolygonFilteredScreens={props?.setPolygonFilteredScreens}
           polygons={props?.polygons}
           setPolygons={props?.setPolygons}
-          handleFinalSelectedScreens={props?.handleFinalSelectedScreens}
+          // handleFinalSelectedScreens={props?.handleFinalSelectedScreens}
         />
 
         {heatmapOn && (
@@ -298,76 +276,44 @@ export function GoogleMapWithGeometry(props: any) {
           />
         )}
 
-        {selectedMarkers.map((marker: any) => (
+        {selectedMarkers.map((markerData: any) => (
           <CustomAdvancedMarker
-            key={marker.id}
-            marker={marker}
+            key={markerData.id}
+            markerData={markerData}
             color={"#00A0FA"}
             // color={marker.screenType === "Spectacular" ? "#00A0FA" : marker.screenType === "Large" ? "#00A0FA60" : "#00A0FA20"}
             size={
-              marker.screenType == "Spectacular"
+              markerData.screenType == "Spectacular"
                 ? 60
-                : marker.screenType == "Large"
+                : markerData.screenType == "Large"
                 ? 44
                 : 36
             }
-            action={(e: any) => setScreenData(e)}
+            screenData={screenData}
+            action={setScreenData}
           />
         ))}
 
-        {unSelectedMarkers.map((marker: any) => (
+        {unSelectedMarkers.map((markerData: any) => (
           <CustomAdvancedMarker
-            key={marker.id}
-            marker={marker}
+            key={markerData.id}
+            markerData={markerData}
             color="#F94623"
             size={
-              marker.screenType == "Spectacular"
+              markerData.screenType == "Spectacular"
                 ? 44
-                : marker.screenType == "Large"
+                : markerData.screenType == "Large"
                 ? 36
                 : 28
             }
-            action={(e: any) => setScreenData(e)}
+            screenData={screenData}
+            action={setScreenData}
           />
         ))}
+       
 
-        {screenData && (
-          <InfoWindow
-            position={{
-              lat: screenData?.lat || 28.495,
-              lng: screenData?.lng,
-            }}
-            onCloseClick={() => {
-              setScreenData(null);
-            }}
-          >
-            <div
-              className={clsx(
-                "rounded-[4px] p-1 transition-colors cursor-pointer bg-white"
-              )}
-            >
-              <div className="relative rounded w-full h-40">
-                <img
-                  className="h-40 w-full rounded-lg object-cover"
-                  src={screenData.images[0]}
-                  alt={screenData.name}
-                  loading="lazy"
-                />
-              </div>
-              <div className="flex flex-col justify-center truncate mt-4 gap-1">
-                <h1 className="text-[14px] font-semibold w-full truncate text-ellipsis overflow-hidden">
-                  {screenData.name}
-                </h1>
-                <h1 className="text-[12px] w-full truncate text-ellipsis overflow-hidden">
-                  {screenData?.details.address}, {screenData?.details?.city}
-                </h1>
-              </div>
-            </div>
-          </InfoWindow>
-        )}
       </Map>
     </div>
   );
 }
-
 

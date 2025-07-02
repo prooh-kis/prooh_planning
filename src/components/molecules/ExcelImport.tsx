@@ -24,7 +24,7 @@ interface ExcelImportProps {
   excelFilteredScreens?: any;
   circleRadius?: any;
   setCircleRadius?: any;
-  handleFinalSelectedScreens?: any;
+  // handleFinalSelectedScreens?: any;
 }
 
 export function ExcelImport({
@@ -41,7 +41,7 @@ export function ExcelImport({
   type,
   setExcelFilteredScreens,
   excelFilteredScreens,
-  handleFinalSelectedScreens,
+  // handleFinalSelectedScreens,
 }: ExcelImportProps) {
   const hiddenFileInput = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<any>(null);
@@ -55,8 +55,8 @@ export function ExcelImport({
 
   const getUniqueScreens = (data: any) => {
     const uniqueScreens = new Set();
-    data.forEach((location: any) => {
-      location.screens.forEach((screen: any) => {
+    data?.forEach((location: any) => {
+      location?.screens?.forEach((screen: any) => {
         uniqueScreens.add(screen);
       });
     });
@@ -69,19 +69,19 @@ export function ExcelImport({
     setFile(null);
     setCircleData([]);
     if (type.includes("brand")) {
-      handleFinalSelectedScreens({
-        type: "remove",
-        screens: brandScreens,
-      });
+      // handleFinalSelectedScreens({
+      //   type: "remove",
+      //   screens: brandScreens,
+      // });
       setExcelFilteredScreens([]);
       setDataBrand([]);
       setBrandScreens(null);
     }
     if (type.includes("comp")) {
-      handleFinalSelectedScreens({
-        type: "remove",
-        screens: compScreens,
-      });
+      // handleFinalSelectedScreens({
+      //   type: "remove",
+      //   screens: compScreens,
+      // });
       setExcelFilteredScreens([]);
       setDataComp([]);
       setCompScreens(null);
@@ -175,7 +175,7 @@ export function ExcelImport({
         );
 
         // Add new screens that are not already present
-        filtered.forEach((f: any) => {
+        filtered?.forEach((f: any) => {
           if (!updatedScreens.map((nf: any) => nf._id).includes(f._id)) {
             updatedScreens.push(f);
           }
@@ -184,10 +184,10 @@ export function ExcelImport({
         return updatedScreens;
       });
 
-      handleFinalSelectedScreens({
-        type: "add",
-        screens: filtered,
-      });
+      // handleFinalSelectedScreens({
+      //   type: "add",
+      //   screens: filtered,
+      // });
 
       setCircleData((prev: any) => ({
         ...prev,
@@ -199,7 +199,7 @@ export function ExcelImport({
     }
   }, [
     allScreens,
-    handleFinalSelectedScreens,
+    // handleFinalSelectedScreens,
     setCircleData,
     setDataBrand,
     setDataComp,

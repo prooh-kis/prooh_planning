@@ -4,7 +4,7 @@ import * as turf from "@turf/turf";
 import { message } from "antd";
 
 
-export function Directions({ routeDataCache, setRouteDataCache, allRoutes, allScreens, routeRadius }: any) {
+export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAllRoutes, allScreens, routeRadius, setRouteFilteredScreens }: any) {
 
   const map = useMap();
   const routesLibrary = useMapsLibrary("routes");
@@ -22,8 +22,8 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, allSc
 
 
   const getColorForRoute = useCallback((id: string | number) => {
-    const colors = ["#540b0e", "#e09f3e", "#073b4c", "#0f4c5c", "#ef476f"];
-    return colors[Math.abs((typeof id === "string" ? id.length : id) % colors.length)];
+    const colors = ["#006064", "#795548", "#37474F", "#9E9D24", "#D84315"];
+    return colors[Math.abs((typeof id === "string" ? id?.length : id) % colors?.length)];
   }, []);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, allSc
     clearMapElements();
     
     // Handle case when allRoutes is empty (remove everything)
-    if (allRoutes.length === 0) {
+    if (allRoutes?.length === 0) {
       return;
     }
   
@@ -83,7 +83,7 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, allSc
     let cachedRoute = routeDataCache;
 
     if (directionsService) {
-      const routePromises = allRoutes.map(async (route: any) => {
+      const routePromises = allRoutes?.map(async (route: any) => {
         const origin = new google.maps.LatLng(route?.origin?.center?.[1], route?.origin?.center?.[0]);
         const destination = new google.maps.LatLng(route?.destination?.center?.[1], route?.destination?.center?.[0]);
     
@@ -123,13 +123,13 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, allSc
                 lng: point.lng(),
               }));
     
-              if (mainRoute.length > 0) {
+              if (mainRoute?.length > 0) {
                 // Clear any existing buffer polygons first
                 routeBufferPolygons.forEach(polygon => {
                   if (polygon) polygon.setMap(null);
                 });
                 
-                const lineString = turf.lineString(mainRoute.map(({ lat, lng }: any) => [lng, lat]));
+                const lineString = turf.lineString(mainRoute?.map(({ lat, lng }: any) => [lng, lat]));
                 const buffered: any = turf.buffer(lineString, routeRadius/1000, { units: "kilometers" });
                 let filteredScreenRecords: any[] = [];
 
@@ -138,7 +138,7 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, allSc
                     ([lng, lat]: any) => ({ lat, lng })
                   );
     
-                  if (bufferPolygonCoords.length > 0) {
+                  if (bufferPolygonCoords?.length > 0) {
                     const bufferColor = `#${getColorForRoute(route.id)?.split("#")?.join("30")}`;
     
                     const newPolygon = new google.maps.Polygon({
@@ -160,6 +160,24 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, allSc
                         point.location.geographicalLocation.latitude,
                       ]);
                       return turf.booleanPointInPolygon(screenPoint, buffered);
+                    });
+
+                    setRouteFilteredScreens((prev: any) => {
+                      
+                      const routeFilteredScreensIds = prev?.map((screen: any) => screen._id);
+                      const newScreens = filteredScreenRecords?.filter((screen: any) => !routeFilteredScreensIds?.includes(screen._id));
+                      return [...prev, ...newScreens];
+                    })
+
+                    setAllRoutes((prev: any) => {
+                      for (let oldRoute of prev) {
+                        if (Number(oldRoute.id) === Number(route.id)){
+                          const oldRouteScreenIds = oldRoute?.selectedScreens?.map((screen: any) => screen._id);
+                          const newScreens = filteredScreenRecords?.filter((screen: any) => !oldRouteScreenIds?.includes(screen._id));
+                          oldRoute.selectedScreens = [...oldRoute.selectedScreens, ...newScreens];
+                        }
+                      }
+                      return prev;
                     });
                   }
                 }
@@ -203,8 +221,6 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, allSc
         setRouteBufferPolygons(newPolygons);
         setRouteMarkers(newMarkers);
       });
-
-
     }
 
 
