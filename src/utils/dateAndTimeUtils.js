@@ -173,7 +173,7 @@ export function formatDateForLogs(isoDate) {
 }
 
 export function transformToAmPm(time) {
-  let [hour, minute, second] = time.split(":");
+  let [hour, minute, second] = time || "".split(":");
   hour = Number(hour);
   const period = hour >= 12 ? "PM" : "AM";
   if (hour === 0) {
