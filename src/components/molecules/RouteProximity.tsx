@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { MapSearchInput } from "../../components/atoms/MapSearchInput";
 import { Slider, Tooltip } from "antd";
 import ButtonInput from "../../components/atoms/ButtonInput";
@@ -38,6 +38,7 @@ export const RouteProximity = ({
   setRouteFilteredScreens,
 }: RouteProximityProps) => {
   const [showDetails, setShowDetails] = useState<any>(null);
+  const sliderTimeout = useRef<NodeJS.Timeout>();
 
   const handleRouteSetup = useCallback(async (originData: any, destinationData: any) => {
     if (!originData?.[0] || !destinationData?.[0]) return;
@@ -125,8 +126,16 @@ export const RouteProximity = ({
                 max={1}
                 step={0.1}
                 value={routeRadius ? routeRadius / 1000 : 1}
-                onChange={(value) => {
-                  setRouteRadius(value * 1000);
+                onChange={(value: number) => {
+                  // Clear any existing timeout
+                  if (sliderTimeout.current) {
+                    clearTimeout(sliderTimeout.current);
+                  }
+                  
+                  // Set a new timeout to update the route radius after sliding stops
+                  sliderTimeout.current = setTimeout(() => {
+                    setRouteRadius(value * 1000);
+                  }, 300); // 300ms delay after sliding stops
                 }}
                 tooltip={{ formatter: (value) => `${value} km` }}
                 styles={{

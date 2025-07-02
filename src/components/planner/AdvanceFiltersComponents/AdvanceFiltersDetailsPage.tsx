@@ -68,6 +68,7 @@ export const AdvanceFiltersDetailsPage = ({
 
   const [polygons, setPolygons] = useState<any[]>(JSON.parse(JSON.stringify(campaignDetails?.advanceFilterData?.polygons || [])));
 
+
   const {
     loading: loadingAddDetails,
     error: errorAddDetails,
@@ -291,7 +292,6 @@ export const AdvanceFiltersDetailsPage = ({
                   userLocation={userLocation}
                   setUserLocation={setUserLocation}
                   handleFinalSelectedScreens={handleFinalSelectedScreens}
-   
                 />
               )}
             </div>

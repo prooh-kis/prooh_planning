@@ -27,6 +27,7 @@ interface LocationProximityProps {
   polygonFilteredScreens?: any;
   polygons?: any;
   setPolygons?: any;
+  disableSlider?: any;
 }
 export const LocationProximity = ({
   allScreens,
@@ -49,6 +50,7 @@ export const LocationProximity = ({
   polygonFilteredScreens,
   polygons,
   setPolygons,
+  disableSlider,
 }: LocationProximityProps) => {
   const [open, setOpen] = useState<any>({
     excel: true,

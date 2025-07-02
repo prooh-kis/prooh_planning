@@ -3,19 +3,15 @@ import {AdvancedMarker, InfoWindow, useAdvancedMarkerRef} from '@vis.gl/react-go
 
 
 interface Props {
-  key?: any;
   markerData?: any;
   color?: any;
-  size?: any;
   action?: any;
   screenData?: any;
 }
 
 export const CustomAdvancedMarker: FunctionComponent<Props> = ({
-  key,
   markerData,
   color,
-  size,
   action,
   screenData,
 }) => {
@@ -49,7 +45,6 @@ export const CustomAdvancedMarker: FunctionComponent<Props> = ({
   return (
     <div className="flex justify-center">
       <AdvancedMarker
-        key={key}
         ref={markerRef}
         position={position}
         title={'AdvancedMarker with custom html content.'}

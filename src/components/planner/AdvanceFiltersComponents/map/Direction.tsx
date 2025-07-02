@@ -1,7 +1,6 @@
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as turf from "@turf/turf";
-import { message } from "antd";
 
 
 export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAllRoutes, allScreens, routeRadius, setRouteFilteredScreens }: any) {
@@ -19,12 +18,6 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
   const [directionsRenderers, setDirectionsRenderers] = useState<google.maps.DirectionsRenderer[]>([]);
   const [routeMarkers, setRouteMarkers] = useState<google.maps.marker.AdvancedMarkerElement[]>([]);
   const [routeBufferPolygons, setRouteBufferPolygons] = useState<google.maps.Polygon[]>([]);
-
-
-  const getColorForRoute = useCallback((id: string | number) => {
-    const colors = ["#006064", "#795548", "#37474F", "#9E9D24", "#D84315"];
-    return colors[Math.abs((typeof id === "string" ? id?.length : id) % colors?.length)];
-  }, []);
 
   useEffect(() => {
     if (!routesLibrary || !map) return;
@@ -76,6 +69,11 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
       return;
     }
   
+    const getColorForRoute = (id: string | number) => {
+      const colors = ["#006064", "#795548", "#37474F", "#9E9D24", "#D84315"];
+      return colors[Math.abs((typeof id === "string" ? id?.length : id) % colors?.length)];
+    };
+
     const newRenderers: google.maps.DirectionsRenderer[] = [];
     const newPolygons: google.maps.Polygon[] = [];
     const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
@@ -87,7 +85,9 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
         const origin = new google.maps.LatLng(route?.origin?.center?.[1], route?.origin?.center?.[0]);
         const destination = new google.maps.LatLng(route?.destination?.center?.[1], route?.destination?.center?.[0]);
     
-
+        newRenderers.forEach((renderer) => renderer.setMap(null));
+        newPolygons.forEach((polygon) => polygon.setMap(null));
+        newMarkers.forEach((marker) => marker.map = null);
         return directionsService
           .route({
             origin,
@@ -101,6 +101,7 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
  
               if (renderedRouteIds.has(routeId)) return;
               renderedRouteIds.add(routeId);
+
               currentRenderers.forEach((renderer) => renderer.setMap(null));
     
               const renderer = new routesLibrary!.DirectionsRenderer({
@@ -123,7 +124,6 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
                 lat: point.lat(),
                 lng: point.lng(),
               }));
-    
               if (mainRoute?.length > 0) {
                 // Clear any existing buffer polygons first
                 routeBufferPolygons.forEach(polygon => {
@@ -165,17 +165,13 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
                       return turf.booleanPointInPolygon(screenPoint, buffered);
                     });
                     const oldScreens = allRoutes?.find((route: any) => Number(route.id) === Number(route.id))?.selectedScreens;
-                    // const removedScreen
-                    console.log(route.id, "oldScreens", oldScreens)
-                    console.log(route.id, "filteredScreenRecords", filteredScreenRecords)
                     const screensToRemove = oldScreens?.filter((screen: any) => !filteredScreenRecords?.map((s: any) => s._id).includes(screen._id));
-                    console.log(route.id, "screens To Remove", screensToRemove)
 
                     setAllRoutes((prev: any) => {
                       for (let oldRoute of prev) {
                         if (Number(oldRoute.id) === Number(route.id)){
                           const updatedScreens = oldRoute.selectedScreens.filter((scr: any) => !screensToRemove?.map((s: any) => s._id).includes(scr._id));
-                          const oldRouteScreenIds = updatedScreens?.map((screen: any) => screen._id);
+                          const oldRouteScreenIds = updatedScreens?.map((sn: any) => sn._id);
                           const newScreens = filteredScreenRecords?.filter((screen: any) => !oldRouteScreenIds?.includes(screen._id));
                           oldRoute.selectedScreens = [...updatedScreens, ...newScreens];
                         }
@@ -186,7 +182,7 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
                     setRouteFilteredScreens((prev: any) => {
                       const updatedScreens = prev.filter((scr: any) => !screensToRemove?.map((s: any) => s._id).includes(scr._id));
                       
-                      const routeFilteredScreensIds = updatedScreens?.map((screen: any) => screen._id);
+                      const routeFilteredScreensIds = updatedScreens?.map((sn: any) => sn._id);
                       const newScreens = filteredScreenRecords?.filter((screen: any) => !routeFilteredScreensIds?.includes(screen._id));
                       return [...updatedScreens, ...newScreens];
                     })
@@ -265,7 +261,6 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
     routeRadius,
     map,
     routesLibrary,
-    getColorForRoute,
     // directionsRenderers,
     // routeBufferPolygons,
     // routeMarkers,
