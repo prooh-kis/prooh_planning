@@ -172,7 +172,7 @@ export const CostSummaryPopup = ({ onClose, campaignId }: any) => {
               className="fi fi-rr-arrow-left text-gray-400 flex items-center"
               onClick={() => onClose()}
             ></i>
-            <h1 className="text-[18px] font-bold">Const Summary</h1>
+            <h1 className="text-[18px] font-bold">Cost Summary</h1>
           </div>
           <i className="fi fi-br-cross" onClick={() => onClose()}></i>
         </div>

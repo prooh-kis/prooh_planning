@@ -27,6 +27,8 @@ import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "
 import { getAllPlannerIdsAndEmail } from "../../actions/screenAction";
 import dayjs from "dayjs";
 import { industryTypes } from "../../data/touchpointData";
+import { format } from "date-fns";
+import { monitoringTypes } from "../../constants/helperConstants";
 
 const calculateDuration = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
   return end.diff(start, "day") + 1; // +1 to include both start and end dates
@@ -173,6 +175,20 @@ export const EnterCampaignBasicDetails = ({
               ?.email || "",
           sov: values.sov,
           sovType: "ordered",
+          monitoringSelection: {
+            startDate: {
+              dates: [format(values.startDate.toDate(), "yyyy-MM-dd")],
+              monitoringType: monitoringTypes.map((type: any) => type.value),
+            },
+            endDate: {
+              dates: [format(values.endDate.toDate(), "yyyy-MM-dd")],
+              monitoringType: monitoringTypes.map((type: any) => type.value),
+            },
+            midDate: {
+              dates: [],
+              monitoringType: [],
+            },
+          },
         };
 
         handleAddNewClient(values.clientName);
@@ -335,7 +351,7 @@ export const EnterCampaignBasicDetails = ({
             name="clientName"
             label={
               <div className="flex items-center gap-2">
-                <span>Agency / Client</span>
+                <span>Client / Group</span>
                 <Tooltip title="Enter Agency's name or client's name who is managing the campaign">
                   <i className="fi fi-rs-info text-[10px] text-gray-400" />
                 </Tooltip>
@@ -498,16 +514,16 @@ export const EnterCampaignBasicDetails = ({
             name="managerId"
             label={
               <div className="flex items-center gap-2">
-                <span>Select Manager</span>
+                <span>Select Coordinator</span>
                 <Tooltip title="Select the manager for this campaign">
                   <i className="fi fi-rs-info text-[10px] text-gray-400" />
                 </Tooltip>
               </div>
             }
-            rules={[{ required: true, message: "Please select manager" }]}
+            rules={[{ required: true, message: "Please Select Coordinator" }]}
           >
             <Select
-              placeholder="Select Manager"
+              placeholder="Select Coordinator"
               size="large"
               loading={!allPlannerData.length}
               showSearch

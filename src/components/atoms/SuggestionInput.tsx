@@ -40,9 +40,24 @@ export const SuggestionInput: React.FC<SuggestionInputProps> = ({
     onChange(inputValue);
 
     if (inputValue.trim() !== "") {
-      const filtered = suggestions?.filter((suggestion) =>
-        suggestion?.toLowerCase()?.includes(inputValue?.toLowerCase())
-      );
+      // Sort suggestions: matches starting with input first, then others
+      const filtered = suggestions
+        ?.filter((suggestion) =>
+          suggestion?.toLowerCase()?.includes(inputValue?.toLowerCase())
+        )
+        .sort((a, b) => {
+          const aStartsWith = a
+            .toLowerCase()
+            .startsWith(inputValue.toLowerCase());
+          const bStartsWith = b
+            .toLowerCase()
+            .startsWith(inputValue.toLowerCase());
+
+          if (aStartsWith && !bStartsWith) return -1;
+          if (!aStartsWith && bStartsWith) return 1;
+          return 0;
+        });
+
       setFilteredSuggestions(filtered);
       setShowSuggestions(true);
       setHighlightedIndex(-1);
@@ -105,6 +120,10 @@ export const SuggestionInput: React.FC<SuggestionInputProps> = ({
                 index === highlightedIndex
                   ? "bg-[#129BFF10]"
                   : "hover:bg-[#129BFF10]"
+              } ${
+                suggestion.toLowerCase().startsWith(value.toLowerCase())
+                  ? "font-semibold"
+                  : ""
               }`}
             >
               {suggestion}

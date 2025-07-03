@@ -253,7 +253,7 @@ export const AddCampaignDetails = ({
         <div className="grid grid-cols-2 gap-8 pt-2">
           <div className="col-span-1 py-1">
             <label className="block text-secondaryText text-[14px] mb-2">
-              Client Name
+              Client / Group
             </label>
             <SuggestionInput
               suggestions={clientAgencyNamesList?.map(
@@ -361,7 +361,7 @@ export const AddCampaignDetails = ({
           <div className="col-span-1 py-1">
             <div className="block flex justify-between gap-2 items-center mb-2">
               <label className="block text-secondaryText text-[14px]">
-                Select Manager
+                Select Coordinator
               </label>
               <Tooltip title="How many times you want to play creatives in one loop">
                 <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
@@ -375,7 +375,7 @@ export const AddCampaignDetails = ({
                 };
               })}
               selectedOption={managerId}
-              placeHolder="Select Manager"
+              placeHolder="Select Coordinator"
               setSelectedOption={(value: any) => {
                 setManagerId(value);
                 setManagerEmail(
