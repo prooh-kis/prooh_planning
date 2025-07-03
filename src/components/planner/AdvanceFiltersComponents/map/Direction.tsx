@@ -94,6 +94,10 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
             destination,
             travelMode: google.maps.TravelMode.DRIVING,
             provideRouteAlternatives: true,
+            drivingOptions: {
+              departureTime: new Date(0),  // This disables traffic-based routing
+              trafficModel: "pessimistic" as google.maps.TrafficModel,
+            }
           })
           .then((response) => {
             response.routes.forEach((r, index) => {

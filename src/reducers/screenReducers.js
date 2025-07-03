@@ -108,7 +108,7 @@ export function screensAudiencesDataGetReducer(state = [], action) {
       const campaign = action.payload;
       const saveData = {};
       saveData[campaign.id] = campaign;
-      saveDataOnLocalStorage(AUDIENCE_DATA, saveData);
+      // saveDataOnLocalStorage(AUDIENCE_DATA, saveData);
       return {
         loading: false,
         data: action.payload,
@@ -130,13 +130,13 @@ export function screensCostDataGetReducer(state = [], action) {
     case GET_SCREENS_COST_DATA_SUCCESS:
       const campaignId = action.payload.id;
 
-      saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, {
-        [campaignId]: action.payload,
-      });
+      // saveDataOnLocalStorage(TOTAL_SCREEN_COST_DATA, {
+      //   [campaignId]: action.payload,
+      // });
       const old = getDataFromLocalStorage(COST_SUMMARY)?.[campaignId] || [];
       const cost = action.payload;
       const newCost = [cost, ...old];
-      saveDataOnLocalStorage(COST_SUMMARY, { [campaignId]: newCost });
+      // saveDataOnLocalStorage(COST_SUMMARY, { [campaignId]: newCost });
       return {
         loading: false,
         data: action.payload,
@@ -159,7 +159,7 @@ export function screensDataAdvanceFilterGetReducer(state = [], action) {
       const campaign = action.payload;
       const saveData = {};
       saveData[campaign.id] = campaign;
-      saveDataOnLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA, saveData);
+      // saveDataOnLocalStorage(ADVANCE_FILTER_SCREENS_MAP_DATA, saveData);
       return {
         loading: false,
         data: action.payload,
@@ -205,7 +205,7 @@ export function regularVsCohortPriceDataGetReducer(state = [], action) {
       const campaign = action.payload;
       const saveData = {};
       saveData[campaign.id] = campaign;
-      saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, saveData);
+      // saveDataOnLocalStorage(REGULAR_VS_COHORT_PRICE_DATA, saveData);
       return {
         loading: false,
         data: action.payload,
@@ -228,7 +228,7 @@ export function screenSummaryDataGetReducer(state = {}, action) {
       const { id, ...campaign } = action.payload;
       const saveData = {};
       saveData[id] = campaign;
-      saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, saveData);
+      // saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, saveData);
       return {
         loading: false,
         data: campaign,
@@ -251,7 +251,7 @@ export function screenSummaryDataIKnowItAllGetReducer(state = {}, action) {
       const { id, ...campaign } = action.payload;
       const saveData = {};
       saveData[id] = campaign;
-      saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, saveData);
+      // saveDataOnLocalStorage(SCREEN_SUMMARY_DATA, saveData);
       return {
         loading: false,
         data: campaign,
@@ -274,7 +274,7 @@ export function screenSummaryPlanTableDataGetReducer(state = [], action) {
       const { id, ...campaign } = action.payload;
       const saveData = {};
       saveData[id] = campaign;
-      saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, saveData);
+      // saveDataOnLocalStorage(SCREEN_SUMMARY_TABLE_DATA, saveData);
 
       return {
         loading: false,
@@ -424,7 +424,7 @@ export function planningPageFooterDataGetReducer(state = {}, action) {
       const { id, ...finalSummaryStepWise } = action.payload;
       const saveData = {};
       saveData[id] = finalSummaryStepWise;
-      saveDataOnLocalStorage(FOOTER_DATA, finalSummaryStepWise);
+      // saveDataOnLocalStorage(FOOTER_DATA, finalSummaryStepWise);
       return {
         loading: false,
         data: action.payload,

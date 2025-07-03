@@ -3,9 +3,6 @@ import { readExcelFile, validateGioData } from "../../utils/excelUtils";
 import { getDistance } from "geolib";
 import { ExcelExport } from "./ExcelExport";
 import { Tooltip, Slider } from "antd";
-import { PrimaryInput } from "../../components/atoms/PrimaryInput";
-import { getDataFromLocalStorage, saveDataOnLocalStorage } from "../../utils/localStorageUtils";
-import { EXCEL_DATA_TARGET_STORES } from "../../constants/campaignConstants";
 
 interface ExcelImportProps {
   open: any;
@@ -19,6 +16,7 @@ interface ExcelImportProps {
   dataBrand?: any;
   dataComp?: any;
   setCircleData?: any;
+  circleData?: any;
   allScreens?: any;
   setExcelFilteredScreens?: any;
   excelFilteredScreens?: any;
@@ -38,11 +36,15 @@ export function ExcelImport({
   circleRadius,
   setCircleRadius,
   setCircleData,
+  circleData,
   type,
   setExcelFilteredScreens,
   excelFilteredScreens,
   // handleFinalSelectedScreens,
 }: ExcelImportProps) {
+  // Add this ref at the top of your component
+  const processedData = useRef<any>({ brand: null, comp: null });
+
   const hiddenFileInput = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<any>(null);
 
@@ -194,22 +196,33 @@ export function ExcelImport({
     }
   }, [
     allScreens,
-    // handleFinalSelectedScreens,
     setCircleData,
     setDataBrand,
     setDataComp,
     setExcelFilteredScreens,
     type,
-    circleRadius, // ✅ Ensure this is included in dependencies
+    circleRadius,
   ]);
 
-  useEffect(() => {
-    window.localStorage.removeItem(EXCEL_DATA_TARGET_STORES);
-  }, []);
 
+  // Update your useEffect
   useEffect(() => {
-    handleGetExcelData(getDataFromLocalStorage(EXCEL_DATA_TARGET_STORES)); // Pass the correct Excel data here
-  }, [circleRadius]);
+    if (!circleData) return;
+
+    // Check if data is different from what we've already processed
+    const brandChanged = JSON.stringify(circleData.brand) !== JSON.stringify(processedData.current.brand);
+    const compChanged = JSON.stringify(circleData.comp) !== JSON.stringify(processedData.current.comp);
+
+    if ((circleData.brand?.length || circleData.comp?.length) && (brandChanged || compChanged)) {
+      // Update the ref with current data
+      processedData.current = {
+        brand: circleData.brand ? [...circleData.brand] : null,
+        comp: circleData.comp ? [...circleData.comp] : null
+      };
+      
+      handleGetExcelData(circleData);
+    }
+  }, [circleData, handleGetExcelData]);
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -217,7 +230,7 @@ export function ExcelImport({
     if (file) {
       try {
         const data = await readExcelFile(file);
-        saveDataOnLocalStorage(EXCEL_DATA_TARGET_STORES, data)
+        // saveDataOnLocalStorage(EXCEL_DATA_TARGET_STORES, data)
         handleGetExcelData(data);
       } catch (error) {
         console.error("Error reading Excel file:", error);

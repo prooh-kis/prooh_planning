@@ -1,7 +1,8 @@
 import { GoogleMapWithGeometry } from "./map/GoogleMapWithGeometry";
 import { addDetailsToCreateCampaign } from "../../../actions/campaignAction";
 import { message, Tooltip } from "antd";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+// Type for polygon with custom ID
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
@@ -49,7 +50,14 @@ export const AdvanceFiltersDetailsPage = ({
 
   const [routeDataCache, setRouteDataCache] = useState<{ [key: string]: any }>({});
 
-  const [excelData, setExcelData] = useState<any>({});
+  const [excelData, setExcelData] = useState<any>(() => {
+    return {
+      brand: campaignDetails?.advanceFilterData?.stores?.[0]?.brands || [],
+      comp: campaignDetails?.advanceFilterData?.stores?.[0]?.comp || [],
+      radius: campaignDetails?.advanceFilterData?.stores?.[0]?.radius || 100,
+    }
+  });
+
   const [dataBrand, setDataBrand] = useState<any[]>(
     campaignDetails?.advanceFilterData?.stores?.[0]?.brands || []
   );
@@ -66,9 +74,7 @@ export const AdvanceFiltersDetailsPage = ({
   );
   const [routeRadius, setRouteRadius] = useState<any>(300); // in meteres
 
-  const [polygons, setPolygons] = useState<any[]>(JSON.parse(JSON.stringify(campaignDetails?.advanceFilterData?.polygons || [])));
-
-
+  const [polygons, setPolygons] = useState<any[]>([]);
   const {
     loading: loadingAddDetails,
     error: errorAddDetails,
@@ -168,6 +174,36 @@ export const AdvanceFiltersDetailsPage = ({
     errorAdvanceFilterData,
   ]);
 
+  const extractPolygonData = (polygons: any[]) => {
+    return polygons.map(polygon => {
+      const paths = polygon.getPaths();
+      const coordinates = [];
+      
+      // Get all the coordinates from the polygon paths
+      for (let i = 0; i < paths.getLength(); i++) {
+        const path = paths.getAt(i);
+        const pathCoords = [];
+        
+        for (let j = 0; j < path.getLength(); j++) {
+          const point = path.getAt(j);
+          pathCoords.push({
+            lat: point.lat(),
+            lng: point.lng()
+          });
+        }
+        
+        if (pathCoords.length > 0) {
+          coordinates.push(pathCoords);
+        }
+      }
+      
+      return {
+        id: polygon.id || Date.now().toString(),
+        coordinates: coordinates
+      };
+    });
+  };
+
   const handleSaveAndContinue = () => {
     if (!pathname.split("/").includes("view")) {
       if (isDisabled) {
@@ -175,26 +211,31 @@ export const AdvanceFiltersDetailsPage = ({
         return;
       }
 
-      dispatch(
-        addDetailsToCreateCampaign({
-          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
-          pageName: "Advance Filter Page",
-          id: campaignId,
-          screenIds: finalSelectedScreens.map((s: any) => s._id),
-          advanceFilterData: {
-            stores: [
-              {
-                brands: [...dataBrand],
-                comp: [...dataComp],
-                radius: circleRadius,
-              },
-            ],
-            routes: routes,
-            poiLists: [],
-            polygons: polygons,
-          },
-        })
-      );
+      if (finalSelectedScreens?.length > 0) {
+        // Extract polygon data before saving
+        const polygonData = extractPolygonData(polygons);
+        
+        dispatch(
+          addDetailsToCreateCampaign({
+            event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
+            pageName: "Advance Filter Page",
+            id: campaignId,
+            screenIds: finalSelectedScreens.map((s: any) => s._id),
+            advanceFilterData: {
+              stores: [
+                {
+                  brands: [...dataBrand],
+                  comp: [...dataComp],
+                  radius: circleRadius,
+                },
+              ],
+              routes: routes,
+              poiLists: [],
+              polygons: polygonData, // This is now a plain object that can be stringified
+            },
+          })
+        );
+      }
     }
   };
 
@@ -216,6 +257,16 @@ export const AdvanceFiltersDetailsPage = ({
   useEffect(() => {
     handleFinalSelectedScreens({ type: "add", screens: [] });
   },[handleFinalSelectedScreens]);
+
+  const handleConfirmScreensSelections = ({ checked, screens }: any) => {
+    setIsDisabled(!checked);
+    if (checked) {
+      handleFinalSelectedScreens({
+        type: "add",
+        screens: screens,
+      });
+    }
+  };
 
   return (
     <div className="w-full h-[calc(100vh-200px)] flex flex-col">
@@ -251,6 +302,7 @@ export const AdvanceFiltersDetailsPage = ({
                   excelFilteredScreens={excelFilteredScreens}
                   setExcelFilteredScreens={setExcelFilteredScreens}
                   setExcelData={setExcelData}
+                  excelData={excelData}
                   setDataBrand={setDataBrand}
                   setDataComp={setDataComp}
                   circleRadius={circleRadius}
@@ -265,9 +317,9 @@ export const AdvanceFiltersDetailsPage = ({
                   polygonFilteredScreens={polygonFilteredScreens}
                   polygons={polygons}
                   setPolygons={setPolygons}
-                  // handleConfirmScreensSelections={
-                  //   handleConfirmScreensSelections
-                  // }
+                  handleConfirmScreensSelections={
+                    handleConfirmScreensSelections
+                  }
                 />
               )}
             </div>
@@ -275,6 +327,7 @@ export const AdvanceFiltersDetailsPage = ({
             <div className="w-1/2 h-full overflow-hidden">
               {!loadingAdvanceFilterData && allScreens?.length > 0 && (
                 <GoogleMapWithGeometry
+                  campaignDetails={campaignDetails}
                   allScreens={allScreens}
                   finalSelectedScreens={finalSelectedScreens}
                   heatmap={advanceFilterData?.heatmap}
@@ -299,9 +352,6 @@ export const AdvanceFiltersDetailsPage = ({
           <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF] z-10">
             <Footer
               mainTitle={isDisabled ? "Check to Confirm" : "Continue"}
-              handleBack={() => {
-                setCurrentStep(step - 1);
-              }}
               handleSave={handleSaveAndContinue}
               campaignId={campaignId}
               pageName="Advance Filter Page"

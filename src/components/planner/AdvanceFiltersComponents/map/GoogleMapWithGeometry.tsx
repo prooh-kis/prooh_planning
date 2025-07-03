@@ -261,11 +261,12 @@ export function GoogleMapWithGeometry(props: any) {
         />
 
         <DrawPolygon
+          mapRef={mapRef}
           allScreens={props?.allScreens}
           setPolygonFilteredScreens={props?.setPolygonFilteredScreens}
           polygons={props?.polygons}
           setPolygons={props?.setPolygons}
-          // handleFinalSelectedScreens={props?.handleFinalSelectedScreens}
+          campaignDetails={props?.campaignDetails}
         />
 
         {heatmapOn && (
@@ -281,14 +282,6 @@ export function GoogleMapWithGeometry(props: any) {
             key={markerData.id}
             markerData={markerData}
             color={"#00A0FA"}
-            // color={marker.screenType === "Spectacular" ? "#00A0FA" : marker.screenType === "Large" ? "#00A0FA60" : "#00A0FA20"}
-            // size={
-            //   markerData.screenType == "Spectacular"
-            //     ? 60
-            //     : markerData.screenType == "Large"
-            //     ? 44
-            //     : 36
-            // }
             screenData={screenData}
             action={setScreenData}
           />
@@ -299,13 +292,6 @@ export function GoogleMapWithGeometry(props: any) {
             key={markerData.id}
             markerData={markerData}
             color="#F94623"
-            // size={
-            //   markerData.screenType == "Spectacular"
-            //     ? 44
-            //     : markerData.screenType == "Large"
-            //     ? 36
-            //     : 28
-            // }
             screenData={screenData}
             action={setScreenData}
           />

@@ -4,7 +4,7 @@ import { CheckboxInput } from "../../atoms/CheckboxInput";
 import { DrawnMapPolygon } from "../../molecules/DrawnMapPolygon";
 import { ExcelImport } from "../../molecules/ExcelImport";
 import { RouteProximity } from "../../molecules/RouteProximity";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface LocationProximityProps {
   allScreens?: any;
@@ -13,6 +13,7 @@ interface LocationProximityProps {
   excelFilteredScreens?: any;
   setExcelFilteredScreens?: any;
   setExcelData?: any;
+  excelData?: any;
   setDataBrand?: any;
   setDataComp?: any;
   circleRadius?: any;
@@ -27,7 +28,7 @@ interface LocationProximityProps {
   polygonFilteredScreens?: any;
   polygons?: any;
   setPolygons?: any;
-  disableSlider?: any;
+  handleConfirmScreensSelections?: any;
 }
 export const LocationProximity = ({
   allScreens,
@@ -36,6 +37,7 @@ export const LocationProximity = ({
   excelFilteredScreens,
   setExcelFilteredScreens,
   setExcelData,
+  excelData,
   setDataBrand,
   setDataComp,
   circleRadius,
@@ -50,7 +52,7 @@ export const LocationProximity = ({
   polygonFilteredScreens,
   polygons,
   setPolygons,
-  disableSlider,
+  handleConfirmScreensSelections,
 }: LocationProximityProps) => {
   const [open, setOpen] = useState<any>({
     excel: true,
@@ -73,11 +75,12 @@ export const LocationProximity = ({
           setDataBrand={setDataBrand}
           setDataComp={setDataComp}
           setCircleData={setExcelData}
+          circleData={excelData}
           allScreens={allScreens}
           setExcelFilteredScreens={setExcelFilteredScreens}
           excelFilteredScreens={excelFilteredScreens}
           type={["brand", "comp"]}
-          // handleFinalSelectedScreens={handleFinalSelectedScreens}
+          // campaignD={handleFinalSelectedScreens}
           setCircleRadius={setCircleRadius}
           circleRadius={circleRadius}
         />
@@ -162,10 +165,10 @@ export const LocationProximity = ({
             </p>
           }
           onChange={(e) => {
-            // handleConfirmScreensSelections({
-            //   checked: e,
-            //   screens: finalSelectedScreens,
-            // });
+            handleConfirmScreensSelections({
+              checked: e,
+              screens: finalSelectedScreens,
+            });
           }}
         />
       </div>
