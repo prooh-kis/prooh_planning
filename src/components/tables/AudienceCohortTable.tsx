@@ -7,40 +7,26 @@ import { DEFINE_ALL_COHORTS } from "../../constants/helperConstants";
 
 interface AudiencesProps {
   audiences?: any;
-  markets?: any;
   selectedAudiences?: any;
   setSelectedAudiences?: any;
   loading?: any;
-  locked?: any;
-  setLocked?: any;
-  showIconHighlight?: any;
 }
 export const AudienceCohortTable = ({
   loading,
   audiences,
   selectedAudiences,
   setSelectedAudiences,
-  locked,
-  setLocked,
-  showIconHighlight,
 }: AudiencesProps) => {
 
   const handleCheckClick = ({ cohort, checked }: any) => {
     if (checked && !selectedAudiences.includes(cohort)) {
       setSelectedAudiences([...selectedAudiences, cohort]);
-      // handleSelection({
-      //   type: "cohorts",
-      //   data: [cohort, selectedAudiences],
-      // });
     } else {
       const aud = selectedAudiences?.filter(
         (audience: any) => audience !== cohort
       );
       setSelectedAudiences(aud);
-      // handleSelection({
-      //   type: "cohorts",
-      //   data: aud,
-      // });
+ 
     }
   };
 

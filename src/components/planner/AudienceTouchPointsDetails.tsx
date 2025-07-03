@@ -197,7 +197,7 @@ export const AudienceTouchPointsDetails = ({
             zones,
           })
         );
-      }, 300);
+      }, 500);
 
       return () => clearTimeout(timer);
     }

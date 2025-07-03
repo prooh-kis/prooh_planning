@@ -24,19 +24,31 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({
   checked,
   onChange,
 }) => {
+  const handleLabelClick = (e: React.MouseEvent) => {
+    // Prevent the default behavior to avoid double-triggering
+    e.preventDefault();
+    // Toggle the checked state
+    if (!disabled) {
+      onChange?.(!checked);
+    }
+  };
+
   return (
-    <label className="grid grid-cols-12 flex items-center space-x-2 cursor-pointer truncate p-1">
+    <label 
+      className="grid grid-cols-12 flex items-center space-x-2 cursor-pointer truncate p-1"
+      onClick={handleLabelClick}
+    >
       <input
         type="checkbox"
         className={`col-span-1 form-checkbox h-4 w-4 text-[#52A2FF]`}
         checked={checked}
         disabled={disabled}
-        onChange={(event: any) => onChange?.(event.target.checked)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => onChange?.(event.target.checked)}
       />
 
       <Tooltip title={<h1 className="text-[10px]">{label ? label : "Checkbox"}</h1>}>
         {showIcon ? (
-          <span className={`col-span-11 truncate`}>
+          <span className={`col-span-11 truncate v`}>
             <i
               className={`${icon} pl-2 flex justify-start items-center text-[${
                 color ? color : "#21394F"

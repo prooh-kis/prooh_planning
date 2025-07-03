@@ -62,8 +62,8 @@ export const LocationTable = ({
   return (
     <table className="w-full">
       <thead className="bg-[#F7F7F7] w-full">
-        <tr className="grid grid-cols-12 w-full h-[40px] px-2">
-          <th className="col-span-9 flex items-center px-1 gap-2">
+        <tr className="grid grid-cols-12 w-full h-[40px]">
+          <th className="col-span-7 flex items-center px-2 gap-2">
             <div className="flex gap-2 items-center px-1">
               {/* <Tooltip title="Choose your target audience gender wise in the given locations">
                 <i className="fi fi-sr-land-layer-location flex items-center lg:text-[14px] text-[12px] text-[#21394F]"></i>
@@ -73,27 +73,34 @@ export const LocationTable = ({
               </h1>
             </div>
           </th>
-          <th className="col-span-3 flex items-center">
-            <CheckboxInput
-              disabled={loading}
-              label="Male"
-              checked={selectedGender.includes("Male") ? true : false}
-              onChange={(e: any) =>
-                handleCheckClick({ type: "Male", checked: e })
-              }
-              icon="fi fi-sr-man-head"
-              showIcon={true}
-            />
-            <CheckboxInput
-              disabled={loading}
-              label="Female"
-              checked={selectedGender.includes("Female") ? true : false}
-              onChange={(e: any) =>
-                handleCheckClick({ type: "Female", checked: e })
-              }
-              icon="fi fi-sr-woman-head"
-              showIcon={true}
-            />
+          <th className="col-span-5 flex items-center grid grid-cols-5 px-1">
+            <div className="col-span-1">
+
+            </div>
+            <div className="col-span-2 flex justify-center items-center pl-1">
+              <CheckboxInput
+                disabled={loading}
+                label="Male"
+                checked={selectedGender.includes("Male") ? true : false}
+                onChange={(e: any) =>
+                  handleCheckClick({ type: "Male", checked: e })
+                }
+                icon="fi fi-sr-man-head"
+                showIcon={true}
+              />
+            </div>
+            <div className="col-span-2 flex justify-center items-center pl-1">
+              <CheckboxInput
+                disabled={loading}
+                label="Female"
+                checked={selectedGender.includes("Female") ? true : false}
+                onChange={(e: any) =>
+                  handleCheckClick({ type: "Female", checked: e })
+                }
+                icon="fi fi-sr-woman-head"
+                showIcon={true}
+              />
+            </div>
           </th>
         </tr>
       </thead>

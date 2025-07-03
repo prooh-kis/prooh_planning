@@ -187,13 +187,13 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
   }
 
   return (
-    <div className="w-full px-4">
+    <div className="w-full px-1">
       <ul>
         {Object.keys(processedData || {}).map((state) => (
           <li key={state} className="mb-2 text-[#303030]">
             {/* State checkbox */}
-            <div className="flex items-center justify-between gap-2 py-1 cursor-pointer">
-              <div className="flex items-center gap-2 truncate">
+            <div className="flex items-center justify-between gap-2 py-1 cursor-pointer grid grid-cols-12">
+              <div className="col-span-7 flex items-center gap-2 truncate">
                 <input
                   title="state"
                   type="checkbox"
@@ -202,7 +202,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                   className="w-4 h-4 truncate"
                   disabled={true}
                 />
-                <div className="flex justify-between">
+                <div className="flex justify-between" onClick={() => toggleState(state)}>
                   <div className="flex items-center gap-1">
                     <span className={`text-[14px] font-[700] ${selected[state] ? "" : "text-[#6F7F8E]"}`}>
                       {state}
@@ -216,24 +216,24 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                   </div>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="col-span-5 flex gap-2 grid grid-cols-5">
                 <button
                   title="state button"
                   type="button"
                   onClick={() => toggleCollapse(state)}
-                  className="focus:outline-none text-black text-[10px]"
+                  className="col-span-1 focus:outline-none text-black text-[10px]"
                 >
                   <i
-                    className={`text-[#9A9A9A] flex items-center ${
+                    className={`text-[#9A9A9A] flex items-center justify-center ${
                       !collapsed[state] ? "fi fi-br-angle-up" : "fi fi-br-angle-down"
                     }`}
                   ></i>
                 </button>
-                <div className="flex gap-2 px-1">
-                  <h1 className="text-[#6F7F8E] text-[12px]">
+                <div className="grid grid-cols-2 col-span-4 flex gap-2 px-1">
+                  <h1 className="col-span-1 text-[#6F7F8E] text-[12px]">
                     {processedData[state]?.gender?.Male?.toFixed(1)}%
                   </h1>
-                  <h1 className="text-[#6F7F8E] text-[12px]">
+                  <h1 className="col-span-1 text-[#6F7F8E] text-[12px]">
                     {processedData[state]?.gender?.Female?.toFixed(1)}%
                   </h1>
                 </div>
@@ -242,12 +242,12 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
             
             {/* City list */}
             {!collapsed[state] && (
-              <ul className="ml-4 mt-1">
+              <ul className="mt-1">
                 {Object.keys(processedData?.[state]?.cities || {}).map((city) => (
                   <li key={city} className="mb-2">
                     {/* City checkbox */}
-                    <div className="flex items-center justify-between gap-2 py-1 cursor-pointer">
-                      <div className="flex items-center gap-2 truncate">
+                    <div className="flex items-center justify-between gap-2 py-1 cursor-pointer grid grid-cols-12">
+                      <div className="col-span-7 flex items-center gap-2 truncate ml-2">
                         <input
                           title="city"
                           type="checkbox"
@@ -255,7 +255,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                           onChange={() => toggleCity(state, city)}
                           className="w-4 h-4 truncate"
                         />
-                        <div className="flex justify-between">
+                        <div className="flex justify-between" onClick={() => toggleCity(state, city)}>
                           <div className="flex items-center gap-1">
                             <span className={`text-[12px] font-[600] ${selected[city] ? "" : "text-[#6F7F8E]"}`}>
                               {city}
@@ -266,24 +266,24 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                           </div>
                         </div>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="col-span-5 flex gap-2 grid grid-cols-5">
                         <button
                           title="city button"
                           type="button"
                           onClick={() => toggleCollapse(city)}
-                          className="focus:outline-none text-black text-[10px] text-[#9A9A9A]"
+                          className="col-span-1 focus:outline-none text-black text-[10px] text-[#9A9A9A]"
                         >
                           <i
-                            className={`text-[#9A9A9A] ${
+                            className={`text-[#9A9A9A] flex items-center justify-center ${
                               !collapsed[city] ? "fi fi-br-angle-up" : "fi fi-br-angle-down"
                             }`}
                           ></i>
                         </button>
-                        <div className="flex gap-2 px-1">
-                          <h1 className="text-[#6F7F8E] text-[12px]">
+                        <div className="col-span-4 flex gap-2 px-1 grid grid-cols-2">
+                          <h1 className="col-span-1 text-[#6F7F8E] text-[12px]">
                             {processedData[state]?.cities?.[city]?.Male?.toFixed(1)}%
                           </h1>
-                          <h1 className="text-[#6F7F8E] text-[12px]">
+                          <h1 className="col-span-1 text-[#6F7F8E] text-[12px]">
                             {processedData[state]?.cities?.[city]?.Female?.toFixed(1)}%
                           </h1>
                         </div>
@@ -292,11 +292,11 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
 
                     {/* Zone list */}
                     {!collapsed[city] && (
-                      <ul className="ml-4 mt-1">
+                      <ul className="mt-1">
                         {Object.keys(processedData?.[state]?.cities?.[city]?.zones || {}).map((zone) => (
                           <li key={zone} className="py-1">
-                            <div className="flex items-center justify-between gap-2 py-1 cursor-pointer">
-                              <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-between gap-2 py-1 cursor-pointer grid grid-cols-12">
+                              <div className="col-span-7 flex items-center gap-2 ml-4">
                                 <input
                                   title="zone"
                                   type="checkbox"
@@ -304,9 +304,9 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                                   onChange={() => toggleZone(state, city, zone)}
                                   className="w-4 h-4 truncate"
                                 />
-                                <div className="flex justify-between">
+                                <div className="flex justify-between" onClick={() => toggleZone(state, city, zone)}>
                                   <div className="flex items-center gap-1">
-                                    <span className={`text-[12px] font-[500] ${selected[zone] ? "" : "text-[#6F7F8E]"}`}>
+                                    <span className={`text-[12px] font-[500] w ${selected[zone] ? "" : "text-[#6F7F8E]"}`}>
                                       {zone}
                                     </span>
                                     <span className="text-gray-600 text-[12px]">
@@ -315,12 +315,13 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                                   </div>
                                 </div>
                               </div>
-                              <div className="flex gap-2">
-                                <div className="flex gap-2 px-1">
-                                  <h1 className="text-[#6F7F8E] text-[12px]">
+                              <div className="col-span-5 flex gap-2 grid grid-cols-5">
+                                <div className="col-span-1"></div>
+                                <div className="col-span-4 flex gap-2 px-1 grid grid-cols-2">
+                                  <h1 className="col-span-1 text-[#6F7F8E] text-[12px]">
                                     {processedData[state]?.cities?.[city]?.zones?.[zone]?.Male?.toFixed(1)}%
                                   </h1>
-                                  <h1 className="text-[#6F7F8E] text-[12px]">
+                                  <h1 className="col-span-1 text-[#6F7F8E] text-[12px]">
                                     {processedData[state]?.cities?.[city]?.zones?.[zone]?.Female?.toFixed(1)}%
                                   </h1>
                                 </div>
