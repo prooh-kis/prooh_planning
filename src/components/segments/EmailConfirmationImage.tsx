@@ -8,10 +8,10 @@ interface EmailConfirmationImageProps {
   setSkipEmailConfirmation?: any;
   skipEmailConfirmation?: any;
   skipFunction?: any;
-  page?: any;
+  disabled?: any;
 }
 
-export const EmailConfirmationImage = ({page, skipEmailConfirmation, setSkipEmailConfirmation, files, handleAddNewFile, removeImage, skipFunction}: EmailConfirmationImageProps) => {
+export const EmailConfirmationImage = ({disabled, files, handleAddNewFile, removeImage, skipFunction}: EmailConfirmationImageProps) => {
   return (
     <div className="p-2 h-auto">
       <div className="flex flex-col">

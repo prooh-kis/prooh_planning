@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   AudienceCohortTable,
@@ -8,6 +8,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Footer } from "../../components/footer";
 import {
+  getLocationWiseFiltersForScreensAudiencesData,
   getPlanningPageFooterData,
   getScreensAudiencesData,
   getScreensCostData,
@@ -38,9 +39,11 @@ export const AudienceTouchPointsDetails = ({
   const dispatch = useDispatch<any>();
   const { pathname } = useLocation();
 
-  const [markets, setMarkets] = useState<any>({});
   const [audiences, setAudiences] = useState<any>({});
   const [touchPoints, setTouchPoints] = useState<any>({});
+  const [markets, setMarkets] = useState<any>(
+    campaignDetails.markets || []
+  );
   const [zones, setSelectedZone] = useState<string[]>(
     campaignDetails?.zones || []
   );
@@ -62,6 +65,10 @@ export const AudienceTouchPointsDetails = ({
   const [selectedTouchPoints, setSelectedTouchPoints] = useState<any>(
     campaignDetails?.touchPoints || []
   );
+  
+  // Refs for tracking state changes
+  const isInitialMount = useRef(true);
+  const prevFilters = useRef({ markets, cities, zones });
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -72,25 +79,31 @@ export const AudienceTouchPointsDetails = ({
     success: successAddDetails,
   } = detailsToCreateCampaignAdd;
 
-  const screensAudiencesDataGet = useSelector(
-    (state: any) => state.screensAudiencesDataGet
+  const {
+    loading: loadingLocationWiseFilters,
+    error: errorLocationWiseFilters,
+    data: locationWiseFilters,
+  } = useSelector(
+    (state: any) => state.getLocationWiseFiltersForScreensAudiencesDataGet
   );
+
   const {
     loading: loadingAudiences,
     error: errorAudiences,
     data: screensAudiences,
-  } = screensAudiencesDataGet;
+  } = useSelector(
+    (state: any) => state.screensAudiencesDataGet
+  );;
 
   const getMatchedData = useCallback(
     (myData: any) => {
       const { id, ...marketData } = myData;
-      setMarkets(marketData);
 
       let audiencesData: any = {};
-      for (const market in myData) {
-        for (const audience in myData[market]["audience"]) {
+      for (const market in marketData) {
+        for (const audience in marketData[market]["audience"]) {
           audiencesData[audience] =
-            myData[market]["audience"][audience]["Total"].toFixed(2);
+          marketData[market]["audience"][audience]["Total"].toFixed(2);
         }
       }
       setAudiences(audiencesData);
@@ -125,19 +138,10 @@ export const AudienceTouchPointsDetails = ({
     },
     [campaignDetails?.cohorts, campaignDetails?.touchPoints, selectedGender]
   );
-
   useEffect(() => {
-    if (!campaignDetails) return;
-
-    const data = [
-      ...(campaignDetails?.markets || []),
-      ...(campaignDetails?.cities || []),
-      ...(campaignDetails?.zones || []),
-    ].reduce((acc: Record<string, boolean>, item: string) => {
-      acc[item] = true;
-      return acc;
-    }, {});
-    saveDataOnLocalStorage("STATE_CITY_ZONE", data);
+    if (errorLocationWiseFilters) {
+      message.error("Error in getting location filters");
+    }
 
     if (errorAudiences) {
       message.error("Error in fetching audience data");
@@ -147,19 +151,57 @@ export const AudienceTouchPointsDetails = ({
       message.error("Error in saving campaigns details");
     }
 
-    dispatch(
-      getScreensAudiencesData({
-        id: campaignId,
-        markets: campaignDetails?.markets,
-      })
-    );
+    if (errorLocationWiseFilters) {
+      message.error("Error in getting location filters");
+    }
+  }, [errorAudiences, errorAddDetails, errorLocationWiseFilters]);
+
+  useEffect(() => {
+    if (!campaignDetails) return;
+
+    dispatch(getLocationWiseFiltersForScreensAudiencesData({id: campaignId}));
+    
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
         pageName: "Audience And TouchPoint Page",
       })
     );
-  }, [campaignId, campaignDetails, dispatch, errorAudiences, errorAddDetails]);
+    
+    // Initial data fetch complete
+  }, [campaignId, campaignDetails, dispatch]);
+
+  useEffect(() => {
+    // Don't run on initial mount or if we don't have locationWiseFilters yet
+    if (isInitialMount.current || !locationWiseFilters) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    // Check if any of the location filters have actually changed
+    const currentFilters = { markets, cities, zones };
+    const hasFiltersChanged = 
+      JSON.stringify(prevFilters.current) !== JSON.stringify(currentFilters);
+      
+    if (hasFiltersChanged) {
+      // Update the ref with current filters
+      prevFilters.current = { ...currentFilters };
+      
+      // Add a small debounce to prevent rapid successive calls
+      const timer = setTimeout(() => {
+        dispatch(
+          getScreensAudiencesData({
+            id: campaignId,
+            markets,
+            cities,
+            zones,
+          })
+        );
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }
+  }, [markets, cities, zones, campaignId, dispatch, locationWiseFilters]);
 
   useEffect(() => {
     if (successAddDetails) {
@@ -176,25 +218,6 @@ export const AudienceTouchPointsDetails = ({
     }
   }, [screensAudiences, getMatchedData]);
 
-  const handleSelection = (input: any) => {
-    dispatch(
-      getScreensCostData({
-        id: campaignId,
-        cohorts: input.type === "cohorts" ? input.data : selectedAudiences,
-        touchPoints:
-          input.type === "touchPoints" ? input.data : selectedTouchPoints,
-        duration: campaignDetails?.duration,
-        gender:
-          input.type === "gender"
-            ? input.data
-            : selectedGender.length === 1 && selectedGender.includes("Male")
-            ? "Male"
-            : selectedGender.length === 1 && selectedGender.includes("Female")
-            ? "Female"
-            : "both",
-      })
-    );
-  };
 
   const getSelectedGender = useCallback(() => {
     return selectedGender.length === 1 && selectedGender.includes("Male")
@@ -234,9 +257,10 @@ export const AudienceTouchPointsDetails = ({
     zones,
   ]);
 
+
   return (
     <div className="">
-      {loadingAudiences ? (
+      {loadingLocationWiseFilters ? (
         <LoadingScreen />
       ) : (
         <div className="w-full">
@@ -252,11 +276,10 @@ export const AudienceTouchPointsDetails = ({
           <div className="grid grid-cols-9 gap-1 py-2">
             <div className="col-span-3 flex justify-center">
               <LocationTable
-                loading={loadingAudiences}
-                handleSelection={handleSelection}
+                loading={loadingLocationWiseFilters}
                 selectedGender={selectedGender}
                 setSelectedGender={setSelectedGender}
-                data={screensAudiences || {}}
+                data={locationWiseFilters || {}}
                 setSelectedCity={setSelectedCity}
                 setSelectedZone={setSelectedZone}
               />
@@ -264,7 +287,6 @@ export const AudienceTouchPointsDetails = ({
             <div className="col-span-3 flex justify-center">
               <AudienceCohortTable
                 loading={loadingAudiences}
-                handleSelection={handleSelection}
                 audiences={audiences}
                 selectedAudiences={selectedAudiences}
                 setSelectedAudiences={setSelectedAudiences}
@@ -273,7 +295,6 @@ export const AudienceTouchPointsDetails = ({
             <div className="col-span-3 flex justify-center">
               <TouchpointTable
                 loading={loadingAudiences}
-                handleSelection={handleSelection}
                 touchPoints={touchPoints}
                 selectedTouchPoints={selectedTouchPoints}
                 setSelectedTouchPoints={(value: string[]) => {
@@ -282,7 +303,7 @@ export const AudienceTouchPointsDetails = ({
               />
             </div>
           </div>
-          <div className="flex justify-start items-center gap-2 pt-2">
+          <div className="flex justify-start items-center gap-2">
             <i className="fi fi-sr-lightbulb-on text-[#FFB904]"></i>
             <h1 className="text-[14px] text-[#178967]">
               Prooh Tip:- select target audience and select select target

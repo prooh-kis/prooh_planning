@@ -64,7 +64,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
   // Variant classes
   const variantClasses = {
     primary: `text-white bg-[#129BFF] hover:bg-[#107ACC] ${
-      disabled || loading ? "bg-blue-300" : ""
+      disabled || loading ? "bg-[#129BFF50]" : ""
     }`,
     secondary: `text-white bg-gray-600 hover:bg-gray-700 ${
       disabled || loading ? "bg-gray-400" : ""
@@ -78,7 +78,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
       disabled || loading ? "text-gray-400" : "text-[#129BFF] hover:bg-blue-50"
     }`,
     danger: `hover:bg-[#ef4444] bg-[#FFFFFF] hover:text-[#FFFFFF] text-[#ef4444] border-[#ef4444] border-2 ${
-      disabled || loading ? "bg-red-300" : ""
+      disabled || loading ? "bg-[#ef444450]" : ""
     }`,
     knowMore: `bg-white hover:bg-gray-100`,
     custom: custom,
@@ -151,7 +151,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
           handleClick(e as any);
         }
       }}
-      className={`${baseClasses} ${sizeClasses[size]} ${roundedClasses[rounded]} ${variantClasses[variant]} ${className} overflow-hidden`}
+      className={`${baseClasses} ${sizeClasses[size]} ${roundedClasses[rounded]} ${variantClasses[variant]} ${className} overflow-hidden truncate`}
     >
       {loading ? (
         <div className="flex items-center gap-2 px-1 truncate">
@@ -187,7 +187,7 @@ const ButtonInput: React.FC<ButtonProps> = ({
             <span className={iconSizeClasses[size]}>{icon}</span>
           )}
           {!showOnlyIcon && (
-            <div ref={contentRef} className="whitespace-nowrap">
+            <div ref={contentRef} className="whitespace-nowrap truncate">
               {children}
             </div>
           )}

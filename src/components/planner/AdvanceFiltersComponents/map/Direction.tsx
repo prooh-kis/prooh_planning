@@ -1,6 +1,7 @@
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as turf from "@turf/turf";
+import { getUniqueArray } from "../../../../utils/generatlUtils";
 
 
 export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAllRoutes, allScreens, routeRadius, setRouteFilteredScreens }: any) {
@@ -168,7 +169,8 @@ export function Directions({ routeDataCache, setRouteDataCache, allRoutes, setAl
                       ]);
                       return turf.booleanPointInPolygon(screenPoint, buffered);
                     });
-                    const oldScreens = allRoutes?.find((route: any) => Number(route.id) === Number(route.id))?.selectedScreens;
+                    const allSelectedScreens = getUniqueArray(allRoutes.map((route: any) => route.selectedScreens));
+                    const oldScreens = allRoutes?.find((route: any) => Number(route.id) === Number(route.id))?.selectedScreens?.filter((sn: any) => !allSelectedScreens.map((sr: any) => sr._id).includes(sn._id));
                     const screensToRemove = oldScreens?.filter((screen: any) => !filteredScreenRecords?.map((s: any) => s._id).includes(screen._id));
 
                     setAllRoutes((prev: any) => {

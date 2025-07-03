@@ -96,26 +96,25 @@ export const RegularCohortComparisonDetails = ({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full pb-12">
       {errorPriceData && <p>Error: {errorPriceData}</p>}
       {loadingPriceData ? (
         <LoadingScreen />
       ) : (
         <div className="w-full">
-          <h1 className="text-[24px] text-primaryText font-semibold">
-            Compare Plan
-          </h1>
-          <p className="text-[14px] text-secondaryText">
-            Choose between a Regular Slots Campaign or customize your slots with
-            cohort data
-          </p>
+          <div className="">
+            <h1 className="text-[24px] text-primaryText font-semibold">
+              Compare Plan
+            </h1>
+            <p className="text-[14px] text-secondaryText">
+              Choose between a Regular Slots Campaign or customize your slots with
+              cohort data
+            </p>
 
+          </div>
+         
           <div className="flex gap-2">
-            <div className="pt-6">
-              <VerticalLine height="auto" color="#B5B5B5" thickness="1px" />
-              <VerticalLine height="auto" color="#B5B5B5" thickness="1px" />
-            </div>
-            <div className="w-full max-h-[60vh] overflow-scroll no-scrollbar">
+            <div className="w-full">
               {["regular", "cohort"].map((type) => (
                 <div key={type} className="py-2">
                   <div className="py-2 flex items-center gap-2">

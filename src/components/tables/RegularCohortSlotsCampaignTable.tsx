@@ -7,6 +7,7 @@ interface RegularCohortSlotsCampaignTableProps {
   type?: any;
   showSummary?: any;
   loading?: boolean;
+  campaignDetails?: any;
 }
 export const RegularCohortSlotsCampaignTable = ({
   type,
@@ -14,6 +15,7 @@ export const RegularCohortSlotsCampaignTable = ({
   priceData,
   showSummary,
   loading,
+  campaignDetails,
 }: RegularCohortSlotsCampaignTableProps) => {
   return (
     <table className="w-full">
@@ -22,38 +24,43 @@ export const RegularCohortSlotsCampaignTable = ({
           ${type === "regular" ? "bg-[#F7F7F7]" : "bg-[#DFE8FF]"}
         flex justify-between items-center w-full`}
       >
-        <tr className="flex justify-between w-full h-[40px]">
-          <th className="flex w-full items-center justify-center gap-2 border-r truncate">
+        <tr className="flex justify-between w-full h-[40px] grid grid-cols-12">
+          <th className="col-span-1 flex w-full items-center justify-center gap-2 border-r truncate">
             <h1 className="text-[14px] text-[#21394F] truncate">
-              Total Screens
+              City
             </h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2 border-r">
+          <th className="col-span-1 flex w-full items-center justify-center gap-2 border-r truncate">
+            <h1 className="text-[14px] text-[#21394F] truncate">
+              Screens
+            </h1>
+          </th>
+          <th className="col-span-1 flex w-full items-center justify-center gap-2 border-r">
             <h1 className="text-[14px] text-[#21394F]">CPM</h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2 border-r truncate">
+          <th className="col-span-2 flex w-full items-center justify-center gap-2 border-r truncate">
             <h1 className="text-[14px] text-[#21394F] truncate">
               Impressions/Day
             </h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2 border-r truncate">
+          <th className="col-span-2 flex w-full items-center justify-center gap-2 border-r truncate">
             <h1 className="text-[14px] text-[#21394F] truncate">
-              Total Slots/Day
+              Slots/Day
             </h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2 border-r">
-            <h1 className="text-[14px] text-[#21394F]">Avg. Price/Slot</h1>
+          <th className="col-span-1 flex w-full items-center justify-center gap-2 border-r">
+            <h1 className="text-[14px] text-[#21394F]">Price/Slot</h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2 border-r">
+          <th className="col-span-2 flex w-full items-center justify-center gap-2 border-r">
             <h1 className="text-[14px] text-[#21394F]">Total Cost</h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2 border-r">
+          {/* <th className="flex w-full items-center justify-center gap-2 border-r">
             <h1 className="text-[14px] text-[#21394F]">SOV</h1>
-          </th>
-          <th className="flex w-full items-center justify-center gap-2 border-r">
+          </th> */}
+          <th className="col-span-1 flex w-full items-center justify-center gap-2 border-r">
             <h1 className="text-[14px] text-[#21394F]">Duration</h1>
           </th>
-          <th className="flex w-full items-center justify-center gap-2">
+          <th className="col-span-1 flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F]">View</h1>
           </th>
         </tr>
@@ -64,13 +71,18 @@ export const RegularCohortSlotsCampaignTable = ({
             <td className="h-[45px] bg-gray-200 rounded-b dark:bg-gray-700 w-full"></td>
           </tr>
         ) : (
-        <tr className="flex justify-between border rounded-b w-full h-[45px]">
-          <td className="flex w-full items-center justify-center gap-2">
+        <tr className="flex justify-between border rounded-b w-full h-[45px] grid grid-cols-12">
+          <td className="col-span-1 flex w-full items-center justify-center gap-2">
+            <h1 className="text-[14px] text-[#21394F]">
+              {priceData?.tableData?.totalCities}
+            </h1>
+          </td>
+          <td className="col-span-1 flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F]">
               {priceData?.tableData?.totalScreens}
             </h1>
           </td>
-          <td className="flex w-full items-center justify-center gap-2">
+          <td className="col-span-1 flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
               &#8377;
               {priceData?.tableData?.cpm?.toFixed(0) > 1
@@ -78,24 +90,24 @@ export const RegularCohortSlotsCampaignTable = ({
                 : 1}
             </h1>
           </td>
-          <td className="flex w-full items-center justify-center gap-2">
+          <td className="col-span-2 flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
               {formatNumber(
                 priceData?.tableData?.impressionPerDay?.toFixed(0) || 0
               )}
             </h1>
           </td>
-          <td className="flex w-full items-center justify-center gap-2">
+          <td className="col-span-2 flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
               {priceData?.tableData?.totalSlotsPerDay?.toFixed(0)}
             </h1>
           </td>
-          <td className="flex w-full items-center justify-center gap-2">
+          <td className="col-span-1 flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
               &#8377; {priceData?.tableData?.pricePerSlot?.toFixed(2)}
             </h1>
           </td>
-          <td className="flex w-full items-center justify-center gap-2">
+          <td className="col-span-2 flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
               &#8377;
               {formatNumber(
@@ -103,18 +115,18 @@ export const RegularCohortSlotsCampaignTable = ({
               )}
             </h1>
           </td>
-          <td className="flex w-full items-center justify-center gap-2">
+          {/* <td className="flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
               {priceData?.tableData?.sov}
             </h1>
-          </td>
-          <td className="flex w-full items-center justify-center gap-2">
+          </td> */}
+          <td className="col-span-1 flex w-full items-center justify-center gap-2">
             <h1 className="text-[14px] text-[#21394F] font-normal">
               {priceData?.tableData?.duration} Days
             </h1>
           </td>
           <td
-            className="flex w-full items-center justify-center gap-2"
+            className="col-span-1 flex w-full items-center justify-center gap-2"
             onClick={() => {
               // console.log(showSummary);
               // console.log(type, "type");

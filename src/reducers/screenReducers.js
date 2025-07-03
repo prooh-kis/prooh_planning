@@ -38,6 +38,9 @@ import {
   GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_ERROR,
   GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_REQUEST,
   GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_SUCCESS,
+  GET_LOCATION_WISE_FILTERS_SCREEN_DATA_BY_AUDIENCES_ERROR,
+  GET_LOCATION_WISE_FILTERS_SCREEN_DATA_BY_AUDIENCES_REQUEST,
+  GET_LOCATION_WISE_FILTERS_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
   GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
   GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
   GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
@@ -99,6 +102,30 @@ import {
   SCREEN_SUMMARY_TABLE_DATA,
   TOTAL_SCREEN_COST_DATA,
 } from "../constants/localStorageConstants";
+
+export function getLocationWiseFiltersForScreensAudiencesDataGetReducer(state = [], action) {
+  switch (action.type) {
+    case GET_LOCATION_WISE_FILTERS_SCREEN_DATA_BY_AUDIENCES_REQUEST:
+      return { loading: true };
+    case GET_LOCATION_WISE_FILTERS_SCREEN_DATA_BY_AUDIENCES_SUCCESS:
+      const campaign = action.payload;
+      const saveData = {};
+      saveData[campaign.id] = campaign;
+      // saveDataOnLocalStorage(AUDIENCE_DATA, saveData);
+      return {
+        loading: false,
+        data: action.payload,
+      };
+    case GET_LOCATION_WISE_FILTERS_SCREEN_DATA_BY_AUDIENCES_ERROR:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+}
+
 
 export function screensAudiencesDataGetReducer(state = [], action) {
   switch (action.type) {

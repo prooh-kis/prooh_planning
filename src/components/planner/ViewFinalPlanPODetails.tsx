@@ -291,15 +291,22 @@ export const ViewFinalPlanPODetails = ({
       }
 
       setConfirmToProceed(true);
-      dispatch(
-        addDetailsToCreateCampaign({
-          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
-          pageName: "View Final Plan Page",
-          id: campaignId,
-          clientApprovalImgs: imageArr,
-          monitoringSelection: initialData,
-        })
-      );
+      console.log({
+        event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
+        pageName: "View Final Plan Page",
+        id: campaignId,
+        clientApprovalImgs: imageArr,
+        monitoringSelection: initialData,
+      })
+      // dispatch(
+      //   addDetailsToCreateCampaign({
+      //     event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
+      //     pageName: "View Final Plan Page",
+      //     id: campaignId,
+      //     clientApprovalImgs: imageArr,
+      //     monitoringSelection: initialData,
+      //   })
+      // );
     } else {
       setCurrentStep(step + 1);
     }
@@ -450,15 +457,16 @@ export const ViewFinalPlanPODetails = ({
     if (successSendEmail) {
       message.success("Email sent successfully!");
       setToEmail("");
-      setCC([]);
       setConfirmationImageFiles([]);
       setLoadingEmailReady(false);
       dispatch({ type: SEND_EMAIL_FOR_CONFIRMATION_RESET });
+      setIsShareModalOpen(false)
     }
   }, [successSendEmail, dispatch]);
 
-  useEffect(() => {
+  const intialDispatchCall = useCallback(() => {
     if (!campaignDetails) return;
+
     dispatch(getFinalPlanPOTableData(poInput));
     dispatch(
       getScreenSummaryPlanTableData({
@@ -481,7 +489,11 @@ export const ViewFinalPlanPODetails = ({
         pageName: "View Final Plan Page",
       })
     );
-  }, [dispatch, campaignDetails, poInput, campaignId]);
+  },[dispatch, campaignDetails, poInput, campaignId])
+
+  useEffect(() => {
+    intialDispatchCall();
+  }, [intialDispatchCall]);
 
   useEffect(() => {
     if (successAddDetails) {
@@ -711,7 +723,10 @@ export const ViewFinalPlanPODetails = ({
     <div className="w-full font-custom">
       {isOpenCostSummary && (
         <CostSummaryPopup
-          onClose={() => setIsOpenCostSummary(false)}
+          onClose={() => {
+            intialDispatchCall();
+            setIsOpenCostSummary(false);
+          }}
           campaignId={campaignId}
         />
       )}
@@ -802,34 +817,6 @@ export const ViewFinalPlanPODetails = ({
                           ${wsLoading ? "animate-pulse" : ""}
                         `}
                         ></i>
-                        {/* <input
-                          title="summary"
-                          type="checkbox"
-                          checked={summaryChecked}
-                          disabled={loadingPOData}
-                          onChange={(e) => {
-                            setSummaryChecked(e.target.checked);
-
-                            const pdfToDownload = pdfDownload;
-                            if (e.target.checked) {
-                              pdfToDownload["summary"] = {
-                                heading: "CAMPAIGN SUMMARY",
-                                data: {
-                                  approach: [campaignDetails],
-                                  costSummary: [screenSummaryPlanTableData],
-                                  creativeRatio:
-                                    countScreensByResolutionAndCity(
-                                      campaignDetails?.screenWiseSlotDetails
-                                    ),
-                                },
-                                fileName: `${poInput?.brandName} Campaign Summary`,
-                              };
-                            } else {
-                              delete pdfToDownload["summary"];
-                            }
-                            setPdfDownload(pdfToDownload);
-                          }}
-                        /> */}
                         <h1
                           className={`text-[14px] truncate ${
                             downloadUrls.length > 0
@@ -859,36 +846,7 @@ export const ViewFinalPlanPODetails = ({
                           ${wsLoading ? "animate-pulse" : ""}
                         `}
                         ></i>
-                        {/* <input
-                          title="screen-pictures"
-                          type="checkbox"
-                          checked={picturesChecked}
-                          disabled={loadingPOData}
-                          onChange={(e) => {
-                            setPicturesChecked(e.target.checked);
-                            const pdfToDownload = pdfDownload;
-
-                            if (e.target.checked) {
-                              pdfToDownload["screen-pictures"] = {
-                                heading: "SCREEN PICTURES",
-                                data: campaignDetails?.screenWiseSlotDetails
-                                  ?.filter((s: any) =>
-                                    campaignDetails?.screenIds.includes(
-                                      s.screenId
-                                    )
-                                  )
-                                  ?.map((screen: any) => {
-                                    return screen;
-                                  }),
-                                fileName: `${poInput?.brandName} Campaign Screen Pictures`,
-                              };
-                            } else {
-                              delete pdfToDownload["screen-pictures"];
-                            }
-
-                            setPdfDownload(pdfToDownload);
-                          }}
-                        /> */}
+                       
                         <h1
                           className={`text-[14px] truncate ${
                             downloadUrls.length > 0
@@ -940,8 +898,9 @@ export const ViewFinalPlanPODetails = ({
                           variant="primary"
                           className="h-[48px]"
                           loadingText="Sending..."
-                          loading={loadingEmailReady}
-                          disabled={loadingEmailReady}
+                          loading={loadingEmailReady || wsLoading}
+                          disabled={downloadUrls.length === 0 || loadingEmailReady || wsLoading}
+
                           icon={
                             <i className="fi fi-sr-envelope flex items-center"></i>
                           }

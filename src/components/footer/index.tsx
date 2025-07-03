@@ -18,8 +18,8 @@ export const Footer = ({
   const { loading, error, data: totalScreensData } = planningPageFooterDataGet;
 
   return (
-    <div className="py-2 z-10 flex justify-between px-8">
-      <div className="flex w-full justify-start items-center gap-4">
+    <div className="py-2 z-10 flex justify-between px-8 grid grid-cols-12 gap-4">
+      <div className="flex w-full justify-start items-center gap-4 col-span-10">
         {totalScreensData && (
           <div className="flex">
             <ScreenSummaryModel
@@ -117,10 +117,10 @@ export const Footer = ({
         )}
       </div>
       {!loading && !error && (
-        <div className="flex w-full justify-end items-center gap-4">
+        <div className="flex w-full justify-end items-center gap-4 col-span-2 grid grid-cols-3 truncate">
          
           <button
-            className="border-2 border-[#D7D7D7] py-2  px-6 rounded-lg text-[#808080]"
+            className="cols-span-1 border-2 border-[#D7D7D7] py-2 rounded-lg text-[#808080] px-4 flex items-center justify-center truncate"
             onClick={handleBack}
           >
             Back
@@ -129,6 +129,7 @@ export const Footer = ({
           <ButtonInput
             onClick={handleSave}
             variant="primary"
+            className="col-span-2"
             loading={loadingCost}
           >
             {mainTitle}

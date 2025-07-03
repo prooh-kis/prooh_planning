@@ -95,7 +95,6 @@ export const RegularPlanPage: React.FC = () => {
   };
   const StepComponent =
     stepComponents[currentStep] || (() => <div>Invalid step</div>);
-
   return (
     <div className="w-full font-custom flex flex-col">
       <div className="flex-none w-full  bg-white z-10">

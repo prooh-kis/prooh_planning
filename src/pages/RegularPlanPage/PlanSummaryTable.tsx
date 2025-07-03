@@ -33,20 +33,19 @@ export function PlanSummaryTable({
   const [showSummary, setShowSummary] = useState<any>(false);
 
   const renderTableRow = (item: any, key: string, isTotal = false) => (
-    <tr key={key} className="py-1 text-[14px] border border-1">
-      <td className="py-2 text-center">
-        {isTotal ? Object.keys(screenSummaryPlanTableData).length - 1 : key.toUpperCase()}
+    <tr key={key} className="border rounded-b py-1 text-[14px] grid grid-cols-12 text-capitalize">
+      <td className="py-2 text-center col-span-1">
+        {isTotal ? Object.keys(screenSummaryPlanTableData).length - 1 : key}
       </td>
-      <td className="py-2 text-center">{item?.totalScreens}</td>
-      <td className="py-2 text-center">&#8377;{item?.totalCpm?.toFixed(0)}</td>
-      <td className="py-2 text-center">{formatNumber(item?.totalImpression?.toFixed(0))}</td>
-      <td className="py-2 text-center">{item?.totalSlots?.toFixed(0)}</td>
-      <td className="py-2 text-center">{formatNumber(item?.pricePerSlot?.toFixed(0))}</td>
-      <td className="py-2 text-center">
+      <td className="py-2 text-center col-span-1">{item?.totalScreens}</td>
+      <td className="py-2 text-center col-span-1">&#8377;{item?.totalCpm?.toFixed(0)}</td>
+      <td className="py-2 text-center col-span-2">{formatNumber(item?.totalImpression?.toFixed(0))}</td>
+      <td className="py-2 text-center col-span-2">{item?.totalSlots?.toFixed(0)}</td>
+      <td className="py-2 text-center col-span-1">{formatNumber(item?.pricePerSlot?.toFixed(0))}</td>
+      <td className="py-2 text-center col-span-2">
         &#8377;{formatNumber(item?.totalCampaignBudget?.toFixed(0))}
       </td>
-      <td className="py-2 text-center">{item?.sov}</td>
-      <td className="py-2 text-center">{item?.duration} Days</td>
+      <td className="py-2 text-center col-span-2">{item?.duration} Days</td>
     </tr>
   );
 
@@ -59,16 +58,15 @@ export function PlanSummaryTable({
   );
 
   const tableHeaders = (
-    <tr className="py-1 h-[40px] bg-[#F1F9FF] md:text-[14px] sm:text-[12px]">
-      <th className="border border-r">City</th>
-      <th className="border border-r">Screens</th>
-      <th className="border border-r">CPM</th>
-      <th className="border border-r">Impressions/Day</th>
-      <th className="border border-r">Slots/Day</th>
-      <th className="border border-r">Price/slot</th>
-      <th className="border border-r">Total Cost</th>
-      <th className="border border-r">SOV</th>
-      <th className="border">Duration</th>
+    <tr className="rounded-t border border-gray-200 flex items-center h-[40px] bg-[#F1F9FF] md:text-[14px] sm:text-[12px] grid grid-cols-12">
+      <th className="col-span-1 h-full flex items-center justify-center">City</th>
+      <th className="col-span-1 h-full flex items-center justify-center border-x">Screens</th>
+      <th className="col-span-1 h-full flex items-center justify-center ">CPM</th>
+      <th className="col-span-2 h-full flex items-center justify-center border-x">Impressions/Day</th>
+      <th className="col-span-2 h-full flex items-center justify-center ">Slots/Day</th>
+      <th className="col-span-1 h-full flex items-center justify-center border-x">Price/slot</th>
+      <th className="col-span-2 h-full flex items-center justify-center">Total Cost</th>
+      <th className="col-span-2 h-full flex items-center justify-center border-l">Duration</th>
     </tr>
   );
 
@@ -113,7 +111,7 @@ export function PlanSummaryTable({
 
       <div className="w-full py-4">
         <div className="flex justify-start gap-2">
-          <h1 className="py-2 text-[14px] font-semibold">
+          <h1 className="py-2 text-[16px] font-semibold">
             Final Screens Summary as per your choice
           </h1>
           <Tooltip title="See below the final summary of your screen selection and related costs and deliverables">
@@ -122,7 +120,7 @@ export function PlanSummaryTable({
         </div>
 
         <table className="w-full">
-          <thead className="border rounded-t">{tableHeaders}</thead>
+          <thead className="rounded-t">{tableHeaders}</thead>
           <tbody className="w-full overflow-scroll">
             {loadingScreenSummaryPlanTable || loadingPriceData || !screenSummaryPlanTableData ? (
               renderLoadingState()
@@ -137,7 +135,7 @@ export function PlanSummaryTable({
 
       <div className="w-full py-4 pb-16">
         <div className="flex justify-start gap-2">
-          <h1 className="py-2 text-[14px] font-semibold">
+          <h1 className="py-2 text-[16px] font-semibold">
             Screen Summary City Wise
           </h1>
           <Tooltip title="See below the final summary of your screen selection on cities basis and their related costs and deliverables">

@@ -39,15 +39,14 @@ export const TriggerDetails = ({
   const { pathname } = useLocation();
 
   const [currentStep1, setCurrentStep1] = useState<any>(1);
-  const [currentTab, setCurrentTab] = useState<any>(1);
+  const [currentWeatherTab, setCurrentWeatherTab] = useState<any>(1);
 
   const [isDisabled, setIsDisabled] = useState<any>(true);
   const [disableApply, setDisableApply] = useState<any>(true);
   const [triggerSelected, setTriggerSelected] = useState<any>(false);
 
-  const [selectedTrigger, setSelectedTrigger] = useState<any>({
-    triggerType: "weather",
-  });
+
+  const [selectedTrigger, setSelectedTrigger] = useState<any>(null);
   const [selectedTriggerData, setSelectedTriggerData] = useState<any>({
     weatherTriggers: [],
     sportsTriggers: [],
@@ -157,7 +156,7 @@ export const TriggerDetails = ({
             ? [
                 {
                   type: weatherTabData?.filter(
-                    (w: any) => w.id === currentTab
+                    (w: any) => w.id === currentWeatherTab
                   )[0]?.value,
                   minVal: minVal,
                   maxVal: maxVal,
@@ -211,7 +210,7 @@ export const TriggerDetails = ({
     player,
     selectedMatchId,
     condition,
-    currentTab,
+    currentWeatherTab,
   ]);
 
   const handleSaveAndContinue = () => {
@@ -229,7 +228,11 @@ export const TriggerDetails = ({
               CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
             pageName: "Add Triggers Page",
             id: campaignId,
-            triggers: selectedTriggerData,
+            triggers: selectedTriggerData || {
+              weatherTriggers: [],
+              sportsTriggers: [],
+              vacantSlots: [],
+            },
           })
         );
       }
@@ -257,13 +260,12 @@ export const TriggerDetails = ({
   // setting initial value  when page reload or came from future
   useEffect(() => {
     const trigger = campaignDetails?.triggers;
-    if (trigger) {
-      setTriggerSelected(true);
-      setIsDisabled(false);
-    }
     if (trigger?.weatherTriggers?.length > 0) {
       setSelectedTrigger({
         triggerType: "weather",
+      });
+      setCurrentWeatherTab(() => {
+        return weatherTabData?.find((tab: any) => tab.value === trigger?.weatherTriggers[0]?.type)?.id
       });
       setMinVal(trigger?.weatherTriggers[0]?.minVal || 0);
       setMaxVal(trigger?.weatherTriggers[0]?.maxVal || 0);
@@ -275,6 +277,8 @@ export const TriggerDetails = ({
       );
       setMaxVal(trigger?.weatherTriggers[0]?.maxVal || 0);
       setSelectedTimeOptions(trigger?.weatherTriggers[0]?.period || 300);
+      setTriggerSelected(true);
+      setIsDisabled(false);
     } else if (trigger?.sportsTriggers?.length > 0) {
       setSelectedTrigger({
         triggerType: "sport",
@@ -288,6 +292,8 @@ export const TriggerDetails = ({
         Number(trigger?.sportsTriggers[0]?.budget).toFixed(0) || null
       );
       setSelectedTimeOptions(trigger?.sportsTriggers[0]?.period || 300);
+      setTriggerSelected(true);
+      setIsDisabled(false);
     } else if (trigger?.vacantSlots?.length > 0) {
       setSelectedTrigger({
         triggerType: "empty",
@@ -298,8 +304,10 @@ export const TriggerDetails = ({
         Number(trigger?.sportsTriggers[0]?.budget).toFixed(0) || null
       );
       setSelectedTimeOptions(trigger?.sportsTriggers[0]?.period || 300);
+      setTriggerSelected(true);
+      setIsDisabled(false);
     }
-  }, [campaignDetails, campaignId]);
+  }, [campaignDetails, weatherTabData, campaignId]);
 
   useEffect(() => {
     if (selectedTrigger) {
@@ -438,8 +446,8 @@ export const TriggerDetails = ({
                 <TabWithIcon
                   trigger={true}
                   justify={true}
-                  currentTab={currentTab}
-                  setCurrentTab={setCurrentTab}
+                  currentTab={currentWeatherTab}
+                  setCurrentTab={setCurrentWeatherTab}
                   tabData={weatherTabData}
                 />
               </div>
@@ -451,7 +459,7 @@ export const TriggerDetails = ({
                 setMaxVal={setMaxVal}
                 rainType={rainType}
                 setRainType={setRainType}
-                currentTab={currentTab}
+                currentTab={currentWeatherTab}
                 aqi={aqi}
                 setAqi={setAqi}
                 setTriggerSelected={setTriggerSelected}

@@ -6,7 +6,7 @@ interface CheckboxProps {
   checked?: boolean;
   textSize?: string;
   color?: string;
-  small?: any;
+  emailText?: boolean;
   onChange?: (checked: boolean) => void;
   disabled?: boolean; // Added disabled prop to be more specific
   icon?: any;
@@ -16,7 +16,7 @@ interface CheckboxProps {
 export const CheckboxInput: React.FC<CheckboxProps> = ({
   showIcon,
   icon,
-  small,
+  emailText,
   disabled,
   color,
   textSize,
@@ -47,7 +47,7 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({
           <span
             className={`pl-2 col-span-11 flex justify-start text-[${
               color ? color : "#21394F"
-            }] text-[${textSize ? textSize : "12px"}] truncate whitespace-pre capitalize
+            }] text-[${textSize ? textSize : "12px"}] truncate whitespace-pre ${!emailText && "capitalize"}
             ${checked ? "text-[#21394F]" : "text-[#9CA3AF]"}
             `}
           >

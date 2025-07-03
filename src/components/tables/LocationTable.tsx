@@ -8,7 +8,6 @@ interface LocationTableProps {
   selectedGender?: any;
   setSelectedGender?: any;
   loading?: any;
-  handleSelection?: any;
   data?: any;
   setSelectedCity?: any;
   setSelectedZone?: any;

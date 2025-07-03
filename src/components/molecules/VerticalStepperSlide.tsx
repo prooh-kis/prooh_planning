@@ -35,7 +35,11 @@ export const VerticalStepperSlider: React.FC<StepSliderProps> = ({
             key={index}
             className={`flex items-center gap-3 cursor-pointer py-2 transition-all duration-300 
               ${isActive ? "text-[#166235] font-semibold" : "text-gray-500"}`}
-            onClick={() => handleStepClick(index + 1)}
+            onClick={() => {
+              if (index !== stepLabels.length - 1) {
+                handleStepClick(index + 1);
+              }
+            }}
           >
             {/* Outer Circle (1px border) */}
             <div

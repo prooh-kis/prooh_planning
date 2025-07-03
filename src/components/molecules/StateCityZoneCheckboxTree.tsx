@@ -192,7 +192,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
         {Object.keys(processedData || {}).map((state) => (
           <li key={state} className="mb-2 text-[#303030]">
             {/* State checkbox */}
-            <div className="flex items-center justify-between gap-2 py-1">
+            <div className="flex items-center justify-between gap-2 py-1 cursor-pointer">
               <div className="flex items-center gap-2 truncate">
                 <input
                   title="state"
@@ -246,7 +246,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                 {Object.keys(processedData?.[state]?.cities || {}).map((city) => (
                   <li key={city} className="mb-2">
                     {/* City checkbox */}
-                    <div className="flex items-center justify-between gap-2 py-1">
+                    <div className="flex items-center justify-between gap-2 py-1 cursor-pointer">
                       <div className="flex items-center gap-2 truncate">
                         <input
                           title="city"
@@ -295,7 +295,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
                       <ul className="ml-4 mt-1">
                         {Object.keys(processedData?.[state]?.cities?.[city]?.zones || {}).map((zone) => (
                           <li key={zone} className="py-1">
-                            <div className="flex items-center justify-between gap-2 py-1">
+                            <div className="flex items-center justify-between gap-2 py-1 cursor-pointer">
                               <div className="flex items-center gap-2">
                                 <input
                                   title="zone"

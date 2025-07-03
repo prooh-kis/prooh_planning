@@ -11,13 +11,11 @@ interface AudiencesProps {
   selectedAudiences?: any;
   setSelectedAudiences?: any;
   loading?: any;
-  handleSelection?: any;
   locked?: any;
   setLocked?: any;
   showIconHighlight?: any;
 }
 export const AudienceCohortTable = ({
-  handleSelection,
   loading,
   audiences,
   selectedAudiences,
@@ -73,8 +71,8 @@ export const AudienceCohortTable = ({
             </div>
           </th>
           <th className="col-span-2 flex justify-between gap-4 pr-2">
-            <p className="lg:text-[14px] text-[12px] font-normal">0</p>
-            <p className="lg:text-[14px] text-[12px] font-normal">
+            <p className="lg:text-[12px] text-[10px] font-normal">0</p>
+            <p className="lg:text-[12px] text-[10px] font-normal">
               {Number(
                 Math.max(
                   ...Object.keys(audiences)?.map((a: any) => audiences[a])
@@ -90,7 +88,7 @@ export const AudienceCohortTable = ({
             </th>
           </tr>
         )}
-        <tr className="w-full overflow-scroll py-3">
+        <tr className="w-full h-full overflow-scroll py-3">
           {Object.keys(audiences)?.map((a: any, i: any) => {
             const cohortName = a;
             const cohortValue = audiences[a]; // Assuming this is the cohort value (percentage)

@@ -45,6 +45,7 @@ import * as monitoringReducers from "../reducers/monitoringReducers";
 
 export const rootReducer = {
     // Screen related
+    getLocationWiseFiltersForScreensAudiencesDataGet: screenReducers.getLocationWiseFiltersForScreensAudiencesDataGetReducer,
     screensAudiencesDataGet: screenReducers.screensAudiencesDataGetReducer,
     screensCostDataGet: screenReducers.screensCostDataGetReducer,
     screensDataAdvanceFilterGet: screenReducers.screensDataAdvanceFilterGetReducer,

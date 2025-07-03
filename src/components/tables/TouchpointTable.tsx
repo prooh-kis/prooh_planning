@@ -11,18 +11,12 @@ interface TouchPointsProps {
   selectedTouchPoints?: any;
   setSelectedTouchPoints?: any;
   loading?: any;
-  handleSelection?: any;
-  locked?: any;
-  setLocked?: any;
 }
 export const TouchpointTable = ({
   touchPoints,
   selectedTouchPoints,
   setSelectedTouchPoints,
-  handleSelection,
   loading,
-  locked,
-  setLocked,
 }: TouchPointsProps) => {
 
   const handleCheckClick = ({ touchPoint, checked }: any) => {
@@ -67,10 +61,10 @@ export const TouchpointTable = ({
             </div>
           </th>
           <th className="col-span-2 flex justify-between pr-2 truncate">
-            <p className="lg:text-[14px] text-[12px] font-normal">0,</p>
-            <p className="lg:text-[14px] text-[12px] font-normal">25,</p>
-            <p className="lg:text-[14px] text-[12px] font-normal">50,</p>
-            <p className="lg:text-[14px] text-[12px] font-normal">100</p>
+            <p className="lg:text-[12px] text-[10px] font-normal">0,</p>
+            <p className="lg:text-[12px] text-[10px] font-normal">25,</p>
+            <p className="lg:text-[12px] text-[10px] font-normal">50,</p>
+            <p className="lg:text-[12px] text-[10px] font-normal">100</p>
           </th>
         </tr>
         {loading && (
@@ -80,7 +74,7 @@ export const TouchpointTable = ({
             </th>
           </tr>
         )}
-        <tr className="w-full overflow-scroll py-3">
+        <tr className="w-full h-full overflow-scroll py-3">
           {Object.keys(touchPoints)?.map((tp: any, i: any) => {
             return (
               <td

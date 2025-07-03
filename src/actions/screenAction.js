@@ -30,6 +30,9 @@ import {
   GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_ERROR,
   GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_REQUEST,
   GET_INVENTORY_DETAILS_FOR_COST_SUMMARY_SUCCESS,
+  GET_LOCATION_WISE_FILTERS_SCREEN_DATA_BY_AUDIENCES_ERROR,
+  GET_LOCATION_WISE_FILTERS_SCREEN_DATA_BY_AUDIENCES_REQUEST,
+  GET_LOCATION_WISE_FILTERS_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
   GET_SCREEN_DATA_BY_AUDIENCES_ERROR,
   GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
   GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
@@ -142,18 +145,46 @@ export const getCalendarListData = (input) => async (dispatch, getState) => {
   }
 };
 
+export const getLocationWiseFiltersForScreensAudiencesData =
+  ({id}) =>
+  async (dispatch, getState) => {
+    dispatch({
+      type: GET_LOCATION_WISE_FILTERS_SCREEN_DATA_BY_AUDIENCES_REQUEST,
+      payload: {id},
+    });
+
+    try {
+      const { data } = await axios.post(`${planningRouterURL}/getLocationWiseFiltersForAudienceAndTouchpointPage`, {id});
+      dispatch({
+        type: GET_LOCATION_WISE_FILTERS_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_LOCATION_WISE_FILTERS_SCREEN_DATA_BY_AUDIENCES_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
+
 export const getScreensAudiencesData =
-  ({ id, markets }) =>
+  ({ id, markets, cities, zones }) =>
   async (dispatch, getState) => {
     dispatch({
       type: GET_SCREEN_DATA_BY_AUDIENCES_REQUEST,
-      payload: markets,
+      payload: {markets, cities, zones},
     });
 
     try {
       const { data } = await axios.post(`${planningRouterURL}/audienceData`, {
         id,
         markets,
+        cities,
+        zones,
       });
       dispatch({
         type: GET_SCREEN_DATA_BY_AUDIENCES_SUCCESS,
