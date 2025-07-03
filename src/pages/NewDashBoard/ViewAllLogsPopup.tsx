@@ -131,7 +131,10 @@ export const ViewAllLogsPopup = ({
           result[date][hour] = [];
         }
 
-        result[date][hour].push(item);
+        // todo offline logs removed from visibility
+        if ( item.screenStatus === "online" ){
+          result[date][hour].push(item);
+        }
         return result;
       }, {});
     }
