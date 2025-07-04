@@ -33,6 +33,7 @@ export const CheckboxInput: React.FC<CheckboxProps> = ({
     }
   };
 
+  console.log(checked);
   return (
     <label 
       className="grid grid-cols-12 flex items-center space-x-2 cursor-pointer truncate p-1"

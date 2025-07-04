@@ -29,6 +29,7 @@ interface LocationProximityProps {
   polygons?: any;
   setPolygons?: any;
   handleConfirmScreensSelections?: any;
+  isDisabled?: any;
 }
 export const LocationProximity = ({
   allScreens,
@@ -53,6 +54,7 @@ export const LocationProximity = ({
   polygons,
   setPolygons,
   handleConfirmScreensSelections,
+  isDisabled,
 }: LocationProximityProps) => {
   const [open, setOpen] = useState<any>({
     excel: true,
@@ -164,6 +166,7 @@ export const LocationProximity = ({
               for my plan
             </p>
           }
+          checked={!isDisabled}
           onChange={(e) => {
             handleConfirmScreensSelections({
               checked: e,

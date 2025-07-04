@@ -101,6 +101,7 @@ export const AdvanceFiltersDetailsPage = ({
   };
 
   const handleFinalSelectedScreens = useCallback(({ type, screens }: any) => {
+    console.log(type, screens)
 
     setFinalSelectedScreens((prevScreens: any) => {
       if (type === "add") {
@@ -117,6 +118,7 @@ export const AdvanceFiltersDetailsPage = ({
         const screensToRemove = new Set(screens.map((s: any) => s._id));
         return prevScreens.filter((screen: any) => !screensToRemove.has(screen._id));
       }
+      console.log(prevScreens)
       return prevScreens;
     });
   },[excelFilteredScreens, polygonFilteredScreens, routeFilteredScreens]);
@@ -261,6 +263,8 @@ export const AdvanceFiltersDetailsPage = ({
   const handleConfirmScreensSelections = ({ checked, screens }: any) => {
     setIsDisabled(!checked);
     if (checked) {
+    console.log(checked)
+
       handleFinalSelectedScreens({
         type: "add",
         screens: screens,
@@ -320,6 +324,7 @@ export const AdvanceFiltersDetailsPage = ({
                   handleConfirmScreensSelections={
                     handleConfirmScreensSelections
                   }
+                  isDisabled={isDisabled}
                 />
               )}
             </div>

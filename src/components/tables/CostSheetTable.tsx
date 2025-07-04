@@ -10,6 +10,7 @@ import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { message } from "antd";
 import { PrimaryInput } from "../../components/atoms/PrimaryInput";
 import { EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET } from "../../constants/screenConstants";
+import ButtonInput from "../../components/atoms/ButtonInput";
 
 interface CostSheetTableProps {
   campaignId?: any;
@@ -137,6 +138,10 @@ export const CostSheetTable = ({
     )
   };
 
+  const handleSendRequest = () => {
+    console.log(screenData.map((s: any) => s.screenName));
+  }
+
 
   return (
     <div className="w-full py-2">
@@ -182,10 +187,20 @@ export const CostSheetTable = ({
               width=""
               fileType={"image"}
             />
+            <ButtonInput 
+              variant="primary"
+              size="small"
+              onClick={handleSendRequest}
+              icon={
+                <i className="fi fi-sr-envelope flex items-center"></i>
+              }
+            >
+              Send
+            </ButtonInput>
           </div>
         )}
       </div>
-      <div className="w-full flex flex-col h-[400px] border border-gray-100 shadow-sm rounded-md">
+      <div className="w-full flex flex-col h-full border border-gray-100 shadow-sm rounded-md">
         <div className="w-full">
           <table className="w-full">
             <thead className="bg-[#F7F7F7] w-full">

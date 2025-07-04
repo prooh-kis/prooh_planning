@@ -375,8 +375,8 @@ export const ShowCampaignLogsPopup = ({
                                             {new Date(entry.logTime).toLocaleTimeString()}
                                           </h1>
                                         </td>
-                                        <td className="col-span-4 py-2 flex items-center justify-center">
-                                          <h1 className="text-[12px]">
+                                        <td className="col-span-4 py-2 flex items-center justify-center truncate">
+                                          <h1 className="text-[12px] truncate">
                                             {entry.mediaId.split("_")[1]}
                                           </h1>
                                         </td>
