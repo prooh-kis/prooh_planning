@@ -8,6 +8,7 @@ import {
   getPlanningPageFooterData,
   getVendorConfirmationDetails,
   getVendorConfirmationStatusTableDetails,
+  sendRequestToVendorForCreativeApprovalPage,
 } from "../../actions/screenAction";
 import {
   VendorConfirmationBasicTable,
@@ -20,9 +21,9 @@ import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { CAMPAIGN_DETAILS_PAGE } from "../../routes/routes";
 import { CountdownTimer } from "../../components/molecules/CountdownTimer";
 import {
-  sendEmailForConfirmation,
   sendEmailForVendorConfirmation,
 } from "../../actions/userAction";
+import { isValidEmail } from "../../utils/valueValidate";
 import {
   ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED,
@@ -33,6 +34,10 @@ import { StatusPopup } from "../../components/popup/StatusPopup";
 import { ShowMediaTypePopup } from "../../components/popup/ShowMediaTypePopup";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
+import { PrimaryInput } from "../../components/atoms/PrimaryInput";
+import ButtonInput from "../../components/atoms/ButtonInput";
+import { AddContactDetailsForCampaignAlerts } from "../../components/segments/AddContactDetailsForCampaignAlerts";
+import { FinalConfirmationPopup } from "../../components/popup/FinalConfirmationPopup";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -65,6 +70,8 @@ export const VendorConfirmationDetails = ({
   const [skipEmailConfirmation, setSkipEmailConfirmation] =
     useState<any>(false);
   const [confirmToProceed, setConfirmToProceed] = useState<any>(false);
+  const [openFinalConfirmationPopup, setOpenFinalConfirmationPopup] = useState<any>(false);
+  const [savedContacts, setSavedContacts] = useState<any[]>([]);
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -92,102 +99,6 @@ export const VendorConfirmationDetails = ({
     error: errorStatusTableData,
     data: statusTableData,
   } = vendorConfirmationStatusTableDetailsGet;
-
-  const sendEmail = () => {
-    const formData = new FormData();
-    formData.append("toEmail", toEmail);
-    formData.append("cc", cc);
-    formData.append(
-      "message",
-      `
-        <div style='max-width: 720px; margin: auto; padding: 16px; background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;'>
-          <a href="https://plan.prooh.ai/campaignDetails/${campaignId}">View Dashboard</a>
-        </div>
-      `
-    );
-
-    dispatch(sendEmailForConfirmation(formData));
-  };
-
-  const sendEmailToAll = () => {
-    if (!statusTableData) {
-      console.error("statusTableData is not available");
-      return;
-    }
-
-    const screenOwnerEmails = Array.from(
-      new Set(statusTableData.map((s: any) => s.screenVendorEmail))
-    );
-
-    screenOwnerEmails?.forEach((email: any) => {
-      const approvalIds = statusTableData
-        ?.filter((s: any) => s.screenVendorEmail === email)
-        ?.map((c: any) => c.campaignId)
-        .join(",");
-      const approvalUrl = `https://prooh.vinciis.in/api/v2/campaigns/approveCampaignScreenVendor?ids=${encodeURIComponent(
-        approvalIds
-      )}`;
-      const viewUrl = `https://plan.prooh.ai/myPlansList`;
-      const emailContent = `
-        <div style='max-width: 600px; margin: auto; padding: 16px; background-color: white; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);'>
-          <h1 style='font-size: 40px; font-weight: bold; text-align: center;'>Congratulations!!!</h1>
-          <h1 style='font-size: 20px; font-weight: regular; text-align: left;'>Now approve campaigns for your screens, increase your revenue and relax...</h1>
-          <table style='width: 100%; border-collapse: collapse; margin-bottom: 16px; border-radius: 4px; overflow: hidden;'>
-            <thead>
-              <tr style='background-color: #007BFF; color: white;'>
-                <th style='padding: 8px; text-align: left;'>Screen Name</th>
-                <th style='padding: 8px; text-align: left;'>Touchpoint</th>
-                <th style='padding: 8px; text-align: left;'>Start Date</th>
-                <th style='padding: 8px; text-align: left;'>End Date</th>
-                <th style='padding: 8px; text-align: left;'>Cost</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${statusTableData
-                ?.filter((s: any) => s.screenVendorEmail === email)
-                ?.map(
-                  (d: any, i: any) => `
-                    <tr key=${i} style='background-color: #F8F9FA;'>
-                      <td style='padding: 8px; border: 1px solid #E0E0E0;'>${d.screenName}</td>
-                      <td style='padding: 8px; border: 1px solid #E0E0E0;'>${d.touchPoint}</td>
-                      <td style='padding: 8px; border: 1px solid #E0E0E0;'>${convertDateIntoDateMonthYear(d.startDate)}</td>
-                      <td style='padding: 8px; border: 1px solid #E0E0E0;'>${convertDateIntoDateMonthYear(d.endDate)}</td>
-                      <td style='padding: 8px; border: 1px solid #E0E0E0;'>₹${d.cost.toFixed(0)}</td>
-                    </tr>
-                  `
-                )}
-            </tbody>
-          </table>
-          <div style='display: flex; gap: 8px; justify-content: center;'>
-            <div style='margin: 0 8px 0 0'>
-              <a href='${viewUrl}'
-                style='display: inline-block; background-color: #007BFF; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;'>
-                See Details
-              </a>
-            </div>
-            <div style='margin: 0 0 0 8px'>
-              <a href='${approvalUrl}'
-                style='display: inline-block; background-color: #D7D7D760; color: black; padding: 12px 24px; text-decoration: none; border-radius: 4px;'>
-                Approve All
-              </a>
-            </div>
-          </div>
-        </div>
-      `;
-      if (!emailContent) {
-        console.error("Failed to generate email content");
-        return;
-      }
-
-      dispatch(
-        sendEmailForVendorConfirmation({
-          toEmail: email,
-          cc: cc,
-          emailContent: emailContent,
-        })
-      );
-    });
-  };
 
   const handleAddNewFile = async (file: File) => {
     if (file) {
@@ -225,30 +136,43 @@ export const VendorConfirmationDetails = ({
     }
   };
 
-  const handleSaveAndContinue = async () => {
-   
+  const sendForVendorConfirmation = () => {
+    message.info(
+      "Sending for approval to all the vendor..."
+    );
+    dispatch(sendRequestToVendorForCreativeApprovalPage({id: campaignDetails?._id}));
+  };
 
-    if (isDisabled) {
-      message.error(
-        "You will be redirected to campaign dashboard, once the campaign has started. Please wait..."
-      );
-    } else {
-      // let imageArr: any[] = [];
-      // for (let data of files) {
-      //   let url = await getAWSUrl(data);
-      //   imageArr.push(url);
-      // }
-      const imageArr = await Promise.all(files.map(getAWSUrl));
-      dispatch(
-        addDetailsToCreateCampaign({
-          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
-          pageName: "Vendor Confirmation Page",
-          id: campaignDetails?._id,
-          vendorApprovalImgs: imageArr, // return url array
-        })
-      );
-      navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignDetails?._id}`);
-    }
+  const sendEmalToClient = () => {
+    message.info(
+      "Make sure to send latest generated docs to your valued partner..."
+    );
+    const formData = new FormData();
+    formData.append("toEmail", toEmail);
+    formData.append("cc", cc);
+    // formData.append(
+    //   "message",
+    //   `Please find the files at the following links:\n${fileLinks}`
+    // );
+    formData.append("id", campaignDetails?._id);
+
+    dispatch(sendEmailForVendorConfirmation(formData));
+  }
+
+  const handleSaveAndContinue = async () => {
+    
+    const imageArr = await Promise.all(files.map(getAWSUrl));
+    dispatch(
+      addDetailsToCreateCampaign({
+        event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
+        pageName: "Vendor Confirmation Page",
+        id: campaignDetails?._id,
+        vendorApprovalImgs: imageArr, // return url array
+        stakeHolders: savedContacts
+      })
+    );
+    setOpenFinalConfirmationPopup(true);
+      // navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignDetails?._id}`);
   };
 
   useEffect(() => {
@@ -299,7 +223,8 @@ export const VendorConfirmationDetails = ({
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
-      setCurrentStep(step + 1);
+      message.success("Your campaign has been successfully planned...")
+      // setCurrentStep(step + 1);
     }
   }, [successAddDetails, step, setCurrentStep, dispatch]);
 
@@ -365,9 +290,11 @@ export const VendorConfirmationDetails = ({
         pageName: "Vendor Confirmation Page",
         id: campaignDetails?._id,
         vendorApprovalImgs: [], // return url array
+        stakeHolders: savedContacts
       })
     );
-    navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignDetails?._id}`);
+    setOpenFinalConfirmationPopup(true);
+    // navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignDetails?._id}`);
   };
 
   return (
@@ -386,6 +313,10 @@ export const VendorConfirmationDetails = ({
             onClose={handleOpenMediaModel}
             mediaTypeData={mediaTypeData}
           />
+          <FinalConfirmationPopup
+            open={openFinalConfirmationPopup}
+            onClose={() => setOpenFinalConfirmationPopup(false)}
+          />
 
           <div className="flex items-center justify-between">
             <div>
@@ -402,7 +333,7 @@ export const VendorConfirmationDetails = ({
             vendorConfirmationData={vendorConfirmationData}
           />
 
-          <div className="py-4 w-full">
+          <div className="py-2 w-full">
             <div className="flex justify-between">
               <div className="flex gap-8">
                 <div className="flex">
@@ -437,7 +368,7 @@ export const VendorConfirmationDetails = ({
                 </h1>
               </div>
             </div>
-            <div className="pb-4">
+            <div className="pb-2">
               <MultiColorLinearBar
                 showPercentage={false}
                 values={[
@@ -479,20 +410,72 @@ export const VendorConfirmationDetails = ({
               campaignsList={[]}
             />
           </div>
-          <div className="pb-20">
+          <div className="">
             {!loadingStatusTableData && !errorStatusTableData && (
               <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-1 border rounded-[12px] p-2">
-                  <EmailSendBox
+                <div className="col-span-1 border rounded-[8px] p-4">
+                  {/* <EmailSendBox
                     type="vendor"
                     toEmail={toEmail}
                     setToEmail={setToEmail}
                     cc={cc}
                     sendEmail={sendEmail}
                     sendEmailToAll={sendEmailToAll}
-                  />
+                  /> */}
+                  <div
+                    className="flex items-center gap-2"
+                    onClick={() => {
+                      // setIsShareModalOpen(true);
+                    }}
+                  >
+                    <h1 className="font-semibold text-lg">Share this plan</h1>
+                    <i className="fi fi-ss-paper-plane flex items-center text-[#129BFF] text-[12px]"></i>
+                  </div>
+                  <div className="grid grid-cols-6 gap-2 pt-4">
+                    <div className="col-span-4">
+                      <PrimaryInput
+                        placeholder="Enter Email"
+                        value={toEmail}
+                        inputType="text"
+                        height="h-[40px]"
+                        action={setToEmail}
+                        rounded="rounded-[8px]"
+                      />
+                    </div>
+                    <div className="col-span-2">
+                      <ButtonInput
+                        variant="primary"
+                        className="h-[40px]"
+                        loadingText="Sending..."
+                        // loading={loadingEmailReady || wsLoading}
+                        // disabled={downloadUrls.length === 0 || loadingEmailReady || wsLoading}
+
+                        icon={
+                          <i className="fi fi-sr-envelope flex items-center"></i>
+                        }
+                        onClick={() => {
+                          if (isValidEmail(toEmail)) {
+                            // sendEmailToClient();
+                            message.info(
+                              "Sending complete plan summary, please call your manager and take approval"
+                            );
+                          } else message.error("Please Enter valid email");
+                        }}
+                      >
+                        Send
+                      </ButtonInput>
+                    </div>
+                  </div>
+                  <div className="flex items-center p-1">
+                    <h1 className="text-[12px] text-[#6F7F8E]">
+                      Enter email and share your plan
+                    </h1>
+                  </div>
+                  <div className="p-1 cursor-pointer" onClick={sendForVendorConfirmation}>
+                    <h1 className="text-[12px] text-primaryButton">Click here to send reminder to all vendor for creative approval</h1>
+                  </div>
                 </div>
-                <div className="col-span-1 border rounded-[12px] p-2">
+                <div className="col-span-1 border rounded-[8px] p-2">
                   <EmailConfirmationImage
                     files={files}
                     handleAddNewFile={handleAddNewFile}
@@ -509,12 +492,18 @@ export const VendorConfirmationDetails = ({
             )}
           </div>
 
+          <div className="border rounded-[8px] p-4 mb-16 mt-2">
+            <AddContactDetailsForCampaignAlerts
+              savedContacts={savedContacts}
+              setSavedContacts={setSavedContacts}
+            />
+          </div>
           <div
             className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]"
             onDoubleClick={() => setIsDisabled(!isDisabled)}
           >
             <Footer
-              mainTitle="See Dashboard"
+              mainTitle="Save"
               handleBack={() => {
                 setCurrentStep(step - 1);
               }}

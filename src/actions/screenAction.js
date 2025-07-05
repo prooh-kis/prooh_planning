@@ -78,6 +78,12 @@ import {
   PLANNING_PAGE_FOOTER_DATA_ERROR,
   PLANNING_PAGE_FOOTER_DATA_REQUEST,
   PLANNING_PAGE_FOOTER_DATA_SUCCESS,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_ERROR,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_REQUEST,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_SUCCESS,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_ERROR,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_REQUEST,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_SUCCESS,
   TABLE_DATA_SET_AD_PLAY_TIME_ERROR,
   TABLE_DATA_SET_AD_PLAY_TIME_REQUEST,
   TABLE_DATA_SET_AD_PLAY_TIME_SUCCESS,
@@ -952,6 +958,69 @@ export const editCostDetailsScreenWiseForCostSummaryPopupPage =
     } catch (error) {
       dispatch({
         type: EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_ERROR,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+
+export const sendRequestToVendorForBudgetApprovalCostSheetPopupPage =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
+
+      const { data } = await axios.post(
+        `${planningRouterURL}/sendRequestToVendorForBudgetApproval`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({
+        type: SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_ERROR,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+  export const sendRequestToVendorForCreativeApprovalPage =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
+
+      const { data } = await axios.post(
+        `${planningRouterURL}/sendCampaignApprovalRemainderToScreenOwner`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({
+        type: SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_ERROR,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message

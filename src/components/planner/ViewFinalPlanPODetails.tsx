@@ -15,7 +15,7 @@ import {
   downloadCampaignSummaryPPTAction,
 } from "../../actions/campaignAction";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
-import { sendEmailForConfirmation } from "../../actions/userAction";
+import { sendEmailForPOConfirmation } from "../../actions/userAction";
 import {
   CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
   SEND_EMAIL_FOR_CONFIRMATION_RESET,
@@ -219,7 +219,7 @@ export const ViewFinalPlanPODetails = ({
     // );
     formData.append("id", campaignId);
 
-    dispatch(sendEmailForConfirmation(formData));
+    dispatch(sendEmailForPOConfirmation(formData));
   };
 
   const handleAddNewFile = async (file: File) => {
@@ -291,22 +291,15 @@ export const ViewFinalPlanPODetails = ({
       }
 
       setConfirmToProceed(true);
-      console.log({
-        event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
-        pageName: "View Final Plan Page",
-        id: campaignId,
-        clientApprovalImgs: imageArr,
-        monitoringSelection: initialData,
-      })
-      // dispatch(
-      //   addDetailsToCreateCampaign({
-      //     event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
-      //     pageName: "View Final Plan Page",
-      //     id: campaignId,
-      //     clientApprovalImgs: imageArr,
-      //     monitoringSelection: initialData,
-      //   })
-      // );
+      dispatch(
+        addDetailsToCreateCampaign({
+          event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
+          pageName: "View Final Plan Page",
+          id: campaignId,
+          clientApprovalImgs: imageArr,
+          monitoringSelection: initialData,
+        })
+      );
     } else {
       setCurrentStep(step + 1);
     }
@@ -754,7 +747,7 @@ export const ViewFinalPlanPODetails = ({
           <div className="grid grid-cols-2 gap-2 pb-20 mt-4">
             <div
               ref={pageRef}
-              className="col-span-1 p-4 border border-1 border-#C3C3C3 rounded-2xl w-full"
+              className="col-span-1 p-4 border border-1 border-#C3C3C3 rounded-[8px] w-full"
             >
               <ViewFinalPlanTable
                 poTableData={poTableData}
@@ -769,7 +762,7 @@ export const ViewFinalPlanPODetails = ({
             <div ref={pageRef} className="col-span-1 w-full">
               {!loadingScreenSummaryPlanTable &&
                 !errorScreenSummaryPlanTable && (
-                  <div className="p-4 border border-1 border-#C3C3C3 rounded-2xl">
+                  <div className="p-4 border border-1 border-#C3C3C3 rounded-[8px]">
                     <div className="flex justify-between items-center">
                       <h1 className="font-semibold text-lg">
                         Download your campaign plan
@@ -861,7 +854,7 @@ export const ViewFinalPlanPODetails = ({
                   </div>
                 )}
 
-              <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-2xl">
+              <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-[8px]">
                 <h1 className="font-semibold text-lg pb-4">
                   Add Mid Date Monitoring
                 </h1>
@@ -873,7 +866,7 @@ export const ViewFinalPlanPODetails = ({
 
               {!loadingScreenSummaryPlanTable &&
                 !errorScreenSummaryPlanTable && (
-                  <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-2xl">
+                  <div className="mt-2 p-4 border border-1 border-#C3C3C3 rounded-[8px]">
                     <div
                       className="flex items-center gap-2"
                       onClick={() => {
@@ -924,7 +917,7 @@ export const ViewFinalPlanPODetails = ({
                     </div>
                   </div>
                 )}
-              <div className="mt-2 p-4 border border-1 border-#C3C3C3 h-auto rounded-2xl">
+              <div className="mt-2 p-4 border border-1 border-#C3C3C3 h-auto rounded-[8px]">
                 <EmailConfirmationImage
                   files={confirmationImageFiles}
                   handleAddNewFile={handleAddNewFile}

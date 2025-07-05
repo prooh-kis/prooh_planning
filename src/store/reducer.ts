@@ -77,6 +77,8 @@ export const rootReducer = {
     grossMarginForCostSummary: screenReducers.getGrossMarginForCostSummaryPopupPageReducer,
     inventoryDetailsForCostSummary: screenReducers.getInventoryDetailsForCostSummaryPopupPageReducer,
     editCostDetailsScreenWise: screenReducers.editCostDetailsScreenWiseForCostSummaryPopupPageReducer,
+    sendRequestToVendorForBudgetApprovalCostSheetPopupPage: screenReducers.sendRequestToVendorForBudgetApprovalCostSheetPopupPageReducer,
+    sendRequestToVendorForCreativeApproval: screenReducers.sendRequestToVendorForCreativeApprovalReducer,
     // Campaign related
     campaignCreationsDetailsGet: campaignReducers.campaignCreationsDetailsGetReducer,
     allCampaignsDataGet: campaignReducers.allCampaignsDataGetReducer,

@@ -62,18 +62,6 @@ export const CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_ERROR =
 export const CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_RESET =
   "CHANGE_CAMPAIGN_STATUS_AFTER_VENDOR_APPROVAL_RESET";
 
-// export const CAMPAIGN_STATUS_PLEA_REQUEST_BUDGET_SENT = "PleaRequestBudgetSent"
-// export const CAMPAIGN_STATUS_PLEA_REQUEST_BUDGET_ACCEPTED = "PleaRequestBudgetAccepted"
-// export const CAMPAIGN_STATUS_PLEA_REQUEST_BUDGET_REJECTED = "PleaRequestBudgetRejected"
-export const CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT =
-  "PleaRequestScreenApprovalSent";
-export const CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED =
-  "PleaRequestScreenApprovalAccepted";
-export const CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED =
-  "PleaRequestScreenApprovalRejected";
-// export const CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_SENT = "PleaRequestFinalApprovalSent"
-// export const CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_ACCEPTED = "PleaRequestFinalApprovalAccepted"
-// export const CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_REJECTED = "PleaRequestFinalApprovalRejected"
 
 export const CHANGE_CAMPAIGN_DURATION_REQUEST =
   "CHANGE_CAMPAIGN_DURATION_REQUEST";
@@ -174,3 +162,34 @@ export const SOV_TYPE_ARRAY = [
   "continuous",
   "random",
 ];
+
+
+
+// export const CAMPAIGN_STATUS_PLEA_REQUEST_BUDGET_SENT = "PleaRequestBudgetSent"
+// export const CAMPAIGN_STATUS_PLEA_REQUEST_BUDGET_ACCEPTED = "PleaRequestBudgetAccepted"
+// export const CAMPAIGN_STATUS_PLEA_REQUEST_BUDGET_REJECTED = "PleaRequestBudgetRejected"
+export const CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT =
+  "PleaRequestScreenApprovalSent";
+export const CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED =
+  "PleaRequestScreenApprovalAccepted";
+export const CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED =
+  "PleaRequestScreenApprovalRejected";
+// export const CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_SENT = "PleaRequestFinalApprovalSent"
+// export const CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_ACCEPTED = "PleaRequestFinalApprovalAccepted"
+// export const CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_REJECTED = "PleaRequestFinalApprovalRejected"
+
+export const CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_SENT = "PleaRequestClientBudgetApprovalSent"
+export const CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_ACCEPTED = "PleaRequestClientBudgetApprovalAccepted"
+export const CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_REJECTED = "PleaRequestClientBudgetApprovalRejected"
+
+export const CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_SENT = "PleaRequestVendorBudgetApprovalSent"
+export const CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_ACCEPTED = "PleaRequestVendorBudgetApprovalAccepted"
+export const CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_REJECTED = "PleaRequestVendorBudgetApprovalRejected"
+
+export const CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_SENT = "PleaRequestCreativeApprovalSent"
+export const CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_ACCEPTED = "PleaRequestCreativeApprovalAccepted"
+export const CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_REJECTED = "PleaRequestCreativeApprovalRejected"
+
+export const CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_SENT = "PleaRequestFinalApprovalSent"
+export const CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_ACCEPTED = "PleaRequestFinalApprovalAccepted"
+export const CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_REJECTED = "PleaRequestFinalApprovalRejected"

@@ -53,7 +53,7 @@ export function StatusPopup({ onClose, open, myData }: CalendarPopupProps) {
           <i className="fi fi-br-cross"></i>
         </div>
         <div className="px-2 overflow-scroll no-scrollbar h-[40vh]">
-          <div className="flex justify-between">
+          <div className="flex flex-col items-center justify-between">
             <h1 className="text-[#0E212E] text-[24px] font-semibold leading-[32.68px]">
               Status
             </h1>
@@ -68,7 +68,7 @@ export function StatusPopup({ onClose, open, myData }: CalendarPopupProps) {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-12 mt-4  flex justify-center">
+          <div className={`grid grid-cols-12 mt-4 flex items-center justify-center`}>
             {myData?.Approved?.Connected + myData?.Approved?.["Third Party"] >
               0 && (
               <div className="col-span-4">

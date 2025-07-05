@@ -88,6 +88,14 @@ import {
   PLANNING_PAGE_FOOTER_DATA_ERROR,
   PLANNING_PAGE_FOOTER_DATA_REQUEST,
   PLANNING_PAGE_FOOTER_DATA_SUCCESS,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_ERROR,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_REQUEST,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_RESET,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_SUCCESS,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_ERROR,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_REQUEST,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_RESET,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_SUCCESS,
   TABLE_DATA_SET_AD_PLAY_TIME_ERROR,
   TABLE_DATA_SET_AD_PLAY_TIME_REQUEST,
   TABLE_DATA_SET_AD_PLAY_TIME_SUCCESS,
@@ -731,6 +739,70 @@ export function editCostDetailsScreenWiseForCostSummaryPopupPageReducer(
         error: action.payload,
       };
     case EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET:
+      return {
+        loading: false,
+        success: false,
+        error: [],
+      };
+    default:
+      return state;
+  }
+}
+
+
+
+export function sendRequestToVendorForBudgetApprovalCostSheetPopupPageReducer(
+  state = [],
+  action
+) {
+  switch (action.type) {
+    case SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_REQUEST:
+      return { loading: true };
+    case SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_ERROR:
+      return {
+        loading: false,
+        success: false,
+        error: action.payload,
+      };
+    case SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_RESET:
+      return {
+        loading: false,
+        success: false,
+        error: [],
+      };
+    default:
+      return state;
+  }
+}
+
+
+
+export function sendRequestToVendorForCreativeApprovalReducer(
+  state = [],
+  action
+) {
+  switch (action.type) {
+    case SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_REQUEST:
+      return { loading: true };
+    case SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_ERROR:
+      return {
+        loading: false,
+        success: false,
+        error: action.payload,
+      };
+    case SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_RESET:
       return {
         loading: false,
         success: false,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Checkbox, message, Tooltip } from "antd";
@@ -206,16 +206,16 @@ export const CreativeUploadV4 = ({
     }));
   };
 
-  const isTriggerAvailable = () => {
+  const isTriggerAvailable = useCallback(() => {
     const triggers = campaignDetails?.triggers || [];
     return (
       triggers?.weatherTriggers?.length > 0 ||
       triggers?.sportsTriggers?.length > 0 ||
       triggers?.vacantSlots?.length > 0
     );
-  };
+  }, [campaignDetails?.triggers]);
 
-  const handleSetValue = () => {
+  const handleSetValue = useCallback(() => {
     const triggerAvailable = isTriggerAvailable();
 
     setTabData(
@@ -229,7 +229,7 @@ export const CreativeUploadV4 = ({
               : []),
           ]
     );
-  };
+  },[isTriggerBasedCampaign, isTriggerAvailable]);
 
   const mergeCreativeWithScreenData = (creatives: any, screenData: any) => {
     return screenData.map((screen: any) => {
@@ -270,13 +270,15 @@ export const CreativeUploadV4 = ({
 
   const validate = () => {
     const triggerAvailable = isTriggerAvailable();
-    return creativeUploadData.every((screen) =>
-      triggerAvailable
+    const validationStatus = creativeUploadData.every((screen) => {
+      const hasContent = triggerAvailable
         ? screen.triggerCreatives?.length > 0
         : screen.standardDayTimeCreatives?.length > 0 ||
           screen.standardNightTimeCreatives?.length > 0 ||
-          screen.triggerCreatives?.length > 0
-    );
+          screen.triggerCreatives?.length > 0;
+      return hasContent;
+    });
+    return validationStatus;
   };
 
   const handleSaveAndContinue = async () => {
@@ -459,7 +461,7 @@ export const CreativeUploadV4 = ({
     );
   };
 
-  const getCount = (key: keyof Screen, label: string): number => {
+  const getCount = useCallback((key: keyof Screen, label: string): number => {
     let creativeCount = 0;
 
     if (label === "All") {
@@ -481,7 +483,7 @@ export const CreativeUploadV4 = ({
     }
 
     return creativeCount;
-  };
+  }, [screenData, isCreativeUploaded]);
 
   useEffect(() => {
     setAllFilter((prev: FilterOptions) => {
@@ -634,26 +636,28 @@ export const CreativeUploadV4 = ({
   };
 
   useEffect(() => {
-    dispatch(
-      getPlanningPageFooterData({
-        id: campaignId,
-        pageName: "Upload Creative Page",
-      })
-    );
-  }, [dispatch, campaignId]);
-
-  useEffect(() => {
+    dispatch(getAllFiltersDetailsForUploadCreativePage({ id: campaignId }));
     dispatch(
       getScreenDataForUploadCreativePageV3({
         id: campaignId,
         ...selectedFilters,
       })
     );
-  }, [dispatch, selectedFilters]);
+    dispatch(
+      getPlanningPageFooterData({
+        id: campaignId,
+        pageName: "Upload Creative Page",
+      })
+    );
+  }, [dispatch, campaignId, selectedFilters]);
 
   useEffect(() => {
     if (errorScreeData) message.error(errorScreeData);
     if (errorAddDetails) message.error("Error in adding campaign details...");
+  },[errorAddDetails, errorScreeData])
+
+  useEffect(() => {
+
     if (!screenData) return;
 
     handleSetValue();
@@ -673,11 +677,8 @@ export const CreativeUploadV4 = ({
     setCreativeUploadData(combinedData);
 
     setPageLoading(false);
-  }, [campaignId, errorScreeData, errorAddDetails, screenData]);
+  }, [screenData, campaignDetails, creativeUploadData?.length, handleSetValue]);
 
-  useEffect(() => {
-    dispatch(getAllFiltersDetailsForUploadCreativePage({ id: campaignId }));
-  }, [dispatch]);
 
   useEffect(() => {
     if (successAddDetails) {

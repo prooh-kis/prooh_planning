@@ -5,6 +5,8 @@ import {
   CAMPAIGN_MANAGER,
   CAMPAIGN_PLANNER,
 } from "../../constants/userConstants";
+import { CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_ACCEPTED, CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_REJECTED, CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_SENT, CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_ACCEPTED, CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_REJECTED, CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_SENT, CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_ACCEPTED, CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_REJECTED, CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_SENT, CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_ACCEPTED, CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_REJECTED, CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_SENT } from "../../constants/campaignConstants";
+import ButtonInput from "../../components/atoms/ButtonInput";
 
 export const VendorConfirmationStatusTable = ({
   userInfo,
@@ -19,26 +21,34 @@ export const VendorConfirmationStatusTable = ({
     creatives: {},
   });
 
-  // const handleRowCheckboxChange = (e: boolean, campaignId: string) => {
-  //   let updatedIds = [...selectedCampaignIds];
-  //   if (e) {
-  //     // Add campaignId if row checkbox is checked
-  //     updatedIds = [...selectedCampaignIds, campaignId];
-  //   } else {
-  //     // Remove campaignId if row checkbox is unchecked
-  //     updatedIds = updatedIds.filter((id) => id !== campaignId);
-  //   }
-  //   setSelectedCampaignIds(updatedIds); // Update the state with the new selection
-  // };
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
-  // useEffect(() => {
-  //   var campaignIds : any = []
-  //   for ( const campaign of campaignsList ){
-  //     if ( campaign.campaignCreationId === statusTableData._id )
-  //       campaignIds.push(campaign._id.toString())
-  //   }
-  //   setSelectedCampaignIds(campaignIds);
-  // }, [ setSelectedCampaignIds, statusTableData]);
+  const handleSelectRow = (value: boolean, index: number) => {
+    if (value) {
+      setSelectedRows((pre: number[]) => [...pre, index]);
+    } else {
+      setSelectedRows((pre: number[]) =>
+        pre.filter((data: number) => data !== index)
+      );
+    }
+  };
+
+  const handleSelectAllRow = (value: boolean) => {
+    if (value) {
+      setSelectedRows(statusTableData.map((_: any, index: number) => index));
+    } else {
+      setSelectedRows([]);
+    }
+  };
+
+    const handleSendRequest = () => {
+      // dispatch(sendRequestToVendorForBudgetApprovalCostSheetPopupPage({
+      //   id: campaignId,
+      //   screens: screenData.filter((s: any, i: any) => selectedRows.includes(i))?.map((sc: any) => sc.screenName)
+      // }));
+    }
+  
+
   return (
     <div className="w-full">
       <ShowMediaPopup
@@ -49,22 +59,42 @@ export const VendorConfirmationStatusTable = ({
         }}
         creativesToShow={creativesToShow}
       />
+      {selectedRows?.length > 0 && (
+        <div className="flex justify-end items-center pb-2">
+          <ButtonInput
+            variant="primary"
+            size="small"
+            onClick={handleSendRequest}
+            icon={
+              <i className="fi fi-sr-envelope flex items-center"></i>
+            }
+          >
+            Send
+          </ButtonInput>
+        </div>
+      )}
       <table className="w-full">
         <thead className="w-full flex">
           {userInfo?.userRole === "campaignPlanner" && (
-            <tr className="bg-[#D6EEFF] w-full grid grid-cols-12 rounded-t">
-              <th className="py-2 col-span-1 flex justify-around">
-                <h1 className="text-[14px] px-2">S.N.</h1>
+            <tr className="bg-[#D6EEFF] w-full grid grid-cols-12 rounded-t-[8px]">
+              <th className="p-2 col-span-1 flex justify-start items-center gap-2">
+                <input
+                  title="checkbox"
+                  type="checkbox"
+                  onChange={(e: any) => handleSelectAllRow(e.target.checked)}
+                  checked={selectedRows?.length === statusTableData?.length}
+                />
+                <h1 className="text-[14px]">S.N.</h1>
               </th>
-              <th className="py-2 col-span-2 flex justify-around">
-                <h1 className="text-[14px] px-2">Screen Name</h1>
+              <th className="py-2 col-span-2 flex justify-around items-center truncate">
+                <h1 className="text-[14px] px-2 truncate">Screen Name</h1>
               </th>
-              <th className="py-2 col-span-2 flex justify-around">
-                <h1 className="text-[14px] flex justify-start">Touchpoint</h1>
+              <th className="py-2 col-span-2 flex justify-around items-center truncate">
+                <h1 className="text-[14px] flex justify-start truncate">Touchpoint</h1>
               </th>
-              <th className="py-2 col-span-2 flex justify-around">
-                <div className="flex gap-2">
-                  <h1 className="text-[14px]">Media Type</h1>
+              <th className="py-2 col-span-2 flex justify-around items-center">
+                <div className="flex gap-2 truncate">
+                  <h1 className="text-[14px] truncate">Media Type</h1>
                   <Tooltip title="Connected media type will have real time campaign delivery updates and monitoring.">
                     <i
                       className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"
@@ -73,18 +103,18 @@ export const VendorConfirmationStatusTable = ({
                   </Tooltip>
                 </div>
               </th>
-              <th className="py-2 col-span-1 flex justify-around">
-                <h1 className="text-[14px]">Cost</h1>
+              <th className="py-2 col-span-1 flex justify-around items-center truncate">
+                <h1 className="text-[14px] truncate">Cost</h1>
               </th>
-              <th className="py-2 col-span-1 flex justify-around">
-                <h1 className="text-[14px]">SOV</h1>
+              <th className="py-2 col-span-1 flex justify-around items-center truncate">
+                <h1 className="text-[14px] truncate">SOV</h1>
               </th>
-              <th className="py-2 col-span-1 flex justify-around">
-                <h1 className="text-[14px]">Creative</h1>
+              <th className="py-2 col-span-1 flex justify-around items-center truncate">
+                <h1 className="text-[14px] truncate">Creative</h1>
               </th>
-              <th className="py-2 col-span-2 flex justify-around">
-                <div className="flex gap-2">
-                  <h1 className="text-[14px]">Status</h1>
+              <th className="py-2 col-span-2 flex justify-around items-center">
+                <div className="flex gap-2 truncate">
+                  <h1 className="text-[14px] truncate">Status</h1>
                   <Tooltip title="Campaign status subject to approval from screen owner/media vendor">
                     <i
                       className="fi fi-rs-info flex items-center text-[#9A9A9A] text-[12px]"
@@ -93,11 +123,6 @@ export const VendorConfirmationStatusTable = ({
                   </Tooltip>
                 </div>
               </th>
-              {/* <th className="py-2">
-                <h1 className="text-[14px]">
-                  Action
-                </h1>
-              </th> */}
             </tr>
           )}
         </thead>
@@ -107,43 +132,62 @@ export const VendorConfirmationStatusTable = ({
             statusTableData?.map((status: any, i: any) => (
               <tr
                 key={i}
-                className={`border w-full grid grid-cols-12 rounded-b
-              ${status.status === "PleaRequestBudgetSent" && "bg-[#F59E0B10]"}
+                className={`border w-full grid grid-cols-12 ${i === statusTableData?.length - 1 ? "rounded-b-[8px]" : ""}
+              ${status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_SENT && "bg-[#F59E0B10]"}
               ${
-                status.status === "PleaRequestBudgetAccepted" &&
+                status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_ACCEPTED &&
                 "bg-[#22C55E10]"
               }
               ${
-                status.status === "PleaRequestBudgetRejected" &&
+                status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_REJECTED &&
                 "bg-[#EF444410]"
               }
               ${
-                status.status === "PleaRequestScreenApprovalSent" &&
+                status.status === CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_SENT &&
                 "bg-[#F59E0B10]"
               }
               ${
-                status.status === "PleaRequestScreenApprovalAccepted" &&
+                status.status === CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_ACCEPTED &&
                 "bg-[#22C55E10]"
               }
               ${
-                status.status === "PleaRequestScreenApprovalRejected" &&
+                status.status === CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_REJECTED &&
                 "bg-[#EF444410]"
               }
               ${
-                status.status === "PleaRequestFinalApprovalSent" &&
+                status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_SENT &&
                 "bg-[#F59E0B10]"
               }
               ${
-                status.status === "PleaRequestFinalApprovalAccepted" &&
+                status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_ACCEPTED &&
                 "bg-[#22C55E10]"
               }
               ${
-                status.status === "PleaRequestFinalApprovalRejected" &&
+                status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_REJECTED &&
+                "bg-[#EF444410]"
+              }
+              ${
+                status.status === CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_SENT &&
+                "bg-[#F59E0B10]"
+              }
+              ${
+                status.status === CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_ACCEPTED &&
+                "bg-[#22C55E10]"
+              }
+              ${
+                status.status === CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_REJECTED &&
                 "bg-[#EF444410]"
               }
             `}
               >
-                <td className="p-2 col-span-1 truncate flex justify-around items-center">
+                <td className="p-2 col-span-1 truncate flex justify-start items-center gap-2">
+                  <input
+                    title={`checkbox-${i}`}
+                    className="border rounded-md"
+                    type="checkbox"
+                    checked={selectedRows?.includes(i)}
+                    onChange={(e: any) => handleSelectRow(e.target.checked, i)}
+                  />
                   <h1 className="text-[14px] truncate">{i + 1}</h1>
                 </td>
                 <td className="p-2 col-span-2 truncate flex justify-around items-center">
@@ -171,7 +215,7 @@ export const VendorConfirmationStatusTable = ({
                 </td>
                 <td className="p-2 col-span-1 flex justify-around items-center">
                   <div
-                    className="flex justify-center items-center"
+                    className="flex justify-center items-center gap-2"
                     onClick={() => {
                       setCreativesToShow({
                         screenName: status.screenName,
@@ -181,83 +225,102 @@ export const VendorConfirmationStatusTable = ({
                       setOpenShowMediaPopup(true);
                     }}
                   >
-                    <i className="fi fi-sr-photo-video text-[20px] text-violet flex justify-center"></i>
+                    <i className="fi fi-sr-photo-video text-[20px] text-violet flex justify-center" /> 
+                    <h1 className="text-[14px]">({status.creatives.standardDayTimeCreatives.length + status.creatives.standardNightTimeCreatives.length + status.creatives.triggerCreatives.length})</h1>
                   </div>
                 </td>
                 <td className="py-2 col-span-2 flex justify-around items-center truncate">
                   <Tooltip
                     title={
-                      status.status === "PleaRequestBudgetSent"
-                        ? "Budget Approval Pending"
-                        : status.status === "PleaRequestBudgetAccepted"
-                        ? "Budget Approved"
-                        : status.status === "PleaRequestBudgetRejected"
-                        ? "Budget Rejected"
-                        : status.status === "PleaRequestScreenApprovalSent"
-                        ? "Screen Approval Pending"
-                        : status.status === "PleaRequestScreenApprovalAccepted"
-                        ? "Screen Approved"
-                        : status.status === "PleaRequestScreenApprovalRejected"
-                        ? "Screen Rejected"
-                        : status.status === "PleaRequestFinalApprovalSent"
-                        ? "Final Aprroval Pending"
-                        : status.status === "PleaRequestFinalApprovalAccepted"
-                        ? "Final Approved"
-                        : status.status === "PleaRequestFinalApprovalRejected"
-                        ? "Final Rejected"
+                      status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_SENT
+                        ? "Client Approval Pending"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_ACCEPTED
+                        ? "Client Approved Planning"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_REJECTED
+                        ? "Client Rejected Planning"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_SENT
+                        ? "Vendor Budget Approval Pending"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_ACCEPTED
+                        ? "Vendor Budget Approved"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_REJECTED
+                        ? "Vendor Budget Rejected"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_SENT
+                        ? "Creative Approval Pending"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_ACCEPTED
+                        ? "Creative Approved"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_REJECTED
+                        ? "Creative Rejected"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_SENT
+                        ? "Campaign Approval Pending"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_ACCEPTED
+                        ? "Campaign Approved"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_REJECTED
+                        ? "Campaign Rejected"
                         : status.status === "Pending"
-                        ? "Approved"
-                        : "Approved"
+                        ? "approved"
+                        : status.status
                     }
                   >
                     <h1
                       className={`text-[14px] truncate ${
-                        status.status === "PleaRequestBudgetSent"
+                        status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_SENT
                           ? "text-[#F59E0B]"
-                          : status.status === "PleaRequestBudgetAccepted"
+                          : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_ACCEPTED
                           ? "text-[#22C55E]"
-                          : status.status === "PleaRequestBudgetRejected"
+                          : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_REJECTED
                           ? "text-[#EF4444]"
-                          : status.status === "PleaRequestScreenApprovalSent"
+                          : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_SENT
                           ? "text-[#F59E0B]"
                           : status.status ===
-                            "PleaRequestScreenApprovalAccepted"
+                            CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_ACCEPTED
                           ? "text-[#22C55E]"
                           : status.status ===
-                            "PleaRequestScreenApprovalRejected"
+                            CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_REJECTED
                           ? "text-[#EF4444]"
-                          : status.status === "PleaRequestFinalApprovalSent"
+                          : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_SENT
                           ? "text-[#F59E0B]"
-                          : status.status === "PleaRequestFinalApprovalAccepted"
+                          : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_ACCEPTED
                           ? "text-[#22C55E]"
-                          : status.status === "PleaRequestFinalApprovalRejected"
+                          : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_REJECTED
+                          ? "text-[#EF4444]"
+                          : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_SENT
+                          ? "text-[#F59E0B]"
+                          : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_ACCEPTED
+                          ? "text-[#22C55E]"
+                          : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_REJECTED
                           ? "text-[#EF4444]"
                           : status.status === "Pending"
                           ? "text-[#22C55E]"
                           : "text-[#3B82F6]"
                       }`}
                     >
-                      {status.status === "PleaRequestBudgetSent"
-                        ? "Budget Approval Pending"
-                        : status.status === "PleaRequestBudgetAccepted"
-                        ? "Budget Approved"
-                        : status.status === "PleaRequestBudgetRejected"
-                        ? "Budget Rejected"
-                        : status.status === "PleaRequestScreenApprovalSent"
-                        ? "Screen Approval Pending"
-                        : status.status === "PleaRequestScreenApprovalAccepted"
-                        ? "Screen Approved"
-                        : status.status === "PleaRequestScreenApprovalRejected"
-                        ? "Screen Rejected"
-                        : status.status === "PleaRequestFinalApprovalSent"
-                        ? "Final Aprroval Pending"
-                        : status.status === "PleaRequestFinalApprovalAccepted"
-                        ? "Final Approved"
-                        : status.status === "PleaRequestFinalApprovalRejected"
-                        ? "Final Rejected"
+                      {status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_SENT
+                        ? "Client Approval Pending"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_ACCEPTED
+                        ? "Client Approved Planning"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CLIENT_BUDGET_APPROVAL_REJECTED
+                        ? "Client Rejected Planning"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_SENT
+                        ? "Vendor Budget Approval Pending"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_ACCEPTED
+                        ? "Vendor Budget Approved"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_VENDOR_BUDGET_APPROVAL_REJECTED
+                        ? "Vendor Budget Rejected"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_SENT
+                        ? "Creative Approval Pending"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_ACCEPTED
+                        ? "Creative Approved"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_CREATIVE_APPROVAL_REJECTED
+                        ? "Creative Rejected"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_SENT
+                        ? "Campaign Approval Pending"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_ACCEPTED
+                        ? "Campaign Approved"
+                        : status.status === CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_REJECTED
+                        ? "Campaign Rejected"
                         : status.status === "Pending"
-                        ? "Approved"
-                        : "Approved"}
+                        ? "approved"
+                        : status.status}
                     </h1>
                   </Tooltip>
                 </td>

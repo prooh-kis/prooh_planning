@@ -346,7 +346,7 @@ export const googleSignupSignin =
     }
   };
 
-export const sendEmailForConfirmation =
+export const sendEmailForPOConfirmation =
   (formData) => async (dispatch, getState) => {
     dispatch({
       type: SEND_EMAIL_FOR_CONFIRMATION_REQUEST,

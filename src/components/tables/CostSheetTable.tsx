@@ -3,11 +3,11 @@ import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { EditIcon } from "../../assets";
 import { Loading } from "../../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
-import { editCostDetailsScreenWiseForCostSummaryPopupPage, getInventoryDetailsForCostSummaryPopupPage } from "../../actions/screenAction";
+import { editCostDetailsScreenWiseForCostSummaryPopupPage, getInventoryDetailsForCostSummaryPopupPage, sendRequestToVendorForBudgetApprovalCostSheetPopupPage } from "../../actions/screenAction";
 import { useEffect, useState } from "react";
 import { FileUploadButton } from "../../components/FileUploadButton";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
-import { message } from "antd";
+import { message, Tooltip } from "antd";
 import { PrimaryInput } from "../../components/atoms/PrimaryInput";
 import { EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET } from "../../constants/screenConstants";
 import ButtonInput from "../../components/atoms/ButtonInput";
@@ -40,6 +40,12 @@ export const CostSheetTable = ({
 
   const [showDocumentModal, setShowDocumentModal] = useState<boolean>(false);
 
+  const {
+    loading: loadingSendApprovalRequest,
+    error: errorSendApprovalRequest,
+    success: successSendApprovalRequest,
+  } = useSelector((state: any) => state.sendRequestToVendorForBudgetApprovalCostSheetPopupPage);
+  
   const handleEdit = (e: any) => {
     setScreenData((prevData: any[]) => {
       if (!prevData || !prevData[e.index]) return prevData;
@@ -50,14 +56,18 @@ export const CostSheetTable = ({
       if (e.type === "clientCost") {
         newData[e.index] = {
           ...newData[e.index],
-          clientCost: isNaN(numericValue) ? 0 : Math.max(0, numericValue) // Ensure non-negative
+          clientCost: isNaN(numericValue) ? 0 : Math.max(0, numericValue), // Ensure non-negative
+          // commission: 30,
+          // vendorCost: numericValue * 0.7
         };
       }
 
       if (e.type === "vendorCost") {
         newData[e.index] = {
           ...newData[e.index],
-          vendorCost: isNaN(numericValue) ? 0 : Math.max(0, numericValue) // Ensure non-negative
+          vendorCost: isNaN(numericValue) ? 0 : Math.max(0, numericValue), // Ensure non-negative
+          // commission: 30,
+          // clientCost: numericValue / 0.7
         };
       }
       
@@ -139,9 +149,11 @@ export const CostSheetTable = ({
   };
 
   const handleSendRequest = () => {
-    console.log(screenData.map((s: any) => s.screenName));
+    dispatch(sendRequestToVendorForBudgetApprovalCostSheetPopupPage({
+      id: campaignId,
+      screens: screenData.filter((s: any, i: any) => selectedRows.includes(i))?.map((sc: any) => sc.screenName)
+    }));
   }
-
 
   return (
     <div className="w-full py-2">
@@ -240,25 +252,33 @@ export const CostSheetTable = ({
               <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
                 Cost
               </h1>
-              <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
+              <Tooltip title="Cost given to your client">
+                <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
+              </Tooltip>
             </th>
             <th className="flex col-span-1 w-full items-center justify-center gap-1">
               <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
                 Commission
               </h1>
-              <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
+              <Tooltip title="Your commission percentage">
+                <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
+              </Tooltip>
             </th>
             <th className="flex col-span-1 w-full items-center justify-center gap-1">
               <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
                 Price
               </h1>
-              <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
+              <Tooltip title="Vendor cost excluding commission">
+                <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
+              </Tooltip>
             </th>
             <th className="flex col-span-1 w-full items-center justify-center gap-1">
               <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
                 Margin
               </h1>
-              <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
+              <Tooltip title="Difference between client cost and vendor cost">
+                <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
+              </Tooltip>
             </th>
             <th className="flex col-span-1 w-full items-center justify-center gap-2">
               <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
@@ -345,7 +365,7 @@ export const CostSheetTable = ({
                     <h1 className="lg:text-[12px] md:text-[12px] text-[#FF0808] font-normal truncate">{inventory?.commission?.toFixed(0) || 0}%</h1>
                   </td>
                   <td className="flex col-span-1 w-full items-center justify-center gap-2">
-                    {isEdit && currentRow === i ? (
+                    {/* {isEdit && currentRow === i ? (
                       <PrimaryInput 
                         placeholder={`₹ ${inventory?.vendorCost}`}
                         value={inventory?.vendorCost}
@@ -353,11 +373,11 @@ export const CostSheetTable = ({
                         inputType="number"
                         height="h-[32px]"
                       />
-                    ) : (
+                    ) : ( */}
                       <span className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal">
                         ₹ {inventory?.vendorCost?.toFixed(0) || 0}
                       </span>
-                    )}
+                    {/* )} */}
                   </td>
                   <td className="flex col-span-1 w-full items-center justify-center gap-2">
                     <span className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal">
