@@ -102,6 +102,8 @@ export const rootReducer = {
     campaignLogsGet: campaignReducers.campaignLogsGetReducer,
     cloneCampaign: campaignReducers.cloneCampaignReducer,
     downloadCampaignSummaryPPT: campaignReducers.downloadCampaignSummaryPPTReducer,
+    campaignRequestFinalApprovalDetails: campaignReducers.getCampaignRequestFinalApprovalDetailsForProohAdminReducer,
+    approveCampaignFinally: campaignReducers.approveCampaignFinallyProohAdminReducer,
 
     // External APIs
     cricketMatchesListGet: externalApiReducers.cricketMatchesListGetReducer,

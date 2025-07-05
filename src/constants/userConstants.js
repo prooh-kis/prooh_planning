@@ -74,7 +74,6 @@ export const UPDATE_USER_PROFILE_ERROR = "UPDATE_USER_PROFILE_ERROR";
 export const UPDATE_USER_PROFILE_SUCCESS = "UPDATE_USER_PROFILE_SUCCESS";
 export const UPDATE_USER_PROFILE_RESET = "UPDATE_USER_PROFILE_RESET";
 
-
 export const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
 export const CHANGE_PASSWORD_ERROR = "CHANGE_PASSWORD_ERROR";
 export const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
@@ -85,8 +84,8 @@ export const CAMPAIGN_MANAGER = "campaignManager";
 export const SCREEN_ADMIN = "screenAdmin";
 export const SCREEN_OWNER = "screenOwner";
 export const SCREEN_MANAGER = "screenManager";
-export const CLIENT_POC_USER = "clientPocUser"
-
+export const CLIENT_POC_USER = "clientPocUser";
+export const PROOH_ADMIN = "screenAdmin";
 
 export const CAMPAIGN_STATUS_CHANGED_TO_ACTIVE_PLANNING_PAGE =
   "campaignStatusChangedToActivePLanningPage";
@@ -115,3 +114,14 @@ export const CAMPAIGN_CREATION_CREATE_CLONE_PLANNING_PAGE =
 
 export const CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE =
   "campaignCreationAddDetailsToCreateCampaignPlanningPage";
+export const CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_SENT =
+  "PleaRequestFinalApprovalSent";
+export const CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_ACCEPTED =
+  "PleaRequestFinalApprovalAccepted";
+export const CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_REJECTED =
+  "PleaRequestFinalApprovalRejected";
+
+export const CAMPAIGN_CREATION_FINAL_APPROVE_CAMPAIGN_CMS =
+  "campaignCreationFinalApproveCampaignCms";
+export const CAMPAIGN_CREATION_GET_FINAL_APPROVAL_REQUEST_DETAILS_VENDOR_CMS =
+  "campaignCreationGetFinalApprovalRequestDetailsVendorCms";

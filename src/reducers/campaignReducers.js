@@ -66,6 +66,14 @@ import {
   DOWNLOAD_CAMPAIGN_SUMMARY_PPT_SUCCESS,
   DOWNLOAD_CAMPAIGN_SUMMARY_PPT_FAIL,
   DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET,
+  APPROVE_CAMPAIGN_FINALLY_PROOH_ADMIN_FAIL,
+  APPROVE_CAMPAIGN_FINALLY_PROOH_ADMIN_REQUEST,
+  APPROVE_CAMPAIGN_FINALLY_PROOH_ADMIN_SUCCESS,
+  APPROVE_CAMPAIGN_FINALLY_PROOH_ADMIN_RESET,
+  GET_CAMPAIGN_REQUEST_FINAL_APPROVAL_DETAILS_REQUEST,
+  GET_CAMPAIGN_REQUEST_FINAL_APPROVAL_DETAILS_SUCCESS,
+  GET_CAMPAIGN_REQUEST_FINAL_APPROVAL_DETAILS_FAIL,
+  GET_CAMPAIGN_REQUEST_FINAL_APPROVAL_DETAILS_RESET,
 } from "../constants/campaignConstants";
 import {
   ALL_CAMPAIGNS_LIST,
@@ -431,6 +439,46 @@ export function downloadCampaignSummaryPPTReducer(state = {}, action) {
     case DOWNLOAD_CAMPAIGN_SUMMARY_PPT_FAIL:
       return { loading: false, error: action.payload };
     case DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function getCampaignRequestFinalApprovalDetailsForProohAdminReducer(
+  state = {},
+  action
+) {
+  switch (action.type) {
+    case GET_CAMPAIGN_REQUEST_FINAL_APPROVAL_DETAILS_REQUEST:
+      return { loading: true };
+    case GET_CAMPAIGN_REQUEST_FINAL_APPROVAL_DETAILS_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        data: action.payload,
+      };
+    case GET_CAMPAIGN_REQUEST_FINAL_APPROVAL_DETAILS_FAIL:
+      return { loading: false, error: action.payload };
+    case GET_CAMPAIGN_REQUEST_FINAL_APPROVAL_DETAILS_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+export function approveCampaignFinallyProohAdminReducer(state = {}, action) {
+  switch (action.type) {
+    case APPROVE_CAMPAIGN_FINALLY_PROOH_ADMIN_REQUEST:
+      return { loading: true };
+    case APPROVE_CAMPAIGN_FINALLY_PROOH_ADMIN_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        data: action.payload,
+      };
+    case APPROVE_CAMPAIGN_FINALLY_PROOH_ADMIN_FAIL:
+      return { loading: false, error: action.payload };
+    case APPROVE_CAMPAIGN_FINALLY_PROOH_ADMIN_RESET:
       return {};
     default:
       return state;

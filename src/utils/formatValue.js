@@ -83,3 +83,10 @@ export function calculateAspectRatio(resolution) {
 
   return `${ratioWidth}:${ratioHeight}`;
 }
+
+export const formattedINR = (amount) =>
+  new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0, // Remove decimal places
+  }).format(amount);

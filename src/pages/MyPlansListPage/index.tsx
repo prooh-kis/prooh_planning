@@ -58,7 +58,7 @@ export const MyPlansListPage: React.FC = () => {
 
   const handleCampaignClick = (data: any) => {
     const pageName = getCampaignPageNameFromCampaignType(data?.campaignType);
-    navigate(`/${pageName}/${data._id}/view`, {
+    navigate(`/${pageName}/${data._id}/edit`, {
       state: { from: VIEW_CAMPAIGN },
     });
   };

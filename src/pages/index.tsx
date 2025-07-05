@@ -18,6 +18,7 @@ export { StoreBasedPlanPage } from "./StoreBasedPlanPage";
 export { IKnowItAllPlanPage } from "./IKnowItAllPlanPage";
 
 export { LandingPage } from "./LandingPage";
-
+export { CampaignRequestForAdmin } from "./CampaignRequestForAdmin";
+export { ShowCampaignRequestDetailsForAdmin } from "./CampaignRequestForAdmin/ShowCampaignRequestDetailsForAdmin";
 export { MyUsers } from "./MyUsers";
 export { Setting } from "./Setting";

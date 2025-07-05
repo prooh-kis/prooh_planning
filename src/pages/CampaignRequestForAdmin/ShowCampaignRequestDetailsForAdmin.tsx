@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   Header,
   VendorConfirmationScreensLevelCreativeTable,
-} from "./HelperComponents";
+} from "./Helper";
 import { VendorConfirmationBasicTable } from "../../components/tables";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import { message } from "antd";
