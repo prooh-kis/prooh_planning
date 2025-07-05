@@ -12,6 +12,8 @@ export const MY_CAMPAIGNS_LIST = "/myCampaignsList";
 export const SETTING = '/setting';
 export const CAMPAIGN_DETAILS = "/campaignDetails";
 export const MY_REQUESTS_LIST = "/myRequestsList";
+export const ADMIN_REQUEST_LIST = "/adminRequestList";
+
 export const PLAY_CAMPAIGN = "/start-plan";
 export const NEW_DASHBOARD = "/campaignDashboard/:id?/:clicked";
 

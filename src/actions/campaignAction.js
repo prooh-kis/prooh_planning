@@ -54,6 +54,11 @@ import {
   DOWNLOAD_CAMPAIGN_SUMMARY_PPT_REQUEST,
   DOWNLOAD_CAMPAIGN_SUMMARY_PPT_SUCCESS,
   DOWNLOAD_CAMPAIGN_SUMMARY_PPT_FAIL,
+  GET_CAMPAIGN_REQUEST_FINAL_APPROVAL_DETAILS_REQUEST,
+  GET_CAMPAIGN_REQUEST_FINAL_APPROVAL_DETAILS_SUCCESS,
+  GET_CAMPAIGN_REQUEST_FINAL_APPROVAL_DETAILS_FAIL,
+  APPROVE_CAMPAIGN_FINALLY_PROOH_ADMIN_REQUEST,
+  APPROVE_CAMPAIGN_FINALLY_PROOH_ADMIN_SUCCESS,
 } from "../constants/campaignConstants";
 import { removeAllKeyFromLocalStorage } from "../utils/localStorageUtils";
 import {
@@ -203,34 +208,6 @@ export const getMyCreateCampaignsManagerRequestsList =
     } catch (error) {
       dispatch({
         type: GET_MY_CREATE_CAMPAIGNS_MANAGER_REQUESTS_LIST_ERROR,
-        payload: {
-          message: error.message,
-          status: error.response?.status,
-          data: error.response?.data,
-        },
-      });
-    }
-  };
-
-export const getMyCreateCampaignsVendorRequestsList =
-  ({ id, status }) =>
-  async (dispatch, getState) => {
-    dispatch({
-      type: GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_REQUEST,
-      payload: { id, status },
-    });
-    try {
-      const { data } = await axios.post(
-        `${campaignV2}/campaignCreationsScreenVendor`,
-        { id, status }
-      );
-      dispatch({
-        type: GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_SUCCESS,
-        payload: data,
-      });
-    } catch (error) {
-      dispatch({
-        type: GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_ERROR,
         payload: {
           message: error.message,
           status: error.response?.status,
@@ -582,6 +559,98 @@ export const downloadCampaignSummaryPPTAction =
           error.response && error.response.data.message
             ? error.response.data.message
             : error.message,
+      });
+    }
+  };
+
+export const getCampaignRequestFinalApprovalDetailsForProohAdmin =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_CAMPAIGN_REQUEST_FINAL_APPROVAL_DETAILS_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
+      const { data } = await axios.post(
+        `${campaignV2}/getCampaignRequestFinalApprovalDetailsForProohAdmin`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({
+        type: GET_CAMPAIGN_REQUEST_FINAL_APPROVAL_DETAILS_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_CAMPAIGN_REQUEST_FINAL_APPROVAL_DETAILS_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const getMyCreateCampaignsVendorRequestsList =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
+      const { data } = await axios.post(
+        `${campaignV2}/getCampaignRequestListForScreenVendor`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({
+        type: GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_MY_CREATE_CAMPAIGNS_VENDOR_REQUESTS_LIST_ERROR,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
+      });
+    }
+  };
+
+export const approveCampaignFinallyProohAdmin =
+  (input) => async (dispatch, getState) => {
+    dispatch({
+      type: APPROVE_CAMPAIGN_FINALLY_PROOH_ADMIN_REQUEST,
+      payload: input,
+    });
+    try {
+      const {
+        auth: { userInfo },
+      } = getState();
+      const { data } = await axios.post(
+        `${campaignV2}/approveCampaignFinallyProohAdmin`,
+        input,
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({
+        type: APPROVE_CAMPAIGN_FINALLY_PROOH_ADMIN_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: APPROVE_CAMPAIGN_FINALLY_PROOH_ADMIN_REQUEST,
+        payload: {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+        },
       });
     }
   };

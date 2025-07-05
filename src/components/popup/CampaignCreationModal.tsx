@@ -10,7 +10,7 @@ import {
 } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import durationPlugin from "dayjs/plugin/duration";
-import ButtonInput from "@components/atoms/ButtonInput";
+import ButtonInput from "../../components/atoms/ButtonInput";
 
 dayjs.extend(durationPlugin);
 

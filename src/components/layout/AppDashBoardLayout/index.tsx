@@ -8,11 +8,13 @@ import {
   menuItemsCampaignPlanner,
   menuItemsCampaignManager,
   menuItemsClientPOCUser,
+  menuItemsAdmin,
 } from "../../../constants/tabDataConstant";
 import {
   CAMPAIGN_MANAGER,
   CAMPAIGN_PLANNER,
   CLIENT_POC_USER,
+  PROOH_ADMIN,
 } from "../../../constants/userConstants";
 import { AUTH, MY_CAMPAIGNS_LIST } from "../../../routes/routes";
 
@@ -51,6 +53,9 @@ export const AppDashBoardLayout: React.FC<AppDashBoardLayoutProps> = ({
         break;
       case CLIENT_POC_USER:
         setMenuItems(menuItemsClientPOCUser);
+        break;
+      case PROOH_ADMIN:
+        setMenuItems(menuItemsAdmin);
         break;
       default:
         notification.error({

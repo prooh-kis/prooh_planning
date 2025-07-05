@@ -19,6 +19,8 @@ import {
   LandingPage,
   MyPlansListPage,
   Setting,
+  CampaignRequestForAdmin,
+  ShowCampaignRequestDetailsForAdmin,
 } from "../pages";
 
 import {
@@ -37,6 +39,7 @@ import {
   MY_PLANS_LIST,
   CAMPAIGN_DETAILS_PAGE,
   SETTING,
+  ADMIN_REQUEST_LIST,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 
@@ -66,7 +69,6 @@ const Routers: React.FC = () => {
             </PublicLayout>
           }
         />
-
         <Route
           path={SIGN_UP}
           element={
@@ -75,7 +77,6 @@ const Routers: React.FC = () => {
             </PublicLayout>
           }
         />
-
         <Route
           path={VERIFY_EMAIL}
           element={
@@ -100,7 +101,6 @@ const Routers: React.FC = () => {
             </PublicLayout>
           }
         />
-
         <Route
           path={USERS}
           element={
@@ -109,7 +109,6 @@ const Routers: React.FC = () => {
             </AppDashBoardLayout>
           }
         />
-
         <Route
           path={HOME}
           element={
@@ -118,7 +117,6 @@ const Routers: React.FC = () => {
             </PublicLayout>
           }
         />
-
         <Route
           path={ROUTE}
           element={
@@ -127,7 +125,6 @@ const Routers: React.FC = () => {
             </AppDashBoardLayout>
           }
         />
-
         <Route
           path={MY_CAMPAIGNS_LIST}
           element={
@@ -136,7 +133,6 @@ const Routers: React.FC = () => {
             </AppDashBoardLayout>
           }
         />
-
         <Route
           path={SETTING}
           element={
@@ -145,7 +141,22 @@ const Routers: React.FC = () => {
             </AppDashBoardLayout>
           }
         />
-
+        <Route
+          path={ADMIN_REQUEST_LIST}
+          element={
+            <AppDashBoardLayout value="FinalRequest">
+              <CampaignRequestForAdmin />
+            </AppDashBoardLayout>
+          }
+        />
+        <Route
+          path={`/final-request-details/:id`}
+          element={
+            <AppDashBoardLayout value="FinalRequest">
+              <ShowCampaignRequestDetailsForAdmin />
+            </AppDashBoardLayout>
+          }
+        />
         <Route
           path={MY_PLANS_LIST}
           element={
@@ -162,7 +173,6 @@ const Routers: React.FC = () => {
             </PublicLayout>
           }
         />
-
         <Route
           path={CAMPAIGN_DETAILS_PAGE}
           element={
@@ -171,7 +181,6 @@ const Routers: React.FC = () => {
             </AppDashBoardLayout>
           }
         />
-
         <Route
           path={"/editCampaign/:id?"}
           element={
@@ -188,7 +197,6 @@ const Routers: React.FC = () => {
             </PrivateLayout>
           }
         />
-
         <Route
           path={"/specialdayplan/:id?/:type?"}
           element={

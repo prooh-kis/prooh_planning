@@ -1,4 +1,9 @@
-import { MY_PLANS_LIST, USERS } from "../routes/routes";
+import {
+  ADMIN_REQUEST_LIST,
+  MY_PLANS_LIST,
+  MY_REQUESTS_LIST,
+  USERS,
+} from "../routes/routes";
 
 export const campaignMonitoringTab = [
   {
@@ -243,5 +248,14 @@ export const menuItemsCampaignPlanner = [
     path: "/setting",
     icon: "fi-ss-settings",
     option: "Setting",
+  },
+];
+
+export const menuItemsAdmin = [
+  {
+    value: "FinalRequest",
+    path: ADMIN_REQUEST_LIST,
+    icon: "fi fi-ss-bell-notification-social-media",
+    option: "FinalRequest",
   },
 ];
