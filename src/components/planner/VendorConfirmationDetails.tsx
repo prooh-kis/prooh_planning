@@ -8,7 +8,9 @@ import {
   getPlanningPageFooterData,
   getVendorConfirmationDetails,
   getVendorConfirmationStatusTableDetails,
-  sendRequestToVendorForCreativeApprovalPage,
+  sendCampaignForFinalApprovalVendorConfirmationPage,
+  sendCampaignStatusReportToClient,
+  sendRequestToVendorForCreativeApprovalVendorConfirmationPage,
 } from "../../actions/screenAction";
 import {
   VendorConfirmationBasicTable,
@@ -18,11 +20,8 @@ import { Footer } from "../../components/footer";
 import { message } from "antd";
 import { addDetailsToCreateCampaign } from "../../actions/campaignAction";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
-import { CAMPAIGN_DETAILS_PAGE } from "../../routes/routes";
 import { CountdownTimer } from "../../components/molecules/CountdownTimer";
-import {
-  sendEmailForVendorConfirmation,
-} from "../../actions/userAction";
+
 import { isValidEmail } from "../../utils/valueValidate";
 import {
   ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
@@ -38,6 +37,8 @@ import { PrimaryInput } from "../../components/atoms/PrimaryInput";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import { AddContactDetailsForCampaignAlerts } from "../../components/segments/AddContactDetailsForCampaignAlerts";
 import { FinalConfirmationPopup } from "../../components/popup/FinalConfirmationPopup";
+import { SendEmailPopup } from "../../components/popup/SendEmailPopup";
+import { SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_RESET, SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_RESET, SEND_CAMPAIGN_FINAL_CONFIRMATION_RESET } from "../../constants/screenConstants";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -58,8 +59,8 @@ export const VendorConfirmationDetails = ({
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const [toEmail, setToEmail] = useState<any>("");
-  const [cc, setCC] = useState<any>(["itisvinciis@gmail.com"]);
+  const [toEmail, setToEmail] = useState<any>(campaignDetails?.campaignManagerEmail || "");
+  const [cc, setCC] = useState<any>([campaignDetails?.campaignPlannerEmail, "tech@prooh.ai"]);
   const [open, setOpen] = useState<boolean>(false);
   const [openMedia, setOpenMedia] = useState<boolean>(false);
 
@@ -71,7 +72,9 @@ export const VendorConfirmationDetails = ({
     useState<any>(false);
   const [confirmToProceed, setConfirmToProceed] = useState<any>(false);
   const [openFinalConfirmationPopup, setOpenFinalConfirmationPopup] = useState<any>(false);
-  const [savedContacts, setSavedContacts] = useState<any[]>([]);
+  const [savedContacts, setSavedContacts] = useState<any[]>(campaignDetails?.stakeHolders || []);
+
+  const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
 
   const detailsToCreateCampaignAdd = useSelector(
     (state: any) => state.detailsToCreateCampaignAdd
@@ -82,23 +85,39 @@ export const VendorConfirmationDetails = ({
     success: successAddDetails,
   } = detailsToCreateCampaignAdd;
 
-  const vendorConfirmationDetailsGet = useSelector(
-    (state: any) => state.vendorConfirmationDetailsGet
-  );
   const {
     loading: loadingVendorConfirmationData,
     error: errorVendorConfirmationData,
     data: vendorConfirmationData,
-  } = vendorConfirmationDetailsGet;
+  } = useSelector(
+    (state: any) => state.vendorConfirmationDetailsGet
+  );;
 
-  const vendorConfirmationStatusTableDetailsGet = useSelector(
-    (state: any) => state.vendorConfirmationStatusTableDetailsGet
-  );
   const {
     loading: loadingStatusTableData,
     error: errorStatusTableData,
     data: statusTableData,
-  } = vendorConfirmationStatusTableDetailsGet;
+  } = useSelector(
+    (state: any) => state.vendorConfirmationStatusTableDetailsGet
+  );;
+
+  const {
+    loading: loadingVendorCreativeApprovalSent,
+    error: errorVendorCreativeApprovalSent,
+    success: successVendorCreativeApprovalSent
+  } = useSelector((state: any) => state.sendRequestToVendorForCreativeApprovalVendorConfirmationPage);
+
+  const {
+    loading: loadingSendCampaignStatusReportToClient,
+    error: errorSendCampaignStatusReportToClient,
+    success: successSendCampaignStatusReportToClient
+  } = useSelector((state: any) => state.campaignStatusReportToClientSend);
+
+  const {
+    loading: loadingSendFinalApproval,
+    error: errorSendFinalApproval,
+    success: successSendFinalApproval
+  } = useSelector((state: any) => state.campaignForFinalApprovalSendVendorConfirmationPage);
 
   const handleAddNewFile = async (file: File) => {
     if (file) {
@@ -140,28 +159,19 @@ export const VendorConfirmationDetails = ({
     message.info(
       "Sending for approval to all the vendor..."
     );
-    dispatch(sendRequestToVendorForCreativeApprovalPage({id: campaignDetails?._id}));
+    dispatch(sendRequestToVendorForCreativeApprovalVendorConfirmationPage({id: campaignDetails?._id}));
   };
 
-  const sendEmalToClient = () => {
+  const sendEmailToClient = () => {
     message.info(
-      "Make sure to send latest generated docs to your valued partner..."
+      "Sending campaign status report..."
     );
-    const formData = new FormData();
-    formData.append("toEmail", toEmail);
-    formData.append("cc", cc);
-    // formData.append(
-    //   "message",
-    //   `Please find the files at the following links:\n${fileLinks}`
-    // );
-    formData.append("id", campaignDetails?._id);
-
-    dispatch(sendEmailForVendorConfirmation(formData));
+    dispatch(sendCampaignStatusReportToClient({toEmail, cc, id: campaignDetails?._id}));
   }
 
   const handleSaveAndContinue = async () => {
     
-    const imageArr = await Promise.all(files.map(getAWSUrl));
+    let imageArr = await Promise.all(files.map(getAWSUrl));
     dispatch(
       addDetailsToCreateCampaign({
         event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
@@ -171,19 +181,30 @@ export const VendorConfirmationDetails = ({
         stakeHolders: savedContacts
       })
     );
-    setOpenFinalConfirmationPopup(true);
       // navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignDetails?._id}`);
   };
+
+
+  const handleSendForFinalApproval = () => {
+    message.info("Sending for final approval...");
+    dispatch(sendCampaignForFinalApprovalVendorConfirmationPage({id: campaignDetails?._id}));
+  }
 
   useEffect(() => {
     if (
       errorVendorConfirmationData ||
       errorStatusTableData ||
-      errorAddDetails
+      errorAddDetails || errorSendCampaignStatusReportToClient || errorSendFinalApproval || errorVendorCreativeApprovalSent
     ) {
+      console.log(errorVendorConfirmationData);
+       console.log(errorStatusTableData)
+       console.log(errorAddDetails)
+       console.log(errorSendCampaignStatusReportToClient)
+       console.log(errorSendFinalApproval)
+       console.log(errorVendorCreativeApprovalSent)
       message.error("Something went wrong, please contact tech support...");
     }
-  },[errorAddDetails, errorStatusTableData, errorVendorConfirmationData]);
+  },[errorAddDetails, errorStatusTableData, errorVendorConfirmationData, errorSendCampaignStatusReportToClient, errorSendFinalApproval, errorVendorCreativeApprovalSent]);
 
   useEffect(() => {
     if (!campaignDetails) return;
@@ -219,14 +240,33 @@ export const VendorConfirmationDetails = ({
   }, [campaignDetails, campaignId, dispatch]);
 
   useEffect(() => {
+    if (successVendorCreativeApprovalSent) {
+      message.success("Vendor creative approval sent successfully to all vendors...");
+      dispatch({
+        type: SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_RESET
+      })
+    }
+    if (successSendCampaignStatusReportToClient) {
+      message.success("Campaign status report sent successfully...")
+      dispatch({
+        type: SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_RESET
+      })
+    }
+    if (successSendFinalApproval) {
+      message.success("Campaign sent for final approval...");
+      dispatch({
+        type: SEND_CAMPAIGN_FINAL_CONFIRMATION_RESET
+      })
+      setOpenFinalConfirmationPopup(false);
+    }
     if (successAddDetails) {
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
       message.success("Your campaign has been successfully planned...")
-      // setCurrentStep(step + 1);
+      setOpenFinalConfirmationPopup(true);
     }
-  }, [successAddDetails, step, setCurrentStep, dispatch]);
+  }, [successAddDetails, step, setCurrentStep, dispatch, successSendCampaignStatusReportToClient, successVendorCreativeApprovalSent, successSendFinalApproval]);
 
   const handleOpenStatusModel = () => {
     setOpen(!open);
@@ -316,6 +356,22 @@ export const VendorConfirmationDetails = ({
           <FinalConfirmationPopup
             open={openFinalConfirmationPopup}
             onClose={() => setOpenFinalConfirmationPopup(false)}
+            onPrimaryAction={() => handleSendForFinalApproval()}
+            title="Campaign Planned Successfully!"
+            message="Your campaign has been successfully planned. For executing the campaign, please send request to the admin"
+            primaryButtonText="Send For Final Approval"
+            loading={loadingSendFinalApproval}
+          />
+          <SendEmailPopup
+            open={isShareModalOpen}
+            onClose={() => setIsShareModalOpen(false)}
+            campaignDetails={campaignDetails}
+            setToEmail={setToEmail}
+            toEmail={toEmail}
+            setCC={setCC}
+            cc={cc}
+            sendEmail={sendEmailToClient}
+            loadingEmailReady={loadingSendCampaignStatusReportToClient || loadingVendorCreativeApprovalSent}
           />
 
           <div className="flex items-center justify-between">
@@ -414,18 +470,10 @@ export const VendorConfirmationDetails = ({
             {!loadingStatusTableData && !errorStatusTableData && (
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-1 border rounded-[8px] p-4">
-                  {/* <EmailSendBox
-                    type="vendor"
-                    toEmail={toEmail}
-                    setToEmail={setToEmail}
-                    cc={cc}
-                    sendEmail={sendEmail}
-                    sendEmailToAll={sendEmailToAll}
-                  /> */}
                   <div
                     className="flex items-center gap-2"
                     onClick={() => {
-                      // setIsShareModalOpen(true);
+                      setIsShareModalOpen(true);
                     }}
                   >
                     <h1 className="font-semibold text-lg">Share this plan</h1>
@@ -447,18 +495,14 @@ export const VendorConfirmationDetails = ({
                         variant="primary"
                         className="h-[40px]"
                         loadingText="Sending..."
-                        // loading={loadingEmailReady || wsLoading}
-                        // disabled={downloadUrls.length === 0 || loadingEmailReady || wsLoading}
-
+                        loading={loadingSendCampaignStatusReportToClient || loadingVendorConfirmationData}
+                        disabled={loadingSendCampaignStatusReportToClient || loadingVendorConfirmationData}
                         icon={
                           <i className="fi fi-sr-envelope flex items-center"></i>
                         }
                         onClick={() => {
                           if (isValidEmail(toEmail)) {
-                            // sendEmailToClient();
-                            message.info(
-                              "Sending complete plan summary, please call your manager and take approval"
-                            );
+                            sendEmailToClient();
                           } else message.error("Please Enter valid email");
                         }}
                       >

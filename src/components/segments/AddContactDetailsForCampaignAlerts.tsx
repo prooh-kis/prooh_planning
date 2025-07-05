@@ -47,27 +47,29 @@ export const AddContactDetailsForCampaignAlerts = ({savedContacts, setSavedConta
         </div>
         <div className="flex items-center gap-4">
           <button 
+            type="button"
             className="text-[12px] text-primaryButton hover:underline"
             onClick={() => {
-              // Template 1: Fill with sample data
-              setContactDetails({
-                name: "John Doe",
-                email: "john.doe@example.com",
-                phone: "+1234567890",
-              });
+              // // Template 1: Fill with sample data
+              // setContactDetails({
+              //   name: "John Doe",
+              //   email: "john.doe@example.com",
+              //   phone: "+1234567890",
+              // });
             }}
           >
             Template 1
           </button>
           <button 
+            type="button"
             className="text-[12px] text-primaryButton hover:underline"
             onClick={() => {
-              // Template 2: Fill with different sample data
-              setContactDetails({
-                name: "Jane Smith",
-                email: "jane.smith@example.com",
-                phone: "+1987654321",
-              });
+              // // Template 2: Fill with different sample data
+              // setContactDetails({
+              //   name: "Jane Smith",
+              //   email: "jane.smith@example.com",
+              //   phone: "+1987654321",
+              // });
             }}
           >
             Template 2
@@ -81,7 +83,7 @@ export const AddContactDetailsForCampaignAlerts = ({savedContacts, setSavedConta
             <div className="space-y-2">
               {savedContacts.map((contact: any, i: any) => (
                 <div 
-                  key={contact.id} 
+                  key={i} 
                   className="grid grid-cols-12 gap-4 items-center"
                 >
                   <div className="col-span-3 grid-cols-5 flex justify-start items-center gap-2">

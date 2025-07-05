@@ -84,6 +84,12 @@ import {
   SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_ERROR,
   SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_REQUEST,
   SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_SUCCESS,
+  SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_ERROR,
+  SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_REQUEST,
+  SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_SUCCESS,
+  SEND_CAMPAIGN_FINAL_CONFIRMATION_ERROR,
+  SEND_CAMPAIGN_FINAL_CONFIRMATION_REQUEST,
+  SEND_CAMPAIGN_FINAL_CONFIRMATION_SUCCESS,
   TABLE_DATA_SET_AD_PLAY_TIME_ERROR,
   TABLE_DATA_SET_AD_PLAY_TIME_REQUEST,
   TABLE_DATA_SET_AD_PLAY_TIME_SUCCESS,
@@ -998,7 +1004,7 @@ export const sendRequestToVendorForBudgetApprovalCostSheetPopupPage =
     }
   };
 
-  export const sendRequestToVendorForCreativeApprovalPage =
+export const sendRequestToVendorForCreativeApprovalVendorConfirmationPage =
   (input) => async (dispatch, getState) => {
     dispatch({
       type: SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_REQUEST,
@@ -1027,4 +1033,64 @@ export const sendRequestToVendorForBudgetApprovalCostSheetPopupPage =
             : error.message,
       });
     }
-  };
+};
+
+export const sendCampaignStatusReportToClient =  (input) => async (dispatch, getState) => {
+  dispatch({
+    type: SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_REQUEST,
+    payload: input,
+  });
+  try {
+    const {
+      auth: { userInfo },
+    } = getState();
+
+    const { data } = await axios.post(
+      `${planningRouterURL}/sendCampaignStatusReportToClient`,
+      input,
+      { headers: { authorization: `Bearer ${userInfo.token}` } }
+    );
+    dispatch({
+      type: SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_ERROR,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+}
+
+export const sendCampaignForFinalApprovalVendorConfirmationPage =  (input) => async (dispatch, getState) => {
+  dispatch({
+    type: SEND_CAMPAIGN_FINAL_CONFIRMATION_REQUEST,
+    payload: input,
+  });
+  try {
+    const {
+      auth: { userInfo },
+    } = getState();
+
+    const { data } = await axios.post(
+      `${planningRouterURL}/sendCampaignForFinalApproval`,
+      input,
+      { headers: { authorization: `Bearer ${userInfo.token}` } }
+    );
+    dispatch({
+      type: SEND_CAMPAIGN_FINAL_CONFIRMATION_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: SEND_CAMPAIGN_FINAL_CONFIRMATION_ERROR,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+}

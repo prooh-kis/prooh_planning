@@ -96,19 +96,20 @@ import {
   SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_REQUEST,
   SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_RESET,
   SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_SUCCESS,
+  SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_ERROR,
+  SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_REQUEST,
+  SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_RESET,
+  SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_SUCCESS,
+  SEND_CAMPAIGN_FINAL_CONFIRMATION_ERROR,
+  SEND_CAMPAIGN_FINAL_CONFIRMATION_REQUEST,
+  SEND_CAMPAIGN_FINAL_CONFIRMATION_RESET,
+  SEND_CAMPAIGN_FINAL_CONFIRMATION_SUCCESS,
   TABLE_DATA_SET_AD_PLAY_TIME_ERROR,
   TABLE_DATA_SET_AD_PLAY_TIME_REQUEST,
   TABLE_DATA_SET_AD_PLAY_TIME_SUCCESS,
 } from "../constants/screenConstants";
 import {
-  ADVANCE_FILTER_SCREENS_MAP_DATA,
-  AUDIENCE_DATA,
   COST_SUMMARY,
-  FOOTER_DATA,
-  REGULAR_VS_COHORT_PRICE_DATA,
-  SCREEN_SUMMARY_DATA,
-  SCREEN_SUMMARY_TABLE_DATA,
-  TOTAL_SCREEN_COST_DATA,
 } from "../constants/localStorageConstants";
 
 export function getLocationWiseFiltersForScreensAudiencesDataGetReducer(state = [], action) {
@@ -321,10 +322,7 @@ export function screenSummaryPlanTableDataGetReducer(state = [], action) {
         error: action.payload,
       };
     case GET_SCREEN_SUMMARY_PLAN_TABLE_DATA_RESET:
-      return {
-        loading: false,
-        error: {},
-      };
+      return {};
     default:
       return state;
   }
@@ -739,11 +737,7 @@ export function editCostDetailsScreenWiseForCostSummaryPopupPageReducer(
         error: action.payload,
       };
     case EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET:
-      return {
-        loading: false,
-        success: false,
-        error: [],
-      };
+      return {};
     default:
       return state;
   }
@@ -771,19 +765,14 @@ export function sendRequestToVendorForBudgetApprovalCostSheetPopupPageReducer(
         error: action.payload,
       };
     case SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_RESET:
-      return {
-        loading: false,
-        success: false,
-        error: [],
-      };
+      return {};
     default:
       return state;
   }
 }
 
 
-
-export function sendRequestToVendorForCreativeApprovalReducer(
+export function sendRequestToVendorForCreativeApprovalVendorConfirmationPageReducer(
   state = [],
   action
 ) {
@@ -803,11 +792,59 @@ export function sendRequestToVendorForCreativeApprovalReducer(
         error: action.payload,
       };
     case SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function campaignStatusReportToClientSendReducer(
+  state = [],
+  action
+) {
+  switch (action.type) {
+    case SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_REQUEST:
+      return { loading: true };
+    case SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_ERROR:
       return {
         loading: false,
         success: false,
-        error: [],
+        error: action.payload,
       };
+    case SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function campaignForFinalApprovalSendVendorConfirmationPageReducer(
+  state = [],
+  action
+) {
+  switch (action.type) {
+    case SEND_CAMPAIGN_FINAL_CONFIRMATION_REQUEST:
+      return { loading: true };
+    case SEND_CAMPAIGN_FINAL_CONFIRMATION_SUCCESS:
+      return {
+        loading: false,
+        data: action.payload,
+        success: true,
+      };
+    case SEND_CAMPAIGN_FINAL_CONFIRMATION_ERROR:
+      return {
+        loading: false,
+        success: false,
+        error: action.payload,
+      };
+    case SEND_CAMPAIGN_FINAL_CONFIRMATION_RESET:
+      return {};
     default:
       return state;
   }

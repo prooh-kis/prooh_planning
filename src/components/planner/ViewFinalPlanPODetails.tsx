@@ -449,8 +449,7 @@ export const ViewFinalPlanPODetails = ({
   useEffect(() => {
     if (successSendEmail) {
       message.success("Email sent successfully!");
-      setToEmail("");
-      setConfirmationImageFiles([]);
+      // setConfirmationImageFiles([]);
       setLoadingEmailReady(false);
       dispatch({ type: SEND_EMAIL_FOR_CONFIRMATION_RESET });
       setIsShareModalOpen(false)
