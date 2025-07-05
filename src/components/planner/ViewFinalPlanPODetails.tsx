@@ -359,7 +359,10 @@ export const ViewFinalPlanPODetails = ({
         "Something went wrong removing this discount. Please try again."
       );
     }
-  }, [errorApply, errorRemove]);
+    if (errorAddDetails) {
+      message.error(`Campaign plannning failed temporarily, ${errorAddDetails}`)
+    }
+  }, [errorApply, errorRemove, errorAddDetails]);
 
   useEffect(() => {
     if (couponApplySuccess) {

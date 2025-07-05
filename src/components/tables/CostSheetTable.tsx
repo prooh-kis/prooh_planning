@@ -9,7 +9,7 @@ import { FileUploadButton } from "../../components/FileUploadButton";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { message, Tooltip } from "antd";
 import { PrimaryInput } from "../../components/atoms/PrimaryInput";
-import { EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET } from "../../constants/screenConstants";
+import { EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET, SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_RESET } from "../../constants/screenConstants";
 import ButtonInput from "../../components/atoms/ButtonInput";
 
 interface CostSheetTableProps {
@@ -45,6 +45,19 @@ export const CostSheetTable = ({
     error: errorSendApprovalRequest,
     success: successSendApprovalRequest,
   } = useSelector((state: any) => state.sendRequestToVendorForBudgetApprovalCostSheetPopupPage);
+
+
+  useEffect(() => {
+    if (errorSendApprovalRequest) {
+      message.error("Request failed for vendor cost approval!!!")
+    }
+    if (successSendApprovalRequest) {
+      message.success("Request sent for vendor cost apporval...")
+      dispatch({
+        type: SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_RESET
+      });
+    }
+  },[dispatch, successSendApprovalRequest, errorSendApprovalRequest]);
   
   const handleEdit = (e: any) => {
     setScreenData((prevData: any[]) => {
@@ -203,6 +216,8 @@ export const CostSheetTable = ({
               variant="primary"
               size="small"
               onClick={handleSendRequest}
+              loading={loadingSendApprovalRequest}
+              disabled={loadingSendApprovalRequest}
               icon={
                 <i className="fi fi-sr-envelope flex items-center"></i>
               }
