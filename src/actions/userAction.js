@@ -37,6 +37,9 @@ import {
   CHANGE_PASSWORD_REQUEST,
   CHANGE_PASSWORD_SUCCESS,
   CHANGE_PASSWORD_ERROR,
+  USER_ALL_LIST_REQUEST,
+  USER_ALL_LIST_SUCCESS,
+  USER_ALL_LIST_ERROR,
 } from "../constants/userConstants";
 import store from "../store";
 import { login, logout } from "../store/authSlice";
@@ -438,6 +441,35 @@ export const getUserList = (input) => async (dispatch, getState) => {
         : error.message;
     dispatch({
       type: USER_LIST_ERROR,
+      payload: message,
+    });
+  }
+};
+
+export const getAllUserList = (input) => async (dispatch, getState) => {
+  dispatch({
+    type: USER_ALL_LIST_REQUEST,
+    payload: input,
+  });
+  try {
+    const {
+      auth: { userInfo },
+    } = getState();
+    const { data } = await Axios.get(`${userV1}/allUsers`, {
+      headers: { authorization: `Bearer ${userInfo.token}` },
+      params: input,
+    });
+    dispatch({
+      type: USER_ALL_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({
+      type: USER_ALL_LIST_ERROR,
       payload: message,
     });
   }

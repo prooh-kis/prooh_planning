@@ -21,6 +21,7 @@ import {
   Setting,
   CampaignRequestForAdmin,
   ShowCampaignRequestDetailsForAdmin,
+  OrganizationPage,
 } from "../pages";
 
 import {
@@ -40,13 +41,14 @@ import {
   CAMPAIGN_DETAILS_PAGE,
   SETTING,
   ADMIN_REQUEST_LIST,
+  ORGANIZATION_PAGE,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 
 import { PlayLiveUrl } from "../pages/PageNotFound/PlayLiveUrl";
 import { NewDashBoard } from "../pages/NewDashBoard";
 import Engagement from "../pages/Engagement";
-import { BrandAgencyPage } from "../pages/PageNotFound/BrandAgency";
+import { BrandAgencyPage } from "../pages/BrandAgencyDetailsPage";
 import { EditCampaignFlow } from "../pages/EditCampaignFlow";
 import { PublicLayout } from "../components/layout/PublicLayout";
 import { AppDashBoardLayout } from "../components/layout/AppDashBoardLayout";
@@ -258,6 +260,15 @@ const Routers: React.FC = () => {
           element={
             <PublicLayout>
               <BrandAgencyPage />
+            </PublicLayout>
+          }
+        />
+
+        <Route
+          path={ORGANIZATION_PAGE}
+          element={
+            <PublicLayout>
+              <OrganizationPage />
             </PublicLayout>
           }
         />

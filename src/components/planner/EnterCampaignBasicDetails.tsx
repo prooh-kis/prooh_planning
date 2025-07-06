@@ -173,6 +173,16 @@ export const EnterCampaignBasicDetails = ({
           campaignManagerEmail:
             allPlannerData?.find((data: any) => data._id === values.managerId)
               ?.email || "",
+          campaignManagerName:
+            allPlannerData?.find((data: any) => data._id === values.managerId)
+              ?.name || "",
+          campaignCoordinatorId: values.coordinatorId,
+          campaignCoordinatorEmail:
+            allPlannerData?.find((data: any) => data._id === values.coordinatorId)
+              ?.email || "",
+          campaignCoordinatorName:
+            allPlannerData?.find((data: any) => data._id === values.coordinatorId)
+              ?.name || "",
           sov: values.sov,
           sovType: "ordered",
           monitoringSelection: {
@@ -192,7 +202,6 @@ export const EnterCampaignBasicDetails = ({
         };
 
         handleAddNewClient(values.clientName);
-
         dispatch(addDetailsToCreateCampaign(payload));
       } catch (error) {
         message.error("Failed to save campaign details");
@@ -512,6 +521,34 @@ export const EnterCampaignBasicDetails = ({
           <Form.Item
             style={{ marginRight: 16 }} /* Reduced from default 24px */
             name="managerId"
+            label={
+              <div className="flex items-center gap-2">
+                <span>Select Manager</span>
+                <Tooltip title="Select the manager for this campaign">
+                  <i className="fi fi-rs-info text-[10px] text-gray-400" />
+                </Tooltip>
+              </div>
+            }
+            rules={[{ required: true, message: "Please Select Manager" }]}
+          >
+            <Select
+              placeholder="Select Manager"
+              size="large"
+              loading={!allPlannerData.length}
+              showSearch
+              optionFilterProp="label"
+              options={allPlannerData?.map((data: any) => {
+                return {
+                  label: data?.name,
+                  value: data?._id,
+                };
+              })}
+            ></Select>
+          </Form.Item>
+          {/* Coordinator */}
+          <Form.Item
+            style={{ marginRight: 16 }} /* Reduced from default 24px */
+            name="coordinatorId"
             label={
               <div className="flex items-center gap-2">
                 <span>Select Coordinator</span>

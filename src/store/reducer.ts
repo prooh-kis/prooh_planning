@@ -40,6 +40,8 @@ import * as dataHeroReducers from "../reducers/dataHeroReducers";
 // monitoring Reducers
 import * as monitoringReducers from "../reducers/monitoringReducers";
 
+import * as organizationReducers from "../reducers/organizationReducers";
+
 
 
 
@@ -125,6 +127,7 @@ export const rootReducer = {
     emailSendForConfirmation: userReducers.emailSendForConfirmationReducer,
     emailSendForVendorConfirmation: userReducers.emailSendForVendorConfirmationReducer,
     userList: userReducers.userListReducer,
+    allUserList: userReducers.userAllListReducer,
     userDelete: userReducers.userDeleteReducer,
 
     // Calendar
@@ -185,4 +188,8 @@ export const rootReducer = {
     campaignMonitoringPicsGet: monitoringReducers.campaignMonitoringPicsGetReducer,
     generateMonitoringPpt: monitoringReducers.generateMonitoringPptReducer,
     getMonitoringPptJobStatus: monitoringReducers.getMonitoringPptJobStatusReducer,
+
+    // Organization
+    myOrgDetailsGet: organizationReducers.myOrgDetailsGetReducer,
+    myOrgCreate: organizationReducers.myOrgCreateReducer,
 };

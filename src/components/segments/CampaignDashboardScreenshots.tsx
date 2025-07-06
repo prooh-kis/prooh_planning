@@ -5,7 +5,7 @@ import { message, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { io } from "socket.io-client";
-import { TAKE_DASHBOARD_SCREENSHOT_RESET } from "../../constants/billInvoiceConstant";
+import { TAKE_DASHBOARD_SCREENSHOT_RESET } from "../../constants/billInvoiceConstants";
 
 interface CampaignDashboardScreenshotsProps {
   loading?: any;

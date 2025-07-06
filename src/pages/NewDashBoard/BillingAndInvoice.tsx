@@ -8,7 +8,7 @@ import { getClientAgencyDetails } from "../../actions/clientAgencyAction";
 import { BillAndInvoiceSteppers } from "./BillAndInvoiceSteppers";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { message, Tooltip } from "antd";
-import { CREATE_BILL_INVOICE_RESET, TAKE_DASHBOARD_SCREENSHOT_RESET } from "../../constants/billInvoiceConstant";
+import { CREATE_BILL_INVOICE_RESET, TAKE_DASHBOARD_SCREENSHOT_RESET } from "../../constants/billInvoiceConstants";
 import {
   getAWSUrlToUploadFile,
   saveFileOnAWS,

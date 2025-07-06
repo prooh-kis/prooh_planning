@@ -15,7 +15,7 @@ import {
   TAKE_DASHBOARD_SCREENSHOT_FAIL,
   TAKE_DASHBOARD_SCREENSHOT_REQUEST,
   TAKE_DASHBOARD_SCREENSHOT_SUCCESS,
-} from "../constants/billInvoiceConstant";
+} from "../constants/billInvoiceConstants";
 import { billInvoiceURL } from "../constants/urlConstant";
 
 export const createBillInvoice = (input) => async (dispatch, getState) => {

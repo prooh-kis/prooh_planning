@@ -47,6 +47,10 @@ import {
   CHANGE_PASSWORD_SUCCESS,
   CHANGE_PASSWORD_ERROR,
   CHANGE_PASSWORD_RESET,
+  USER_ALL_LIST_REQUEST,
+  USER_ALL_LIST_SUCCESS,
+  USER_ALL_LIST_ERROR,
+  USER_ALL_LIST_RESET,
 } from "../constants/userConstants";
 
 export function updateUserProfileReducer(state = {}, action) {
@@ -216,6 +220,21 @@ export function userListReducer(state = [], action) {
     case USER_LIST_ERROR:
       return { loading: false, error: action.payload };
     case USER_LIST_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function userAllListReducer(state = [], action) {
+  switch (action.type) {
+    case USER_ALL_LIST_REQUEST:
+      return { loading: true };
+    case USER_ALL_LIST_SUCCESS:
+      return { loading: false, success: true, data: action.payload };
+    case USER_ALL_LIST_ERROR:
+      return { loading: false, error: action.payload };
+    case USER_ALL_LIST_RESET:
       return {};
     default:
       return state;

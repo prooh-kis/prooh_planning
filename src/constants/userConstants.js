@@ -45,6 +45,11 @@ export const USER_LIST_SUCCESS = "USER_LIST_SUCCESS";
 export const USER_LIST_ERROR = "USER_LIST_ERROR";
 export const USER_LIST_RESET = "USER_LIST_RESET";
 
+export const USER_ALL_LIST_REQUEST = "USER_ALL_LIST_REQUEST";
+export const USER_ALL_LIST_SUCCESS = "USER_ALL_LIST_SUCCESS";
+export const USER_ALL_LIST_ERROR = "USER_ALL_LIST_ERROR";
+export const USER_ALL_LIST_RESET = "USER_ALL_LIST_RESET";
+
 export const ALLY_USER_ROLE = "ally";
 export const MASTER_USER_ROLE = "master";
 

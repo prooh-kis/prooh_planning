@@ -37,3 +37,4 @@ export const IKNOWITALLPLAN = "/iknowitallplan/:id?";
 
 export const PLAY_LIVE_URL = "/play-live-url";
 export const BRAND_AGENCY_PAGE = "/brand-agency";
+export const ORGANIZATION_PAGE = "/organization";

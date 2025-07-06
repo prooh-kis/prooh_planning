@@ -22,3 +22,5 @@ export { CampaignRequestForAdmin } from "./CampaignRequestForAdmin";
 export { ShowCampaignRequestDetailsForAdmin } from "./CampaignRequestForAdmin/ShowCampaignRequestDetailsForAdmin";
 export { MyUsers } from "./MyUsers";
 export { Setting } from "./Setting";
+export { BrandAgencyPage } from "./BrandAgencyDetailsPage";
+export { OrganizationPage } from "./OrganizationPage";
