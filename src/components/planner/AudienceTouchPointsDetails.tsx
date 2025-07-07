@@ -41,9 +41,7 @@ export const AudienceTouchPointsDetails = ({
 
   const [audiences, setAudiences] = useState<any>({});
   const [touchPoints, setTouchPoints] = useState<any>({});
-  const [markets, setMarkets] = useState<any>(
-    campaignDetails.markets || []
-  );
+  const [markets, setMarkets] = useState<any>(campaignDetails.markets || []);
   const [zones, setSelectedZone] = useState<string[]>(
     campaignDetails?.zones || []
   );
@@ -65,7 +63,7 @@ export const AudienceTouchPointsDetails = ({
   const [selectedTouchPoints, setSelectedTouchPoints] = useState<any>(
     campaignDetails?.touchPoints || []
   );
-  
+
   // Refs for tracking state changes
   const isInitialMount = useRef(true);
   const prevFilters = useRef({ markets, cities, zones });
@@ -91,9 +89,7 @@ export const AudienceTouchPointsDetails = ({
     loading: loadingAudiences,
     error: errorAudiences,
     data: screensAudiences,
-  } = useSelector(
-    (state: any) => state.screensAudiencesDataGet
-  );;
+  } = useSelector((state: any) => state.screensAudiencesDataGet);
 
   const getMatchedData = useCallback(
     (myData: any) => {
@@ -103,7 +99,7 @@ export const AudienceTouchPointsDetails = ({
       for (const market in marketData) {
         for (const audience in marketData[market]["audience"]) {
           audiencesData[audience] =
-          marketData[market]["audience"][audience]["Total"].toFixed(2);
+            marketData[market]["audience"][audience]["Total"].toFixed(2);
         }
       }
       setAudiences(audiencesData);
@@ -159,15 +155,15 @@ export const AudienceTouchPointsDetails = ({
   useEffect(() => {
     if (!campaignDetails) return;
 
-    dispatch(getLocationWiseFiltersForScreensAudiencesData({id: campaignId}));
-    
+    dispatch(getLocationWiseFiltersForScreensAudiencesData({ id: campaignId }));
+
     dispatch(
       getPlanningPageFooterData({
         id: campaignId,
         pageName: "Audience And TouchPoint Page",
       })
     );
-    
+
     // Initial data fetch complete
   }, [campaignId, campaignDetails, dispatch]);
 
@@ -180,13 +176,13 @@ export const AudienceTouchPointsDetails = ({
 
     // Check if any of the location filters have actually changed
     const currentFilters = { markets, cities, zones };
-    const hasFiltersChanged = 
+    const hasFiltersChanged =
       JSON.stringify(prevFilters.current) !== JSON.stringify(currentFilters);
-      
+
     if (hasFiltersChanged) {
       // Update the ref with current filters
       prevFilters.current = { ...currentFilters };
-      
+
       // Add a small debounce to prevent rapid successive calls
       const timer = setTimeout(() => {
         dispatch(
@@ -217,7 +213,6 @@ export const AudienceTouchPointsDetails = ({
       getMatchedData(screensAudiences);
     }
   }, [screensAudiences, getMatchedData]);
-
 
   const getSelectedGender = useCallback(() => {
     return selectedGender.length === 1 && selectedGender.includes("Male")
@@ -257,7 +252,6 @@ export const AudienceTouchPointsDetails = ({
     zones,
   ]);
 
-
   return (
     <div className="">
       {loadingLocationWiseFilters ? (
@@ -281,6 +275,7 @@ export const AudienceTouchPointsDetails = ({
                 setSelectedGender={setSelectedGender}
                 data={locationWiseFilters || {}}
                 setSelectedCity={setSelectedCity}
+                cities={cities}
                 setSelectedZone={setSelectedZone}
               />
             </div>

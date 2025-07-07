@@ -44,18 +44,26 @@ export const AdvanceFiltersDetailsPage = ({
     longitude: number;
   } | null>(null);
 
-  const [excelFilteredScreens, setExcelFilteredScreens] = useState<any>((prev: any) => prev && prev.length > 0 ? prev : []);
-  const [routeFilteredScreens, setRouteFilteredScreens] = useState<any>((prev: any) => prev && prev.length > 0 ? prev : []);
-  const [polygonFilteredScreens, setPolygonFilteredScreens] = useState<any>((prev: any) => prev && prev.length > 0 ? prev : []);
+  const [excelFilteredScreens, setExcelFilteredScreens] = useState<any>(
+    (prev: any) => (prev && prev.length > 0 ? prev : [])
+  );
+  const [routeFilteredScreens, setRouteFilteredScreens] = useState<any>(
+    (prev: any) => (prev && prev.length > 0 ? prev : [])
+  );
+  const [polygonFilteredScreens, setPolygonFilteredScreens] = useState<any>(
+    (prev: any) => (prev && prev.length > 0 ? prev : [])
+  );
 
-  const [routeDataCache, setRouteDataCache] = useState<{ [key: string]: any }>({});
+  const [routeDataCache, setRouteDataCache] = useState<{ [key: string]: any }>(
+    {}
+  );
 
   const [excelData, setExcelData] = useState<any>(() => {
     return {
       brand: campaignDetails?.advanceFilterData?.stores?.[0]?.brands || [],
       comp: campaignDetails?.advanceFilterData?.stores?.[0]?.comp || [],
       radius: campaignDetails?.advanceFilterData?.stores?.[0]?.radius || 100,
-    }
+    };
   });
 
   const [dataBrand, setDataBrand] = useState<any[]>(
@@ -79,17 +87,13 @@ export const AdvanceFiltersDetailsPage = ({
     loading: loadingAddDetails,
     error: errorAddDetails,
     success: successAddDetails,
-  } = useSelector(
-    (state: any) => state.detailsToCreateCampaignAdd
-  );
+  } = useSelector((state: any) => state.detailsToCreateCampaignAdd);
 
   const {
     loading: loadingAdvanceFilterData,
     error: errorAdvanceFilterData,
     data: advanceFilterData,
-  } = useSelector(
-    (state: any) => state.screensDataAdvanceFilterGet
-  );
+  } = useSelector((state: any) => state.screensDataAdvanceFilterGet);
 
   const handleReload = () => {
     dispatch(
@@ -100,28 +104,32 @@ export const AdvanceFiltersDetailsPage = ({
     );
   };
 
-  const handleFinalSelectedScreens = useCallback(({ type, screens }: any) => {
-    console.log(type, screens)
+  const handleFinalSelectedScreens = useCallback(
+    ({ type, screens }: any) => {
+      console.log(type, screens);
 
-    setFinalSelectedScreens((prevScreens: any) => {
-      if (type === "add") {
-        const updatedScreens = [
-          ...excelFilteredScreens,
-          ...routeFilteredScreens,
-          ...polygonFilteredScreens,
-          ...screens,
-        ];
-        const uniqueScreens = getUniqueScreens([{ screens: updatedScreens }]);
-        return uniqueScreens;
-      } else if (type === "remove") {
-
-        const screensToRemove = new Set(screens.map((s: any) => s._id));
-        return prevScreens.filter((screen: any) => !screensToRemove.has(screen._id));
-      }
-      console.log(prevScreens)
-      return prevScreens;
-    });
-  },[excelFilteredScreens, polygonFilteredScreens, routeFilteredScreens]);
+      setFinalSelectedScreens((prevScreens: any) => {
+        if (type === "add") {
+          const updatedScreens = [
+            ...excelFilteredScreens,
+            ...routeFilteredScreens,
+            ...polygonFilteredScreens,
+            ...screens,
+          ];
+          const uniqueScreens = getUniqueScreens([{ screens: updatedScreens }]);
+          return uniqueScreens;
+        } else if (type === "remove") {
+          const screensToRemove = new Set(screens.map((s: any) => s._id));
+          return prevScreens.filter(
+            (screen: any) => !screensToRemove.has(screen._id)
+          );
+        }
+        console.log(prevScreens);
+        return prevScreens;
+      });
+    },
+    [excelFilteredScreens, polygonFilteredScreens, routeFilteredScreens]
+  );
 
   useEffect(() => {
     if (successAddDetails) {
@@ -144,7 +152,6 @@ export const AdvanceFiltersDetailsPage = ({
       }
     }
   }, [advanceFilterData, campaignId, finalSelectedScreens, successAddDetails]);
-
 
   useEffect(() => {
     if (!campaignDetails) return;
@@ -177,31 +184,31 @@ export const AdvanceFiltersDetailsPage = ({
   ]);
 
   const extractPolygonData = (polygons: any[]) => {
-    return polygons.map(polygon => {
+    return polygons.map((polygon) => {
       const paths = polygon.getPaths();
       const coordinates = [];
-      
+
       // Get all the coordinates from the polygon paths
       for (let i = 0; i < paths.getLength(); i++) {
         const path = paths.getAt(i);
         const pathCoords = [];
-        
+
         for (let j = 0; j < path.getLength(); j++) {
           const point = path.getAt(j);
           pathCoords.push({
             lat: point.lat(),
-            lng: point.lng()
+            lng: point.lng(),
           });
         }
-        
+
         if (pathCoords.length > 0) {
           coordinates.push(pathCoords);
         }
       }
-      
+
       return {
         id: polygon.id || Date.now().toString(),
-        coordinates: coordinates
+        coordinates: coordinates,
       };
     });
   };
@@ -216,10 +223,11 @@ export const AdvanceFiltersDetailsPage = ({
       if (finalSelectedScreens?.length > 0) {
         // Extract polygon data before saving
         const polygonData = extractPolygonData(polygons);
-        
+
         dispatch(
           addDetailsToCreateCampaign({
-            event: CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
+            event:
+              CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE,
             pageName: "Advance Filter Page",
             id: campaignId,
             screenIds: finalSelectedScreens.map((s: any) => s._id),
@@ -258,13 +266,11 @@ export const AdvanceFiltersDetailsPage = ({
 
   useEffect(() => {
     handleFinalSelectedScreens({ type: "add", screens: [] });
-  },[handleFinalSelectedScreens]);
+  }, [handleFinalSelectedScreens]);
 
   const handleConfirmScreensSelections = ({ checked, screens }: any) => {
     setIsDisabled(!checked);
     if (checked) {
-    console.log(checked)
-
       handleFinalSelectedScreens({
         type: "add",
         screens: screens,
@@ -357,6 +363,9 @@ export const AdvanceFiltersDetailsPage = ({
           <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF] z-10">
             <Footer
               mainTitle={isDisabled ? "Check to Confirm" : "Continue"}
+              handleBack={() => {
+                setCurrentStep(step - 1);
+              }}
               handleSave={handleSaveAndContinue}
               campaignId={campaignId}
               pageName="Advance Filter Page"
