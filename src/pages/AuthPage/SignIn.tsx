@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Form, Input, message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { signin } from "../../actions/userAction";
@@ -11,6 +11,7 @@ export const SignIn: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   // localStorage.getItem("myapp-email") ||
+  const { state } = useLocation();
   const [email, setEmail] = useState<any>("");
   const [password, setPassword] = useState<any>("");
   const userSignin = useSelector((state: any) => state.userSignin);
@@ -18,7 +19,7 @@ export const SignIn: React.FC = () => {
 
   useEffect(() => {
     if (success) {
-      navigate("/");
+      navigate(state?.path || "/");
     }
     if (errorSignIn) {
       message.error(errorSignIn);

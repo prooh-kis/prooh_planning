@@ -50,7 +50,11 @@ export const Menu = (props: any) => {
   const signOutHandler = () => {
     toggleDropdown();
     dispatch(signout());
-    navigate(AUTH);
+    navigate(AUTH, {
+      state: {
+        path: pathname,
+      },
+    });
   };
 
   // todo remove comment

@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { Header } from "../../header";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AUTH } from "../../../routes/routes";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -15,12 +15,18 @@ export const PrivateLayout = (props: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { children } = props;
+  const { pathname } = useLocation();
+
   const { userInfo } = useSelector((state: any) => state.auth);
   const padding = props.padding || "py-2";
 
   useEffect(() => {
     if (!userInfo) {
-      navigate(AUTH);
+      navigate(AUTH, {
+        state: {
+          path: pathname,
+        },
+      });
       return;
     }
     switch (userInfo?.userRole) {
@@ -42,9 +48,7 @@ export const PrivateLayout = (props: any) => {
       <div className="flex-none">
         <Header />
       </div>
-      <div className={`flex-1 overflow-y-auto px-6 ${padding}`}>
-        {children}
-      </div>
+      <div className={`flex-1 overflow-y-auto px-6 ${padding}`}>{children}</div>
     </div>
   );
 };

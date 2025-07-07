@@ -229,7 +229,7 @@ export const CreativeUploadV4 = ({
               : []),
           ]
     );
-  },[isTriggerBasedCampaign, isTriggerAvailable]);
+  }, [isTriggerBasedCampaign, isTriggerAvailable]);
 
   const mergeCreativeWithScreenData = (creatives: any, screenData: any) => {
     return screenData.map((screen: any) => {
@@ -461,29 +461,32 @@ export const CreativeUploadV4 = ({
     );
   };
 
-  const getCount = useCallback((key: keyof Screen, label: string): number => {
-    let creativeCount = 0;
+  const getCount = useCallback(
+    (key: keyof Screen, label: string): number => {
+      let creativeCount = 0;
 
-    if (label === "All") {
-      for (const screen of screenData || []) {
-        if (isCreativeUploaded(screen.screenId)) {
-          creativeCount++;
-        }
-      }
-    } else {
-      for (const screen of screenData || []) {
-        // Check if this screen matches the filter criteria
-        if (screen[key] === label) {
-          // Check if creative is uploaded for this screen
+      if (label === "All") {
+        for (const screen of screenData || []) {
           if (isCreativeUploaded(screen.screenId)) {
             creativeCount++;
           }
         }
+      } else {
+        for (const screen of screenData || []) {
+          // Check if this screen matches the filter criteria
+          if (screen[key] === label) {
+            // Check if creative is uploaded for this screen
+            if (isCreativeUploaded(screen.screenId)) {
+              creativeCount++;
+            }
+          }
+        }
       }
-    }
 
-    return creativeCount;
-  }, [screenData, isCreativeUploaded]);
+      return creativeCount;
+    },
+    [screenData, isCreativeUploaded]
+  );
 
   useEffect(() => {
     setAllFilter((prev: FilterOptions) => {
@@ -654,20 +657,18 @@ export const CreativeUploadV4 = ({
   useEffect(() => {
     if (errorScreeData) message.error(errorScreeData);
     if (errorAddDetails) message.error("Error in adding campaign details...");
-  },[errorAddDetails, errorScreeData])
+  }, [errorAddDetails, errorScreeData]);
 
   useEffect(() => {
-
     if (!screenData) return;
 
     handleSetValue();
     if (creativeUploadData?.length > 0) {
       setPageLoading(false);
+      console.log("creativeUploadData: ", creativeUploadData);
       return;
     }
-    console.log("move next, no creativeUploadData ");
-    const storedCampaignData = campaignDetails;
-    const storedCreatives = storedCampaignData?.creatives;
+    const storedCreatives = campaignDetails?.creatives;
     const transformedCreatives = transformData(storedCreatives || []);
     const transformedScreenData = newTransformData(screenData || []);
     const combinedData = mergeCreativeWithScreenData(
@@ -675,10 +676,8 @@ export const CreativeUploadV4 = ({
       transformedScreenData
     );
     setCreativeUploadData(combinedData);
-
     setPageLoading(false);
   }, [screenData, campaignDetails, creativeUploadData?.length, handleSetValue]);
-
 
   useEffect(() => {
     if (successAddDetails) {

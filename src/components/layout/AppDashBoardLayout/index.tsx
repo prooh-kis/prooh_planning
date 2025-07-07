@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { signout } from "../../../actions/userAction";
 import { Header } from "../../../components/header";
 import { notification, Tooltip } from "antd";
@@ -16,7 +16,7 @@ import {
   CLIENT_POC_USER,
   PROOH_ADMIN,
 } from "../../../constants/userConstants";
-import { AUTH, MY_CAMPAIGNS_LIST } from "../../../routes/routes";
+import { AUTH } from "../../../routes/routes";
 
 interface AppDashBoardLayoutProps {
   children: React.ReactNode;
@@ -31,6 +31,7 @@ export const AppDashBoardLayout: React.FC<AppDashBoardLayoutProps> = ({
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [current, setCurrent] = useState<string>(value);
   const [showFull, setShowFull] = useState<any>(false);
   const [menuItems, setMenuItems] = useState<any[]>([]);
@@ -41,7 +42,11 @@ export const AppDashBoardLayout: React.FC<AppDashBoardLayoutProps> = ({
 
   useEffect(() => {
     if (!userInfo) {
-      navigate(AUTH);
+      navigate(AUTH, {
+        state: {
+          path: pathname,
+        },
+      });
       return;
     }
     switch (userInfo?.userRole) {
@@ -74,7 +79,11 @@ export const AppDashBoardLayout: React.FC<AppDashBoardLayoutProps> = ({
   const handleSignOut = () => {
     if (window.confirm("Do you want to log out?")) {
       dispatch(signout());
-      navigate(AUTH);
+      navigate(AUTH, {
+        state: {
+          path: pathname,
+        },
+      });
     }
   };
 

@@ -20,7 +20,6 @@ import {
   EditCampaignCreationAndItsSubCampaigns,
   EditCreativeEndDatePopup,
 } from "../../components";
-import { ShowMediaFile } from "../../components/molecules/ShowMediaFIle";
 import {
   CAMPAIGN_CREATION_EDIT_END_DATE_PLANNING_PAGE,
   CAMPAIGN_CREATION_GET_CAMPAIGN_DETAILS_PLANNING_PAGE,
@@ -47,7 +46,7 @@ export const CampaignDetailsPage: React.FC = () => {
     "standardDayTimeCreatives"
   );
   const [currentTab1, setCurrentTab1] = useState<string>("1");
-
+  const [isEditPlanShow, setIsEditPlanShow] = useState<boolean>(false);
   const [campaign, setCampaign] = useState<any>(null);
   const [campaignList, setCampaignList] = useState<any[]>([]);
   const [currentScreen, setCurrentScreen] = useState<any>(null);
@@ -164,21 +163,21 @@ export const CampaignDetailsPage: React.FC = () => {
     successEditAllSubCampaigns,
     errorEditAllSubCampaigns,
     dispatch,
-    campaignId
+    campaignId,
   ]);
 
   useEffect(() => {
     const filteredCampaigns =
       screens?.length > 0 && campaignCreated?.campaigns?.length > 0
         ? campaignCreated?.campaigns
-          .filter((camp: any) =>
-            campaignCreated?.screenIds?.includes(camp.screenId?.toString())
-          )
-          .filter((camp: any) =>
-            camp?.screenName
-              ?.toLowerCase()
-              ?.includes(searchQuery?.toLowerCase() || "")
-          )
+            .filter((camp: any) =>
+              campaignCreated?.screenIds?.includes(camp.screenId?.toString())
+            )
+            .filter((camp: any) =>
+              camp?.screenName
+                ?.toLowerCase()
+                ?.includes(searchQuery?.toLowerCase() || "")
+            )
         : [];
 
     setCampaignList(filteredCampaigns);
@@ -375,13 +374,17 @@ export const CampaignDetailsPage: React.FC = () => {
         setCurrentTab1={setCurrentTab1}
         userInfo={userInfo}
         campaignId={campaignId}
+        setIsEditPlanShow={() => setIsEditPlanShow((pre: boolean) => !pre)}
+        isEditPlanShow={isEditPlanShow}
       />
       {/* Main Content */}
       {currentTab1 === "1" ? (
         <ScreenListForCampaignDetails
           userInfo={userInfo}
           campaignCreated={campaignCreated}
-          loadingStatusChange={loadingStatusChange || loadingScreens || loadingCampaignDetails}
+          loadingStatusChange={
+            loadingStatusChange || loadingScreens || loadingCampaignDetails
+          }
           handleChangeStatusAll={handleChangeStatusAll}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -408,6 +411,7 @@ export const CampaignDetailsPage: React.FC = () => {
           performanceMatrix={
             getCampaignBasicDetails(campaignCreated)?.performanceMatrix
           }
+          setIsEditPlanShow={() => setIsEditPlanShow((pre: boolean) => !pre)}
           campaignCost={getCampaignBasicDetails(campaignCreated)?.campaignCost}
         />
       )}

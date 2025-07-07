@@ -1,14 +1,13 @@
-import { message, Skeleton, Tooltip } from "antd";
+import { Skeleton } from "antd";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   formatDateForLogs,
   getCampaignDurationFromStartAndEndDate,
   getTimeFromDate,
-  transformToAmPm,
 } from "../../utils/dateAndTimeUtils";
 import { NoDataView } from "../../components/molecules/NoDataView";
 import { CalenderScaleStepper } from "../../components/molecules/CalenderScale2";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { GetCampaignLogsAction } from "../../actions/campaignAction";
 import { downloadExcel2 } from "../../utils/excelUtils";
 import { MetricCard, SiteInfoHeader } from "./SiteMapViewDetailsPopup";
@@ -53,7 +52,6 @@ export const ShowCampaignLogsPopup = ({
     } else {
       return [];
     }
-
   }, [logs]);
 
   const newCombinedData = useMemo(() => {
@@ -63,21 +61,20 @@ export const ShowCampaignLogsPopup = ({
       // const onTime = screenCampaignData?.operationalDuration?.onTime;
       // const offTime = screenCampaignData?.operationalDuration?.offTime;
 
-
       // Now populate with actual logs
       logs?.forEach((item: any) => {
         const date: any = formatDateForLogs(item?.logTime)?.logDate;
         const timeStr = new Date(item?.logTime).toLocaleTimeString();
-        const [time, period] = timeStr.split(' ');
-        let [hour] = time.split(':');
+        const [time, period] = timeStr.split(" ");
+        let [hour] = time.split(":");
 
         // Convert to 24-hour format
-        if (period === 'PM' && hour !== '12') {
-          hour = String(Number(hour) + 12).padStart(2, '0');
-        } else if (period === 'AM' && hour === '12') {
-          hour = '00';
+        if (period === "PM" && hour !== "12") {
+          hour = String(Number(hour) + 12).padStart(2, "0");
+        } else if (period === "AM" && hour === "12") {
+          hour = "00";
         } else {
-          hour = hour.padStart(2, '0');
+          hour = hour.padStart(2, "0");
         }
 
         if (!hrWiseLogs[date]) {
@@ -123,15 +120,32 @@ export const ShowCampaignLogsPopup = ({
       dispatch(
         GetCampaignLogsAction({
           campaignId: screenCampaignData?.campaignId,
-          date: getCampaignDurationFromStartAndEndDate(currentDate, campaignDetails?.endDate) < 0
-            ? formatDateForLogs(moment(Math.min(moment(currentDate).valueOf(), moment(campaignDetails.endDate).valueOf())).format("YYYY-MM-DD hh:mm:ss")).apiDate
-            : formatDateForLogs(moment(currentDate).format("YYYY-MM-DD hh:mm:ss")).apiDate,
+          date:
+            getCampaignDurationFromStartAndEndDate(
+              currentDate,
+              campaignDetails?.endDate
+            ) < 0
+              ? formatDateForLogs(
+                  moment(
+                    Math.min(
+                      moment(currentDate).valueOf(),
+                      moment(campaignDetails.endDate).valueOf()
+                    )
+                  ).format("YYYY-MM-DD hh:mm:ss")
+                ).apiDate
+              : formatDateForLogs(
+                  moment(currentDate).format("YYYY-MM-DD hh:mm:ss")
+                ).apiDate,
           // date: "13/03/2025"
         })
       );
-
     }
-  }, [dispatch, currentDate, screenCampaignData?.campaignId, campaignDetails.endDate]);
+  }, [
+    dispatch,
+    currentDate,
+    screenCampaignData?.campaignId,
+    campaignDetails.endDate,
+  ]);
 
   useEffect(() => {
     if (open) {
@@ -164,9 +178,11 @@ export const ShowCampaignLogsPopup = ({
     {
       id: "2",
       label: "Hardware Performance",
-      delivered: siteBasedDataOnLogs?.hardwarePerformanceDelivered?.toFixed(2) || 0,
+      delivered:
+        siteBasedDataOnLogs?.hardwarePerformanceDelivered?.toFixed(2) || 0,
       promised:
-        siteBasedDataOnLogs?.hardwarePerformancePromisedTillDate?.toFixed(2) || 1,
+        siteBasedDataOnLogs?.hardwarePerformancePromisedTillDate?.toFixed(2) ||
+        1,
       colors: ["#EDEDED", "#6982FF"],
       inPercentage: true,
     },
@@ -256,15 +272,20 @@ export const ShowCampaignLogsPopup = ({
                   </div>
                   <div className="col-span-2 py-1 flex items-center justify-center">
                     <h2 className="text-sm font-semibold text-white">
-                      {"Time"}
+                      {"Start Time"}
                     </h2>
                   </div>
-                  <div className="col-span-4 py-1 flex items-center justify-center">
+                  <div className="col-span-2 py-1 flex items-center justify-center">
+                    <h2 className="text-sm font-semibold text-white">
+                      {"End Time"}
+                    </h2>
+                  </div>
+                  <div className="col-span-3 py-1 flex items-center justify-center">
                     <h2 className="text-sm font-semibold text-white">
                       {"Creative"}
                     </h2>
                   </div>
-                  <div className="col-span-3 py-1 flex items-center justify-center">
+                  <div className="col-span-2 py-1 flex items-center justify-center">
                     <h2 className="text-sm font-semibold text-white">
                       {"Brand"}
                     </h2>
@@ -298,7 +319,7 @@ export const ShowCampaignLogsPopup = ({
                   screenName={siteBasedDataOnLogs?.screenName}
                   address={siteBasedDataOnLogs?.address}
                   lastActive={siteBasedDataOnLogs?.lastActive}
-                  onClose={() => { }}
+                  onClose={() => {}}
                   images={siteBasedDataOnLogs?.images}
                   showCloseIcon={false}
                   operationalDuration={siteBasedDataOnLogs?.operationalDuration}
@@ -337,19 +358,29 @@ export const ShowCampaignLogsPopup = ({
                           .sort((a, b) => Number(a) - Number(b))
                           .map((key) => [key, hours[key]])
                           .map(([hour, entries]: any, i: any) => (
-                            <div
-                              key={hour}
-                              className="grid grid-cols-9 "
-                            >
+                            <div key={hour} className="grid grid-cols-9 ">
                               <div
                                 className="col-span-6 overflow-scroll no-scrollbar h-[75vh] border-b"
                                 ref={(el) => (scrollRefs.current[hour] = el)}
                               >
-                                {i == 0 && Number(hour) > Number(siteBasedDataOnLogs?.operationalDuration?.onTime?.split(":")[0]) && (
-                                  <div className="flex items-center justify-center h-[5vh] bg-[#D7D7D7]">
-                                    <h1 className="text-[12px]">No Logs from {`${siteBasedDataOnLogs?.operationalDuration?.onTime?.split(":")[0]} to ${hour} O'clock`}</h1>
-                                  </div>
-                                )}
+                                {i == 0 &&
+                                  Number(hour) >
+                                    Number(
+                                      siteBasedDataOnLogs?.operationalDuration?.onTime?.split(
+                                        ":"
+                                      )[0]
+                                    ) && (
+                                    <div className="flex items-center justify-center h-[5vh] bg-[#D7D7D7]">
+                                      <h1 className="text-[12px]">
+                                        No Logs from{" "}
+                                        {`${
+                                          siteBasedDataOnLogs?.operationalDuration?.onTime?.split(
+                                            ":"
+                                          )[0]
+                                        } to ${hour} O'clock`}
+                                      </h1>
+                                    </div>
+                                  )}
 
                                 <table className="min-w-full bg-white">
                                   <tbody>
@@ -358,11 +389,25 @@ export const ShowCampaignLogsPopup = ({
                                         key={index}
                                         className={`
                                           grid grid-cols-12 border-b border-gray-100 hover:bg-gray-50 text-gray-700 p-1
-                                          ${TIME_ZONES?.["t1"].includes(Number(hour)) ? "bg-[#F9E39650]" :
-                                            TIME_ZONES?.["t2"].includes(Number(hour)) ? "bg-[#BCFFA650]" :
-                                              TIME_ZONES?.["t3"].includes(Number(hour)) ? "bg-[#D2CAFF50]" :
-                                                TIME_ZONES?.["t4"].includes(Number(hour)) ? "bg-[#EBFAFF50]" :
-                                                  "bg-[#00A0FA10]"}
+                                          ${
+                                            TIME_ZONES?.["t1"].includes(
+                                              Number(hour)
+                                            )
+                                              ? "bg-[#F9E39650]"
+                                              : TIME_ZONES?.["t2"].includes(
+                                                  Number(hour)
+                                                )
+                                              ? "bg-[#BCFFA650]"
+                                              : TIME_ZONES?.["t3"].includes(
+                                                  Number(hour)
+                                                )
+                                              ? "bg-[#D2CAFF50]"
+                                              : TIME_ZONES?.["t4"].includes(
+                                                  Number(hour)
+                                                )
+                                              ? "bg-[#EBFAFF50]"
+                                              : "bg-[#00A0FA10]"
+                                          }
                                         `}
                                       >
                                         <td className="col-span-1 py-2 flex items-center justify-center">
@@ -372,24 +417,34 @@ export const ShowCampaignLogsPopup = ({
                                         </td>
                                         <td className="col-span-2 py-2 flex items-center justify-center">
                                           <h1 className="text-[12px]">
-                                            {new Date(entry.logTime).toLocaleTimeString()}
+                                            {new Date(
+                                              entry.creativeStartTime
+                                            ).toLocaleTimeString()}
                                           </h1>
                                         </td>
-                                        <td className="col-span-4 py-2 flex items-center justify-center truncate">
+                                        <td className="col-span-2 py-2 flex items-center justify-center">
+                                          <h1 className="text-[12px]">
+                                            {new Date(
+                                              entry.creativeEndTime
+                                            ).toLocaleTimeString()}
+                                          </h1>
+                                        </td>
+                                        <td className="col-span-3 py-2 flex items-center justify-center truncate">
                                           <h1 className="text-[12px] truncate">
                                             {entry.mediaId.split("_")[1]}
                                           </h1>
                                         </td>
-                                        <td className="col-span-3 py-2 flex items-center justify-center">
+                                        <td className="col-span-2 py-2 flex items-center justify-center">
                                           <h1 className="text-[12px]">
                                             {entry.brandName}
                                           </h1>
                                         </td>
                                         <td
-                                          className={`col-span-2 py-2 flex items-center justify-center ${entry.screenStatus === "online"
+                                          className={`col-span-2 py-2 flex items-center justify-center ${
+                                            entry.screenStatus === "online"
                                               ? "text-[#59A237]"
                                               : "text-gray-500"
-                                            }`}
+                                          }`}
                                         >
                                           <h1 className="text-[12px]">
                                             {entry.screenStatus.toUpperCase()}
@@ -400,15 +455,17 @@ export const ShowCampaignLogsPopup = ({
                                   </tbody>
                                 </table>
                               </div>
-                              <div className={`
+                              <div
+                                className={`
                                 col-span-3 h-auto border-b border-l border-gray-100 grid grid-cols-3 bg-[#FFFFFF]
-                              `}>
+                              `}
+                              >
                                 <div className="col-span-1 flex justify-center items-center gap-2 p-2">
                                   <h1
                                     className={
                                       entries.length /
                                         (17 * campaignDetails?.sov) >=
-                                        1
+                                      1
                                         ? "text-[#2A892D] text-[12px]"
                                         : "text-[#CC0000] text-[12px]"
                                     }
@@ -419,29 +476,29 @@ export const ShowCampaignLogsPopup = ({
                                     className={
                                       entries.length /
                                         (17 * campaignDetails?.sov) >=
-                                        1
+                                      1
                                         ? "text-[#2A892D] text-[12px]"
                                         : "text-[#CC0000] text-[12px]"
                                     }
                                   >
                                     {entries.length /
                                       (17 * campaignDetails?.sov) >
-                                      1
+                                    1
                                       ? `(+${Number(
-                                        (entries.length /
-                                          (17 * campaignDetails?.sov)) *
-                                        100
-                                      ).toFixed(0)}%)`
-                                      : entries.length /
-                                        (17 * campaignDetails?.sov) <
-                                        1
-                                        ? `(-${Number(
-                                          100 -
                                           (entries.length /
                                             (17 * campaignDetails?.sov)) *
-                                          100
+                                            100
                                         ).toFixed(0)}%)`
-                                        : `✔`}
+                                      : entries.length /
+                                          (17 * campaignDetails?.sov) <
+                                        1
+                                      ? `(-${Number(
+                                          100 -
+                                            (entries.length /
+                                              (17 * campaignDetails?.sov)) *
+                                              100
+                                        ).toFixed(0)}%)`
+                                      : `✔`}
                                   </p>
                                 </div>
                                 <div className="col-span-1 border-x border-gray-100 flex justify-center items-center p-2">
@@ -497,17 +554,38 @@ export const ShowCampaignLogsPopup = ({
             </div>
           </div>
         ) : !loading && (logs.length === 0 || error) ? (
-          <div className={`${error ? "border border-[#EFF000]" : ""} flex justify-center items-center pt-12`} onClick={() => {
-            dispatch(
-              GetCampaignLogsAction({
-                campaignId: screenCampaignData?.campaignId,
-                date: getCampaignDurationFromStartAndEndDate(currentDate, campaignDetails?.endDate) < 0
-                  ? formatDateForLogs(moment(Math.min(moment(currentDate).valueOf(), moment(campaignDetails.endDate).valueOf())).format("YYYY-MM-DD hh:mm:ss")).apiDate
-                  : formatDateForLogs(moment(currentDate).format("YYYY-MM-DD hh:mm:ss")).apiDate,
-              })
-            );
-          }}>
-            <NoDataView title="Please click to reload data again" reload={true} />
+          <div
+            className={`${
+              error ? "border border-[#EFF000]" : ""
+            } flex justify-center items-center pt-12`}
+            onClick={() => {
+              dispatch(
+                GetCampaignLogsAction({
+                  campaignId: screenCampaignData?.campaignId,
+                  date:
+                    getCampaignDurationFromStartAndEndDate(
+                      currentDate,
+                      campaignDetails?.endDate
+                    ) < 0
+                      ? formatDateForLogs(
+                          moment(
+                            Math.min(
+                              moment(currentDate).valueOf(),
+                              moment(campaignDetails.endDate).valueOf()
+                            )
+                          ).format("YYYY-MM-DD hh:mm:ss")
+                        ).apiDate
+                      : formatDateForLogs(
+                          moment(currentDate).format("YYYY-MM-DD hh:mm:ss")
+                        ).apiDate,
+                })
+              );
+            }}
+          >
+            <NoDataView
+              title="Please click to reload data again"
+              reload={true}
+            />
           </div>
         ) : (
           <div className="pt-12">

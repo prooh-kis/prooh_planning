@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_SENT,
   SCREEN_ADMIN,
@@ -38,6 +38,7 @@ export const CampaignRequestForAdmin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const [searchQuery, setSearchQuery] = useState("");
+  const { pathname } = useLocation();
   const [planRequest, setPlanRequest] = useState<Campaign[]>([]);
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
@@ -54,7 +55,11 @@ export const CampaignRequestForAdmin = () => {
   // Redirect if not authenticated or unauthorized
   useEffect(() => {
     if (!userInfo) {
-      navigate(AUTH);
+      navigate(AUTH, {
+        state: {
+          path: pathname,
+        },
+      });
       return;
     }
 

@@ -4,7 +4,6 @@ import { Checkbox, notification, Skeleton, Tooltip } from "antd";
 import { CalenderScaleStepper } from "../../components/molecules/CalenderScale2";
 import { NoDataView } from "../../components";
 import { getFiltersAndDataForAllLogsPopupAction } from "../../actions/dashboardAction";
-import { List, ListItem } from "../../components/molecules/List";
 import { GetCampaignLogsAction } from "../../actions/campaignAction";
 import {
   formatDateForLogs,
@@ -132,7 +131,7 @@ export const ViewAllLogsPopup = ({
         }
 
         // todo offline logs removed from visibility
-        if ( item.screenStatus === "online" ){
+        if (item.screenStatus === "online") {
           result[date][hour].push(item);
         }
         return result;
@@ -250,8 +249,8 @@ export const ViewAllLogsPopup = ({
   useEffect(() => {
     dispatch(
       getFiltersAndDataForAllLogsPopupAction({
-        userRole: getUserRole(userInfo?.userRole), 
-        userId: userInfo?._id,      
+        userRole: getUserRole(userInfo?.userRole),
+        userId: userInfo?._id,
         cities: selectedCities,
         touchPoints: selectedTouchPoints,
         screenTypes: selectedScreenTypes,
@@ -263,9 +262,22 @@ export const ViewAllLogsPopup = ({
       dispatch(
         GetCampaignLogsAction({
           campaignId: currentScreenCampaignId,
-          date: getCampaignDurationFromStartAndEndDate(currentDate, campaignDetails?.endDate) < 0 
-                  ? formatDateForLogs(moment(Math.min(moment(currentDate).valueOf(), moment(campaignDetails.endDate).valueOf())).format("YYYY-MM-DD hh:mm:ss")).apiDate
-                  : formatDateForLogs(moment(currentDate).format("YYYY-MM-DD hh:mm:ss")).apiDate,
+          date:
+            getCampaignDurationFromStartAndEndDate(
+              currentDate,
+              campaignDetails?.endDate
+            ) < 0
+              ? formatDateForLogs(
+                  moment(
+                    Math.min(
+                      moment(currentDate).valueOf(),
+                      moment(campaignDetails.endDate).valueOf()
+                    )
+                  ).format("YYYY-MM-DD hh:mm:ss")
+                ).apiDate
+              : formatDateForLogs(
+                  moment(currentDate).format("YYYY-MM-DD hh:mm:ss")
+                ).apiDate,
           // date: "13/03/2025"
         })
       );
@@ -279,7 +291,7 @@ export const ViewAllLogsPopup = ({
     currentDate,
     currentScreenCampaignId,
     campaignDetails,
-    userInfo
+    userInfo,
   ]);
 
   // Dispatch action with updated filters
@@ -527,15 +539,20 @@ export const ViewAllLogsPopup = ({
                     </div>
                     <div className="col-span-2 py-1 flex items-center justify-center">
                       <h2 className="text-sm font-semibold text-white truncate">
-                        {"Time"}
+                        {"Start Time"}
                       </h2>
                     </div>
-                    <div className="col-span-4 py-1 flex items-center justify-center">
+                    <div className="col-span-2 py-1 flex items-center justify-center">
+                      <h2 className="text-sm font-semibold text-white truncate">
+                        {"End Time"}
+                      </h2>
+                    </div>
+                    <div className="col-span-3 py-1 flex items-center justify-center">
                       <h2 className="text-sm font-semibold text-white truncate">
                         {"Creative"}
                       </h2>
                     </div>
-                    <div className="col-span-3 py-1 flex items-center justify-center">
+                    <div className="col-span-2 py-1 flex items-center justify-center">
                       <h2 className="text-sm font-semibold text-white">
                         {"Brand"}
                       </h2>
@@ -629,16 +646,23 @@ export const ViewAllLogsPopup = ({
                                           <td className="col-span-2 py-2 flex items-center justify-center">
                                             <h1 className="text-[12px]">
                                               {new Date(
-                                                entry.logTime
+                                                entry?.creativeStartTime
                                               ).toLocaleTimeString()}
                                             </h1>
                                           </td>
-                                          <td className="col-span-4 py-2 flex items-center justify-center">
+                                          <td className="col-span-2 py-2 flex items-center justify-center">
+                                            <h1 className="text-[12px]">
+                                              {new Date(
+                                                entry?.creativeEndTime
+                                              ).toLocaleTimeString()}
+                                            </h1>
+                                          </td>
+                                          <td className="col-span-3 py-2 flex items-center justify-center">
                                             <h1 className="text-[12px]">
                                               {entry.mediaId.split("_")[1]}
                                             </h1>
                                           </td>
-                                          <td className="col-span-3 py-2 flex items-center justify-center">
+                                          <td className="col-span-2 py-2 flex items-center justify-center">
                                             <h1 className="text-[12px]">
                                               {entry.brandName}
                                             </h1>

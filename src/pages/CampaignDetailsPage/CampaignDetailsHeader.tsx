@@ -26,6 +26,8 @@ export const CampaignDetailsHeader = ({
   setCurrentTab1,
   userInfo,
   campaignId,
+  isEditPlanShow,
+  setIsEditPlanShow,
 }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -45,7 +47,7 @@ export const CampaignDetailsHeader = ({
         description: "Clone create successfully",
       });
       const data = campaignData?.clonedCampaign;
-      navigate(`/${data?.campaignType?.toLowerCase()}plan/${data._id}`, {
+      navigate(`/${data?.campaignType?.toLowerCase()}plan/${data._id}/edit`, {
         state: { from: EDIT_CAMPAIGN },
       });
       dispatch({ type: CLONE_CAMPAIGN_RESET });
@@ -96,12 +98,17 @@ export const CampaignDetailsHeader = ({
               <div className="flex gap-1">
                 <div
                   onClick={() => {
-                    dispatch(
-                      cloneCampaignAction({
-                        id: campaignId,
-                        event: CAMPAIGN_CREATION_CREATE_CLONE_PLANNING_PAGE,
-                      })
-                    );
+                    if (
+                      confirm(
+                        "Do you really want to create new campaign with old data?"
+                      )
+                    )
+                      dispatch(
+                        cloneCampaignAction({
+                          id: campaignId,
+                          event: CAMPAIGN_CREATION_CREATE_CLONE_PLANNING_PAGE,
+                        })
+                      );
                   }}
                   className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
                 >
@@ -110,28 +117,34 @@ export const CampaignDetailsHeader = ({
                 </div>
 
                 <div
-                  onClick={() =>
-                    navigate(`/editCampaign/${campaignCreated?._id}`)
-                  }
+                  onClick={() => {
+                    if (confirm("Do you really want to change creatives?")) {
+                      navigate(`/editCampaign/${campaignCreated?._id}`);
+                    }
+                  }}
                   className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
                 >
                   <i className="fi fi-rr-edit-alt flex items-center" />
                   <h1 className="truncate">Change Creatives</h1>
                 </div>
-                <div
-                  onClick={() => {
-                    const pageName = getCampaignPageNameFromCampaignType(
-                      campaignCreated?.campaignType
-                    );
-                    navigate(`/${pageName}/${campaignCreated?._id}/edit`, {
-                      state: { from: EDIT_CAMPAIGN },
-                    });
-                  }}
-                  className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
-                >
-                  <i className="fi fi-rr-file-edit flex items-center" />
-                  <h1 className="truncate">Edit Plan</h1>
-                </div>
+                {isEditPlanShow && (
+                  <div
+                    onClick={() => {
+                      const pageName = getCampaignPageNameFromCampaignType(
+                        campaignCreated?.campaignType
+                      );
+                      setIsEditPlanShow();
+                      navigate(`/${pageName}/${campaignCreated?._id}/edit`, {
+                        state: { from: EDIT_CAMPAIGN },
+                      });
+                    }}
+                    className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"
+                  >
+                    <i className="fi fi-rr-file-edit flex items-center" />
+                    <h1 className="truncate">Edit Plan</h1>
+                  </div>
+                )}
+
                 <div
                   onClick={() => setOpenCreateCampaignEndDateChangePopup(true)}
                   className="truncate h-8 flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"

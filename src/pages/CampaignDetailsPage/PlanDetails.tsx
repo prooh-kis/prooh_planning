@@ -27,11 +27,15 @@ export const PlanDetails = ({
   campaignCost,
   downloadSummary,
   userInfo,
+  setIsEditPlanShow,
 }: any) => {
   return (
     <div className="w-full border border-[#D3D3D350] rounded-[18px] p-4 bg-white mt-2">
       <div className="flex justify-between border-b pb-2">
-        <h1 className="text-[#092A41] text-[16px] font-semibold mt-2 px-1">
+        <h1
+          className="text-[#092A41] text-[16px] font-semibold mt-2 px-1"
+          onClick={setIsEditPlanShow}
+        >
           Your Plan Details
         </h1>{" "}
         <div

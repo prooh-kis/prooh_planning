@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AUTH } from "../../routes/routes";
 import {
   CAMPAIGN_MANAGER,
@@ -23,6 +23,7 @@ import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 export const MyUsers = (props: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
+  const { pathname } = useLocation();
   const [searchQuery, setSearchQuery] = useState<any>("");
   const [open, setOpen] = useState<boolean>(false);
   const userList = useSelector((state: any) => state.userList);
@@ -66,7 +67,11 @@ export const MyUsers = (props: any) => {
 
   useEffect(() => {
     if (!userInfo) {
-      navigate(AUTH);
+      navigate(AUTH, {
+        state: {
+          path: pathname,
+        },
+      });
     } else {
       if (userInfo?.userRole !== CAMPAIGN_MANAGER) {
         message.warning("You have no access to this page");
