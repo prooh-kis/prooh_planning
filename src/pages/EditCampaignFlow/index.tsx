@@ -12,7 +12,7 @@ import { EditStepperSlider } from "../../components/molecules/EditStepperSlider"
 
 export const EditCampaignFlow: React.FC = () => {
   const dispatch = useDispatch<any>();
-  const steps = 4;
+  const steps = 2;
   const { pathname, state } = useLocation();
   const navigate = useNavigate();
 

@@ -360,7 +360,9 @@ export const ViewFinalPlanPODetails = ({
       );
     }
     if (errorAddDetails) {
-      message.error(`Campaign plannning failed temporarily, ${errorAddDetails}`)
+      message.error(
+        `Campaign plannning failed temporarily, ${errorAddDetails}`
+      );
     }
   }, [errorApply, errorRemove, errorAddDetails]);
 
@@ -455,11 +457,11 @@ export const ViewFinalPlanPODetails = ({
       // setConfirmationImageFiles([]);
       setLoadingEmailReady(false);
       dispatch({ type: SEND_EMAIL_FOR_CONFIRMATION_RESET });
-      setIsShareModalOpen(false)
+      setIsShareModalOpen(false);
     }
   }, [successSendEmail, dispatch]);
 
-  const intialDispatchCall = useCallback(() => {
+  const initialDispatchCall = useCallback(() => {
     if (!campaignDetails) return;
 
     dispatch(getFinalPlanPOTableData(poInput));
@@ -484,11 +486,11 @@ export const ViewFinalPlanPODetails = ({
         pageName: "View Final Plan Page",
       })
     );
-  },[dispatch, campaignDetails, poInput, campaignId])
+  }, [dispatch, campaignDetails, poInput, campaignId]);
 
   useEffect(() => {
-    intialDispatchCall();
-  }, [intialDispatchCall]);
+    initialDispatchCall();
+  }, [initialDispatchCall]);
 
   useEffect(() => {
     if (successAddDetails) {
@@ -719,7 +721,7 @@ export const ViewFinalPlanPODetails = ({
       {isOpenCostSummary && (
         <CostSummaryPopup
           onClose={() => {
-            intialDispatchCall();
+            initialDispatchCall();
             setIsOpenCostSummary(false);
           }}
           campaignId={campaignId}
@@ -841,7 +843,7 @@ export const ViewFinalPlanPODetails = ({
                           ${wsLoading ? "animate-pulse" : ""}
                         `}
                         ></i>
-                       
+
                         <h1
                           className={`text-[14px] truncate ${
                             downloadUrls.length > 0
@@ -894,8 +896,11 @@ export const ViewFinalPlanPODetails = ({
                           className="h-[48px]"
                           loadingText="Sending..."
                           loading={loadingEmailReady || wsLoading}
-                          disabled={downloadUrls.length === 0 || loadingEmailReady || wsLoading}
-
+                          disabled={
+                            downloadUrls.length === 0 ||
+                            loadingEmailReady ||
+                            wsLoading
+                          }
                           icon={
                             <i className="fi fi-sr-envelope flex items-center"></i>
                           }

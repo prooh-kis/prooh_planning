@@ -169,24 +169,22 @@ export const CreativeUploadV4 = ({
     .includes("triggerbasedplan");
 
   // Helper functions
-  const transformData = (data: any[]): any[] => {
+  const transformData = useCallback((data: any[]): any[] => {
     return data?.map((item) => {
-      const { city, creativeDuration, screenRatio } = item;
-
       const transformCreative = (creative: any) => ({
         url: creative?.url,
         fileType: creative?.type,
         fileSize: creative?.size,
-        creativeDuration,
+        creativeDuration: item.creativeDuration || 10,
         awsURL: creative?.url,
       });
 
       return {
         ...item,
-        screenId: item.screenIds[0],
-        screenResolution: screenRatio,
-        screenRatio,
-        creativeDuration,
+        screenId: item.screenIds?.[0] || "",
+        screenResolution: item.screenRatio,
+        screenRatio: item.screenRatio,
+        creativeDuration: item.creativeDuration || 10,
         standardDayTimeCreatives:
           item.standardDayTimeCreatives?.map(transformCreative) || [],
         standardNightTimeCreatives:
@@ -194,9 +192,9 @@ export const CreativeUploadV4 = ({
         triggerCreatives: item.triggerCreatives?.map(transformCreative) || [],
       };
     });
-  };
+  }, []);
 
-  const newTransformData = (input: Screen[]): any[] => {
+  const newTransformData = useCallback((input: Screen[]): any[] => {
     return input.map((screen) => ({
       ...screen,
       creativeDuration: 10,
@@ -204,7 +202,7 @@ export const CreativeUploadV4 = ({
       standardNightTimeCreatives: [],
       triggerCreatives: [],
     }));
-  };
+  }, []);
 
   const isTriggerAvailable = useCallback(() => {
     const triggers = campaignDetails?.triggers || [];
@@ -231,22 +229,25 @@ export const CreativeUploadV4 = ({
     );
   }, [isTriggerBasedCampaign, isTriggerAvailable]);
 
-  const mergeCreativeWithScreenData = (creatives: any, screenData: any) => {
-    return screenData.map((screen: any) => {
-      const creativeData = creatives?.find(
-        (creative: any) => creative.screenId == screen.screenId
-      );
+  const mergeCreativeWithScreenData = useCallback(
+    (creatives: any[], screenData: any[]) => {
+      return screenData.map((screen: any) => {
+        const creativeData = creatives?.find(
+          (creative: any) => creative.screenId === screen.screenId
+        );
 
-      return creativeData
-        ? {
-            ...screen,
-            standardDayTimeCreatives: creativeData.standardDayTimeCreatives,
-            standardNightTimeCreatives: creativeData.standardNightTimeCreatives,
-            triggerCreatives: creativeData.triggerCreatives,
-          }
-        : screen;
-    });
-  };
+        return {
+          ...screen,
+          standardDayTimeCreatives:
+            creativeData?.standardDayTimeCreatives || [],
+          standardNightTimeCreatives:
+            creativeData?.standardNightTimeCreatives || [],
+          triggerCreatives: creativeData?.triggerCreatives || [],
+        };
+      });
+    },
+    []
+  );
 
   const isCreativeUploaded = (screenId: string) => {
     const screen = creativeUploadData?.find(
@@ -444,7 +445,6 @@ export const CreativeUploadV4 = ({
       setLabel("standardDayTimeCreatives");
       setOpenSelected(false);
     } catch (error: any) {
-      console.error("Error:", error);
       message.error(error.message);
     }
   };
@@ -663,21 +663,21 @@ export const CreativeUploadV4 = ({
     if (!screenData) return;
 
     handleSetValue();
-    if (creativeUploadData?.length > 0) {
-      setPageLoading(false);
-      console.log("creativeUploadData: ", creativeUploadData);
-      return;
+
+    // Only initialize if we don't have creative data yet
+    if (creativeUploadData?.length === 0) {
+      const storedCreatives = campaignDetails?.creatives;
+      const transformedCreatives = transformData(storedCreatives || []);
+      const transformedScreenData = newTransformData(screenData || []);
+      const combinedData = mergeCreativeWithScreenData(
+        transformedCreatives,
+        transformedScreenData
+      );
+      setCreativeUploadData(combinedData);
     }
-    const storedCreatives = campaignDetails?.creatives;
-    const transformedCreatives = transformData(storedCreatives || []);
-    const transformedScreenData = newTransformData(screenData || []);
-    const combinedData = mergeCreativeWithScreenData(
-      transformedCreatives,
-      transformedScreenData
-    );
-    setCreativeUploadData(combinedData);
+
     setPageLoading(false);
-  }, [screenData, campaignDetails, creativeUploadData?.length, handleSetValue]);
+  }, [screenData, campaignDetails, creativeUploadData.length, handleSetValue]);
 
   useEffect(() => {
     if (successAddDetails) {

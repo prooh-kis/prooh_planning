@@ -8,7 +8,7 @@ import {
 } from "../../constants/userConstants";
 import { useSelector, useDispatch } from "react-redux";
 import { useCallback, useEffect, useState } from "react";
-import { deleteUser, getUserList } from "../../actions/userAction";
+import { deleteUser, getUserList, signout } from "../../actions/userAction";
 import { message } from "antd";
 import { AddUserDetails } from "../../components/popup/AddUserDetails";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
@@ -75,6 +75,7 @@ export const MyUsers = (props: any) => {
     } else {
       if (userInfo?.userRole !== CAMPAIGN_MANAGER) {
         message.warning("You have no access to this page");
+        dispatch(signout());
         navigate(-1);
       } else {
         dispatch(

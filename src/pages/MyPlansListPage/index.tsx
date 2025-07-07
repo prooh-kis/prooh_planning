@@ -17,6 +17,7 @@ import {
   VIEW_CAMPAIGN,
 } from "../../constants/campaignConstants";
 import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
+import { signout } from "../../actions/userAction";
 
 export const MyPlansListPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -46,6 +47,7 @@ export const MyPlansListPage: React.FC = () => {
       dispatch(getMyCreateCampaignsList({ id: userInfo._id }));
     } else {
       message.error("You have no access to this page");
+      dispatch(signout());
       return navigate("/auth");
     }
   }, [dispatch, navigate, userInfo, campaignDetails]);

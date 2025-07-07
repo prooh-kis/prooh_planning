@@ -16,6 +16,7 @@ import { message } from "antd";
 import { CampaignsListModel } from "../../components/molecules/CampaignsListModel";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { AUTH } from "../../routes/routes";
+import { signout } from "../../actions/userAction";
 
 interface Campaign {
   _id: string;
@@ -67,7 +68,8 @@ export const CampaignRequestForAdmin = () => {
       userInfo?.userRole !== SCREEN_ADMIN &&
       userInfo?.userRole !== SCREEN_OWNER
     ) {
-      alert("You have no access to this page");
+      message.error("You have no access to this page");
+      dispatch(signout());
       navigate(-1);
       return;
     }
@@ -81,7 +83,6 @@ export const CampaignRequestForAdmin = () => {
         event: "campaignCreationGetRequestListVendorCms",
       })
     );
-    console.log("getRequestList called!");
   }, [userInfo]);
 
   // Fetch vendor requests
