@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { getJSDocOverrideTagNoCache } from "typescript";
 
 // Updated types to match the actual data structure
 type FilterOptionItem = {
@@ -12,6 +13,7 @@ type FilterOptions = {
   touchPoints: FilterOptionItem[];
   screenTypes: FilterOptionItem[];
   screenRatio: FilterOptionItem[];
+  gridType: FilterOptionItem[];
 };
 
 type SelectedFilters = {
@@ -19,6 +21,7 @@ type SelectedFilters = {
   touchPoints: string[];
   screenTypes: string[];
   screenRatio: string[];
+  gridType: string[];
 };
 
 type Props = {
@@ -37,6 +40,7 @@ const FilterUI: React.FC<Props> = ({
     touchPoints: true,
     screenTypes: true,
     screenRatio: true,
+    gridType: true,
   });
 
   const handleFilterChange = (
@@ -240,6 +244,7 @@ const FilterUI: React.FC<Props> = ({
               touchPoints: ["All"],
               screenTypes: ["All"],
               screenRatio: ["All"],
+              gridType: ["All"],
             });
           }}
           className="text-gray-800 font-medium transition duration-150 hover:text-[#129BFF]"
@@ -265,6 +270,12 @@ const FilterUI: React.FC<Props> = ({
             "screenTypes",
             "Screen Types",
             filterOptions?.screenTypes,
+            "checkbox"
+          )}
+          {renderFilterGroup(
+            "gridType",
+            "Grid Types",
+            filterOptions?.gridType,
             "checkbox"
           )}
           {renderFilterGroup(

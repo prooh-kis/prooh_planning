@@ -23,6 +23,7 @@ import { getAWSUrl } from "../../utils/awsUtils";
 import { getVideoDurationFromVideoURL } from "../../utils/fileUtils";
 import { CAMPAIGN_CREATION_ADD_DETAILS_TO_CREATE_CAMPAIGN_PLANNING_PAGE } from "../../constants/userConstants";
 import { UploadCreativesFromBucketPopupV2 } from "../popup/UploadCreativesFromBucketPopupV2";
+import { NoDataView } from "../../components/molecules/NoDataView";
 
 interface CreativeUploadDetailsProps {
   setCurrentStep: (step: number) => void;
@@ -58,6 +59,7 @@ type SelectedFilters = {
   touchPoints: string[];
   screenTypes: string[];
   screenRatio: string[];
+  gridType: string[];
 };
 
 type FilterOptionItem = {
@@ -71,6 +73,7 @@ type FilterOptions = {
   touchPoints: FilterOptionItem[];
   screenTypes: FilterOptionItem[];
   screenRatio: FilterOptionItem[];
+  gridType: FilterOptionItem[];
 };
 
 export const CreativeUploadV4 = ({
@@ -96,6 +99,7 @@ export const CreativeUploadV4 = ({
     touchPoints: ["All"],
     screenTypes: ["All"],
     screenRatio: ["All"],
+    gridType: ["All"],
   });
   const [isBucketPopupOpen, setIsBucketPopupOpen] = useState<boolean>(false);
   const [mediaFiles, setMediaFiles] = useState<any[]>([]);
@@ -118,6 +122,8 @@ export const CreativeUploadV4 = ({
     success: successFilterOption,
     data: filterOption,
   } = allFiltersDetailsForUploadCreativePage;
+
+  console.log("filterOption : ", filterOption);
 
   useEffect(() => {
     if (successFilterOption) {
@@ -498,6 +504,7 @@ export const CreativeUploadV4 = ({
         touchPoints: "touchPoint",
         screenTypes: "screenType",
         screenRatio: "ratio",
+        gridType: "gridType",
       };
 
       // Type-safe iteration through filter categories
@@ -809,6 +816,9 @@ export const CreativeUploadV4 = ({
 
                   {/* Table Body */}
                   <div className="h-[50vh] overflow-auto scrollbar-minimal">
+                    {filteredScreens?.length === 0 && (
+                      <NoDataView title="No Screen found for this filter" />
+                    )}
                     {filteredScreens?.map((singleData: any, index: number) => {
                       const isUploaded = isCreativeUploaded(
                         singleData.screenId
