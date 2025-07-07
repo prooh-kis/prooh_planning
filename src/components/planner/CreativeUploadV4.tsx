@@ -123,8 +123,6 @@ export const CreativeUploadV4 = ({
     data: filterOption,
   } = allFiltersDetailsForUploadCreativePage;
 
-  console.log("filterOption : ", filterOption);
-
   useEffect(() => {
     if (successFilterOption) {
       setAllFilter(filterOption);
@@ -667,7 +665,7 @@ export const CreativeUploadV4 = ({
   }, [errorAddDetails, errorScreeData]);
 
   useEffect(() => {
-    if (!screenData) return;
+    if (!screenData || !campaignDetails) return;
 
     handleSetValue();
 
