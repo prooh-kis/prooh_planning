@@ -401,7 +401,8 @@ export const OrganizationPage: React.FC = () => {
               
               {/* Show MANAGERs without reportsTo at the top */}
               {members
-                .filter(member => member.role === 'MANAGER' && !member.reportsTo)
+                .filter(member => member.role === 'MANAGER' 
+                  && (!member.reportsTo || !members.some(m => m._id === member.reportsTo) || members.some(m => m._id === member.reportsTo && (m.role === 'HOC' || m.role === 'COORDINATOR'))))
                 .map(manager => (
                   <div key={manager._id} className="mb-4">
                     <MemberCard
@@ -496,6 +497,33 @@ export const OrganizationPage: React.FC = () => {
             {/* HOC and Coordinators Section */}
             <div className="bg-white p-4 rounded-lg border border-[#E5E7EB]">
               <h3 className="text-lg font-semibold mb-4 text-center text-[#16A34A]">Coordinators Team</h3>
+              
+              {/* Show COORDINATORs with invalid or no reportsTo */}
+              {members
+                .filter(member => 
+                  member.role === 'COORDINATOR'
+                   && (!member.reportsTo || !members.some(m => m._id === member.reportsTo) || members.some(m => m._id === member.reportsTo && (m.role === 'HOM' || m.role === 'MANAGER')))
+                )
+                .map(coordinator => (
+                  <div key={coordinator._id} className="mt-4 border-t pt-4">
+                    {/* <div className="text-sm text-yellow-600 mb-2">
+                      {!coordinator.reportsTo 
+                        ? 'Unassigned Coordinator' 
+                        : 'Coordinator with invalid supervisor'}
+                    </div> */}
+                    <MemberCard
+                      member={coordinator}
+                      members={members}
+                      level={0}
+                      isEditing={isEditing}
+                      onEdit={setEditingMember}
+                      onDelete={handleDeleteMember}
+                      getConnectedCoordinators={getConnectedMembers}
+                    />
+                  </div>
+                ))}
+
+              {/* Show HOC with their direct reports */}
               {members
                 .filter(member => member.role === 'HOC')
                 .map(hoc => (

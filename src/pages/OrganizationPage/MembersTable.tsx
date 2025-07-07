@@ -1,7 +1,8 @@
 import React from 'react';
-import { Table, Tag, Avatar, Space, Select } from 'antd';
+import { Table, Tag, Avatar, Space, Select, Input } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { UserOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
+import { UserOutlined, MailOutlined, PhoneOutlined, SearchOutlined } from '@ant-design/icons';
+import { useState, useMemo } from 'react';
 import { Member, Role } from './types';
 
 const { Option } = Select;
@@ -19,6 +20,19 @@ export const MembersTable: React.FC<MembersTableProps> = ({
   onRoleUpdate,
   currentUserRole = 'ADMIN' // Default to ADMIN if not provided
 }) => {
+  const [searchText, setSearchText] = useState('');
+
+  const filteredMembers = useMemo(() => {
+    if (!searchText) return members;
+    
+    const lowerSearchText = searchText.toLowerCase();
+    return members.filter(member => 
+      member.name?.toLowerCase().includes(lowerSearchText) ||
+      member.email?.toLowerCase().includes(lowerSearchText) ||
+      member.role?.toLowerCase().includes(lowerSearchText)
+    );
+  }, [members, searchText]);
+
   console.log(members);
   const getRoleColor = (role: string) => {
     switch (role) {
@@ -115,11 +129,21 @@ export const MembersTable: React.FC<MembersTableProps> = ({
 
   return (
     <div key="members-table-container" className="mt-8">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">All Members</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-gray-800">All Members</h2>
+        <Input
+          placeholder="Search members..."
+          prefix={<SearchOutlined />}
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          style={{ width: 250 }}
+          allowClear
+        />
+      </div>
       <Table 
         key="members-table"
         columns={columns} 
-        dataSource={members}
+        dataSource={filteredMembers}
         rowKey={(record) => record._id || record.userId || `user-${Math.random().toString(36).substr(2, 9)}`}
         loading={loading}
         pagination={{ pageSize: 10 }}
