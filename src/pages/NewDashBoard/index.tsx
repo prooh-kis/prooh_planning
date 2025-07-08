@@ -129,17 +129,23 @@ export const NewDashBoard: React.FC = () => {
     );
   };
 
-  // // In your iframe's code
-  // useEffect(() => {
-    
-  // }, []); // Empty dependency array means this effect runs once on mount
-
+  const [hasReceivedParentMessage, setHasReceivedParentMessage] = useState(false);
 
   useEffect(() => {
-    if (loggedInUser) {
+    if (loggedInUser && campaignDetails?.campaignPlannerId === loggedInUser._id) {
       setUserInfo(loggedInUser)
       setOpenView(loggedInUser.userRole);
     }
+
+    // Notify parent that iframe is ready
+    const notifyParent = () => {
+      try {
+        window.parent.postMessage('IFRAME_READY', '*');
+        console.log('IFRAME_READY message sent to parent');
+      } catch (error) {
+        console.error('Failed to send IFRAME_READY message:', error);
+      }
+    };
 
     // Function to handle incoming messages
     const handleMessage = (event: MessageEvent) => {
@@ -150,13 +156,6 @@ export const NewDashBoard: React.FC = () => {
         "https://prooh-cms.vercel.app",
         "https://cms.prooh.ai"
       ];
-
-      // // Log all incoming messages for debugging
-      // console.log('Message received in iframe:', {
-      //   origin: event.origin,
-      //   data: event.data,
-      //   isAllowedOrigin: allowedOrigins.includes(event.origin)
-      // });
 
       // Only process messages from allowed origins
       if (!allowedOrigins.includes(event.origin)) {
@@ -170,30 +169,23 @@ export const NewDashBoard: React.FC = () => {
         // Handle the user info
         setUserInfo(event.data.data.userInfo);
         setOpenView(event.data.data.userInfo.userRole);
+        
+        // Only send IFRAME_READY if we haven't already received a message
+        if (!hasReceivedParentMessage) {
+          setHasReceivedParentMessage(true);
+          notifyParent();
+        }
       }
     };
 
     // Add message listener
     window.addEventListener('message', handleMessage);
 
-    // Notify parent that iframe is ready
-    const notifyParent = () => {
-      try {
-        window.parent.postMessage('IFRAME_READY', '*');
-        console.log('IFRAME_READY message sent to parent');
-      } catch (error) {
-        console.error('Failed to send IFRAME_READY message:', error);
-      }
-    };
-
-    // Send initial ready notification
-    notifyParent();
-
     // Clean up
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  },[loggedInUser]);
+  },[loggedInUser, campaignDetails, hasReceivedParentMessage]);
   
   // Set up initial data fetch and refresh interval
   useEffect(() => {

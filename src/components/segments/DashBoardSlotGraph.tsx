@@ -125,8 +125,8 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
   });
 
   const partialDaySlots: number[] = currentData.map((item, index) => {
-    if (zeroIndex === -1) return 0;
-    return index < zeroIndex && item.delayedSlots ? item.delayedSlots : 0;
+    // if (zeroIndex === -1) return 0;
+    return item.delayedSlots ? item.delayedSlots : 0;
   });
 
   const newLabel = labels?.map((date: string) => formatDate(date));
