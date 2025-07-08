@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Map } from "@vis.gl/react-google-maps";
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import { NewCustomMarker } from "../../components/map/NewCustomMarker";
-import { getTimeDifferenceInMin, transformToAmPm } from "../../utils/dateAndTimeUtils";
+import {
+  getTimeDifferenceInMin,
+  transformToAmPm,
+} from "../../utils/dateAndTimeUtils";
 import { formatNumber } from "../../utils/formatValue";
 import { LinearBar } from "../../components/molecules/linearbar";
 import { MonitoringPic } from "../../components/segments/MonitoringPic";
@@ -171,8 +174,8 @@ export const MetricCard = ({
   const isPositive = delivered >= promised;
 
   return (
-    <div className="flex flex-col gap-2 mt-2 border-b">
-      <p className="text-[#0E212E] font-normal text-[14px]">{label}</p>
+    <div className="flex flex-col">
+      <p className="text-[#0E212E] font-normal text-[14px] p-0 m-0">{label}</p>
       <div className="grid grid-cols-5 gap-4 items-center">
         <div className="col-span-3">
           <LinearBar
@@ -216,14 +219,14 @@ export const SiteInfoHeader = ({
   lastActive,
   onClose,
   images,
-  showCloseIcon=true,
-  operationalDuration
+  showCloseIcon = true,
+  operationalDuration,
 }: SiteInfoHeaderProps) => (
   <div>
     {showCloseIcon ? (
       <div className="flex justify-between">
         <div className="flex gap-2">
-          <div className={`h-16 w-16 rounded-[7px] overflow-hidden`}>
+          <div className={`h-8 w-16 rounded-[7px] overflow-hidden`}>
             <img
               src={images[0]}
               alt={screenName}
@@ -241,10 +244,8 @@ export const SiteInfoHeader = ({
               <h1 className="text-[#0E212E] text-[16px] font-semibold m-0 p-0">
                 {screenName}
               </h1>
-              
-              {showCloseIcon && (
-                <StatusIndicator lastActive={lastActive} />
-              )}
+
+              {showCloseIcon && <StatusIndicator lastActive={lastActive} />}
             </div>
             <p className="text-[#667D8C] font-normal text-[12px]">{address}</p>
           </div>
@@ -262,7 +263,7 @@ export const SiteInfoHeader = ({
           <img
             src={images?.[0]}
             alt={screenName}
-            className="w-full h-full object-cover rounded-[7px]"
+            className="w-full h-[130px] object-cover rounded-[7px]"
             onError={(e) => {
               (e.target as HTMLImageElement).style.display = "none";
               (e.target as HTMLImageElement).parentElement!.classList.add(
@@ -275,14 +276,17 @@ export const SiteInfoHeader = ({
           <h1 className="text-[#0E212E] text-[16px] font-semibold m-0 p-0">
             {screenName}
           </h1>
-          <p className="text-[#667D8C] font-normal text-[12px]">{address}</p>
-          <p className="text-[#667D8C] font-normal text-[10px]">
-            {transformToAmPm(operationalDuration?.onTime)} to {transformToAmPm(operationalDuration?.offTime)}
+          <p className="text-[#667D8C] font-normal text-[12px]">
+            {address}
+            {",     "}
+            <span className="text-[#667D8C] font-normal text-[10px]">
+              {transformToAmPm(operationalDuration?.onTime)} to{" "}
+              {transformToAmPm(operationalDuration?.offTime)}
+            </span>
           </p>
         </div>
       </div>
     )}
-
   </div>
 );
 

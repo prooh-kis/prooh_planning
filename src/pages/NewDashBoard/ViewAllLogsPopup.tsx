@@ -349,7 +349,7 @@ export const ViewAllLogsPopup = ({
         className="bg-[#FFFFFF] p-4 rounded-lg shadow-lg w-full max-w-full relative overflow-auto max-h-auto "
         style={{ height: "90vh", width: "95vw" }}
       >
-        <div className="relative inset-0 flex items-center justify-between gap-4 py-2 pr-5">
+        <div className="relative inset-0 flex items-center justify-between gap-4 pr-5">
           <div className="flex gap-2 items-center">
             <h1 className="text-[#0E212E] font-semibold text-[20px]">
               All Log Report
@@ -401,7 +401,7 @@ export const ViewAllLogsPopup = ({
                 {/* Cities Filter */}
                 <div className="border border-gray-100 rounded-[12px] col-span-1">
                   <Header title={"City"} icon="fi-sr-marker" />
-                  <div className="max-h-[65vh] overflow-auto">
+                  <div className="max-h-[60vh] overflow-auto">
                     <div className="px-2 py-2 flex flex-col">
                       <div className="grid grid-cols-4 items-center">
                         <Checkbox
@@ -449,7 +449,7 @@ export const ViewAllLogsPopup = ({
                 {/* Touch Points Filter */}
                 <div className="border border-gray-100 rounded-[12px] col-span-2">
                   <Header title={"Touch points"} icon="fi-sr-land-location" />
-                  <div className="max-h-[65vh] overflow-auto">
+                  <div className="h-[50vh] overflow-auto">
                     <div className="px-2 py-2 flex flex-col">
                       <div className="grid grid-cols-4 items-center">
                         <Checkbox
@@ -500,7 +500,7 @@ export const ViewAllLogsPopup = ({
                 {/* Screen List */}
                 <div className="border border-gray-100 rounded-[12px] col-span-3">
                   <Header title={"Screens"} icon="fi-sr-screen" />
-                  <div className="max-h-[65vh] overflow-auto">
+                  <div className="h-[50vh] overflow-auto">
                     <div className="px-2 py-2 flex flex-col">
                       {Object.keys(allLogsData?.screenWiseData || {})
                         .filter((screen) => screen !== "all")
@@ -600,7 +600,7 @@ export const ViewAllLogsPopup = ({
                             </Tooltip>
                           </div>
                         )}
-                        <div className="overflow-scroll no-scrollbar h-[60vh] border-r border-gray-100 rounded-br-[12px]">
+                        <div className="overflow-scroll no-scrollbar h-[50vh] border-r border-gray-100 rounded-br-[12px]">
                           {Object.keys(hours)
                             .sort((a, b) => Number(a) - Number(b))
                             .map((key) => [key, hours[key]])

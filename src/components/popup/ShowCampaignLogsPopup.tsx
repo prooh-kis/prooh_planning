@@ -208,17 +208,13 @@ export const ShowCampaignLogsPopup = ({
         className="bg-[#FFFFFF] p-4 rounded-lg shadow-lg w-full max-w-full relative overflow-auto max-h-auto "
         style={{ height: "90vh", width: "95vw" }}
       >
-        <div className="flex justify-end">
-          <i className="fi fi-br-cross" onClick={() => onClose()}></i>
-        </div>
-        <div className="flex justify-between p-2">
+        <div className="flex justify-between">
           <div>
             <h1 className="font-semibold text-[20px] text-[#0E212E] leading-[19.36px]">
               Log Report
             </h1>
-            {/* <h1>{campaign?.screenName}</h1> */}
-            <h1 className="text-[14px] text-[#5B7180] leading-[16.94px] py-1">
-              {campaignDetails?.name}
+            <h1 className="text-[14px] text-[#5B7180] leading-[16.94px] pt-1">
+              {campaignDetails?.name?.toUpperCase()}
             </h1>
           </div>
           <div className="flex gap-4 items-center">
@@ -232,6 +228,7 @@ export const ShowCampaignLogsPopup = ({
                 Download Current Logs
               </button>
             )}
+            <i className="fi fi-br-cross" onClick={() => onClose()}></i>
           </div>
         </div>
         <div className="">
@@ -251,12 +248,12 @@ export const ShowCampaignLogsPopup = ({
           />
         </div>
         {logs?.length > 0 ? (
-          <div className="p-1">
-            <div className="bg-white rounded pt-2 pb-4">
+          <div className="p-1 max-h-[57vh] overflow-y-auto">
+            {/* <div className="bg-white rounded pt-2 pb-4">
               <h1 className="font-semibold text-[16px] text-[#0E212E] leading-[19.36px]">
                 Hourly Based Logs{" "}
               </h1>
-            </div>
+            </div> */}
             <div className="grid grid-cols-12 bg-[#129BFF] rounded-t-[12px]">
               <div className="col-span-4 py-1 flex items-center justify-center">
                 <h2 className="text-sm font-semibold text-white">
@@ -324,7 +321,7 @@ export const ShowCampaignLogsPopup = ({
                   showCloseIcon={false}
                   operationalDuration={siteBasedDataOnLogs?.operationalDuration}
                 />
-                <div className="flex flex-col mt-4 p-2">
+                <div className="flex flex-col mt-2 p-2">
                   {metrics.map((metric, i: any) => (
                     <MetricCard
                       key={i}
@@ -353,14 +350,14 @@ export const ShowCampaignLogsPopup = ({
                           </Tooltip>
                         </div>
                       )} */}
-                      <div className="overflow-scroll no-scrollbar h-[75vh] border-r border-gray-100 rounded-br-[12px]">
+                      <div className="overflow-scroll no-scrollbar h-[57vh] border-r border-gray-100 rounded-br-[12px]">
                         {Object.keys(hours)
                           .sort((a, b) => Number(a) - Number(b))
                           .map((key) => [key, hours[key]])
                           .map(([hour, entries]: any, i: any) => (
                             <div key={hour} className="grid grid-cols-9 ">
                               <div
-                                className="col-span-6 overflow-scroll no-scrollbar h-[75vh] border-b"
+                                className="col-span-6 overflow-scroll no-scrollbar h-[57vh] border-b"
                                 ref={(el) => (scrollRefs.current[hour] = el)}
                               >
                                 {i == 0 &&
@@ -522,36 +519,6 @@ export const ShowCampaignLogsPopup = ({
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-12">
-              <div className="col-span-8 pt-4 flex items-center gap-4">
-                <div className="flex items-center justify-start gap-2">
-                  <div className="h-4 w-4 bg-[#F9E396] rounded-full" />
-                  <h1 className="text-[12px]">T1 (2:00 AM to 10:59 AM)</h1>
-                </div>
-                <div className="flex items-center justify-start gap-2">
-                  <div className="h-4 w-4 bg-[#BCFFA6] rounded-full" />
-                  <h1 className="text-[12px]">T2 (11:00 AM to 3:59 PM)</h1>
-                </div>
-                <div className="flex items-center justify-start gap-2">
-                  <div className="h-4 w-4 bg-[#D2CAFF] rounded-full" />
-                  <h1 className="text-[12px]">T3 (04:00 PM to 08:59 PM)</h1>
-                </div>
-                <div className="flex items-center justify-start gap-2">
-                  <div className="h-4 w-4 bg-[#EBFAFF] rounded-full" />
-                  <h1 className="text-[12px]">T4 (09:00 PM to 01:59 AM)</h1>
-                </div>
-              </div>
-              <div className="col-span-4 pt-4 flex items-center justify-end gap-4">
-                <div className="flex items-center justify-start gap-2">
-                  <div className="h-4 w-4 bg-[#59A237] rounded-full" />
-                  <h1 className="text-[12px]">Online</h1>
-                </div>
-                <div className="flex items-center justify-start gap-2">
-                  <div className="h-4 w-4 bg-[#EFEFEF] rounded-full" />
-                  <h1 className="text-[12px]">Offline</h1>
-                </div>
-              </div>
-            </div>
           </div>
         ) : !loading && (logs.length === 0 || error) ? (
           <div
@@ -589,9 +556,39 @@ export const ShowCampaignLogsPopup = ({
           </div>
         ) : (
           <div className="pt-12">
-            <Skeleton active paragraph={{ rows: 12 }} />
+            <Skeleton active paragraph={{ rows: 10 }} />
           </div>
         )}
+        <div className="grid grid-cols-12">
+          <div className="col-span-8 pt-4 flex items-center gap-4">
+            <div className="flex items-center justify-start gap-2">
+              <div className="h-4 w-4 bg-[#F9E396] rounded-full" />
+              <h1 className="text-[12px]">T1 (2:00 AM to 10:59 AM)</h1>
+            </div>
+            <div className="flex items-center justify-start gap-2">
+              <div className="h-4 w-4 bg-[#BCFFA6] rounded-full" />
+              <h1 className="text-[12px]">T2 (11:00 AM to 3:59 PM)</h1>
+            </div>
+            <div className="flex items-center justify-start gap-2">
+              <div className="h-4 w-4 bg-[#D2CAFF] rounded-full" />
+              <h1 className="text-[12px]">T3 (04:00 PM to 08:59 PM)</h1>
+            </div>
+            <div className="flex items-center justify-start gap-2">
+              <div className="h-4 w-4 bg-[#EBFAFF] rounded-full" />
+              <h1 className="text-[12px]">T4 (09:00 PM to 01:59 AM)</h1>
+            </div>
+          </div>
+          <div className="col-span-4 pt-4 flex items-center justify-end gap-4">
+            <div className="flex items-center justify-start gap-2">
+              <div className="h-4 w-4 bg-[#59A237] rounded-full" />
+              <h1 className="text-[12px]">Online</h1>
+            </div>
+            <div className="flex items-center justify-start gap-2">
+              <div className="h-4 w-4 bg-[#EFEFEF] rounded-full" />
+              <h1 className="text-[12px]">Offline</h1>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
