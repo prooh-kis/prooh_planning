@@ -5,7 +5,10 @@ import {
   CREATE_NEW_ORG_SUCCESS,
   GET_MY_ORG_DETAILS_FAIL,
   GET_MY_ORG_DETAILS_REQUEST,
-  GET_MY_ORG_DETAILS_SUCCESS
+  GET_MY_ORG_DETAILS_SUCCESS,
+  GET_ORG_LEVEL_CAMPAIGN_STATUS_FAIL,
+  GET_ORG_LEVEL_CAMPAIGN_STATUS_REQUEST,
+  GET_ORG_LEVEL_CAMPAIGN_STATUS_SUCCESS
 } from "../constants/organizationConstants";
 import { orgV2 } from "../constants/urlConstant";
 
@@ -44,6 +47,7 @@ export const createNewOrgAction = (input) => async (dispatch, getState) => {
 
 
 export const getMyOrgDetailsAction = (input) => async (dispatch, getState) => {
+
   dispatch({
     type: GET_MY_ORG_DETAILS_REQUEST,
     payload: input,
@@ -73,3 +77,35 @@ export const getMyOrgDetailsAction = (input) => async (dispatch, getState) => {
     });
   }
 };
+
+
+export const getOrgLevelCampaignStatusAction = (input) => async (dispatch, getState) => {
+  dispatch({
+    type: GET_ORG_LEVEL_CAMPAIGN_STATUS_REQUEST,
+    payload: input,
+  });
+  try {
+    const {
+      auth: { userInfo },
+    } = getState();
+
+    const { data } = await Axios.get(
+      `${orgV2}/getOrgLevelCampaignStatus?id=${input.id}`,
+      {
+        headers: { authorization: `Bearer ${userInfo.token}` },
+      }
+    );
+    dispatch({
+      type: GET_ORG_LEVEL_CAMPAIGN_STATUS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_ORG_LEVEL_CAMPAIGN_STATUS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+}

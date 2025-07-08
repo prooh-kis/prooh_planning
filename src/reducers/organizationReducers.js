@@ -6,7 +6,11 @@ import {
   GET_MY_ORG_DETAILS_FAIL,
   GET_MY_ORG_DETAILS_REQUEST,
   GET_MY_ORG_DETAILS_RESET,
-  GET_MY_ORG_DETAILS_SUCCESS
+  GET_MY_ORG_DETAILS_SUCCESS,
+  GET_ORG_LEVEL_CAMPAIGN_STATUS_FAIL,
+  GET_ORG_LEVEL_CAMPAIGN_STATUS_REQUEST,
+  GET_ORG_LEVEL_CAMPAIGN_STATUS_RESET,
+  GET_ORG_LEVEL_CAMPAIGN_STATUS_SUCCESS
 } from "../constants/organizationConstants";
 
 export function myOrgCreateReducer(state = {}, action) {
@@ -34,6 +38,21 @@ export function myOrgDetailsGetReducer(state = {}, action) {
     case GET_MY_ORG_DETAILS_FAIL:
       return { loading: false, error: action.payload };
     case GET_MY_ORG_DETAILS_RESET:
+      return {};
+    default:
+      return state;
+  }
+}
+
+export function orgLevelCampaignStatusGetReducer(state = {}, action) {
+  switch (action.type) {
+    case GET_ORG_LEVEL_CAMPAIGN_STATUS_REQUEST:
+      return { loading: true };
+    case GET_ORG_LEVEL_CAMPAIGN_STATUS_SUCCESS:
+      return { loading: false, data: action.payload };
+    case GET_ORG_LEVEL_CAMPAIGN_STATUS_FAIL:
+      return { loading: false, error: action.payload };
+    case GET_ORG_LEVEL_CAMPAIGN_STATUS_RESET:
       return {};
     default:
       return state;

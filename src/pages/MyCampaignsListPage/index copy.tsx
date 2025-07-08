@@ -28,9 +28,9 @@ import { notification, Tooltip } from "antd";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { Input } from "../../components/atoms/Input";
 import { CampaignAnalysis } from "./CampaignAnalysis";
-import { getMyOrgDetailsAction, getOrgLevelCampaignStatusAction } from "../../actions/organizationAction";
+import { getMyOrgDetailsAction } from "../../actions/organizationAction";
 
-export const MyCampaignsListPage: React.FC = () => {
+export const MyCampaignsListPage2: React.FC = () => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const targetDivRef = useRef<HTMLDivElement>(null);
@@ -64,12 +64,6 @@ export const MyCampaignsListPage: React.FC = () => {
     data: campaignData,
   } = useSelector((state: any) => state.cloneCampaign);
 
-  const {
-    loading: loadingOrgLevelCampaignStatus,
-    error: errorOrgLevelCampaignStatus,
-    data: orgLevelCampaignStatus,
-  } = useSelector((state: any) => state.orgLevelCampaignStatusGet);
-
   const fetchCampaigns = useCallback(() => {
     if (userInfo && !userInfo?.isMaster) {
       return;
@@ -83,10 +77,8 @@ export const MyCampaignsListPage: React.FC = () => {
       })
     );
     dispatch(getMyOrgDetailsAction({ id: userInfo?._id }));
-    dispatch(getOrgLevelCampaignStatusAction({ id: userInfo._id, orgRole: "ADMIN" }));
     
-    
-  }, [dispatch, userInfo]);
+  }, [dispatch, userInfo, plannerId]);
 
   useEffect(() => {
     fetchCampaigns();
@@ -101,35 +93,31 @@ export const MyCampaignsListPage: React.FC = () => {
   const handleGetCampaignByStatus = useCallback(
     (status: any) => {
       setCurrentTab(status);
-      // dispatch(
-      //   getAllCampaignsDetailsAction({
-      //     plannerId: plannerId ? [plannerId] : [],
-      //     userId: userInfo?._id,
-      //     status: campaignCreationTypeTabs?.filter(
-      //       (tab: any) => tab.id === status
-      //     )[0]?.value,
-      //     event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
-      //   })
-      // );
-      dispatch(getOrgLevelCampaignStatusAction({ id: userInfo._id }));
-    
+      dispatch(
+        getAllCampaignsDetailsAction({
+          plannerId: plannerId ? [plannerId] : [],
+          userId: userInfo?._id,
+          status: campaignCreationTypeTabs?.filter(
+            (tab: any) => tab.id === status
+          )[0]?.value,
+          event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
+        })
+      );
     },
-    [dispatch, userInfo]
+    [dispatch, userInfo, plannerId]
   );
 
   const reset = () => {
     setPlannerId("");
     setShowPlannerList(false);
-    // dispatch(
-    //   getAllCampaignsDetailsAction({
-    //     plannerId: [],
-    //     userId: userInfo?._id,
-    //     status: CAMPAIGN_STATUS_ACTIVE,
-    //     event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
-    //   })
-    // );
-    dispatch(getOrgLevelCampaignStatusAction({ id: userInfo._id }));
-    
+    dispatch(
+      getAllCampaignsDetailsAction({
+        plannerId: [],
+        userId: userInfo?._id,
+        status: CAMPAIGN_STATUS_ACTIVE,
+        event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
+      })
+    );
   };
 
   const handleDoubleClick = (id: string) => {
@@ -215,7 +203,7 @@ export const MyCampaignsListPage: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const filteredCampaigns = orgLevelCampaignStatus?.campaignCreations?.filter(
+  const filteredCampaigns = allCampaigns?.result?.filter(
     (campaign: any) =>
       campaign?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       campaign?.brandName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -303,17 +291,11 @@ export const MyCampaignsListPage: React.FC = () => {
           <LoadingScreen />
         ) : (
           <div>
-            <CampaignAnalysis 
-              userInfo={userInfo} 
-              myOrg={myOrg}
-              loadingOrgLevelCampaignStatus={loadingOrgLevelCampaignStatus} 
-              errorOrgLevelCampaignStatus={errorOrgLevelCampaignStatus} 
-              orgLevelCampaignStatus={orgLevelCampaignStatus}
-            />
+            {/* <CampaignAnalysis userInfo={userInfo} myOrg={myOrg} /> */}
           </div>
         )}
 
-        {loadingOrgLevelCampaignStatus ? (
+        {loading ? (
           <LoadingScreen />
         ) : filteredCampaigns?.length === 0 ? (
           <NoDataView />
@@ -330,10 +312,10 @@ export const MyCampaignsListPage: React.FC = () => {
               >
                 <CampaignsListModel
                   data={data}
-                  // handleClone={handleClone}
-                  // handleGoToDashBoard={(id: string) =>
-                  //   navigate(`/campaignDashboard/${id}`)
-                  // }
+                  handleClone={handleClone}
+                  handleGoToDashBoard={(id: string) =>
+                    navigate(`/campaignDashboard/${id}`)
+                  }
                 />
               </div>
             ))}

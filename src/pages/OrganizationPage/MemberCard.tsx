@@ -1,6 +1,6 @@
 // src/pages/OrganizationPage/MemberCard.tsx
 import React from 'react';
-import { Member, Role } from './types';
+import { Member, Role } from '../OrganizationPage/types';
 import { 
   UserOutlined, 
   EditOutlined, 
@@ -72,7 +72,7 @@ export const MemberCard: React.FC<MemberCardProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => onDelete(member._id)}
+              onClick={() => onDelete(member.userId)}
               className="p-1 text-[#6B7280] hover:text-[#DC2626]"
               aria-label={`Delete ${member.name}`}
               title={`Delete ${member.name}`}
@@ -101,8 +101,7 @@ export const MemberCard: React.FC<MemberCardProps> = ({
         </div>
       )}
 
-      {/* Connected Coordinators */}
-      {member.role === 'MANAGER' && connectedCoordinators.length > 0 && (
+      {/* {member.role === 'MANAGER' && connectedCoordinators.length > 0 && (
         <div className="mt-4 ml-4">
           <div className="text-xs font-medium text-gray-500 mb-2 flex items-center">
             <span className="w-4 h-px bg-gray-300 mr-2"></span>
@@ -121,15 +120,11 @@ export const MemberCard: React.FC<MemberCardProps> = ({
                     ({coordinator.email})
                   </span>
                 </div>
-                <div className="mt-2 text-sm text-gray-600">
-                  <span className="font-medium">Works:</span>{' '}
-                  {/* {coordinator.works.join(', ')} */}
-                </div>
               </div>
             ))}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

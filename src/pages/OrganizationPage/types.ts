@@ -1,4 +1,4 @@
-// src/pages/OrganizationPage/types/organization.types.ts
+// src/pages/OrganizationPage/types.ts
 export interface Organization {
   _id?: string;
   officialName: string;
@@ -16,7 +16,6 @@ export type Role = 'ADMIN' | 'HOM' | 'HOC' | 'MANAGER' | 'COORDINATOR';
 export type WorkConnection = string[];
 
 export interface Member {
-  _id: string;
   userId?: any;
   name: string;
   email: string;
