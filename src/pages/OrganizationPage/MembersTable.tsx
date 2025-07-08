@@ -111,7 +111,7 @@ export const MembersTable: React.FC<MembersTableProps> = ({
             <Select
               defaultValue={record.role}
               style={{ width: 120 }}
-              onChange={(value: Role) => onRoleUpdate?.(record.userId || record._id, value)}
+              onChange={(value: Role) => onRoleUpdate?.(record.userId || record.userId, value)}
               disabled={record.role === 'ADMIN'}
             >
               {/* <Option value="ADMIN">Admin</Option> */}
@@ -144,7 +144,7 @@ export const MembersTable: React.FC<MembersTableProps> = ({
         key="members-table"
         columns={columns} 
         dataSource={filteredMembers}
-        rowKey={(record) => record._id || record.userId || `user-${Math.random().toString(36).substr(2, 9)}`}
+        rowKey={(record) => record.userId || `user-${Math.random().toString(36).substr(2, 9)}`}
         loading={loading}
         pagination={{ pageSize: 10 }}
       />
