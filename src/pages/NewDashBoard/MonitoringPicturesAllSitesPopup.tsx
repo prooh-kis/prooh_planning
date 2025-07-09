@@ -212,7 +212,7 @@ export const MonitoringPicturesAllSitesPopup = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 font-inter">
       {/* Modal Content */}
-      <div className="bg-[#FFFFFF] rounded-[10px] h-[80vh] w-[90%] p-4 flex flex-col relative">
+      <div className="bg-[#FFFFFF] rounded-[10px] h-[80vh] w-[95%] p-4 flex flex-col relative">
         {(pptGeneration || zipGeneration) && (
           <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-20 rounded-[10px]">
             <LoadingScreen
@@ -307,7 +307,7 @@ export const MonitoringPicturesAllSitesPopup = ({
                 renderItem={(screenName: string) => (
                   <div
                     key={screenName}
-                    className={`p-2 cursor-pointer truncate ${
+                    className={`px-2 py-1 cursor-pointer truncate text-[14px] ${
                       currentScreen === screenName ? "bg-[#129BFF50]" : ""
                     }`}
                     onClick={() => setCurrentScreen(screenName)}

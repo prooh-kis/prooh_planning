@@ -26,10 +26,10 @@ export const FilterSection = ({
   );
 
   return (
-    <div className="border border-gray-100 rounded-[12px]">
+    <div className="border border-gray-100 rounded-[12px] w-full">
       <PanelHeader title={title} icon={icon} />
       <div className="px-2 py-2 flex flex-col max-h-[40vh] overflow-y-auto">
-        <div className="grid grid-cols-4 items-center">
+        <div className="grid grid-cols-4 items-center truncate">
           <Checkbox
             indeterminate={
               selectedItems.length > 0 && selectedItems.length < items.length
@@ -38,7 +38,7 @@ export const FilterSection = ({
             checked={selectedItems.length === items.length}
             className="col-span-3 truncate"
           >
-            All
+            <h1 className="truncate text-[14px]">All</h1>
           </Checkbox>
           <div className="col-span-1">
             <LinearBar
@@ -55,9 +55,9 @@ export const FilterSection = ({
             <Checkbox
               checked={selectedItems.includes(item)}
               onChange={(e) => onItemChange(item, e.target.checked)}
-              className="col-span-3 truncate"
+              className="col-span-3"
             >
-              {item}
+              <h1 className="truncate text-[12px]">{item}</h1>
             </Checkbox>
             <div className="col-span-1">
               <LinearBar

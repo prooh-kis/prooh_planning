@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Checkbox, notification, Skeleton, Tooltip } from "antd";
+import { notification, Skeleton, Tooltip } from "antd";
 import { CalenderScaleStepper } from "../../components/molecules/CalenderScale2";
 import { NoDataView } from "../../components";
 import { getFiltersAndDataForAllLogsPopupAction } from "../../actions/dashboardAction";
@@ -15,22 +15,11 @@ import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import moment from "moment";
 import { getUserRole } from "../../utils/campaignUtils";
-
-interface HeaderProps {
-  icon: string;
-  title: string;
-}
-
-const Header = ({ icon, title }: HeaderProps) => {
-  return (
-    <div className="bg-[#FAFAFA] rounded-[12px] text-gray-800 text-[16px] font-medium font-inter p-2 flex items-center gap-2 px-2 truncate">
-      <div className="h-[26px] w-[26px] rounded-full bg-[#129BFF] flex items-center justify-center">
-        <i className={`fi ${icon} text-white text-[16px] flex items-center`} />
-      </div>
-      <h1 className="truncate">{title}</h1>
-    </div>
-  );
-};
+import {
+  FilterSection,
+  PanelHeader,
+} from "../../components/molecules/ViewMonitoringPicMolicule";
+import { List } from "../../components/molecules/List";
 
 interface Props {
   handleCancel: () => void;
@@ -71,6 +60,7 @@ export const ViewAllLogsPopup = ({
   const [selectedTouchPoints, setSelectedTouchPoints] = useState<any>([]);
   const [selectedScreenTypes, setSelectedScreenTypes] = useState<any>([]);
   const [zipGeneration, setZipGeneration] = useState(false);
+  const [dataInitialized, setDataInitialized] = useState(false);
 
   const [currentScreenName, setCurrentScreenName] = useState<string>("");
   const [currentScreenCampaignId, setCurrentScreenCampaignId] =
@@ -179,34 +169,6 @@ export const ViewAllLogsPopup = ({
     setSelectedTouchPoints(checked ? allTouchPoints : []);
   };
 
-  // Toggle all screen types
-  const toggleAllScreenTypes = (checked: boolean) => {
-    const allScreenTypes = Object.keys(
-      allLogsData?.screenTypeWiseData || {}
-    ).filter((s) => s !== "all");
-    setSelectedScreenTypes(checked ? allScreenTypes : []);
-  };
-
-  // Handle city selection
-  const handleCityChange = (city: string, checked: boolean) => {
-    if (checked) {
-      setSelectedCities([...selectedCities, city]);
-    } else {
-      setSelectedCities(selectedCities.filter((c: any) => c !== city));
-    }
-  };
-
-  // Handle touch point selection
-  const handleTouchPointChange = (touchPoint: string, checked: boolean) => {
-    if (checked) {
-      setSelectedTouchPoints([...selectedTouchPoints, touchPoint]);
-    } else {
-      setSelectedTouchPoints(
-        selectedTouchPoints.filter((t: any) => t !== touchPoint)
-      );
-    }
-  };
-
   const handleDownloadZip = async () => {
     setZipGeneration(true);
     try {
@@ -230,17 +192,6 @@ export const ViewAllLogsPopup = ({
       setZipGeneration(false);
     } finally {
       setZipGeneration(false);
-    }
-  };
-
-  // Handle screen type selection
-  const handleScreenTypeChange = (screenType: string, checked: boolean) => {
-    if (checked) {
-      setSelectedScreenTypes([...selectedScreenTypes, screenType]);
-    } else {
-      setSelectedScreenTypes(
-        selectedScreenTypes.filter((s: any) => s !== screenType)
-      );
     }
   };
 
@@ -294,28 +245,37 @@ export const ViewAllLogsPopup = ({
     userInfo,
   ]);
 
-  // Dispatch action with updated filters
   useEffect(() => {
-    if (allLogsData && !logs && currentScreenCampaignId === null) {
-      setCurrentScreenName(() => {
-        return Object.keys(allLogsData?.screenWiseData || {})?.filter(
-          (l: any) => l !== "all"
-        )[0];
-      });
-      setCurrentScreenCampaignId(() => {
-        return allLogsData?.screenWiseData[
+    if (allLogsData && !dataInitialized) {
+      const cities = Object.keys(allLogsData.cityWiseData || {}).filter(
+        (c) => c !== "all"
+      );
+      const touchPoints = Object.keys(
+        allLogsData.touchPointWiseData || {}
+      ).filter((t) => t !== "all");
+      const screenTypes = Object.keys(
+        allLogsData.screenTypeWiseData || {}
+      ).filter((s) => s !== "all");
+
+      const screen =
+        allLogsData?.screenWiseData[
           Object.keys(allLogsData?.screenWiseData || {})?.filter(
             (l: any) => l !== "all"
           )[0]
-        ]?.campaignId;
-      });
+        ];
 
-      setSelectedCities(Object.keys(allLogsData?.cityWiseData || {}));
-      setSelectedTouchPoints(
-        Object.keys(allLogsData?.touchPointWiseData || {})
+      setSelectedCities(cities);
+      setSelectedTouchPoints(touchPoints);
+      setSelectedScreenTypes(screenTypes);
+      setCurrentScreenName(
+        Object.keys(allLogsData?.screenWiseData || {})?.filter(
+          (l: any) => l !== "all"
+        )[0]
       );
+      setCurrentScreenCampaignId(screen.campaignId);
+      setDataInitialized(true);
     }
-  }, [allLogsData, logs, currentScreenCampaignId]);
+  }, [allLogsData, dataInitialized]);
 
   useEffect(() => {
     if (errorLogs) notification.error(errorLogs);
@@ -397,137 +357,75 @@ export const ViewAllLogsPopup = ({
         ) : allLogsData ? (
           <div className="p-1">
             <div className="mx-auto grid grid-cols-12 gap-1">
-              <div className="col-span-5 grid grid-cols-6 flex gap-1 rounded-bl-[12px] border-gray-100">
-                {/* Cities Filter */}
-                <div className="border border-gray-100 rounded-[12px] col-span-1">
-                  <Header title={"City"} icon="fi-sr-marker" />
-                  <div className="max-h-[60vh] overflow-auto">
-                    <div className="px-2 py-2 flex flex-col">
-                      <div className="grid grid-cols-4 items-center">
-                        <Checkbox
-                          indeterminate={
-                            selectedCities.length > 0 &&
-                            selectedCities.length <
-                              Object.keys(allLogsData?.cityWiseData || {})
-                                .length
-                          }
-                          onChange={(e) => toggleAllCities(e.target.checked)}
-                          checked={
-                            selectedCities.length ===
-                            Object.keys(allLogsData?.cityWiseData || {}).length
-                          }
-                          className="col-span-3 truncate"
-                        >
-                          All
-                        </Checkbox>
-                        <div className="col-span-1"></div>
-                      </div>
-
-                      {Object.keys(allLogsData?.cityWiseData || {})
-                        .filter((city) => city !== "all")
-                        .map((city: string) => (
-                          <div
-                            className="grid grid-cols-4 items-center py-1"
-                            key={city}
-                          >
-                            <Checkbox
-                              checked={selectedCities.includes(city)}
-                              onChange={(e) =>
-                                handleCityChange(city, e.target.checked)
-                              }
-                              className="col-span-3 truncate"
-                            >
-                              {city}
-                            </Checkbox>
-                            <div className="col-span-1"></div>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
+              <div className="col-span-5 grid grid-cols-6 rounded-bl-[12px] border-gray-100">
+                <div className="col-span-2">
+                  <FilterSection
+                    title="City"
+                    icon="fi-sr-marker"
+                    data={allLogsData}
+                    selectedItems={selectedCities}
+                    onItemChange={(city: string, checked: boolean) => {
+                      setSelectedCities(
+                        checked
+                          ? [...selectedCities, city]
+                          : selectedCities.filter((c: string) => c !== city)
+                      );
+                    }}
+                    onToggleAll={toggleAllCities}
+                    dataKey="cityWiseData"
+                  />
                 </div>
-
-                {/* Touch Points Filter */}
+                <div className="col-span-2">
+                  <FilterSection
+                    title="Touch points"
+                    icon="fi-sr-land-location"
+                    data={allLogsData}
+                    selectedItems={selectedTouchPoints}
+                    onItemChange={(tp, checked) =>
+                      setSelectedTouchPoints(
+                        checked
+                          ? [...selectedTouchPoints, tp]
+                          : selectedTouchPoints.filter((t: string) => t !== tp)
+                      )
+                    }
+                    onToggleAll={toggleAllTouchPoints}
+                    dataKey="touchPointWiseData"
+                  />
+                </div>
                 <div className="border border-gray-100 rounded-[12px] col-span-2">
-                  <Header title={"Touch points"} icon="fi-sr-land-location" />
-                  <div className="h-[50vh] overflow-auto">
-                    <div className="px-2 py-2 flex flex-col">
-                      <div className="grid grid-cols-4 items-center">
-                        <Checkbox
-                          indeterminate={
-                            selectedTouchPoints.length > 0 &&
-                            selectedTouchPoints.length <
-                              Object.keys(allLogsData?.touchPointWiseData || {})
-                                .length
-                          }
-                          onChange={(e) =>
-                            toggleAllTouchPoints(e.target.checked)
-                          }
-                          defaultChecked={
-                            selectedTouchPoints.length ===
-                            Object.keys(allLogsData?.touchPointWiseData || {})
-                              .length
-                          }
-                          className="col-span-3 truncate"
-                        >
-                          All
-                        </Checkbox>
-                        <div className="col-span-1"></div>
-                      </div>
-
-                      {Object.keys(allLogsData?.touchPointWiseData || {})
-                        .filter((tp) => tp !== "all")
-                        .map((tp: string) => (
+                  <PanelHeader title={"Screens"} icon="fi-sr-screen" />
+                  <div className="h-[50vh]">
+                    <List
+                      items={
+                        Object.keys(allLogsData?.screenWiseData)?.filter(
+                          (s) => s !== "all"
+                        ) || []
+                      }
+                      loading={loadingAllLogs}
+                      renderItem={(screenName: string) => (
+                        <Tooltip title={screenName}>
                           <div
-                            className="grid grid-cols-4 items-center py-1"
-                            key={tp}
-                          >
-                            <Checkbox
-                              checked={selectedTouchPoints.includes(tp)}
-                              onChange={(e) =>
-                                handleTouchPointChange(tp, e.target.checked)
-                              }
-                              className="col-span-3 truncate"
-                            >
-                              {tp}
-                            </Checkbox>
-                            <div className="col-span-1"></div>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Screen List */}
-                <div className="border border-gray-100 rounded-[12px] col-span-3">
-                  <Header title={"Screens"} icon="fi-sr-screen" />
-                  <div className="h-[50vh] overflow-auto">
-                    <div className="px-2 py-2 flex flex-col">
-                      {Object.keys(allLogsData?.screenWiseData || {})
-                        .filter((screen) => screen !== "all")
-                        .map((screenName: string) => (
-                          <div
-                            className="grid grid-cols-4 items-center py-1"
                             key={screenName}
+                            className={`px-2 py-1 cursor-pointer truncate  text-[14px] ${
+                              currentScreenName === screenName
+                                ? "bg-[#129BFF50]"
+                                : ""
+                            }`}
+                            onClick={() => {
+                              setCurrentScreenName(screenName);
+                              setCurrentScreenCampaignId(
+                                allLogsData?.screenWiseData[screenName]
+                                  .campaignId
+                              );
+                            }}
                           >
-                            <Checkbox
-                              checked={currentScreenName === screenName}
-                              onChange={(e) => {
-                                setCurrentScreenName(screenName);
-                                setCurrentScreenCampaignId(
-                                  allLogsData?.screenWiseData[screenName]
-                                    .campaignId
-                                );
-                              }}
-                              className="col-span-3 truncate"
-                            >
-                              {screenName}
-                            </Checkbox>
-                            <div className="col-span-1"></div>
+                            {screenName === "all" ? "All Screens" : screenName}
                           </div>
-                        ))}
-                    </div>
+                        </Tooltip>
+                      )}
+                    />
                   </div>
-                </div>
+                </div>{" "}
               </div>
               <div className="col-span-7 border border-gray-100 rounded-[12px]">
                 <div className="grid grid-cols-9 bg-[#129BFF] rounded-t-[12px]">
