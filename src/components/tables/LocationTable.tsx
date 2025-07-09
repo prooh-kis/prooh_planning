@@ -12,6 +12,7 @@ interface LocationTableProps {
   setSelectedCity?: any;
   setSelectedZone?: any;
   cities: string[];
+  zones : string[]
 }
 export const LocationTable = ({
   loading,
@@ -21,6 +22,7 @@ export const LocationTable = ({
   setSelectedCity,
   setSelectedZone,
   cities,
+  zones,
 }: LocationTableProps) => {
   const handleCheckClick = ({ type, checked }: any) => {
     if (type === "Male") {
@@ -110,6 +112,7 @@ export const LocationTable = ({
             <StateCityZoneCheckboxTree
               data={data || {}}
               cities={cities}
+              zone={zones}
               loading={loading}
               setSelectedCity={setSelectedCity}
               setSelectedZone={setSelectedZone}

@@ -41,6 +41,7 @@ interface Props {
   setSelectedZone: (zones: string[]) => void;
   loading?: any;
   cities: string[];
+  zone: string[];
 }
 
 export const StateCityZoneCheckboxTree: React.FC<Props> = ({
@@ -49,6 +50,7 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
   setSelectedCity,
   setSelectedZone,
   cities: propCities,
+  zone: propsZone,
 }) => {
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
@@ -155,7 +157,9 @@ export const StateCityZoneCheckboxTree: React.FC<Props> = ({
       propCities.forEach((city) => {
         initialSelected[city] = true;
       });
-
+      propsZone.forEach((zone) => {
+        initialSelected[zone] = true;
+      });
       setSelected(initialSelected);
     }
     // Otherwise, default to all selected

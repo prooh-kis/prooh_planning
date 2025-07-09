@@ -276,6 +276,7 @@ export const AudienceTouchPointsDetails = ({
                 data={locationWiseFilters || {}}
                 setSelectedCity={setSelectedCity}
                 cities={cities}
+                zones={zones}
                 setSelectedZone={setSelectedZone}
               />
             </div>
