@@ -153,10 +153,9 @@ export const SiteLevelSlotDeliveryAnalysis = ({
                     <h1 className="text-[12px] font-semibold truncate">
                       <span
                         className={`${
-                          tabWiseSiteData?.dayWiseData.all
-                            ?.totalSlotsDelivered >
-                          tabWiseSiteData?.dayWiseData.all
-                            ?.slotsPromisedTillDate
+                          tabWiseSiteData?.dayWiseData.all?.totalSlotsDelivered?.toFixed(0)/screenLevelData?.data?.durationDelivered >
+                          tabWiseSiteData?.dayWiseData.all?.slotsPromisedTillDate?.toFixed(0)
+                          /screenLevelData?.data?.durationDelivered
                             ? "text-[#4DB37E]"
                             : "text-[#EF4444]"
                         }`}

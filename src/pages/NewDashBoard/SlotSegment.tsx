@@ -180,7 +180,11 @@ export const SlotSegment = ({
                     title={`Av. slots delivered per day / Av. slots promised per day`}
                   >
                     <h1 className={`text-[12px] font-semibold truncate`}>
-                      <span className={`${dataToShow.slotsDelivered > dataToShow.slotsPromisedTillDate ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
+                      <span className={`${
+                          dataToShow.slotsDelivered.toFixed(0)/ screenLevelData?.data?.durationDelivered > 
+                          dataToShow.slotsPromisedTillDate.toFixed(0)/screenLevelData?.data?.durationDelivered
+                          ? "text-[#4DB37E]" : "text-[#EF4444]"
+                        }`}>
                         Actual ({formatNumber(dataToShow.slotsDelivered.toFixed(0)/ screenLevelData?.data?.durationDelivered)}) 
                       </span>
                       <span className="text-[#0E212E]">
