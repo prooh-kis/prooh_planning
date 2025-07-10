@@ -181,7 +181,7 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
           No managers data available
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-2 h-[30vh] overflow-y-auto no-scrollbar">
           {hierarchy.map((hom) => (
             <div key={hom.userId} className="border border-[#E5E7EB] rounded-lg overflow-hidden">
               <div 

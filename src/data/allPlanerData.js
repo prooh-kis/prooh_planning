@@ -228,3 +228,14 @@ export const triggerBasePlanData = [
     value: "Vendor Confirmation Page",
   },
 ];
+
+export const EditCreativeData = [
+  {
+    id: 1,
+    value: "Upload Creative Page",
+  },
+  {
+    id: 2,
+    value: "Vendor Confirmation Page",
+  },
+];

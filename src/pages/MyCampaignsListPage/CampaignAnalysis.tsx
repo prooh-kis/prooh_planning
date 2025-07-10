@@ -49,9 +49,10 @@ export const CampaignAnalysis: React.FC<CampaignAnalysisProps> = ({
     );
   }
 
+  console.log("userOrgRole", userOrgRole);
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 mr-2 gap-2">
-      {["HOM", "MANAGER", "ADMIN"].includes(userOrgRole)&& (
+      {["HOM", "ADMIN"].includes(userOrgRole)&& (
         <div className="md:col-span-1 ">
           <TeamHierarchy
             title="Management Team"
@@ -65,7 +66,7 @@ export const CampaignAnalysis: React.FC<CampaignAnalysisProps> = ({
         </div>
       )}
 
-      {["HOC", "COORDINATOR", "ADMIN"].includes(userOrgRole)&& (
+      {["HOC", "ADMIN"].includes(userOrgRole)&& (
         <div className="md:col-span-1">
           <TeamHierarchy
             title="Coordination Team"
