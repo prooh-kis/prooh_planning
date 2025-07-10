@@ -168,10 +168,10 @@ export const SiteLevelSlotDeliveryAnalysis = ({
                       <span className="text-[#0E212E]">
                         /
                         Promised ({
-                        // formatNumber
+                        formatNumber
                         (
                           tabWiseSiteData?.dayWiseData.all?.slotsPromisedTillDate?.toFixed(0)
-                          // /screenLevelData?.data?.durationDelivered
+                          /screenLevelData?.data?.durationDelivered
                         )})
                       </span>
                     </h1>

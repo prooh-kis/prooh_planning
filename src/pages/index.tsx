@@ -8,7 +8,9 @@ export {
   ForgetPassword,
 } from "./AuthPage/index";
 
-export { MyCampaignsListPage } from "./MyCampaignsListPage";
+export { MyCampaignsListPageAdvance } from "./MyCampaignsListPage";
+export { MyCampaignsListPage } from "./MyCampaignsListPage/index copy";
+
 export { MyPlansListPage } from "./MyPlansListPage";
 
 export { RegularPlanPage } from "./RegularPlanPage";
