@@ -390,11 +390,15 @@ export const AddCampaignDetails = ({
               </Tooltip>
             </div>
             <DropdownInput
-              options={myOrg?.officialMembers?.filter((mem: any) => 
-                mem.userId.toString() === myOrg?.officialMembers?.find((member: any) => 
-                  member.userId === userInfo?._id
-                )?.reportsTo.toString()
-              )?.map((data: any) => ({
+              // options={myOrg?.officialMembers?.filter((mem: any) => 
+              //   mem.userId.toString() === myOrg?.officialMembers?.find((member: any) => 
+              //     member.userId === userInfo?._id
+              //   )?.reportsTo.toString()
+              // )?.map((data: any) => ({
+              //   label: data?.name,
+              //   value: data?.userId,
+              // }))}
+              options={allPlannerData?.map((data: any) => ({
                 label: data?.name,
                 value: data?.userId,
               }))}
@@ -420,7 +424,13 @@ export const AddCampaignDetails = ({
               </Tooltip>
             </div>
             <DropdownInput
-              options={allPlannerData?.filter((planner: any) => myOrg?.officialMembers?.filter((mem: any) => mem.role === "COORDINATOR")?.map((mem: any) => mem?.userId?.toString()).includes(planner._id))?.map((data: any) => {
+              // options={allPlannerData?.filter((planner: any) => myOrg?.officialMembers?.filter((mem: any) => mem.role === "COORDINATOR")?.map((mem: any) => mem?.userId?.toString()).includes(planner._id))?.map((data: any) => {
+              //   return {
+              //     label: data?.name,
+              //     value: data?._id,
+              //   };
+              // })}
+              options={allPlannerData?.map((data: any) => {
                 return {
                   label: data?.name,
                   value: data?._id,
