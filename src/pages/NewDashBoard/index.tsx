@@ -165,7 +165,6 @@ export const NewDashBoard: React.FC = () => {
 
       // Handle the message based on its type
       if (event.data && event.data.type === 'USERINFO_FOR_VENDOR_DASHBOARD') {
-        console.log('User info received:', event.data);
         // Handle the user info
         setUserInfo(event.data.data.userInfo);
         setOpenView(event.data.data.userInfo.userRole);

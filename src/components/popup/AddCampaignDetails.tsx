@@ -14,6 +14,7 @@ import { ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET } from "../../constants/campaignCo
 import { getAllPlannerIdsAndEmail } from "../../actions/screenAction";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { ALL_BRAND_LIST } from "../../constants/localStorageConstants";
+import { getMyOrgDetailsAction } from "../../actions/organizationAction";
 
 const allIndex = [1, 2, 3, 6].map((data: any) => {
   return {
@@ -78,6 +79,13 @@ export const AddCampaignDetails = ({
   const [managerEmail, setManagerEmail] = useState<string>(
     campaignDetails?.campaignManagerEmail || ""
   );
+  const [coordinatorId, setCoordinatorId] = useState<string>(
+    campaignDetails?.campaignCoordinatorId || ""
+  );
+  const [coordinatorEmail, setCoordinatorEmail] = useState<string>(
+    campaignDetails?.campaignCoordinatorEmail || ""
+  );
+
   const allClientAgencyNamesListGet = useSelector(
     (state: any) => state.allClientAgencyNamesListGet
   );
@@ -94,7 +102,7 @@ export const AddCampaignDetails = ({
     loading: loadingAllPlanner,
     error: errorAllPlanner,
     success: successAllPlanner,
-    data: AllPlanner,
+    data: allPlannerData,
   } = allPlannerIdsAndEmail;
 
   const detailsToCreateCampaignAdd = useSelector(
@@ -106,6 +114,12 @@ export const AddCampaignDetails = ({
     success: successAddDetails,
     data: addDetails,
   } = detailsToCreateCampaignAdd;
+
+  const {
+    loading: loadingMyOrg,
+    error: errorMyOrg,
+    data: myOrg
+  } = useSelector((state: any) => state.myOrgDetailsGet);
 
   const handleAddNewClient = (value: string) => {
     if (
@@ -155,6 +169,8 @@ export const AddCampaignDetails = ({
           campaignPlannerEmail: userInfo?.email,
           campaignManagerId: managerId,
           campaignManagerEmail: managerEmail,
+          campaignCoordinatorId: coordinatorId,
+          campaignCoordinatorEmail: coordinatorEmail,
           sov: sov,
           sovType,
         });
@@ -195,7 +211,9 @@ export const AddCampaignDetails = ({
   useEffect(() => {
     dispatch(getAllClientAgencyNames());
     dispatch(getAllPlannerIdsAndEmail({ id: userInfo?._id }));
-  }, [dispatch]);
+    dispatch(getMyOrgDetailsAction({id: userInfo?._id}));
+    
+  }, [dispatch, userInfo]);
 
   useEffect(() => {
     if (campaignDetails) {
@@ -204,6 +222,10 @@ export const AddCampaignDetails = ({
       setClientName(campaignDetails?.clientName);
       setIndustry(campaignDetails?.industry);
       setSov(campaignDetails?.sov);
+      setCoordinatorEmail(campaignDetails?.campaignCoordinatorEmail);
+      setManagerEmail(campaignDetails?.campaignManagerEmail);
+      setCoordinatorId(campaignDetails?.campaignCoordinatorId);
+      setManagerId(campaignDetails?.campaignManagerId);
     }
   }, [campaignDetails]);
 
@@ -361,6 +383,36 @@ export const AddCampaignDetails = ({
           <div className="col-span-1 py-1">
             <div className="block flex justify-between gap-2 items-center mb-2">
               <label className="block text-secondaryText text-[14px]">
+                Select Manager
+              </label>
+              <Tooltip title="How many times you want to play creatives in one loop">
+                <i className="fi fi-rs-info pr-1 text-[10px] text-gray-400 flex justify-center items-center"></i>
+              </Tooltip>
+            </div>
+            <DropdownInput
+              options={myOrg?.officialMembers?.filter((mem: any) => 
+                mem.userId.toString() === myOrg?.officialMembers?.find((member: any) => 
+                  member.userId === userInfo?._id
+                )?.reportsTo.toString()
+              )?.map((data: any) => ({
+                label: data?.name,
+                value: data?.userId,
+              }))}
+              selectedOption={managerId}
+              placeHolder="Select Manager"
+              setSelectedOption={(value: any) => {
+                setManagerId(value);
+                setManagerEmail(
+                  allPlannerData?.find((data: any) => data._id === value)?.email ||
+                    ""
+                );
+              }}
+              height="h-[48px]"
+            />
+          </div>
+          <div className="col-span-1 py-1">
+            <div className="block flex justify-between gap-2 items-center mb-2">
+              <label className="block text-secondaryText text-[14px]">
                 Select Coordinator
               </label>
               <Tooltip title="How many times you want to play creatives in one loop">
@@ -368,18 +420,18 @@ export const AddCampaignDetails = ({
               </Tooltip>
             </div>
             <DropdownInput
-              options={AllPlanner?.map((data: any) => {
+              options={allPlannerData?.filter((planner: any) => myOrg?.officialMembers?.filter((mem: any) => mem.role === "COORDINATOR")?.map((mem: any) => mem?.userId?.toString()).includes(planner._id))?.map((data: any) => {
                 return {
-                  label: `${data.name}`,
-                  value: data._id.toString(),
+                  label: data?.name,
+                  value: data?._id,
                 };
               })}
               selectedOption={managerId}
               placeHolder="Select Coordinator"
               setSelectedOption={(value: any) => {
-                setManagerId(value);
-                setManagerEmail(
-                  AllPlanner?.find((data: any) => data._id === value)?.email ||
+                setCoordinatorId(value);
+                setCoordinatorEmail(
+                  allPlannerData?.find((data: any) => data._id === value)?.email ||
                     ""
                 );
               }}
