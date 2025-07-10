@@ -16,6 +16,7 @@ import {
   CAMPAIGN_STATUS_ACTIVE,
   CLONE_CAMPAIGN_RESET,
   EDIT_CAMPAIGN,
+  GET_ALL_CAMPAIGNS_DATA_RESET,
 } from "../../constants/campaignConstants";
 import {
   CAMPAIGN_CREATION_CREATE_CLONE_PLANNING_PAGE,
@@ -29,8 +30,9 @@ import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { Input } from "../../components/atoms/Input";
 import { CampaignAnalysis } from "./CampaignAnalysis";
 import { getMyOrgDetailsAction, getOrgLevelCampaignStatusAction } from "../../actions/organizationAction";
+import { GET_ORG_LEVEL_CAMPAIGN_STATUS_RESET } from "../../constants/organizationConstants";
 
-export const MyCampaignsListPage: React.FC = () => {
+export const MyCampaignsListPageAdvance: React.FC = () => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const targetDivRef = useRef<HTMLDivElement>(null);
@@ -73,18 +75,20 @@ export const MyCampaignsListPage: React.FC = () => {
   } = useSelector((state: any) => state.orgLevelCampaignStatusGet);
 
   const fetchCampaigns = useCallback(() => {
-    if (userInfo && !userInfo?.isMaster) {
+    if (!userInfo) {
       return;
     }
-
     if (currentTab === "1") {
+
       dispatch(getOrgLevelCampaignStatusAction({ id: userInfo?._id, orgRole: "ADMIN" }));
     } else {
       dispatch(
         getAllCampaignsDetailsAction({
           plannerId: plannerId ? [plannerId] : [],
           userId: userInfo?._id,
-          status: CAMPAIGN_STATUS_ACTIVE,
+          status: campaignCreationTypeTabs?.filter(
+            (tab: any) => tab.id === currentTab
+          )[0]?.value,
           event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
         })
       );
@@ -107,20 +111,23 @@ export const MyCampaignsListPage: React.FC = () => {
   const handleGetCampaignByStatus = useCallback(
     (status: any) => {
       setCurrentTab(status);
-      if (status === "1") {
-        dispatch(getOrgLevelCampaignStatusAction({ id: userInfo?._id }));
-      } else {
-        dispatch(
-          getAllCampaignsDetailsAction({
-            plannerId: plannerId ? [plannerId] : [],
-            userId: userInfo?._id,
-            status: campaignCreationTypeTabs?.filter(
-              (tab: any) => tab.id === status
-            )[0]?.value,
-            event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
-          })
-        );
-      }
+      dispatch({
+        type: GET_ORG_LEVEL_CAMPAIGN_STATUS_RESET
+      });
+      dispatch({
+        type: GET_ALL_CAMPAIGNS_DATA_RESET
+      })
+      setAllCampaignsData([]);
+      dispatch(
+        getAllCampaignsDetailsAction({
+          plannerId: plannerId ? [plannerId] : [],
+          userId: userInfo?._id,
+          status: campaignCreationTypeTabs?.filter(
+            (tab: any) => tab.id === status
+          )[0]?.value,
+          event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
+        })
+      );
     },
     [dispatch, userInfo, plannerId]
   );
@@ -230,9 +237,10 @@ export const MyCampaignsListPage: React.FC = () => {
   useEffect(() => {
     if (currentTab === "1" && orgLevelCampaignStatus) {
       setAllCampaignsData(orgLevelCampaignStatus?.campaignCreations);
-    }
-    if (currentTab !== "1" && allCampaigns) {
-      setAllCampaignsData(allCampaigns?.result);
+    }else if (currentTab !== "1" && allCampaigns) {
+      setAllCampaignsData(allCampaigns.result);
+    } else {
+      setAllCampaignsData([]);
     }
   },[allCampaigns, currentTab, orgLevelCampaignStatus]);
 
@@ -336,7 +344,7 @@ export const MyCampaignsListPage: React.FC = () => {
           </div>
         )}
 
-        {loadingOrgLevelCampaignStatus ? (
+        {loading || loadingOrgLevelCampaignStatus ? (
           <LoadingScreen />
         ) : filteredCampaigns?.length === 0 ? (
           <NoDataView />
