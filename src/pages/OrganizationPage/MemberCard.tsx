@@ -85,7 +85,7 @@ export const MemberCard: React.FC<MemberCardProps> = ({
       </div>
 
       {/* Team Members */}
-      {member.workConnections && member.workConnections.length > 0 && (
+      {member.role === "MANAGER" && member.workConnections && member.workConnections.length > 0 && (
         <div className="mt-2 border-l-2 border-gray-200 pl-4">
           {members?.filter((m: Member) => member.workConnections?.includes(m.userId)).map((teamMember: Member) => (
             <MemberCard
@@ -100,31 +100,6 @@ export const MemberCard: React.FC<MemberCardProps> = ({
           ))}
         </div>
       )}
-
-      {/* {member.role === 'MANAGER' && connectedCoordinators.length > 0 && (
-        <div className="mt-4 ml-4">
-          <div className="text-xs font-medium text-gray-500 mb-2 flex items-center">
-            <span className="w-4 h-px bg-gray-300 mr-2"></span>
-            Works with Coordinators:
-          </div>
-          <div className="space-y-3">
-            {connectedCoordinators.map(coordinator => (
-              <div 
-                key={coordinator.userId} 
-                className="ml-4 p-3 bg-[#EFF6FF] rounded-lg border border-[#BFDBFE]"
-              >
-                <div className="flex items-center">
-                  <UserOutlined className="text-[#2563EB] mr-2" />
-                  <span className="font-medium">{coordinator.name}</span>
-                  <span className="text-sm text-gray-500 ml-2">
-                    ({coordinator.email})
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )} */}
     </div>
   );
 };
