@@ -132,7 +132,7 @@ export const NewDashBoard: React.FC = () => {
   const [hasReceivedParentMessage, setHasReceivedParentMessage] = useState(false);
 
   useEffect(() => {
-    if (loggedInUser && campaignDetails?.campaignPlannerId === loggedInUser._id) {
+    if (loggedInUser && campaignDetails?.campaignPlannerId === loggedInUser._id && openView === userInfo?.userRole) {
       setUserInfo(loggedInUser)
       setOpenView(loggedInUser.userRole);
     }
@@ -185,7 +185,7 @@ export const NewDashBoard: React.FC = () => {
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  },[loggedInUser, campaignDetails, hasReceivedParentMessage]);
+  },[loggedInUser, campaignDetails, hasReceivedParentMessage, openView, userInfo]);
   
   // Set up initial data fetch and refresh interval
   useEffect(() => {
@@ -251,6 +251,8 @@ export const NewDashBoard: React.FC = () => {
       </div>
     );
   }
+  console.log(userInfo)
+  console.log(getUserRole(userInfo?.userRole))
 
   return (
     <div className="w-full font-custom">

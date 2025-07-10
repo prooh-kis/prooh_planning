@@ -333,6 +333,7 @@ export const CampaignDashboard = ({
               open={isViewSelectionOpen}
               onClose={() => setIsViewSelectionOpen(false)}
               onSelectView={(view: any) => {
+                
                 setUserInfo({
                   userRole: view.value,
                   _id: siteLevelData[0].master,
