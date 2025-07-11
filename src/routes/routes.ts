@@ -9,6 +9,8 @@ export const ROUTE = "/";
 
 export const PRODUCTS = "/products/:id";
 export const MY_CAMPAIGNS_LIST = "/myCampaignsList";
+export const MY_CAMPAIGNS_LIST_ADVANCE = "/myCampaignsListAdvance";
+
 export const SETTING = '/setting';
 export const CAMPAIGN_DETAILS = "/campaignDetails";
 export const MY_REQUESTS_LIST = "/myRequestsList";

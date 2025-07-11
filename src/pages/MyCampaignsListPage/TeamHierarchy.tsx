@@ -162,16 +162,17 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
   const hierarchy = processHierarchy();
   const totalMembers = hierarchy.reduce((sum, hom) => sum + (hom.team?.length || 0), 0);
   return (
-    <div className="bg-[#FFFFFF] rounded-lg shadow-md p-4 mb-6">
+    <div className="bg-[#FFFFFF] rounded-lg shadow-md p-2 mb-2">
       <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center">
-          <TeamOutlined className="text-lg mr-2 text-[#2563EB]" />
+        <div className="flex items-center gap-2">
+      
+          <i className="fi fi-ss-user-gear flex items-center"></i>
           <h2 className="text-[14px] font-semibold text-[#1F2937]">
-            {title} {title.toLowerCase().includes('coordination') ? '(HOC)' : '(HOM)'}
+            {title}
           </h2>
         </div>
-        <span className="text-[12px] text-[#6B7280]">
-          {totalMembers} { _memberRole === "COORDINATOR" ? "Coordinators" : "Managers"}
+        <span className="flex items-center text-[12px] text-[#6B7280] gap-2">
+        ({totalMembers})
         </span>
       </div>
       
@@ -180,30 +181,32 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
           No managers data available
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-2 h-[30vh] overflow-y-auto no-scrollbar">
           {hierarchy.map((hom) => (
             <div key={hom.userId} className="border border-[#E5E7EB] rounded-lg overflow-hidden">
               <div 
-                className="bg-[#F9FAFB] px-4 py-3 border-b border-[#E5E7EB] cursor-pointer hover:bg-[#F3F4F6] transition-colors"
+                className="bg-[#F9FAFB] px-2 py-3 border-b border-[#E5E7EB] cursor-pointer hover:bg-[#F3F4F6] transition-colors"
                 onClick={() => toggleLeader(hom.userId)}
               >
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col items-start justify-between">
                   <div className="flex items-center">
                     {expandedLeaders[hom.userId] ? (
                       <DownOutlined className="mr-2 text-[#6B7280] text-xs" />
                     ) : (
                       <RightOutlined className="mr-2 text-[#6B7280] text-xs" />
                     )}
-                    <span className="font-medium text-[12px] text-[#111827]">
+                    <span className="font-medium text-[12px] text-[#111827] truncate">
                       {hom.name} ({hom.role})
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-[#EEF2FF] text-[#4338CA]">
-                      {hom.team?.length || 0} {_memberRole === "COORDINATOR" ? "Coordinators" : "Managers"}
+                    <span className="flex gap-1 text-xs px-2 py-0.5 rounded-full bg-[#EEF2FF] text-[#4338CA]">
+                      <i className="fi fi-ss-user-gear flex items-center"></i>
+                      {hom.team?.length || 0}           
                     </span>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-[#EFF6FF] text-[#1E40AF]">
-                      {hom.totalCampaigns} total campaigns
+                    <span className="flex gap-1 text-[10px] px-1.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                      <i className="fi fi-sr-megaphone flex items-center"></i>
+                      {hom.totalCampaigns}
                     </span>
                     <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(hom?.performance || 0) > 1 ? "bg-[#4DB37E30] text-[#4DB37E]" : "bg-[#EF444430] text-[#EF4444]"}`}>
                       {((hom?.performance || 0) * 100)?.toFixed(1) || 0}%
@@ -216,60 +219,62 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
                 <div className="divide-y divide-[#E5E7EB]">
                   {hom.team.length > 0 ? (
                     hom.team.map((manager) => (
-                      <div key={manager.userId} className="px-4 py-2 hover:bg-[#F9FAFB] transition-colors">
+                      <div key={manager.userId} className="px-2 py-2 hover:bg-[#F9FAFB] transition-colors">
                         <div className="flex flex-col w-full">
-                          <div className="flex items-center justify-between w-full">
+                          <div className="flex flex-col items-start justify-between w-full gap-1">
                             <div className="flex items-center gap-2">
                               <input
                                 type="checkbox"
-                                className="h-4 w-4 text-[#2563EB] rounded border-[#D1D5DB] focus:ring-[#3B82F6]"
+                                className="h-3 w-3 text-[#2563EB] rounded border-[#D1D5DB] focus:ring-[#3B82F6]"
                                 checked={selectedMembers.includes(manager.userId)}
                                 onChange={(e) => handleSelectMember(manager.userId, e.target.checked)}
                                 aria-label={`Select ${manager.name || 'manager'}`}
                               />
-                              <h3 className="font-medium text-[12px] text-[#111827]">
+                              <h3 className="font-medium text-[12px] text-[#111827] truncate">
                                 {manager.name || 'Unnamed Manager'}
                               </h3>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-[#EFF6FF] text-[#1E40AF]">
-                                {manager.role}
-                              </span>
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
-                                {manager.totalCampaigns || 0} Campaigns
-                              </span>
                               <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(manager?.performance || 0)> 1 ? "bg-[#4DB37E30] text-[#4DB37E]" : "bg-[#EF444430] text-[#EF4444]"}`}>
                                 {((manager?.performance || 0) * 100)?.toFixed(1) || 0}%
+                              </span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <span className="flex gap-1 text-xs px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                                <i className="fi fi-sr-megaphone flex items-center"></i>
+                                {manager.totalCampaigns || 0}
+                              </span>
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-[#EFF6FF] text-[#1E40AF]">
+                                {manager.role}
                               </span>
                             </div>
                           </div>
                           
                           {/* Coordinators section */}
                           {manager.coordinators && manager.coordinators.length > 0 && (
-                            <div className="ml-8 mt-2 border-l-2 border-[#E5E7EB] pl-3 py-1">
+                            <div className="mt-2 border-t-2 border-l-2 border-[#E5E7EB] pl-2 py-1">
                               {manager.coordinators.map(coordinator => (
-                                <div key={coordinator.userId} className="flex items-center justify-between py-1">
-                                  <div className="flex items-center gap-2">
+                                <div key={coordinator.userId} className="flex flex-col items-start justify-between py-1 gap-1 truncate">
+                                  <div className="flex items-center gap-2 truncate">
                                     <input
                                       type="checkbox"
-                                      className="h-3.5 w-3.5 text-[#2563EB] rounded border-[#D1D5DB] focus:ring-[#3B82F6]"
+                                      className="h-3 w-3 text-[#2563EB] rounded border-[#D1D5DB] focus:ring-[#3B82F6]"
                                       checked={selectedMembers.includes(coordinator.userId)}
                                       onChange={(e) => handleSelectMember(coordinator.userId, e.target.checked)}
                                       aria-label={`Select ${coordinator.name || 'coordinator'}`}
                                     />
-                                    <span className="text-xs text-[#4B5563]">
+                                    <span className="text-xs text-[#4B5563] truncate">
                                       {coordinator.name || 'Unnamed Coordinator'}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center space-x-2">
-                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#EFF6FF] text-[#1E40AF]">
-                                      COORDINATOR
-                                    </span>
-                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
-                                      {coordinator.totalCampaigns || 0} Campaigns
                                     </span>
                                     <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(coordinator?.performance || 0)> 1 ? "bg-[#4DB37E30] text-[#4DB37E]" : "bg-[#EF444430] text-[#EF4444]"}`}>
                                       {((coordinator?.performance || 0) * 100)?.toFixed(1) || 0}%
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center space-x-2">
+                                    <span className="flex gap-1 text-[10px] px-1.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                                      <i className="fi fi-sr-megaphone flex items-center"></i>
+                                      {coordinator.totalCampaigns || 0}
+                                    </span>
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#EFF6FF] text-[#1E40AF] truncate">
+                                      COORDINATOR
                                     </span>
                                   </div>
                                 </div>

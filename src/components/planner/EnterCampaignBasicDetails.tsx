@@ -29,6 +29,7 @@ import dayjs from "dayjs";
 import { industryTypes } from "../../data/touchpointData";
 import { format } from "date-fns";
 import { monitoringTypes } from "../../constants/helperConstants";
+import { getMyOrgDetailsAction } from "../../actions/organizationAction";
 
 const calculateDuration = (start: dayjs.Dayjs, end: dayjs.Dayjs) => {
   return end.diff(start, "day") + 1; // +1 to include both start and end dates
@@ -111,6 +112,12 @@ export const EnterCampaignBasicDetails = ({
   const { data: clientAgencyNamesList } = allClientAgencyNamesListGet;
   const { data: AllPlanner } = allPlannerIdsAndEmail;
 
+  const {
+    loading: loadingMyOrg,
+    error: errorMyOrg,
+    data: myOrg
+  } = useSelector((state: any) => state.myOrgDetailsGet);
+
   // Handle adding new client/agency
   const handleAddNewClient = useCallback(
     (value: string) => {
@@ -149,6 +156,7 @@ export const EnterCampaignBasicDetails = ({
 
   // Form submission handler
   const onFinish = async (values: any) => {
+    console.log(values);
     setLoading(true);
     if (!pathname.split("/").includes("view")) {
       try {
@@ -226,6 +234,7 @@ export const EnterCampaignBasicDetails = ({
     dispatch(getAllClientAgencyNames());
     dispatch(getAllBrandAndNetworkAction());
     dispatch(getAllPlannerIdsAndEmail({ id: userInfo?._id }));
+    dispatch(getMyOrgDetailsAction({id: userInfo?._id}));
   }, [dispatch, userInfo]);
 
   useEffect(() => {
@@ -279,17 +288,17 @@ export const EnterCampaignBasicDetails = ({
   }, [campaignDetails, form]);
 
   const formItemStyles = `
-  .compact-form .ant-form-item-label {
-    padding-bottom: 2px;
-    line-height: 1.2;
-  }
-  .compact-form .ant-form-item {
-    margin-bottom: 12px;
-  }
-  .compact-form .ant-form-item-label > label {
-    font-size: 13px;
-  }
-`;
+    .compact-form .ant-form-item-label {
+      padding-bottom: 2px;
+      line-height: 1.2;
+    }
+    .compact-form .ant-form-item {
+      margin-bottom: 12px;
+    }
+    .compact-form .ant-form-item-label > label {
+      font-size: 13px;
+    }
+  `;
 
   return (
     <div className="w-full">
@@ -523,27 +532,42 @@ export const EnterCampaignBasicDetails = ({
             name="managerId"
             label={
               <div className="flex items-center gap-2">
-                <span>Select Manager</span>
-                <Tooltip title="Select the manager for this campaign">
+                <span>Manager</span>
+                <Tooltip title="The manager assigned to this campaign">
                   <i className="fi fi-rs-info text-[10px] text-gray-400" />
                 </Tooltip>
               </div>
             }
-            rules={[{ required: true, message: "Please Select Manager" }]}
+            initialValue={myOrg?.officialMembers?.find((mem: any) => 
+              mem.userId.toString() === myOrg?.officialMembers?.find((member: any) => 
+                member.userId === userInfo?._id
+              )?.reportsTo.toString()
+            )?.userId}
           >
             <Select
+              // disabled
+              // placeholder={`${myOrg?.officialMembers?.find((mem: any) => 
+              //     mem.userId.toString() === myOrg?.officialMembers?.find((member: any) => 
+              //       member.userId === userInfo?._id
+              //     )?.reportsTo.toString()
+              //   )?.name || "Manager"}`}
               placeholder="Select Manager"
               size="large"
               loading={!allPlannerData.length}
-              showSearch
-              optionFilterProp="label"
-              options={allPlannerData?.map((data: any) => {
-                return {
-                  label: data?.name,
-                  value: data?._id,
-                };
-              })}
-            ></Select>
+              showSearch={false}
+              // options={myOrg?.officialMembers?.filter((mem: any) => 
+              //   mem.userId.toString() === myOrg?.officialMembers?.find((member: any) => 
+              //     member.userId === userInfo?._id
+              //   )?.reportsTo.toString()
+              // )?.map((data: any) => ({
+              //   label: data?.name,
+              //   value: data?.userId,
+              // }))}
+              options={allPlannerData?.map((data: any) => ({
+                label: data?.name,
+                value: data?.userId,
+              }))}
+            />
           </Form.Item>
           {/* Coordinator */}
           <Form.Item
@@ -565,6 +589,12 @@ export const EnterCampaignBasicDetails = ({
               loading={!allPlannerData.length}
               showSearch
               optionFilterProp="label"
+              // options={allPlannerData?.filter((planner: any) => myOrg?.officialMembers?.filter((mem: any) => mem.role === "COORDINATOR")?.map((mem: any) => mem?.userId?.toString()).includes(planner._id))?.map((data: any) => {
+              //   return {
+              //     label: data?.name,
+              //     value: data?._id,
+              //   };
+              // })}
               options={allPlannerData?.map((data: any) => {
                 return {
                   label: data?.name,

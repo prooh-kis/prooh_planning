@@ -30,7 +30,7 @@ import { Input } from "../../components/atoms/Input";
 import { CampaignAnalysis } from "./CampaignAnalysis";
 import { getMyOrgDetailsAction } from "../../actions/organizationAction";
 
-export const MyCampaignsListPage2: React.FC = () => {
+export const MyCampaignsListPage: React.FC = () => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const targetDivRef = useRef<HTMLDivElement>(null);
@@ -218,7 +218,7 @@ export const MyCampaignsListPage2: React.FC = () => {
     <div className="w-full">
       <div className="bg-white w-auto rounded-[4px] mr-2">
         <div className="flex justify-between pr-8 border-b">
-          <div className="flex gap-4 items-center p-4 ">
+          <div className="flex gap-4 items-center p-4 " onDoubleClick={() => navigate("/myCampaignsListAdvance")}>
             <i className="fi fi-sr-megaphone flex items-center justify-center text-[#8B5CF680]"></i>
             <h1 className="text-[16px] font-semibold">
               My Campaigns{" "}

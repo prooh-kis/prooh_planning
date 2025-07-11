@@ -22,6 +22,7 @@ import {
   CampaignRequestForAdmin,
   ShowCampaignRequestDetailsForAdmin,
   OrganizationPage,
+  MyCampaignsListPageAdvance,
 } from "../pages";
 
 import {
@@ -42,6 +43,7 @@ import {
   SETTING,
   ADMIN_REQUEST_LIST,
   ORGANIZATION_PAGE,
+  MY_CAMPAIGNS_LIST_ADVANCE,
 } from "./routes";
 import { PowerPointGenerator } from "../pages/PowerPointGenerator";
 
@@ -132,6 +134,14 @@ const Routers: React.FC = () => {
           element={
             <AppDashBoardLayout value="Campaigns">
               <MyCampaignsListPage />
+            </AppDashBoardLayout>
+          }
+        />
+        <Route
+          path={MY_CAMPAIGNS_LIST_ADVANCE}
+          element={
+            <AppDashBoardLayout value="Campaigns">
+              <MyCampaignsListPageAdvance />
             </AppDashBoardLayout>
           }
         />

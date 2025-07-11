@@ -71,7 +71,6 @@ export const RegularPlanPage: React.FC = () => {
   }, [
     campaignDetails,
     campaignId,
-    dispatch,
     location.pathname,
     location?.state?.from,
   ]);

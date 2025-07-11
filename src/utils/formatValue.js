@@ -90,3 +90,22 @@ export const formattedINR = (amount) =>
     currency: "INR",
     maximumFractionDigits: 0, // Remove decimal places
   }).format(amount);
+
+export const getNameFromEmailLetters = (email) => {
+  if (!email) return '';
+  
+  // Split at @ and take the first part
+  const localPart = email.split('@')[0] || '';
+  
+  // Replace dots, underscores, and numbers with spaces
+  let name = localPart.replace(/[._0-9]/g, ' ');
+  
+  // Capitalize first letter of each word
+  name = name.split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+    .trim();
+  
+  // Return the first word
+  return name.split(' ')[0];
+}
