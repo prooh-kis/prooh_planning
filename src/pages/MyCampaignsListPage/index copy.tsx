@@ -28,9 +28,9 @@ import { notification, Tooltip } from "antd";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { Input } from "../../components/atoms/Input";
 import { CampaignAnalysis } from "./CampaignAnalysis";
-import { getMyOrgDetailsAction, getOrgLevelCampaignStatusAction } from "../../actions/organizationAction";
+import { getMyOrgDetailsAction } from "../../actions/organizationAction";
 
-export const MyCampaignsListPage: React.FC = () => {
+export const MyCampaignsListPage2: React.FC = () => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const targetDivRef = useRef<HTMLDivElement>(null);
@@ -43,8 +43,6 @@ export const MyCampaignsListPage: React.FC = () => {
   const [plannerId, setPlannerId] = useState<any>("");
   const [showPlannerList, setShowPlannerList] = useState<boolean>(false);
   const [plannerSearch, setPlannerSearch] = useState<string>("");
-
-  const [allCampaignsData, setAllCampaignsData] = useState<any>([]);
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
@@ -66,33 +64,21 @@ export const MyCampaignsListPage: React.FC = () => {
     data: campaignData,
   } = useSelector((state: any) => state.cloneCampaign);
 
-  const {
-    loading: loadingOrgLevelCampaignStatus,
-    error: errorOrgLevelCampaignStatus,
-    data: orgLevelCampaignStatus,
-  } = useSelector((state: any) => state.orgLevelCampaignStatusGet);
-
   const fetchCampaigns = useCallback(() => {
     if (userInfo && !userInfo?.isMaster) {
       return;
     }
-
-    if (currentTab === "1") {
-      dispatch(getOrgLevelCampaignStatusAction({ id: userInfo?._id, orgRole: "ADMIN" }));
-    } else {
-      dispatch(
-        getAllCampaignsDetailsAction({
-          plannerId: plannerId ? [plannerId] : [],
-          userId: userInfo?._id,
-          status: CAMPAIGN_STATUS_ACTIVE,
-          event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
-        })
-      );
-    }
-
+    dispatch(
+      getAllCampaignsDetailsAction({
+        plannerId: plannerId ? [plannerId] : [],
+        userId: userInfo?._id,
+        status: CAMPAIGN_STATUS_ACTIVE,
+        event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
+      })
+    );
     dispatch(getMyOrgDetailsAction({ id: userInfo?._id }));
     
-  }, [dispatch, userInfo, plannerId, currentTab]);
+  }, [dispatch, userInfo, plannerId]);
 
   useEffect(() => {
     fetchCampaigns();
@@ -107,20 +93,16 @@ export const MyCampaignsListPage: React.FC = () => {
   const handleGetCampaignByStatus = useCallback(
     (status: any) => {
       setCurrentTab(status);
-      if (status === "1") {
-        dispatch(getOrgLevelCampaignStatusAction({ id: userInfo?._id }));
-      } else {
-        dispatch(
-          getAllCampaignsDetailsAction({
-            plannerId: plannerId ? [plannerId] : [],
-            userId: userInfo?._id,
-            status: campaignCreationTypeTabs?.filter(
-              (tab: any) => tab.id === status
-            )[0]?.value,
-            event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
-          })
-        );
-      }
+      dispatch(
+        getAllCampaignsDetailsAction({
+          plannerId: plannerId ? [plannerId] : [],
+          userId: userInfo?._id,
+          status: campaignCreationTypeTabs?.filter(
+            (tab: any) => tab.id === status
+          )[0]?.value,
+          event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
+        })
+      );
     },
     [dispatch, userInfo, plannerId]
   );
@@ -128,18 +110,14 @@ export const MyCampaignsListPage: React.FC = () => {
   const reset = () => {
     setPlannerId("");
     setShowPlannerList(false);
-    if (currentTab === "1") {
-      dispatch(getOrgLevelCampaignStatusAction({ id: userInfo?._id }));
-    } else {
-      dispatch(
-        getAllCampaignsDetailsAction({
-          plannerId: [],
-          userId: userInfo?._id,
-          status: CAMPAIGN_STATUS_ACTIVE,
-          event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
-        })
-      );
-    }
+    dispatch(
+      getAllCampaignsDetailsAction({
+        plannerId: [],
+        userId: userInfo?._id,
+        status: CAMPAIGN_STATUS_ACTIVE,
+        event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
+      })
+    );
   };
 
   const handleDoubleClick = (id: string) => {
@@ -195,7 +173,7 @@ export const MyCampaignsListPage: React.FC = () => {
         description: "Clone create successfully",
       });
       const data = campaignData?.clonedCampaign;
-      navigate(`/${data?.campaignType?.toLowerCase()}plan/${data?._id}`, {
+      navigate(`/${data?.campaignType?.toLowerCase()}plan/${data._id}`, {
         state: { from: EDIT_CAMPAIGN },
       });
       dispatch({ type: CLONE_CAMPAIGN_RESET });
@@ -203,9 +181,7 @@ export const MyCampaignsListPage: React.FC = () => {
   }, [campaignData?.clonedCampaign, dispatch, navigate, successClone]);
 
   useEffect(() => {
-    if (currentTab !== "1") {
-      handleGetCampaignByStatus(currentTab);
-    }
+    handleGetCampaignByStatus(currentTab);
     const savedScrollPosition =
       sessionStorage.getItem("campaignsScrollPosition") || "0";
     if (targetDivRef.current) {
@@ -227,16 +203,7 @@ export const MyCampaignsListPage: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    if (currentTab === "1" && orgLevelCampaignStatus) {
-      setAllCampaignsData(orgLevelCampaignStatus?.campaignCreations);
-    }
-    if (currentTab !== "1" && allCampaigns) {
-      setAllCampaignsData(allCampaigns?.result);
-    }
-  },[allCampaigns, currentTab, orgLevelCampaignStatus]);
-
-  const filteredCampaigns = allCampaignsData?.filter(
+  const filteredCampaigns = allCampaigns?.result?.filter(
     (campaign: any) =>
       campaign?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       campaign?.brandName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -291,11 +258,11 @@ export const MyCampaignsListPage: React.FC = () => {
                     {filteredPlanners?.length > 0 ? (
                       filteredPlanners.map((planner: any) => (
                         <div
-                          key={planner?._id}
+                          key={planner._id}
                           className={`p-2 hover:bg-gray-100 cursor-pointer ${
-                            plannerId === planner?._id ? "bg-blue-50" : ""
+                            plannerId === planner._id ? "bg-blue-50" : ""
                           }`}
-                          onClick={() => handlePlannerSelect(planner?._id)}
+                          onClick={() => handlePlannerSelect(planner._id)}
                         >
                           <span className="truncate block">{planner.name}</span>
                         </div>
@@ -324,19 +291,11 @@ export const MyCampaignsListPage: React.FC = () => {
           <LoadingScreen />
         ) : (
           <div>
-            {currentTab === "1" && (
-              <CampaignAnalysis 
-                userInfo={userInfo} 
-                myOrg={myOrg}
-                loadingOrgLevelCampaignStatus={loadingOrgLevelCampaignStatus} 
-                errorOrgLevelCampaignStatus={errorOrgLevelCampaignStatus} 
-                orgLevelCampaignStatus={orgLevelCampaignStatus}
-              />
-            )}
+            {/* <CampaignAnalysis userInfo={userInfo} myOrg={myOrg} /> */}
           </div>
         )}
 
-        {loadingOrgLevelCampaignStatus ? (
+        {loading ? (
           <LoadingScreen />
         ) : filteredCampaigns?.length === 0 ? (
           <NoDataView />
@@ -353,10 +312,10 @@ export const MyCampaignsListPage: React.FC = () => {
               >
                 <CampaignsListModel
                   data={data}
-                  // handleClone={handleClone}
-                  // handleGoToDashBoard={(id: string) =>
-                  //   navigate(`/campaignDashboard/${id}`)
-                  // }
+                  handleClone={handleClone}
+                  handleGoToDashBoard={(id: string) =>
+                    navigate(`/campaignDashboard/${id}`)
+                  }
                 />
               </div>
             ))}

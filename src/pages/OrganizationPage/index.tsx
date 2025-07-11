@@ -66,41 +66,49 @@ export const OrganizationPage: React.FC = () => {
     // Return coordinator members that are in the workConnections array
     return members.filter(m => 
       m.role === 'COORDINATOR' && 
-      member.workConnections?.includes(m._id)
+      member.workConnections?.includes(m.userId)
     );
   }, [members]);
 
   const handleSaveMember = (updatedMember: Member) => {
     // If role is being changed, update the reportsTo field accordingly
-    const existingMember = members.find(m => m._id === updatedMember._id);
+    const existingMember = members.find(m => m.userId === updatedMember.userId);
     
     if (existingMember && existingMember.role !== updatedMember.role) {
       // Role has changed, update reportsTo based on new role
       if (updatedMember.role === 'MANAGER') {
         // Find HOM to report to
         const hom = members.find(m => m.role === 'HOM');
-        updatedMember.reportsTo = hom?._id || null;
+        updatedMember.reportsTo = hom?.userId || null;
         // Clear work connections if role changed to MANAGER
         updatedMember.workConnections = [];
       } else if (updatedMember.role === 'COORDINATOR') {
         // Find HOC to report to
         const hoc = members.find(m => m.role === 'HOC');
-        updatedMember.reportsTo = hoc?._id || null;
+        updatedMember.reportsTo = hoc?.userId || null;
       } else if (updatedMember.role === 'HOM' || updatedMember.role === 'HOC') {
-        // HOM and HOC don't report to anyone
-        updatedMember.reportsTo = null;
+        // HOM and HOC should report to an ADMIN
+        const admin = members.find(m => m.role === 'ADMIN');
+        updatedMember.reportsTo = admin?.userId || null;
+      }
+    } else if ((updatedMember.role === 'HOM' || updatedMember.role === 'HOC') && updatedMember.reportsTo) {
+      // If the role is HOM or HOC and has a reportsTo, ensure it's an ADMIN
+      const reportsToMember = members.find(m => m.userId === updatedMember.reportsTo);
+      if (reportsToMember?.role !== 'ADMIN') {
+        const admin = members.find(m => m.role === 'ADMIN');
+        updatedMember.reportsTo = admin?.userId || null;
       }
     }
 
     setMembers(prevMembers => 
       prevMembers.map(member => 
-        member._id === updatedMember._id ? { ...member, ...updatedMember } : member
+        member.userId === updatedMember.userId ? { ...member, ...updatedMember } : member
       )
     );
     
     // Update in the organization
     const updatedMembers = members.map(member => 
-      member._id === updatedMember._id ? { ...member, ...updatedMember } : member
+      member.userId === updatedMember.userId ? { ...member, ...updatedMember } : member
     );
     
     dispatch(createNewOrgAction({
@@ -120,13 +128,13 @@ export const OrganizationPage: React.FC = () => {
       // Find HOM to report to
       const hom = members.find(m => m.role === 'HOM');
       if (hom) {
-        reportsTo = hom._id;
+        reportsTo = hom.userId;
       }
     } else if (newMember.role === 'COORDINATOR') {
       // Find HOC to report to
       const hoc = members.find(m => m.role === 'HOC');
       if (hoc) {
-        reportsTo = hoc._id;
+        reportsTo = hoc.userId;
       }
     }
     
@@ -152,7 +160,7 @@ export const OrganizationPage: React.FC = () => {
   };
 
   const handleDeleteMember = (memberId: string) => {
-    const memberToDelete = members.find(m => m._id === memberId);
+    const memberToDelete = members.find(m => m.userId === memberId);
     
     if (!memberToDelete) return;
 
@@ -175,7 +183,7 @@ export const OrganizationPage: React.FC = () => {
     }
     
     // Remove the member
-    updatedMembers = updatedMembers.filter(member => member._id !== memberId);
+    updatedMembers = updatedMembers.filter(member => member.userId !== memberId);
     
     // If the deleted member was a HOM or HOC, update reportsTo for their direct reports
     if (memberToDelete.role === 'HOM' || memberToDelete.role === 'HOC') {
@@ -216,6 +224,13 @@ export const OrganizationPage: React.FC = () => {
             email: userInfo?.email,
             phone: userInfo?.phone
           },
+          officialMembers: [{
+            userId: userInfo?._id,
+            name: userInfo?.name,
+            email: userInfo?.email,
+            phone: userInfo?.phone,
+            role: 'ADMIN'
+          }],
           userId: userInfo?._id
         })
       );
@@ -382,7 +397,7 @@ export const OrganizationPage: React.FC = () => {
             .filter(m => m.role === 'ADMIN')
             .map(member => (
               <MemberCard
-                key={member._id}
+                key={member.userId}
                 member={member}
                 members={members}
                 level={0}
@@ -401,9 +416,10 @@ export const OrganizationPage: React.FC = () => {
               
               {/* Show MANAGERs without reportsTo at the top */}
               {members
-                .filter(member => member.role === 'MANAGER' && !member.reportsTo)
+                .filter(member => member.role === 'MANAGER' 
+                  && (!member.reportsTo || !members.some(m => m.userId === member.reportsTo) || members.some(m => m.userId === member.reportsTo && (m.role === 'HOC' || m.role === 'COORDINATOR'))))
                 .map(manager => (
-                  <div key={manager._id} className="mb-4">
+                  <div key={manager.userId} className="mb-4">
                     <MemberCard
                       member={manager}
                       members={members}
@@ -418,10 +434,10 @@ export const OrganizationPage: React.FC = () => {
                       {manager.workConnections?.map((coordinatorId, index) => {
                         const coordinator = members.find(m => 
                           m.role === 'COORDINATOR' && 
-                          m._id === coordinatorId
+                          m.userId === coordinatorId
                         );
                         return coordinator ? (
-                          <div key={`${manager._id}-${index}`} className="mt-2">
+                          <div key={`${manager.userId}-${index}`} className="mt-2">
                             <MemberCard
                               member={coordinator}
                               members={members}
@@ -442,7 +458,7 @@ export const OrganizationPage: React.FC = () => {
               {members
                 ?.filter(member => member.role === 'HOM')
                 ?.map(hom => (
-                  <div key={hom._id}>
+                  <div key={hom.userId}>
                     <MemberCard
                       member={hom}
                       members={members}
@@ -454,9 +470,9 @@ export const OrganizationPage: React.FC = () => {
                     />
                     <div className="ml-8 mt-2">
                       {members
-                        .filter(member => member.reportsTo === hom._id && member.role === 'MANAGER')
+                        .filter(member => member.reportsTo === hom.userId && member.role === 'MANAGER')
                         .map(manager => (
-                          <div key={manager._id} className="mt-2">
+                          <div key={manager.userId} className="mt-2">
                             <MemberCard
                               member={manager}
                               members={members}
@@ -467,13 +483,13 @@ export const OrganizationPage: React.FC = () => {
                               getConnectedCoordinators={getConnectedMembers}
                             />
                             {/* Show connected coordinators */}
-                            {manager.workConnections?.map((coordinatorId, index) => {
+                            {/* {manager.workConnections?.map((coordinatorId, index) => {
                               const coordinator = members.find(m => 
                                 m.role === 'COORDINATOR' && 
-                                m._id === coordinatorId
+                                m.userId === coordinatorId
                               );
                               return coordinator ? (
-                                <div key={`${manager._id}-${index}`} className="ml-8 mt-2">
+                                <div key={`${manager.userId}-${index}`} className="ml-8 mt-2">
                                   <MemberCard
                                     member={coordinator}
                                     members={members}
@@ -485,7 +501,7 @@ export const OrganizationPage: React.FC = () => {
                                   />
                                 </div>
                               ) : null;
-                            })}
+                            })} */}
                           </div>
                         ))}
                     </div>
@@ -496,10 +512,37 @@ export const OrganizationPage: React.FC = () => {
             {/* HOC and Coordinators Section */}
             <div className="bg-white p-4 rounded-lg border border-[#E5E7EB]">
               <h3 className="text-lg font-semibold mb-4 text-center text-[#16A34A]">Coordinators Team</h3>
+              
+              {/* Show COORDINATORs with invalid or no reportsTo */}
+              {members
+                .filter(member => 
+                  member.role === 'COORDINATOR'
+                   && (!member.reportsTo || !members.some(m => m.userId === member.reportsTo) || members.some(m => m.userId === member.reportsTo && (m.role === 'HOM' || m.role === 'MANAGER')))
+                )
+                .map(coordinator => (
+                  <div key={coordinator.userId} className="mt-4 border-t pt-4">
+                    {/* <div className="text-sm text-yellow-600 mb-2">
+                      {!coordinator.reportsTo 
+                        ? 'Unassigned Coordinator' 
+                        : 'Coordinator with invalid supervisor'}
+                    </div> */}
+                    <MemberCard
+                      member={coordinator}
+                      members={members}
+                      level={0}
+                      isEditing={isEditing}
+                      onEdit={setEditingMember}
+                      onDelete={handleDeleteMember}
+                      getConnectedCoordinators={getConnectedMembers}
+                    />
+                  </div>
+                ))}
+
+              {/* Show HOC with their direct reports */}
               {members
                 .filter(member => member.role === 'HOC')
                 .map(hoc => (
-                  <div key={hoc._id}>
+                  <div key={hoc.userId}>
                     <MemberCard
                       member={hoc}
                       members={members}
@@ -511,10 +554,10 @@ export const OrganizationPage: React.FC = () => {
                     />
                     <div className="ml-8 mt-2">
                       {members
-                        .filter(member => member.reportsTo === hoc._id && member.role === 'COORDINATOR')
+                        .filter(member => member.reportsTo === hoc.userId && member.role === 'COORDINATOR')
                         .map(coordinator => (
                           <MemberCard
-                            key={coordinator._id}
+                            key={coordinator.userId}
                             member={coordinator}
                             members={members}
                             level={1}

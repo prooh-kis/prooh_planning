@@ -192,4 +192,5 @@ export const rootReducer = {
     // Organization
     myOrgDetailsGet: organizationReducers.myOrgDetailsGetReducer,
     myOrgCreate: organizationReducers.myOrgCreateReducer,
+    orgLevelCampaignStatusGet: organizationReducers.orgLevelCampaignStatusGetReducer,
 };

@@ -32,7 +32,13 @@ export const MemberModal: React.FC<MemberModalProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // If role is changing to HOM or HOC, clear reportsTo since they should only report to ADMIN
+    if (name === 'role' && (value === 'HOM' || value === 'HOC')) {
+      setFormData(prev => ({ ...prev, [name]: value, reportsTo: null }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -47,16 +53,21 @@ export const MemberModal: React.FC<MemberModalProps> = ({
   };
 
   const availableRoles: Role[] = ['ADMIN', 'HOM', 'HOC', 'MANAGER', 'COORDINATOR'];
-  const availableManagers = members.filter(m => 
-    ['ADMIN', 'HOM', 'HOC'].includes(m.role)
-  );
+  
+  // Filter available managers based on the selected role
+  const availableManagers = members.filter(m => {
+    if (formData.role === 'HOM' || formData.role === 'HOC') {
+      return m.role === 'ADMIN';
+    }
+    return ['ADMIN', 'HOM', 'HOC'].includes(m.role);
+  });
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-medium">
-            {member._id?.startsWith('new') ? 'Add New' : 'Edit'} Team Member
+            {member.userId?.startsWith('new') ? 'Add New' : 'Edit'} Team Member
           </h2>
           <button
             onClick={onClose}
@@ -106,7 +117,7 @@ export const MemberModal: React.FC<MemberModalProps> = ({
             >
               <option value="">Select a manager</option>
               {availableManagers.map(m => (
-                <option key={m._id} value={m._id}>
+                <option key={m.userId} value={m.userId}>
                   {m.name} ({m.role})
                 </option>
               ))}
