@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Checkbox, message, Tooltip } from "antd";
@@ -158,6 +158,33 @@ export const CreativeUploadV4 = ({
     data: screenData,
   } = screenDataUploadCreative;
 
+  const creativeCountScreenWise = (screenId: string) => {
+    const screen = creativeUploadData?.find(
+      (screen: Screen) => screen.screenId === screenId
+    );
+    if (!screen) return 0;
+    return (
+      screen?.standardDayTimeCreatives?.length +
+      screen?.standardNightTimeCreatives?.length +
+      screen?.triggerCreatives?.length
+    );
+  };
+
+  // First, let's create a sorting function
+  const sortScreens = (screens: any[]) => {
+    return [...screens].sort((a, b) => {
+      const aCount = creativeCountScreenWise(a.screenId);
+      const bCount = creativeCountScreenWise(b.screenId);
+
+      // If both have 0 creatives or both have >0 creatives, sort by name
+      if ((aCount === 0 && bCount === 0) || (aCount > 0 && bCount > 0)) {
+        return a.screenName.localeCompare(b.screenName);
+      }
+      // Put screens with 0 creatives first
+      return aCount === 0 ? -1 : 1;
+    });
+  };
+
   // Derived values
   const filteredScreens =
     screenData?.filter((singleData: any) =>
@@ -253,27 +280,33 @@ export const CreativeUploadV4 = ({
     []
   );
 
-  const isCreativeUploaded = (screenId: string) => {
-    const screen = creativeUploadData?.find(
-      (screen) => screen.screenId === screenId
-    );
-    return (
-      screen &&
-      (screen?.standardDayTimeCreatives?.length > 0 ||
+  const isCreativeUploaded = useCallback(
+    (screenId: string) => {
+      const screen = creativeUploadData?.find(
+        (screen) => screen.screenId === screenId
+      );
+      return (
+        screen &&
+        (screen?.standardDayTimeCreatives?.length > 0 ||
+          screen?.standardNightTimeCreatives?.length > 0 ||
+          screen?.triggerCreatives?.length > 0)
+      );
+    },
+    [creativeUploadData]
+  );
+
+  const isCreativeUploaded2 = useCallback(
+    (screen: any) => {
+      return (
+        screen?.standardDayTimeCreatives?.length > 0 ||
         screen?.standardNightTimeCreatives?.length > 0 ||
-        screen?.triggerCreatives?.length > 0)
-    );
-  };
+        screen?.triggerCreatives?.length > 0
+      );
+    },
+    [creativeUploadData]
+  );
 
-  const isCreativeUploaded2 = (screen: any) => {
-    return (
-      screen?.standardDayTimeCreatives?.length > 0 ||
-      screen?.standardNightTimeCreatives?.length > 0 ||
-      screen?.triggerCreatives?.length > 0
-    );
-  };
-
-  const validate = () => {
+  const validate = useCallback(() => {
     const triggerAvailable = isTriggerAvailable();
     const validationStatus = creativeUploadData.every((screen) => {
       const hasContent = triggerAvailable
@@ -284,7 +317,7 @@ export const CreativeUploadV4 = ({
       return hasContent;
     });
     return validationStatus;
-  };
+  }, []);
 
   const handleSaveAndContinue = async () => {
     if (pathname.split("/").includes("view")) {
@@ -450,19 +483,8 @@ export const CreativeUploadV4 = ({
       setOpenSelected(false);
     } catch (error: any) {
       message.error(error.message);
+      setFileUploadLoading(false);
     }
-  };
-
-  const creativeCountScreenWise = (screenId: string) => {
-    const screen = creativeUploadData?.find(
-      (screen: Screen) => screen.screenId === screenId
-    );
-    if (!screen) return 0;
-    return (
-      screen?.standardDayTimeCreatives?.length +
-      screen?.standardNightTimeCreatives?.length +
-      screen?.triggerCreatives?.length
-    );
   };
 
   const getCount = useCallback(
@@ -519,7 +541,7 @@ export const CreativeUploadV4 = ({
     });
   }, [creativeUploadData]);
 
-  const removeFile = (awsURL: string) => {
+  const removeFile = useCallback((awsURL: string) => {
     setCreativeUploadData((prevData) => {
       const newData = [...prevData];
       const screenIndex = newData?.findIndex(
@@ -550,9 +572,9 @@ export const CreativeUploadV4 = ({
       setCurrentScreen(screen);
       return newData;
     });
-  };
+  }, []);
 
-  const removeAllSavedCreative = () => {
+  const removeAllSavedCreative = useCallback(() => {
     setCreativeUploadData((prevData) => {
       const newData = [...prevData];
       const screenIndex = newData?.findIndex(
@@ -576,12 +598,12 @@ export const CreativeUploadV4 = ({
       setCurrentScreen(screen);
       return newData;
     });
-  };
+  }, []);
 
-  const closePopup = () => {
+  const closePopup = useCallback(() => {
     setIsBucketPopupOpen(false);
     setCurrentScreens([]);
-  };
+  }, []);
 
   const handleSaveFiles = (files: Creative[], screenId: string) => {
     if (files.length === 0) {
@@ -817,94 +839,98 @@ export const CreativeUploadV4 = ({
                     {filteredScreens?.length === 0 && (
                       <NoDataView title="No Screen found for this filter" />
                     )}
-                    {filteredScreens?.map((singleData: any, index: number) => {
-                      const isUploaded = isCreativeUploaded(
-                        singleData.screenId
-                      );
-                      const status = isUploaded ? "Completed" : "Pending";
-                      const creativeCount = creativeCountScreenWise(
-                        singleData?.screenId
-                      );
-                      const statusColor = isUploaded
-                        ? "text-[#3A9868]"
-                        : "text-[#FD7E00]";
+                    {sortScreens(filteredScreens)?.map(
+                      (singleData: any, index: number) => {
+                        const isUploaded = isCreativeUploaded(
+                          singleData.screenId
+                        );
+                        const status = isUploaded ? "Completed" : "Pending";
+                        const creativeCount = creativeCountScreenWise(
+                          singleData?.screenId
+                        );
+                        const statusColor = isUploaded
+                          ? "text-[#3A9868]"
+                          : "text-[#FD7E00]";
 
-                      return (
-                        <div
-                          key={index}
-                          className={`grid grid-cols-8 w-full items-center border-b hover:bg-blue-50 cursor-pointer ${
-                            currentScreen === singleData.screenId
-                              ? "bg-blue-100"
-                              : ""
-                          }`}
-                        >
-                          {[
-                            singleData.screenName,
-                            singleData.city,
-                            singleData.touchPoint,
-                            singleData.ratio,
-                            singleData.screenType,
-                            creativeCount,
-                          ].map((item, i) => (
-                            <div
-                              className={`col-span-${
-                                i === 0 ? "2" : "1"
-                              } flex items-center ${
-                                i === 0 ? "pl-4" : "justify-center"
-                              } py-2`}
-                              key={i}
-                            >
-                              {i === 0 && (
-                                <Checkbox
-                                  checked={currentScreens.includes(
-                                    singleData.screenId
-                                  )}
-                                  onChange={(e) =>
-                                    handleSelectScreen(e, singleData.screenId)
-                                  }
-                                  className="mr-2"
-                                />
-                              )}
-                              {i === 0 || i === 2 || i === 4 ? (
-                                <Tooltip title={item}>
+                        return (
+                          <div
+                            key={index}
+                            className={`grid grid-cols-8 w-full items-center border-b hover:bg-blue-50 cursor-pointer ${
+                              currentScreen === singleData.screenId
+                                ? "bg-blue-100"
+                                : ""
+                            }`}
+                          >
+                            {[
+                              singleData.screenName,
+                              singleData.city,
+                              singleData.touchPoint,
+                              singleData.ratio,
+                              singleData.screenType,
+                              creativeCount,
+                            ].map((item, i) => (
+                              <div
+                                className={`col-span-${
+                                  i === 0 ? "2" : "1"
+                                } flex items-center ${
+                                  i === 0 ? "pl-4" : "justify-center"
+                                } py-2`}
+                                key={i}
+                              >
+                                {i === 0 && (
+                                  <Checkbox
+                                    checked={currentScreens.includes(
+                                      singleData.screenId
+                                    )}
+                                    onChange={(e) =>
+                                      handleSelectScreen(e, singleData.screenId)
+                                    }
+                                    className="mr-2"
+                                  />
+                                )}
+                                {i === 0 || i === 2 || i === 4 ? (
+                                  <Tooltip title={item}>
+                                    <span
+                                      className={`text-sm truncate  font-medium`}
+                                      onClick={() =>
+                                        handleSelectScreenByClick(
+                                          singleData.screenId
+                                        )
+                                      }
+                                    >
+                                      {item}
+                                    </span>
+                                  </Tooltip>
+                                ) : (
                                   <span
-                                    className={`text-sm truncate  font-medium`}
                                     onClick={() =>
                                       handleSelectScreenByClick(
                                         singleData.screenId
                                       )
                                     }
+                                    className={`text-sm truncate ${
+                                      i === 5
+                                        ? `${statusColor} font-medium`
+                                        : ""
+                                    }`}
                                   >
                                     {item}
                                   </span>
-                                </Tooltip>
-                              ) : (
-                                <span
-                                  onClick={() =>
-                                    handleSelectScreenByClick(
-                                      singleData.screenId
-                                    )
-                                  }
-                                  className={`text-sm truncate ${
-                                    i === 5 ? `${statusColor} font-medium` : ""
-                                  }`}
-                                >
-                                  {item}
-                                </span>
-                              )}
+                                )}
+                              </div>
+                            ))}
+                            <div className="col-span-1 flex justify-center">
+                              <i
+                                className={`fi fi-sr-picture cursor-pointer ${statusColor}`}
+                                onClick={() =>
+                                  handleViewCreative(singleData.screenId)
+                                }
+                              />
                             </div>
-                          ))}
-                          <div className="col-span-1 flex justify-center">
-                            <i
-                              className={`fi fi-sr-picture cursor-pointer ${statusColor}`}
-                              onClick={() =>
-                                handleViewCreative(singleData.screenId)
-                              }
-                            />
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      }
+                    )}
                   </div>
                 </div>
               </div>
