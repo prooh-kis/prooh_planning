@@ -81,13 +81,24 @@ export const CampaignAnalysis: React.FC<CampaignAnalysisProps> = ({
         </div>
       )}
 
-      <div className="md:col-span-1">
-        <UserWiseCampaigns
-          title="Managers"
-          userWiseCampaigns={["COORDINATOR"].includes(userOrgRole) ? orgLevelCampaignStatus?.managerWiseCampaigns : orgLevelCampaignStatus?.coordinatorWiseCampaigns}
-          orgMembers={myOrg?.officialMembers}
-        />
-      </div>
+      {["COORDINATOR", "ADMIN"].includes(userOrgRole) && (
+        <div className="md:col-span-1">
+          <UserWiseCampaigns
+            title="Managers"
+            userWiseCampaigns={orgLevelCampaignStatus?.managerWiseCampaigns}
+            orgMembers={myOrg?.officialMembers}
+          />
+        </div>
+      )}
+      {["MANAGER", "ADMIN"].includes(userOrgRole) && (
+        <div className="md:col-span-1">
+          <UserWiseCampaigns
+            title="Coordinators"
+            userWiseCampaigns={orgLevelCampaignStatus?.coordinatorWiseCampaigns}
+            orgMembers={myOrg?.officialMembers}
+          />
+        </div>
+      )}
       <div className="md:col-span-1">
         <GroupWiseCampaigns
           title="Agencys"
