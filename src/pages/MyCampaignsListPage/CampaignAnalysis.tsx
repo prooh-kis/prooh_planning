@@ -4,8 +4,9 @@ import { Loading } from "../../components/Loading";
 import { message } from "antd";
 import { CampaignAnalysisProps } from "./types";
 import { TeamHierarchy } from "./TeamHierarchy";
-import { AgencyWiseCampaigns } from "./AgencyWiseCampaigns";
+import { GroupWiseCampaigns } from "./GroupWiseCampaigns";
 import { VendorWiseCampaigns } from "./VendorWiseCampaigns";
+import { UserWiseCampaigns } from "./UserWiseCampaigns";
 
 export const CampaignAnalysis: React.FC<CampaignAnalysisProps> = ({
   userInfo,
@@ -80,10 +81,35 @@ export const CampaignAnalysis: React.FC<CampaignAnalysisProps> = ({
         </div>
       )}
 
+      {["COORDINATOR", "ADMIN"].includes(userOrgRole) && (
+        <div className="md:col-span-1">
+          <UserWiseCampaigns
+            title="Managers"
+            userWiseCampaigns={orgLevelCampaignStatus?.managerWiseCampaigns}
+            orgMembers={myOrg?.officialMembers}
+          />
+        </div>
+      )}
+      {["MANAGER", "ADMIN"].includes(userOrgRole) && (
+        <div className="md:col-span-1">
+          <UserWiseCampaigns
+            title="Coordinators"
+            userWiseCampaigns={orgLevelCampaignStatus?.coordinatorWiseCampaigns}
+            orgMembers={myOrg?.officialMembers}
+          />
+        </div>
+      )}
       <div className="md:col-span-1">
-        <AgencyWiseCampaigns
+        <GroupWiseCampaigns
           title="Agencys"
-          agencyWiseCampaigns={orgLevelCampaignStatus?.agencyWiseCampaigns}
+          groupWiseCampaigns={orgLevelCampaignStatus?.agencyWiseCampaigns}
+        />
+      </div>
+
+      <div className="md:col-span-1">
+        <GroupWiseCampaigns
+          title="Brands"
+          groupWiseCampaigns={orgLevelCampaignStatus?.brandWiseCampaigns}
         />
       </div>
       <div className="md:col-span-1">
