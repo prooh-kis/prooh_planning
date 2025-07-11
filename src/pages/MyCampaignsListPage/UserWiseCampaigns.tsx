@@ -14,23 +14,26 @@ interface Campaign {
   performance?: number;
 }
 
-type AgencyWiseCampaignsProps = {
+type UserWiseCampaignsProps = {
   title: string;
-  agencyWiseCampaigns: any; // Required prop for backward compatibility
+  userWiseCampaigns: any; // Required prop for backward compatibility
+  orgMembers?: any;
 };
 
-export const AgencyWiseCampaigns: React.FC<AgencyWiseCampaignsProps> = ({
+export const UserWiseCampaigns: React.FC<UserWiseCampaignsProps> = ({
   title,
-  agencyWiseCampaigns,
+  userWiseCampaigns,
+  orgMembers
 }) => {
-  const [agencyList, setAgencyList] = useState<string[]>([]);
+  const [userList, setUserList] = useState<string[]>([]);
   const [expandedAgencies, setExpandedAgencies] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    if (agencyWiseCampaigns) {
-      setAgencyList(Object.keys(agencyWiseCampaigns));
+    if (userWiseCampaigns) {
+      // setUserList(orgMembers?.filter((member: any) => Object.keys(userWiseCampaigns)?.map((ke: any) => ke.toString()).includes(member.userId.toString()))?.map((member: any) => member.name));
+      setUserList(Object.keys(userWiseCampaigns));
     }
-  },[agencyWiseCampaigns]);
+  },[userWiseCampaigns, orgMembers]);
 
   const toggleAgency = (agency: string) => {
     setExpandedAgencies(prev => ({
@@ -50,47 +53,47 @@ export const AgencyWiseCampaigns: React.FC<AgencyWiseCampaignsProps> = ({
           </h2>
         </div>
         <span className="flex items-center text-[12px] text-[#6B7280] gap-2">
-        ({agencyList.length})
+        ({userList.length})
         </span>
       </div>
       
-      {agencyList.length === 0 ? (
+      {userList.length === 0 ? (
         <div className="text-center py-4 text-[#6B7280]">
           No Agency data available
         </div>
       ) : (
         <div className="space-y-2 h-[30vh] overflow-y-auto no-scrollbar">
-          {agencyList?.map((agency: any, i: any) => (
+          {userList?.map((user: any, i: any) => (
             <div key={i} className="border border-[#E5E7EB] rounded-lg overflow-hidden">
               <div 
                 className="bg-[#F9FAFB] px-2 py-3 border-b border-[#E5E7EB] cursor-pointer hover:bg-[#F3F4F6] transition-colors"
-                onClick={() => toggleAgency(agency)}
+                onClick={() => toggleAgency(user)}
               >
                 <div className="flex flex-col items-start justify-between">
                   <div className="flex items-center">
-                    {expandedAgencies[agency] ? (
+                    {expandedAgencies[user] ? (
                       <DownOutlined className="mr-2 text-[#6B7280] text-xs" />
                     ) : (
                       <RightOutlined className="mr-2 text-[#6B7280] text-xs" />
                     )}
                     <span className="font-medium text-[12px] text-[#111827] truncate">
-                      {agency}
+                      {user}
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="flex gap-1 text-[10px] px-1.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
                       <i className="fi fi-sr-megaphone flex items-center"></i>
-                      {agencyWiseCampaigns[agency].campaigns.length}
+                      {userWiseCampaigns[user]?.campaigns?.length}
                     </span>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(agencyWiseCampaigns[agency]?.performance || 0) > 1 ? "bg-[#4DB37E30] text-[#4DB37E]" : "bg-[#EF444430] text-[#EF4444]"}`}>
-                      {((agencyWiseCampaigns[agency]?.performance || 0) * 100)?.toFixed(1) || 0}%
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(userWiseCampaigns[user]?.performance || 0) > 1 ? "bg-[#4DB37E30] text-[#4DB37E]" : "bg-[#EF444430] text-[#EF4444]"}`}>
+                      {((userWiseCampaigns[user]?.performance || 0) * 100)?.toFixed(1) || 0}%
                     </span>
                   </div>
                 </div>
               </div>
-              {expandedAgencies[agency] && agencyWiseCampaigns[agency].campaigns.length > 0 && (
+              {expandedAgencies[user] && userWiseCampaigns[user]?.campaigns?.length > 0 && (
                 <div className="divide-y divide-[#E5E7EB]">
-                  {agencyWiseCampaigns[agency].campaigns.map((campaign: any, i: any) => (
+                  {userWiseCampaigns[user]?.campaigns?.map((campaign: any, i: any) => (
                     <div key={i} className="px-2 py-3 flex flex-col gap-1">
                       <div className="flex items-center justify-start gap-2">
                         <input

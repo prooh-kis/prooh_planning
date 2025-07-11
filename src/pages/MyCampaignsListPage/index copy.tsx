@@ -27,8 +27,6 @@ import { removeAllKeyFromLocalStorage } from "../../utils/localStorageUtils";
 import { notification, Tooltip } from "antd";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { Input } from "../../components/atoms/Input";
-import { CampaignAnalysis } from "./CampaignAnalysis";
-import { getMyOrgDetailsAction } from "../../actions/organizationAction";
 
 export const MyCampaignsListPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -52,12 +50,6 @@ export const MyCampaignsListPage: React.FC = () => {
   );
 
   const {
-    loading: loadingMyOrg,
-    error: errorMyOrg,
-    data: myOrg
-  } = useSelector((state: any) => state.myOrgDetailsGet);
-
-  const {
     loading: loadingClone,
     error: errorClone,
     success: successClone,
@@ -76,8 +68,6 @@ export const MyCampaignsListPage: React.FC = () => {
         event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
       })
     );
-    dispatch(getMyOrgDetailsAction({ id: userInfo?._id }));
-    
   }, [dispatch, userInfo, plannerId]);
 
   useEffect(() => {
@@ -158,13 +148,7 @@ export const MyCampaignsListPage: React.FC = () => {
       });
       dispatch({ type: CLONE_CAMPAIGN_RESET });
     }
-    if (errorMyOrg) {
-      notification.error({
-        message: "My Org Error",
-        description: errorMyOrg,
-      });
-    }
-  }, [errorClone, errorMyOrg, dispatch]);
+  }, [errorClone, dispatch]);
 
   useEffect(() => {
     if (successClone) {
@@ -287,14 +271,6 @@ export const MyCampaignsListPage: React.FC = () => {
       </div>
 
       <div className="mt-2">
-        {loadingMyOrg ? (
-          <LoadingScreen />
-        ) : (
-          <div>
-            {/* <CampaignAnalysis userInfo={userInfo} myOrg={myOrg} /> */}
-          </div>
-        )}
-
         {loading ? (
           <LoadingScreen />
         ) : filteredCampaigns?.length === 0 ? (

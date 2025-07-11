@@ -80,7 +80,7 @@ export const VendorWiseCampaigns: React.FC<VendorWiseCampaignsProps> = ({
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="flex gap-1 text-[10px] px-1.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
-                      <i className="fi fi-sr-megaphone flex items-center"></i>
+                      <i className="fi fi-sr-screen flex items-center"></i>
                       {Object.keys(vendorWiseCampaigns[vendor].screens).length}
                     </span>
                     <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(vendorWiseCampaigns[vendor]?.performance || 0) > 1 ? "bg-[#4DB37E30] text-[#4DB37E]" : "bg-[#EF444430] text-[#EF4444]"}`}>

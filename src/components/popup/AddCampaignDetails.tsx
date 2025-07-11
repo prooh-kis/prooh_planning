@@ -451,6 +451,7 @@ export const AddCampaignDetails = ({
         </div>
 
         <button
+          type="submit"
           className="px-8 py-2 mt-4 text-[16px] font-semibold bg-[#1297E2] text-[#FFFFFF] rounded-md w-full"
           onClick={saveCampaignDetailsOnLocalStorage}
         >
