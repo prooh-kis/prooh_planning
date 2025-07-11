@@ -115,7 +115,7 @@ export const EnterCampaignBasicDetails = ({
   const {
     loading: loadingMyOrg,
     error: errorMyOrg,
-    data: myOrg
+    data: myOrg,
   } = useSelector((state: any) => state.myOrgDetailsGet);
 
   // Handle adding new client/agency
@@ -186,11 +186,13 @@ export const EnterCampaignBasicDetails = ({
               ?.name || "",
           campaignCoordinatorId: values.coordinatorId,
           campaignCoordinatorEmail:
-            allPlannerData?.find((data: any) => data._id === values.coordinatorId)
-              ?.email || "",
+            allPlannerData?.find(
+              (data: any) => data._id === values.coordinatorId
+            )?.email || "",
           campaignCoordinatorName:
-            allPlannerData?.find((data: any) => data._id === values.coordinatorId)
-              ?.name || "",
+            allPlannerData?.find(
+              (data: any) => data._id === values.coordinatorId
+            )?.name || "",
           sov: values.sov,
           sovType: "ordered",
           monitoringSelection: {
@@ -234,7 +236,7 @@ export const EnterCampaignBasicDetails = ({
     dispatch(getAllClientAgencyNames());
     dispatch(getAllBrandAndNetworkAction());
     dispatch(getAllPlannerIdsAndEmail({ id: userInfo?._id }));
-    dispatch(getMyOrgDetailsAction({id: userInfo?._id}));
+    dispatch(getMyOrgDetailsAction({ id: userInfo?._id }));
   }, [dispatch, userInfo]);
 
   useEffect(() => {
@@ -538,16 +540,20 @@ export const EnterCampaignBasicDetails = ({
                 </Tooltip>
               </div>
             }
-            initialValue={myOrg?.officialMembers?.find((mem: any) => 
-              mem.userId.toString() === myOrg?.officialMembers?.find((member: any) => 
-                member.userId === userInfo?._id
-              )?.reportsTo.toString()
-            )?.userId}
+            initialValue={
+              myOrg?.officialMembers?.find(
+                (mem: any) =>
+                  mem.userId.toString() ===
+                  myOrg?.officialMembers
+                    ?.find((member: any) => member.userId === userInfo?._id)
+                    ?.reportsTo.toString()
+              )?.userId
+            }
           >
             <Select
               // disabled
-              // placeholder={`${myOrg?.officialMembers?.find((mem: any) => 
-              //     mem.userId.toString() === myOrg?.officialMembers?.find((member: any) => 
+              // placeholder={`${myOrg?.officialMembers?.find((mem: any) =>
+              //     mem.userId.toString() === myOrg?.officialMembers?.find((member: any) =>
               //       member.userId === userInfo?._id
               //     )?.reportsTo.toString()
               //   )?.name || "Manager"}`}
@@ -555,8 +561,8 @@ export const EnterCampaignBasicDetails = ({
               size="large"
               loading={!allPlannerData.length}
               showSearch={false}
-              // options={myOrg?.officialMembers?.filter((mem: any) => 
-              //   mem.userId.toString() === myOrg?.officialMembers?.find((member: any) => 
+              // options={myOrg?.officialMembers?.filter((mem: any) =>
+              //   mem.userId.toString() === myOrg?.officialMembers?.find((member: any) =>
               //     member.userId === userInfo?._id
               //   )?.reportsTo.toString()
               // )?.map((data: any) => ({
@@ -565,7 +571,7 @@ export const EnterCampaignBasicDetails = ({
               // }))}
               options={allPlannerData?.map((data: any) => ({
                 label: data?.name,
-                value: data?.userId,
+                value: data?._id,
               }))}
             />
           </Form.Item>
@@ -589,12 +595,6 @@ export const EnterCampaignBasicDetails = ({
               loading={!allPlannerData.length}
               showSearch
               optionFilterProp="label"
-              // options={allPlannerData?.filter((planner: any) => myOrg?.officialMembers?.filter((mem: any) => mem.role === "COORDINATOR")?.map((mem: any) => mem?.userId?.toString()).includes(planner._id))?.map((data: any) => {
-              //   return {
-              //     label: data?.name,
-              //     value: data?._id,
-              //   };
-              // })}
               options={allPlannerData?.map((data: any) => {
                 return {
                   label: data?.name,

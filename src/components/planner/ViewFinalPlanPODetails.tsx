@@ -361,7 +361,7 @@ export const ViewFinalPlanPODetails = ({
     }
     if (errorAddDetails) {
       message.error(
-        `Campaign plannning failed temporarily, ${errorAddDetails}`
+        `Campaign planning failed temporarily, ${errorAddDetails.data.error}`
       );
     }
   }, [errorApply, errorRemove, errorAddDetails]);
