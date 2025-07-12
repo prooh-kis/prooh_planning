@@ -200,7 +200,7 @@ export const CreativeUploadV4 = ({
     .includes("triggerbasedplan");
 
   // Helper functions
-  const transformData = useCallback((data: any[]): any[] => {
+  const transformData = (data: any[]): any[] => {
     return data?.map((item) => {
       const transformCreative = (creative: any) => ({
         url: creative?.url,
@@ -223,9 +223,9 @@ export const CreativeUploadV4 = ({
         triggerCreatives: item.triggerCreatives?.map(transformCreative) || [],
       };
     });
-  }, []);
+  };
 
-  const newTransformData = useCallback((input: Screen[]): any[] => {
+  const newTransformData = (input: Screen[]): any[] => {
     return input.map((screen) => ({
       ...screen,
       creativeDuration: 10,
@@ -233,7 +233,7 @@ export const CreativeUploadV4 = ({
       standardNightTimeCreatives: [],
       triggerCreatives: [],
     }));
-  }, []);
+  };
 
   const isTriggerAvailable = useCallback(() => {
     const triggers = campaignDetails?.triggers || [];
@@ -260,25 +260,21 @@ export const CreativeUploadV4 = ({
     );
   }, [isTriggerBasedCampaign, isTriggerAvailable]);
 
-  const mergeCreativeWithScreenData = useCallback(
-    (creatives: any[], screenData: any[]) => {
-      return screenData.map((screen: any) => {
-        const creativeData = creatives?.find(
-          (creative: any) => creative.screenId === screen.screenId
-        );
+  const mergeCreativeWithScreenData = (creatives: any[], screenData: any[]) => {
+    return screenData.map((screen: any) => {
+      const creativeData = creatives?.find(
+        (creative: any) => creative.screenId === screen.screenId
+      );
 
-        return {
-          ...screen,
-          standardDayTimeCreatives:
-            creativeData?.standardDayTimeCreatives || [],
-          standardNightTimeCreatives:
-            creativeData?.standardNightTimeCreatives || [],
-          triggerCreatives: creativeData?.triggerCreatives || [],
-        };
-      });
-    },
-    []
-  );
+      return {
+        ...screen,
+        standardDayTimeCreatives: creativeData?.standardDayTimeCreatives || [],
+        standardNightTimeCreatives:
+          creativeData?.standardNightTimeCreatives || [],
+        triggerCreatives: creativeData?.triggerCreatives || [],
+      };
+    });
+  };
 
   const isCreativeUploaded = useCallback(
     (screenId: string) => {
@@ -295,18 +291,15 @@ export const CreativeUploadV4 = ({
     [creativeUploadData]
   );
 
-  const isCreativeUploaded2 = useCallback(
-    (screen: any) => {
-      return (
-        screen?.standardDayTimeCreatives?.length > 0 ||
-        screen?.standardNightTimeCreatives?.length > 0 ||
-        screen?.triggerCreatives?.length > 0
-      );
-    },
-    [creativeUploadData]
-  );
+  const isCreativeUploaded2 = (screen: any) => {
+    return (
+      screen?.standardDayTimeCreatives?.length > 0 ||
+      screen?.standardNightTimeCreatives?.length > 0 ||
+      screen?.triggerCreatives?.length > 0
+    );
+  };
 
-  const validate = useCallback(() => {
+  const validate = () => {
     const triggerAvailable = isTriggerAvailable();
     const validationStatus = creativeUploadData.every((screen) => {
       const hasContent = triggerAvailable
@@ -317,7 +310,7 @@ export const CreativeUploadV4 = ({
       return hasContent;
     });
     return validationStatus;
-  }, []);
+  };
 
   const handleSaveAndContinue = async () => {
     if (pathname.split("/").includes("view")) {
@@ -541,40 +534,45 @@ export const CreativeUploadV4 = ({
     });
   }, [creativeUploadData]);
 
-  const removeFile = useCallback((awsURL: string) => {
-    setCreativeUploadData((prevData) => {
-      const newData = [...prevData];
-      const screenIndex = newData?.findIndex(
-        (screen) => screen.screenId === currentScreen?.screenId
+  const removeFile = (awsURL: string) => {
+    let newData = [...creativeUploadData];
+    const screenIndex = newData?.findIndex(
+      (screen) => screen.screenId === currentScreen?.screenId
+    );
+
+    const screen = { ...newData[screenIndex] };
+    if (!isCreativeUploaded2(screen)) {
+      message.error("No Creative uploaded yet");
+      return;
+    }
+
+    screen.standardDayTimeCreatives = screen.standardDayTimeCreatives.filter(
+      (file) => file.awsURL !== awsURL
+    );
+
+    screen.standardNightTimeCreatives =
+      screen.standardNightTimeCreatives.filter(
+        (file) => file.awsURL !== awsURL
       );
 
-      if (screenIndex === -1) {
-        message.error("Screen not found!");
-        return prevData;
+    screen.triggerCreatives = screen.triggerCreatives.filter(
+      (file) => file.awsURL !== awsURL
+    );
+
+    newData[screenIndex] = screen;
+    setCurrentScreen(screen);
+    setTabData((pre: any) => {
+      let sss = [...pre];
+      for (let d of sss) {
+        d.label = `${d.label?.split("(")[0]} (${screen[d.id]?.length}) `;
       }
-
-      const screen = { ...newData[screenIndex] };
-
-      screen.standardDayTimeCreatives = screen.standardDayTimeCreatives.filter(
-        (file) => file.awsURL !== awsURL
-      );
-
-      screen.standardNightTimeCreatives =
-        screen.standardNightTimeCreatives.filter(
-          (file) => file.awsURL !== awsURL
-        );
-
-      screen.triggerCreatives = screen.triggerCreatives.filter(
-        (file) => file.awsURL !== awsURL
-      );
-
-      newData[screenIndex] = screen;
-      setCurrentScreen(screen);
-      return newData;
+      return sss;
     });
-  }, []);
 
-  const removeAllSavedCreative = useCallback(() => {
+    setCreativeUploadData(newData);
+  };
+
+  const removeAllSavedCreative = () => {
     setCreativeUploadData((prevData) => {
       const newData = [...prevData];
       const screenIndex = newData?.findIndex(
@@ -598,12 +596,12 @@ export const CreativeUploadV4 = ({
       setCurrentScreen(screen);
       return newData;
     });
-  }, []);
+  };
 
-  const closePopup = useCallback(() => {
+  const closePopup = () => {
     setIsBucketPopupOpen(false);
     setCurrentScreens([]);
-  }, []);
+  };
 
   const handleSaveFiles = (files: Creative[], screenId: string) => {
     if (files.length === 0) {
