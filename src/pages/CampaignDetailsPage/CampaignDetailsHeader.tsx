@@ -119,7 +119,12 @@ export const CampaignDetailsHeader = ({
                 <div
                   onClick={() => {
                     if (confirm("Do you really want to change creatives?")) {
-                      navigate(`/editCampaign/${campaignCreated?._id}`);
+                      navigate(`/editCampaign/${campaignCreated?._id}`, {
+                        state: {
+                          changeCreative: true,
+                          from: EDIT_CAMPAIGN
+                        },
+                      });
                     }
                   }}
                   className="h-8 truncate flex gap-2 text-[#6F7F8E] text-[14px] font-medium hover:text-[#129BFF] cursor-pointer hover:border border-[#129BFF] rounded-md py-1 px-4"

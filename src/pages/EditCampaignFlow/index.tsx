@@ -6,7 +6,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getCampaignCreationsDetails } from "../../actions/campaignAction";
-import { CAMPAIGN_PLAN_TYPE_KNOW, EDIT_CAMPAIGN, VIEW_CAMPAIGN } from "../../constants/campaignConstants";
+import {
+  CAMPAIGN_PLAN_TYPE_KNOW,
+  EDIT_CAMPAIGN,
+  VIEW_CAMPAIGN,
+} from "../../constants/campaignConstants";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
 import { EditStepperSlider } from "../../components/molecules/EditStepperSlider";
 import { EditCreativeData } from "../../data/allPlanerData";
@@ -32,8 +36,7 @@ export const EditCampaignFlow: React.FC = () => {
     if (campaignData) {
       setCampaignDetails(campaignData);
       const newStep =
-        pathname.split("/").includes("view") &&
-        state?.from === VIEW_CAMPAIGN
+        pathname.split("/").includes("view") && state?.from === VIEW_CAMPAIGN
           ? 1
           : location.pathname.split("/").includes("edit") &&
             state?.from === EDIT_CAMPAIGN
@@ -41,7 +44,11 @@ export const EditCampaignFlow: React.FC = () => {
           : EditCreativeData.find(
               (page: any) => page.value === campaignData.currentPage
             )?.id || 0;
-
+      if (state.changeCreative) {
+        setCurrentStep(1);
+        saveDataOnLocalStorage(CURRENT_STEP, 1);
+        return;
+      }
       setCurrentStep(
         newStep >= steps ? newStep : newStep == 1 ? newStep + 1 : newStep + 1
       );
@@ -51,11 +58,7 @@ export const EditCampaignFlow: React.FC = () => {
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
-  }, [
-    campaignData,
-    campaignId,
-    pathname,
-    state?.from,]);
+  }, [campaignData, campaignId, pathname, state?.from]);
 
   useEffect(() => {
     if (campaignId) {
