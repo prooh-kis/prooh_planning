@@ -57,7 +57,7 @@ const Monitoring = ({ bg, text, label, data }: MonitoringProps) => {
 
   return (
     <div className="col-span-1 border border-gray-100 gap-2 sm:gap-4 w-full p-2 rounded-md">
-      <Tooltip title={`${label} Date : ${data.siteMonitoring.actual}`}>
+      <Tooltip title={`${label} Date : ${data?.siteMonitoring?.actual}`}>
         <div
           style={{ backgroundColor: bg, color: text }}
           className="p-2 rounded-md flex items-center justify-center gap-2"

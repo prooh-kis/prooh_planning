@@ -34,6 +34,11 @@ const MONITORING_TYPE_CONFIGS: MonitoringTypeConfig[] = [
     iconType: "fi-sr-video-camera-alt",
   },
   { label: "Night Shots", value: "nightShot", iconType: "fi-ss-moon" },
+  {
+    label: "High Resolution",
+    value: "highResolution",
+    iconType: "fi-sr-high-definition",
+  },
 ];
 
 const MONITORING_TYPE_LABELS: Record<string, string> = {
@@ -42,6 +47,7 @@ const MONITORING_TYPE_LABELS: Record<string, string> = {
   loopVideo: "Loop Video",
   nightShot: "Night Shot",
   withGeoTag: "With Geo Tag",
+  highResolution: 'High Resolution'
 };
 
 export const MonitoringPicCard = ({
@@ -104,9 +110,7 @@ export const MonitoringPicCard = ({
       className={`relative flex flex-col rounded-[12px] shadow-md hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-gray-800 ${cardHeight}`}
     >
       {/* Media container - takes about 70% of card height */}
-      <div className="flex-1 relative h-[70%]">
-        {renderMedia()}
-      </div>
+      <div className="flex-1 relative h-[70%]">{renderMedia()}</div>
 
       {/* Info container - takes about 30% of card height */}
       <div className="p-2 h-[30%] ">
