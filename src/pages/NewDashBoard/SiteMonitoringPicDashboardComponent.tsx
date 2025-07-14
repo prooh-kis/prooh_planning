@@ -2,6 +2,8 @@ import { SiteMapViewDetailsPopup } from "../../components/popup/SiteMapViewDetai
 import React, { useCallback } from "react";
 import { MonitoringPicturesAllSitesPopup } from "./MonitoringPicturesAllSitesPopup";
 import { useSelector } from "react-redux";
+import { formatDelayedDate } from "../../utils/dateAndTimeUtils";
+import { Tooltip } from "antd";
 
 interface MonitoringProps {
   bg: string;
@@ -11,17 +13,9 @@ interface MonitoringProps {
 }
 
 const Monitoring = ({ bg, text, label, data }: MonitoringProps) => {
-  // Calculate overall percentage for this date period
-  const totalCount = Object.values(data).reduce(
-    (sum: number, item: any) => sum + item.count,
-    0
+  const overallPercentage = Math.round(
+    (data?.siteMonitoring?.count / data?.siteMonitoring?.total) * 100
   );
-  const totalTotal = Object.values(data).reduce(
-    (sum: number, item: any) => sum + item.total,
-    0
-  );
-  const overallPercentage =
-    totalTotal > 0 ? Math.round((totalCount / totalTotal) * 100) : 0;
 
   // Map icon data to real values from props
   const iconData = [
@@ -63,21 +57,23 @@ const Monitoring = ({ bg, text, label, data }: MonitoringProps) => {
 
   return (
     <div className="col-span-1 border border-gray-100 gap-2 sm:gap-4 w-full p-2 rounded-md">
-      <div
-        style={{ backgroundColor: bg, color: text }}
-        className="p-2 rounded-md flex items-center justify-center gap-2"
-      >
+      <Tooltip title={`${label} Date : ${data.siteMonitoring.actual}`}>
         <div
-          style={{ background: text }}
-          className="h-2 w-2 rounded-full"
-        ></div>
-        <p className="text-[12px] font-medium leading-[100%] m-0 p-0">
-          {label}
-        </p>
-        <p className="text-[12px] font-bold leading-[100%] m-0 p-0">
-          {overallPercentage}%
-        </p>
-      </div>
+          style={{ backgroundColor: bg, color: text }}
+          className="p-2 rounded-md flex items-center justify-center gap-2"
+        >
+          <div
+            style={{ background: text }}
+            className="h-2 w-2 rounded-full"
+          ></div>
+          <p className="text-[12px] font-medium leading-[100%] m-0 p-0">
+            {label}
+          </p>
+          <p className="text-[12px] font-bold leading-[100%] m-0 p-0">
+            {overallPercentage}%
+          </p>
+        </div>
+      </Tooltip>
       <div className="flex flex-wrap gap-2 sm:gap-4 items-center justify-center pt-2">
         {iconData.map((item, index) => (
           <div key={index} className="flex gap-1 text-[11px] items-center">
@@ -86,6 +82,15 @@ const Monitoring = ({ bg, text, label, data }: MonitoringProps) => {
           </div>
         ))}
       </div>
+      {data?.siteMonitoring?.delayed !== data?.siteMonitoring?.actual && (
+        <div className="rounded-full bg-[#FFF3F3] flex items-center gap-4 text-[10px] mt-2 text-[#A75A55]">
+          <div className="rounded-full  border border-[#FFF3F3] bg-[#FFFFFF] w-auto p-1 px-4 text-[#A75A55]">
+            Delayed
+          </div>
+          Monitoring pic last uploaded at,{" "}
+          {formatDelayedDate(data?.siteMonitoring?.delayed)}
+        </div>
+      )}
     </div>
   );
 };

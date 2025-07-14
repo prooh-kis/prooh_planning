@@ -190,18 +190,17 @@ export function transformToAmPm(time) {
 }
 
 export function convertTo12Hour(hour24) {
-  const period = hour24 >= 12 ? 'PM' : 'AM';
+  const period = hour24 >= 12 ? "PM" : "AM";
   const hour12 = hour24 % 12 || 12; // Converts 0 to 12
   return `${hour12} ${period}`;
 }
 
-  // Helper function to compare dates in mm/dd/yyyy format
+// Helper function to compare dates in mm/dd/yyyy format
 export function isDateAfter(dateStr1, dateStr2) {
-    const date1 = new Date(dateStr1);
-    const date2 = new Date(dateStr2);
-    return date1 > date2;
-  }
-
+  const date1 = new Date(dateStr1);
+  const date2 = new Date(dateStr2);
+  return date1 > date2;
+}
 
 export function calculateDayTypes(startDate, endDate) {
   // Convert input to Date objects if they aren't already
@@ -210,12 +209,12 @@ export function calculateDayTypes(startDate, endDate) {
 
   // Validate the dates
   if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-      throw new Error("Invalid date input");
+    throw new Error("Invalid date input");
   }
 
   // Swap dates if start is after end
   if (start > end) {
-      [start, end] = [end, start];
+    [start, end] = [end, start];
   }
 
   // Initialize counters
@@ -228,24 +227,40 @@ export function calculateDayTypes(startDate, endDate) {
 
   // Loop through each day
   while (current <= end) {
-      const day = current.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-      
-      if (day === 0) {
-          sundays++;
-      } else if (day === 6) {
-          saturdays++;
-      } else {
-          weekdays++;
-      }
-      
-      // Move to the next day
-      current.setDate(current.getDate() + 1);
+    const day = current.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+    if (day === 0) {
+      sundays++;
+    } else if (day === 6) {
+      saturdays++;
+    } else {
+      weekdays++;
+    }
+
+    // Move to the next day
+    current.setDate(current.getDate() + 1);
   }
- 
+
   return {
-      weekdays,
-      saturdays,
-      sundays,
-      all: weekdays + saturdays + sundays
-  }
+    weekdays,
+    saturdays,
+    sundays,
+    all: weekdays + saturdays + sundays,
+  };
 }
+
+export const formatDelayedDate = (dateString) => {
+  if (!dateString) return ""; // Handle empty/undefined cases
+
+  // Split the date string into parts
+  const [month, day, year] = dateString.split("/").map(Number);
+
+  // Create a Date object (months are 0-indexed in JS)
+  const date = new Date(year, month - 1, day);
+
+  // Format to "day Month name"
+  return date.toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+  });
+};
