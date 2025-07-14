@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { message } from "antd";
+import { message, Tooltip } from "antd";
 import { Footer } from "../../components/footer";
 import { EmailConfirmationImage } from "../../components/segments/EmailConfirmationImage";
 import { useDispatch, useSelector } from "react-redux";
@@ -46,6 +46,10 @@ import { format } from "date-fns";
 import { monitoringTypes } from "../../constants/helperConstants";
 import { ChoseMonitoringTypeFive } from "../../components/segments/ChoseMonitoringTypeFive";
 import { CostSummaryPopup } from "./CostSummaryPopup";
+import {
+  ErrorConfirmationPopup,
+  SuccessConfirmationPopup,
+} from "../../components/popup/ConfirmationPopup";
 
 interface ViewFinalPlanPODetailsProps {
   setCurrentStep: (step: number) => void;
@@ -80,6 +84,10 @@ export const ViewFinalPlanPODetails = ({
 
   const [skipEmailConfirmation, setSkipEmailConfirmation] =
     useState<any>(false);
+
+  const [myMessage, setMyMessage] = useState<string>("");
+  const [errorPopup, setErrorPopup] = useState<boolean>(false);
+  const [successPopup, setSuccessPopup] = useState<boolean>(false);
 
   const [confirmationImageFiles, setConfirmationImageFiles] = useState<any>([]);
   const [toEmail, setToEmail] = useState<any>(
@@ -274,11 +282,26 @@ export const ViewFinalPlanPODetails = ({
   const handleSaveAndContinue = async () => {
     if (!pathname.split("/").includes("view")) {
       if (confirmationImageFiles?.length == 0) {
-        message.info(
-          "Please share your plan with your manager and upload an email confirmation screenshot to continue"
+        setMyMessage(
+          "Please share your plan with your manager if not, and upload an email confirmation screenshot to continue"
         );
+        setErrorPopup(true);
+        setTimeout(() => {
+          setErrorPopup(false);
+        }, 1000 * 30);
         return;
       }
+
+      if (initialData?.midDate?.dates?.length === 0) {
+        if (
+          !confirm(
+            "You have not set mid monitoring data. Do you want to continue?"
+          )
+        ) {
+          return;
+        }
+      }
+
       let imageArr: string[] = [];
       for (let data of confirmationImageFiles) {
         if (data.awsURL) {
@@ -360,9 +383,11 @@ export const ViewFinalPlanPODetails = ({
       );
     }
     if (errorAddDetails) {
-      message.error(
-        `Campaign planning failed temporarily, ${errorAddDetails.data.error}`
-      );
+      setMyMessage(errorAddDetails.data.error);
+      setErrorPopup(true);
+      setTimeout(() => {
+        setErrorPopup(false);
+      }, 1000 * 20);
     }
   }, [errorApply, errorRemove, errorAddDetails]);
 
@@ -453,7 +478,11 @@ export const ViewFinalPlanPODetails = ({
 
   useEffect(() => {
     if (successSendEmail) {
-      message.success("Email sent successfully!");
+      setMyMessage("Email sent successfully!  ");
+      setSuccessPopup(true);
+      setTimeout(() => {
+        setSuccessPopup(false);
+      }, 1000 * 30);
       // setConfirmationImageFiles([]);
       setLoadingEmailReady(false);
       dispatch({ type: SEND_EMAIL_FOR_CONFIRMATION_RESET });
@@ -620,7 +649,11 @@ export const ViewFinalPlanPODetails = ({
         // Handle different job statuses
         switch (socketStatus) {
           case "completed":
-            message.success("Document generation completed successfully!");
+            setMyMessage("Document generation completed successfully!");
+            setSuccessPopup(true);
+            setTimeout(() => {
+              setSuccessPopup(false);
+            }, 1000 * 10);
             setWsLoading(false);
             setJobId(null);
 
@@ -651,9 +684,14 @@ export const ViewFinalPlanPODetails = ({
             setJobId(null);
             setSocketUpdateStatus(null);
             dispatch({ type: DOWNLOAD_CAMPAIGN_SUMMARY_PPT_RESET });
-            message.error(
+            setMyMessage(
               update.error || "Error in document generation. Please try again."
             );
+            setErrorPopup(true);
+            setTimeout(() => {
+              setErrorPopup(false);
+            }, 1000 * 10);
+
             break;
 
           case "not_found":
@@ -727,6 +765,22 @@ export const ViewFinalPlanPODetails = ({
           campaignId={campaignId}
         />
       )}
+      {successPopup && (
+        <SuccessConfirmationPopup
+          message={myMessage}
+          onClose={() => {
+            setSuccessPopup(false);
+          }}
+        />
+      )}
+      {errorPopup && (
+        <ErrorConfirmationPopup
+          message={myMessage}
+          onClose={() => {
+            setErrorPopup(false);
+          }}
+        />
+      )}
       <SendEmailPopup
         open={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
@@ -771,28 +825,38 @@ export const ViewFinalPlanPODetails = ({
                       <h1 className="font-semibold text-lg">
                         Download your campaign plan
                       </h1>
-                      <div
-                        className="cursor-pointer flex items-center gap-2"
-                        onClick={handleDownload}
-                      >
-                        <i
-                          className={`${
-                            wsLoading
-                              ? "fi fi-br-spinner animate-spin"
-                              : "fi fi-sr-file-download"
-                          } text-[12px] text-[#129BFF] flex items-center`}
-                        ></i>
-                        <h1 className="text-[12px] text-[#129BFF]">
-                          {socketUpdateStatus?.progress &&
-                            socketUpdateStatus?.progress !== 100 &&
-                            `${socketUpdateStatus?.progress}%`}{" "}
-                          {downloadUrls.length > 0
-                            ? "Download"
+                      <Tooltip
+                        title={
+                          downloadUrls.length > 0
+                            ? "Download PDF document"
                             : wsLoading
-                            ? "Generating"
-                            : "Generate"}
-                        </h1>
-                      </div>
+                            ? "Generating PDF"
+                            : "Generate PDF to share client"
+                        }
+                      >
+                        <div
+                          className="cursor-pointer flex items-center gap-2"
+                          onClick={handleDownload}
+                        >
+                          <i
+                            className={`${
+                              wsLoading
+                                ? "fi fi-br-spinner animate-spin"
+                                : "fi fi-sr-file-download"
+                            } text-[12px] text-[#129BFF] flex items-center`}
+                          ></i>
+                          <h1 className="text-[12px] text-[#129BFF]">
+                            {socketUpdateStatus?.progress &&
+                              socketUpdateStatus?.progress !== 100 &&
+                              `${socketUpdateStatus?.progress}%`}{" "}
+                            {downloadUrls.length > 0
+                              ? "Download"
+                              : wsLoading
+                              ? "Generating"
+                              : "Generate"}
+                          </h1>
+                        </div>
+                      </Tooltip>
                     </div>
                     <div className="flex flex-wrap gap-6 pt-4">
                       <div

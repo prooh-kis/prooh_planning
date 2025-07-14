@@ -1,16 +1,22 @@
 import clsx from "clsx";
-import { CheckboxInput } from "../../components/atoms/CheckboxInput";
 import { EditIcon } from "../../assets";
 import { Loading } from "../../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
-import { editCostDetailsScreenWiseForCostSummaryPopupPage, getInventoryDetailsForCostSummaryPopupPage, sendRequestToVendorForBudgetApprovalCostSheetPopupPage } from "../../actions/screenAction";
+import {
+  editCostDetailsScreenWiseForCostSummaryPopupPage,
+  sendRequestToVendorForBudgetApprovalCostSheetPopupPage,
+} from "../../actions/screenAction";
 import { useEffect, useState } from "react";
 import { FileUploadButton } from "../../components/FileUploadButton";
 import { getAWSUrlToUploadFile, saveFileOnAWS } from "../../utils/awsUtils";
 import { message, Tooltip } from "antd";
 import { PrimaryInput } from "../../components/atoms/PrimaryInput";
-import { EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET, SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_RESET } from "../../constants/screenConstants";
+import {
+  EDIT_COST_DETAILS_SCREEN_WISE_FOR_COST_SUMMARY_RESET,
+  SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_RESET,
+} from "../../constants/screenConstants";
 import ButtonInput from "../../components/atoms/ButtonInput";
+import { SuccessConfirmationPopup } from "../../components/popup/ConfirmationPopup";
 
 interface CostSheetTableProps {
   campaignId?: any;
@@ -35,37 +41,44 @@ export const CostSheetTable = ({
 }: CostSheetTableProps) => {
   const dispatch = useDispatch<any>();
 
-  
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-
+  const [showSuccessConfirmation, setShowSuccessConfirmation] =
+    useState<boolean>(false);
   const [showDocumentModal, setShowDocumentModal] = useState<boolean>(false);
 
   const {
     loading: loadingSendApprovalRequest,
     error: errorSendApprovalRequest,
     success: successSendApprovalRequest,
-  } = useSelector((state: any) => state.sendRequestToVendorForBudgetApprovalCostSheetPopupPage);
-
+  } = useSelector(
+    (state: any) => state.sendRequestToVendorForBudgetApprovalCostSheetPopupPage
+  );
 
   useEffect(() => {
     if (errorSendApprovalRequest) {
-      message.error("Request failed for vendor cost approval!!!")
-    }
-    if (successSendApprovalRequest) {
-      message.success("Request sent for vendor cost apporval...")
+      message.error("Request failed for vendor cost approval!!!");
       dispatch({
-        type: SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_RESET
+        type: SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_RESET,
       });
     }
-  },[dispatch, successSendApprovalRequest, errorSendApprovalRequest]);
-  
+    if (successSendApprovalRequest) {
+      dispatch({
+        type: SEND_BUDGET_APPROVAL_TO_VENDOR_COST_SUMMARY_RESET,
+      });
+      setShowSuccessConfirmation(true);
+      setTimeout(() => {
+        setShowSuccessConfirmation(false);
+      }, 1000 * 15);
+    }
+  }, [dispatch, successSendApprovalRequest, errorSendApprovalRequest]);
+
   const handleEdit = (e: any) => {
     setScreenData((prevData: any[]) => {
       if (!prevData || !prevData[e.index]) return prevData;
-      
+
       const newData = [...prevData];
-      const numericValue = e.value === '' ? 0 : Number(e.value);
-      
+      const numericValue = e.value === "" ? 0 : Number(e.value);
+
       if (e.type === "clientCost") {
         newData[e.index] = {
           ...newData[e.index],
@@ -83,10 +96,10 @@ export const CostSheetTable = ({
           // clientCost: numericValue / 0.7
         };
       }
-      
+
       return newData;
     });
-  }
+  };
 
   const handleSave = () => {
     // Create a new array with updated data to ensure immutability
@@ -99,12 +112,13 @@ export const CostSheetTable = ({
       // commission: item.commission // This will be recalculated by the server
     }));
 
-    dispatch(editCostDetailsScreenWiseForCostSummaryPopupPage({
-      id: campaignId,
-      screenData: updatedData
-    }));
-  }
-
+    dispatch(
+      editCostDetailsScreenWiseForCostSummaryPopupPage({
+        id: campaignId,
+        screenData: updatedData,
+      })
+    );
+  };
 
   const handleSelectRow = (value: boolean, index: number) => {
     if (value) {
@@ -123,7 +137,6 @@ export const CostSheetTable = ({
       setSelectedRows([]);
     }
   };
-
 
   const getAWSUrl = async (data: any) => {
     try {
@@ -144,7 +157,7 @@ export const CostSheetTable = ({
     const data = {
       file: file,
       fileType: file.type,
-    }
+    };
     const awsUrl = await getAWSUrl(data);
     if (!awsUrl) return;
     let data2: any = [...screenData];
@@ -156,28 +169,47 @@ export const CostSheetTable = ({
     dispatch(
       editCostDetailsScreenWiseForCostSummaryPopupPage({
         id: campaignId,
-        screenData: data2
+        screenData: data2,
       })
-    )
+    );
   };
 
   const handleSendRequest = () => {
-    dispatch(sendRequestToVendorForBudgetApprovalCostSheetPopupPage({
-      id: campaignId,
-      screens: screenData.filter((s: any, i: any) => selectedRows.includes(i))?.map((sc: any) => sc.screenName)
-    }));
-  }
+    if (confirm("Do you want to send budget request to venders?"))
+      dispatch(
+        sendRequestToVendorForBudgetApprovalCostSheetPopupPage({
+          id: campaignId,
+          screens: screenData
+            .filter((s: any, i: any) => selectedRows.includes(i))
+            ?.map((sc: any) => sc.screenName),
+        })
+      );
+  };
 
   return (
     <div className="w-full py-2">
+      {showSuccessConfirmation && (
+        <SuccessConfirmationPopup
+          message="Successfully Send Budget Approval To Vender, Ask the venders to approve the request."
+          onClose={() => {
+            setShowSuccessConfirmation(false);
+          }}
+        />
+      )}
+
       {showDocumentModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
           <div className="border bg-[#FFFFFF] rounded-[10px] h-3/4 w-3/4 p-1">
             <div className="flex justify-between">
               <div className="relative inset-0 flex items-center justify-start gap-4 p-3">
-                <h1 className="text-[14px] font-bold">Confirmation Documents</h1>
+                <h1 className="text-[14px] font-bold">
+                  Confirmation Documents
+                </h1>
               </div>
-              <div className="relative inset-0 flex items-center justify-end gap-4 p-3" onClick={() => setShowDocumentModal(false)}>
+              <div
+                className="relative inset-0 flex items-center justify-end gap-4 p-3"
+                onClick={() => setShowDocumentModal(false)}
+              >
                 <i className="fi fi-br-cross"></i>
               </div>
             </div>
@@ -190,11 +222,12 @@ export const CostSheetTable = ({
                         <img key={j} src={doc} alt="" />
                       ))}
                     </div>
-                    <h1 className="text-[12px] p-2">Screen Name: {data?.screenName}</h1>
+                    <h1 className="text-[12px] p-2">
+                      Screen Name: {data?.screenName}
+                    </h1>
                   </div>
-                ))} 
+                ))}
               </div>
-              
             </div>
           </div>
         </div>
@@ -203,7 +236,9 @@ export const CostSheetTable = ({
       <div className="flex justify-between items-center">
         <h1 className="text-[14px] font-semibold p-2">
           Inventory Details{" "}
-          <span className="text-[#6F7F8E] text-[12px]">({screenData?.length || 0})</span>
+          <span className="text-[#6F7F8E] text-[12px]">
+            ({screenData?.length || 0})
+          </span>
         </h1>
         {selectedRows?.length > 0 && (
           <div className="flex items-center gap-2">
@@ -212,15 +247,13 @@ export const CostSheetTable = ({
               width=""
               fileType={"image"}
             />
-            <ButtonInput 
+            <ButtonInput
               variant="primary"
               size="small"
               onClick={handleSendRequest}
               loading={loadingSendApprovalRequest}
               disabled={loadingSendApprovalRequest}
-              icon={
-                <i className="fi fi-sr-envelope flex items-center"></i>
-              }
+              icon={<i className="fi fi-sr-envelope flex items-center"></i>}
             >
               Send
             </ButtonInput>
@@ -232,79 +265,83 @@ export const CostSheetTable = ({
           <table className="w-full">
             <thead className="bg-[#F7F7F7] w-full">
               <tr className="grid grid-cols-12 w-full h-[40px] grid-flow-col">
-            <th className="col-span-3 grid grid-cols-5 w-full flex items-center justify-start px-2 gap-2">
-              <div className="col-span-1 flex items-center gap-2">
-                <input
-                  title="checkbox"
-                  type="checkbox"
-                  onChange={(e: any) => handleSelectAllRow(e.target.checked)}
-                  checked={selectedRows?.length === screenData?.length}
-                />
-                <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">Sl</h1>
-              </div>
-              <div className="col-span-4 flex justify-start">
-                <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
-                  Screen Name
-                </h1>
-              </div>
-            </th>
-            <th className="flex col-span-1 w-full items-center justify-start gap-2">
-              <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
-                Touchpoints
-              </h1>
-            </th>
-            <th className="flex col-span-1 w-full items-center justify-center gap-2">
-              <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
-                Vendor Name
-              </h1>
-            </th>
-            <th className="flex col-span-1 w-full items-center justify-center gap-2">
-              <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
-                Vendor Type
-              </h1>
-            </th>
-            <th className="flex col-span-1 w-full items-center justify-center gap-1">
-              <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
-                Cost
-              </h1>
-              <Tooltip title="Cost given to your client">
-                <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
-              </Tooltip>
-            </th>
-            <th className="flex col-span-1 w-full items-center justify-center gap-1">
-              <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
-                Commission
-              </h1>
-              <Tooltip title="Your commission percentage">
-                <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
-              </Tooltip>
-            </th>
-            <th className="flex col-span-1 w-full items-center justify-center gap-1">
-              <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
-                Price
-              </h1>
-              <Tooltip title="Vendor cost excluding commission">
-                <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
-              </Tooltip>
-            </th>
-            <th className="flex col-span-1 w-full items-center justify-center gap-1">
-              <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
-                Margin
-              </h1>
-              <Tooltip title="Difference between client cost and vendor cost">
-                <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
-              </Tooltip>
-            </th>
-            <th className="flex col-span-1 w-full items-center justify-center gap-2">
-              <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
-                Docs
-              </h1>
-            </th>
-            <th className="flex col-span-1 w-full items-center justify-center gap-2">
-              <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
-                Action
-              </h1>
-            </th>
+                <th className="col-span-3 grid grid-cols-5 w-full flex items-center justify-start px-2 gap-2">
+                  <div className="col-span-1 flex items-center gap-2">
+                    <input
+                      title="checkbox"
+                      type="checkbox"
+                      onChange={(e: any) =>
+                        handleSelectAllRow(e.target.checked)
+                      }
+                      checked={selectedRows?.length === screenData?.length}
+                    />
+                    <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
+                      Sl
+                    </h1>
+                  </div>
+                  <div className="col-span-4 flex justify-start">
+                    <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
+                      Screen Name
+                    </h1>
+                  </div>
+                </th>
+                <th className="flex col-span-1 w-full items-center justify-start gap-2">
+                  <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
+                    Touchpoints
+                  </h1>
+                </th>
+                <th className="flex col-span-1 w-full items-center justify-center gap-2">
+                  <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
+                    Vendor Name
+                  </h1>
+                </th>
+                <th className="flex col-span-1 w-full items-center justify-center gap-2">
+                  <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
+                    Vendor Type
+                  </h1>
+                </th>
+                <th className="flex col-span-1 w-full items-center justify-center gap-1">
+                  <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
+                    Cost
+                  </h1>
+                  <Tooltip title="Cost given to your client">
+                    <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
+                  </Tooltip>
+                </th>
+                <th className="flex col-span-1 w-full items-center justify-center gap-1">
+                  <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
+                    Commission
+                  </h1>
+                  <Tooltip title="Your commission percentage">
+                    <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
+                  </Tooltip>
+                </th>
+                <th className="flex col-span-1 w-full items-center justify-center gap-1">
+                  <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
+                    Price
+                  </h1>
+                  <Tooltip title="Vendor cost excluding commission">
+                    <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
+                  </Tooltip>
+                </th>
+                <th className="flex col-span-1 w-full items-center justify-center gap-1">
+                  <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
+                    Margin
+                  </h1>
+                  <Tooltip title="Difference between client cost and vendor cost">
+                    <i className="fi fi-br-info text-[#21394F] text-[12px] flex items-center"></i>
+                  </Tooltip>
+                </th>
+                <th className="flex col-span-1 w-full items-center justify-center gap-2">
+                  <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
+                    Docs
+                  </h1>
+                </th>
+                <th className="flex col-span-1 w-full items-center justify-center gap-2">
+                  <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F]">
+                    Action
+                  </h1>
+                </th>
               </tr>
             </thead>
           </table>
@@ -319,68 +356,82 @@ export const CostSheetTable = ({
                   </td>
                 </tr>
               )}
-              {!loading && screenData && screenData?.map((inventory: any, i: number) => (
-                <tr
-                  key={i}
-                  className={clsx(
-                    `flex justify-between border-b w-full h-[45px] grid grid-cols-12 hover:bg-gray-100`
-                  )}
-                >
-                  <td className="col-span-3 grid grid-cols-5 w-full flex items-center justify-start gap-4 truncate px-2">
-                    <div className="col-span-1 flex items-center gap-2">
-                      <input
-                        title={`checkbox-${i}`}
-                        className="border rounded-md"
-                        type="checkbox"
-                        checked={selectedRows?.includes(i)}
-                        onChange={(e: any) => handleSelectRow(e.target.checked, i)}
-                      />
-                      <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F] truncate">
-                        {i + 1}
-                      </h1>
-                    </div>
-                    <div className="col-span-4 flex items-center gap-2">
-                      <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal truncate">
-                        {inventory?.screenName}
-                      </h1>
-                    </div>
-                  </td>
-                  <td className="flex col-span-1 w-full items-center justify-start gap-2">
-                    <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal truncate">
-                      {inventory?.touchPoint}
-                    </h1>
-                  </td>
-                  <td className="flex col-span-1 w-full items-center justify-center gap-2">
-                    <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal">
-                      {inventory?.vendorName}
-                    </h1>
-                  </td>
-                  <td className="flex col-span-1 w-full items-center justify-center gap-2">
-                    <div className="grid grid-cols-4 w-full items-center">
-                      <p className="col-span-1"></p>
-                      <h1 className="col-span-2 lg:text-[12px] md:text-[12px] text-[#21394F] truncate font-normal">
-                        {inventory?.vendorType}
-                      </h1>
-                    </div>
-                  </td>
-                  <td className="flex col-span-1 w-full items-center justify-center gap-2">
-                    {isEdit && currentRow === i ? (
-                      <PrimaryInput 
-                        placeholder={`₹ ${inventory?.clientCost}`}
-                        value={inventory?.clientCost}
-                        action={(value: any) => handleEdit({value: value, type: "clientCost", index: i})}
-                        inputType="number"
-                        height="h-[32px]"
-                      />
-                    ) : (
-                      <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal truncate">₹ {inventory?.clientCost?.toFixed(0) || 0}</h1>
+              {!loading &&
+                screenData &&
+                screenData?.map((inventory: any, i: number) => (
+                  <tr
+                    key={i}
+                    className={clsx(
+                      `flex justify-between border-b w-full h-[45px] grid grid-cols-12 hover:bg-gray-100`
                     )}
-                  </td>
-                  <td className="flex col-span-1 w-full items-center justify-center gap-2">
-                    <h1 className="lg:text-[12px] md:text-[12px] text-[#FF0808] font-normal truncate">{inventory?.commission?.toFixed(0) || 0}%</h1>
-                  </td>
-                  <td className="flex col-span-1 w-full items-center justify-center gap-2">
-                    {/* {isEdit && currentRow === i ? (
+                  >
+                    <td className="col-span-3 grid grid-cols-5 w-full flex items-center justify-start gap-4 truncate px-2">
+                      <div className="col-span-1 flex items-center gap-2">
+                        <input
+                          title={`checkbox-${i}`}
+                          className="border rounded-md"
+                          type="checkbox"
+                          checked={selectedRows?.includes(i)}
+                          onChange={(e: any) =>
+                            handleSelectRow(e.target.checked, i)
+                          }
+                        />
+                        <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F] truncate">
+                          {i + 1}
+                        </h1>
+                      </div>
+                      <div className="col-span-4 flex items-center gap-2">
+                        <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal truncate">
+                          {inventory?.screenName}
+                        </h1>
+                      </div>
+                    </td>
+                    <td className="flex col-span-1 w-full items-center justify-start gap-2">
+                      <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal truncate">
+                        {inventory?.touchPoint}
+                      </h1>
+                    </td>
+                    <td className="flex col-span-1 w-full items-center justify-center gap-2">
+                      <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal">
+                        {inventory?.vendorName}
+                      </h1>
+                    </td>
+                    <td className="flex col-span-1 w-full items-center justify-center gap-2">
+                      <div className="grid grid-cols-4 w-full items-center">
+                        <p className="col-span-1"></p>
+                        <h1 className="col-span-2 lg:text-[12px] md:text-[12px] text-[#21394F] truncate font-normal">
+                          {inventory?.vendorType}
+                        </h1>
+                      </div>
+                    </td>
+                    <td className="flex col-span-1 w-full items-center justify-center gap-2">
+                      {isEdit && currentRow === i ? (
+                        <PrimaryInput
+                          placeholder={`₹ ${inventory?.clientCost}`}
+                          value={inventory?.clientCost}
+                          action={(value: any) =>
+                            handleEdit({
+                              value: value,
+                              type: "clientCost",
+                              index: i,
+                            })
+                          }
+                          inputType="number"
+                          height="h-[32px]"
+                        />
+                      ) : (
+                        <h1 className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal truncate">
+                          ₹ {inventory?.clientCost?.toFixed(0) || 0}
+                        </h1>
+                      )}
+                    </td>
+                    <td className="flex col-span-1 w-full items-center justify-center gap-2">
+                      <h1 className="lg:text-[12px] md:text-[12px] text-[#FF0808] font-normal truncate">
+                        {inventory?.commission?.toFixed(0) || 0}%
+                      </h1>
+                    </td>
+                    <td className="flex col-span-1 w-full items-center justify-center gap-2">
+                      {/* {isEdit && currentRow === i ? (
                       <PrimaryInput 
                         placeholder={`₹ ${inventory?.vendorCost}`}
                         value={inventory?.vendorCost}
@@ -392,68 +443,66 @@ export const CostSheetTable = ({
                       <span className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal">
                         ₹ {inventory?.vendorCost?.toFixed(0) || 0}
                       </span>
-                    {/* )} */}
-                  </td>
-                  <td className="flex col-span-1 w-full items-center justify-center gap-2">
-                    <span className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal">
-                      ₹ {inventory?.margin?.toFixed(0) || 0}
-                    </span>
-                  </td>
-                  <td className="flex col-span-1 w-full items-center justify-center gap-2">
-                    <div
-                      className={`flex gap-1 text-[14px]  font-medium ${
-                        inventory?.documents?.length > 0
-                          ? "text-[#43AF5B]"
-                          : "text-[#FF5050]"
-                      }`}
-
-                      onClick={() => {
-                        if (inventory?.documents?.length > 0) {
-                          setShowDocumentModal(true);
-                        } else {
-                          message.error("No documents uploaded");
-                        }
-                      }}
-                    >
-                      <i className="fi fi-sr-clip-file flex items-center"></i>
-                      <h1 >{inventory?.documents?.length}</h1>
-                    </div>
-                  </td>
-                  {loading ? (
-                    <td className="cursor-pointer flex col-span-1 w-full items-center justify-center gap-2">
-                      <Loading />
+                      {/* )} */}
                     </td>
-                  ) : (
-                    <td className="cursor-pointer flex col-span-1 w-full items-center justify-center gap-2">
-                      {isEdit && currentRow === i ? (
-                        <button
-                          title="Save"
-                          type="button"
-                          className="h-8 w-8 border border-[#4DB37E] rounded-lg flex items-center justify-center hover:bg-[#4DB37E50] hover:border-[#4DB37E10]"
-                          onClick={() => {
-                            handleSave();
-                          }}
-                        >
-                          <i className="fi fi-sr-disk text-[16px] text-[#4DB37E]" />
-                        </button>
-                      ) : (
-                        <button
-                          title="Edit"
-                          type="button"
-                          className="h-8 w-8 border rounded-lg flex items-center justify-center hover:bg-[#D7D7D750]"
-                          onClick={() => {
-                            setCurrentRow(i);
-                            setIsEdit(true);
-                          }}
-                        >
-                          <img alt="edit icon" src={EditIcon} />
-                        </button>
-                      )}
+                    <td className="flex col-span-1 w-full items-center justify-center gap-2">
+                      <span className="lg:text-[12px] md:text-[12px] text-[#21394F] font-normal">
+                        ₹ {inventory?.margin?.toFixed(0) || 0}
+                      </span>
                     </td>
-                  )}
-
-                </tr>
-              ))}
+                    <td className="flex col-span-1 w-full items-center justify-center gap-2">
+                      <div
+                        className={`flex gap-1 text-[14px]  font-medium ${
+                          inventory?.documents?.length > 0
+                            ? "text-[#43AF5B]"
+                            : "text-[#FF5050]"
+                        }`}
+                        onClick={() => {
+                          if (inventory?.documents?.length > 0) {
+                            setShowDocumentModal(true);
+                          } else {
+                            message.error("No documents uploaded");
+                          }
+                        }}
+                      >
+                        <i className="fi fi-sr-clip-file flex items-center"></i>
+                        <h1>{inventory?.documents?.length}</h1>
+                      </div>
+                    </td>
+                    {loading ? (
+                      <td className="cursor-pointer flex col-span-1 w-full items-center justify-center gap-2">
+                        <Loading />
+                      </td>
+                    ) : (
+                      <td className="cursor-pointer flex col-span-1 w-full items-center justify-center gap-2">
+                        {isEdit && currentRow === i ? (
+                          <button
+                            title="Save"
+                            type="button"
+                            className="h-8 w-8 border border-[#4DB37E] rounded-lg flex items-center justify-center hover:bg-[#4DB37E50] hover:border-[#4DB37E10]"
+                            onClick={() => {
+                              handleSave();
+                            }}
+                          >
+                            <i className="fi fi-sr-disk text-[16px] text-[#4DB37E]" />
+                          </button>
+                        ) : (
+                          <button
+                            title="Edit"
+                            type="button"
+                            className="h-8 w-8 border rounded-lg flex items-center justify-center hover:bg-[#D7D7D750]"
+                            onClick={() => {
+                              setCurrentRow(i);
+                              setIsEdit(true);
+                            }}
+                          >
+                            <img alt="edit icon" src={EditIcon} />
+                          </button>
+                        )}
+                      </td>
+                    )}
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
