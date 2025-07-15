@@ -82,7 +82,9 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
   });
 
   const requiredToPlayed: number[] = currentData.map((item, index) => {
-    const promised = item.delayedSlots ? item.slotsPromised - item.delayedSlots : item.slotsPromised;
+    const promised = item.delayedSlots
+      ? item.slotsPromised - item.delayedSlots
+      : item.slotsPromised;
     const consumed = item.slotsDelivered;
     const originalValue = Math.max(promised - consumed, 0);
 
@@ -100,28 +102,36 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
     }
   });
 
-  const extraSlots: number[] = currentData?.map(
-    (played: any) => {
-      if (played.delayedSlots && played.slotsDelivered > played.slotsPromised - played.delayedSlots) {
-        return played.extraSlotsDelivered + played.slotsDelivered - (played.slotsPromised - played.delayedSlots);
-      }
-      return Math.max(0, played.extraSlotsDelivered);
+  const extraSlots: number[] = currentData?.map((played: any) => {
+    if (
+      played.delayedSlots &&
+      played.slotsDelivered > played.slotsPromised - played.delayedSlots
+    ) {
+      return (
+        played.extraSlotsDelivered +
+        played.slotsDelivered -
+        (played.slotsPromised - played.delayedSlots)
+      );
     }
-  );
+    return Math.max(0, played.extraSlotsDelivered);
+  });
 
-  const dailyPlayedSlots: number[] = currentData?.map(
-    (played: any) => {
-      if (played.delayedSlots && played.slotsDelivered > played.slotsPromised - played.delayedSlots) {
-        return Math.max(0, played.slotsPromised - played.delayedSlots);
-      }
-      return Math.max(0, played.slotsDelivered);
+  const dailyPlayedSlots: number[] = currentData?.map((played: any) => {
+    if (
+      played.delayedSlots &&
+      played.slotsDelivered > played.slotsPromised - played.delayedSlots
+    ) {
+      return Math.max(0, played.slotsPromised - played.delayedSlots);
     }
-  );
+    return Math.max(0, played.slotsDelivered);
+  });
 
   const futurePerformanceData: number[] = currentData.map((item, index) => {
     if (zeroIndex === -1) return 0;
     const delayedSlots = item.delayedSlots || 0;
-    return index < zeroIndex ? 0 : Math.max(0, item.slotsPromised - delayedSlots);
+    return index < zeroIndex
+      ? 0
+      : Math.max(0, item.slotsPromised - delayedSlots);
   });
 
   const partialDaySlots: number[] = currentData.map((item, index) => {
@@ -134,7 +144,6 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
   const chartData = {
     labels: newLabel,
     datasets: [
-      
       {
         label: "Daily",
         data: dailyPlayedSlots,
@@ -196,7 +205,7 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
           align: "center" as const,
           rotation: -90,
           font: { size: 8 },
-          formatter: (value: number) => value > 0 ? "" : ""
+          formatter: (value: number) => (value > 0 ? "" : ""),
         },
       },
       {
@@ -253,48 +262,62 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
       },
       tooltip: {
         enabled: true,
-        mode: 'index',
+        mode: "index",
         intersect: false,
         titleFont: {
           size: 12,
-          weight: '600',
+          weight: "600",
         },
         bodyFont: {
           size: 12,
-          weight: 'normal',
+          weight: "normal",
         },
-        borderColor: '#E5E7EB',
+        borderColor: "#E5E7EB",
         borderWidth: 1,
         padding: 12,
         usePointStyle: true,
         boxWidth: 8,
         boxHeight: 8,
         callbacks: {
-          label: function(context: any) {
-            const label = context.dataset.label || '';
-            if (label === 'Current Day' && context.raw === 0) {
+          label: function (context: any) {
+            const label = context.dataset.label || "";
+            if (label === "Current Day" && context.raw === 0) {
               return null;
             }
             return `${label}: ${context.raw?.toFixed(0) || 0}`;
           },
-          afterBody: function(context: any) {
+          afterBody: function (context: any) {
             const dataIndex = context[0].dataIndex;
             const currentItem = currentData[dataIndex];
-            
+
             // Calculate required values
-            const lastDayRemaining = dataIndex === 0 ? 0 : 
-              Math.max(0, currentData[dataIndex-1].slotsPromised - 
-                (currentData[dataIndex-1].delayedSlots || 0) - 
-                currentData[dataIndex-1].slotsDelivered);
-                
-            const requiredToPlayedValue = currentItem.delayedSlots ? 
-              currentItem.slotsPromised - currentItem.delayedSlots : 
-              currentItem.slotsPromised + lastDayRemaining;
+            const lastDayRemaining =
+              dataIndex === 0
+                ? 0
+                : Math.max(
+                    0,
+                    currentData[dataIndex - 1].slotsPromised -
+                      (currentData[dataIndex - 1].delayedSlots || 0) -
+                      currentData[dataIndex - 1].slotsDelivered
+                  );
+
+            const requiredToPlayedValue = currentItem.delayedSlots
+              ? currentItem.slotsPromised - currentItem.delayedSlots > 0
+                ? currentItem.slotsPromised - currentItem.delayedSlots
+                : 0
+              : currentItem.slotsPromised + lastDayRemaining;
 
             // Get all datasets
-            const allDatasets = context[0]?.chart?.data?.datasets?.filter(
-              (data: any) => ["Daily", "Adjustment", "Remaining", "Partial", "Upcoming"].includes(data.label)
-            ) || [];
+            const allDatasets =
+              context[0]?.chart?.data?.datasets?.filter((data: any) =>
+                [
+                  "Daily",
+                  "Adjustment",
+                  "Remaining",
+                  "Partial",
+                  "Upcoming",
+                ].includes(data.label)
+              ) || [];
 
             // Extract values
             const getValue = (label: string) => {
@@ -309,8 +332,10 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
             const partialDelivery = getValue("Partial");
 
             // Calculate total delivered
-            const total = [dailyDelivery, adjustmentDelivery]
-              .reduce((sum, val) => sum + (val || 0), 0);
+            const total = [dailyDelivery, adjustmentDelivery].reduce(
+              (sum, val) => sum + (val || 0),
+              0
+            );
 
             // Return formatted lines with colors
             return [
@@ -319,10 +344,10 @@ export const DashBoardSlotGraph: React.FC<BarChartProps> = ({
               // `Remaining Delivery: ${remainingDelivery !== 0 ? remainingDelivery : currentDay !== 0 ? currentDay : 'None'}`,
               // `Partial Delivery: ${partialDelivery !== 0 ? partialDelivery : 'None'}`,
               `Total Delivered: ${total.toFixed(0)}`,
-              `Total Promised: ${requiredToPlayedValue?.toFixed(0) || 0}`
+              `Total Promised: ${requiredToPlayedValue?.toFixed(0) || 0}`,
             ];
           },
-        }
+        },
       },
     },
     scales: {
