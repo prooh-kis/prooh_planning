@@ -37,7 +37,6 @@ export const CampaignWise: React.FC<CampaignWiseProps> = ({
     }
   },[nameWiseCampaigns]);
 
-  
   return (
     <div className="bg-[#FFFFFF] rounded-lg p-2">
       <div className="flex items-center justify-between mb-2 border-b py-2">
@@ -61,8 +60,11 @@ export const CampaignWise: React.FC<CampaignWiseProps> = ({
                   <div className="flex items-center gap-2 truncate">
                     <input
                       type="checkbox"
-                      className="h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
-                      checked={filters.campaignCreation.includes(campaign.toString())}
+                      className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
+                      checked={campaign === "0"
+                        ? filters?.campaignCreation.length ===
+                          Object.keys(initialFilters?.campaignCreation).length
+                        : filters.campaignCreation.includes(campaign.toString())}
                       onChange={(e) => handleFilters("campaignCreation", campaign, e.target.checked)}
                       aria-label={`Select ${nameWiseCampaigns[campaign].name}`}
                       disabled={campaignList.length <= 2 ? true : false}
@@ -93,7 +95,7 @@ export const CampaignWise: React.FC<CampaignWiseProps> = ({
                   <div className="flex items-center gap-2 truncate">
                     <input
                       type="checkbox"
-                      className="h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
+                      className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
                       checked={filters.campaignCreation.includes(campaign.toString())}
                       onChange={(e) => handleFilters("campaignCreation", campaign, e.target.checked)}
                       aria-label={`Select ${initialFilters.campaignCreation[campaign].name}`}

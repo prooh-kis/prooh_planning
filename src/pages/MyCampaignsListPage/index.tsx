@@ -381,7 +381,7 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
         }
         if (filtersToUpdate.campaignCreation.length !== filters.campaignCreation.length) {
           console.log('7');
-          updatedFilters = {...updatedFilters, campaignCreation: filters.campaignCreation.filter((member: any) => member !== "0")};
+          updatedFilters = {...updatedFilters, campaignCreation: updatedFilters.campaignCreation.filter((member: any) => member !== "0")};
         }
         return updatedFilters;
       });

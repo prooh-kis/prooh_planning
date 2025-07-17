@@ -62,8 +62,11 @@ export const VendorWiseCampaigns: React.FC<VendorWiseCampaignsProps> = ({
                   <div className="flex items-center gap-2 truncate">
                   <input
                       type="checkbox"
-                      className="h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
-                      checked={filters?.vendor.includes(vendor)}
+                      className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
+                      checked={vendor === "All"
+                        ? filters?.vendor.length ===
+                          initialFilters?.vendor.length
+                        : filters?.vendor.includes(vendor)}
                       onChange={(e) => handleFilters(vendor, e.target.checked)}
                       aria-label={`Select ${vendor || 'vendor'}`}
                     /> 

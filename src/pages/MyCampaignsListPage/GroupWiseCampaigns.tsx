@@ -58,7 +58,7 @@ export const GroupWiseCampaigns: React.FC<AgencyWiseCampaignsProps> = ({
                   <div className="flex items-center gap-2 truncate">
                     <input
                       type="checkbox"
-                      className="h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
+                      className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
                       checked={
                         group === "All"
                           ? filters?.agency.length ===
@@ -106,7 +106,7 @@ export const GroupWiseCampaigns: React.FC<AgencyWiseCampaignsProps> = ({
                       <div className="flex items-center gap-2 truncate">
                         <input
                           type="checkbox"
-                          className="h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
+                          className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
                           checked={filters.agency.includes(group)}
                           onChange={(e) =>
                             handleFilters("agency", group, e.target.checked)

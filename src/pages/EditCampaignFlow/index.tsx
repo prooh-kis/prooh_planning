@@ -44,7 +44,8 @@ export const EditCampaignFlow: React.FC = () => {
           : EditCreativeData.find(
               (page: any) => page.value === campaignData.currentPage
             )?.id || 0;
-      if (state.changeCreative) {
+
+      if (state?.changeCreative) {
         setCurrentStep(1);
         saveDataOnLocalStorage(CURRENT_STEP, 1);
         return;
@@ -58,7 +59,7 @@ export const EditCampaignFlow: React.FC = () => {
       };
       saveDataOnLocalStorage(CURRENT_STEP, currStep);
     }
-  }, [campaignData, campaignId, pathname, state?.from]);
+  }, [campaignData, campaignId, pathname, state]);
 
   useEffect(() => {
     if (campaignId) {

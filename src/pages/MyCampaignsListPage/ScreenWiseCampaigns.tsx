@@ -61,8 +61,11 @@ export const ScreenWiseCampaigns: React.FC<ScreenWiseCampaignsProps> = ({
                   <div className="flex items-center gap-2 truncate">
                     <input
                       type="checkbox"
-                      className="h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
-                      checked={filters?.screen.includes(screen)}
+                      className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
+                      checked={screen === "All"
+                        ? filters?.screen.length ===
+                          initialFilters?.screen.length
+                        : filters?.screen.includes(screen)}
                       onChange={(e) => handleFilters("screen", screen, e.target.checked)}
                       aria-label={`Select ${screen}`}
                       disabled={screenList.length <= 2 ? true : false}
@@ -91,7 +94,7 @@ export const ScreenWiseCampaigns: React.FC<ScreenWiseCampaignsProps> = ({
                   <div className="flex items-center gap-2 truncate">
                     <input
                       type="checkbox"
-                      className="h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
+                      className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
                       checked={filters?.screen.includes(screen)}
                       onChange={(e) => handleFilters("screen", screen, e.target.checked)}
                       aria-label={`Select ${screen}`}

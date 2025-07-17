@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Checkbox, message, Tooltip } from "antd";
 import type { CheckboxProps } from "antd";
@@ -85,6 +85,7 @@ export const CreativeUploadV4 = ({
   // Hooks and state initialization
   const { pathname } = useLocation();
   const dispatch = useDispatch<any>();
+  const navigate = useNavigate();
   const [pageLoading, setPageLoading] = useState(true);
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
   const [allFilter, setAllFilter] = useState<any>({});
@@ -706,10 +707,11 @@ export const CreativeUploadV4 = ({
 
   useEffect(() => {
     if (successAddDetails) {
+      navigate(`/editCampaign/${campaignId}`, { state: null });
       dispatch({ type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET });
       setCurrentStep(step + 1);
     }
-  }, [successAddDetails, step, setCurrentStep, dispatch]);
+  }, [successAddDetails, step, setCurrentStep, dispatch, navigate, campaignId]);
 
   if (pageLoading) return <LoadingScreen />;
 
