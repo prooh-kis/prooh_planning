@@ -89,8 +89,9 @@ export const getOrgLevelCampaignStatusAction = (input) => async (dispatch, getSt
       auth: { userInfo },
     } = getState();
 
-    const { data } = await Axios.get(
-      `${orgV2}/getOrgLevelCampaignStatus?id=${input.id}`,
+    const { data } = await Axios.post(
+      `${orgV2}/getOrgLevelCampaignStatus`,
+      input,
       {
         headers: { authorization: `Bearer ${userInfo.token}` },
       }

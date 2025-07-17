@@ -1,6 +1,6 @@
 import React from "react";
 
-export const SearchInputField = ({ value, onChange, placeholder }: any) => {
+export const SearchInputField = ({ value, onChange, placeholder, className }: any) => {
   return (
     <div className="relative w-full">
       <input
@@ -8,12 +8,12 @@ export const SearchInputField = ({ value, onChange, placeholder }: any) => {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder || "Search..."}
-        className="rounded-md h-[40px] pl-10 pr-4 py-2 border focus:outline-none focus:ring-2 focus:ring-[#129BFF] w-full text-[14px]"
+        className={`${className ? className : "h-[40px] text-[14px] py-2"} rounded-md pl-10 pr-4 border focus:outline-none focus:ring-2 focus:ring-[#129BFF] w-full`}
       />
-      <div className="absolute left-3 top-2 cursor-pointer">
+      <div className="absolute left-3 top-1 bottom-1 flex items-center cursor-pointer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 text-gray-500"
+          className="h-4 w-4 text-gray-500"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -26,9 +26,9 @@ export const SearchInputField = ({ value, onChange, placeholder }: any) => {
           />
         </svg>
       </div>
-      <div className="absolute right-3 top-2 cursor-pointer">
+      <div className="absolute right-3 top-1 cursor-pointer">
         {value && (
-          <i className="fi fi-rs-circle-xmark" onClick={() => onChange("")}></i>
+          <i className="fi fi-rs-circle-xmark flex items-center" onClick={() => onChange("")}></i>
         )}
       </div>
     </div>
