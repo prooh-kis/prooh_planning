@@ -7,6 +7,8 @@ import { TeamHierarchy } from "./TeamHierarchy";
 import { GroupWiseCampaigns } from "./GroupWiseCampaigns";
 import { VendorWiseCampaigns } from "./VendorWiseCampaigns";
 import { UserWiseCampaigns } from "./UserWiseCampaigns";
+import { CampaignWise } from "./CampaignWise";
+import { ScreenWiseCampaigns } from "./ScreenWiseCampaigns";
 
 export const CampaignAnalysis: React.FC<CampaignAnalysisProps> = ({
   userInfo,
@@ -14,25 +16,14 @@ export const CampaignAnalysis: React.FC<CampaignAnalysisProps> = ({
   loadingOrgLevelCampaignStatus,
   errorOrgLevelCampaignStatus,
   orgLevelCampaignStatus,
+  filters,
+  handleFilters,
+  initialFilters,
 }) => {
   const dispatch = useDispatch<any>();
-  const [selectedManagers, setSelectedManagers] = useState<string[]>([]);
-  const [selectedCoordinators, setSelectedCoordinators] = useState<string[]>([]);
 
   const userOrgRole: string = myOrg?.officialMembers.find((member: any) => member.userId === userInfo._id)?.role || ""
 
-  const handleSelectMember = (role: 'manager' | 'coordinator') => 
-    (memberId: string, selected: boolean) => {
-      if (role === 'manager') {
-        setSelectedManagers(prev => 
-          selected ? [...prev, memberId] : prev.filter(id => id !== memberId)
-        );
-      } else {
-        setSelectedCoordinators(prev => 
-          selected ? [...prev, memberId] : prev.filter(id => id !== memberId)
-        );
-      }
-    };
 
   useEffect(() => {
     if (errorOrgLevelCampaignStatus) {
@@ -50,72 +41,85 @@ export const CampaignAnalysis: React.FC<CampaignAnalysisProps> = ({
     );
   }
 
-  console.log("userOrgRole", userOrgRole);
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 mr-2 gap-2">
-      {["HOM", "ADMIN"].includes(userOrgRole)&& (
+    <div className={`grid grid-cols-1 ${["MANAGER", "COORDINATOR"].includes(userOrgRole) ? "md:grid-cols-5" : "md:grid-cols-6"} gap-1`}>
+      {["ADMIN"].includes(userOrgRole)&& (
         <div className="md:col-span-1 ">
           <TeamHierarchy
-            title="Management Team"
+            title="By Managers"
             members={officialMembers}
             leaderRole="HOM"
             memberRole="MANAGER"
-            selectedMembers={selectedManagers}
-            onSelectMember={handleSelectMember('manager')}
             orgLevelCampaignStatus={orgLevelCampaignStatus}
+            selectionType="radio"
+            filters={filters}
+            handleFilters={handleFilters}
+            initialFilters={initialFilters}
+          />
+        </div>
+      )}
+      {["HOM", "COORDINATOR"].includes(userOrgRole) && (
+        <div className="md:col-span-1">
+          <UserWiseCampaigns
+            title="By Managers"
+            userWiseCampaigns={orgLevelCampaignStatus?.data?.managers}
+            orgMembers={myOrg?.officialMembers}
+            filters={filters}
+            handleFilters={handleFilters}
+            initialFilters={initialFilters}
+            orgUser="manager"
           />
         </div>
       )}
 
-      {["HOC", "ADMIN"].includes(userOrgRole)&& (
+      {["HOM", "MANAGER", "ADMIN"].includes(userOrgRole) && (
         <div className="md:col-span-1">
-          <TeamHierarchy
-            title="Coordination Team"
-            members={officialMembers}
-            leaderRole="HOC"
-            memberRole="COORDINATOR"
-            selectedMembers={selectedCoordinators}
-            onSelectMember={handleSelectMember('coordinator')}
-            orgLevelCampaignStatus={orgLevelCampaignStatus}
-          />
-        </div>
-      )}
+          <UserWiseCampaigns
+            title="By Coordinators"
+            userWiseCampaigns={orgLevelCampaignStatus?.data?.coordinators}
+            orgMembers={myOrg?.officialMembers}
+            filters={filters}
+            handleFilters={handleFilters}
+            initialFilters={initialFilters}
+            orgUser="coordinator"
 
-      {["COORDINATOR", "ADMIN"].includes(userOrgRole) && (
-        <div className="md:col-span-1">
-          <UserWiseCampaigns
-            title="Managers"
-            userWiseCampaigns={orgLevelCampaignStatus?.managerWiseCampaigns}
-            orgMembers={myOrg?.officialMembers}
-          />
-        </div>
-      )}
-      {["MANAGER", "ADMIN"].includes(userOrgRole) && (
-        <div className="md:col-span-1">
-          <UserWiseCampaigns
-            title="Coordinators"
-            userWiseCampaigns={orgLevelCampaignStatus?.coordinatorWiseCampaigns}
-            orgMembers={myOrg?.officialMembers}
           />
         </div>
       )}
       <div className="md:col-span-1">
         <GroupWiseCampaigns
-          title="Agencys"
-          groupWiseCampaigns={orgLevelCampaignStatus?.agencyWiseCampaigns}
+          title="By Groups"
+          groupWiseCampaigns={orgLevelCampaignStatus?.data?.agencies}
+          filters={filters}
+          handleFilters={handleFilters}
+          initialFilters={initialFilters}
         />
       </div>
-
       <div className="md:col-span-1">
-        <GroupWiseCampaigns
-          title="Brands"
-          groupWiseCampaigns={orgLevelCampaignStatus?.brandWiseCampaigns}
+        <CampaignWise
+          title="By Campaigns"
+          nameWiseCampaigns={orgLevelCampaignStatus?.data?.campaignCreations}
+          filters={filters}
+          handleFilters={handleFilters}
+          initialFilters={initialFilters}
         />
       </div>
       <div className="md:col-span-1">
         <VendorWiseCampaigns
-          title="Vendors"
-          vendorWiseCampaigns={orgLevelCampaignStatus?.vendorWiseCampaigns}
+          title="By Vendors"
+          vendorWiseCampaigns={orgLevelCampaignStatus?.data?.vendors}
+          filters={filters}
+          handleFilters={handleFilters}
+          initialFilters={initialFilters}
+        />
+      </div>
+      <div>
+        <ScreenWiseCampaigns
+        title="By Sites"
+        screenWiseCampaigns={orgLevelCampaignStatus?.data?.screens}
+        filters={filters}
+        handleFilters={handleFilters}
+        initialFilters={initialFilters}
         />
       </div>
 

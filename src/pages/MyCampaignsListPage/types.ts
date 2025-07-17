@@ -29,4 +29,7 @@ export interface CampaignAnalysisProps {
   loadingOrgLevelCampaignStatus: boolean;
   errorOrgLevelCampaignStatus: string;
   orgLevelCampaignStatus: any;
+  filters?: any;
+  handleFilters?: any;
+  initialFilters?: any;
 }
