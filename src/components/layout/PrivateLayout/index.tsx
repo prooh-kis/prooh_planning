@@ -34,6 +34,8 @@ export const PrivateLayout = (props: any) => {
         break;
       case CAMPAIGN_PLANNER:
         break;
+      case "campaignAdmin":
+        break;
       default:
         notification.error({
           message: "Error",

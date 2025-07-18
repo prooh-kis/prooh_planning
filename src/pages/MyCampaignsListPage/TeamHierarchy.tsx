@@ -101,8 +101,8 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
         </div>
       </div>
       {Object.keys(hierarchy)?.length === 0 ? (
-        <div className="text-center py-4 text-[#6B7280]">
-          No managers data available
+        <div className="text-center bg-[#F3F4F6] h-[10vh] animate-pulse text-[10px]">
+          Loading...
         </div>
       ) : (
         <div className="space-y-2 h-[30vh] overflow-y-auto no-scrollbar">

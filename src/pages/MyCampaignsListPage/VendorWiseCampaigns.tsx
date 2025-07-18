@@ -50,8 +50,8 @@ export const VendorWiseCampaigns: React.FC<VendorWiseCampaignsProps> = ({
       </div>
       
       {vendorList.length === 0 ? (
-        <div className="text-center py-4 text-[#6B7280]">
-          No Vendor data available
+        <div className="text-center bg-[#F3F4F6] h-[10vh] animate-pulse text-[10px]">
+          Loading...
         </div>
       ) : (
         <div className="space-y-2 h-[30vh] overflow-y-auto no-scrollbar">
@@ -64,9 +64,9 @@ export const VendorWiseCampaigns: React.FC<VendorWiseCampaignsProps> = ({
                       type="checkbox"
                       className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
                       checked={vendor === "All"
-                        ? filters?.vendor.length ===
-                          initialFilters?.vendor.length
-                        : filters?.vendor.includes(vendor)}
+                        ? filters?.vendor?.length ===
+                          initialFilters?.vendor?.length
+                        : filters?.vendor?.includes(vendor)}
                       onChange={(e) => handleFilters(vendor, e.target.checked)}
                       aria-label={`Select ${vendor || 'vendor'}`}
                     /> 
@@ -74,12 +74,12 @@ export const VendorWiseCampaigns: React.FC<VendorWiseCampaignsProps> = ({
                       {vendor}
                     </span>
                     <span className="text-[10px] text-[#6B7280]">
-                      ({vendorWiseCampaigns[vendor].totalCampaigns})
+                      ({vendorWiseCampaigns?.[vendor]?.totalCampaigns})
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(vendorWiseCampaigns[vendor]?.performance || 0) > 1 ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
-                      {((vendorWiseCampaigns[vendor]?.performance || 0) * 100)?.toFixed(1) || 0}%
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(vendorWiseCampaigns?.[vendor]?.performance || 0) > 1 ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
+                      {((vendorWiseCampaigns?.[vendor]?.performance || 0) * 100)?.toFixed(1) || 0}%
                     </span>
                   </div>
                 </div>

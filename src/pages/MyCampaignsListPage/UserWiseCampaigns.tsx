@@ -53,8 +53,8 @@ export const UserWiseCampaigns: React.FC<UserWiseCampaignsProps> = ({
       </div>
       
       {userList.length === 0 ? (
-        <div className="text-center py-4 text-[#6B7280]">
-          No data available
+        <div className="text-center bg-[#F3F4F6] h-[10vh] animate-pulse text-[10px]">
+          Loading...
         </div>
       ) : (
         <div className="space-y-2 h-[30vh] overflow-y-auto no-scrollbar">
@@ -68,10 +68,10 @@ export const UserWiseCampaigns: React.FC<UserWiseCampaignsProps> = ({
                     <input
                       type="checkbox"
                       className="h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
-                      checked={user === "All" ? filters?.[orgUser].length === initialFilters?.[orgUser].length : filters?.[orgUser].includes(user)}
+                      checked={user === "All" ? filters?.[orgUser]?.length === initialFilters?.[orgUser]?.length : filters?.[orgUser]?.includes(user)}
                       onChange={(e) => handleFilters(orgUser, user, e.target.checked)}
                       aria-label={`Select ${user || orgUser}`}
-                      disabled={userList.length <= 2 ? true : false}
+                      disabled={userList?.length <= 2 ? true : false}
                     /> 
                     <span className="font-medium text-[10px] text-[#111827] truncate">
                       {user === "undefined" ? "Unknown" : user}

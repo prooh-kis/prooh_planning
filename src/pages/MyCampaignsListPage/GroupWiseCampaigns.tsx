@@ -46,8 +46,8 @@ export const GroupWiseCampaigns: React.FC<AgencyWiseCampaignsProps> = ({
       </div>
 
       {agencyList.length === 0 ? (
-        <div className="text-center py-4 text-[#6B7280]">
-          No Agency data available
+        <div className="text-center bg-[#F3F4F6] h-[10vh] animate-pulse text-[10px]">
+         Loading...
         </div>
       ) : (
         <div className="space-y-2 h-[30vh] overflow-y-auto no-scrollbar">
@@ -61,33 +61,33 @@ export const GroupWiseCampaigns: React.FC<AgencyWiseCampaignsProps> = ({
                       className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
                       checked={
                         group === "All"
-                          ? filters?.agency.length ===
-                            initialFilters?.agency.length
-                          : filters.agency.includes(group)
+                          ? filters?.agency?.length ===
+                            initialFilters?.agency?.length
+                          : filters?.agency?.includes(group)
                       }
                       onChange={(e) =>
                         handleFilters("agency", group, e.target.checked)
                       }
                       aria-label={`Select ${group}`}
-                      disabled={agencyList.length <= 2 ? true : false}
+                      disabled={agencyList?.length <= 2 ? true : false}
                     />
                     <span className="font-medium text-[10px] text-[#111827] truncate capitalize">
                       {group.toLowerCase()}
                     </span>
                     <span className="text-[10px] text-[#6B7280]">
-                      ({groupWiseCampaigns[group].totalCampaigns})
+                      ({groupWiseCampaigns?.[group]?.totalCampaigns})
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <span
                       className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                        (groupWiseCampaigns[group]?.performance || 0) > 1
+                        (groupWiseCampaigns?.[group]?.performance || 0) > 1
                           ? "text-[#4DB37E]"
                           : "text-[#EF4444]"
                       }`}
                     >
                       {(
-                        (groupWiseCampaigns[group]?.performance || 0) * 100
+                        (groupWiseCampaigns?.[group]?.performance || 0) * 100
                       )?.toFixed(1) || 0}
                       %
                     </span>
@@ -112,9 +112,10 @@ export const GroupWiseCampaigns: React.FC<AgencyWiseCampaignsProps> = ({
                             handleFilters("agency", group, e.target.checked)
                           }
                           aria-label={`Select ${group}`}
+                          disabled={true}
                         />
                         <span className="font-medium text-[10px] text-[#D7D7D7] truncate capitalize">
-                          {group.toLowerCase()}
+                          {group?.toLowerCase()}
                         </span>
                       </div>
                     </div>

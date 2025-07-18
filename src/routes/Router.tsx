@@ -133,7 +133,8 @@ const Routers: React.FC = () => {
           path={MY_CAMPAIGNS_LIST}
           element={
             <AppDashBoardLayout value="Campaigns">
-              <MyCampaignsListPage />
+              {/* <MyCampaignsListPage /> */}
+              <MyCampaignsListPageAdvance />
             </AppDashBoardLayout>
           }
         />

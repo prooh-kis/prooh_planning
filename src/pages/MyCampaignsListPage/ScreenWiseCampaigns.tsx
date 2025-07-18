@@ -49,8 +49,8 @@ export const ScreenWiseCampaigns: React.FC<ScreenWiseCampaignsProps> = ({
       </div>
       
       {screenList.length === 0 ? (
-        <div className="text-center py-4 text-[#6B7280]">
-          No Agency data available
+        <div className="text-center bg-[#F3F4F6] h-[10vh] animate-pulse text-[10px]">
+          Loading...
         </div>
       ) : (
         <div className="space-y-2 h-[30vh] overflow-y-auto no-scrollbar">
@@ -62,10 +62,11 @@ export const ScreenWiseCampaigns: React.FC<ScreenWiseCampaignsProps> = ({
                     <input
                       type="checkbox"
                       className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
-                      checked={screen === "All"
-                        ? filters?.screen.length ===
-                          initialFilters?.screen.length
-                        : filters?.screen.includes(screen)}
+                      checked={
+                        screen === "All"
+                        ? filters?.screen?.length ===
+                          initialFilters?.screen?.length
+                        : filters?.screen?.includes(screen)}
                       onChange={(e) => handleFilters("screen", screen, e.target.checked)}
                       aria-label={`Select ${screen}`}
                       disabled={screenList.length <= 2 ? true : false}
@@ -74,12 +75,12 @@ export const ScreenWiseCampaigns: React.FC<ScreenWiseCampaignsProps> = ({
                       {screen.toLowerCase()}
                     </span>
                     <span className="text-[10px] text-[#6B7280]">
-                      ({screenWiseCampaigns[screen]?.totalCampaigns})
+                      ({screenWiseCampaigns?.[screen]?.totalCampaigns})
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(screenWiseCampaigns[screen]?.performance || 0) > 1 ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
-                      {((screenWiseCampaigns[screen]?.performance || 0) * 100)?.toFixed(1) || 0}%
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(screenWiseCampaigns?.[screen]?.performance || 0) > 1 ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
+                      {((screenWiseCampaigns?.[screen]?.performance || 0) * 100)?.toFixed(1) || 0}%
                     </span>
                   </div>
                 </div>
@@ -87,7 +88,7 @@ export const ScreenWiseCampaigns: React.FC<ScreenWiseCampaignsProps> = ({
             </div>
           ))}
 
-          {initialFilters.screen?.filter((sc: any) => !screenList.includes(sc)).map((screen: any, i: any) => (
+          {initialFilters?.campaignCreation &&  initialFilters.screen?.filter((sc: any) => !screenList.includes(sc)).map((screen: any, i: any) => (
             <div key={i} className="overflow-hidden">
               <div className="px-1 cursor-pointer hover:rounded-[4px] hover:bg-[#F3F4F6] transition-colors">
                 <div className="flex items-center justify-between">

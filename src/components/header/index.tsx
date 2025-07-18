@@ -60,6 +60,8 @@ export const Header: React.FC = () => {
                 ? "MANAGER"
                 : userInfo.userRole === CLIENT_POC_USER
                 ? "Client POC"
+                : userInfo.userRole === "campaignAdmin"
+                ? "Admin"
                 : userInfo?.userRole}
             </p>
           </div>

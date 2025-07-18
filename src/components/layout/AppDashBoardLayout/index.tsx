@@ -62,6 +62,9 @@ export const AppDashBoardLayout: React.FC<AppDashBoardLayoutProps> = ({
       case PROOH_ADMIN:
         setMenuItems(menuItemsAdmin);
         break;
+      case "campaignAdmin":
+        setMenuItems(menuItemsAdmin);
+        break;
       default:
         notification.error({
           message: "Error",

@@ -14,6 +14,7 @@ import {
 import { campaignCreationTypeTabs } from "../../constants/tabDataConstant";
 import {
   CAMPAIGN_STATUS_ACTIVE,
+  CAMPAIGN_STATUS_COMPLETED,
   CLONE_CAMPAIGN_RESET,
   EDIT_CAMPAIGN,
   GET_ALL_CAMPAIGNS_DATA_RESET,
@@ -33,6 +34,8 @@ import { GET_ORG_LEVEL_CAMPAIGN_STATUS_RESET } from "../../constants/organizatio
 import { MultiColorLinearBar2 } from "../../components/molecules/MultiColorLinearBar2";
 import { CampaignListTable } from "./CampaignListTable";
 
+type FilterKey = 'hom' | 'hoc' | 'manager' | 'coordinator' | 'vendor' | 'agency' | 'screen' | 'campaignCreation';
+
 export const MyCampaignsListPageAdvance: React.FC = () => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
@@ -41,8 +44,6 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
   const wrapperRef = useRef<any>(null);
   const [currentTab, setCurrentTab] = useState<any>("1");
   const [searchQuery, setSearchQuery] = useState<any>("");
-  const [selectedCard, setSelectedCard] = useState<any>(null);
-  const [open, setOpen] = useState<boolean>(false);
   const [plannerId, setPlannerId] = useState<any>("");
   const [showPlannerList, setShowPlannerList] = useState<boolean>(false);
   const [plannerSearch, setPlannerSearch] = useState<string>("");
@@ -91,35 +92,26 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
     if (!userInfo) {
       return;
     }
-    if (currentTab === "1") {
-
-      dispatch(getOrgLevelCampaignStatusAction({
-        id: userInfo?._id,
-        filters: filters
-      }));
-    } else {
-      dispatch(
-        getAllCampaignsDetailsAction({
-          plannerId: plannerId ? [plannerId] : [],
-          userId: userInfo?._id,
-          status: campaignCreationTypeTabs?.filter(
-            (tab: any) => tab.id === currentTab
-          )[0]?.value,
-          event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
-        })
-      );
-    }
-
     dispatch(getMyOrgDetailsAction({
       id: userInfo?._id,
     }));
+
+    dispatch(getOrgLevelCampaignStatusAction({
+      id: userInfo?._id,
+      filters: filters,
+      initialFilters: initialFilters,
+      status: CAMPAIGN_STATUS_ACTIVE,
+      event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
+    }));
     
-  }, [dispatch, userInfo, plannerId, currentTab]);
+  }, [dispatch, userInfo]);
 
   useEffect(() => {
     fetchCampaigns();
     removeAllKeyFromLocalStorage();
     dispatch({ type: GET_CAMPAIGN_DASHBOARD_DATA_RESET });
+    dispatch({ type: GET_ORG_LEVEL_CAMPAIGN_STATUS_RESET });
+
   }, [dispatch, userInfo, fetchCampaigns]);
 
 
@@ -133,47 +125,62 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
         type: GET_ALL_CAMPAIGNS_DATA_RESET
       })
       setAllCampaignsData([]);
+      setFilters({
+        hom: [],
+        hoc: [],
+        manager: [],
+        coordinator: [],
+        vendor: [],
+        agency: [],
+        screen: [],
+        campaignCreation: [],
+      });
+      setInitialFilters(null);
+      setInitialFilters(false);
 
-      if (status === "1") {
-        dispatch(getOrgLevelCampaignStatusAction({
-          id: userInfo?._id,
-          filters: filters
-        }));
-      } else {
-        dispatch(
-          getAllCampaignsDetailsAction({
-            plannerId: plannerId ? [plannerId] : [],
-            userId: userInfo?._id,
-            status: campaignCreationTypeTabs?.filter(
-              (tab: any) => tab.id === status
-            )[0]?.value,
-            event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
-          })
-        );
-      }
-      
+      dispatch(getOrgLevelCampaignStatusAction({
+        id: userInfo?._id,
+        filters: {
+          hom: [],
+          hoc: [],
+          manager: [],
+          coordinator: [],
+          vendor: [],
+          agency: [],
+          screen: [],
+          campaignCreation: [],
+        },
+        initialFilters: null,
+        status: campaignCreationTypeTabs?.filter(
+          (tab: any) => tab.id === status
+        )[0]?.value,
+        event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
+      }));
     },
-    [dispatch, userInfo, plannerId, filters]
+    [dispatch, userInfo]
   );
 // console.log(JSON.stringify(filters));
   const reset = () => {
     setPlannerId("");
     setShowPlannerList(false);
-    if (currentTab === "1") {
+    // if (currentTab === "1") {
       dispatch(getOrgLevelCampaignStatusAction({
         id: userInfo?._id,
-        filters: filters
+        filters: filters,
+        initialFilters: initialFilters,
+        status: CAMPAIGN_STATUS_ACTIVE,
+        event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
       }));
-    } else {
-      dispatch(
-        getAllCampaignsDetailsAction({
-          plannerId: [],
-          userId: userInfo?._id,
-          status: CAMPAIGN_STATUS_ACTIVE,
-          event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
-        })
-      );
-    }
+    // } else {
+    //   dispatch(
+    //     getAllCampaignsDetailsAction({
+    //       plannerId: [userInfo?._id],
+    //       userId: userInfo?._id,
+    //       status: CAMPAIGN_STATUS_ACTIVE,
+    //       event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
+    //     })
+    //   );
+    // }
   };
 
   const handleDoubleClick = (id: string) => {
@@ -187,9 +194,15 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
   };
 
   const handlePlannerSelect = (id: string) => {
+    console.log(id)
     setPlannerId(id);
     setShowPlannerList(false);
-    setPlannerSearch("");
+    setPlannerSearch(id.toString());
+    setSearchQuery(() => {
+      console.log(myOrg?.officialMembers)
+      console.log(myOrg?.officialMembers?.find((member: any) => member.userId.toString() === id.toString())?.name)
+      return myOrg?.officialMembers?.find((member: any) => member.userId.toString() === id.toString())?.name
+    })
   };
 
   const clearPlannerFilter = () => {
@@ -229,15 +242,12 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
   }, [campaignData?.clonedCampaign, dispatch, navigate, successClone]);
 
   useEffect(() => {
-    if (currentTab !== "1") {
-      handleGetCampaignByStatus(currentTab);
-    }
     const savedScrollPosition =
       sessionStorage.getItem("campaignsScrollPosition") || "0";
     if (targetDivRef.current) {
       targetDivRef.current.scrollTop = parseInt(savedScrollPosition, 10);
     }
-  }, [currentTab, handleGetCampaignByStatus]);
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -254,14 +264,10 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (currentTab === "1" && orgLevelCampaignStatus?.data) {
+    if (orgLevelCampaignStatus?.data) {
       setAllCampaignsData(Object.values(orgLevelCampaignStatus?.data?.campaigns));
-    }else if (currentTab !== "1" && allCampaigns) {
-      setAllCampaignsData(allCampaigns.result);
-    } else {
-      setAllCampaignsData([]);
     }
-  },[allCampaigns, currentTab, orgLevelCampaignStatus]);
+  },[orgLevelCampaignStatus]);
 
   useEffect(() => {
     if (orgLevelCampaignStatus?.data) {
@@ -296,49 +302,39 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
     planner.name.toLowerCase().includes(plannerSearch.toLowerCase())
   );
 
+
   const filteredCampaigns = allCampaignsData?.filter(
     (campaign: any) =>
       campaign?.name?.toLowerCase().includes(searchQuery.toLowerCase())
       || campaign?.brandName?.toLowerCase().includes(searchQuery.toLowerCase())
       || campaign?.clientName?.toLowerCase().includes(searchQuery.toLowerCase())
-      // || campaign?.campaignPlannerId?.toString().includes(plannerSearch.toLowerCase())
+      || campaign?.campaignPlannerName?.toLowerCase().includes(searchQuery.toLowerCase())
+      || campaign?.campaignManagerName?.toLowerCase().includes(searchQuery.toLowerCase())
+      || campaign?.campaignCoordinatorName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-
-
-  // Type for filter keys to ensure type safety
-  type FilterKey = 'hom' | 'hoc' | 'manager' | 'coordinator' | 'vendor' | 'agency' | 'screen' | 'campaignCreation';
-
-  // Helper function to update array filters
   const updateFilterArray = (current: string[], value: string, checked: boolean): string[] => {
-    console.log(current, value);
     return checked 
       ? [...new Set([...current, value])]
       : current.filter(v => v !== value && !["All","0"].includes(v));
   };
 
-  // Main filter handler
   const handleFilters = (type: FilterKey, value: string, checked: boolean) => {
-    console.log(filters);
     try {
       let filtersToUpdate = { ...filters };
-      // Handle HOM selection (special case as it affects managers)
       if (type === 'hom') {
         const updatedHOM = updateFilterArray(filters.hom, value, checked);
         const hom = orgLevelCampaignStatus?.roleGroups?.["HOM"]?.find((hom: any) => hom.name === value);
         const homManagers = orgLevelCampaignStatus?.roleGroups?.["MANAGER"]?.filter((manager: any) => hom.userId.toString() === manager.reportsTo.toString())?.map((m: any) => m.name);
         
-        // Update HOM and related managers
         filtersToUpdate = {
           ...filters,
           hom: updatedHOM,
-          // If checking, add the managers; if unchecking, only remove managers from this HOM
           manager: checked
             ? [...new Set([...filters.manager, ...homManagers])]
             : filters.manager.filter((manager: string) => !homManagers.includes(manager) && manager !== "All"),
         };
       } 
-      // Handle other filter types
       else {
         filtersToUpdate = {
           ...filters,
@@ -346,62 +342,48 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
         };
       }
 
-      console.log(filtersToUpdate);
-      console.log(initialFilters)
-      
-
-      // Update state and dispatch action
       var updatedFilters: any;
 
       setFilters(() => {
         updatedFilters = filtersToUpdate
         if (filtersToUpdate.hom.length !== filters.hom.length) {
-          console.log('1');
           updatedFilters = {...updatedFilters, hom: updatedFilters.hom.filter((member: any) => member !== "All")};
         }
         if (filtersToUpdate.manager.length !== filters.manager.length) {
-          console.log('2');
           updatedFilters = {...updatedFilters, manager: updatedFilters.manager.filter((member: any) => member !== "All")};
         }
         if (filtersToUpdate.coordinator.length !== filters.coordinator.length) {
-          console.log('3');
           updatedFilters = {...updatedFilters, coordinator: updatedFilters.coordinator.filter((member: any) => member !== "All")};
         }
         if (filtersToUpdate.vendor.length !== filters.vendor.length) {
-          console.log('4');
           updatedFilters = {...updatedFilters, vendor: updatedFilters.vendor.filter((member: any) => member !== "All")};
         }
         if (filtersToUpdate.agency.length !== filters.agency.length) {
-          console.log('5');
           updatedFilters = {...updatedFilters, agency: updatedFilters.agency.filter((member: any) => member !== "All")};
         }
         if (filtersToUpdate.screen.length !== filters.screen.length) {
-          console.log('6');
           updatedFilters = {...updatedFilters, screen: updatedFilters.screen.filter((member: any) => member !== "All")};
         }
         if (filtersToUpdate.campaignCreation.length !== filters.campaignCreation.length) {
-          console.log('7');
           updatedFilters = {...updatedFilters, campaignCreation: updatedFilters.campaignCreation.filter((member: any) => member !== "0")};
         }
         return updatedFilters;
       });
-      console.log(updatedFilters)
       
       dispatch(getOrgLevelCampaignStatusAction({
         id: userInfo?._id,
         filters: updatedFilters,
         initialFilters: filters,
+        status: CAMPAIGN_STATUS_ACTIVE,
+        event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
       }));
       
     } catch (error) {
       console.error('Error in handleFilters:', error);
-      // Optionally show error to user
-      // setError('Failed to update filters. Please try again.');
     }
   };
-  console.log("filters", filters);
   return (
-    <div className="w-full pr-1">
+    <div className="w-full pr-1 font-custom">
       <div className="bg-white w-auto rounded-[4px]">
         <div className="">
           <div className="">
@@ -430,7 +412,7 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
               <h1 className="text-[16px] font-semibold">
                 My Campaigns{" "}
                 <span className="text-[14px] text-[#68879C] ">
-                  ({filteredCampaigns?.length})
+                  ({orgLevelCampaignStatus?.data?.totalCampaigns})
                 </span>
               </h1>
               <ReloadButton onClick={reset} />
@@ -446,34 +428,38 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-12 mt-1 bg-white rounded-[8px] p-4 mr-2">
-        <h1 className="col-span-3 text-[12px] font-regular">
-          Active Campaign Performance
-        </h1>
-        <div className="col-span-8 flex items-center">
-          <MultiColorLinearBar2
-            delivered={
-            orgLevelCampaignStatus?.data?.performance * 100
-            }
-            expected={100}
-            total={100}
-            deliveredColor={orgLevelCampaignStatus?.data?.performance < 1 ? "bg-[#EF4444]" : "bg-[#4DB37E]"}
-            expectedColor="bg-[#E6E6E6]"
-            totalColor="bg-[#D3EDFF]"
-            height="h-[5px]"
-          />
+      {["1", "3"].includes(currentTab) && (
+        <div className="grid grid-cols-12 mt-1 bg-white rounded-[8px] p-4 mr-2">
+          <h1 className="col-span-3 text-[12px] font-regular">
+            {
+              currentTab == "2" ? "Upcoming" : currentTab === "3" ? "Completed" : "Active"
+            } Campaign Performance
+          </h1>
+          <div className="col-span-8 flex items-center">
+            <MultiColorLinearBar2
+              delivered={
+              orgLevelCampaignStatus?.data?.performance * 100
+              }
+              expected={100}
+              total={100}
+              deliveredColor={orgLevelCampaignStatus?.data?.performance < 1 ? "bg-[#EF4444]" : "bg-[#4DB37E]"}
+              expectedColor="bg-[#E6E6E6]"
+              totalColor="bg-[#D3EDFF]"
+              height="h-[5px]"
+            />
+          </div>
+          
+          <h1 className={`col-span-1 text-[12px] ${orgLevelCampaignStatus?.data?.performance < 1 ? "text-[#EF4444]" : "text-[#4DB37E]"} font-semibold flex justify-center`}>
+            {(orgLevelCampaignStatus?.data?.performance * 100 || 0)?.toFixed(0)} %
+          </h1>
         </div>
-        
-        <h1 className={`col-span-1 text-[12px] ${orgLevelCampaignStatus?.data?.performance < 1 ? "text-[#EF4444]" : "text-[#4DB37E]"} font-semibold flex justify-center`}>
-          {(orgLevelCampaignStatus?.data?.performance * 100 || 0)?.toFixed(0)} %
-        </h1>
-      </div>
+      )}
       <div className="mt-1">
         {loadingOrgLevelCampaignStatus ? (
           <LoadingScreen />
         ) : (
           <div className="mr-2 mb-1">
-            {currentTab === "1" && (
+            {["1", "3"].includes(currentTab) && (
               <CampaignAnalysis 
                 userInfo={userInfo} 
                 myOrg={myOrg}
@@ -491,7 +477,9 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
           <div className="bg-white rounded-[8px] mr-2 shadow-md p-4" ref={targetDivRef}>
             <div className="flex justify-between items-center">
               <h1 className="text-[14px] font-semibold">
-                Active Campaigns ({orgLevelCampaignStatus?.data?.totalCampaigns || 0})
+                {
+                  currentTab == "2" ? "Upcoming" : currentTab === "3" ? "Completed" : "Active"
+                } Campaigns ({orgLevelCampaignStatus?.data?.totalCampaigns || 0})
               </h1>
               <div className="flex items-center gap-4 w-96">
                 <SearchInputField
@@ -530,11 +518,11 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
                         {filteredPlanners?.length > 0 ? (
                           filteredPlanners.map((planner: any) => (
                             <div
-                              key={planner?._id}
+                              key={planner?.userId}
                               className={`p-2 hover:bg-gray-100 cursor-pointer ${
-                                plannerId === planner?._id ? "bg-blue-50" : ""
+                                plannerId === planner?.userId ? "bg-blue-50" : ""
                               }`}
-                              onClick={() => handlePlannerSelect(planner?._id)}
+                              onClick={() => handlePlannerSelect(planner?.userId)}
                             >
                               <span className="text-[12px] truncate block">{planner.name}</span>
                             </div>
@@ -553,7 +541,7 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
           ) : filteredCampaigns?.length === 0 ? (
             <NoDataView />
           ) : (
-            <div className="h-[76vh] overflow-y-auto scrollbar-minimal rounded-lg flex flex-col gap-2">
+            <div className="">
               <CampaignListTable
                 data={filteredCampaigns}
                 onDoubleClick={handleDoubleClick}
