@@ -40,7 +40,7 @@ export const AddContactDetailsForCampaignAlerts = ({savedContacts, setSavedConta
     setSavedContacts((prev: any) => prev.filter((contact: any) => contact.id !== id));
   };
   return (
-    <div>
+    <div className="border rounded-[8px] p-4">
       <div className="flex items-center justify-between border-b pb-2">
         <div>
           <h1 className="text-[16px] font-semibold">Add contact details for campaign alerts</h1>

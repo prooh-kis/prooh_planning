@@ -149,7 +149,7 @@ export function SendEmailPopup({
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                onKeyPress={(e) => {
+                onKeyDown={(e) => {
                   if (e.key === 'Enter' && email && !cc.includes(email)) {
                     setCC((prev: string[]) => [...prev, email]);
                     setEmail("");
@@ -167,7 +167,7 @@ export function SendEmailPopup({
                   setCC((prev: string[]) => [...prev, email]);
                   setEmail("");
                 }}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200 flex items-center gap-2"
+                className="px-4 py-2 bg-primaryButton text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200 flex items-center gap-2"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="12" y1="5" x2="12" y2="19"></line>

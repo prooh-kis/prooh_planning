@@ -196,12 +196,6 @@ export const VendorConfirmationDetails = ({
       errorStatusTableData ||
       errorAddDetails || errorSendCampaignStatusReportToClient || errorSendFinalApproval || errorVendorCreativeApprovalSent
     ) {
-      console.log(errorVendorConfirmationData);
-       console.log(errorStatusTableData)
-       console.log(errorAddDetails)
-       console.log(errorSendCampaignStatusReportToClient)
-       console.log(errorSendFinalApproval)
-       console.log(errorVendorCreativeApprovalSent)
       message.error("Something went wrong, please contact tech support...");
     }
   },[errorAddDetails, errorStatusTableData, errorVendorConfirmationData, errorSendCampaignStatusReportToClient, errorSendFinalApproval, errorVendorCreativeApprovalSent]);
@@ -536,7 +530,7 @@ export const VendorConfirmationDetails = ({
             )}
           </div>
 
-          <div className="border rounded-[8px] p-4 mb-16 mt-2">
+          <div className="pb-20 mt-2">
             <AddContactDetailsForCampaignAlerts
               savedContacts={savedContacts}
               setSavedContacts={setSavedContacts}
