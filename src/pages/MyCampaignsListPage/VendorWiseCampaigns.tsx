@@ -65,10 +65,11 @@ export const VendorWiseCampaigns: React.FC<VendorWiseCampaignsProps> = ({
                       className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
                       checked={vendor === "All"
                         ? filters?.vendor?.length ===
-                          initialFilters?.vendor?.length
+                          (vendorList?.length - 1)
                         : filters?.vendor?.includes(vendor)}
                       onChange={(e) => handleFilters(vendor, e.target.checked)}
                       aria-label={`Select ${vendor || 'vendor'}`}
+                      disabled={vendorList.length <= 2 ? true : false}
                     /> 
                     <span className="font-medium text-[10px] text-[#111827] truncate capitalize">
                       {vendor}

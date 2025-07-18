@@ -4,7 +4,7 @@ import { CheckboxInput } from "../../atoms/CheckboxInput";
 import { DrawnMapPolygon } from "../../molecules/DrawnMapPolygon";
 import { ExcelImport } from "../../molecules/ExcelImport";
 import { RouteProximity } from "../../molecules/RouteProximity";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface LocationProximityProps {
   allScreens?: any;
@@ -56,6 +56,8 @@ export const LocationProximity = ({
   handleConfirmScreensSelections,
   isDisabled,
 }: LocationProximityProps) => {
+  const wrapperRef = useRef<any>(null);
+  
   const [open, setOpen] = useState<any>({
     excel: true,
     route: true,
@@ -65,6 +67,22 @@ export const LocationProximity = ({
 
   const [routeOrigin, setRouteOrigin] = useState<any>([]);
   const [routeDestination, setRouteDestination] = useState<any>([]);
+
+  const [showScreensList, setShowScreensList] = useState<any>(false);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setShowScreensList(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div className="flex flex-col flex-1 h-full">
@@ -115,16 +133,37 @@ export const LocationProximity = ({
       <div className="border-b mr-2" />
 
       <div className="py-2 pr-4">
-        <div className="flex justify-between items-center mb-2">
+        <div className="relative flex justify-between items-center mb-2">
           <div className="flex items-center gap-2">
             <h1 className="text-sm font-medium text-gray-700">
               Showing Results
             </h1>
-            <Tooltip title="Only showing unique screens from all the above filters selected">
-              <i className="fi fi-rs-info text-xs text-gray-400"></i>
+            <Tooltip title="Final filtered Screens" placement="bottom">
+              <i className="fi fi-rs-info text-xs text-gray-400 flex items-center cursor-pointer" onClick={() => setShowScreensList(true)}></i>
             </Tooltip>
           </div>
-          
+          {showScreensList && (
+            <div
+              ref={wrapperRef}
+              className="absolute bottom-6 left-0 z-10 bg-white shadow-lg rounded-md p-2 w-64"
+            >
+              <div className="max-h-60 overflow-y-auto">
+                {finalSelectedScreens?.length > 0 ? (
+                  finalSelectedScreens.map((screen: any, i: number) => (
+                    <div
+                      key={screen?._id}
+                      className={`flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer`}
+                    >
+                      <span className="text-[10px] truncate block">{i+1}. {screen.screenName}</span>
+                      <i className="fi fi-rs-check text-xs text-[#4DB37E] flex items-center" />
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-2 text-gray-500">No screens found</div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
         <div className="grid grid-cols-12 flex items-center gap-4">
           <div className="col-span-2">

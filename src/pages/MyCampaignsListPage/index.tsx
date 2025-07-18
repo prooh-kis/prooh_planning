@@ -1,10 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  cloneCampaignAction,
-  getAllCampaignsDetailsAction,
-} from "../../actions/campaignAction";
+
 import { TabWithoutIcon } from "../../components/molecules/TabWithoutIcon";
 import {
   NoDataView,
@@ -14,13 +11,11 @@ import {
 import { campaignCreationTypeTabs } from "../../constants/tabDataConstant";
 import {
   CAMPAIGN_STATUS_ACTIVE,
-  CAMPAIGN_STATUS_COMPLETED,
   CLONE_CAMPAIGN_RESET,
   EDIT_CAMPAIGN,
   GET_ALL_CAMPAIGNS_DATA_RESET,
 } from "../../constants/campaignConstants";
 import {
-  CAMPAIGN_CREATION_CREATE_CLONE_PLANNING_PAGE,
   CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
 } from "../../constants/userConstants";
 import { GET_CAMPAIGN_DASHBOARD_DATA_RESET } from "../../constants/screenConstants";
@@ -60,7 +55,16 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
     screen: [],
     campaignCreation: [],
   });
-  const [initialFilters, setInitialFilters] = useState<any>(null);
+  const [initialFilters, setInitialFilters] = useState<any>({
+    hom: [],
+    hoc: [],
+    manager: [],
+    coordinator: [],
+    vendor: [],
+    agency: [],
+    screen: [],
+    campaignCreation: [],
+  });
 
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
@@ -135,7 +139,16 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
         screen: [],
         campaignCreation: [],
       });
-      setInitialFilters(null);
+      setInitialFilters({
+        hom: [],
+        hoc: [],
+        manager: [],
+        coordinator: [],
+        vendor: [],
+        agency: [],
+        screen: [],
+        campaignCreation: [],
+      });
       setInitialFilters(false);
 
       dispatch(getOrgLevelCampaignStatusAction({
@@ -166,7 +179,16 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
     // if (currentTab === "1") {
       dispatch(getOrgLevelCampaignStatusAction({
         id: userInfo?._id,
-        filters: filters,
+        filters: {
+          hom: [],
+          hoc: [],
+          manager: [],
+          coordinator: [],
+          vendor: [],
+          agency: [],
+          screen: [],
+          campaignCreation: [],
+        },
         initialFilters: initialFilters,
         status: CAMPAIGN_STATUS_ACTIVE,
         event: CAMPAIGN_CREATION_GET_ALL_CAMPAIGN_DATA_PLANNING_PAGE,
@@ -273,26 +295,26 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
     if (orgLevelCampaignStatus?.data) {
       if (!initialFilters && initializeFilters) {
         setInitialFilters({
-          hom: Object.keys(orgLevelCampaignStatus?.data?.managerHeads),
-          manager: Object.keys(orgLevelCampaignStatus?.data?.managers),
-          coordinator: Object.keys(orgLevelCampaignStatus?.data?.coordinators),
-          vendor: Object.keys(orgLevelCampaignStatus?.data?.vendors),
-          agency: Object.keys(orgLevelCampaignStatus?.data?.agencies),
-          screen: Object.keys(orgLevelCampaignStatus?.data?.screens),
-          campaignCreation: orgLevelCampaignStatus?.data?.campaignCreations,
+          hom: Object.keys(orgLevelCampaignStatus?.data?.managerHeads)?.filter((f: any) => f !== "All"),
+          manager: Object.keys(orgLevelCampaignStatus?.data?.managers)?.filter((f: any) => f !== "All"),
+          coordinator: Object.keys(orgLevelCampaignStatus?.data?.coordinators)?.filter((f: any) => f !== "All"),
+          vendor: Object.keys(orgLevelCampaignStatus?.data?.vendors)?.filter((f: any) => f !== "All"),
+          agency: Object.keys(orgLevelCampaignStatus?.data?.agencies)?.filter((f: any) => f !== "All"),
+          screen: Object.keys(orgLevelCampaignStatus?.data?.screens)?.filter((f: any) => f !== "All"),
+          campaignCreation: Object.keys(orgLevelCampaignStatus?.data?.campaignCreations)?.filter((f: any) => f !== "0")?.map((c: any) => orgLevelCampaignStatus?.data?.campaignCreations[c]),
         });
       }
       setInitializeFilters(false);
       setFilters((prev: any) => {
         return {
           ...prev,
-          hom: Object.keys(orgLevelCampaignStatus?.data?.managerHeads),
-          manager: Object.keys(orgLevelCampaignStatus?.data?.managers),
-          coordinator: Object.keys(orgLevelCampaignStatus?.data?.coordinators),
-          vendor: Object.keys(orgLevelCampaignStatus?.data?.vendors),
-          agency: Object.keys(orgLevelCampaignStatus?.data?.agencies),
-          screen: Object.keys(orgLevelCampaignStatus?.data?.screens),
-          campaignCreation: Object.keys(orgLevelCampaignStatus?.data?.campaignCreations),
+          hom: Object.keys(orgLevelCampaignStatus?.data?.managerHeads)?.filter((f: any) => f !== "All"),
+          manager: Object.keys(orgLevelCampaignStatus?.data?.managers)?.filter((f: any) => f !== "All"),
+          coordinator: Object.keys(orgLevelCampaignStatus?.data?.coordinators)?.filter((f: any) => f !== "All"),
+          vendor: Object.keys(orgLevelCampaignStatus?.data?.vendors)?.filter((f: any) => f !== "All"),
+          agency: Object.keys(orgLevelCampaignStatus?.data?.agencies)?.filter((f: any) => f !== "All"),
+          screen: Object.keys(orgLevelCampaignStatus?.data?.screens)?.filter((f: any) => f !== "All"),
+          campaignCreation: Object.keys(orgLevelCampaignStatus?.data?.campaignCreations)?.filter((f: any) => f !== "0"),
         }
       })
     }
@@ -343,7 +365,7 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
       }
 
       var updatedFilters: any;
-
+console.log(filtersToUpdate);
       setFilters(() => {
         updatedFilters = filtersToUpdate
         if (filtersToUpdate.hom.length !== filters.hom.length) {

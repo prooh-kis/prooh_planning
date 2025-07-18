@@ -63,7 +63,7 @@ export const CampaignWise: React.FC<CampaignWiseProps> = ({
                       className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
                       checked={campaign === "0" && initialFilters?.campaignCreation
                         ? filters?.campaignCreation?.length ===
-                          Object.keys(initialFilters?.campaignCreation).length
+                          (campaignList.length - 1)
                         : filters?.campaignCreation?.includes(campaign.toString())}
                       onChange={(e) => handleFilters("campaignCreation", campaign, e.target.checked)}
                       aria-label={`Select ${nameWiseCampaigns?.[campaign]?.name}`}
@@ -88,27 +88,6 @@ export const CampaignWise: React.FC<CampaignWiseProps> = ({
             </div>
           ))}
 
-          {initialFilters?.campaignCreation && Object.keys(initialFilters?.campaignCreation)?.filter((ca: any) => !campaignList?.includes(ca))?.map((campaign: any, i: any) => (
-            <div key={i} className="overflow-hidden">
-              <div className="px-1 cursor-pointer hover:rounded-[4px] hover:bg-[#F3F4F6] transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 truncate">
-                    <input
-                      type="checkbox"
-                      className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
-                      checked={filters?.campaignCreation?.includes(campaign.toString())}
-                      onChange={(e) => handleFilters("campaignCreation", campaign, e.target.checked)}
-                      aria-label={`Select ${initialFilters?.campaignCreation?.[campaign]?.name}`}
-                      disabled={true}
-                    />
-                    <span className="font-medium text-[10px] text-[#D7D7D7] truncate capitalize">
-                      {initialFilters?.campaignCreation?.[campaign]?.name?.toLowerCase()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
 
           
         </div>

@@ -65,7 +65,7 @@ export const ScreenWiseCampaigns: React.FC<ScreenWiseCampaignsProps> = ({
                       checked={
                         screen === "All"
                         ? filters?.screen?.length ===
-                          initialFilters?.screen?.length
+                          (screenList?.length - 1)
                         : filters?.screen?.includes(screen)}
                       onChange={(e) => handleFilters("screen", screen, e.target.checked)}
                       aria-label={`Select ${screen}`}
@@ -88,26 +88,6 @@ export const ScreenWiseCampaigns: React.FC<ScreenWiseCampaignsProps> = ({
             </div>
           ))}
 
-          {initialFilters?.campaignCreation &&  initialFilters.screen?.filter((sc: any) => !screenList.includes(sc)).map((screen: any, i: any) => (
-            <div key={i} className="overflow-hidden">
-              <div className="px-1 cursor-pointer hover:rounded-[4px] hover:bg-[#F3F4F6] transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 truncate">
-                    <input
-                      type="checkbox"
-                      className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
-                      checked={filters?.screen.includes(screen)}
-                      onChange={(e) => handleFilters("screen", screen, e.target.checked)}
-                      aria-label={`Select ${screen}`}
-                    /> 
-                    <span className="font-medium text-[10px] text-[#D7D7D7] truncate capitalize">
-                      {screen.toLowerCase()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
         </div>
       )}
     </div>

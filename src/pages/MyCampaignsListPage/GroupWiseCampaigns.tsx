@@ -62,7 +62,7 @@ export const GroupWiseCampaigns: React.FC<AgencyWiseCampaignsProps> = ({
                       checked={
                         group === "All"
                           ? filters?.agency?.length ===
-                            initialFilters?.agency?.length
+                            (agencyList?.length - 1)
                           : filters?.agency?.includes(group)
                       }
                       onChange={(e) =>
@@ -96,32 +96,7 @@ export const GroupWiseCampaigns: React.FC<AgencyWiseCampaignsProps> = ({
               </div>
             </div>
           ))}
-          {initialFilters?.agency?.length > 0 &&
-            initialFilters.agency
-              ?.filter((u: any) => !agencyList.includes(u))
-              .map((group: any, i: any) => (
-                <div key={i} className="overflow-hidden">
-                  <div className="px-1 cursor-pointer hover:bg-[#F3F4F6] transition-colors">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 truncate">
-                        <input
-                          type="checkbox"
-                          className="cursor-pointer h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
-                          checked={filters.agency.includes(group)}
-                          onChange={(e) =>
-                            handleFilters("agency", group, e.target.checked)
-                          }
-                          aria-label={`Select ${group}`}
-                          disabled={true}
-                        />
-                        <span className="font-medium text-[10px] text-[#D7D7D7] truncate capitalize">
-                          {group?.toLowerCase()}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+          
         </div>
       )}
     </div>

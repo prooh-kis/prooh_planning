@@ -68,7 +68,7 @@ export const UserWiseCampaigns: React.FC<UserWiseCampaignsProps> = ({
                     <input
                       type="checkbox"
                       className="h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
-                      checked={user === "All" ? filters?.[orgUser]?.length === initialFilters?.[orgUser]?.length : filters?.[orgUser]?.includes(user)}
+                      checked={user === "All" ? filters?.[orgUser]?.length === (userList?.length - 1) : filters?.[orgUser]?.includes(user)}
                       onChange={(e) => handleFilters(orgUser, user, e.target.checked)}
                       aria-label={`Select ${user || orgUser}`}
                       disabled={userList?.length <= 2 ? true : false}
@@ -89,28 +89,7 @@ export const UserWiseCampaigns: React.FC<UserWiseCampaignsProps> = ({
               </div>
             </div>
           ))}
-          {initialFilters?.[orgUser]?.length > 0 && initialFilters?.[orgUser]?.filter((u: any) => !userList.includes(u))?.map((user: any, i: any) => (
-            <div key={i} className="overflow-hidden">
-              <div 
-                className="px-1 cursor-pointer hover:bg-[#F3F4F6] transition-colors"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 truncate">
-                    <input
-                      type="checkbox"
-                      className="h-3 w-3 text-[#D7D7D7] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
-                      checked={filters?.[orgUser].filter((u: any) => userList.includes(u)).includes(user)}
-                      onChange={(e) => handleFilters(orgUser, user, e.target.checked)}
-                      aria-label={`Select ${user || orgUser}`}
-                    /> 
-                    <span className="font-medium text-[10px] text-[#D7D7D7] truncate">
-                      {user === "undefined" ? "Unknown" : user}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+         
         </div>
       )}
     </div>
