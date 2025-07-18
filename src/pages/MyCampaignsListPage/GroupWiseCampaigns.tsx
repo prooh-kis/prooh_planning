@@ -86,10 +86,14 @@ export const GroupWiseCampaigns: React.FC<AgencyWiseCampaignsProps> = ({
                           : "text-[#EF4444]"
                       }`}
                     >
-                      {(
+                      {/* {(
                         (groupWiseCampaigns?.[group]?.performance || 0) * 100
                       )?.toFixed(1) || 0}
-                      %
+                      % */}
+                      {groupWiseCampaigns?.[group]?.performance < 1 ? 
+                      `-${((1 - groupWiseCampaigns?.[group]?.performance || 0) * 100)?.toFixed(1)}`
+                      : `+${(((groupWiseCampaigns?.[group]?.performance - 1) || 0) * 100)?.toFixed(1)}`
+                      }%
                     </span>
                   </div>
                 </div>

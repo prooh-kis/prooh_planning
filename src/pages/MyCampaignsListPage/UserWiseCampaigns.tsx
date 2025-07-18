@@ -82,7 +82,11 @@ export const UserWiseCampaigns: React.FC<UserWiseCampaignsProps> = ({
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(userWiseCampaigns[user]?.performance || 0) > 1 ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
-                      {((userWiseCampaigns[user]?.performance || 0) * 100)?.toFixed(1) || 0}%
+                      {/* {((userWiseCampaigns[user]?.performance || 0) * 100)?.toFixed(1) || 0}% */}
+                      {userWiseCampaigns[user]?.performance < 1 ? 
+                      `-${((1 - userWiseCampaigns[user]?.performance || 0) * 100)?.toFixed(1)}`
+                      : `+${(((userWiseCampaigns[user]?.performance - 1) || 0) * 100)?.toFixed(1)}`
+                      }%
                     </span>
                   </div>
                 </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { TeamOutlined, DownOutlined, RightOutlined } from "@ant-design/icons";
 
 interface Campaign {
@@ -75,7 +75,15 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
   handleFilters,
   initialFilters
 }) => {
-  const [expandedLeaders, setExpandedLeaders] = useState<Record<string, boolean>>({});
+  const [expandedLeaders, setExpandedLeaders] = useState<Record<string, boolean>>(() => {
+    if (orgLevelCampaignStatus && orgLevelCampaignStatus?.data?.managerHeads) {
+      return {
+        [Object.keys(orgLevelCampaignStatus?.data?.managerHeads)[0]]: true
+      };
+    } else {
+      return {};
+    }
+  });
   
   const toggleLeader = (leaderId: string) => {
     setExpandedLeaders(prev => ({
@@ -90,7 +98,8 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
   void _unused; // Use void to satisfy linter
 
   // const hierarchy = processHierarchy();
-  const hierarchy = orgLevelCampaignStatus?.data?.managerHeads || {};
+  const hierarchy = orgLevelCampaignStatus?.data?.managerHeads;
+
   return (
     <div className="bg-[#FFFFFF] rounded-lg p-2">
       <div className="flex items-center justify-between mb-2 border-b py-2">
@@ -100,7 +109,7 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
           </h2>
         </div>
       </div>
-      {Object.keys(hierarchy)?.length === 0 ? (
+      {!hierarchy || Object.keys(hierarchy)?.length === 0 ? (
         <div className="text-center bg-[#F3F4F6] h-[10vh] animate-pulse text-[10px]">
           Loading...
         </div>
@@ -139,7 +148,11 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(hierarchy[hom]?.performance || 0) > 1 ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
-                      {((hierarchy[hom]?.performance || 0) * 100)?.toFixed(1) || 0}%
+                      {/* {((hierarchy[hom]?.performance || 0) * 100)?.toFixed(1) || 0}% */}
+                      {hierarchy[hom]?.performance < 1 ? 
+                        `-${((1 - hierarchy[hom]?.performance || 0) * 100)?.toFixed(1)}`
+                        : `+${(((hierarchy[hom]?.performance - 1) || 0) * 100)?.toFixed(1)}`
+                        }%
                     </span>
                   </div>
                 </div>
@@ -159,12 +172,12 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
                                 checked={filters.manager.includes(manager)}
                                 onChange={(e) => handleFilters("manager", manager, e.target.checked)}
                                 aria-label={`Select ${manager || 'manager'}`}
-                                // disabled={
-                                //   Object.keys(hierarchy[hom].managers).length == 1 ? true :
-                                //   filters.manager?.find((m: any) => m === manager) ? 
-                                //   hierarchy[hom].managers[manager].totalCampaigns === 0 : 
-                                //   !filters.manager?.find((m: any) => m === manager) ? true : false
-                                // }
+                                disabled={
+                                  Object.keys(hierarchy[hom].managers).length == 1 ? true :
+                                  filters.manager?.find((m: any) => m === manager) ? 
+                                  hierarchy[hom].managers[manager].totalCampaigns === 0 : 
+                                  !filters.manager?.find((m: any) => m === manager) ? true : false
+                                }
                               /> 
                               <h3 className="font-medium text-[10px] text-[#111827] truncate">
                                 {manager || 'Unnamed Manager'}
@@ -175,7 +188,10 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
                             </div>
                             <div className="flex items-center space-x-2">
                               <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(hierarchy[hom].managers[manager]?.performance || 0)> 1 ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
-                                {((hierarchy[hom].managers[manager]?.performance || 0) * 100)?.toFixed(1) || 0}%
+                                {hierarchy[hom].managers[manager]?.performance < 1 ? 
+                                `-${((1 - hierarchy[hom].managers[manager]?.performance || 0) * 100)?.toFixed(1)}`
+                                : `+${(((hierarchy[hom].managers[manager]?.performance - 1) || 0) * 100)?.toFixed(1)}`
+                                }%
                               </span>
                             </div>
                           </div>
@@ -190,29 +206,6 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
                 </div>
               )}
             </div>
-          ))}
-          {initialFilters?.hom?.filter((ho: any) => !Object.keys(hierarchy).includes(ho))?.map((hom: any, i: number) => (
-            <div key={i} className="overflow-hidden">
-              <div 
-                className="px-1 cursor-pointer hover:bg-[#F3F4F6] hover:rounded-[8px] transition-colors"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 truncate">
-                    <input
-                      type="checkbox"
-                      className="h-3 w-3 text-[#2563EB] rounded border-[#F9FAFB] focus:ring-[#F9FAFB]"
-                      checked={filters?.hom?.includes(hom) && hierarchy[hom]?.totalCampaigns as number > 0}
-                      onChange={(e) => handleFilters("hom", hom, e.target.checked)}
-                      aria-label={`Select ${hom || 'hom'}`}
-                    /> 
-                  
-                    <span  className={`font-medium text-[12px] text-[#111827] truncate text-[#D7D7D7]`}  >
-                      {hom}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div> 
           ))}
         </div>
       )}
