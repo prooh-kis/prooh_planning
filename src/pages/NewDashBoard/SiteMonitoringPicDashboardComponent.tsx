@@ -20,18 +20,21 @@ const Monitoring = ({ bg, text, label, data }: MonitoringProps) => {
   // Map icon data to real values from props
   const iconData = [
     {
+      title: "Day Short",
       icon: "fi fi-ss-brightness flex items-center",
       value: data.dayShot
         ? `${Math.round((data.dayShot.count / data.dayShot.total) * 100)}%`
         : "0%",
     },
     {
+      title: "Night Short",
       icon: "fi fi-ss-moon flex items-center",
       value: data.nightShot
         ? `${Math.round((data.nightShot.count / data.nightShot.total) * 100)}%`
         : "0%",
     },
     {
+      title: "Geo Tag",
       icon: "fi fi-ss-map-marker-check flex items-center",
       value: data.withGeoTag
         ? `${Math.round(
@@ -40,16 +43,27 @@ const Monitoring = ({ bg, text, label, data }: MonitoringProps) => {
         : "0%",
     },
     {
+      title: "Loop video",
       icon: "fi fi-sr-video-camera-alt flex items-center",
       value: data.loopVideo
         ? `${Math.round((data.loopVideo.count / data.loopVideo.total) * 100)}%`
         : "0%",
     },
     {
+      title: "News paper",
       icon: "fi fi-sr-newspaper flex items-center",
       value: data.withNewspaper
         ? `${Math.round(
             (data.withNewspaper.count / data.withNewspaper.total) * 100
+          )}%`
+        : "0%",
+    },
+    {
+      title: "High Resolution",
+      icon: "fi-sr-high-definition flex items-center",
+      value: data.highResolution
+        ? `${Math.round(
+            (data.highResolution.count / data.highResolution.total) * 100
           )}%`
         : "0%",
     },
@@ -76,10 +90,12 @@ const Monitoring = ({ bg, text, label, data }: MonitoringProps) => {
       </Tooltip>
       <div className="flex flex-wrap gap-2 sm:gap-4 items-center justify-center pt-2">
         {iconData.map((item, index) => (
-          <div key={index} className="flex gap-1 text-[11px] items-center">
-            <i style={{ color: text }} className={item.icon}></i>
-            <p className="font-bold m-0 p-0 text-[#00000090]">{item.value}</p>
-          </div>
+          <Tooltip title={item.title} key={index}>
+            <div className="flex gap-1 text-[11px] items-center">
+              <i style={{ color: text }} className={item.icon}></i>
+              <p className="font-bold m-0 p-0 text-[#00000090]">{item.value}</p>
+            </div>
+          </Tooltip>
         ))}
       </div>
       {data?.siteMonitoring?.delayed !== data?.siteMonitoring?.actual && (
