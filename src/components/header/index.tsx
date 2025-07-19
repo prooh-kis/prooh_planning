@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Menu } from "./Menu";
 import "react-toastify/dist/ReactToastify.css";
 import userImage from "../../assets/userImage.png";
-import { AUTH } from "../../routes/routes";
+import { AUTH, MY_CAMPAIGNS_LIST } from "../../routes/routes";
 import {
   CAMPAIGN_MANAGER,
   CAMPAIGN_PLANNER,
@@ -18,7 +18,6 @@ export const Header: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const auth = useSelector((state: any) => state.auth);
   const { userInfo } = auth;
-
   const handleClick = () => {
     if (userInfo) {
       navigate("/");

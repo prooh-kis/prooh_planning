@@ -9,6 +9,7 @@ import {
   menuItemsCampaignManager,
   menuItemsClientPOCUser,
   menuItemsAdmin,
+  menuItemsCampaignAdmin,
 } from "../../../constants/tabDataConstant";
 import {
   CAMPAIGN_MANAGER,
@@ -63,7 +64,7 @@ export const AppDashBoardLayout: React.FC<AppDashBoardLayoutProps> = ({
         setMenuItems(menuItemsAdmin);
         break;
       case "campaignAdmin":
-        setMenuItems(menuItemsAdmin);
+        setMenuItems(menuItemsCampaignAdmin);
         break;
       default:
         notification.error({

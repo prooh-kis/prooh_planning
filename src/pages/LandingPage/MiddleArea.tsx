@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Landing } from "./Landing";
 import { useNavigate } from "react-router-dom";
+import { MY_CAMPAIGNS_LIST } from "../../routes/routes";
 
 export const MiddleArea: React.FC = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export const MiddleArea: React.FC = () => {
   const { userInfo } = auth;
 
   useEffect(() => {
+
     if (userInfo) {
       navigate("/");
     }

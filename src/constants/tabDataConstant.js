@@ -259,3 +259,12 @@ export const menuItemsAdmin = [
     option: "FinalRequest",
   },
 ];
+
+export const menuItemsCampaignAdmin = [
+  {
+    value: "Campaigns",
+    path: "/myCampaignsList",
+    icon: "fi-sr-megaphone ",
+    option: "Campaigns",
+  },
+];
