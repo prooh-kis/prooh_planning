@@ -82,7 +82,7 @@ const ScreenListForCampaignDetails = ({
             <Skeleton active paragraph={{ rows: 1 }} />
           ) : (
             <div>
-              {getUserRole(userInfo?.role) === "planner" && (
+              {getUserRole(userInfo?.userRole) === "planner" && (
                 <div className="py-2 flex items-center justify-center h-auto gap-4">
                   <Tooltip title="Pause for all screens">
                     <i
