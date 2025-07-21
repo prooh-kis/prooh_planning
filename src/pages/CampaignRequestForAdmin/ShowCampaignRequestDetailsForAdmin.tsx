@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  Header,
-  VendorConfirmationScreensLevelCreativeTable,
-} from "./Helper";
+import { Header, VendorConfirmationScreensLevelCreativeTable } from "./Helper";
 import { VendorConfirmationBasicTable } from "../../components/tables";
 import ButtonInput from "../../components/atoms/ButtonInput";
 import { message } from "antd";
@@ -190,7 +187,7 @@ export const ShowCampaignRequestDetailsForAdmin = () => {
           onClick={handleApprovedClicked}
           loading={loadingApproveCampaignCreative}
         >
-          Approve
+          Save Changes
         </ButtonInput>
       </div>
     </div>
