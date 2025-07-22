@@ -434,19 +434,9 @@ export const CalenderScaleStepper = ({
                 <div
                   key={i}
                   onClick={() => {
-                    // if (week !== "End" && 
-                    //   !weeks[i][1][currentDay - 1] || 
-                    //   getNumberOfDaysBetweenTwoDates(
-                    //     new Date(),
-                    //     new Date(weeks[i][1][currentDay - 1]?.value)
-                    //   ) > 0
-                    // ) {
-                    //   message.info("Still to come...");
-                    // } else {
                       if (week !== "End") {
                         handleStepClick({ type: "week", step: i });
                       }
-                    // }
                   }}
                   className="relative flex flex-col items-center"
                 >
@@ -491,6 +481,10 @@ export const CalenderScaleStepper = ({
                   width: `${getCurrentTime() - (Number(currentDay - 1) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100}%`,
                   left: `${(Number(currentDay - 1) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100}%`
                 }}
+                onClick={() => {
+                  console.log(getCurrentTime() - (Number(currentDay - 1) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100);
+                  console.log((Number(currentDay - 1) / (weeks?.[currentWeek - 1]?.[1]?.length - 1)) * 100);
+                }}
               >
                 <div className="relative">
                   <Tooltip id="3" placement="bottom"
@@ -514,7 +508,6 @@ export const CalenderScaleStepper = ({
                       }}
                     />
                   </Tooltip>
-                 
                 </div>
               </div>
             )}

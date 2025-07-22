@@ -79,11 +79,11 @@ export const VendorWiseCampaigns: React.FC<VendorWiseCampaignsProps> = ({
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(vendorWiseCampaigns?.[vendor]?.performance || 0) > 1 ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
-                      {/* {((vendorWiseCampaigns?.[vendor]?.performance || 0) * 100)?.toFixed(1) || 0}% */}
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(vendorWiseCampaigns?.[vendor]?.performance || 0) > 0.85 ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
+                      {/* {((vendorWiseCampaigns?.[vendor]?.performance || 0) * 100)?.toFixed(0) || 0}% */}
                       {vendorWiseCampaigns?.[vendor]?.performance < 1 ? 
-                      `-${((1 - vendorWiseCampaigns?.[vendor]?.performance || 0) * 100)?.toFixed(1)}`
-                      : `+${(((vendorWiseCampaigns?.[vendor]?.performance - 1) || 0) * 100)?.toFixed(1)}`
+                      `-${((1 - vendorWiseCampaigns?.[vendor]?.performance || 0) * 100)?.toFixed(0)}`
+                      : `+${(((vendorWiseCampaigns?.[vendor]?.performance - 1) || 0) * 100)?.toFixed(0)}`
                       }%
                     </span>
                   </div>

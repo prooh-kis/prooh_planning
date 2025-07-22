@@ -365,7 +365,6 @@ export const MyCampaignsListPageAdvance: React.FC = () => {
       }
 
       var updatedFilters: any;
-console.log(filtersToUpdate);
       setFilters(() => {
         updatedFilters = filtersToUpdate
         if (filtersToUpdate.hom.length !== filters.hom.length) {
@@ -464,14 +463,14 @@ console.log(filtersToUpdate);
               }
               expected={100}
               total={100}
-              deliveredColor={orgLevelCampaignStatus?.data?.performance < 1 ? "bg-[#EF4444]" : "bg-[#4DB37E]"}
+              deliveredColor={orgLevelCampaignStatus?.data?.performance < 0.85 ? "bg-[#EF4444]" : "bg-[#4DB37E]"}
               expectedColor="bg-[#E6E6E6]"
               totalColor="bg-[#D3EDFF]"
               height="h-[5px]"
             />
           </div>
           
-          <h1 className={`col-span-1 text-[12px] ${orgLevelCampaignStatus?.data?.performance < 1 ? "text-[#EF4444]" : "text-[#4DB37E]"} font-semibold flex justify-center`}>
+          <h1 className={`col-span-1 text-[12px] ${orgLevelCampaignStatus?.data?.performance < 0.85 ? "text-[#EF4444]" : "text-[#4DB37E]"} font-semibold flex justify-center`}>
             {(orgLevelCampaignStatus?.data?.performance * 100 || 0)?.toFixed(0)} %
           </h1>
         </div>

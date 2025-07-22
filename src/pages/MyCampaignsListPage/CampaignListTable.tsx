@@ -84,11 +84,11 @@ export const CampaignListTable: React.FC<CampaignListTableProps> = ({
                       expected={100}
                       total={100}
                       height="h-1"
-                      deliveredColor={`${campaign?.performance >= 1 ? "bg-[#4DB37E]" : "bg-[#EF4444]" }`}
+                      deliveredColor={`${campaign?.performance >= 0.85 ? "bg-[#4DB37E]" : "bg-[#EF4444]" }`}
                       expectedColor="bg-[#E6E6E6]"
                       totalColor="bg-[#E6E6E6]"
                     />
-                    <h1 className={`${campaign?.performance >= 1 ? "text-[#4DB37E]" : "text-[#EF4444]" }`}>
+                    <h1 className={`${campaign?.performance >= 0.85 ? "text-[#4DB37E]" : "text-[#EF4444]" }`}>
                       {((campaign?.performance || 0) * 100).toFixed(0)} %
                     </h1>
                   </div>

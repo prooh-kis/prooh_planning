@@ -75,18 +75,10 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
   handleFilters,
   initialFilters
 }) => {
-  const [expandedLeaders, setExpandedLeaders] = useState<Record<string, boolean>>(() => {
-    if (orgLevelCampaignStatus && orgLevelCampaignStatus?.data?.managerHeads) {
-      return {
-        [Object.keys(orgLevelCampaignStatus?.data?.managerHeads)[0]]: true
-      };
-    } else {
-      return {};
-    }
-  });
+  const [expandedLeaders, setExpandedLeaders] = useState<Record<string, boolean>>();
   
   const toggleLeader = (leaderId: string) => {
-    setExpandedLeaders(prev => ({
+    setExpandedLeaders((prev: any) => ({
       ...prev,
       [leaderId]: !prev[leaderId]
     }));
@@ -97,8 +89,13 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
   const _unused = { _leaderRole, _memberRole, members };
   void _unused; // Use void to satisfy linter
 
-  // const hierarchy = processHierarchy();
   const hierarchy = orgLevelCampaignStatus?.data?.managerHeads;
+
+  useEffect(() => {
+    if (orgLevelCampaignStatus && orgLevelCampaignStatus?.data?.managerHeads) {
+      setExpandedLeaders({[orgLevelCampaignStatus?.data?.managerHeads[Object.keys(orgLevelCampaignStatus?.data?.managerHeads)[0]]?.userId]: true});
+    } 
+  },[orgLevelCampaignStatus]);
 
   return (
     <div className="bg-[#FFFFFF] rounded-lg p-2">
@@ -133,7 +130,7 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
                       }
                     /> 
                     <span 
-                      className={`font-medium text-[10px] text-[#111827] truncate ${expandedLeaders[hierarchy[hom].userId] ? 'font-semibold' : 'font-normal'}`} 
+                      className={`font-medium text-[10px] text-[#111827] truncate ${expandedLeaders && expandedLeaders[hierarchy[hom].userId] ? 'font-semibold' : 'font-normal'}`} 
                       onClick={() => {
                         if (hierarchy[hom].totalCampaigns > 0) {
                           toggleLeader(hierarchy[hom].userId);
@@ -147,18 +144,18 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(hierarchy[hom]?.performance || 0) > 1 ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
-                      {/* {((hierarchy[hom]?.performance || 0) * 100)?.toFixed(1) || 0}% */}
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(hierarchy[hom]?.performance || 0) > 0.85 ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
+                      {/* {((hierarchy[hom]?.performance || 0) * 100)?.toFixed(0) || 0}% */}
                       {hierarchy[hom]?.performance < 1 ? 
-                        `-${((1 - hierarchy[hom]?.performance || 0) * 100)?.toFixed(1)}`
-                        : `+${(((hierarchy[hom]?.performance - 1) || 0) * 100)?.toFixed(1)}`
+                        `-${((1 - hierarchy[hom]?.performance || 0) * 100)?.toFixed(0)}`
+                        : `+${(((hierarchy[hom]?.performance - 1) || 0) * 100)?.toFixed(0)}`
                         }%
                     </span>
                   </div>
                 </div>
               </div>
               
-              {expandedLeaders[hierarchy[hom].userId] && hierarchy[hom].managers && (
+              {expandedLeaders && expandedLeaders[hierarchy[hom].userId] && hierarchy[hom].managers && (
                 <div className={`space-y-1 ${selectionType === "checkbox" ? "" : "border-l-2 border-[#F9FAFB] ml-1"}`}>
                   {Object.keys(hierarchy[hom].managers).length > 0 ? (
                     Object.keys(hierarchy[hom].managers).reverse().map((manager: any) => (
@@ -189,8 +186,8 @@ export const TeamHierarchy: React.FC<TeamHierarchyProps> = ({
                             <div className="flex items-center space-x-2">
                               <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${(hierarchy[hom].managers[manager]?.performance || 0)> 1 ? "text-[#4DB37E]" : "text-[#EF4444]"}`}>
                                 {hierarchy[hom].managers[manager]?.performance < 1 ? 
-                                `-${((1 - hierarchy[hom].managers[manager]?.performance || 0) * 100)?.toFixed(1)}`
-                                : `+${(((hierarchy[hom].managers[manager]?.performance - 1) || 0) * 100)?.toFixed(1)}`
+                                `-${((1 - hierarchy[hom].managers[manager]?.performance || 0) * 100)?.toFixed(0)}`
+                                : `+${(((hierarchy[hom].managers[manager]?.performance - 1) || 0) * 100)?.toFixed(0)}`
                                 }%
                               </span>
                             </div>

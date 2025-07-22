@@ -81,18 +81,18 @@ export const GroupWiseCampaigns: React.FC<AgencyWiseCampaignsProps> = ({
                   <div className="flex items-center space-x-2">
                     <span
                       className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                        (groupWiseCampaigns?.[group]?.performance || 0) > 1
+                        (groupWiseCampaigns?.[group]?.performance || 0) > 0.85
                           ? "text-[#4DB37E]"
                           : "text-[#EF4444]"
                       }`}
                     >
                       {/* {(
                         (groupWiseCampaigns?.[group]?.performance || 0) * 100
-                      )?.toFixed(1) || 0}
+                      )?.toFixed(0) || 0}
                       % */}
                       {groupWiseCampaigns?.[group]?.performance < 1 ? 
-                      `-${((1 - groupWiseCampaigns?.[group]?.performance || 0) * 100)?.toFixed(1)}`
-                      : `+${(((groupWiseCampaigns?.[group]?.performance - 1) || 0) * 100)?.toFixed(1)}`
+                      `-${((1 - groupWiseCampaigns?.[group]?.performance || 0) * 100)?.toFixed(0)}`
+                      : `+${(((groupWiseCampaigns?.[group]?.performance - 1) || 0) * 100)?.toFixed(0)}`
                       }%
                     </span>
                   </div>
