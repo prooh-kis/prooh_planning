@@ -17,7 +17,10 @@ import {
   takeDashboardScreenShotAction,
 } from "../../actions/billInvoiceAction";
 import { getUserRole } from "../../utils/campaignUtils";
-import { CAMPAIGN_PLANNER, CLIENT_POC_USER } from "../../constants/userConstants";
+import {
+  CAMPAIGN_PLANNER,
+  CLIENT_POC_USER,
+} from "../../constants/userConstants";
 import { createNoSubstitutionTemplateLiteral } from "typescript";
 
 interface FilterState {
@@ -129,21 +132,26 @@ export const NewDashBoard: React.FC = () => {
     );
   };
 
-  const [hasReceivedParentMessage, setHasReceivedParentMessage] = useState(false);
+  const [hasReceivedParentMessage, setHasReceivedParentMessage] =
+    useState(false);
 
   useEffect(() => {
-    if (loggedInUser && campaignDetails?.campaignPlannerId === loggedInUser._id && openView === userInfo?.userRole) {
-      setUserInfo(loggedInUser)
+    if (
+      loggedInUser &&
+      campaignDetails?.campaignPlannerId === loggedInUser._id &&
+      openView === userInfo?.userRole
+    ) {
+      setUserInfo(loggedInUser);
       setOpenView(loggedInUser.userRole);
     }
 
     // Notify parent that iframe is ready
     const notifyParent = () => {
       try {
-        window.parent.postMessage('IFRAME_READY', '*');
-        console.log('IFRAME_READY message sent to parent');
+        window.parent.postMessage("IFRAME_READY", "*");
+        console.log("IFRAME_READY message sent to parent");
       } catch (error) {
-        console.error('Failed to send IFRAME_READY message:', error);
+        console.error("Failed to send IFRAME_READY message:", error);
       }
     };
 
@@ -154,21 +162,21 @@ export const NewDashBoard: React.FC = () => {
         "http://localhost:3000",
         "https://prooh-cms-beta.vercel.app",
         "https://prooh-cms.vercel.app",
-        "https://cms.prooh.ai"
+        "https://cms.prooh.ai",
       ];
 
       // Only process messages from allowed origins
       if (!allowedOrigins.includes(event.origin)) {
-        console.warn('Message from untrusted origin:', event.origin);
+        console.warn("Message from untrusted origin:", event.origin);
         return;
       }
 
       // Handle the message based on its type
-      if (event.data && event.data.type === 'USERINFO_FOR_VENDOR_DASHBOARD') {
+      if (event.data && event.data.type === "USERINFO_FOR_VENDOR_DASHBOARD") {
         // Handle the user info
         setUserInfo(event.data.data.userInfo);
-        setOpenView(event.data.data.userInfo.userRole);
-        
+        setOpenView(event.data.data.userInfo?.userRole);
+
         // Only send IFRAME_READY if we haven't already received a message
         if (!hasReceivedParentMessage) {
           setHasReceivedParentMessage(true);
@@ -178,14 +186,20 @@ export const NewDashBoard: React.FC = () => {
     };
 
     // Add message listener
-    window.addEventListener('message', handleMessage);
+    window.addEventListener("message", handleMessage);
 
     // Clean up
     return () => {
-      window.removeEventListener('message', handleMessage);
+      window.removeEventListener("message", handleMessage);
     };
-  },[loggedInUser, campaignDetails, hasReceivedParentMessage, openView, userInfo]);
-  
+  }, [
+    loggedInUser,
+    campaignDetails,
+    hasReceivedParentMessage,
+    openView,
+    userInfo,
+  ]);
+
   // Set up initial data fetch and refresh interval
   useEffect(() => {
     if (userInfo?.userRole === CAMPAIGN_PLANNER) {
@@ -250,8 +264,6 @@ export const NewDashBoard: React.FC = () => {
       </div>
     );
   }
-  console.log(userInfo)
-  console.log(getUserRole(userInfo?.userRole))
 
   return (
     <div className="w-full font-custom">

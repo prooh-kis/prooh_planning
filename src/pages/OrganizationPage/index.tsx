@@ -1,25 +1,28 @@
 // src/pages/OrganizationPage/page.tsx
-'use client';
+"use client";
 
-import React, { useState, useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { createNewOrgAction, getMyOrgDetailsAction } from '../../actions/organizationAction';
-import {OrganizationHeader} from './OrganizationHeader';
-import {MemberCard} from './MemberCard';
-import {OrganizationModal} from './OrganizationModal';
-import { Organization, Member, Role } from './types';
-import { MemberModal } from './MemberModal';
-import { PlusOutlined, TeamOutlined, UserAddOutlined } from '@ant-design/icons';
-import { CreateOrgModal } from './CreateOrgModal';
-import { MembersTable } from './MembersTable';
-import { AddMemberModal } from './AddMemberModal';
-import { Button, message } from 'antd';
-import { GET_MY_ORG_DETAILS_RESET } from '../../constants/organizationConstants';
-
+import React, { useState, useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createNewOrgAction,
+  getMyOrgDetailsAction,
+} from "../../actions/organizationAction";
+import { OrganizationHeader } from "./OrganizationHeader";
+import { MemberCard } from "./MemberCard";
+import { OrganizationModal } from "./OrganizationModal";
+import { Organization, Member, Role } from "./types";
+import { MemberModal } from "./MemberModal";
+import { PlusOutlined, TeamOutlined, UserAddOutlined } from "@ant-design/icons";
+import { CreateOrgModal } from "./CreateOrgModal";
+import { MembersTable } from "./MembersTable";
+import { AddMemberModal } from "./AddMemberModal";
+import { Button, message } from "antd";
+import { GET_MY_ORG_DETAILS_RESET } from "../../constants/organizationConstants";
 
 const initialOrg: Organization = {
   officialName: "PROOH",
-  officialLogo: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.c6ASmT7d2qYobP4OPwAxVgAAAA%26pid%3DApi&f=1",
+  officialLogo:
+    "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.c6ASmT7d2qYobP4OPwAxVgAAAA%26pid%3DApi&f=1",
   officialEmail: "contact@prooh.ai",
   officialPhone: "+1 (555) 123-4567",
   officialAddress: {},
@@ -36,8 +39,10 @@ export const OrganizationPage: React.FC = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [members, setMembers] = useState<Member[]>(initialMembers);
-  const [editingMember, setEditingMember] = useState<Partial<Member> | null>(null);
-  
+  const [editingMember, setEditingMember] = useState<Partial<Member> | null>(
+    null
+  );
+
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [createOrgError, setCreateOrgError] = useState<string | null>(null);
 
@@ -46,98 +51,116 @@ export const OrganizationPage: React.FC = () => {
   const [showOrgModal, setShowOrgModal] = useState(false);
   const [showAddMemberModal, setShowAddMemberModal] = useState(false);
 
-
   const { userInfo } = useSelector((state: any) => state.auth);
   const {
     loading: loadingMyOrg,
     error: errorMyOrg,
-    data: myOrg
+    data: myOrg,
   } = useSelector((state: any) => state.myOrgDetailsGet);
 
   const {
     loading: loadingCreateOrg,
     error: errorCreateOrg,
-    success: successCreateOrg
+    success: successCreateOrg,
   } = useSelector((state: any) => state.myOrgCreate);
 
-  const getConnectedMembers = useCallback((member: Member) => {
-    if (!member.workConnections || member.workConnections.length === 0) return [];
-    
-    // Return coordinator members that are in the workConnections array
-    return members.filter(m => 
-      m.role === 'COORDINATOR' && 
-      member.workConnections?.includes(m.userId)
-    );
-  }, [members]);
+  const getConnectedMembers = useCallback(
+    (member: Member) => {
+      if (!member.workConnections || member.workConnections.length === 0)
+        return [];
+
+      // Return coordinator members that are in the workConnections array
+      return members.filter(
+        (m) =>
+          m.role === "COORDINATOR" && member.workConnections?.includes(m.userId)
+      );
+    },
+    [members]
+  );
 
   const handleSaveMember = (updatedMember: Member) => {
     // If role is being changed, update the reportsTo field accordingly
-    const existingMember = members.find(m => m.userId === updatedMember.userId);
-    
+    const existingMember = members.find(
+      (m) => m.userId === updatedMember.userId
+    );
+
     if (existingMember && existingMember.role !== updatedMember.role) {
       // Role has changed, update reportsTo based on new role
-      if (updatedMember.role === 'MANAGER') {
+      if (updatedMember.role === "MANAGER") {
         // Find HOM to report to
-        const hom = members.find(m => m.role === 'HOM');
+        const hom = members.find((m) => m.role === "HOM");
         updatedMember.reportsTo = hom?.userId || null;
         // Clear work connections if role changed to MANAGER
         updatedMember.workConnections = [];
-      } else if (updatedMember.role === 'COORDINATOR') {
+      } else if (updatedMember.role === "COORDINATOR") {
         // Find HOC to report to
-        const hoc = members.find(m => m.role === 'HOC');
+        const hoc = members.find((m) => m.role === "HOC");
         updatedMember.reportsTo = hoc?.userId || null;
-      } else if (updatedMember.role === 'HOM' || updatedMember.role === 'HOC') {
+      } else if (updatedMember.role === "HOM" || updatedMember.role === "HOC") {
         // HOM and HOC should report to an ADMIN
-        const admin = members.find(m => m.role === 'ADMIN');
+        const admin = members.find((m) => m.role === "ADMIN");
         updatedMember.reportsTo = admin?.userId || null;
       }
-    } else if ((updatedMember.role === 'HOM' || updatedMember.role === 'HOC') && updatedMember.reportsTo) {
+    } else if (
+      (updatedMember.role === "HOM" || updatedMember.role === "HOC") &&
+      updatedMember.reportsTo
+    ) {
       // If the role is HOM or HOC and has a reportsTo, ensure it's an ADMIN
-      const reportsToMember = members.find(m => m.userId === updatedMember.reportsTo);
-      if (reportsToMember?.role !== 'ADMIN') {
-        const admin = members.find(m => m.role === 'ADMIN');
+      const reportsToMember = members.find(
+        (m) => m.userId === updatedMember.reportsTo
+      );
+      if (reportsToMember?.role !== "ADMIN") {
+        const admin = members.find((m) => m.role === "ADMIN");
         updatedMember.reportsTo = admin?.userId || null;
       }
     }
 
-    setMembers(prevMembers => 
-      prevMembers.map(member => 
-        member.userId === updatedMember.userId ? { ...member, ...updatedMember } : member
+    setMembers((prevMembers) =>
+      prevMembers.map((member) =>
+        member.userId === updatedMember.userId
+          ? { ...member, ...updatedMember }
+          : member
       )
     );
-    
+
     // Update in the organization
-    const updatedMembers = members.map(member => 
-      member.userId === updatedMember.userId ? { ...member, ...updatedMember } : member
+    const updatedMembers = members.map((member) =>
+      member.userId === updatedMember.userId
+        ? { ...member, ...updatedMember }
+        : member
     );
-    
-    dispatch(createNewOrgAction({
-      id: organization._id,
-      officialName: organization.officialName,
-      officialMembers: updatedMembers
-    }));
-    
+
+    dispatch(
+      createNewOrgAction({
+        id: organization._id,
+        officialName: organization.officialName,
+        officialMembers: updatedMembers,
+      })
+    );
+
     setEditingMember(null);
   };
 
-  const handleAddNewMember = (newMember: Omit<Member, 'id' | 'reportsTo' | 'workConnections'>) => {
+  const handleAddNewMember = (
+    newMember: Omit<Member, "id" | "reportsTo" | "workConnections">
+  ) => {
     // Determine reportsTo based on role
     let reportsTo = null;
-    
-    if (newMember.role === 'MANAGER') {
+
+    if (newMember.role === "MANAGER") {
       // Find HOM to report to
-      const hom = members.find(m => m.role === 'HOM');
+      const hom = members.find((m) => m.role === "HOM");
       if (hom) {
         reportsTo = hom.userId;
       }
-    } else if (newMember.role === 'COORDINATOR') {
+    } else if (newMember.role === "COORDINATOR") {
       // Find HOC to report to
-      const hoc = members.find(m => m.role === 'HOC');
+      const hoc = members.find((m) => m.role === "HOC");
       if (hoc) {
         reportsTo = hoc.userId;
       }
     }
-    
+
     // Initialize workConnections as an empty array
     const workConnections: string[] = [];
 
@@ -147,65 +170,71 @@ export const OrganizationPage: React.FC = () => {
       reportsTo,
       workConnections,
     };
-    
-    setMembers(prevMembers => [...prevMembers, memberWithId]);
-    dispatch(createNewOrgAction({
-      id: organization._id,
-      userId: memberWithId.userId,
-      officialName: organization.officialName,
-      officialMembers: [...members, memberWithId]
-    }));
+
+    setMembers((prevMembers) => [...prevMembers, memberWithId]);
+    dispatch(
+      createNewOrgAction({
+        id: organization._id,
+        userId: memberWithId.userId,
+        officialName: organization.officialName,
+        officialMembers: [...members, memberWithId],
+      })
+    );
     setShowAddMemberModal(false);
     message.success(`${newMember.name} has been added to the organization`);
   };
 
   const handleDeleteMember = (memberId: string) => {
-    const memberToDelete = members.find(m => m.userId === memberId);
-    
+    const memberToDelete = members.find((m) => m.userId === memberId);
+
     if (!memberToDelete) return;
 
     // If the member being deleted is a manager, clean up work connections
     let updatedMembers = [...members];
-    
-    if (memberToDelete.role === 'MANAGER') {
+
+    if (memberToDelete.role === "MANAGER") {
       // Remove this manager's ID from any work connections
-      updatedMembers = members.map(member => {
+      updatedMembers = members.map((member) => {
         if (member.workConnections) {
           return {
             ...member,
             workConnections: member.workConnections.filter(
-              coordinatorId => coordinatorId !== memberId
-            )
+              (coordinatorId) => coordinatorId !== memberId
+            ),
           };
         }
         return member;
       });
     }
-    
+
     // Remove the member
-    updatedMembers = updatedMembers.filter(member => member.userId !== memberId);
-    
+    updatedMembers = updatedMembers.filter(
+      (member) => member.userId !== memberId
+    );
+
     // If the deleted member was a HOM or HOC, update reportsTo for their direct reports
-    if (memberToDelete.role === 'HOM' || memberToDelete.role === 'HOC') {
-      const roleToUpdate = memberToDelete.role === 'HOM' ? 'MANAGER' : 'COORDINATOR';
-      updatedMembers = updatedMembers.map(member => {
+    if (memberToDelete.role === "HOM" || memberToDelete.role === "HOC") {
+      const roleToUpdate =
+        memberToDelete.role === "HOM" ? "MANAGER" : "COORDINATOR";
+      updatedMembers = updatedMembers.map((member) => {
         if (member.role === roleToUpdate && member.reportsTo === memberId) {
           return { ...member, reportsTo: null };
         }
         return member;
       });
     }
-    
-    setMembers(updatedMembers);
-    
-    // Update in the organization
-    dispatch(createNewOrgAction({
-      id: organization._id,
-      officialName: organization.officialName,
-      officialMembers: updatedMembers
-    }));
-  };
 
+    setMembers(updatedMembers);
+
+    // Update in the organization
+    dispatch(
+      createNewOrgAction({
+        id: organization._id,
+        officialName: organization.officialName,
+        officialMembers: updatedMembers,
+      })
+    );
+  };
 
   const handleCreateOrganization = (orgData: {
     officialName: string;
@@ -222,29 +251,30 @@ export const OrganizationPage: React.FC = () => {
             userId: userInfo?._id,
             name: userInfo?.name,
             email: userInfo?.email,
-            phone: userInfo?.phone
-          },
-          officialMembers: [{
-            userId: userInfo?._id,
-            name: userInfo?.name,
-            email: userInfo?.email,
             phone: userInfo?.phone,
-            role: 'ADMIN'
-          }],
-          userId: userInfo?._id
+          },
+          officialMembers: [
+            {
+              userId: userInfo?._id,
+              name: userInfo?.name,
+              email: userInfo?.email,
+              phone: userInfo?.phone,
+              role: "ADMIN",
+            },
+          ],
+          userId: userInfo?._id,
         })
       );
 
       // Refresh organization data after creation
       if (userInfo?._id) {
-        dispatch(getMyOrgDetailsAction({ id: userInfo._id }));
+        dispatch(getMyOrgDetailsAction({ id: userInfo?._id }));
       }
       setShowCreateModal(false);
     } catch (error: any) {
-      setCreateOrgError(error.message || 'Failed to create organization');
+      setCreateOrgError(error.message || "Failed to create organization");
     }
   };
-
 
   const handleEditOrg = () => {
     setEditingOrg({ ...organization });
@@ -256,23 +286,21 @@ export const OrganizationPage: React.FC = () => {
     setShowOrgModal(false);
   };
 
-
-
   useEffect(() => {
     if (errorCreateOrg) {
       message.error(errorCreateOrg);
     }
-  }, [errorCreateOrg])
+  }, [errorCreateOrg]);
 
   useEffect(() => {
     if (myOrg) {
       setOrganization(myOrg);
-      setMembers(myOrg.officialMembers)
+      setMembers(myOrg.officialMembers);
       dispatch({
-        type: GET_MY_ORG_DETAILS_RESET
-      })
+        type: GET_MY_ORG_DETAILS_RESET,
+      });
     }
-  },[myOrg, dispatch]);
+  }, [myOrg, dispatch]);
 
   // Fetch organization data on mount
   useEffect(() => {
@@ -281,7 +309,7 @@ export const OrganizationPage: React.FC = () => {
       dispatch(getMyOrgDetailsAction({ id: userInfo?._id }));
     }
     if (userInfo?._id) {
-      dispatch(getMyOrgDetailsAction({id: userInfo?._id}));
+      dispatch(getMyOrgDetailsAction({ id: userInfo?._id }));
     }
   }, [dispatch, userInfo?._id, successCreateOrg]);
 
@@ -298,192 +326,232 @@ export const OrganizationPage: React.FC = () => {
           loading={loadingMyOrg}
           error={createOrgError}
         />
-      {loadingMyOrg && (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3B82F6] mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading organization data...</p>
-          </div>
-        </div>
-      )}
-      
-      {errorMyOrg ? (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center p-6 max-w-md mx-auto bg-red-50 rounded-lg">
-            <div className="text-red-500 mb-4">
-              <svg
-                className="w-12 h-12 mx-auto"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                />
-              </svg>
+        {loadingMyOrg && (
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3B82F6] mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading organization data...</p>
             </div>
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">Error Loading Organization</h2>
-            <p className="text-gray-600 mb-6">{errorMyOrg}</p>
-            <button
-              onClick={() => errorMyOrg === "Organization not found" ? setShowCreateModal(true) : window.location.reload()}
-              className="px-4 py-2 bg-[#3B82F6] text-white rounded-md hover:bg-[#3B82F670] transition-colors"
-            >
-              {errorMyOrg === "Organization not found" ? "Create Organization" : "Try Again"}
-            </button>
           </div>
-        </div>
-      ) : !myOrg && !loadingMyOrg && !organization && !members && (
-        <div className="flex flex-col items-center justify-center min-h-screen p-6">
-          <div className="text-center max-w-md">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg
-                className="w-12 h-12 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
+        )}
+
+        {errorMyOrg ? (
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="text-center p-6 max-w-md mx-auto bg-red-50 rounded-lg">
+              <div className="text-red-500 mb-4">
+                <svg
+                  className="w-12 h-12 mx-auto"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                Error Loading Organization
+              </h2>
+              <p className="text-gray-600 mb-6">{errorMyOrg}</p>
+              <button
+                onClick={() =>
+                  errorMyOrg === "Organization not found"
+                    ? setShowCreateModal(true)
+                    : window.location.reload()
+                }
+                className="px-4 py-2 bg-[#3B82F6] text-white rounded-md hover:bg-[#3B82F670] transition-colors"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                />
-              </svg>
+                {errorMyOrg === "Organization not found"
+                  ? "Create Organization"
+                  : "Try Again"}
+              </button>
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">No Organization Found</h2>
-            <p className="text-gray-600 mb-6">
-              {"You don't have an organization set up yet. Create one to get started with managing your team."}
-            </p>
-            <button
-              type="button"
-              title="Create Organization"
-              onClick={() => setShowCreateModal(true)}
-              className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center mx-auto"
-            >
-              <PlusOutlined className="mr-2" />
-              Create Organization
-            </button>
           </div>
-        </div>
-      )}
-      <div className="container mx-auto p-6">
-        <OrganizationHeader 
-          organization={organization} 
-          onEdit={handleEditOrg} 
-          userInfo={userInfo}
-        />
-
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-[#1F2937]">Organization Structure</h2>
-          <button
-            onClick={() => setIsEditing(!isEditing)}
-            className={`px-4 py-2 rounded-md ${
-              isEditing 
-                ? 'bg-[#FEE2E2] text-[#B91C1C] hover:bg-[#FECACA]' 
-                : 'bg-[#DBEAFE] text-[#1D4ED8] hover:bg-[#BFDBFE]'
-            } transition-colors`}
-          >
-            {isEditing ? 'Cancel' : 'Edit Structure'}
-          </button>
-        </div>
-
-        <div className="bg-[#F9FAFB] p-6 rounded-lg">
-          {members
-            .filter(m => m.role === 'ADMIN')
-            .map(member => (
-              <MemberCard
-                key={member.userId}
-                member={member}
-                members={members}
-                level={0}
-                isEditing={isEditing}
-                onEdit={setEditingMember}
-                onDelete={handleDeleteMember}
-                getConnectedCoordinators={getConnectedMembers}
-              />
-            ))}
-          
-          {/* Teams sections */}
-          <div className="grid grid-cols-1 gap-6 mt-6">
-            {/* HOM and Managers Section */}
-            <div className="bg-white p-4 rounded-lg border border-[#E5E7EB]">
-              <h3 className="text-lg font-semibold mb-4 text-center text-[#2563EB]">Managers Team</h3>
-              
-              {/* Show MANAGERs without reportsTo at the top */}
-              {members
-                .filter(member => member.role === 'MANAGER' 
-                  && (!member.reportsTo || !members.some(m => m.userId === member.reportsTo) || members.some(m => m.userId === member.reportsTo && (m.role === 'HOC' || m.role === 'COORDINATOR'))))
-                .map(manager => (
-                  <div key={manager.userId} className="mb-4">
-                    <MemberCard
-                      member={manager}
-                      members={members}
-                      level={0}
-                      isEditing={isEditing}
-                      onEdit={setEditingMember}
-                      onDelete={handleDeleteMember}
-                      getConnectedCoordinators={getConnectedMembers}
+        ) : (
+          !myOrg &&
+          !loadingMyOrg &&
+          !organization &&
+          !members && (
+            <div className="flex flex-col items-center justify-center min-h-screen p-6">
+              <div className="text-center max-w-md">
+                <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <svg
+                    className="w-12 h-12 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                     />
-                    {/* Show connected coordinators */}
-                    <div className="ml-8 mt-2">
-                      {manager.workConnections?.map((coordinatorId, index) => {
-                        const coordinator = members.find(m => 
-                          m.role === 'COORDINATOR' && 
-                          m.userId === coordinatorId
-                        );
-                        return coordinator ? (
-                          <div key={`${manager.userId}-${index}`} className="mt-2">
-                            <MemberCard
-                              member={coordinator}
-                              members={members}
-                              level={1}
-                              isEditing={isEditing}
-                              onEdit={setEditingMember}
-                              onDelete={handleDeleteMember}
-                              getConnectedCoordinators={getConnectedMembers}
-                            />
-                          </div>
-                        ) : null;
-                      })}
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                  No Organization Found
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  {
+                    "You don't have an organization set up yet. Create one to get started with managing your team."
+                  }
+                </p>
+                <button
+                  type="button"
+                  title="Create Organization"
+                  onClick={() => setShowCreateModal(true)}
+                  className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center mx-auto"
+                >
+                  <PlusOutlined className="mr-2" />
+                  Create Organization
+                </button>
+              </div>
+            </div>
+          )
+        )}
+        <div className="container mx-auto p-6">
+          <OrganizationHeader
+            organization={organization}
+            onEdit={handleEditOrg}
+            userInfo={userInfo}
+          />
+
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-semibold text-[#1F2937]">
+              Organization Structure
+            </h2>
+            <button
+              onClick={() => setIsEditing(!isEditing)}
+              className={`px-4 py-2 rounded-md ${
+                isEditing
+                  ? "bg-[#FEE2E2] text-[#B91C1C] hover:bg-[#FECACA]"
+                  : "bg-[#DBEAFE] text-[#1D4ED8] hover:bg-[#BFDBFE]"
+              } transition-colors`}
+            >
+              {isEditing ? "Cancel" : "Edit Structure"}
+            </button>
+          </div>
+
+          <div className="bg-[#F9FAFB] p-6 rounded-lg">
+            {members
+              .filter((m) => m.role === "ADMIN")
+              .map((member) => (
+                <MemberCard
+                  key={member.userId}
+                  member={member}
+                  members={members}
+                  level={0}
+                  isEditing={isEditing}
+                  onEdit={setEditingMember}
+                  onDelete={handleDeleteMember}
+                  getConnectedCoordinators={getConnectedMembers}
+                />
+              ))}
+
+            {/* Teams sections */}
+            <div className="grid grid-cols-1 gap-6 mt-6">
+              {/* HOM and Managers Section */}
+              <div className="bg-white p-4 rounded-lg border border-[#E5E7EB]">
+                <h3 className="text-lg font-semibold mb-4 text-center text-[#2563EB]">
+                  Managers Team
+                </h3>
+
+                {/* Show MANAGERs without reportsTo at the top */}
+                {members
+                  .filter(
+                    (member) =>
+                      member.role === "MANAGER" &&
+                      (!member.reportsTo ||
+                        !members.some((m) => m.userId === member.reportsTo) ||
+                        members.some(
+                          (m) =>
+                            m.userId === member.reportsTo &&
+                            (m.role === "HOC" || m.role === "COORDINATOR")
+                        ))
+                  )
+                  .map((manager) => (
+                    <div key={manager.userId} className="mb-4">
+                      <MemberCard
+                        member={manager}
+                        members={members}
+                        level={0}
+                        isEditing={isEditing}
+                        onEdit={setEditingMember}
+                        onDelete={handleDeleteMember}
+                        getConnectedCoordinators={getConnectedMembers}
+                      />
+                      {/* Show connected coordinators */}
+                      <div className="ml-8 mt-2">
+                        {manager.workConnections?.map(
+                          (coordinatorId, index) => {
+                            const coordinator = members.find(
+                              (m) =>
+                                m.role === "COORDINATOR" &&
+                                m.userId === coordinatorId
+                            );
+                            return coordinator ? (
+                              <div
+                                key={`${manager.userId}-${index}`}
+                                className="mt-2"
+                              >
+                                <MemberCard
+                                  member={coordinator}
+                                  members={members}
+                                  level={1}
+                                  isEditing={isEditing}
+                                  onEdit={setEditingMember}
+                                  onDelete={handleDeleteMember}
+                                  getConnectedCoordinators={getConnectedMembers}
+                                />
+                              </div>
+                            ) : null;
+                          }
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              
-              {/* Show HOM and their direct reports */}
-              {members
-                ?.filter(member => member.role === 'HOM')
-                ?.map(hom => (
-                  <div key={hom.userId}>
-                    <MemberCard
-                      member={hom}
-                      members={members}
-                      level={0}
-                      isEditing={isEditing}
-                      onEdit={setEditingMember}
-                      onDelete={handleDeleteMember}
-                      getConnectedCoordinators={getConnectedMembers}
-                    />
-                    <div className="ml-8 mt-2">
-                      {members
-                        .filter(member => member.reportsTo === hom.userId && member.role === 'MANAGER')
-                        .map(manager => (
-                          <div key={manager.userId} className="mt-2">
-                            <MemberCard
-                              member={manager}
-                              members={members}
-                              level={1}
-                              isEditing={isEditing}
-                              onEdit={setEditingMember}
-                              onDelete={handleDeleteMember}
-                              getConnectedCoordinators={getConnectedMembers}
-                            />
-                            {/* Show connected coordinators */}
-                            {/* {manager.workConnections?.map((coordinatorId, index) => {
+                  ))}
+
+                {/* Show HOM and their direct reports */}
+                {members
+                  ?.filter((member) => member.role === "HOM")
+                  ?.map((hom) => (
+                    <div key={hom.userId}>
+                      <MemberCard
+                        member={hom}
+                        members={members}
+                        level={0}
+                        isEditing={isEditing}
+                        onEdit={setEditingMember}
+                        onDelete={handleDeleteMember}
+                        getConnectedCoordinators={getConnectedMembers}
+                      />
+                      <div className="ml-8 mt-2">
+                        {members
+                          .filter(
+                            (member) =>
+                              member.reportsTo === hom.userId &&
+                              member.role === "MANAGER"
+                          )
+                          .map((manager) => (
+                            <div key={manager.userId} className="mt-2">
+                              <MemberCard
+                                member={manager}
+                                members={members}
+                                level={1}
+                                isEditing={isEditing}
+                                onEdit={setEditingMember}
+                                onDelete={handleDeleteMember}
+                                getConnectedCoordinators={getConnectedMembers}
+                              />
+                              {/* Show connected coordinators */}
+                              {/* {manager.workConnections?.map((coordinatorId, index) => {
                               const coordinator = members.find(m => 
                                 m.role === 'COORDINATOR' && 
                                 m.userId === coordinatorId
@@ -502,110 +570,137 @@ export const OrganizationPage: React.FC = () => {
                                 </div>
                               ) : null;
                             })} */}
-                          </div>
-                        ))}
+                            </div>
+                          ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
-            </div>
-            
-            {/* HOC and Coordinators Section */}
-            <div className="bg-white p-4 rounded-lg border border-[#E5E7EB]">
-              <h3 className="text-lg font-semibold mb-4 text-center text-[#16A34A]">Coordinators Team</h3>
-              
-              {/* Show COORDINATORs with invalid or no reportsTo */}
-              {members
-                .filter(member => 
-                  member.role === 'COORDINATOR'
-                   && (!member.reportsTo || !members.some(m => m.userId === member.reportsTo) || members.some(m => m.userId === member.reportsTo && (m.role === 'HOM' || m.role === 'MANAGER')))
-                )
-                .map(coordinator => (
-                  <div key={coordinator.userId} className="mt-4 border-t pt-4">
-                    {/* <div className="text-sm text-yellow-600 mb-2">
+                  ))}
+              </div>
+
+              {/* HOC and Coordinators Section */}
+              <div className="bg-white p-4 rounded-lg border border-[#E5E7EB]">
+                <h3 className="text-lg font-semibold mb-4 text-center text-[#16A34A]">
+                  Coordinators Team
+                </h3>
+
+                {/* Show COORDINATORs with invalid or no reportsTo */}
+                {members
+                  .filter(
+                    (member) =>
+                      member.role === "COORDINATOR" &&
+                      (!member.reportsTo ||
+                        !members.some((m) => m.userId === member.reportsTo) ||
+                        members.some(
+                          (m) =>
+                            m.userId === member.reportsTo &&
+                            (m.role === "HOM" || m.role === "MANAGER")
+                        ))
+                  )
+                  .map((coordinator) => (
+                    <div
+                      key={coordinator.userId}
+                      className="mt-4 border-t pt-4"
+                    >
+                      {/* <div className="text-sm text-yellow-600 mb-2">
                       {!coordinator.reportsTo 
                         ? 'Unassigned Coordinator' 
                         : 'Coordinator with invalid supervisor'}
                     </div> */}
-                    <MemberCard
-                      member={coordinator}
-                      members={members}
-                      level={0}
-                      isEditing={isEditing}
-                      onEdit={setEditingMember}
-                      onDelete={handleDeleteMember}
-                      getConnectedCoordinators={getConnectedMembers}
-                    />
-                  </div>
-                ))}
-
-              {/* Show HOC with their direct reports */}
-              {members
-                .filter(member => member.role === 'HOC')
-                .map(hoc => (
-                  <div key={hoc.userId}>
-                    <MemberCard
-                      member={hoc}
-                      members={members}
-                      level={0}
-                      isEditing={isEditing}
-                      onEdit={setEditingMember}
-                      onDelete={handleDeleteMember}
-                      getConnectedCoordinators={getConnectedMembers}
-                    />
-                    <div className="ml-8 mt-2">
-                      {members
-                        .filter(member => member.reportsTo === hoc.userId && member.role === 'COORDINATOR')
-                        .map(coordinator => (
-                          <MemberCard
-                            key={coordinator.userId}
-                            member={coordinator}
-                            members={members}
-                            level={1}
-                            isEditing={isEditing}
-                            onEdit={setEditingMember}
-                            onDelete={handleDeleteMember}
-                            getConnectedCoordinators={getConnectedMembers}
-                          />
-                        ))}
+                      <MemberCard
+                        member={coordinator}
+                        members={members}
+                        level={0}
+                        isEditing={isEditing}
+                        onEdit={setEditingMember}
+                        onDelete={handleDeleteMember}
+                        getConnectedCoordinators={getConnectedMembers}
+                      />
                     </div>
-                  </div>
-                ))}
+                  ))}
+
+                {/* Show HOC with their direct reports */}
+                {members
+                  .filter((member) => member.role === "HOC")
+                  .map((hoc) => (
+                    <div key={hoc.userId}>
+                      <MemberCard
+                        member={hoc}
+                        members={members}
+                        level={0}
+                        isEditing={isEditing}
+                        onEdit={setEditingMember}
+                        onDelete={handleDeleteMember}
+                        getConnectedCoordinators={getConnectedMembers}
+                      />
+                      <div className="ml-8 mt-2">
+                        {members
+                          .filter(
+                            (member) =>
+                              member.reportsTo === hoc.userId &&
+                              member.role === "COORDINATOR"
+                          )
+                          .map((coordinator) => (
+                            <MemberCard
+                              key={coordinator.userId}
+                              member={coordinator}
+                              members={members}
+                              level={1}
+                              isEditing={isEditing}
+                              onEdit={setEditingMember}
+                              onDelete={handleDeleteMember}
+                              getConnectedCoordinators={getConnectedMembers}
+                            />
+                          ))}
+                      </div>
+                    </div>
+                  ))}
+              </div>
             </div>
+          </div>
+
+          {/* Members Table Section */}
+          <div className="mt-8 bg-white p-6 rounded-lg shadow">
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex items-center">
+                <TeamOutlined className="text-2xl text-blue-600 mr-3" />
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  All Organization Members
+                </h2>
+              </div>
+              <Button
+                type="primary"
+                icon={<UserAddOutlined />}
+                onClick={() => setShowAddMemberModal(true)}
+              >
+                Add Member
+              </Button>
+            </div>
+            <MembersTable
+              members={members}
+              loading={loadingMyOrg || loadingCreateOrg}
+              onRoleUpdate={async (userId: string, newRole: Role) => {
+                const memberWithId: any = members.find(
+                  (member) => member.userId === userId
+                );
+                dispatch(
+                  createNewOrgAction({
+                    id: organization._id,
+                    userId: memberWithId.userId,
+                    officialName: organization.officialName,
+                    officialMembers: [
+                      ...members.filter(
+                        (member: any) => member.userId !== userId
+                      ),
+                      { ...memberWithId, role: newRole },
+                    ],
+                  })
+                );
+              }}
+            />
           </div>
         </div>
 
-        {/* Members Table Section */}
-        <div className="mt-8 bg-white p-6 rounded-lg shadow">
-          <div className="flex justify-between items-center mb-6">
-            <div className="flex items-center">
-              <TeamOutlined className="text-2xl text-blue-600 mr-3" />
-              <h2 className="text-2xl font-semibold text-gray-800">All Organization Members</h2>
-            </div>
-            <Button 
-              type="primary" 
-              icon={<UserAddOutlined />}
-              onClick={() => setShowAddMemberModal(true)}
-            >
-              Add Member
-            </Button>
-          </div>
-          <MembersTable 
-            members={members} 
-            loading={loadingMyOrg || loadingCreateOrg} 
-            onRoleUpdate={async (userId: string, newRole: Role) => {
-              const memberWithId: any = members.find((member) => member.userId === userId)
-              dispatch(createNewOrgAction({    
-                id: organization._id,
-                userId: memberWithId.userId,
-                officialName: organization.officialName,
-                officialMembers: [...members.filter((member: any) => member.userId !== userId), {...memberWithId, role: newRole}]
-              }));
-            }}
-          />
-        </div>
-      </div>
-
-      {showOrgModal && editingOrg && (
+        {showOrgModal && editingOrg && (
           <OrganizationModal
             organization={editingOrg}
             onClose={() => setShowOrgModal(false)}

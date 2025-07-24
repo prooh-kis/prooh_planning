@@ -87,8 +87,8 @@ export const CampaignTemplates: React.FC = () => {
     if ([CLIENT_POC_USER, "campaignAdmin"].includes(userInfo?.userRole)) {
       navigate(MY_CAMPAIGNS_LIST);
     }
-    if (userInfo.userRole === "screenAdmin") {
-      navigate("/adminRequestList")
+    if (userInfo?.userRole === "screenAdmin") {
+      navigate("/adminRequestList");
     }
   }, [navigate, userInfo]);
 

@@ -22,8 +22,10 @@ export const CampaignAnalysis: React.FC<CampaignAnalysisProps> = ({
 }) => {
   const dispatch = useDispatch<any>();
 
-  const userOrgRole: string = myOrg?.officialMembers.find((member: any) => member.userId === userInfo._id)?.role || ""
-
+  const userOrgRole: string =
+    myOrg?.officialMembers.find(
+      (member: any) => member.userId === userInfo?._id
+    )?.role || "";
 
   useEffect(() => {
     if (errorOrgLevelCampaignStatus) {
@@ -42,8 +44,14 @@ export const CampaignAnalysis: React.FC<CampaignAnalysisProps> = ({
   }
 
   return (
-    <div className={`grid grid-cols-1 ${["MANAGER", "COORDINATOR"].includes(userOrgRole) ? "md:grid-cols-5" : "md:grid-cols-6"} gap-1`}>
-      {["ADMIN"].includes(userOrgRole)&& (
+    <div
+      className={`grid grid-cols-1 ${
+        ["MANAGER", "COORDINATOR"].includes(userOrgRole)
+          ? "md:grid-cols-5"
+          : "md:grid-cols-6"
+      } gap-1`}
+    >
+      {["ADMIN"].includes(userOrgRole) && (
         <div className="md:col-span-1 ">
           <TeamHierarchy
             title="By Managers"
@@ -82,7 +90,6 @@ export const CampaignAnalysis: React.FC<CampaignAnalysisProps> = ({
             handleFilters={handleFilters}
             initialFilters={initialFilters}
             orgUser="coordinator"
-
           />
         </div>
       )}
@@ -115,14 +122,13 @@ export const CampaignAnalysis: React.FC<CampaignAnalysisProps> = ({
       </div>
       <div>
         <ScreenWiseCampaigns
-        title="By Sites"
-        screenWiseCampaigns={orgLevelCampaignStatus?.data?.screens}
-        filters={filters}
-        handleFilters={handleFilters}
-        initialFilters={initialFilters}
+          title="By Sites"
+          screenWiseCampaigns={orgLevelCampaignStatus?.data?.screens}
+          filters={filters}
+          handleFilters={handleFilters}
+          initialFilters={initialFilters}
         />
       </div>
-
     </div>
   );
 };

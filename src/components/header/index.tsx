@@ -50,16 +50,16 @@ export const Header: React.FC = () => {
           />
           <div className="truncate">
             <h3 className="font-custom text-lg font-semibold">
-              {userInfo.name}
+              {userInfo?.name}
             </h3>
             <p className="font-custom text-xs font-bold text-gray-700">
-              {userInfo.userRole === CAMPAIGN_PLANNER
+              {userInfo?.userRole === CAMPAIGN_PLANNER
                 ? "PLANNER"
-                : userInfo.userRole === CAMPAIGN_MANAGER
+                : userInfo?.userRole === CAMPAIGN_MANAGER
                 ? "MANAGER"
-                : userInfo.userRole === CLIENT_POC_USER
+                : userInfo?.userRole === CLIENT_POC_USER
                 ? "Client POC"
-                : userInfo.userRole === "campaignAdmin"
+                : userInfo?.userRole === "campaignAdmin"
                 ? "Admin"
                 : userInfo?.userRole}
             </p>

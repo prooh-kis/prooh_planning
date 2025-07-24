@@ -44,7 +44,7 @@ export const MyPlansListPage: React.FC = () => {
       userInfo?.userRole === CAMPAIGN_MANAGER
     ) {
       removeAllKeyFromLocalStorage();
-      dispatch(getMyCreateCampaignsList({ id: userInfo._id }));
+      dispatch(getMyCreateCampaignsList({ id: userInfo?._id }));
     } else {
       message.error("You have no access to this page");
       dispatch(signout());
@@ -73,7 +73,7 @@ export const MyPlansListPage: React.FC = () => {
   };
 
   const reset = () => {
-    dispatch(getMyCreateCampaignsList({ id: userInfo._id }));
+    dispatch(getMyCreateCampaignsList({ id: userInfo?._id }));
   };
 
   return (

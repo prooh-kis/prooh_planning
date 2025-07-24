@@ -78,7 +78,7 @@ export const CampaignRequestForAdmin = () => {
   const getRequestList = useCallback(() => {
     dispatch(
       getMyCreateCampaignsVendorRequestsList({
-        id: userInfo._id,
+        id: userInfo?._id,
         status: CAMPAIGN_STATUS_PLEA_REQUEST_FINAL_APPROVAL_SENT,
         event: "campaignCreationGetRequestListVendorCms",
       })
