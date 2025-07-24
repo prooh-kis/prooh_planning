@@ -88,7 +88,7 @@ export const Landing: React.FC<any> = ({}) => {
       heading: "Layer",
       subHeading: "DATA MANAGEMENT PLATFORM",
       para: "Unprecedented access to 800+ OOH &DOOH media units via multiple purchase agreements media owners & through programmatic SSP integrations.",
-      redirect: { dmpURL },
+      redirect: dmpURL,
     },
     {
       id: 2,
@@ -98,7 +98,7 @@ export const Landing: React.FC<any> = ({}) => {
       heading: "Fly",
       subHeading: "CONTENT MANAGEMENT SYSTEM",
       para: "Unprecedented access to 800+ OOH &DOOH media units via multiple purchase agreements media owners & through programmatic SSP integrations.",
-      redirect: { cmsURL },
+      redirect: cmsURL,
     },
   ];
 

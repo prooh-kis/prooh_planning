@@ -163,9 +163,7 @@ export const ShowCampaignRequestDetailsForAdmin = () => {
             onClick={() => navigate(-1)}
           ></i>
           <h1 className="text-[16px] font-semibold">
-            {index === "1"
-              ? `Campaign Budget Request`
-              : `Campaign Creative Request`}
+            Campaign Final Approval Request
           </h1>
         </div>
       </div>

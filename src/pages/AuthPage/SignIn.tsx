@@ -19,7 +19,9 @@ export const SignIn: React.FC = () => {
 
   useEffect(() => {
     if (success) {
-      navigate(state?.path || "/");
+      navigate(
+        state?.path ? (state?.path === "/auth" ? "/" : state?.path) : "/"
+      );
     }
     if (errorSignIn) {
       message.error(errorSignIn);
