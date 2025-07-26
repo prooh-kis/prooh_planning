@@ -13,4 +13,9 @@
     1. React type script
     2. Redux
     3. Google map integration
-    4. Java Script
+    4. JavaScript
+
+# Branches
+
+    1. main -> production  -> https://plan.prooh.ai/auth
+    2. development2 -> development environment (testing) -> https://developmentplanning.vercel.app/auth
