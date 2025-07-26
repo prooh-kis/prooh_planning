@@ -1,6 +1,5 @@
 import { MultiColorLinearBar } from "../../components/molecules/MultiColorLinearBar";
 import { useEffect, useState } from "react";
-import { EmailSendBox } from "../../components/segments/EmailSendBox";
 import { EmailConfirmationImage } from "../../components/segments/EmailConfirmationImage";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -28,7 +27,6 @@ import {
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED,
   CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED,
 } from "../../constants/campaignConstants";
-import { convertDateIntoDateMonthYear } from "../../utils/dateAndTimeUtils";
 import { StatusPopup } from "../../components/popup/StatusPopup";
 import { ShowMediaTypePopup } from "../../components/popup/ShowMediaTypePopup";
 import { LoadingScreen } from "../../components/molecules/LoadingScreen";
@@ -38,7 +36,12 @@ import ButtonInput from "../../components/atoms/ButtonInput";
 import { AddContactDetailsForCampaignAlerts } from "../../components/segments/AddContactDetailsForCampaignAlerts";
 import { FinalConfirmationPopup } from "../../components/popup/FinalConfirmationPopup";
 import { SendEmailPopup } from "../../components/popup/SendEmailPopup";
-import { SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_RESET, SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_RESET, SEND_CAMPAIGN_FINAL_CONFIRMATION_RESET } from "../../constants/screenConstants";
+import {
+  SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_RESET,
+  SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_RESET,
+  SEND_CAMPAIGN_FINAL_CONFIRMATION_RESET,
+} from "../../constants/screenConstants";
+import { getRequestNameFromStatus } from "../../utils/campaignUtils";
 
 interface VendorConfirmationDetailsProps {
   setCurrentStep: any;
@@ -59,8 +62,13 @@ export const VendorConfirmationDetails = ({
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const [toEmail, setToEmail] = useState<any>(campaignDetails?.campaignManagerEmail || "");
-  const [cc, setCC] = useState<any>([campaignDetails?.campaignPlannerEmail, "tech@prooh.ai"]);
+  const [toEmail, setToEmail] = useState<any>(
+    campaignDetails?.campaignManagerEmail || ""
+  );
+  const [cc, setCC] = useState<any>([
+    campaignDetails?.campaignPlannerEmail,
+    "tech@prooh.ai",
+  ]);
   const [open, setOpen] = useState<boolean>(false);
   const [openMedia, setOpenMedia] = useState<boolean>(false);
 
@@ -71,8 +79,11 @@ export const VendorConfirmationDetails = ({
   const [skipEmailConfirmation, setSkipEmailConfirmation] =
     useState<any>(false);
   const [confirmToProceed, setConfirmToProceed] = useState<any>(false);
-  const [openFinalConfirmationPopup, setOpenFinalConfirmationPopup] = useState<any>(false);
-  const [savedContacts, setSavedContacts] = useState<any[]>(campaignDetails?.stakeHolders || []);
+  const [openFinalConfirmationPopup, setOpenFinalConfirmationPopup] =
+    useState<any>(false);
+  const [savedContacts, setSavedContacts] = useState<any[]>(
+    campaignDetails?.stakeHolders || []
+  );
 
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
 
@@ -89,9 +100,7 @@ export const VendorConfirmationDetails = ({
     loading: loadingVendorConfirmationData,
     error: errorVendorConfirmationData,
     data: vendorConfirmationData,
-  } = useSelector(
-    (state: any) => state.vendorConfirmationDetailsGet
-  );;
+  } = useSelector((state: any) => state.vendorConfirmationDetailsGet);
 
   const {
     loading: loadingStatusTableData,
@@ -99,25 +108,30 @@ export const VendorConfirmationDetails = ({
     data: statusTableData,
   } = useSelector(
     (state: any) => state.vendorConfirmationStatusTableDetailsGet
-  );;
+  );
 
   const {
     loading: loadingVendorCreativeApprovalSent,
     error: errorVendorCreativeApprovalSent,
-    success: successVendorCreativeApprovalSent
-  } = useSelector((state: any) => state.sendRequestToVendorForCreativeApprovalVendorConfirmationPage);
+    success: successVendorCreativeApprovalSent,
+  } = useSelector(
+    (state: any) =>
+      state.sendRequestToVendorForCreativeApprovalVendorConfirmationPage
+  );
 
   const {
     loading: loadingSendCampaignStatusReportToClient,
     error: errorSendCampaignStatusReportToClient,
-    success: successSendCampaignStatusReportToClient
+    success: successSendCampaignStatusReportToClient,
   } = useSelector((state: any) => state.campaignStatusReportToClientSend);
 
   const {
     loading: loadingSendFinalApproval,
     error: errorSendFinalApproval,
-    success: successSendFinalApproval
-  } = useSelector((state: any) => state.campaignForFinalApprovalSendVendorConfirmationPage);
+    success: successSendFinalApproval,
+  } = useSelector(
+    (state: any) => state.campaignForFinalApprovalSendVendorConfirmationPage
+  );
 
   const handleAddNewFile = async (file: File) => {
     if (file) {
@@ -156,21 +170,26 @@ export const VendorConfirmationDetails = ({
   };
 
   const sendForVendorConfirmation = () => {
-    message.info(
-      "Sending for approval to all the vendor..."
+    message.info("Sending for approval to all the vendor...");
+    dispatch(
+      sendRequestToVendorForCreativeApprovalVendorConfirmationPage({
+        id: campaignDetails?._id,
+      })
     );
-    dispatch(sendRequestToVendorForCreativeApprovalVendorConfirmationPage({id: campaignDetails?._id}));
   };
 
   const sendEmailToClient = () => {
-    message.info(
-      "Sending campaign status report..."
+    message.info("Sending campaign status report...");
+    dispatch(
+      sendCampaignStatusReportToClient({
+        toEmail,
+        cc,
+        id: campaignDetails?._id,
+      })
     );
-    dispatch(sendCampaignStatusReportToClient({toEmail, cc, id: campaignDetails?._id}));
-  }
+  };
 
   const handleSaveAndContinue = async () => {
-    
     let imageArr = await Promise.all(files.map(getAWSUrl));
     dispatch(
       addDetailsToCreateCampaign({
@@ -178,27 +197,40 @@ export const VendorConfirmationDetails = ({
         pageName: "Vendor Confirmation Page",
         id: campaignDetails?._id,
         vendorApprovalImgs: imageArr, // return url array
-        stakeHolders: savedContacts
+        stakeHolders: savedContacts,
       })
     );
-      // navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignDetails?._id}`);
+    // navigate(`${CAMPAIGN_DETAILS_PAGE}/${campaignDetails?._id}`);
   };
-
 
   const handleSendForFinalApproval = () => {
     message.info("Sending for final approval...");
-    dispatch(sendCampaignForFinalApprovalVendorConfirmationPage({id: campaignDetails?._id}));
-  }
+    dispatch(
+      sendCampaignForFinalApprovalVendorConfirmationPage({
+        id: campaignDetails?._id,
+      })
+    );
+  };
 
   useEffect(() => {
     if (
       errorVendorConfirmationData ||
       errorStatusTableData ||
-      errorAddDetails || errorSendCampaignStatusReportToClient || errorSendFinalApproval || errorVendorCreativeApprovalSent
+      errorAddDetails ||
+      errorSendCampaignStatusReportToClient ||
+      errorSendFinalApproval ||
+      errorVendorCreativeApprovalSent
     ) {
       message.error("Something went wrong, please contact tech support...");
     }
-  },[errorAddDetails, errorStatusTableData, errorVendorConfirmationData, errorSendCampaignStatusReportToClient, errorSendFinalApproval, errorVendorCreativeApprovalSent]);
+  }, [
+    errorAddDetails,
+    errorStatusTableData,
+    errorVendorConfirmationData,
+    errorSendCampaignStatusReportToClient,
+    errorSendFinalApproval,
+    errorVendorCreativeApprovalSent,
+  ]);
 
   useEffect(() => {
     if (!campaignDetails) return;
@@ -235,32 +267,42 @@ export const VendorConfirmationDetails = ({
 
   useEffect(() => {
     if (successVendorCreativeApprovalSent) {
-      message.success("Vendor creative approval sent successfully to all vendors...");
+      message.success(
+        "Vendor creative approval sent successfully to all vendors..."
+      );
       dispatch({
-        type: SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_RESET
-      })
+        type: SEND_BUDGET_APPROVAL_TO_VENDOR_CREATIVE_APPROVAL_RESET,
+      });
     }
     if (successSendCampaignStatusReportToClient) {
-      message.success("Campaign status report sent successfully...")
+      message.success("Campaign status report sent successfully...");
       dispatch({
-        type: SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_RESET
-      })
+        type: SEND_CAMPAIGN_STATUS_REPORT_TO_CLIENT_RESET,
+      });
     }
     if (successSendFinalApproval) {
       message.success("Campaign sent for final approval...");
       dispatch({
-        type: SEND_CAMPAIGN_FINAL_CONFIRMATION_RESET
-      })
+        type: SEND_CAMPAIGN_FINAL_CONFIRMATION_RESET,
+      });
       setOpenFinalConfirmationPopup(false);
     }
     if (successAddDetails) {
       dispatch({
         type: ADD_DETAILS_TO_CREATE_CAMPAIGN_RESET,
       });
-      message.success("Your campaign has been successfully planned...")
+      message.success("Your campaign has been successfully planned...");
       setOpenFinalConfirmationPopup(true);
     }
-  }, [successAddDetails, step, setCurrentStep, dispatch, successSendCampaignStatusReportToClient, successVendorCreativeApprovalSent, successSendFinalApproval]);
+  }, [
+    successAddDetails,
+    step,
+    setCurrentStep,
+    dispatch,
+    successSendCampaignStatusReportToClient,
+    successVendorCreativeApprovalSent,
+    successSendFinalApproval,
+  ]);
 
   const handleOpenStatusModel = () => {
     setOpen(!open);
@@ -273,41 +315,22 @@ export const VendorConfirmationDetails = ({
     Approved: {
       Connected:
         statusTableData?.filter((c: any) =>
-          [
-            CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED,
-            "Completed",
-            "Pending",
-            "Hold",
-            "Active",
-            "Pause",
-            "Deleted",
-          ].includes(c.status)
+          getRequestNameFromStatus(c.status).includes("Approved")
         ).length || 0,
       "Third Party": 0,
     },
     Rejected: {
       Connected:
-        statusTableData?.filter(
-          (c: any) =>
-            c.status === CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED
+        statusTableData?.filter((c: any) =>
+          getRequestNameFromStatus(c.status).includes("Rejected")
         ).length || 0,
       "Third Party": 0,
     },
     Pending: {
       Connected:
-        statusTableData?.filter(
-          (c: any) =>
-            ![
-              CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_ACCEPTED,
-              CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_REJECTED,
-              "Completed",
-              "Pending",
-              "Hold",
-              "Active",
-              "Pause",
-              "Deleted",
-            ].includes(c.status)
-        )?.length || 0,
+        statusTableData?.filter((c: any) =>
+          getRequestNameFromStatus(c.status).includes("Pending")
+        ).length || 0,
       "Third Party": 0,
     },
   };
@@ -324,7 +347,7 @@ export const VendorConfirmationDetails = ({
         pageName: "Vendor Confirmation Page",
         id: campaignDetails?._id,
         vendorApprovalImgs: [], // return url array
-        stakeHolders: savedContacts
+        stakeHolders: savedContacts,
       })
     );
     setOpenFinalConfirmationPopup(true);
@@ -365,7 +388,10 @@ export const VendorConfirmationDetails = ({
             setCC={setCC}
             cc={cc}
             sendEmail={sendEmailToClient}
-            loadingEmailReady={loadingSendCampaignStatusReportToClient || loadingVendorCreativeApprovalSent}
+            loadingEmailReady={
+              loadingSendCampaignStatusReportToClient ||
+              loadingVendorCreativeApprovalSent
+            }
           />
 
           <div className="flex items-center justify-between">
@@ -377,7 +403,11 @@ export const VendorConfirmationDetails = ({
                 Check and confirm media availability for your campaign plan
               </p>
             </div>
-            <CountdownTimer createdAt={vendorConfirmationData?.createdAt || new Date().toISOString()} />
+            <CountdownTimer
+              createdAt={
+                vendorConfirmationData?.createdAt || new Date().toISOString()
+              }
+            />
           </div>
           <VendorConfirmationBasicTable
             vendorConfirmationData={vendorConfirmationData}
@@ -489,8 +519,14 @@ export const VendorConfirmationDetails = ({
                         variant="primary"
                         className="h-[40px]"
                         loadingText="Sending..."
-                        loading={loadingSendCampaignStatusReportToClient || loadingVendorConfirmationData}
-                        disabled={loadingSendCampaignStatusReportToClient || loadingVendorConfirmationData}
+                        loading={
+                          loadingSendCampaignStatusReportToClient ||
+                          loadingVendorConfirmationData
+                        }
+                        disabled={
+                          loadingSendCampaignStatusReportToClient ||
+                          loadingVendorConfirmationData
+                        }
                         icon={
                           <i className="fi fi-sr-envelope flex items-center"></i>
                         }
@@ -509,8 +545,14 @@ export const VendorConfirmationDetails = ({
                       Enter email and share your plan
                     </h1>
                   </div>
-                  <div className="p-1 cursor-pointer" onClick={sendForVendorConfirmation}>
-                    <h1 className="text-[12px] text-primaryButton">Click here to send reminder to all vendor for creative approval</h1>
+                  <div
+                    className="p-1 cursor-pointer"
+                    onClick={sendForVendorConfirmation}
+                  >
+                    <h1 className="text-[12px] text-primaryButton">
+                      Click here to send reminder to all vendor for creative
+                      approval
+                    </h1>
                   </div>
                 </div>
                 <div className="col-span-1 border rounded-[8px] p-2">
