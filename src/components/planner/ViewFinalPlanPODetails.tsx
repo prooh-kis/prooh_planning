@@ -815,6 +815,7 @@ export const ViewFinalPlanPODetails = ({
                 handleRemoveCoupon={handleRemoveCoupon}
                 setIsOpenCostSummary={setIsOpenCostSummary}
                 coupons={coupons}
+                campaignDetails={campaignDetails}
               />
             </div>
             <div ref={pageRef} className="col-span-1 w-full">

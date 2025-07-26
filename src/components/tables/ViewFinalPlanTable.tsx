@@ -1,7 +1,10 @@
 import { message, Tooltip } from "antd";
 import { formatNumber } from "../../utils/formatValue";
 import { convertDateIntoDateMonthYear } from "../../utils/dateAndTimeUtils";
-import { DropdownInput } from "../../components/atoms/DropdownInput";
+import {
+  getColorCodeOnBasicOfStatus,
+  getRequestNameFromStatus,
+} from "../../utils/campaignUtils";
 
 function MyDiv({ left, right }: any) {
   return (
@@ -24,12 +27,29 @@ export const ViewFinalPlanTable = ({
   handleRemoveCoupon,
   coupons,
   setIsOpenCostSummary,
+  campaignDetails,
 }: any) => {
   return (
     <div>
       <h1 className="font-semibold py-2	">Client Information</h1>
       <MyDiv left={"Client Name"} right={poTableData?.clientName} />
       <MyDiv left={"Brand Name"} right={poTableData?.brandName} />
+      <div className="flex text-[#2B2B2B]">
+        <h1 className="text-left text-[14px] basis-1/2 text-[#129BFF] font-semibold">
+          Campaign status
+        </h1>
+        <h1
+          className={`text-left text-[14px] basis-1/2 font-semibold ${getColorCodeOnBasicOfStatus(
+            getRequestNameFromStatus(
+              campaignDetails?.screenWiseSlotDetails[0].campaignStatus
+            )
+          )}`}
+        >
+          {getRequestNameFromStatus(
+            campaignDetails?.screenWiseSlotDetails[0].campaignStatus
+          )}
+        </h1>
+      </div>
       <MyDivider />
       <h1 className="font-semibold ">Campaign Details</h1>
       <MyDiv left={"Campaign Name"} right={poTableData?.name} />
