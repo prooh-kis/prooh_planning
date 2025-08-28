@@ -1,5 +1,5 @@
 import { PrimaryInput } from "../atoms/PrimaryInput";
-import { message, Modal, Tooltip } from "antd";
+import { message, Modal, Select, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -15,6 +15,7 @@ import { getAllPlannerIdsAndEmail } from "../../actions/screenAction";
 import { getDataFromLocalStorage } from "../../utils/localStorageUtils";
 import { ALL_BRAND_LIST } from "../../constants/localStorageConstants";
 import { getMyOrgDetailsAction } from "../../actions/organizationAction";
+import { industryTypes } from "../../data/touchpointData";
 
 const allIndex = [1, 2, 3, 6].map((data: any) => {
   return {
@@ -63,12 +64,14 @@ export const AddCampaignDetails = ({
   const [brandName, setBrandName] = useState<any>(
     campaignDetails?.brandName || ""
   );
+
   const [clientName, setClientName] = useState<any>(
     campaignDetails?.clientName || ""
   );
   const [industry, setIndustry] = useState<any>(
     campaignDetails?.industry || ""
   );
+
   const [sov, setSov] = useState<any>(campaignDetails?.sov || 1);
   const [sovType, setSovType] = useState<string>(
     campaignDetails?.sovType || "continuous"
@@ -118,7 +121,7 @@ export const AddCampaignDetails = ({
   const {
     loading: loadingMyOrg,
     error: errorMyOrg,
-    data: myOrg
+    data: myOrg,
   } = useSelector((state: any) => state.myOrgDetailsGet);
 
   const handleAddNewClient = (value: string) => {
@@ -143,7 +146,7 @@ export const AddCampaignDetails = ({
       message.error("Please enter brand name");
       return false;
     } else if (industry.length === 0) {
-      message.error("Please enter brand name");
+      message.error("Please enter industry name");
       return false;
     } else {
       return true;
@@ -211,8 +214,7 @@ export const AddCampaignDetails = ({
   useEffect(() => {
     dispatch(getAllClientAgencyNames());
     dispatch(getAllPlannerIdsAndEmail({ id: userInfo?._id }));
-    dispatch(getMyOrgDetailsAction({id: userInfo?._id}));
-    
+    dispatch(getMyOrgDetailsAction({ id: userInfo?._id }));
   }, [dispatch, userInfo]);
 
   useEffect(() => {
@@ -267,7 +269,9 @@ export const AddCampaignDetails = ({
             <SuggestionInput
               suggestions={getDataFromLocalStorage(ALL_BRAND_LIST)}
               placeholder="Brand Name"
-              onChange={(value) => setBrandName(value?.toUpperCase())}
+              onChange={(value) => {
+                setBrandName(value?.toUpperCase());
+              }}
               value={brandName}
             />
           </div>
@@ -290,12 +294,16 @@ export const AddCampaignDetails = ({
             <label className="block text-secondaryText text-[14px] mb-2">
               Industry
             </label>
-            <PrimaryInput
-              inputType="text"
-              placeholder="Industry"
+            <Select
+              placeholder="Select Industry"
+              size="large"
+              showSearch
+              optionFilterProp="label"
+              onChange={(value) => setIndustry(value)}
+              options={industryTypes}
               value={industry}
-              action={setIndustry}
-            />
+              className="w-full"
+            ></Select>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-8 pt-2">
@@ -390,8 +398,8 @@ export const AddCampaignDetails = ({
               </Tooltip>
             </div>
             <DropdownInput
-              // options={myOrg?.officialMembers?.filter((mem: any) => 
-              //   mem.userId.toString() === myOrg?.officialMembers?.find((member: any) => 
+              // options={myOrg?.officialMembers?.filter((mem: any) =>
+              //   mem.userId.toString() === myOrg?.officialMembers?.find((member: any) =>
               //     member.userId === userInfo?._id
               //   )?.reportsTo.toString()
               // )?.map((data: any) => ({
@@ -400,15 +408,15 @@ export const AddCampaignDetails = ({
               // }))}
               options={allPlannerData?.map((data: any) => ({
                 label: data?.name,
-                value: data?.userId,
+                value: data?._id,
               }))}
               selectedOption={managerId}
               placeHolder="Select Manager"
               setSelectedOption={(value: any) => {
                 setManagerId(value);
                 setManagerEmail(
-                  allPlannerData?.find((data: any) => data._id === value)?.email ||
-                    ""
+                  allPlannerData?.find((data: any) => data._id === value)
+                    ?.email || ""
                 );
               }}
               height="h-[48px]"
@@ -430,19 +438,17 @@ export const AddCampaignDetails = ({
               //     value: data?._id,
               //   };
               // })}
-              options={allPlannerData?.map((data: any) => {
-                return {
-                  label: data?.name,
-                  value: data?._id,
-                };
-              })}
-              selectedOption={managerId}
+              options={allPlannerData?.map((data: any) => ({
+                label: data?.name,
+                value: data?._id,
+              }))}
+              selectedOption={coordinatorId}
               placeHolder="Select Coordinator"
               setSelectedOption={(value: any) => {
                 setCoordinatorId(value);
                 setCoordinatorEmail(
-                  allPlannerData?.find((data: any) => data._id === value)?.email ||
-                    ""
+                  allPlannerData?.find((data: any) => data._id === value)
+                    ?.email || ""
                 );
               }}
               height="h-[48px]"
