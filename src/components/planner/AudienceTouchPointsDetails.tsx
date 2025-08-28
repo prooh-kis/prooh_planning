@@ -302,8 +302,8 @@ export const AudienceTouchPointsDetails = ({
           <div className="flex justify-start items-center gap-2">
             <i className="fi fi-sr-lightbulb-on text-[#FFB904]"></i>
             <h1 className="text-[14px] text-[#178967]">
-              Prooh Tip:- select target audience and select select target
-              audience and location target audience and location location
+              Prooh Tip:- select target audience and select target
+              audience and location target audience and location
             </h1>
           </div>
           <div className="px-4 fixed bottom-0 left-0 w-full bg-[#FFFFFF]">

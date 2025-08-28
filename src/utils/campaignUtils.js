@@ -59,7 +59,7 @@ export const getUserRole = (value) => {
 export const getRequestNameFromStatus = (status) => {
   const statusMap = {
     [CAMPAIGN_STATUS_PLEA_REQUEST_BUDGET_SENT]: "Budget Request Sent",
-    [CAMPAIGN_STATUS_PLEA_REQUEST_BUDGET_ACCEPTED]: "Budget Approved",
+    [CAMPAIGN_STATUS_PLEA_REQUEST_BUDGET_ACCEPTED]: "Draft",
     [CAMPAIGN_STATUS_PLEA_REQUEST_BUDGET_REJECTED]: "Budget Rejected",
     [CAMPAIGN_STATUS_PLEA_REQUEST_SCREEN_APPROVAL_SENT]:
       "Screen Approval Request",

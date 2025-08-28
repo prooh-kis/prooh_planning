@@ -64,13 +64,11 @@ export const MyRequestsListTable = ({
             onClick={() =>
               setShowDetails({
                 show: !showDetails.show,
-                data: campaign
+                data: campaign,
               })
             }
           >
-            <CampaignsListModel
-              data={{ ...campaign }}
-            />
+            <CampaignsListModel data={{ ...campaign }} />
           </div>
         ))}
       </div>
@@ -210,7 +208,7 @@ export const MyRequestsListTable = ({
                   {campaign.status === "PleaRequestBudgetSent"
                     ? "Budget Approval Pending"
                     : campaign.status === "PleaRequestBudgetAccepted"
-                    ? "Budget Approved"
+                    ? "Draft"
                     : campaign.status === "PleaRequestBudgetRejected"
                     ? "Budget Rejected"
                     : campaign.status === "PleaRequestScreenApprovalSent"
