@@ -60,28 +60,100 @@ export function numberToWords(num) {
 
 
 export function calculateAspectRatio(resolution) {
-  if (!resolution || typeof resolution !== 'string') {
-    throw new Error('Invalid resolution format. Expected format: "widthxheight"');
+  if (!resolution) {
+    return 'Unknown';
   }
 
-  // Split resolution into width and height
-  const [widthStr, heightStr] = resolution.split('x');
-  const width = parseInt(widthStr, 10);
-  const height = parseInt(heightStr, 10);
-
-  if (isNaN(width) || isNaN(height)) {
-    throw new Error('Invalid resolution values. Both width and height must be numbers');
+  // Handle cases where resolution might be null, undefined, or empty
+  if (typeof resolution !== 'string') {
+    console.warn('Invalid resolution format. Expected string, got:', typeof resolution, resolution);
+    return 'Unknown';
   }
 
-  // Calculate greatest common divisor (GCD) using Euclidean algorithm
-  const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
-  const divisor = gcd(width, height);
+  // Clean the resolution string - remove any whitespace and convert to lowercase
+  const cleanResolution = resolution.trim().toLowerCase();
+  
+  // Handle common resolution formats
+  let width, height;
+  
+  // Case 1: Standard "widthxheight" format
+  if (cleanResolution.includes('x')) {
+    const parts = cleanResolution.split('x');
+    if (parts.length !== 2) {
+      console.warn('Invalid resolution format. Expected "widthxheight":', resolution);
+      return 'Unknown';
+    }
+    
+    width = parseInt(parts[0], 10);
+    height = parseInt(parts[1], 10);
+  }
+  // Case 2: Handle other common separators
+  else if (cleanResolution.includes('*')) {
+    const parts = cleanResolution.split('*');
+    if (parts.length !== 2) {
+      console.warn('Invalid resolution format. Expected "width*height":', resolution);
+      return 'Unknown';
+    }
+    
+    width = parseInt(parts[0], 10);
+    height = parseInt(parts[1], 10);
+  }
+  // Case 3: Handle "width x height" with spaces
+  else if (cleanResolution.includes(' x ')) {
+    const parts = cleanResolution.split(' x ');
+    if (parts.length !== 2) {
+      console.warn('Invalid resolution format. Expected "width x height":', resolution);
+      return 'Unknown';
+    }
+    
+    width = parseInt(parts[0], 10);
+    height = parseInt(parts[1], 10);
+  }
+  // Case 4: Unknown format
+  else {
+    console.warn('Unknown resolution format:', resolution);
+    return 'Unknown';
+  }
 
-  // Calculate simplified ratio
-  const ratioWidth = width / divisor;
-  const ratioHeight = height / divisor;
+  // Validate parsed numbers
+  if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
+    console.warn('Invalid resolution values. Both width and height must be positive numbers:', resolution);
+    return 'Unknown';
+  }
 
-  return `${ratioWidth}:${ratioHeight}`;
+  try {
+    // Calculate greatest common divisor (GCD) using Euclidean algorithm
+    const gcd = (a, b) => {
+      a = Math.abs(a);
+      b = Math.abs(b);
+      return b === 0 ? a : gcd(b, a % b);
+    };
+    
+    const divisor = gcd(width, height);
+
+    // Calculate simplified ratio
+    const ratioWidth = width / divisor;
+    const ratioHeight = height / divisor;
+
+    // Handle special cases and common ratios
+    const commonRatios = {
+      '1:1': '1:1',
+      '4:3': '4:3',
+      '16:9': '16:9',
+      '16:10': '16:10',
+      '21:9': '21:9',
+      '32:9': '32:9'
+    };
+
+    const calculatedRatio = `${ratioWidth}:${ratioHeight}`;
+    
+    // Return common ratio name if it matches a standard
+    return commonRatios[calculatedRatio] || calculatedRatio;
+    
+  } catch (error) {
+    console.warn('Error calculating aspect ratio for resolution:', resolution, error);
+    return 'Unknown';
+  }
 }
 
 export const formattedINR = (amount) =>
